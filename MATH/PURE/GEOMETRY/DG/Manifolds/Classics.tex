@@ -1,0 +1,146 @@
+\documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{ stmaryrd }
+\usepackage[dvipsnames]{xcolor}
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=10mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\rightarrowtriangle}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{\LOGIC{then} \;}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Nat}{\mathbb{N} }
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cate}{\TYPE{Category}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+%%ProofWritting
+\newcommand{\A}{\LOGIC{Assume} \;} 
+%LinearAlgebra
+%TYPES
+\newcommand{\VS}[1]{\TYPE{VectorSpace}\left( #1 \right)}
+\newcommand{\Lin}[1]{\mathcal{L}\left( #1 \right)}
+\newcommand{\vs}[1]{\mathsf{VS}\left( #1 \right)}
+%FUNK
+\DeclareMathOperator{\rk}{rank}
+%Manifolds
+%TYPES
+\newcommand{\SManifold}{\TYPE{SmoothManifold}}
+\newcommand{\SubMan}{\TYPE{SubManifold}}
+\newcommand{\smooth}[1]{C^\infty\left( #1 \right)}
+\newcommand{\CCurve}[2]{\TYPE{CentredCurve}\left(  #1, #2 \right)}
+\newcommand{\Admis}{\TYPE{Admissible}}
+\parindent=0em
+%FUNC
+\DeclareMathOperator{\cca}{chartCentredAt}
+\DeclareMathOperator{\codim}{codim}
+%TangentSpaces
+%TYPES
+\newcommand{\TS}{\TYPE{TangentSpace}}
+\newcommand{\Germ}{\TYPE{Germ}}
+\newcommand{\germs}[2]{\mathcal{F}_{#2}\left( #1 \right)}
+\newcommand{\DirAt}{\TYPE{DerivationAtPoint}}
+\newcommand{\dirAt}[2]{\mathrm{Dir}\left( #1 , #2 \right)}
+\newcommand{\Phys}{\TYPE{PhysicalView}}
+\newcommand{\Kin}{\TYPE{MovementDirection}}
+\newcommand{\PManifold}{\TYPE{PointedManifolds}}
+\newcommand{\PM}{\mathsf{PM}}
+\newcommand{\TF}{\TYPE{TangentFunctor}}
+\newcommand{\RegP}{\TYPE{RegularPoint}}
+\newcommand{\CritP}{\TYPE{CriticalPoint}}
+\newcommand{\RegV}{\TYPE{RegularValue}}
+\newcommand{\CritV}{\TYPE{CriticalValue}}
+\newcommand{\Zero}{\TYPE{Zero}}
+\newcommand{\NonDeg}{\TYPE{NonDegenerate}}
+\newcommand{\ConstRk}{\TYPE{ConstantRank}}
+\newcommand{\Trans}{\TYPE{Transverse}}
+%FUNC
+\DeclareMathOperator{\alg}{alg}
+\DeclareMathOperator{\fAlg}{fromAlg}
+\DeclareMathOperator{\phys}{phys}
+\DeclareMathOperator{\fPhys}{fromPhys}
+\DeclareMathOperator{\kin}{kin}
+\DeclareMathOperator{\fKin}{fromKin}
+\newcommand{\tM}{\TYPE{TangentMap}}
+\newcommand{\derT}{\TYPE{DerivationTransfer}}
+\newcommand{\physS}{\TYPE{PhysicalShift}}
+\newcommand{\kinT}{\TYPE{DirectionTransfer}}
+\newcommand{\diff}{\TYPE{Differential}}
+%THM
+\newcommand{\Sard}{\THM{Sard}}
+\newcommand{\MorseLemma}{\THM{MorseLemma}}
+\newcommand{\LevelSubmanifold}{\THM{LevelSubmanifold}}
+\newcommand{\TransThm}{\THM{Transversality}}
+\newcommand{\TransPB}{\THM{TransversalPullbacks}}
+\author{Uncultured Tramp} 
+\title{TangentSpace.Know}
+\begin{document}
+\maketitle
+\section{Classical Differential Geometry}
+\subsection{Basic Definitions}
+\begin{flalign*} 
+&\TYPE{Hypersurface} :: \prod M : \TYPE{SManifold} \. ?\TYPE{Submanifold}(M) \\
+&H : \TYPE{Hypersurface} \iff \codim H = 1 
+\\ \\
+&\TYPE{Parallel} :: \; ? TM \times TM \\
+& ( (p,v), (q,w)) : \TYPE{Parallel}  \iff  (p,v) \parallel (q,w) \iff v = w 
+\\ \\
+&\TYPE{FieldAlongCurve} ::  \TYPE{Curve}(M) \to \TYPE{Field}(M) \\
+&  Y : \TYPE{FieldAlongCurve}(c)  \iff \forall t \in \Reals \. \pi \;  Y(c(t)) = \dot c(t)
+\\ \\
+&\TYPE{DerivativeOfCurve} :: \TYPE{Curve}(\Reals^n) \to \TYPE{Curve}(T\Reals^n) \\
+&\TYPE{DerivativeOfCurve}(c) = c' = \sum^n_{i=1} \dot c(t)^i\hat e_i(c(t))   
+\\ \\
+&\TYPE{HigherDerivativeCurve} :: \TYPE{Curve}(\Reals^n) \to \Nat \to  \TYPE{Curve}(T\Reals^n) \\
+&\TYPE{HigherDerivativeCurve}(c,k) = c^{(k)} = \sum^n_{i=1} 
+\frac{\mathrm{d}^{k-1}\dot c(t)^i}{\mathrm{d}t^{k-1}}\hat e_i(c(t)) 
+\\ \\
+&\FUNC{crossProduct} :: C^\infty((\Reals^n)^{n-1},\Reals^n) \\ &
+\FUNC{crossProduct}(v) = \times(v) \de  \FUNC{asBasis}(\Reals^n)(\det[v] \otimes x)(x)  
+\end{flalign*}
+\newpage
+\subsection{Curves}
+\begin{flalign*} 
+&\TYPE{RegularCurve} :: \; ? \TYPE{Curve}(\Reals^n) \\
+&\gamma : \TYPE{RegularCurve} \iff \forall t \in \mathrm{Dom} \; \gamma \. \Vert \dot \gamma(t) \Vert \ \neq 0  
+\\ \\
+&\FUNC{unitTangentField} :: \TYPE{RegularCurve}(\Reals^n) \to  \TYPE{Curve}(\Reals^n) \\
+&\FUNC{unitTangentField}(\gamma) = \mathrm{T}_\gamma = t \mapsto \frac{\dot \gamma (t)}{\Vert \dot \gamma(t) \Vert}
+\\ \\
+&\FUNC{Length} :: \TYPE{Path}(\Reals^n) \to  \Reals_+ \\
+&\FUNC{Length}(\gamma) = L(\gamma) = \int^1_0 \Vert \dot \gamma(t) \Vert dt
+\\ \\
+&\FUNC{arclength} :: \prod \gamma : \TYPE{Curve}(\Reals^n) \. \mathrm{Dom} \; \gamma \to \mathrm{Dom} \; \gamma \to \Reals \\
+&\FUNC{Length}(\gamma) = h(t_0)(t) = \int^t_{t_0} \Vert \dot \gamma(t) \Vert dt
+\\ \\
+&\FUNC{unitSpeedCurve} :: \TYPE{RegularCurve}(\Reals^n) \to \TYPE{RegularCurve}(\Reals^n) \\
+&\FUNC{unitSpeedCurve}(\gamma) = c_\gamma \de t \mapsto \gamma \circ (h_{\gamma}(0))^{-1}(t)
+\\ \\
+&\FUNC{curvatureVector} :: \TYPE{RegularCurve}(\Reals^n) \to \TYPE{Curve}(\Reals^n) \\
+&\FUNC{curvatureVector}(\gamma) = \kappa_{\gamma}  \de t  \mapsto \dot{ \mathrm{T}}_\gamma(t)  
+\\ \\
+&\FUNC{curvatureFunction} :: \TYPE{RegularCurve}(\Reals^n) \to C^\infty[0,1] \\
+&\FUNC{curvatureVector}(\gamma) = K_{\gamma}  \de t  \mapsto \Vert \kappa_\gamma(t)\Vert 
+\\ \\
+&\TYPE{RealCurve} :: \; ? \TYPE{RegularCurve} \\
+& \gamma ::   \TYPE{RealCurve} \iff K_{\gamma} > 0
+\end{flalign*}
+\end{document}

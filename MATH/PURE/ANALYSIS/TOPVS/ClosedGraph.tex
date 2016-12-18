@@ -1,0 +1,66 @@
+\documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{ stmaryrd }
+\usepackage[dvipsnames]{xcolor}
+\usepackage{extsizes}
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=10mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{\triangleq}
+\newcommand{\extract}{\rightarrowtriangle}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{\LOGIC{then} \;}
+\newcommand{\Type}{\TYPE{Type}}
+\newcommand{\Set}{\TYPE{Set}}
+\begin{document}
+\begin{flalign*}
+&\THM{ClosedGraph1} :: \forall E,F : \TYPE{Banach} \. \forall \; T : \mathcal{M}_{\mathsf{TVS}(\mathbb{R})}:\TYPE{Iso}(\mathsf{SET})(E,F) \. T  : \TYPE{Iso}(\mathsf{TVS}(\mathbb{R}))(E,F) \\
+&\LOGIC{Proof:} \\
+& \LOGIC{A} \;  E,F : \TYPE{Banach}, \\
+& \LOGIC{A} \; T : \mathcal{M}_{\mathsf{TVS}(\mathbb{R})}:\TYPE{Iso}(\mathsf{SET})(E,F), \\
+& \TYPE{Iso}(\mathsf{SET})(E,F)(T) \Rightarrow  \exists f : \TYPE{Inverse}(\mathsf{SET})(T) \; \LOGIC{E} \; (T^{-1}), \\
+& \LOGIC{A} \; v,w \in F, \\
+& \TYPE{Inverse}(\mathsf{SET})(T)(T^{-1})  \Rightarrow  \exists a,b \in E : Ta = v \wedge Tb = w \; 
+\LOGIC{E}, \\
+& T^{-1}(v + w) = T^{-1}(Ta + Tb) = T^{-1}T(a + b ) = a + b = T^{-1}Ta + T^{-1}Tb = T^{-1}v + T^{-1}w \; \LOGIC{as} \; (1);  \\
+& \LOGIC{A} \; v \in F, \\
+& \LOGIC{A} \; r \in \mathbb{R}, \\
+& \TYPE{Inverse}(\mathsf{SET})(T)(T^{-1})  \Rightarrow  \exists a \in E : Ta = v \;   \LOGIC{E}, \\
+& T^{-1}rv = T^{-1}rTa = T^{-1}Tra = ra = rT^{-1}Ta = rT^{-1}v \; \LOGIC{as} \; (2);; \\
+& \TYPE{Linear}(\mathbb{R})(T^{-1},(1),(2)) \Rightarrow T^{-1} :  \mathcal{M}_{\mathsf{NVS}(\mathbb{R})}(F,E)
+\; \LOGIC{as} \; (3), \\ 
+& \LOGIC{A} \;  y: \TYPE{Convergent}(F), \\
+&  Y \de \lim_{n \to \infty} y_n, X \de T^{-1}Y, x \de T^{-1}y, \\
+&  0 = \lim_{n \to \infty} \Vert Y - y_n \Vert = \lim_{n \to \infty} \Vert TX - Tx_n \Vert =
+   \lim_{n \to \infty} \Vert T(X - x_n) \Vert = 
+   \left\Vert T\left( \lim_{n \to \infty} X - x_n \right) \right\Vert \LOGIC{as} \; (4), \\
+& \TYPE{Norm}(\Vert \cdot \Vert)_1(4) \Rightarrow  T\left( \lim_{n \to \infty} X - x_n \right) = 0 
+\to \TYPE{Iso}(\mathsf{SET})(E,F)(T) \Rightarrow  \lim_{n \to \infty}  x_n = X \; \LOGIC{as} \; (5), \\
+&  \de(Y,y)(5) \Rightarrow \lim_{n \to \infty}  T^{-1}y_n = T^{-1}Y \; \LOGIC{as} \; (6); \\
+& \TYPE{Continous}(T^{-1},(6)) \Rightarrow T^{-1} : \mathcal{M}_{\mathsf{TOP}}(F,E) \; \LOGIC{as} \; (7), \\
+& (3,7) \Rightarrow T^{-1} : \mathcal{M}_{\mathsf{TVS}(\mathbb{R})}(E,F) \Rightarrow
+T  :\TYPE{Iso}(\mathsf{TVS}(\mathbb{R})) ;; \square 
+\\ \\
+&\THM{ClosedGraph2} :: \forall E : \TYPE{Banach} \. \forall \; A : \TYPE{Subspace}(E) \. \forall B : \TYPE{Split}(F) \. \\
+& \kern 1pc \. \Lambda a  \in A \. \Lambda b \in B \. a + b : \TYPE{Iso}(\mathsf{TVS}(\mathbb{R}))(A \oplus B, E) \\
+&\LOGIC{Proof:} \\
+& \LOGIC{A} \;  E : \TYPE{Banach}, \\
+& \LOGIC{A} \; A : \TYPE{ClSubspace}(E), \\
+& \LOGIC{A} \; B : \TYPE{Split}(A), \\
+& s \de \Lambda a  \in A \. \Lambda b \in B \. a + b, \\
+& \TYPE{Split}(A)(B) \Rightarrow A + B = E \Rightarrow s : \TYPE{Surjective} \; \LOGIC{as} \; (1), \\
+& \TYPE{Split}(A)(B) \Rightarrow A \cap B = \{ 0 \} \Rightarrow s : \TYPE{Injective} \; \LOGIC{as} \; (2), \\
+& (1,2) \Rightarrow s : \TYPE{Iso}(\mathsf{SET})(E,F) \to \THM{ClosedGraph1}(E :\mathsf{TVS}(\mathbb{R})) \to s : 
+\TYPE{Iso}(\mathsf{TVS}(\mathbb{R}))(A \oplus B, E);;; \square
+\end{flalign*} 
+\end{document}

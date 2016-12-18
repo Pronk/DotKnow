@@ -1,0 +1,230 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{upgreek}
+\usepackage[russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{pstricks}
+\mathchardef\mhy="2D
+\DeclareMathOperator*{\im}{\mathrm{Im}}
+\DeclareMathOperator*{\coker}{\mathrm{Coker}}
+\DeclareMathOperator*{\coim}{\mathrm{coim}}
+\DeclareMathOperator*{\rk}{\mathrm{rank}}
+\DeclareMathOperator*{\trace}{\mathrm{trace}}
+\renewcommand{\.}{\; . \;}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\De}{\underline{\mathtt{def}} \quad}
+\newcommand{\lemma}{\underline{\mathtt{lemma}} \quad}
+\newcommand{\Thm}{\underline{\mathtt{thm}} \quad}
+\newcommand{\ball}{\mathbb{B}}
+\newcommand{\module}[1]{{#1} \mhy \mathtt{Module}}
+\newcommand{\submodule}[1]{\mathtt{Submodule}(#1)}
+\newcommand{\linear}[1]{\mathcal{L}(#1)}
+\newcommand{\Morph}[3]{\mathcal{H}_{#1}(#2,#3)}
+\newcommand{\Obj}[1]{\mathcal{O}(#1)}
+\newcommand{\ring}{\mathtt{Ring}}
+\newcommand{\RING}{\mathsf{RING}}
+\newcommand{\GRP}{\mathsf{GRP} }
+\newcommand{\MOD}[1]{#1 \mhy \mathsf{MOD} }
+\newcommand{\VS}[1]{#1 \mhy \mathsf{VS} }
+\newcommand{\End}{\mathtt{End}}
+\newcommand{\vs}[1]{#1 \mhy \mathtt{VectorSpace}}
+\newcommand{\subspace}[1]{\mathtt{Subspace}(#1)}
+\newcommand{\cat}{\mathtt{Category} }
+\newcommand{\abel}{\mathtt{Abelean}}
+\newcommand{\field}{\mathtt{Field}}
+\newcommand{\set}{\mathtt{Set}}
+\newcommand{\fin}{\mathtt{Finite}}
+\newcommand{\Normal}{\mathcal{N}}
+\newcommand{\inj}{\mathtt{Injective}}
+\newcommand{\bij}{\mathtt{Bijective}}
+\newcommand{\surj}{\mathtt{Surjective}}
+\newcommand{\is}{\mathtt{IndexedSet}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\gen}{\mathtt{Generates}}
+\newcommand{\basis}{\mathtt{Basis}}
+\newcommand{\LInd}{\mathtt{LinearlyIndependent}}
+\newcommand{\maxLInd}{\mathtt{MaximalLI}}
+\newcommand{\minGen}{\mathtt{MinimalGenerator}}
+\newcommand{\intD}{\mathtt{IntegralDomain}}
+\newcommand{\card}{\mathtt{Cardinal}}
+\newcommand{\byDe}{\triangleq}
+\title{Multilinear Algebra }
+\author{Uncultured Trump}
+\begin{document}
+\maketitle
+\section{Basis of a Module: Proofs}
+\begin{flalign*}
+\Thm & \mathtt{maxLInd} :: \forall M : \module{R} \. \forall v : \LInd(M) \. 
+	\exists  w : \maxLInd(M) : v \subset w  \\
+& \mathtt{maxLInd} (M)(v) = \\
+&  \De L = \{ w : \LInd(M) :  v \subset w   \} \\
+&  ( v : \LInd(M), \mathtt{ExtThm}(v) : v \subset v ) \to (*) : v \in L \to (1):L \neq \emptyset \\ 
+&  \vert C : \mathtt{Chain} \; L \; (\subset) \vdash \\
+& \quad  \left((*) : v \in L, \byDe \bigcup \right) \to (2) : v \subset \bigcup C \\
+&  \quad \vert A : \bigcup C \;! \;\LInd(M) \vdash \\
+&    \quad \quad A  \to \exists \alpha \in  F^R\left( \bigcup C \right) 
+	: \sum_{x \in \bigcup C} \alpha_x x = 0 : \alpha \neq 0 \multimap \alpha \\ 
+&   \quad \quad \alpha \in  F^R\left( \bigcup C \right) \to  \left\{ x \in \bigcup C : \alpha_x \neq 0   \right\} : \fin -(C : \mathtt{Chain})\to\\
+& \quad \quad \to  \exists w \in C : \sum_{x \in  w} \alpha_x x = 0  \multimap w \\
+&  \quad \quad ( \alpha \neq 0 , \byDe w : \sum_{x \in  w} \alpha_x x = 0 ) \to (3) : w \; ! \; \LInd(M) \\
+&   \quad \quad w \in C \subset L \to w : \LInd(M) -(3)\to  \bot \vert :\bigcup C : \\
+& \quad : \LInd(M) -(2) \to (3) : \bigcup C \in L
+&   \bigcup C : \LInd(M) : v \in \bigcup C \to \bigcup C \in L \\
+&   \quad (\byDe \mathtt{Chain} \; L \; (\subset), \byDe \bigcup) \to  \bigcup C : \mathtt{UB}(C)
+	\vert : \forall C : \mathtt{Chain} \, L \, (\subset) \. \exists B : \mathtt{UB}(C) : B \in L - \\
+& -(1)-\mathtt{ZornLemma}\to \exists \mathtt{Maximal} (L) \square 
+\end{flalign*}
+\newpage
+\begin{flalign*}
+\Thm &  \mathtt{freeBasis} :: \forall M : \module{R} \. ( \exists S : \set : M \cong_{\mathsf{SET}} F^R(S)) \iff
+	\basis(M) \\
+&  \mathtt{freeBasis}(M) = \\
+&   \vert   S : \set : M \cong_{\mathsf{SET}} F^R(S) \vdash \\
+&  \quad \byDe S  :    M \cong_{\mathsf{SET}} F^R(S) \to \exists \phi : \bij(F^R(S),M) \multimap
+	\phi \\
+& \quad \De b = \Lambda s \in S \. \Lambda x \in S \. \delta_{x, s} \\
+& \quad b : \basis(F^R(S)) \to   \phi(b) :  \basis(F^R(S)) \\
+& \vert : ( \exists S : \set : M \cong_{\mathsf{SET}} F^R(S)) \Rightarrow \basis(M) \multimap (\Rightarrow) \\
+& \vert (I,b) : \basis(M) \vdash \\
+&  \quad (I,b) : \basis(M) \to \exists \bij(M,F^R(I))    \to F^R(I) \cong_{\mathsf{SET}} M \\
+& \vert : \basis(M) \Rightarrow   ( \exists S : \set : M \cong_{\mathsf{SET}} F^R(S)) 
+\multimap (\Leftarrow) \\
+& ( \Leftarrow, \Rightarrow) \to ( \exists S : \set : M \cong_{\mathsf{SET}} F^R(S)) \iff
+	\basis(M) \square
+\end{flalign*}
+\begin{flalign*}
+\Thm  &\mathtt{basisFree} :: \forall M : \module{R} \. \forall B : \mathtt{Subset}(M) \. 
+	\\   & (B, \mathrm{id} ) : \basis(M)  
+		  \iff  
+		  L_B : \mathtt{Isomorphism}_{\MOD{R}}
+    \\   & \mathtt{basisFree}(M,B) = \\
+           &\byDe \basis(M)
+\end{flalign*}
+\newpage
+\begin{flalign*}
+\Thm &  \mathtt{maxIsBasis} ::  \forall V : \vs{K}  \. \id :  \maxLInd(V) \to \basis(V) \\
+   & \mathtt{maxIsBasis} \, V  \, (I,v) = \\
+   & (I,v) : \maxLInd(V) \to (I,v) : ( \LInd \to L_v : \inj(F^K (I),V )           \\
+   & (L_v, \vert A : L_v \; ! \; \surj(F^K (I), V) \vdash \\
+   &  \quad  A \to \exists \mathtt{In}(V) \wedge !\mathtt{In}(\im L) \multimap x \\
+   &  \quad  \De w : I | \{ I \} \to V \\
+   &  \quad  \kern 2.65pc  w(\mathtt{right}, I) = x \\
+   &  \quad  \kern 2.65pc w(\mathtt{left}, i) = v_i  \\ 
+   &  \quad  (*) = | \alpha \in F^K (I | \{I\}) : \alpha \neq 0 \vdash \\                                 
+   &  \quad \quad \mathtt{ExMid}(\alpha_I, 0) :  (\alpha_I = 0 | \alpha_I \neq 0 )
+    \to (\exists i \in I : \alpha_i \neq 0 | 
+     \alpha_I \neq 0)  \wedge \sum_{i \in I} w_i = \sum_{i \in I} v_i\to \\
+   & \quad \quad \to  (L_v(\alpha) \neq 0 | L_v(\alpha) \neq -\alpha_Ix) 
+   		\wedge L_w(\alpha) = L_v(\alpha) + \alpha_I x \to \\
+   & \quad \quad (L_w(\alpha) \neq 0 | L_w(\alpha) \neq 0) \to L_w(\alpha) \neq 0
+   \vert : L_w : \inj(F^K (I|\{ I \}),V) \to \\
+   & \quad (I|\{I\},w) : \LInd(V) -( \byDe w : v \subset w) \to (I,v) \, ! \, \maxLInd(V) \to \\
+   & \quad \to \bot |): \surj(F^K (I), V) \to L_v : \bij(F^K (I), V)  \to \\
+   &  \to  (I,v) : \basis(V) \square
+\end{flalign*}
+\newpage
+\begin{flalign*}
+\Thm  &\mathtt{completeBasis} :: \forall V : \vs{K} \. \forall v : \LInd(V) \. \\ 
+	  &	 \exists b : \basis(V)  : ( v \subset b) \\ 
+	  &\mathtt{completeBasis}(V,v) =   \mathtt{maxIsBasis} \, V \; \mathtt{maxLInd}(V,v)
+\end{flalign*}
+\newpage
+\begin{flalign*}
+\Thm &\mathtt{minIsBasis}  :: \forall V : \vs{K}  \. \id  :\minGen(V)  \to \basis(V)  \\
+	 &\mathtt{minIsBasis} \, V \, (I,v) = \\
+	 &(I,v) : \minGen(V) \to (I,v) : \gen(V) \to L_v : \surj(F^K(I), V)\\
+	 &(L_v, | A : L_v \; ! \; \inj(F^K(I),V) \vdash \\
+	 & \quad A \to \exists \alpha \in F^K(I) : \alpha \neq 0 : L_v(\alpha) = 0 \multimap (1)\\
+	 &  \quad (1)_2 : \alpha \neq 0 \to \exists k \in I : \alpha_k \neq 0 \multimap (2) \\
+	 &   \quad \De    J = I \setminus \{ k \} \\
+	 &   \quad \De  w = v_{\vert J}
+	 &  \quad (1)_3 : \sum_{i \in I} \alpha_i v_i = 0 -(2)\to 
+	 	(3) : v_k = \alpha_k^{-1} \sum_{j \in J} \alpha_jv_j \\
+	 & \quad (*) = \vert x \in V \vdash \\
+     & \quad \quad   L_v : \surj(F^K(I), V) \to \exists \beta \in F^K(I) : L_v(\beta) = x  
+     	\multimap (4) \\
+     & \quad \quad (4)_2 : x = \sum_{i \in I} \beta_i v_i =_{(3)} 
+     	\sum_{j \in J}(\beta_j  + \beta_k \alpha_k^{-1}\alpha_j)v_j \to
+     	\exists \beta' \in   F^K(J) : x = L_w(\beta') \\
+     & \quad 	| : \forall x \in V \. \exists \beta \in   F^K(J) : x = L_w(\beta ) 
+     \to  L_w : \surj(F^K(J), V) \to \\
+     & \quad \to (J,w) : \gen(V) -( J \subset I ) \to (I,v) \; ! \;   \minGen(V) \to \\
+     & \quad \to \bot |): \inj(F^K(I),V) \to L_v : \bij(F^K(I),V) \to \\
+     & (I,v) : \basis(V)               	  	
+\end{flalign*}
+\newpage
+\begin{flalign*}
+\lemma & \mathtt{fractionalLInd} :: \forall R : \intD \.\forall S : \set \. 
+\forall v : \is(F^R(S)) \. \\
+ &  v : \LInd(F^R(S)) \iff v : \LInd(F^{\mathrm{fractions} \, R}(S)) \\
+ &  \mathtt{fractionalLInd} \, R \; S \; (I,v) = \\
+ &  \De  K = \mathrm{fractions} \, R \\
+ &  (\Rightarrow) =  \vert (I,v) : \LInd(F^R(S)) \vdash \\
+ &  ( (I,v), \quad \vert A : (I,v) \; ! \; \LInd(F^K(S)) \vdash \\
+ &  \quad \quad A \to \exists \frac{a}{b} \in F^K(I) 
+ 	: L_v \left(\frac{a}{b} \right) = 0 : \frac{a}{b} \neq 0 \multimap (1) \\    
+ &	\quad \quad (1)_1  \to \exists E : \fin(I) : E = \{ i \in I : a_i \neq 0 \} \multimap (2) \\
+ &  \quad \quad  \De p = \prod_{i \in E} b_i \in R \\
+ &  \quad \quad \byDe p \to (3) : p\frac{a}{b} \in F^R(I) \\
+ &  \quad \quad (1)_2 \to (4) :L_v \left(  p\frac{a}{b} \right)  = p L_v \left( \frac{a}{b} \right)
+  =0 \\
+ & \quad \quad ((1)_3, 3,4) \to (I,v) \; ! \; \LInd(F^R(S)) \to \bot |  \\
+ & \quad |) : \LInd(F^R(S))  |: \\ 
+ & | :  \big((I,v) : \LInd(F^R(S) \big) \Rightarrow  \big( (I,v) :\LInd(F^K(S)) \big) \\
+ & (\Leftarrow) = | (I,v) : \LInd(F^K(S)) \vdash \\
+ & \quad  | A : \alpha \in F^R(I) : L_v(\alpha) = 0 \vdash \\
+ & \quad  \quad \byDe K \to \alpha \in F^K(I) \\
+ & \quad \quad (I,v) : \LInd(F^K(S))  -(A)\to \alpha = 0 |: \\
+ & \quad |: \forall \alpha \in F^R(I) : L_v(\alpha) =0 \. \alpha = 0 \to 
+ 	(I,v) : \LInd(F^R(S)) |: \\
+ & | :  \big((I,v) : \LInd(F^K(S) \big) \Rightarrow  \big( (I,v) :\LInd(F^R(S)) \big) \to \\
+ & \to (I,v) : \LInd(F^R(S)) \iff (I,v) : \LInd(F^K(S)) \square
+\end{flalign*}
+\newpage
+\begin{flalign*}
+\Thm & \mathtt{LIndBound}  :: \forall R : \intD \. \forall S : \set  \. 
+\\ & \forall (I,b) : \maxLInd \, F^R(S)	\. \forall (J,v) : \LInd \, F^R(S) \. |J| \le |I|  \\
+ & \mathtt{LIndBound}(R,S,b,v) = \\
+ & \De K = \mathrm{fractions} \, R ; M = F^R(S) ; V = F^K(S) \\
+ &  (\mathtt{fractionalLInd}) \to (I,b),(J,v) : \LInd(V) \\
+ &  (\mathtt{fractionalLInd}^*) \to (I,b) : \maxLInd(V) -(\mathtt{maxIsBasis})\to  
+ 	(I,b) : \basis(V)  \\
+ &   \mathtt{wellOrdering}(J) : \exists (<) : \mathtt{TotalOrder}(J) \multimap \\
+ &  \De m = \min (J, <) ;  \De B_m = b \\
+ &  \mathtt{foreach} \; j \in (J, <) |\\ 
+  	& \quad 	(I,B_j) : \basis(V)  \to \exists \alpha \in F^K(I) : v_j 
+  	= \sum_{i \in I} \alpha_i B_j(i) \multimap (1)\\
+  	& \quad (J,v) : \LInd(V) -(2)\to \exists \psi \in I : \alpha_\psi \neq 0 : B_j(I) 
+  		\not \in \im v
+  	\multimap (2) \\
+  	&  \quad \De f(j) = \psi \\
+  	&  \quad (*)_j : \forall k < j \. B_j( f(k) ) \in \im v \to f : \inj(\mathbb{I}_j(<),I) \\
+  	& \quad  \De B_{j++}(k) = \mathtt{if} \; k == \psi \; \mathtt{then} \; v_j \;
+  	\mathtt{else} \; B_{j} (k) \\
+  	& \quad (*)_{j++} = (*)_j \wedge B_{j++}(f(j)) = B_{j++}(\psi) = v_j \in \im v \\
+  	& \quad (1,2) \to \exists c \in F^K(I) : B_j(\psi) = L_{B_{j++}}(c) \multimap (3)\\
+  	& \quad \vert X : \beta \in F^k(I) : L_{B_{j++}}(\beta) = 0 \vdash \\
+  	& \quad \quad \vert Y : \beta_\psi \neq 0 \vdash \\
+  	& \quad \quad \quad Y -(1,2,X)\to L_{B_j}(\alpha) = 
+  		\beta_\psi^{-1} L_{B_j}(\beta_{\psi \to 0}) \to \\
+  	& \quad \quad \quad  \to  (4) :  B_j(\psi) 
+  		= \alpha_\psi^{-1}\beta_\psi^{-1}L_{B_j}(\beta_{\psi \to 0}) 
+  		- \alpha_\psi^{-1}L_{B_j}(\alpha_{\psi \to 0})  \to \\
+  	& \quad \quad \quad (I,B_j) : \LInd(V) -(4)\to \bot \vert : \beta_\psi = 0 \to \\
+  	& \quad \quad \to (4) : 0 = L_{B_{j++}}(\beta) = L_{B_{j}}(\beta) \\
+  	&  \quad \quad (I,B_j) : \LInd(V) -(4)\to \beta = 0 \\
+  	& \quad | : \forall \beta \in F^K(I) : L_{B_{j++}}( \beta) = 0 \. \beta = 0 \to
+  	  (I,B_{j++}) : \LInd(V) \\   
+  	&  \quad \vert x \in V \vdash \\
+  	& \quad \quad (I,B_k) :\gen(V) \to \exists \beta \in F^K(I) : 
+  		x = L_{B_j}(\beta)\multimap (4) \\
+  	& \quad \quad (3,4) \to x = L_{B_j}(\beta) =L_{B_{j++}}(\beta_{\psi \to 0}) 
+  	   +  \beta_\psi L_{B_{j++}}(c) = L_{B_{j++}}(\beta_{\psi \to 0} + \beta_\psi c) \\
+  	& \quad | : \forall x \in V \. \exists \beta \in F^K(I) \. x = L_{B_{j++}}(\beta)
+  	\to (I,B_{j++}) : \gen(V) \to \\
+  	& \quad \to (I,B_{j++}) : \basis(V) \models f : \inj(J,I) \to |J| \le |I| \square 
+\end{flalign*}
+\end{document}

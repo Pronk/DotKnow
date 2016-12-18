@@ -1,0 +1,122 @@
+\documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{ stmaryrd }
+\usepackage[dvipsnames]{xcolor}
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=10mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\rightarrowtriangle}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{\LOGIC{then} \;}
+\newcommand{\Else}{\LOGIC{else} \;}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Nat}{\mathbb{N} }
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cate}{\TYPE{Category}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+%%ProofWritting
+\newcommand{\A}{\LOGIC{Assume} \;} 
+%LinearAlgebra
+%TYPES
+\newcommand{\VS}[1]{\TYPE{VectorSpace}\left( #1 \right)}
+\newcommand{\Lin}[1]{\mathcal{L}\left( #1 \right)}
+\newcommand{\vs}[1]{\mathsf{VS}\left( #1 \right)}
+%FUNK
+\DeclareMathOperator{\rk}{rank}
+%Manifolds
+%TYPES
+\newcommand{\SManifold}{\TYPE{SmoothManifold}}
+\newcommand{\SubMan}{\TYPE{SubManifold}}
+\newcommand{\smooth}[1]{C^\infty\left( #1 \right)}
+\newcommand{\CCurve}[2]{\TYPE{CentredCurve}\left(  #1, #2 \right)}
+\newcommand{\Admis}{\TYPE{Admissible}}
+\parindent=0em
+%FUNC
+\DeclareMathOperator{\cca}{chartCentredAt}
+\DeclareMathOperator{\codim}{codim}
+%TangentSpaces
+%TYPES
+\newcommand{\TS}{\TYPE{TangentSpace}}
+\newcommand{\Germ}{\TYPE{Germ}}
+\newcommand{\germs}[2]{\mathcal{F}_{#2}\left( #1 \right)}
+\newcommand{\DirAt}{\TYPE{DerivationAtPoint}}
+\newcommand{\dirAt}[2]{\mathrm{Dir}\left( #1 , #2 \right)}
+\newcommand{\Phys}{\TYPE{PhysicalView}}
+\newcommand{\Kin}{\TYPE{MovementDirection}}
+\newcommand{\PManifold}{\TYPE{PointedManifolds}}
+\newcommand{\PM}{\mathsf{PM}}
+\newcommand{\TF}{\TYPE{TangentFunctor}}
+\newcommand{\RegP}{\TYPE{RegularPoint}}
+\newcommand{\CritP}{\TYPE{CriticalPoint}}
+\newcommand{\RegV}{\TYPE{RegularValue}}
+\newcommand{\CritV}{\TYPE{CriticalValue}}
+\newcommand{\Zero}{\TYPE{Zero}}
+\newcommand{\NonDeg}{\TYPE{NonDegenerate}}
+\newcommand{\ConstRk}{\TYPE{ConstantRank}}
+\newcommand{\Trans}{\TYPE{Transverse}}
+%FUNC
+\DeclareMathOperator{\alg}{alg}
+\DeclareMathOperator{\fAlg}{fromAlg}
+\DeclareMathOperator{\phys}{phys}
+\DeclareMathOperator{\fPhys}{fromPhys}
+\DeclareMathOperator{\kin}{kin}
+\DeclareMathOperator{\fKin}{fromKin}
+\newcommand{\tM}{\TYPE{TangentMap}}
+\newcommand{\derT}{\TYPE{DerivationTransfer}}
+\newcommand{\physS}{\TYPE{PhysicalShift}}
+\newcommand{\kinT}{\TYPE{DirectionTransfer}}
+\newcommand{\diff}{\TYPE{Differential}}
+%THM
+\newcommand{\Sard}{\THM{Sard}}
+\newcommand{\MorseLemma}{\THM{MorseLemma}}
+\newcommand{\LevelSubmanifold}{\THM{LevelSubmanifold}}
+\newcommand{\TransThm}{\THM{Transversality}}
+\newcommand{\TransPB}{\THM{TransversalPullbacks}}
+\author{Uncultured Tramp} 
+\title{TangentSpace.Know}
+\begin{document}
+\maketitle
+\section{Tensors}
+\subsection{Basic Definitions}
+\begin{flalign*} 
+&\TYPE{TensorType} :: \prod n \in \mathbb{N} \. n \to\mathbb{N} \times (0|1 )
+\\ \\
+&\FUNC{vectorize} :: \TYPE{TensorType}(n) \times \mathsf{MOD}(R) \to \TYPE{List}(\mathsf{MOD}(R)) \\
+&\FUNC{vectorize}(T,V) = V^T \de \mathbf{\bigoplus}^n_{i=1}  \If \; \pi_2 T_i == 0 \; \Then [V]^{\oplus\pi_1 T_i} \Else [V^*]^{\oplus\pi_1 T_i} 
+\\ \\
+&\TYPE{TensorMap} :: \prod T :  \TYPE{TensorType}(n) \. \prod V,W : \mathsf{MOD}(R) \. \mathcal{L}(V^T,W) \\ 
+& T(V,W)
+\\ \\
+&\FUNC{covariantNumber} :: \TYPE{TensorType}(n) \to \Nat \\
+&\FUNC{covariantNumber}(T) = n(T) \de \sum^n_{i=1}  \If \; \pi_2 T_i == 0 \; \Then 1  \; \Else  0
+\\ \\
+&\FUNC{contravariantNumber} :: \TYPE{TensorType}(n) \to \Nat \\
+&\FUNC{contravariantNumber}(T) = (T)n \de \sum^n_{i=1}  \If \; \pi_2 T_i == 0 \; \Then 0  \; \Else  1
+\\ \\
+&\TYPE{Consolidated} :: \; ? \TYPE{TensorProduct}(n) \\
+& T : \TYPE{Consolidated} \iff \exists j \in n + 1 \. \forall i \in n \. \; \If (\_,1) = T_i \; \iff i \ge j 
+\\ \\
+&\FUNC{KronekerDeltaTensor} :: \prod V :  \mathsf{MOD}(R) \. (^1_{\quad 1} )(V,\alpha) \\
+&\FUNC{KronekerDeltaTensor} = \delta \de  (w,v) \mapsto \langle w, v \rangle
+\end{flalign*}
+\newpage
+\end{document}

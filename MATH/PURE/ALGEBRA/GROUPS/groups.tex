@@ -1,0 +1,125 @@
+  \documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=10mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cate}{\TYPE{Category}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+\renewcommand{\And}{\; \& \;}
+%%ProofWritting
+\newcommand{\A}{\LOGIC{Assume} \;} 
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\E}{ \; \LOGIC{Extract} } 
+\newcommand{\QED}{\; \square}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%MetricGeometry
+\newcommand{\Ball}[3]{ \mathbb{B}^{#1}\left(#2,#3\right) }
+\newcommand{\ClBall}[3]{ \overline{ \mathbb{B}}^{#1}\left(#2,#3\right) }
+\newcommand{\ToP}{\overset{p}{\to}}
+\newcommand{\ToU}{\rightrightarrows}
+%LinearAlgebra
+%TYPES
+\newcommand{\VS}[1]{\TYPE{VectorSpace}\left( #1 \right)}
+\newcommand{\Lin}[1]{\mathcal{L}\left( #1 \right)}
+\newcommand{\vs}[1]{\mathsf{VS}\left( #1 \right)}
+\DeclareMathOperator*{\rank}{rank}
+%FUNK
+\DeclareMathOperator{\rk}{rank}
+\author{Uncultured Tramp} 
+\title{Groups.Know}
+%Simbpls
+\renewcommand{\L}{\mathcal{L}}
+%Topology
+%TYPES
+\newcommand{\TS}{\TYPE{TopologicalSpace}}
+%MeasureTheory
+%TYPES
+\newcommand{\SA}[1]{\TYPE{\sigma \hyph  Algebra}\left( #1 \right) }
+\newcommand{\SF}[1]{\TYPE{\sigma \hyph  Finite}\left( #1 \right) }
+\newcommand{\CA}[1]{\TYPE{CountablyAdditive}\left( #1 \right) }
+\newcommand{\FA}[1]{\TYPE{Charge}\left( #1 \right) }
+\newcommand{\LS}{\TYPE{Lebesgue \hyph Stieltjes}}
+\newcommand{\DF}{\TYPE{DistributionFunction}}
+\renewcommand{\AE}[1]{\quad \mathrm{a\. e\.} \left[#1\right] \,}
+\newcommand{\SI}[1]{\TYPE{\sigma \hyph  Ideal}\left( #1 \right) }
+%Simbols
+\newcommand{\F}{\mathcal{F}}
+\renewcommand{\O}{\Omega}
+\newcommand{\B}{\mathcal{B}}
+\renewcommand{\l}{\lambda}
+\renewcommand{\P}{\mathbb{P}}
+%Probability
+\newcommand{\RA}{\TYPE{RamdomVariable}}
+\renewcommand*{\E}{\mathbb{E} \,}
+\begin{document}
+\maketitle
+\begin{center}
+\end{center}
+\tableofcontents
+\newpage
+\section{Group Basics}
+\subsection{Groups}
+ $$ \TYPE{Group} :: ? \sum S : \Set \. S \to  S \to S $$
+ $$ (G,\cdot) : \TYPE{Group}$$ 
+ $$\Updownarrow$$
+ $$ \forall a,b,c \in G \. (ab)c=a(bc)    $$
+ $$ \exists e \in G : \forall a \in G \. ea = ae= a  $$
+ $$ \forall a \in G : \exists a^{-1} \in G \. aa^{-1} = a^{-1}a = e  $$
+\subsection{Subgroups}
+\subsection{Orders and exponents}
+\subsection{Normal Subgroups}
+\subsection{Group Homorphism}
+\section{Finite Groups}
+\subsection{Cosets and Lagrange theorem}
+\subsection{Cyclic Groups}
+\subsection{Sylow Subroups}
+\section{Symmetric Groups}
+\end{document}

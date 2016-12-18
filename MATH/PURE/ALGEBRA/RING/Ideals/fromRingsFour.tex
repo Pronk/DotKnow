@@ -1,0 +1,369 @@
+\documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{ stmaryrd }
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\rightarrowtriangle}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\begin{document}
+Problem 4.9 :: $\forall R : \mathtt{Commutative} \. \forall f : \mathtt{ZD} \; R[x] \. \exists c \in R \. f c = 0 \wedge c \neq 0 $  \\ 
+Proof $=$ \\ 
+\begin{flalign*}
+  &\vdash  R : \mathtt{Commutative} \kern 10pc \\
+  &\kern 1pc \vdash f : \mathtt{ZD} \; R[x] \rightarrow\\
+  &\kern 2pc \rightarrow \exists g \in R[x] \. fg = 0 \wedge g \neq 0 \multimap (*)\\
+  &\kern 2pc  G \de \big\{ g \in R[x] | gf = 0 \bullet  g \neq 0 \big\} \quad  | \quad G:\mathtt{Subset} \; R[x]\\
+  &\kern 2pc (*) \to G \neq \emptyset \to \exists g \in G \. \forall h \in G \. \deg g \leq \deg h 
+  \extract g \\
+  & \kern 2pc n  \de \deg f \quad d \de \deg g \quad | \quad n,d \in \mathbb{Z}_+\\
+  & \kern 2pc \mercury :: \mathbb{I}_{0,n} \to \mathbb{T} \\
+  & \kern 3pc \mercury(k) = \forall i \in \mathbb{I}_{0,k} \. f_{n-i} g = 0 \\
+  & \kern 2pc \vdash f_ng \neq 0 \\
+  &\begin{rcases}
+   \kern 3pc (\de g) \to fg = 0 \to f_ng_d = 0 \to \deg f_ng < \deg g \\
+   \kern 3pc (\de g)  \to fg = 0 \to ff_ng = 0 \to f_ng\in  G
+  \end{rcases} \to \bot \\
+  & \kern 2pc \bot \to \mercury(0) \multimap (0) \\
+  & \kern 2pc \vdash k \in \mathbb{I}_{0,n-1} \\
+  & \kern 3pc \vdash \mercury(k) \multimap (\mercury) \\
+  & \kern 4pc  F \de \sum_{i = 0}^{n-k -1}f_ix^i  \quad | \quad F \in R[x]\\
+  & \kern 4pc (\mercury)-(\de g) \to 0 = fg = Fg \to f_{n-k-1}g_d = 0 \to \deg f_{n-k-1}g < \deg f \to \\
+  &\begin{rcases} 
+  	\kern 4pc \to f_{n-k - 1}g \not\in G \\
+  	\kern 4pc (\de g) \to  ff_{n-k-1}g = 0 
+  	\end{rcases} \to f_{n-k-1}g = 0  - (\mercury) \to \mercury (k + 1) \\
+& \kern 2pc \dashv \dashv : \forall k \in  \mathbb{I}_{0,n-1} \. \mercury(k) \Rightarrow \mercury(k+1) -  \! (0) \! \to \mercury(n) \multimap (\mercury) \\
+& \kern 2pc \vdash i \in \mathbb{I}_{0,n} \\
+& \kern 3pc (\mercury) \to \mercury(i) \to f_ig_d = 0 \\
+&\begin{rcases} 
+	 \kern 2pc \dashv : \forall i \in \mathbb{I}_{0,n} \. f_ig_d = 0 \to fg_d = 0  \\
+	 \kern 2pc (\de d) \to g_d \neq 0
+\end{rcases} \to \exists \. c \in R \. fc = 0 \wedge c \neq 0 \quad [g_d] \\
+& \dashv \dashv : \forall R : \mathtt{Commutative} \. \forall f : \mathtt{ZD} \; R[x] \. \exists c \in R \. f c = 0 \wedge c \neq 0 \quad \square
+\end{flalign*} \\
+
+\newpage
+Problem 4.10 \\
+
+$$ d \in \big\{ n \in \mathbb{Z} \; | \; \forall m \in \mathbb{Z} \. n \neq m^2 \big\}  $$
+$$ \mathbb{Q}(\sqrt{d}) = \big\{ a + b \sqrt{d} \; | \; a,b \in \mathbb{Q} \big\} $$
+$(a) :: \mathbb{Q}(\sqrt{d}) : \mathtt{Subring} \; \mathbb{C} $ \\
+Proof $\; =$  \\
+\begin{flalign*}
+	&\mathrm{Obviously, } \; \mathbb{Q}(\sqrt{d}) \subset \mathbb{C}  \\
+	&\mathrm{ Assume \; that} \: a+b\sqrt{d}, x+y\sqrt{d} \in 	\mathbb{Q}(\sqrt{d}) \\
+	& \kern 1pc \mathrm{then}  \; (a+b\sqrt{d}) + (x+y\sqrt{d}) = (a + x) + (b+y) \sqrt{d}  \in
+	 	\mathbb{Q}(\sqrt{d}) \\
+	& \kern 1pc \mathrm{and} \; 0 = 0 + 0\sqrt{d} \in \mathbb{Q}(\sqrt{d}) \\
+	& \kern 1pc \mathrm{and} \; \exists -a - b \sqrt{d}  \in \mathbb{Q}(\sqrt{d}) \. -a -b\sqrt{d}  = -( a + b\sqrt{d}) \\
+	& \mathrm{So,} \; \mathbb{Q}(\sqrt{d}) : \mathtt{Abelian}(+_{\mathbb{C}}) \\
+	&\mathrm{ Assume \; that} \: a+b\sqrt{d}, x+y\sqrt{d} \in 	\mathbb{Q}(\sqrt{d}) \\
+	& \kern 1pc \mathrm{then}  \; (a+b\sqrt{d})(x+y\sqrt{d}) = (ax + byd) + (ay + bx) \sqrt{d}  \in
+	 	\mathbb{Q}(\sqrt{d}) \\
+	& \kern 1pc \mathrm{and} \; 1 = 1 + 0\sqrt{d} \in \mathbb{Q}(\sqrt{d}) \\
+	& \mathrm{So,} \; \mathbb{Q}(\sqrt{d}) : \mathtt{Monoid}(\cdot_{\mathbb{C}}) \\
+	& \mathrm{Hence,} \; \mathbb{Q}(\sqrt{d}) : \mathtt{Subring} \; \mathbb{C} \quad \square  
+\end{flalign*}
+\begin{flalign*}
+&\mathtt{def} \quad N :: \mathbb{Q}(\sqrt{d}) \to \mathbb{Q} \\
+& \kern 2.5pc N(a + b\sqrt{d}) = a^2 - b^2d \\
+&\mathtt{def} \quad \mathtt{Norm} :: \prod R : \mathtt{Ring} \. \prod M : R \mathtt{-Module} \. \mathtt{?}
+ M \to R \\
+& \kern 2.5pc N : \mathtt{Norm}  \Leftrightarrow \forall r \in R \. \forall v \in M \. N(rv) = N(r)N(v) \wedge (N(v) = 0 \Rightarrow v = 0)
+\end{flalign*}
+
+\newpage 
+
+$$(b) :: N : \mathtt{Norm} \; \mathbb{Q}(\sqrt{d}) \; \mathbb{Q}(\sqrt{d}) $$
+\begin{flalign*}
+&\mathrm{Proof} = \; \vdash v, w \in \mathbb{Q}(\sqrt{d}) \\
+& \kern 1pc (\de \mathbb{Q}(\sqrt{d})) \extract v = a + b\sqrt{d} \\
+& \kern 1pc (\de \mathbb{Q}(\sqrt{d})) \extract w = x + y\sqrt{d} \\
+& \kern 1pc N(vw) = N\big((ax + byd) + (ay + bx) \sqrt{d} \big) = (ax + byd)^2 - (ay + bx)^2d = \\
+& \kern 2pc = a^2x^2  + 2axbyd + b^2y^2d^2 - a^2y^2d  - 2axbyd - x^2b^2d = \\
+& \kern 2pc = a^2x^2  - a^2y^2d - x^2b^2d  +  b^2y^2d^2 = (a^2 - b^2d)(x^2 -y^2d) = N(v)N(w) \\
+&\begin{rcases}
+ \kern 1pc \vdash  N(v) = 0 \to a^2 - b^2d = 0 \\
+ \kern 2pc \vdash  v \neq 0 \to a\neq 0 \vee b \neq 0
+\end{rcases}
+\to  a \neq 0 \wedge b \neq 0 \to\\
+&\begin{rcases}
+\kern 3pc \to d  = \frac{a^2}{b^2} \\
+\kern 3pc d \in \mathbb{Z}
+\end{rcases} \to \sqrt{d} = \frac{a}{b} \in \mathbb{Z} \to \bot : \\
+&\kern 2pc : v = 0 \dashv : N(v) = 0 \Rightarrow v = 0 \dashv : \\
+&: N : \mathtt{Norm} \; \mathbb{Q}(\sqrt{d}) \; \mathbb{Q}(\sqrt{d}) \quad \square 
+\end{flalign*}
+$$(c) :: \mathbb{Q}(\sqrt{d}) : \mathtt{Field} \wedge 
+	\forall K : \mathtt{Subfield}(\mathbb{C}) \. \mathtt{if} \; 
+	\mathbb{Q} \subset K \wedge \sqrt{d} \in K \. \mathbb{Q}(\sqrt{d}) \subset K $$
+\begin{flalign*}
+&\mathrm{Proof} = \; \vdash v \in \mathbb{Q}(\sqrt{d}) \; \vdash v \neq 0 \to N(v) \neq 0  \\
+& \kern 2pc (\de \mathbb{Q}(\sqrt{d})) \extract v = a + b\sqrt{d} \\
+& \kern 2pc (a + b\sqrt{d})(a - b\sqrt{d}) / N(v) =  (a^2 - b^2d) / N(v) = N(v)/N(v) = 1 \\
+& \kern 2pc  (a - b\sqrt{d}) / N(v) \in \mathbb{Q}(\sqrt{d}) \to \exists w \in \mathbb{Q}(\sqrt{d}) \. vw = 1 \dashv \dashv : \\ 
+&\begin{rcases}
+ :\mathbb{Q}(\sqrt{d}) : \mathtt{Division} \\
+ \mathbb{C} : \mathtt{Field} \to \mathbb{Q}(\sqrt{d}) : \mathtt{Commutative}
+&\end{rcases} \to \mathbb{Q}(\sqrt{d}) : \mathtt{Field} \\
+&\vdash \; K : \mathtt{Subfield}(\mathbb{C}) \\
+&\kern 1pc \vdash \; \mathbb{Q} \subset K \wedge \sqrt{d} \in K \\
+&\kern 2pc \vdash v \in \mathbb{Q}(\sqrt{d}) \\
+&\kern 3pc (\de \mathbb{Q}(\sqrt{d})) \extract v = a + b\sqrt{d} \wedge a,b \in \mathbb{Q} \to \\
+&\kern 3pc  \to  v = a + b\sqrt{d} \in K \dashv : \mathbb{Q}(\sqrt{d})) \subset K \dashv \dashv : \quad \square 
+\end{flalign*}
+
+\newpage
+
+
+$$(b) :: \mathbb{Q}(\sqrt{d})  \cong \frac{\mathbb{Q}[x]}{(x^2 - d)}$$
+\begin{flalign*}
+&\mathrm{Proof} = \\
+&\mathtt{def} \quad \phi :: \mathbb{Q}[x] \to \mathbb{Q}(\sqrt{d}) \\
+& \kern 2.5pc \phi \: p = \sum_{i=0}^{\deg p} p_i(\sqrt{d})^i \\
+& \phi : \mathtt{Homo} \; \mathbb{Q}[x] \; \mathbb{Q}(\sqrt{d}) \\
+& \vdash \; a + b\sqrt(d) \in \mathbb{Q}(\sqrt{d}) \\
+& \kern 1pc p \de a + bx \to \phi p = a + b\sqrt{d} \to \exists p \in \mathbb{Q}[x] \. \phi p = a + b\sqrt{d} \dashv : \\
+&\phi : \mathtt{Surjictive} \multimap (0)\\
+& \forall p \in  \mathbb{Q}[x] \. p \in \ker \phi \Leftrightarrow 
+\sum_{i=0}^{\deg p} p_i(\sqrt{d})^i = 0 \Leftrightarrow p \in (x^2 - d) \to  \quad  (\sqrt(d) \not \in \mathbb{Q})
+\to  \\ &\to  \ker \phi = (x^2 - d) - \! (0) \! - \! \mathtt{RingIsoThm1} \! \to 
+\mathbb{Q}(\sqrt{d})  \cong \frac{\mathbb{Q}[x]}{(x^2 - d)}
+\quad \square
+\end{flalign*}
+\newpage
+Problem 4.11 $:: \forall R : \mathtt{Commutative} \. \forall n \in \mathbb{N} \. 
+	\forall f : \mathbb{I}_n \to R[x] \. \forall a \in R \.$ \\ $(a) :: \big(\mathbf{L}_{i=1}^n \: f_i \frown [x-a]\big) = 
+	\big(\mathbf{L}_{i=1}^n \: f_i(a) \frown [x-a]\big) $ \\
+	$\forall i \in \mathbb{I}_n \. $  \\
+	by division with reminder $f_i = p(x-a) + r $ where $p \in R[x]$ and $r \in R$. \\
+	We set $g_i = p$ and note that $f_i(a) = g_i(a-a) + r = r$. \\
+	So we acquired $g : \mathbb{I}_n \to R[x]$ with mentioned properties. \\
+	$\forall p \in R[x]. p \in \big(\mathbf{L}_{i=1}^n \: f_i \frown [x-a]\big) \Leftrightarrow p = \sum_{i=1}^n q_if_i + (q_{n+1}) (x - a)  = $ \\
+	$ =\sum^n_{i=1} q_i(g_i(x-a) + f_i(a)) + (q_{n+1}) (x - a) =$ \\ 
+	$=\sum^n_{i=1} q_if_i(a) +(\sum^n_{i=1} q_ig_i + q_{n+1})(x-a) =$ \\$
+	= \sum^n_{i=1} q_if_i(a) +(q'_{n+1})(x-a)
+	\Leftrightarrow p \in \big(\mathbf{L}_{i=1}^n \: f_i(a) \frown [x-a]\big)$ \\
+	Hence, $\big(\mathbf{L}_{i=1}^n \: f_i \frown [x-a]\big) = \big(\mathbf{L}_{i=1}^n \: f_i(a) \frown [x-a]\big)
+	 \quad \square$ \\ \\
+	$$(b) ::  \frac{R[x]}{\big(\mathbf{L}_{i=1}^n \: f_i \frown [x-a]\big)} \cong \frac{R}{\big(\mathbf{L}^n_{i=1} f_i(a)\big)}$$
+	$$\frac{R[x]}{\big(\mathbf{L}_{i=1}^n \: f_i \frown [x-a]\big)}=\frac{R[x]}{\big(\mathbf{L}_{i=1}^n \: f_i(a) \frown [x-a]\big)} \cong \frac{R[x]/(x-a)}{(\mathbf{L}_{i=1}^n \: f_i(a))} \cong \frac{R}{\big(\mathbf{L}^n_{i=1} f_i(a)\big)} \; \square$$
+	\\
+Problem 4.12 \\
+$$\frac{R[x_1,\ldots,x_n]}{(x_1 - a_1,\ldots,x_n - a_n)} \cong \frac{R[x_1,\ldots,x_{n-1}][y]}{(x_1 - a_1,\ldots,x_{n-1} - a_{n-1},y - a_{n})} \cong $$
+$$\cong \frac{R[x_1,\ldots,x_{n-1}][y] / (y-a_n)}{(x_1 - a_1,\ldots,x_{n-1} - a_{n-1})}  \cong 
+\frac{R[x_1,\cdots,x_{n-1}]}{(x_1 - a_1,\ldots,x_{n-1} - a_{n-1})} \cong \cdots \cong $$
+$$ \cong \frac{R[x]}{(x-a_1)} \cong R \quad \square$$
+\newpage
+Problem 4.13 $::$ \\ $:: \forall R : \mathtt{IntegralDomain} \. \forall n \in \mathbb{N} \. 
+	\forall k \in \mathbb{I}_n \. (\mathbf{L}^k_{i=1} x_i) : \mathtt{Prime} \; R[\mathbf{L}^n_{i=1} x_i] $
+\begin{flalign*}
+&\forall  R : \mathtt{IntegralDomain} \. \\ 
+&\kern 1pc \forall n \in \mathbb{N} \. \\
+&\kern 2pc \forall k \in \mathbb{I}_n \. \\
+&\kern 3pc  \frac{R[x_1, \ldots, x_n]}{(x_1, \ldots, x_k)} \cong R[x_1, \ldots x_{n-k}] : \mathtt{IntegralDomain} \to  (x_1, \ldots, x_k) : \mathtt{Prime} \; R[x_1, \ldots, x_n]  \\
+ &\forall R : \mathtt{IntegralDomain} \. \forall n \in \mathbb{N} \. 
+	\forall k \in \mathbb{I}_n \. (\mathbf{L}^k_{i=1} x_i) : \mathtt{Prime} \; R[\mathbf{L}^n_{i=1} x_i] \quad \Square
+\end{flalign*}
+	 
+Problem 4.14 $:: \forall R : \mathtt{Ring} \. \forall I : \mathtt{Maximal} \; R \. I : \mathtt{Prime} \; R$ \\
+(Quotients are banned) \\
+\begin{flalign*}
+&\forall  R : \mathtt{Ring} \. \\ 
+&\kern 1pc \forall I : \mathtt{Maximal} \; R \. \\
+&\kern 2pc \mathtt{if} \; I : \; !\mathtt{Prime}\; R \. \\
+&\kern 3pc \exists a,b \in I^\complement \. ab \in I \extract a,b \. \\
+&\kern 3pc \mathtt{if} \; a : \mathtt{Unit} \; R  \. \\
+&\kern 4pc a^{-1}ab = b \to b \in I \to \bot \to \\
+&\kern 3pc \to a : \; ! \mathtt{Unit} \; R \to 1 \not\in (a)   \\
+&\kern 3pc \mathtt{if} \; (a)  + I = (1)  \. \\
+&\kern 4pc \exists i \in I \. \exists j \in R \. i + ja = 1 \\
+&\kern 4pc b = ib + jab \\
+&\begin{rcases}
+\kern 4pc i \in I \to ib \in I \\
+\kern 4pc ab \in I \to jab \in I
+\end{rcases} \to b \in I \to \bot \to \\
+&\begin{rcases}
+\kern 3pc \to (a) + I \subsetneq R \\
+\kern 3pc a \in (a) \to a \in I + (a) \\
+\kern 3pc a \in I^\complement \to a \not\in I
+\end{rcases}
+ \to I \subsetneq I + (a) \subsetneq  R \to \\
+& \kern 3pc \to I : \; !\mathtt{Maximal} \; R \to \bot \to \\
+& \kern 2pc \to I : \mathtt{Prime} \; R \to \\
+&\forall R : \mathtt{Ring} \. \forall I : \mathtt{Maximal} \; R \. I : \mathtt{Prime} \; R \quad \square 
+\end{flalign*}
+ 	
+\newpage
+
+Problem 4.16 $:: \forall R : \mathtt{Commutative}  \. \forall P : \mathtt{Prime} \; R \.  
+\mathtt{if} \;  $ \\  
+$\forall p \in P \.  \mathtt{if} \; p : \mathtt{ZD} \; R \. p = 0 \.  R : \mathtt{IntegralDomain}$
+\begin{flalign*}
+&\forall R : \mathtt{Commutative}  \. \\
+& \kern 1pc \forall  P : \mathtt{Prime} \; R \. \\
+& \kern 2pc \mathtt{if} \quad  \forall p \in P \.  \mathtt{if} \; p : \mathtt{ZD} \; R \. p = 0 \. \\
+& \kern 3pc \mathtt{Law Of Excluded Middle} \to P = (0) \vee P \neq (0) \\
+& \kern 3pc \mathtt{if} \quad P = (0) \. \\
+& \kern 4pc \forall a,b \in R  \. \\
+& \kern 5pc \mathtt{if}  \quad ab = 0 \to  ab \in P \to a \in P \vee b \in P \to a = 0 \vee b = 0 \to \\
+& \kern 3pc P = (0) \Rightarrow  R : \mathtt{IntegralDomain} \\
+& \kern 3pc  \mathtt{if} \quad P \neq (0) \to \exists p \in P \. p \neq 0 \extract p \to p : \; !\mathtt{ZD} \; R \\
+& \kern 4pc \forall a,b \in R \\
+& \kern 5pc \mathtt{if} \quad ab =0 \to pab = 0 \to a = 0 \vee pa \neq 0 \wedge pa \in P \to \\
+& \kern 6pc  \to  a = 0 \vee pa : \; !\mathtt{ZD} \ \to a = 0 \vee b = 0 \to \\
+& \kern 3pc P \neq (0) \Rightarrow R : \mathtt{IntegralDomain}  \to \\
+& \kern 3pc R : \mathtt{IntegralDomain} \to\\ 
+&  \forall R : \mathtt{Commutative}  \. \forall P : \mathtt{Prime} \; R \.  \\
+& \mathtt{if} \; \forall p \in P \.  \mathtt{if} \; p : \mathtt{ZD} \; R \. p = 0 \.  R : \mathtt{IntegralDomain} 
+\quad \square 
+\end{flalign*}
+
+\newpage
+
+Problem 4.17 \\
+$K : \; \mathtt{Compact}$ \\
+$R = (C^0(K), +_{\mathbb{R}}, \cdot_{\mathbb{R}})$ \\
+\begin{flalign*}
+& \mathtt{def} \; M :: K \to \mathtt{Ideal} \; R \\
+& \kern 1.7pc M_p = \{ f \in R | f(p) = 0 \} \\
+\end{flalign*}
+(a) $:: \forall p \in K \. M_p : \mathtt{Maximal} \; R$	
+\begin{flalign*}
+& \forall p \in K \. \\
+& \kern 1pc P \de \bigcap_{U \in \mathcal{U}(p)} U | \: P \subset K \\
+& \kern 1pc \Big(\forall f \in C^0(K) \. \forall p' \in P. f(p') = f(p) \Big) \\
+& \kern 1pc \frac{R}{M_p} = \frac{C^0(K)}{M_p} \cong \big\{f(p') \; | f \in C^0(K) \;, p'  \in P \big\}  
+= \big\{f(p) \; | f \in M_p \big\} = \mathbb{R} \\
+& \kern 1pc \mathbb{R} : \mathtt{Field} \; \to M_p : \mathtt{Maximal}\; R \to \\
+& \to \forall p \in K \. M_p : \mathtt{Maximal} \; R \quad \square
+\end{flalign*}
+(b) $:: \forall n \in \mathbb{N}  \.  
+	\forall f : \mathbb{I}_n \to C^0(K)  \. $ \\
+	$\mathtt{if} \quad \forall p \in K \. \exists i \in \mathbb{I}_n \. f_i(p) \neq 0 \. (f) = (1)$
+\begin{flalign*}
+& \forall n \in \mathbb{N} \. \\
+& \kern 1pc  f :  \mathbb{I}_n \to C^0(K) \. \\
+& \kern 2pc  \mathtt{if} \quad \forall p \in K \. \exists i \in \mathbb{I}_n \. f_i(p) \neq 0  \multimap (1) \. \\
+& \kern 3pc F \de  \sum^n_{i=1} f_i^2 \; | \; F \in C^0(K) \\
+& \kern 3pc (1) \to 0 \not \in \mathtt{Im} \: F \to 1 / F \in C^0(K) \to \\
+& \kern 3pc (1) \to 1 = \sum^n_{i=1} \frac{f_i}{F} f_i \in (f) \to (f) = (1) \to \\
+&  \forall n \in \mathbb{N}  \.  
+	\forall f : \mathbb{I}_n \to C^0(K)  \. 
+	\mathtt{if} \quad \forall p \in K \. \exists i \in \mathbb{I}_n \. f_i(p) \neq 0 \. (f) = (1)
+	\quad \square
+\end{flalign*}	
+\newpage
+(c) :: $\forall I : \mathtt{Maximal} \; R \. \exists p \in K \. I = M_p$
+\begin{flalign*}
+& \forall I : \mathtt{Maximal} \; R \. \\
+& \kern 1pc \mathtt{if} \quad \forall p \in K \. \exists f \in I \. f(p) \neq 0  \multimap (0)\. \\
+& \kern 2pc \forall p \in K \. \\
+& \kern 3pc f_p \de (0)(p) \quad | \quad f : K \to I \\
+& \kern 3pc U_p \de f_p(p) \neq 0 \to \exists U \in \mathcal{U}(p) \. 0 \not \in f_p[U] \extract \quad | \quad U : \prod_{p \in K}  \mathcal{U}(p)\\
+& \kern 2pc K : \; \mathtt{Compact} \to 
+\exists n \in \mathbb{N} \. \exists p : \mathbb{I}_n \to K \. \bigcup^n_{i=1} U_{p_i} = K 
+\extract n, p \\
+& \kern 2pc (b) \to (f_p) = (1) = R \\
+& \kern 2pc  (f_p) \subset I \neq R \to \bot \to \\
+& \kern 1pc \to \exists p \in K \. I(p) = \{0\} \extract p \\
+& \kern 1pc I \subset M_p \to I = M_p \to \\
+& \forall I : \mathtt{Maximal} \; R \. \exists p \in K \. I = M_p \quad \square
+\end{flalign*}	
+problem 4.18 $:: \forall R : \mathtt{Commutative} \. \forall P : \mathtt{Prime} \; R
+	\. \mathfrak{nil}(R) \subset P $
+\begin{flalign*}
+& \forall R : \mathtt{Commutative} \. \\
+& \kern 1pc \forall P : \mathtt{Prime} \; R \to \frac{R}{P} : \mathtt{IntegralDomain}\. 
+\multimap (p) \. \\
+& \kern 2pc \forall n \in \mathfrak{nil}(R) \to \exists k \in \mathbb{N} \forall i \in 
+\mathbb{I}_{k-1} \. n^{i} \neq 0 \wedge n^k = 0 \extract k \. \\
+& \kern 3pc \mathtt{if} \quad n \not \in P \to n + P \neq P \\
+& \begin{rcases}
+ \kern 4pc (p) \to n^k + P \neq P \\
+ \kern 4pc n^k + P = 0 + P = P \\ 
+\end{rcases} \to \bot \\ 
+&\kern 3pc n \in P \to \\
+&\kern 2pc \to \forall n \in \mathfrak{nil}(R) \. n \in P \to \mathfrak{nil}(R) \subset P \to \\
+&\forall R : \mathtt{Commutative} \. \forall P : \mathtt{Prime} \; R \. \mathfrak{nil}(R) \subset P \quad \square
+\end{flalign*}
+
+\newpage
+
+problem 4.19 $:: \forall R : \mathtt{Commutative} \. \forall P : \mathtt{Prime} \; R
+\. \forall n \in \mathbb{N} \. $ \\ $ \. \forall I : \mathbb{I}_n \to \mathtt{Ideal} \; R $ \\
+(a) $:: \mathtt{if} \quad \prod^n_{i=1} I_i \subset P \. \exists i \in \mathbb{I}_n \. I_i \subset P $
+\begin{flalign*}
+& \forall a : \prod^n_{i=1} I _ i \. \\
+& \kern 1pc \mathtt{if} \quad \prod^n_{i=1} a_i\in P \. \\ 
+& \kern 2pc \mathrm{as} \; ( P : \mathtt{Prime} \; R) \; \mathrm{by \; Induction} \; \exists i \in \mathbb{I}_n \. a_i \in P \\
+& \multimap (\alpha) \\
+& \mathtt{if} \quad  \prod^n_{i=1} I_i \subset P  \multimap (*) \. \\
+& \kern 1pc \mathtt{if} \quad  \forall i \in \mathbb{I}^n \. I_i  \not \subset P \\
+& \kern 2pc \exists a : \prod^n_{i=1} (I _ i \setminus P) \extract a \\
+& \kern 2pc (*) \to \prod^n_{i=1} a_i \in P - \! (\alpha) \! \to \exists i \in \mathbb{I}_n \. a_i \in P \to \bot  \\
+& \mathtt{if} \quad \prod^n_{i=1} I_i \subset P \. \exists i \in \mathbb{I}_n \. I_i \subset P
+\quad \square \\
+\end{flalign*}
+(b) ? $\forall I : \mathbb{N} \to \mathtt{Ideal} \; R \. 
+\mathtt{if} \;  \bigcap^{\infty}_{i=1} I_i \subset P \.
+ \exists i \in \mathbb{N} \. I_i \subset P $ \\
+ This is false. We give counterexample:
+ take $R = \mathbb{Z}$,$P = 3\mathbb{Z}$,$I_n = 2^n\mathbb{Z} .$
+ \\ Then, $\bigcap^{\infty}_{i=1} I_i = \bigcap^{\infty}_{i=1}  2^n\mathbb{Z} = (0) \subset P$.
+ \\ However, consequent does not hold: $\forall n \in \mathbb{N} \. 2^n \in I_n \wedge 2^n \not \in P$ .
+\\$\square$
+\newpage
+problem 4.20 $:: \forall R : \mathtt{Ring} \. \forall M : \mathtt{Maximal}  \; R \. 
+ R / M : \mathtt{Simple}$
+\begin{flalign*}
+&\forall R : \mathtt{Ring} \. \\
+& \kern 1pc  \forall M : \mathtt{Maximal} \; R \to  \\
+&  \kern 2pc \to \forall I : \mathtt{Ideal} \; R \. \mathtt{if} \; M \subset I \wedge I \neq R \. M = 
+\multimap (\alpha)  \\
+& \kern 2pc \to \exists f : R \to \frac{R}{M} \. f a \mapsto a + M \extract f  \. \\
+& \kern 2pc \ker  f = M \\
+& \kern 2pc \mathtt{if} \; \frac{R}{M}  : \; !\mathtt{Simple} \to 
+\exists I : \mathtt{Ideal} \frac{R}{M} \. I \neq (0) \wedge I \neq \frac{R}{M} \extract I \\
+& \kern 3pc  I : \mathtt{Ideal} \frac{R}{M} \to \exists f : \frac{R}{M} \to \frac{R / M}{I}
+\. f (a + M) \mapsto a + I \extract g \\
+& \kern 3pc I = \ker g \\
+&\begin{rcases}
+\kern 3pc I \neq \frac{R}{M} \to \ker g \neq \frac{R}{M} = \mathrm{Im} \, f \to \ker fg \neq R \\
+\kern 3pc I \neq (0) \to \ker fg \neq f^{-1}(0) = M \\
+\kern 3pc \ker f \subset \ker fg \to M \subset \ker fg \\
+\end{rcases} \to \\
+& \kern 3pc \to M \subsetneq \ker fg \subsetneq R - \! (\alpha) \!  \to \bot \\
+&\forall R : \mathtt{Ring} \. \forall M : \mathtt{Maximal}  \; R \. 
+ R / M : \mathtt{Simple} \quad \square
+\end{flalign*}
+problem 4.21 $:: \forall K : \mathtt{Algebraicly Closed Field} \.
+\forall I : \mathtt{Ideal} \; K[x] \.$ \\
+$ \. \mathtt{iff} \; I : \mathtt{Maximal} \; K[x] \. \exists c \in K \. I = (x - c) $\\
+($\Leftarrow$) It easily can be seen that $\forall c \in K \. (x - c) :  \mathtt{Maximal} \; K[x]$. \\
+Indeed, $K[x] / (x - c) \cong K : \mathtt{Field}$. \\
+($\Rightarrow$) Assume that $M : \mathtt{Maximal} \; K[x]$ and that it contains polynomials   which have no common root. Then, by application of Euclidean algorithm we can show that where is 
+$r \in M$ such that $\deg r = 0$. This means that $1 \in M$, which contradicts maximality of $M$.
+\\So all polynomials in any maximal ideal $M$ of $K[x]$ must have a common root, say $c$. This means that $M \subset (x - c)$ and by maximality $M = (x -c)$. \\
+$\square$\\ \\
+problem 4.22 $:: (x^2 + 1) : \mathtt{Maximal} \; \mathbb{R}[x]$ \\
+Indeed, $\mathbb{R}[x] / (x^2 + 1) \cong \mathbb{C} : \mathtt{Field}$, so $(x^2 + 1)$ is Maximal. \\
+$\square$\\  
+\newpage
+
+problem 4.23 :: Fields and Boolean algebras have Krull dimension $0$. \\
+Case of Fields is obvious as the only prime ideal of any field $K$ is $(0)$, which means that $(0)$ is also the only maximal ideal of a field. So $\dim K = 0$. \\
+Assume that $B$ is a boolean algebra with a prime ideal $P$. We know that $B / P$ is integral domain, but this means that $B / P \cong \mathbb{Z} / 2 \mathbb{Z} : \mathtt{Field}$, so $P$ is maximal ideal. So, all prime ideals of $B$ are maximal, which implies that  $\dim B = 0$. \\
+$\square$ \\ \\ 
+problem 4.24 :: $\dim \mathbb{Z}[x] \geq 2$ \\
+Idea: $(0)  \subset (2x - 2) \subset (2) \subset  \mathbb{Z}[x] $ \\
+We inspect $(2)$, that is space of polynomials with even coefficients. Note that 
+$\mathbb{Z}[x] / (2) =\cong \mathbb{Z} / 2 \mathbb{Z} [x]$ which is an integral domain, hence $(2)$ is prime. \\ Moreover, as $\mathbb{Z} / 2 \mathbb{Z}$ is a field $\mathbb{Z} / 2 \mathbb{Z} [x]$ has $(x-1)$ as it's maximal ideal, so $(2)$ is not maximal in  $\mathbb{Z}[x] $, which implies that 
+$\dim \mathbb{Z}[x] \geq  2$. \\
+$\square$ \\
+
+\end{document}

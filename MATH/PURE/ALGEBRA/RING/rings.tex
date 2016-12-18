@@ -1,0 +1,291 @@
+  \documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=10mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cate}{\TYPE{Category}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+\renewcommand{\And}{\; \& \;}
+%%ProofWritting
+\newcommand{\A}{\LOGIC{Assume} \;} 
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\E}{ \; \LOGIC{Extract} } 
+\newcommand{\QED}{\; \square}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%MetricGeometry
+\newcommand{\Ball}[3]{ \mathbb{B}^{#1}\left(#2,#3\right) }
+\newcommand{\ClBall}[3]{ \overline{ \mathbb{B}}^{#1}\left(#2,#3\right) }
+\newcommand{\ToP}{\overset{p}{\to}}
+\newcommand{\ToU}{\rightrightarrows}
+%LinearAlgebra
+%TYPES
+\newcommand{\VS}[1]{\TYPE{VectorSpace}\left( #1 \right)}
+\newcommand{\Lin}[1]{\mathcal{L}\left( #1 \right)}
+\newcommand{\vs}[1]{\mathsf{VS}\left( #1 \right)}
+\DeclareMathOperator*{\rank}{rank}
+%FUNK
+\DeclareMathOperator{\rk}{rank}
+\author{Uncultured Tramp} 
+\title{Rings.Know}
+%Simbpls
+\renewcommand{\L}{\mathcal{L}}
+%Topology
+%TYPES
+\newcommand{\TS}{\TYPE{TopologicalSpace}}
+%MeasureTheory
+%TYPES
+\newcommand{\SA}[1]{\TYPE{\sigma \hyph  Algebra}\left( #1 \right) }
+\newcommand{\SF}[1]{\TYPE{\sigma \hyph  Finite}\left( #1 \right) }
+\newcommand{\CA}[1]{\TYPE{CountablyAdditive}\left( #1 \right) }
+\newcommand{\FA}[1]{\TYPE{Charge}\left( #1 \right) }
+\newcommand{\LS}{\TYPE{Lebesgue \hyph Stieltjes}}
+\newcommand{\DF}{\TYPE{DistributionFunction}}
+\renewcommand{\AE}[1]{\quad \mathrm{a\. e\.} \left[#1\right] \,}
+\newcommand{\SI}[1]{\TYPE{\sigma \hyph  Ideal}\left( #1 \right) }
+%Simbols
+\newcommand{\F}{\mathcal{F}}
+\renewcommand{\O}{\Omega}
+\newcommand{\B}{\mathcal{B}}
+\renewcommand{\l}{\lambda}
+\renewcommand{\P}{\mathbb{P}}
+%Probability
+\newcommand{\RA}{\TYPE{RamdomVariable}}
+\renewcommand*{\E}{\mathbb{E} \,}
+%Ring Theory
+%Types
+\newcommand{\Ring}{\TYPE{Ring}}
+\newcommand{\RING}{\mathsf{Ring}}
+\newcommand{\CR}{\TYPE{CommutativeRing}}
+\begin{document}
+\maketitle
+\begin{center}
+\end{center}
+\tableofcontents
+\newpage
+\section{Basic Rings}
+\subsection{Rings}
+\subsection{Ideals}
+\subsection{Morphisms}
+\subsection{Quotients}
+\newpage
+\subsection{Polynomials and generating functions}
+$$\TYPE{Polynomial} :  \CR \to \CR$$
+$$\TYPE{Polynomial}((R) = R[x] \de ( $$
+$$ \{ p :  \NNInt \to R : \exists N \in \NNInt : \forall n \in \NNInt : n \ge N \. p_n = 0  \}, $$
+$$ p + q \de \Lambda n \in \NNInt \. p_n + q_n,$$
+$$  pq \de \Lambda n \in \NNInt \. \sum_{i \in \NNInt} \sum_{j \in \NNInt : i + j = n}  
+p_iq_j )$$ 
+\\
+$$ \FUNC{degree} :: R[x] \to \NNInt | - \infty $$
+$$\FUNC{degree}(p) = \deg p \de \If p = 0 \Then -\infty \Else  \max \{ n \in \NNInt : p_n \neq 0  \}  $$
+\\
+$$ \FUNC{leadingCoeficient} :: R[x] \to R $$
+$$\FUNC{leadingCoeficient}(p) = \mathrm{lc}( p) \de \If p = 0 \Then 0 \Else  p_{\deg p} $$
+\\
+$$\TYPE{Monic} :: ?R[x] $$
+$$ p : \TYPE{Monic} \iff \mathrm{lc}(p) = 1 $$
+\\
+$$ \FUNC{moprhPolyExtension} :: \mathcal{M}_{\RING}(R,S) \to \mathcal{M}_{\RING}(R[x],S[x]) $$
+$$
+ \FUNC{moprhPolyExtension}(\phi)(p)= p^\phi = \sum^\infty_{i=0} \phi(p_i)x^i 
+$$
+\\
+$$\TYPE{Irreducable} :: ?R[x]$$
+$$f : \TYPE{Irreducable}  \iff f \IsNot \TYPE{Unit}([R(x)]) \And \forall p,q \in R[x] :
+pq =f \.  p : \TYPE{Unit}([R(x)]) | q :\TYPE{Unit}([R(x)])
+$$
+\\
+\subsubsection{Content and proimitive polinomials}
+Assume $R : \TYPE{UFD}$
+\\
+$$
+\TYPE{Content} :R[x] \to ? R
+$$
+$$
+r : \TYPE{Content}(p) \iff r \in C(p) \iff r : \TYPE{GCD}(\{ p_i : i \in \deg p \} )
+$$
+\\
+$$
+\TYPE{Primitive} : ?R[x] 
+$$
+$$
+p : \TYPE{Primitive} \iff  C(p) = \{ 1 \}
+$$
+\newpage
+$$
+\TYPE{Content} :\mathrm{Frac} \, R[x] \to ? \mathrm{Frac} \, R
+$$
+\begin{flalign*}
+&\TYPE{Content}(f) = C(f) \de \{ u\Pi  | u : \TYPE{Units}(R)\} \\
+ &\LOGIC{Where} \\ 
+ &\Pi =  \prod_{P : \TYPE{Prime}(R)} P^{e(P)} \\
+& e(P) = \min_{i \in \deg f } \{  \exp(f_i,P)\} 
+\end{flalign*}
+\\
+$$
+\TYPE{Primitive} :: ? \mathrm{Frac} R[x] 
+$$
+$$
+p : \TYPE{Primitive} \iff  1 \in C(p) 
+$$
+\\
+$
+\THM{ContentFact1} :: \forall f \in \mathrm{Frac} \, R \.  \forall a \in C(f) \.  \exists p \in \TYPE{Primitive}( R)  : f = ap
+$\\
+$Proof \approx $ \\
+Let $a = u\Pi$  as in definition of content. Then, by definition of $\Pi$ $$(u\Pi)^{-1}f
+ = \sum^{\deg f}_{i=0} r_i x^i = p $$
+with each $r_i \in R$ such that $gcd(r) =1$ which means that $p$ is Primitive and in $R[x]\square$. 
+\\ \\
+$
+\THM{ContentFact2} :: \forall p : \TYPE{Primitive}(\mathrm{Frac} \, R) \.   p : \TYPE{Primitive}(\mathrm{Frac} \, R)
+$\\
+$Proof \approx $\\
+We know that $1 \in С(p) $ so by $\THM{ContentFact1}$  $p = 1p$ lies in $R[x]$.
+\\ \\
+$
+\THM{ContentFact3} :: f \in R[x] \iff C(f) \in R
+$\\
+$Proof \approx $\\
+If $f \in R[x]$ when all her coefficients lie in  $R$ so by definition of content in field of fractions $C(f) \in R$. \\
+If $C(f) \in R$ when by definition of $C$ no  prime factor of any coefficient of $f$ has strictly negative exponent which is the same as $ f \in R[x]$.
+\\ \\
+$\THM{GausLemma} :: \forall f, g : \TYPE{Primitive}(R) \. fg : \TYPE{Primitive}(R)  $ \\
+$Proof \approx $\\
+Assume $f,g$ are primitive polynomials.\\
+Assume $fg$ Is not primitive.\\
+This means that there exists a prime element $p \in R$ such that $p \in C(fg)$. \\
+Let $\pi_p : R \to \frac{R}{(p)}$ denote natural projection. \\
+Then $$0 = (fg)^{\pi_p} = f^{\pi_p}g^{\pi_p}$$
+but as $f$ and $g$ are primitive $f^{\pi_p}g^{\pi_p} \neq 0$ so we have a contradiction.
+\\$\QED$
+\newpage
+$\THM{ContentProduct} :: \forall   f,g : \mathrm{Frac} \, R [x] \. C(fg) = C(f)C(g)  $ 
+\\$\Proof \approx $ \\
+For each $a \in C(f)$ and $b \in C(g)$ by $\THM{ContentFact1}$ we write $f = aF$ and $g = aG$ whera $F$ and $G$ are primitive and hence by $\THM{GausLemma} $ $FG$ is primitive. \\
+So
+$$ C(fg) = C(aFbG) = C(abFG) = ab\TYPE{Unit}(R) = a\TYPE{Unit}(R)b\TYPE{Unit}(R) = C(f)C(g) $$
+ $\square$
+ \\ 
+$\THM{PrimitiveFactorization} :: \forall f \in R[x] \. \forall h \in  \mathrm{Frac} \, R[x] \. \forall p : \TYPE{Primitive}(R) : f = ph \. h \in R[x] $\\
+$\Proof \approx$
+By $\THM{ContentProduct}$ and using permittivity of $p$ we have
+$$
+C(f) = C(ph) = C(p)C(h) = C(h)
+$$
+so by $\THM{contentFact3}$ $h \in R[x]$. 
+\\ $\QED$ 
+\subsubsection{Irreducibility over field of fractions}
+$\TYPE{FactorizationOver} : R[x] \to ?R \to ?(R[x] \times R[x]) $ \\
+$(a,b) :\TYPE{FactorizationOver}(f)(S) \iff f = ab \wedge \forall i \in \deg a \. a_i \in S \wedge   \forall i \in \deg b \. b_i \in S  $
+\\ \\
+$ \TYPE{DegreewiseFactorization} : R[x] \to ?R \to ?(R[x] \times R[x])  $ \\
+$(a,b) : \TYPE{DegreewiseFactorization}(f) \iff f = ab \wedge \deg a > 0 \wedge \deg b > 0  $
+\\ \\
+$ \TYPE{DegreewiseIrrefucable} : ?R[x] $\\
+$f : \TYPE{DegreewiseIrreducable} \iff \forall (a,b) \in R[x] \times R[x] \.   (a,b) \IsNot 
+\TYPE{DegreewiseFactorization}(f)$
+\\ \\
+$
+\THM{IrreducibilityInFractionsTheorem1} :: \forall f \in R[x] \.   
+f : \TYPE{DegreewiseIrreducable}(R) \iff f : \TYPE{DegreewiseIrreducable}( \
+\mathrm{Frac} \, R)
+$ \\
+$ \Proof \approx$ \\
+One side is trivial . \\
+Now assume that $f$ is degreewise irreducible only in $R$. Assume that $(a,b)$ is a degreewise factorisation of $f$ in  field of fractions. let $\alpha$ be an element from content of $a$ such that $a = \alpha p$ where $p$ is primitive. Then 
+$$f = ab = \alpha p b =  (\alpha b) p.$$
+As $f \in R[x]$ and $p$ is primitive then by   $\THM{PrimitiveFactorization}$ $(\alpha b) \in R[x]$ and by $\THM{ContentFact2}$ $p \in R[x]$. So $f$ is not irreducible over $R$, a contradiction. \\ $\square$
+\\ \\
+$
+\THM{IrreducibilityInFractionsTheorem1} :: \forall f : \TYPE{Primitive} \, R[x] \.   
+f : \TYPE{eIrreducable}(R) \iff f : \TYPE{Irreducable}( \
+\mathrm{Frac} \, R)
+$ \\
+$ \Proof \approx$ \\
+If $f$ is not irreducible only in $R$ then one of  her factors must have a degree $0$ which means that $f$ is not primitive. \\
+A contradiction. \\
+If $f$ is not irreducible only in field of fractions then it must be degreewise reducible and hence reducible in $R$ also. \\
+A contradiction. $\QED$ \\
+
+\subsubsection{Division Algorithm}
+$
+\THM{DivisionAlgorithm} :: \forall f \in R[x] . \forall g : \TYPE{Monic}(R) \.    
+\exists q,r \in R[x] : \deg r \le \deg g : f = gq + r
+$ \\
+$\Proof \approx $ \\
+If $\deg g > \deg f$ then just take $q = 0 $ and $r = f$. \\
+Otherwise we know that $\deg q =  \deg f - \deg g$ so we can choose   $q_i$ to be unique to be unique solution of linear equation $( (gq)_i = f_i )^{\deg f}_{i = \deg g }$ which always exists as $g$ is monic and $(R,+)$ is a group. \\
+So $\deg r \le \deg f $. $\square$. 
+\\ \\
+$
+\THM{RootIsFactor} :: \forall f \in R[x] \. \forall a \in R \. a : \TYPE{Root}(f) \iff x -a : \TYPE{Factor}(f)
+$ \\
+$\Proof \approx  $ \\    
+ Represent $f = q(x - a) + r$. \\
+ If $a$ is root of $f$ then $0 = f(a) = q(a - a) + r = r$, so $(x - a)$ is indeed a factor of $f$.  \\
+ Another side is trivial $f(a) = q(a - a) = 0$. $\QED$.   
+ \\ \\
+ $
+\THM{MaximalRoots} :: \forall f \in R[x] \.  \#\ker f \le \deg f 
+$ \\
+$\Proof \approx$
+ number of factors of a polynomial cannot exceed her degree and number of roots cannot exceed her degree.
+ \\ \\
+ 
+\newpage
+\section{Characteristic}
+\section{Classes of Commutative rings}
+\subsection{Integral Domains}
+\subsection{Unique Factorization Domain}
+\subsection{PID}
+\subsection{Euclidean Domains}
+\end{document}

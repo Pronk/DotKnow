@@ -1,0 +1,307 @@
+\documentclass{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\newtheorem{axiom}{Axiom}
+\newtheorem{define}{\underline{def}}
+\newcommand{\Kind}{\mathcal{K}}
+\newcommand{\Type}{\mathcal{T}}
+\newcommand{\Nat}{\mathbb{N}}
+\newcommand\Baby{\stackrel{\mathclap{\infty}}{\mathbb{N}}}
+\newcommand{\is}{:}
+\newcommand{\truth}{\mathbf{1}}
+\newcommand{\st}{\mathtt{Statement}}
+\renewcommand{\.}{\; . \;}
+\begin{document}
+\section{Basic constructions}
+\textbf{Types and kinds} \\
+$\Kind$ represent all known kinds of objeсts. \\
+\\
+While $\Type$ represent all known types of same objects. \\
+\\
+\begin{axiom}[Axiom of kindnes]
+$$ \frac{}{\Type \is \Kind}(\mathrm{Kindnes}) $$
+All types are kinds of certain objects. That is, Type exists only if it is inhabited.
+\end{axiom}
+let $x$ be a free sentence in working alphabeth $\Sigma$
+$$\frac{[x]}{\mathtt{IsAtom}(x) \is \Type  }\mathrm{Reserve} $$
+We can construct atomic types
+$$ \frac{\mathtt{IsAtom}(x) \is \Type}{ \mathbf{x}  \is \Type,
+\mathrm{type}(x) \is \mathtt{IsAtom}}\mathrm{Type}(x) $$
+Every atom is inhabited by one and only one construction which is identical to itself.
+$$ \frac{ a : \mathtt{isAtom}(x)}{  x : \mathbf{x}} \mathrm{I(x)}$$
+\textbf{Tuples} \\
+Construction:
+$$\frac{A,B : \Type}{A \times B : \Type}\mathrm{Cons(\times)}$$ 
+Introduction:
+$$\frac{a : A ; b : B}{ (a,b) : A \times B } \mathrm{I(\times)}$$ 
+Left projection:
+$$ \frac{ (a,b) : A \times B}{a : A} \pi_l$$ 
+Right projection:
+$$ \frac{ (a,b) : A \times B}{b : B} \pi_r$$ 
+
+\textbf{Functions} \\
+Construction:
+$$\frac{X,Y : \Kind; A : X ; B : Y}{A \to B : \Type}\mathrm{Cons(\to)}$$ 
+Application:
+$$\frac{f : A \to B; a : A}{ f(a) : B}\mathrm{E}(\to)$$ 
+Abstraction:
+$$ \frac{  b : B }{ \lambda \; a \in A \; . \; b : A \to B}\mathrm{I}(\to)$$ 
+
+\textbf{Super Functions} \\
+Construction:
+$$\frac{X,Y : \Kind;  B : Y}{ X \to B : \Type}\mathrm{Cons(\to)}$$ 
+Application:
+$$ \frac{ X \to B; T : X} {f(X) : B}\mathrm{E}(\to)$$ 
+Abstraction:
+$$  \frac{  b : B}{ \lambda \; T \in X \; . \; b : X \to B}I(\to) $$ 
+
+\textbf{Alternatives} \\
+Construction:
+$$\frac{A,B : \Type}{A | B : \Type}\mathrm{const}(|)$$ 
+Left injection:
+$$\frac{a : A}{  (0,a) : A | B}i_l$$ 
+Right injection:
+$$ \frac{ b : B}{ (1,b) : A | B}i_r$$ 
+Elimination:
+$$\frac{x : A | B ;  f : A \to C ; g : B \to C}{ (f | g)(x) : C}\mathrm{E}(|)$$ 
+
+\textbf{Absurd}
+\begin{axiom}[Axiom of Absurd]
+$$\bot : \Type$$
+\end{axiom}
+Mayhem:
+$$\frac{a : \bot ;  T : \Type}{  \mu_\bot(a, T) : T}\mathrm{E}(\bot) $$
+
+\textbf{Generics} \\
+Construction:
+$$\frac{X,Y : \Kind  }{   X \rhd Y : \Kind}\mathrm{Constr}(\rhd) $$
+Application:
+$$\frac{F : X \rhd Y; T : X }{ F(T) : Y}\mathrm{E}({\rhd})$$ 
+Abstraction:
+$$  \frac{ S : Y}{\lambda \; T \in X \; . \; S : X \rhd Y}\mathrm{I}(\rhd) $$ 
+Membership:
+$$ \frac{T : F ; F :  X \rhd  Y}  {  \mu_\rhd(T,F) : \sum A : X \. F(A)}\mathrm{M}(\rhd)$$ 
+
+\textbf{Predicate} \\
+Construction:
+$$\frac{X,Y : \Kind ; T : X}{ ?_Y  T : \Kind}\mathrm{Constr}(?) $$
+Application:
+$$\frac{P :  ?_Y  T ; t : T}{ P(t) : Y } \mathrm{E}(?)$$ 
+Abstraction:
+$$ \frac{  S : Y}{  \lambda \; t \in T \; . S : ?_Y  T} \mathrm{I}(?) $$ 
+Membership:
+$$   \frac{x : P ; P :  ?_Y  T}{ \mu_?(x,P) : \sum t : T \. P(t) }\mathrm{M}(?)$$ 
+\textbf{Equality} \\
+Construction:
+$$ \frac{X : \Kind ; T : X ; a,b : T}  { a =_T b : \Type} \mathrm{Constr}(=)$$
+Reflexivity:
+$$ \frac{t : T}{ \mathrm{id} \, (t) : t =_T t}\mathrm{I}(=)$$ 
+Elemenation
+$$
+\frac{P : T \to T \to \Type, p : P(a,a), e : a =_T b}
+{c(P,p,e) : P(b,a)}\mathrm{E}(=)
+$$
+
+\textbf{Product } \\
+Construction:
+$$\frac{X,Y  : \Kind ; T : X ; P : ?_\Type T}{ \prod t : T \, . \, P(t) : \Type }
+\mathrm{Constr}(\prod)$$
+Definition:
+$$\frac{ t : T  \vdash p(t) : P(t)}{ \lambda t \in T \, . \, p(t) : \prod t : X \, . \, P(t)}  
+\mathrm{I}\prod $$ 
+Application:
+$$ \frac{  f : \prod t : T \, . \, P(t) ; t : T}{  f(t) : P(t)}  \mathrm{E}\prod$$
+
+\newpage
+\textbf{Sum } \\
+Construction:
+$$\frac{X,Y  : \Kind ; T : X ; P : ?_\Type T} {\sum t : T \, . \, P(t) :  \Type} 
+\mathrm{Constr}\sum$$
+Assembly:
+$$ \frac{t : T ; p : P(t)}{(t; p) : \sum t : T \, . \, P(t)}\mathrm{I}\sum  $$ 
+Extraction:
+$$\frac{x : \sum t : T \, . \, P(t)}{ \pi_l( x) : T ; \pi_r(x) : P(\pi_l(x))}\mathrm{E}\sum $$
+\section{Appartnes}
+\textbf{Appartnes} \\
+Construction:
+$$\frac{T : \Type ; a,b : T}{ a \#_T b : \Type}\mathrm{Constr}(\#) $$
+Contradiction:
+$$  \frac{ \alpha : a =_T b ; \beta : a \#_T b}{ c_T(\alpha,\beta): \bot}\mathrm{E}(\#)$$
+Pairs:
+$$ \frac{\alpha : a \#_A c | b \#_B d }{  p(\alpha) : (a,b) \#_{A \times B} (c,d)}I(\times,\#)  $$
+Alternatives:
+$$ \frac{(0,a), (1,b) : A | B }{  x : (0,a) \#_{A | B} (1,b) }I(|,\#) $$
+Functions:
+$$ \frac{f,g : A \to B ; a : A; \alpha : f(a) \#_B g(a) }{ \xi(\alpha) : f \#_{A \to B} g}
+I(\to, \#)$$
+Detection:
+$$ \frac{f : A \to B ; a,b : A ; \alpha :f(a) \#_B f(b) }{ d(\alpha) :  a \#_A b}I(\#, \to)$$ 
+\newpage
+\section{Univalent Foundations}
+\textbf{Statement} \\
+
+$$\frac{T:\Type}{\st (T) \is \Type} \quad 
+\frac{T \is \Type; a,b \is T}{u(T,a,b):\st(a =_T b)} \quad
+\frac{\alpha : \st(T),a,b:T}{s(\alpha,a,b) : a =_T b}$$
+\textbf{Existance}
+$$
+\frac{A \is \Type}{\exists A \is \Type, \alpha(A) : \st(\exists A)} 
+\quad
+\frac{a : A}{[a] : \exists A}
+\quad
+\frac{p : \exists A}{w(p) : A}
+$$
+\textbf{And}
+$$
+\frac{A,B \is \Type, \alpha : \st(A), \beta : \st(B)}
+{ A \wedge B \is \Type, \mathrm{and}(\alpha,\beta) : \st( A \wedge B )} 
+\quad
+\frac{a : A, b : B}{(a,b) : A \wedge B }
+\quad
+\frac{p :  A \wedge B}{w(p) : A \times B}
+$$
+\textbf{Implication}
+$$
+\frac{A,B \is \Type, \alpha : \st(A), \beta : \st(B)}
+{ A \Rightarrow B \is \Type, \mathrm{and}(\alpha,\beta) : \st( A \Rightarrow B )} 
+$$ 
+$$
+\frac{\alpha \is \exists  A \to B }{[\alpha] : A \Rightarrow B }
+\quad
+\frac{p :  A \Rightarrow B}{w(p) : A \to B}
+\quad
+\frac{p:A \Rightarrow B, a : A}{p(a) : B}
+$$
+\textbf{Or}
+$$
+\frac{A,B \is \Type ; \alpha : \st(A); \beta : \st(B)}
+{A \vee B \is \Type; \mathrm{or}(\alpha,\beta) : \st(A \vee B)}
+$$
+$$
+\frac{c : A|B}{[c] : A \vee B} \quad \frac{p : A \vee B}{w(p) : A | B} 
+$$
+\textbf{Universal}
+$$
+\frac{A \is \Type, \alpha : \st(A), P : \prod a : A  \. \sum b(a) : B(a) \. \st(b)}
+{\forall a : A \. b(a) \is \Type, U(A,\alpha,P,B,b) : \st\left(  \forall a \in A \. b(a)\right)}
+$$
+$$
+\frac{F \is \prod a \is A \. b(a)}{[F] \is \forall a \is A \. b(a)}
+\quad
+\frac{p \is \forall a \is A \. b(a)}{w(p) : \prod a : A \. b(a) }
+$$
+\section{Natural numbers}
+\textbf{Generic Naturals}
+\begin{flalign*}
+& \mathrm{Nat} :: \Type \rhd \Type \\
+&  \mathrm{Nat}(\Nat)  = \exists 1 : \Nat   \. \exists (<) : ?_\Type(\Nat \times \Nat)  \.   \exists  \sigma : \Nat \to \Nat \. \\  &  \quad  \.
+	\forall n \in \Nat \.( n = 1 + (\exists m \in \Nat \. n = \sigma m )(1 < n))( n < n \to \bot)
+	( n < \sigma n) 
+\end{flalign*}
+\textbf{Constructive Naturals}
+\begin{flalign*}
+& \Nat :: \Type  \\
+& \mathrm{unit} : \Nat \\
+&   n : \Nat \; | \; S(n) : \Nat 
+\\ \\
+& 1 :: \Nat \\ 
+& [\mathrm{unit}] : \Nat \\ \\
+& \mathrm{next} :: \Nat \to  \Nat\\
+& \mathrm{next}(o) = (1,((),o)) \\ \\  
+& \mathrm{priv} :: \Baby \to  \Baby + [\mathrm{overflow}]\\
+& \mathrm{priv}(1) = \mathrm{overflow} \\   
+& \mathrm{priv}(1,o) = o \\ \\
+& \Nat :: ?_\Type \Baby \\
+& \Nat(n) = (\mathrm{next} \, n = n) \to \bot 
+\end{flalign*}
+\newpage
+\textbf{Boolean}
+$$\mathbb{B} :: \Type$$
+$$\mathbb{B} = \mathrm{true} + \mathrm{false}$$
+\textbf{Basic Boolean Algebra}
+$$! :: \mathbb{B} \to \mathbb{B}$$
+$$!\mathrm{true} =\mathrm{false}$$
+$$!\mathrm{false} =\mathrm{true}$$
+\\
+$$\wedge :: \mathbb{B}^2 \to \mathbb{B}$$
+$$\mathrm{true} \wedge \mathrm{true} = \mathrm{true}$$
+$$b \wedge b =\mathrm{false}$$
+\\
+$$\vee :: \mathbb{B}^2 \to \mathbb{B}$$
+$$\mathrm{false} \vee \mathrm{false} = \mathrm{false}$$
+$$b \vee b =\mathrm{true}$$
+\textbf{Equate}
+$$\textrm{equate} :: \mathbb{N}^2 \to \mathbb{B}$$
+$$\textrm{equate}(1,1) = \mathrm{true}$$
+$$\textrm{equate}(1,a) = \mathrm{false}$$
+$$\textrm{equate}(a,1) = \mathrm{false}$$
+$$\textrm{equate}(a,b) = a == b = \textrm{equate}(\textrm{priv} \, a, \textrm{priv} \, b)$$
+\textbf{Equatable class}
+$$\mathrm{Equatable} :: \Type + ?\mathrm{Equatable}  \to \Type $$
+$$\mathrm{Equatable}(T) = \sum (==) : T^2 \to \mathbb{B} . \prod a,b \in T  . a == n =_\mathbb{B} 
+\mathrm{true} \leftrightarrow a =_T b $$
+
+
+$$(\mathbb{N},(==,\ldots)): \mathrm{Equatable}$$
+\textbf{Set over Type}
+$$\mathrm{Set} :: \Type \rhd \Type$$
+$$\mathrm{Set}(T) = T \to \mathbb{B}$$
+\\
+following structure have non-constructive types and should be banished from the theory:
+\\
+$$\mathrm{Universe} :: \prod T : \Type \; . \; \mathrm{Set}(T)$$
+$$\mathrm{Universe}(T) = U_T = \lambda a : T \; . \; \mathrm{true} $$
+
+$$\mathrm{Empty} :: \prod T : \Type \; . \; \mathrm{Set}(T)$$
+$$\mathrm{Empty}(T) = \emptyset_T = \lambda a : T \; . \; \mathrm{false} $$
+\\
+However this notation is simple and as it indicates only simple constant functions will be used in the sequel.
+\\
+\\
+\textbf{Sets and Predicates} \\
+Each set forms a predicate:
+$$\mathrm{Inside} :: \prod  T : \Type \; . \; \mathrm{Set(T)} \to ?_\Type T $$
+$$\mathrm{Inside}(A)(a) = a \in A = A(a) =_\mathbb{B} \mathrm{true} $$
+However it's not true that  all predicates form a set. The most we can is to translate a predicate to a predicate over world of sets.
+$$\mathrm{represents} :: \prod T : \Type . ?_\Type T \to ?_\Type \mathrm{Set}(T)$$
+$$\mathrm{represents}(P)(S) = \prod t : T  \, . \, P(t) \leftrightarrow (t \in S)  $$
+\textbf{Basic Set Algebra}
+$$\mathrm{union} :: \prod K : \Kind  . \prod T : \Type  . \prod I : K  . (I \to \mathrm{Set}(T)) \to ?\mathrm{Set}(T)$$
+$$\mathrm{union}(A)(S) = (S = \bigcup_{i \in I}A_i) = \prod t : T .\left( t \in S \leftrightarrow \prod i : I . t \in A_i\right)$$
+
+$$\mathrm{union'} ::  \prod T : \Type  .  \mathrm{Set}(T)^2 \to \mathrm{Set}(T)$$
+$$\mathrm{union'} (A,B) = A \cup B = \lambda t : T . A(t) \vee B(t)$$
+
+$$\mathrm{intersect} :: \prod K : \Kind  . \prod T : \Type  . \prod I : K  . (I \to \mathrm{Set}(T)) \to ?\mathrm{Set}(T)$$
+$$\mathrm{intersect}(A)(S) = (S = \bigcap_{i \in I}A_i) = \prod t : T .\left( t \in S \leftrightarrow \sum i : I . t \in A_i\right)$$
+
+$$\mathrm{intersect'} ::  \prod T : \Type  .  \mathrm{Set}(T)^2 \to \mathrm{Set}(T)$$
+$$\mathrm{intersect'} (A,B) = A \cap B = \lambda t : T . A(t) \wedge B(t)$$
+
+$$\mathrm{complement} ::  \prod T : \Type  .  \mathrm{Set}(T) \to \mathrm{Set}(T)$$
+$$\mathrm{complement} \, A = A^\complement = \lambda t : T . !A(t) $$
+
+$$\mathrm{setminus} :: \prod T : \Type  .  \mathrm{Set}(T)^2 \to \mathrm{Set}(T) $$
+$$\mathrm{setminus}(A,B) = A \setminus B = A \cap B^\complement  $$
+
+\textbf{Singletons}
+$$\mathrm{singleton} :: \prod T : \mathrm{Equatable} . T \to \mathrm{Set}(T)$$
+$$\mathrm{singleton}(a)  = \{ a \} = \lambda t : T .t ==_T a$$
+\textbf{Injections, Surjections and Bijections} 
+$$\mathrm{Injection} :: ? A \to B$$
+$$\mathrm{Injection}(f) = \prod x,y : A .  f(x) =_B f(y) \to x =_A y$$
+
+$$\mathrm{Surjection} :: ? A \to B$$
+$$\mathrm{Surjection}(f) = \prod y : B. \sum x : A .  f(x) =_B  y$$
+
+$$\mathrm{Bijection} :: ? A \to B$$
+$$\mathrm{Bijection}(f) = \sum f^{-1} : B \to A . \prod a : A . f^{-1}f(a) =a \times \prod b : B
+. ff^{-1}(b) = b$$
+
+$$\mathrm{Finite} :: ? A \to B$$
+$$\mathrm{Bijection}(f) = \sum f^{-1} : B \to A . \prod a : A . f^{-1}f(a) =a \times \prod b : B
+. ff^{-1}(b) = b$$
+\end{document}

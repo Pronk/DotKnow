@@ -1,0 +1,35 @@
+\documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{ stmaryrd }
+\usepackage[dvipsnames]{xcolor}
+\usepackage{extsizes}
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=10mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{\triangleq}
+\newcommand{\extract}{\rightarrowtriangle}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{\LOGIC{then} \;}
+\newcommand{\Type}{\TYPE{Type}}
+\newcommand{\Set}{\TYPE{Set}}
+\begin{document}
+\begin{flalign*}
+&\TYPE{Banach} :: \prod K : \TYPE{Field} \; \&   \mathsf{TOP} \. ?  \mathsf{NVS}(K) \; \& \; \mathsf{TVS}(K)
+ \; \& \: \TYPE{Complete}\\ 
+& E : \TYPE{Banach} \iff \mathcal{T}_E = \FUNC{generateTop}(\Vert \cdot \Vert_{E}) 
+\\ \\
+&\TYPE{Split} :: \prod E : \TYPE{Banach} \. ? \TYPE{Subspace} \; \& \; \TYPE{Closed}(E) \\ 
+& F : \TYPE{Split} \iff \exists F' : \TYPE{Subspace} \; \& \; \TYPE{Closed}(E) \. F + F' = E \wedge 
+F \cap F' = \{ 0 \}  
+\end{flalign*} 
+\end{document}

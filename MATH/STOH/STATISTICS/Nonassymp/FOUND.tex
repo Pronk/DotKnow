@@ -1,0 +1,186 @@
+  \documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=10mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cate}{\TYPE{Category}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+\renewcommand{\And}{\; \& \;}
+%%ProofWritting
+\newcommand{\A}{\LOGIC{Assume} \;} 
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\E}{ \; \LOGIC{Extract} } 
+\newcommand{\QED}{\; \square}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%MetricGeometry
+\newcommand{\Ball}[3]{ \mathbb{B}^{#1}\left(#2,#3\right) }
+\newcommand{\ClBall}[3]{ \overline{ \mathbb{B}}^{#1}\left(#2,#3\right) }
+\newcommand{\ToP}{\overset{p}{\to}}
+\newcommand{\ToU}{\rightrightarrows}
+%LinearAlgebra
+%TYPES
+\newcommand{\VS}[1]{\TYPE{VectorSpace}\left( #1 \right)}
+\newcommand{\Lin}[1]{\mathcal{L}\left( #1 \right)}
+\newcommand{\vs}[1]{\mathsf{VS}\left( #1 \right)}
+\DeclareMathOperator*{\rank}{rank}
+%FUNK
+\DeclareMathOperator{\rk}{rank}
+\author{Uncultured Tramp} 
+\title{Foundations of non-asymptotic statistics}
+%Simbpls
+\renewcommand{\L}{\mathcal{L}}
+%Topology
+%TYPES
+\newcommand{\TS}{\TYPE{TopologicalSpace}}
+%MeasureTheory
+%TYPES
+\newcommand{\SA}[1]{\TYPE{\sigma \hyph  Algebra}\left( #1 \right) }
+\newcommand{\SF}[1]{\TYPE{\sigma \hyph  Finite}\left( #1 \right) }
+\newcommand{\CA}[1]{\TYPE{CountablyAdditive}\left( #1 \right) }
+\newcommand{\FA}[1]{\TYPE{Charge}\left( #1 \right) }
+\newcommand{\LS}{\TYPE{Lebesgue \hyph Stieltjes}}
+\newcommand{\DF}{\TYPE{DistributionFunction}}
+\renewcommand{\AE}[1]{\quad \mathrm{a\. e\.} \left[#1\right] \,}
+\newcommand{\SI}[1]{\TYPE{\sigma \hyph  Ideal}\left( #1 \right) }
+%Simbols
+\newcommand{\F}{\mathcal{F}}
+\renewcommand{\O}{\Omega}
+\newcommand{\B}{\mathcal{B}}
+\renewcommand{\l}{\lambda}
+\renewcommand{\P}{\mathbb{P}}
+%Probability
+\newcommand{\RA}{\TYPE{RamdomVariable}}
+\renewcommand*{\E}{\mathbb{E} \,}
+\begin{document}
+\maketitle
+\begin{center}
+\end{center}
+\tableofcontents
+\newpage
+\section{Basic set-up}
+Sample size $n \in \Nat$,\\
+Sample $Y : n \to \RA (\Reals^d,\B \Reals^d) $, \\
+True Distribution $\P : \TYPE{Probability}(\O,\F)$,  \\
+Model    $(0) : \forall k \in n \.  Y_k \sim \P $, \\
+Parameter Space  $\Theta : \Set$, \\
+Parametric Family $P : \Theta \to \TYPE{Probability}(\O,\F)$, \\
+Specification  $(1) : \exists \theta \in \Theta : \P = P_\theta$,\\
+True Parameter $\theta^* \in \Theta : \P = P_{\theta^*}$,\\
+\\
+Kullbeck-Leiber Divergence \\  
+$$ KL :: \TYPE{Density}(\Reals^d,\B \Reals^d) \to  \TYPE{Density}(\Reals^d,\B \Reals^d) 
+\to \Reals $$ \\
+$$KL(f,g) = \int_{\mathrm{supp} f} f \ln \left( \dfrac{f}{g} \right) d\lambda$$
+
+$$ \THM{KLIsZero} :: KL(f,g) = 0 \iff f = g \AE \l$$
+Assume that (1) is false. Model is misspecified. 
+\\
+Best parametric assumption $\theta^* = \argmin_{\theta \in \Theta} KL(\P, P_\theta)$\\
+Log-Likelihood 
+$$ L :: \Theta \to \Reals $$
+$$ L(\theta) = \ln f_{\overline{P}_\theta}(Y) = \sum^n_{i=1} \ln f_{P_\theta}(Y_i)  $$
+Maximal likelihood estimation estimation 
+ $\tilde \theta = \argmin_{\theta \in \Theta} KL(\hat \P,  P_\theta) = 
+ \argmax_{\theta \in \Theta} L(\theta) $\\
+Distribution estimation $$\hat F(x) = \frac{1}{n} \sum^n_{i=1} I_{(y_i,\infty)} (x)$$ 
+$$ \TYPE{Regular} :: ?(\Theta \to \TYPE{Probability}(\O, \F))$$
+$$ P : \TYPE{Regular} \iff \exists C : \TYPE{Closed}(\Reals^d) : \forall \theta \in 
+\Theta \.\mathrm{supp} \, P_\theta = C
+ $$
+ Linear model $Y = \Psi\theta + \epsilon$ where 
+ $\Psi : \TYPE{Matrix}(n \times p, \Reals),\epsilon \sim \mathcal{N}(0,\sigma^2I)$
+ \\
+ In case of linear model  $\tilde \theta = (\Psi \Psi^\top)^{-1} \Psi^\top Y = \Psi^\dagger Y$ 
+ \newpage
+ \section{Fisher Information}
+ Fisher Information \\ 
+ If $\Theta$ is a smooth manifold and $L$ is smooth
+ $$  
+ F : \prod \theta \in \Theta \. \mathcal{L}(T_\theta \Theta, T_\theta \Theta; \Reals)  
+ $$
+ $$
+ F(\theta) = \E_\P \nabla^2 L |_{\theta}
+ $$
+ In case $\Theta = \Reals^p$ $F(\theta) : \TYPE{Mat}(p\times p, \Reals ).$ \\
+ Assume Euclidean case and  that $F(\theta^*)$ is non singular. \\
+ Entropy? $D = \big(F(\theta^*)\big)^{\frac{1}{2}}$ \\
+ Estimation error vectors $\xi = D^{-1}\nabla L(\theta^*)$ \\
+ For linear model \\
+ $$ L(\theta) = c - \frac{1}{2\sigma^2}\left\| Y - \Psi \theta  \right\|^2 $$
+ $$ F(\theta) = \frac{1}{\sigma^2}\Psi^\top \Psi $$
+ $$ \xi = \frac{1}{\sigma}\left (  \Psi^\top \Psi \right )^{-\frac{1}{2}}\Psi (Y - \Psi \theta^*)  $$
+  Asymptotic result 
+  $$ \lim_{n \to \infty} D(\tilde \theta - \theta^*) \to_d \xi \sim \mathcal{N}(0,I) $$
+  Non-asymptotic result
+  $$ 
+   \P\left (\| D(\tilde \theta - \theta^*) - \xi \|) \le \diamondsuit(x) \right )    \ge 1 - \mathrm{e}^{-x}
+  $$  
+  where
+  $$
+  \diamondsuit(x) \le \sqrt{ \frac{(p + x)^2}{n} }
+  $$
+  Concentration sets 
+  $$ \Theta_\circ :: \Reals_{++} \to \quad  ?\Theta $$
+  $$ \Theta_\circ(r) =  \left\{ \theta \in \Theta : \| D(\theta - \theta^*) \| \le r \right\}  $$
+  Concentration result
+  $$
+     \P( \tilde \theta \in \Theta(\diamondsuit(x))) \le 1 - \mathrm{e}^{-x} 
+  $$
+  \newpage
+\section{Wilkes Phenomenon}
+Asymptotic result  \\
+$\lim_{n \to \infty} 2(L(\tilde \theta) - L(\theta^*)) \to_d \| \xi \|^2 \sim \chi^2(p)$ \\
+Non-asymptotic \\
+$ \P( |2L(\tilde \theta) - 2L(\theta^*)  - \l \xi \l^2| \le \triangle(x) ) \le 1 - \mathrm{e}^{-x} $ 
+ \\
+\newpage
+\section{Bernstein-von Mizes}
+\end{document}

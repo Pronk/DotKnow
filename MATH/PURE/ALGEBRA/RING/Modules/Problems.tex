@@ -1,0 +1,234 @@
+\documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{ wasysym }
+\usepackage{ stmaryrd }
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\rightarrowtriangle}
+\newcommand{\as}{\multimap}
+\newcommand{\Module}{\mathrm{Module}}
+\newcommand{\problem}{ \textcolor{blue}{\mathtt{problem}}\quad}
+\newcommand{\data}{ \textcolor{blue}{\mathtt{data}}\quad}
+\newcommand{\pred}{ \textcolor{blue}{\mathtt{predicate}}\quad}
+\newcommand{\func}{ \textcolor{blue}{\mathtt{function}}\quad}
+\newcommand{\thm}{ \textcolor{blue}{\mathtt{thm}}\quad}
+\newcommand{\proof}{ \textcolor{cyan}{\mathtt{proof}}\:}
+\newcommand{\Iff}{\mathbf{iff}\:}
+\newcommand{\If}{ \mathbf{if}\:}
+\newcommand{\cate}{\mathtt{category} \quad}
+\newcommand{\Ring}{\mathtt{Ring}}
+\newcommand{\Commu}{\mathrm{Commutative}}
+\newcommand{\Abel}{\mathtt{Abelean}}
+\newcommand{\Ab}{\mathsf{Ab}}
+\newcommand{\rmod}{R\hyph\Module}
+\newcommand{\Group}{\mathtt{Group} }
+\newcommand{\Algebra}{\mathrm{Algebra} }
+\newcommand{\ralg}{R\hyph\Algebra }
+\newcommand{\Ideal}{\mathrm{Ideal} }
+\newcommand{\AlgHomo}{\mathtt{AlgHomo} }
+\newcommand{\End}{\mathrm{End} }
+\newcommand{\Submod}{\mathrm{Submodule} \; }
+\newcommand{\Homo}{\mathtt{Homo} \; }
+\newcommand{\Iso}{\mathrm{Isomorphism} \; }
+\newcommand{\Lin}{\mathrm{Linear} \;}
+\newcommand{\Rmod}{R\hyph\mathsf{Mod} \;}
+\newcommand{\Ralg}{R\hyph\mathsf{Alg} \;}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\assume}{\vdash}
+\newcommand{\Surj}{\mathrm{Surjection}}
+\newcommand{\Inj}{\mathrm{Injection}}
+\newcommand{\Bij}{\mathrm{Bijection}}
+\newcommand{\proving}{\dashv }
+\newcommand{\rationals}{\mathbb{Q}}
+\renewcommand{\int}{\mathbb{Z} \;}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\mathchardef\hyph="2D
+\title{Modules.Know}
+\begin{document}
+\maketitle
+\parindent=0em 
+\begin{flalign*}
+&\problem 5.1 \\
+&\kern 1pc  \func \mathtt{opposite} :: \Ring \to \Ring \\
+&\kern 6pc  \mathtt{opposite} \, R =  R^\circ \de \{R, \bullet \de \Lambda a,b \in R \. b \cdot_R a \}\\
+\\
+&\kern 1pc \func \mathtt{toOpposite} :: \prod R : \Ring \. R \to R^\circ \\
+&\kern 6pc \mathtt{toOpposite} \, r = \pi r \de \: r\\
+\\
+&\kern 1pc \thm \forall R : \Ring \; \Iff \pi_R : \mathtt{Iso} \. R : \Commu \\
+&\kern 2pc \proof =    R : \Ring \vdash \pi_R : \Iso  \vdash \\
+&\kern 3pc  a, b \in R \vdash \\
+&\kern 4pc  ab = \pi_R \, ab = \pi_R a \pi_R b = a \bullet b = b a \dashv  \\
+&\kern 3pc  \to  R : \Commu  \dashv \\
+&\kern 2pc  \to  \If \pi_R : \Iso \. R : \Commu  \as (\Rightarrow) \\
+&\kern 2pc  R : \Commu  \vdash \\
+&\kern 3pc  a, b \in R \vdash \\
+&\kern 4pc  \pi_R a \pi_R b = a \bullet b  = b a = a b = \pi_R ab \dashv \\
+&\kern 3pc  \to \pi_R : \mathtt{Iso} \vdash \\
+&\kern 2pc \to  \If  R : \Commu \. \pi_R : \Iso - (\Rightarrow) \dashv \\
+&\kern 1pc  \forall R : \Ring \; \Iff \pi_R : \mathtt{Iso} \. R : \Commu \quad \square
+\end{flalign*}
+\newpage
+\begin{flalign*}
+A \mapsto A^\top : \Iso \, \mathcal{M}^n(\reals)\: \mathcal{M}^n(\reals)^\circ
+\end{flalign*}
+you can define Left $ \rmod $ as $R^\circ \hyph \Module$ \\
+
+\textbf{problem 5.4}
+\begin{flalign*}
+&\pred \mathtt{Simple} :: ?\rmod \\
+&\kern 5.5pc M : \mathtt{Simple} \Leftrightarrow \forall S : \Submod M \. S = \{ 0 \} \vee 
+S = M \\
+\\ 
+&\thm \mathrm{Schur's} \:  \mathrm{Lemma} :: \forall M,N : \mathtt{Simple} 
+\.  \forall \phi : \Homo M \: N \. \phi : \Iso \vee \phi = 0  
+\end{flalign*}
+If $\phi$ is not $\Iso$ or $0$ then either $R \neq \ker \phi \neq \{ 0 \}$, or $R \neq \mathrm{Im} \, \phi \neq \{ 0 \}$. As $\ker \phi$ is also a submodule, first situation contradicts with a simplicity of $M$. And the second situation contradicts the simplicity of $N$ as $\mathrm{Im} \, \phi$  is also a submodule. $\square$ \\
+
+
+\textbf{problem 5.5 }
+\begin{flalign*}
+&\thm \mathtt{MorphIsomorph} :: \forall R : \Commu  
+\.  \forall M : \rmod \. \mathrm{Hom}_{\Rmod}(R,M) \cong M  
+\end{flalign*}
+we will define isomorphism map explicitly:
+\begin{flalign*}
+&\func f :: \mathrm{Hom}_{\Rmod}(R,M) \to M
+\\ 
+&\kern 5.5pc f \, \phi = \phi(1_R) \\ 
+\\
+&\func g :: M \to \mathrm{Hom}_{\Rmod}(R,M) 
+\\ 
+&\kern 5.5pc g \, m \,r = rm 
+\end{flalign*}
+It is easy to see that both maps are homorphisms:
+$$f \; r\phi + s\psi =r\phi(1_R) + s\psi(1_R) = rf \, \phi + sf \, \psi  $$
+$$g \, (xm + yn) \, r = r(xm + yn) = rxm + ryn =xrm + yrn = (xg \, m   + yg \, n) \, r $$
+Its also easy to prove that maps are inverses
+$$f \, (g \,  m) = (g \, m) \, 1_R = 1_R m = m $$
+$$\left(g \, (f \, \phi) \right) r = g \, \phi(1_R) \, r = r \phi(1_R) = \phi(r)$$
+So this modules are indeed isomorphic. $\square$
+\newpage
+
+\textbf{problem 5.6}
+
+Firstly, we will show that a group  with $\rationals$-vector space structure must have all elements all infinite order . Assume that a non-zero element $a$ of finite order $k > 1$ exists. then we know that $ka = 0$, however we also know that $(1 / k  ) (k) a= a $. Which means that \\
+$(1 / k  ) 0 \neq 0$ and brings us to a contradiction. 
+\\
+  
+Now assume that $\cdot$ and $*$ are both $\rationals$-vector space structures over abelian group $G$ . Let's  arbitrary select elements $n \in \mathbb{Z}$ and $g \in G$ . Then we can show $b$ multiples of this elements will be equal :
+$$n\left((1/n) \cdot g \right) = n \cdot (1 / n) \cdot g = g = n * (1/n) * g = b \left( (1/n) * g \right)$$ 
+As our group has infinite order we can factor $b$ out and get an equality $(1/n)\cdot g = (1/n) * g$
+from which we can easily derive that \\ $\forall q \in \rationals \. \forall g \in G \. q \cdot g = q * g$ and hence $\cdot = *$. $\square$
+\\
+
+\textbf{problem 5.9}\\
+$\forall R : \Commu \. \forall  M : \rmod \.  \mathrm{End}_{\Rmod} (M) : \ralg$ \\
+Lets repeat definition of $\ralg$.
+\begin{flalign*}
+&\data\Algebra :: \prod R : \Commu \. \sum S : \Ring \. \Homo  R  \; \; \centr S\\
+\end{flalign*}
+So we will define this homomorphism in following way:
+\begin{flalign*}
+&\func f :: R \to \centr \mathrm{End}_{\Rmod} (M) \\
+& \kern 5.5pc f(r) \, m = rm
+\end{flalign*}
+It's easy to sea tht this function i indeed a function into center as \\
+$\forall r \in R \. \forall \phi \in  \mathrm{End}_{\Rmod} M \. \forall m \in M$:
+$$mf(r)\phi = \phi(rm) = r\phi(m) = m\phi f(r)$$
+It's also easy to check that this function is a homomorphism
+$\forall a,b,c \in R \. \forall m \in M$:
+$$f(ab + c)m = (ab + c)m = abm + cm = f(a)f(b)m + f(c)m = (f(a)f(b) + f(c))m $$ 
+So we can claim $ (\mathrm{Aut}_{\Rmod} (M), f) : \ralg$. 
+\newpage
+$\mathcal{M}^n(R)$ is an $\ralg$ in natural order as $\mathcal{M}^n(R) \cong \mathrm{End}_{\Rmod} R^n$. $\square$ \\
+
+\textbf{problem 5.10} \\
+$ \forall R : \Commu \. M : \mathtt{Simple} \, R \. \mathrm{End}_{\Rmod} M : \mathtt{Division}$
+As $M$ is Simple we deduce that every its endomorphism is either a zero map or automorphism. And each automorphism is a bijection, hence has an inverse. So, every non-zero element of $\mathrm{End}_{\Rmod} M$ has an inverse which makes it into a division algebra. $\square$ \\
+\textbf{problem 5.11} \\
+\begin{multline}
+\forall R : \Commu \. M : \rmod \. \\
+\. \{f : \Homo  R[x]  \; \mathrm{End}_{\mathsf{Abb}} M    \} \cong \mathrm{End}_{\Rmod} M 
+\end{multline}
+We will begin with constructing bijection math explicitly.
+\begin{flalign*}
+&\func f:: \Homo  R[x]  \; \mathrm{End}_{\mathsf{Abb}} \, M \to  \mathrm{End}_{\Rmod} M \\
+&\kern 5pc  f \, \phi \, m = \phi(x) m \\
+&\func g ::  \mathrm{End}_{\Rmod} M  \to \Homo  R[x]  \; \mathrm{End}_{\mathsf{Abb}} \, M  \\
+&\kern 5pc  g \, \phi \, p \, m = \sum_{n=0}^\infty p_n \phi^n(m) \\
+& m \phi g f = m x \phi g = \phi(m) = m\phi \\
+&  m p\phi  f g  = m p \phi(x) g =  m = \sum_{n=0}^\infty p_n (\phi(x))^n(m) = m p \phi
+ \\  
+&g = f^{-1}  \quad \square\\
+\end{flalign*}
+\newpage 
+\textbf{problem 5.13} ::
+\begin{multline*}
+\forall R : \mathrm{IntegralDomain} \. \forall I : \mathrm{Principle} \; R \. \If I \neq (0) \. I \cong_{\Rmod} R
+\end{multline*}
+\begin{flalign*}
+&\assume R : \mathrm{IntegralDomain} \as (ID)  \\
+&\assume I : \mathrm{Principle} \, R  \to \exists a \in R \. I = (a) \extract a \in R ; I = (a) \\
+&\assume I \neq 0 \to a \neq 0 \\
+&\func f : R \to I \\
+&\kern 5pc f(r) = ra \\
+&\assume x,y,z \in R \\
+& f(xy + z) = (xy +z)a = xya + za = xf(y) + f(z) \proving \\
+& \begin{rcases}
+\proving f : \Lin R \, I  \\
+\begin{rcases}
+I = (a) = f[R] \to f : \Surj  \\
+(ID) \wedge a \neq 0 \to f : \Inj
+\end{rcases} \to f : \Bij
+\end{rcases} \to f : \Iso \to \\
+&\to  I \cong_{\Rmod} R \proving_3 \\
+&\proving_3  \forall R : \mathrm{IntegralDomain} \. \forall I : \mathrm{Principle} \; R \. \If I \neq (0) \. I \cong_{\Rmod} R \quad \square
+\end{flalign*}
+\newpage
+\textbf{problem 5.14} ::
+$$\forall M : \rmod \. \forall N, P :\Submod M \. N + P : \Submod M$$
+This is true by  distributivity $r(a+b) = ra + rb$
+$$\forall M : \rmod \. \forall N, P :\Submod M \. N \cap P : \Submod M$$
+\begin{flalign*}
+&\assume r \in R \assume a \in N \cap P \\
+&\begin{rcases}
+a \in N \to ra \in N \\ 
+a \in P \to ra \in P
+\end{rcases} \to  ra \in N \cap P\prec
+\end{flalign*}
+$$\frac{N + P}{N} \cong ' \frac{N}{N} + \frac{P}{P \cap N} = 0 + \frac{P}{P \cap N} = \frac{P}{P \cap N} $$
+? $\square$ \\
+\textbf{problem 5.15}
+$$I(\frac{R}{J}) \cong \frac{I}{J \cap I} \cong \frac{I + J}{J} \quad \square$$
+\textbf{problem 5.16} :: \\
+$$\forall R : \Commu \. \forall M : \rmod \. \forall a : \mathrm{Nilpotent} \, R
+\. \Iff \, M = 0 \. aM = M$$
+$(\Leftarrow)$
+Simply, $a0 = 0 $, hence $aM = M$ . \\
+$(\Rightarrow)$  Assume that $aM = M$. \\
+As $a$ is nilpotent $\exists n \in \int_{+} \. a^n=0$. \\
+This means that with application of simple induction \\ $0 = a^nM = a^{n-1}M = \ldots = aM = M $ \\
+$\square$  \\
+\newpage
+\textbf{problem 5.17} \\
+\begin{flalign*}
+&\func \mathrm{Rees} :: \prod R : \Commu \. \Ideal \, R \to \ralg \\
+&\kern 5pc \mathrm{Rees} \, I = (\bigoplus^\infty_{i=0} I^i, \Lambda \, r \. [r] \oplus \bigoplus^\infty_{i=0} 0) \\
+&\thm \forall R : \Commu \. \forall a : \mathrm{NZD} \. \mathrm{Rees} \, R \, (a) \cong_{\Ralg} R[x]
+\end{flalign*}
+After problem 5.13 we know that $(a) \cong R$, furthermore applying the same result we can show that $(a)^n \cong (a)^{n-1} \cong \ldots (a) \cong R$  which provides us with the sequence of isomorphisms functions 
+$$ f : \prod n \in \int_{+} \. (a)^n \leftrightarrow R $$
+Then we construct a map  $\phi : v \mapsto \sum^\infty_{i=0}f_n(v_i)x^i$. Inherently, this map is a bijection.
+$$\phi(vw) =\phi \left(\bigoplus^\infty_{n=0} \sum_{i+j=n} v_iw_j \right) = 
+\sum_{n=0}^\infty f_n(\sum_{i+j=n} v_iw_j) = \sum_{n=0}^\infty \sum_{i+j=n} f_n(v_iw_j)x^n =$$
+$$=\sum_{n=0}^\infty \sum_{i+j=n} f_n(bca^n)x^n=\sum_{n=0}^\infty \sum_{i+j=n}  bcx^n=\sum_{n=0}^\infty \sum_{i+j=n} f_i(v_i)f_j(w_j)x^n = \phi(v)\phi(w)$$
+$$\phi(v+w) = \phi \left( \bigoplus^\infty_{n=0} v_n + w_n \right)= \sum^\infty_{n=0} f_n(v_n + w_n)x^n = \sum^\infty_{n=0} f_n(v_n)x^n + \sum^\infty_{n=0} f_n(w_n)x^n = \phi(v) + \phi(w)$$
+$$\phi(rw) = \phi\left(\left([r] \oplus \bigoplus^\infty_{i=0} 0\right)w\right) = \phi\left([r] \oplus \bigoplus^\infty_{i=0}\right)\phi(w) = r\phi(w)$$
+So we can say that $\phi$ is $\ralg$. As $\phi$ is also a bijection we can claim it to be an isomorphism. $\square$
+\end{document}

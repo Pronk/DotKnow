@@ -1,0 +1,46 @@
+\documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{ stmaryrd }
+\usepackage[dvipsnames]{xcolor}
+\usepackage{extsizes}
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=10mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{\triangleq}
+\newcommand{\extract}{\rightarrowtriangle}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{\LOGIC{then} \;}
+\newcommand{\Type}{\TYPE{Type}}
+\newcommand{\Set}{\TYPE{Set}}
+\begin{document}
+\begin{flalign*}
+&\TYPE{TopogicalVectorSpace} :: \prod K : \TYPE{Field} \; \&   \mathsf{TOP} \. ?  \mathsf{VS}(K) \; \& \mathsf{TOP} \\
+& E : \TYPE{TopogicalVectorSpace} \iff  +_E : \mathcal{M}_{\mathsf{TOP}}(E\times E,E) \\
+& \kern 15pc \cdot_E : \mathcal{M}_{\mathsf{TOP}}(K \times E, E)
+\\ \\
+&\TYPE{TVS} :: \TYPE{Field} \to \TYPE{Category}  \\
+&\TYPE{TVS}(K) = \mathsf{TVS}(K) \de \\
+& \kern 1pc \de (   \TYPE{TopogicalVectorSpace} \; \& \; \TYPE{Hausdorf} \; \& \; \TYPE{Locally} \; \TYPE{Convex}, \\ 
+& \kern  3pc  ,  \mathcal{M}_{\mathsf{TOP}} \cap  \mathcal{M}_{\mathsf{VS}(K)}, \\
+& \kern 3pc , \circ)
+\\ \\
+&K : \TYPE{Field} \; \& \; \mathsf{TOP}
+\\ \\
+& \TYPE{TopMultilinear} ::  \prod  I : \Set \. \prod E : I \to \mathsf{TVS}(K) \. \prod F : \mathsf{TVS}(K) \.
+\mathcal{M}_{\mathsf{TOP}}\left(\prod_{i \in I} E_i, F \right) \\
+& T : \TYPE{TopMultilinear} \iff  T : \mathcal{L}^I(E,F) \iff \\
+& \kern 1pc \iff \forall a : \prod i \in I \. E_i \. \forall j \in I \. \Lambda x \in  E_j \. T\left(\bigoplus_{i \in I : i \neq j} a_i \oplus_j x \right) : \mathcal{M}_{\mathsf{TVS}(K)}(E_j,F) 
+\end{flalign*}
+\\ \\
+
+\end{document}

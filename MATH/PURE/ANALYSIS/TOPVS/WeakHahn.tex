@@ -1,0 +1,39 @@
+\documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{ stmaryrd }
+\usepackage[dvipsnames]{xcolor}
+\usepackage{extsizes}
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=10mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{\triangleq}
+\newcommand{\extract}{\rightarrowtriangle}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{\LOGIC{then} \;}
+\newcommand{\Type}{\TYPE{Type}}
+\newcommand{\Set}{\TYPE{Set}}
+\begin{document}
+\begin{flalign*}
+&\THM{WeakHahnBanach} :: \forall E : \TYPE{Banach} \. \forall x \in E : x \neq 0 \. \exists \lambda \in \mathcal{M}_{\mathsf{TVS(\mathbb{R})}}(E,\mathbb{R}) : \lambda(x) \neq 0 \\
+& \LOGIC{Proof:} \\ 
+&  \LOGIC{A} \; E : \TYPE{Banach}, \\
+& \LOGIC{A} \; x \in E : x \neq 0, \\
+& e \de x/\Vert x \Vert,  \\
+& \lambda  \de \Lambda \alpha e \in \FUNC{span}(e) \. \alpha, \\
+& \LOGIC{A} \; K : \TYPE{Subspace}(E) : \dim K = 2 : e \in K , \\
+&  \de K \Rightarrow \exists v \in K : v \not \in \FUNC{span}(e) \; \LOGIC{E} \;, \\
+&  e' \de v/\Vert v \Vert, \\   
+&  \LOGIC{Extend}(\lambda, \Lambda \alpha e + \beta e' \in K \. \alpha)  ; \\
+& \LOGIC{Choice} \Rightarrow \lambda : \mathcal{L}(E,\mathbb{R}) 
+\end{flalign*} 
+\end{document}

@@ -1,0 +1,107 @@
+\documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{ stmaryrd }
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\rightarrowtriangle}
+\newcommand{\Module}{\mathtt{Module}}
+\newcommand{\data}{\mathtt{data}\quad}
+\newcommand{\pred}{\mathtt{predicate}\quad}
+\newcommand{\func}{\mathtt{function}\quad}
+\newcommand{\thm}{\mathtt{thm}\quad}
+\newcommand{\proof}{\mathtt{proof}\:}
+\newcommand{\cate}{\mathtt{category} \quad}
+\newcommand{\Ring}{\mathtt{Ring}}
+\newcommand{\Commu}{\mathtt{Commutative}}
+\newcommand{\Abel}{\mathtt{Abelean}}
+\newcommand{\Ab}{\mathsf{Ab}}
+\newcommand{\rmod}{R\hyph\Module}
+\newcommand{\Group}{\mathtt{Group} }
+\newcommand{\Algebra}{\mathtt{Algebra} }
+\newcommand{\ralg}{R\hyph\mathtt{Algebra} }
+\newcommand{\AlgHomo}{\mathtt{AlgHomo} }
+\newcommand{\End}{\mathrm{End} }
+\newcommand{\Submod}{\mathtt{Submodule} \; }
+\newcommand{\Homo}{\mathtt{Homo} \; }
+\newcommand{\Lin}{\mathtt{Linear} \;}
+\newcommand{\Rmod}{R\hyph\mathsf{Mod} \;}
+\newcommand{\Ralg}{R\hyph\mathsf{Alg} \;}
+\renewcommand{\int}{\mathbb{Z} \;}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\mathchardef\hyph="2D
+\title{Modules.Know}
+\begin{document}
+\maketitle
+%\parindent=0em 
+\begin{flalign*}
+&\data\Module :: \prod R : \Ring \. \sum M : \Abel \. \Homo  R  \; \; (\End_{\Ab} \; M )\\
+&\kern 3pc R\hyph\Module \de \Module(R) \\
+\\
+&\func \mathtt{moduleMult} :: \prod (M,f) : R\hyph\Module \. R \times M \to M\\
+&\kern 5pc ra \de  \mathtt{moduleMult}(M,f) (r,a) \de f(r)(a) \\
+\\
+&\func \mathtt{implicit}  :: R\hyph\Module \to \Abel \\
+&\kern 5pc (M,f) \de  M \\ \\
+&\thm \mathtt{basic0} :: \prod  M : R\hyph\Module \. \prod m \in M \. 0_Rm =0_M \\
+&\kern 3pc \proof M \: m = \\
+	&\kern 4pc (=I)(0_Rm) : 0_Rm =0_Rm \to (0_R + 0_R)m = 0_Rm \to \\
+	&\kern 4pc  \to 0_Rm+0_Rm = 0_Rm \to 0_Rm =0_M \quad \square \\ 
+	\\
+&\thm \mathtt{basic1} :: \prod  M : R\hyph\Module \. \prod m \in M \. -1_Rm =-m \\
+&\kern 3pc \proof M \: m = \\
+	&\kern 4pc  \mathtt{basic0} \; M \; m : 0_Rm = 0_M \to (1_R -1_R)m = 0_M \to \\
+	&\kern 4pc  \to m+(-1_R)m = 0_M \to -1_Rm =-m  \quad \square \\
+\end{flalign*}
+\begin{flalign*}
+&\thm \mathtt{abGroupZModularity} :: \prod A : \Abel \. \exists ! \; f : \Homo  \int  \; \; (\End_{\Ab} \; A )  \. \\  & \kern 13pc \. (A, f) : \int \hyph \Module \\
+&\kern 3pc \proof A = \\
+&\kern 5pc \int : \mathtt{Init}(\mathsf{Ring}) \to 
+\exists ! f :  \Homo  \int  \; \; (\End_{\Ab} \; A )  \extract f \\ 
+&\kern 5pc   (A,f) : \int \hyph \Module \to  \\ 
+&\kern 5pc \to \exists ! \; f : \Homo  \int  \; \; (\End_{\Ab} \; A )   \. (A, f) : \int \hyph \Module  \quad \square \\
+\\
+&\pred \Lin :: \prod A,B : \rmod \. ?\Group.\Homo A \; B \\
+&\kern 5pc f : \Lin \Leftrightarrow \prod a \in A \. \prod r \in R \. f(ra) = rf(a) \\  
+\\
+& \cate  \mathsf{Mod}:: \Ring \to \cate \\
+&\kern 5pc \Rmod \de  \mathsf{Mod}(R) \de ( \\
+&\kern 7pc Obj \de \rmod ; \\
+&\kern 7pc Hom \de \Lambda \; A,B : Obj \. \Lin A \; B ;\\
+&\kern 7pc \cdot \de \circ ) \\ \\
+&\data\Algebra :: \prod R : \Commu \. \sum S : \Ring \. \Homo  R  \; \; \centr S\\
+&\kern 3pc \ralg \de \Algebra(R) \\
+\\
+&\func \mathtt{algebraMult} :: \prod (S,f) : \ralg \. R \times S \to S\\
+&\kern 5pc ra \de  \mathtt{algebraMult}(M,f) (r,a) \de f(r)(a) \\
+\\
+&\func \mathtt{implicit}  :: \ralg \to \Ring \\
+&\kern 5pc (S,f) \de  S \\ \\
+&\pred \AlgHomo :: \prod A,B : \ralg \. \Homo A  \; B \\
+&\kern 5.5pc f : \AlgHomo \Leftrightarrow \prod a \in A \. \prod r \in R \. f(ra) = rf(a) \\  
+\end{flalign*}
+\newpage
+\begin{flalign*}
+& \cate  \mathsf{Alg}:: \Ring \to \cate \\
+&\kern 5pc \Ralg \de  \mathsf{Mod}(R) \de ( \\
+&\kern 7pc Obj \de \ralg ; \\
+&\kern 7pc Hom \de \Lambda \; A,B : Obj \. \AlgHomo A \; B ;\\
+&\kern 7pc \cdot \de \circ )\\
+\\
+&\mathtt{fact} \; (*) : \mathtt{zero} \; \Rmod \\ \\
+&\mathtt{fact} \; \prod R : \Commu \. \prod A,B : \rmod \. Hom_{\Rmod} A \; B : \rmod \\
+\\
+&\pred  \Submod :: \prod S : \rmod \. ? \mathtt{Subset} \; S \\
+&\kern 5.5pc A : \Submod \Leftrightarrow A : \rmod \\
+\\
+&\func  \mathtt{quotient} :: \prod M : \rmod \. \Submod \; S \to \rmod  \\
+&\kern 5.5pc \frac{M}{A} \de \mathtt{quotient} \; S \; A \de \left( \{ m + A | m \in M \} , \cdot \right)  \\
+\\
+&\mathtt{fact} \; \prod M : \rmod \. \prod S : \mathtt{Subset} \; M  \. \mathtt{iff} \; S : \Submod M \. \\
+&\kern 3pc  \. \exists N : \rmod \. \exists f : \Lin  M \ N . \ker f = S \\ 
+\end{flalign*}
+\end{document}
