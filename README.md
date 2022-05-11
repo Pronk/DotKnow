@@ -1,2 +1,5 @@
 # DotKnow
-Knowledge Description system with special emphasis on type-theoretic representation of pure mathematics
+This should collect all my notes.
+
+Style is ultraformal but it is steadely evolving into something readable.
+
