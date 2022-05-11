@@ -1,4 +1,0 @@
-\contentsline {section}{\numberline {1}Basic set-up}{2}
-\contentsline {section}{\numberline {2}Fisher Information}{3}
-\contentsline {section}{\numberline {3}Wilkes Phenomenon}{4}
-\contentsline {section}{\numberline {4}Bernstein-von Mizes}{5}
