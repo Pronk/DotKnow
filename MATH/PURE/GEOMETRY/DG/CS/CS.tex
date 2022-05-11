@@ -1,0 +1,259 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=10mm, left=10mm, right=2mm,heightrounded, includefoot]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+\newcommand{\IntBy}{\; \mathrm{d}} 
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\DeclareMathOperator*{\supp}{supp}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cat}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\ToIso}{\xleftrightarrow}
+\newcommand{\Arrow}{\xrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\}
+\newcommand{\A}{\LOGIC{Assume} \;} 
+\newcommand{\Assume}[2]{& \A #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\text{\thorn}}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%SetTheory
+%Cats
+\newcommand{\SET}{\mathsf{SET}}
+%ALGEBRA
+%LINEAR
+\newcommand{\LI}{\TYPE{LinearlyIndependent}}
+%Analysis
+%Real
+%Types
+\newcommand{\IPP}{\TYPE{IntermidiatePointProperty}}
+\newcommand{\LUB}{\TYPE{LowerUpperBound}}
+\newcommand{\ULB}{\TYPE{UpperLowerBound}}
+\newcommand{\CC}{ \TYPE{ConditionallyConvergent}}
+\renewcommand{\AC}{  \TYPE{AbsolutelyCovergent} }
+\newcommand{\ND}{\TYPE{NowhereDense}}
+\newcommand{\ED}{\TYPE{EverywhereDense}}
+\newcommand{\ToU}{\rightrightarrows}
+%Linear
+%Differential
+\newcommand{\DIFF}{\mathsf{DIFF}}
+\newcommand{\diff}{\mathrm{D}}
+%GEOM
+%DG
+%Types
+\newcommand{\NP}{\TYPE{NaturallyParametrized}}
+%Symbol
+\newcommand{\R}{\mathcal{R}}
+%TYPE
+\newcommand{\FC}{\TYPE{FrenetCurve}}
+\author{Uncultured Tramp} 
+\title{Curves And Surfaces}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Smooth Curves}
+\subsection{Natural Parametrization}
+\Page{  
+	\DeclareType{RegularCurve}{\prod [a,b] : \TYPE{ClosedInterval}(\Reals) \. \prod n \in \Nat \.  ?C^\infty([a,b],\Reals^n)  }
+	\DefineNamedType{r}{RegularCurve}{r \in \R(a,b,n)}{ \forall t \in (a,b) \.  \| \diff r |_t \| > 0 }
+	\\
+	\DeclareFunc{lengthFunc}{\prod [a,b] : \TYPE{ClosedInterval}(\Reals) \. \prod n \in \Nat \. C^1([a,b],\Reals^n) \to [a,b] \to \Reals_+ }
+	\DefineNamedFunc{lengthFunc}{r,t}{L_r(t)}{ \int_a^t \Big\| \diff r|_s \Big\| \IntBy s  }
+	\\ 
+	\Theorem{RegularArclengthIsMonotontonic}{\forall [a,b] : \TYPE{ClosedInterval}(\Reals) \. \forall n \in \Nat \. 
+		\forall r \in \R(a,b,n) \.  \NewLine \.L_r : \TYPE{Increasing}\Big([a,b],\Reals_+\Big) } 
+	\Assume{t,t'}{[a,b]}
+	\Assume{[t.1]}{t < t'}
+	\Conclude{[t.*]}{\bd L_r\THM{AdditiveInteegral}(a,t,t',\| \diff r \|)(t.1)\THM{PositiveIntegral}\Big(\bd \R\Big)(t.1)}
+	{
+		\NewLine : 
+		L_r(t') - L_r(t) = 
+		\int^{t'}_a \Big\| \diff r|_s \Big| \IntBy s - \int^{t}_a \Big\| \diff r|_s\Big\| \IntBy s = 
+		\int^{t'}_{t} \Big\| \diff r|_s \Big\| \IntBy s > 0   
+	}
+	\Derive{[*]}{\bd^{-1}\TYPE{Increasing}}{ \Big(L_r : \TYPE{Increasing}\big([a,b],\Reals_+\big)\Big)} 
+	\EndProof
+	\\
+	\DeclareType{\NP}{?\R(a,b,n)}
+	\DefineType{r}{\NP}{\| \diff r \| = 1}
+	\\
+	\Theorem{NaturalParametrizationExists}{ 
+		\forall r \in \R(a,b,n) \.  
+		\exists s : C^\infty\Big([0,L_r],[a,b] \Big) \. 
+		\. \NewLine \. r \circ s : \NP\Big(0,L_r(b),n\Big)	
+	}
+	\Say{s}{L_r^{-1}}{\TYPE{Increasing}\Big([0,L_r(b)],[a,b]\Big)}
+	\Say{[1]}{\THM{InverseDifferentiation}(s)}{\diff s = \frac{1}{\| \diff r_s \|}}
+	\Assume{t}{[0,L_r(b)]}
+	\Say{[t.1]}{\THM{DerivativeComposition}(r,s)}{D r \circ s = \frac{D r |_s}{\| D r|_s \|}}  
+	\Conclude{[t.*]}{\THM{NormHomogen}(\Reals^n)(t.1)\bd \TYPE{Inverse}}{\| \diff r \circ s \| = \frac{\| \diff r|_s\|}{\| \diff r|_s\|} = 1}
+	\DeriveConclude{(*)}{\bd^{-1}\NP}{\Big( r \circ s : \NP(a,b,n) \Big)}
+	\EndProof
+}\Page{
+	\DeclareType{ReparametrizationClassOfACurve}{\R(a,b,n) \to ? \sum [c,d] : \TYPE{ClosedInterval}(\Reals) \. \R(c,d,n)}
+	\DefineNamedType{\Big([c,d],\gamma\Big)}{ReparametrizationClassOfACurve}{\Lambda r \in R(a,b,n) \. \Big([c,d],\gamma \Big) \in [r]}
+	{\NewLine \iff \exists \tau : (\Reals,[a,b]) \ToIso{\DIFF(\infty)} (\Reals,[c,d]) \And \TYPE{increasing} : \gamma = r \circ \tau}
+	\\
+	\DeclareFunc{arclength}{C^1\Big([a,b],\Reals^n\Big) \to \Reals_+}
+	\DefineNamedFunc{arclength}{r}{L(r)}{L_r(b)}
+	\\
+	\DeclareType{ReparametrizationClass}{  ? \sum [a,b] : \TYPE{ClosedInterval}(R) \. \R(a,b,n)}
+	\DefineNamedType{X}{ReparametrizationClass}{X \in [\R(n)]}{\exists [a,b] : \TYPE{ClosedInterval}(R) : \exists r \in \R(a,b,n) : X = [r] }
+	\\
+	\Theorem{ReparametrizationPreservesArclength}{\forall [r] \in [\R(n)] \. 
+		\forall \Big([a,b] ,\alpha\Big), \Big([c,d],\beta\Big) \in [r] \. L(\alpha) = L(\beta)}
+	\Say{\Big(\tau,[1]\Big)}{\bd [\R(n)]([r]) (\alpha,\beta)}
+	{ \sum \tau : C^\infty \And \TYPE{increasing}\Big([c,d],[a,b]\Big) \. \beta = \alpha \circ \tau}
+	\Say{[2]}{\THM{DerivativeOfIncreasing}(\tau)}{ \diff \tau > 0}
+	\Conclude{[*]}{\bd L(\beta) [1]\THM{ChainRule}(\alpha,\tau)[2]\THM{ChangeOfVariable}(\tau)\bd^{-1}(L(\alpha))}{
+		\NewLine :
+		L(\beta) = \int_c^d \Big\| \diff \beta |_s \Big\| \IntBy s  = 
+		\int_c^d D\tau|_s\Big\| \diff\alpha |_{\tau(s)} \Big\| \IntBy s =
+		\int_a^b \Big\| \diff\alpha |_s \Big\| \IntBy s = L(\alpha)
+	}
+	\EndProof
+	\\
+	\DeclareFunc{classLength}{\big[\R(n)\big] \to \Reals_+}
+	\DefineNamedFunc{classLength}{[r]}{L\big([r]\big)}{L\big(r\big)}
+	\\
+	\Theorem{NaturalParametrizationIsUnique}{\forall X \in [\R(n)] \. \exists! \Big([0,L(X)],r\Big) \in X : \NewLine 
+		: \Big(r : \NP(0,L(X),n)\Big)}
+	\Assume{\Big([0,L(X)],\alpha \Big),\Big([0,l(X)],\beta}{X}
+	\Assume{[1]}{\Big(r : \NP(0,L(X),n)\Big)}
+	\Say{\Big(\tau,[1.1]\Big)}{\bd [\R(n)](X)(\alpha,\beta)}
+	{ \sum \tau : C^\infty \And \TYPE{increasing}\Big([0,L(X)],[0,L(X)]\Big) \. \beta = \alpha \circ \tau}
+	\Say{[1.2]}{\THM{DerivativeOfIncreasing}(\tau)}{ \diff \tau > 0}
+	\Say{[1.3]}{ \bd \NP(0,L(X),n)(\beta)(s)[1.1]\THM{ChainRule}(\alpha,\tau)[1.2]\NewLine\bd\NP(0,L(X),n)}
+	{
+		1 = 
+		\Big\| \diff \beta   \Big\| = 
+		\diff \tau  \Big\| \diff \alpha |_\tau \Big\| = 
+		\diff \tau  
+	}
+	\Say{[1.4]}{\THM{AntiderivativeOfUnity}[3]}{\tau = \id}
+	\Conclude{[1.*]}{[1.4][1.1]}{\alpha = \beta}
+	\EndProof
+	\\
+	\DeclareFunc{naturalParametrization}{\prod X \in [\R(n)] \. \NP(0,L(X),n)}
+	\DefineNamedFunc{naturalParametrization}{X}{X}{\THM{NaturalParametrizationIsUnique}(X)}
+}
+\newpage
+\subsection{Frenet Theory}
+\Page{
+	\DeclareType{FrenetCurve}{?[\R(n)]}
+	\DefineType{r}{FrenetCurve}{(D^i r)_{i=1}^n : [0,L] \to \LI(\Reals^n)}
+	\\
+	\Theorem{FrenetPropertyInClass}{\forall r : \FC(n) \. 
+		\forall \Big([a,b],\gamma\Big) \in r \.  \NewLine \. (\diff^i \gamma)^n_{i=1} : [a,b] \to \LI(\Reals^n) }
+	\Say{\Big(\tau,[1]\Big)}{\bd \R[n](r)\Big([a,b],\gamma\Big)}{ 
+		\sum \tau \in C^\infty \And \TYPE{Increasing}([a,b],[0,L])  \.
+		\gamma = r \circ \tau
+	}
+	\Say{[2]}{\THM{DerivativeOfIncreasing}(\tau)\bd\TYPE{StriclyGreater}}{\forall t \in (a,b) \. \diff \tau |_t \neq 0}
+	\Say{\Big(D,[3]\Big)}{\bd^{-1}\TYPE{LowerTriangular}\FUNC{matrixArange}\;\THM{HigherOrderChainRule}([1])}
+	{ \NewLine :
+		\exists D : [a,b] \to \TYPE{LowerTriangualar}(\Reals,n) \.  
+		D(\diff^i r|_\tau  )^n_{i=1} = (\diff \gamma)^n_{i=1}  \And \forall i \in n \. D_{i,i} = \diff \tau }
+	\Say{[4]}{ \THM{NonDegenerateByDeterminant}\THM{DeterminantOfTheTriangular}[2][3]}{ D  \in \mathrm{GL}(n,\Reals)  }                      
+	\Conclude{[*]}{\THM{LindMap}(D)\Big([4],[3]\Big)}{ \forall t \in (a,b) \. (\diff^i \gamma |_t)^n_{i=1} : \LI(\Reals^n) }
+	\EndProof
+	\\
+	\DeclareFunc{curvature}{\FC(n) \to C^\infty([0,L], \Reals_+)}
+	\DefineNamedFunc{curvature}{r,s}{k_r(s)}{\Big\|\diff^2 r|_s \Big\|}
+	\\
+	\DeclareFunc{velocity}{\FC(n) \to C^\infty([0,L],\mathbb{S}^{n-1}(0,1))}
+	\DefineNamedFunc{velocity}{r,s}{v_r(s)}{\diff r}
+	\\
+	\DeclareFunc{normal}{\FC(n) \to (n-1) \to  C^\infty([0,L],\mathbb{S}^{n-1}(0,1))}
+	\DefineNamedFunc{normal}{i,r,s}{n_{r,i}(s)}{\FUNC{GrammSmidt}(\diff^j r|_s )^n_{i=1}(i+1)}
+	\\
+	\DeclareFunc{torsion}{\FC(n) \to (n-2) \to C^\infty([0,L],\Reals)}
+	\DefineNamedFunc{torsion}{i,r,s}{\tau_{r,i}(s)}{ \langle \diff n_{r,i + 1}|_s, n_{r,i}(s) \rangle  }
+	\\
+	\DeclareFunc{frenetFrame}{\FC(n) \to n \to C^\infty([0,L],\TYPE{Orhtonormal}(\Reals^n))}
+	\DefineNamedFunc{frenetFrame}{r}{f_r}{v_r \oplus n_r}
+	\\
+	\DeclareFunc{torsionCurvature}{\FC(n) \to n \to C^\infty([0,L])}
+	\\
+	\Theorem{FrenetEquations}{
+		\forall n \in \Nat \. \forall i \in (n- 2) \.  \dot f_{i+1} =  -\kappa_i f_i + \kappa_{i+1}f_{i + 2}
+	}
+}
+\end{document}

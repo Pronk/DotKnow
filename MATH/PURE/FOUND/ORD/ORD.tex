@@ -1,0 +1,2219 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{extpfeil}
+\usepackage{graphicx}
+\usepackage{scalerel}
+\usepackage{esvect}
+\usepackage{upgreek}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+\newcommand{\Imply}{\Rightarrow} 
+\newcommand{\Intro}{\LOGIC{I}}
+\newcommand{\Elim}{\LOGIC{E}}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+\newcommand{\Class}{\TYPE{Kind}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Sphere}{\mathbb{S}}
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\DeclareMathOperator*{\supp}{supp}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cat}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToMono}{\xhookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToEpi}{\xtwoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\ToIso}{\xleftrightarrow}
+\newcommand{\Arrow}{\xrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+\renewcommand{\i}{\mathbf{i}}
+\newcommand{\llbracket}{\left[\!\!\left[}
+\newcommand{\rrbracket}{\right]\!\!\right]}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\SayIn}[3]{& #1 \de #2 \in #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\} 
+\newcommand{\Assume}[2]{& \LOGIC{Assume} \; #1 : #2, \\}
+\newcommand{\AssumeIn}[2]{& \LOGIC{Assume} \; #1 \in #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%CategoryTheory
+%Types
+\newcommand{\Cov}{\TYPE{Covariant}}
+\newcommand{\Contra}{\TYPE{Contravariant}}
+\newcommand{\NT}{\TYPE{NaturalTransform}}
+\newcommand{\UMP}{\TYPE{UnversalMappingProperty}}
+\newcommand{\CMP}{\TYPE{CouniversalMappingProperty}}
+\newcommand{\paral}{\rightrightarrows}
+%functions
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\obj}{\mathrm{obj}}
+\DeclareMathOperator*{\dom}{dom}
+\DeclareMathOperator*{\codom}{codom}
+\DeclareMathOperator*{\colim}{colim}
+%variable
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\R}{\mathcal{R}}
+%Cats
+\newcommand{\CAT}{\mathsf{CAT}}
+\newcommand{\SET}{\mathsf{SET}}
+\newcommand{\PARALLEL}{\bullet \paral \bullet}
+\newcommand{\WEDGE}{\bullet \to \bullet \leftarrow \bullet}
+\newcommand{\VEE}{\bullet \leftarrow \bullet \to \bullet}
+%OrderTheory
+%Types
+\newcommand{\Poset}{\TYPE{Poset}}
+\newcommand{\Toset}{\TYPE{Toset}}
+\newcommand{\Pres}{\TYPE{PreorderedSet}}
+\newcommand{\WF}{\TYPE{WellFounded}}
+\newcommand{\WO}{\TYPE{WellOrdered}}
+\newcommand{\II}{\TYPE{InitialInterval}}
+\newcommand{\UB}{\TYPE{UpperBound}}
+%Cats
+\newcommand{\POSET}{\mathsf{POSET}}
+\newcommand{\ORD}{\mathsf{ORD}}
+%Symbold
+\renewcommand{\P}{\mathsf{P}}
+\newcommand{\F}{\mathsf{F}}
+\newcommand{\U}{\mathsf{U}}
+\author{Uncultured Tramp} 
+\title{Order Theory}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Ordered Spaces}
+\subsection{Objects}
+\subsubsection{Ordered Sets}
+\Page{
+	\Conclude{\TYPE{Order}}{
+		\Lambda X \in \SET \. 
+		\TYPE{Reflexive}(X)\And \TYPE{Antisymmetric}(X) \And \TYPE{Transitive}(X)}
+	{\prod_{X \in \SET} \TYPE{Relation}(X)}
+	\\
+	\Conclude{\Poset}{ \sum_{X \in \SET} \TYPE{Order}}{ \Type }
+	\\
+	\DeclareFunc{asSet}{\Poset \to \SET}
+	\DefineNamedFunc{asSet}{(X,R)}{(X,R)}{X}
+	\\
+	\DeclareFunc{order}{\prod (X,R) : \Poset \. \TYPE{Order}(X)}
+	\DefineNamedFunc{order}{}{\le_{(X,R)}}{R}	
+	\\
+	\DeclareType{Comparable}{\prod_{X \in \SET} \. \TYPE{Order}(X) \to  ?X^2}
+	\DefineType{(x,y)}{Comparable}{\Lambda (\le) : \TYPE{Order}(X) \. x \le y | y \le x}
+	\\
+	\DeclareType{TotalOrder}{\prod_{X  \in \SET}?\TYPE{Order}(X)}
+	\DefineType{R}{TotalOrder}{\forall x,y \in X^2 \. \TYPE{Comparable}\Big(X,R,(x,y)\Big)}
+	\\
+	\Conclude{\TYPE{Toset}}{ \sum_{X \in \SET} \TYPE{TotalOrder}}{ \Type }
+	\\
+	\DeclareType{StrictlyLess}{\prod X : \Poset \. ?X^2}
+	\DefineNamedType{(x,y)}{StrictlyLess}{x < y }{x \le y \And x \neq y}
+	\\
+	\DeclareFunc{orderedSubset}{\prod X : \Poset \. ?X \to \Poset}
+	\DefineNamedFunc{orderedSubset}{A}{A}{\Big(A,(\le)_X \cap A\times A\Big)}
+	\\
+	\DeclareFunc{subsetPoset}{\SET \to \Poset}
+	\DefineNamedFunc{subsetPoset}{X}{?X}{\Big(?X, (\subset) \Big)}
+}
+\subsubsection{Maximal and minimal elements}
+\Page{
+	\DeclareType{Maximal}{\prod X : \Poset \. ?X  }
+	\DefineNamedType{x}{Maximal}{x \in \max X}{\forall y \in X \. x \le y \Imply x = y}
+	\\
+	\DeclareType{Minimal}{\prod X : \Poset \. ?X  }
+	\DefineNamedType{x}{Minimal}{x \in \min X}{\forall y \in X \. x \ge y \Imply x = y}
+	\DeclareType{Top}{\prod X : \Poset \. ?X}
+	\DefineNamedType{x}{Top}{x \in \top(X)}{\forall y \in X \. y \le x} 
+	\\
+	\DeclareType{Bottom}{\prod X : \Poset \. ?X}
+	\DefineNamedType{x}{Bottom}{x \in \bot(X)}{\forall y \in X \. y \ge x} 
+	\\
+	\Theorem{TopIsMaximal}{\forall X : \Poset \. \top(X) \subset \max(X)}
+	\AssumeIn{x}{\top(X)}
+	\AssumeIn{y}{X}
+	\Assume{[1]}{x \le y}
+	\Say{[2]}{\Elim \top(X,x)(y)}{y \le x}
+	\Conclude{[y.*]}{\Elim \TYPE{Antisymmetric}(X,\le)[1,2]}{x = y}
+	\DeriveConclude{[x.*]}{\Intro(\Imply)\Intro(\forall)\Intro(\max X)}{x \in \max X }
+	\DeriveConclude{[*]}{\Intro \TYPE{Subset}}{\top(X) \subset \max X}
+	\EndProof
+	\\
+	\Theorem{TopIsUnique}{\forall X : \Poset \. \Big|\top(X)\Big| \le 1}
+	\AssumeIn{x,y}{\to(X)}
+	\Say{[1]}{\Elim \top(X,x)(y)}{y \le x}
+	\Say{[2]}{\Elim \top(X,y)(x)}{x \le y}
+	\Conclude{\Big[(x,y).*\Big]}{\Elim \TYPE{Antisymmetric}(X,\le)[1,2]}{x = y}
+	\Derive{[*]}{\Intro \mathsf{CARD}}{ \Big|\top(X)\Big| \le 1  }
+	\EndProof
+	\\
+	\Theorem{BottomIsMinimal}{\forall X : \Poset \. \bot(X) \subset \min(X)}
+	\NoProof
+	\\
+	\Theorem{BittomIsUnique}{\forall X : \Poset \. \Big|\bot(X)\Big| \le 1}
+	\NoProof
+}
+\subsubsection{Preorders}
+\Page{
+	\Conclude{\TYPE{Preorder}}{
+		\Lambda X \in \SET \. 
+		\TYPE{Reflexive}(X) \And \TYPE{Transitive}(X)}
+	{\prod_{X \in \SET} \TYPE{Relation}(X)} 
+	\\
+	\Conclude{\Pres}{ \sum_{X \in \SET} \TYPE{Preorder}}{ \Type }	
+	\\
+	\DeclareFunc{asSet}{\Pres \to \SET}
+	\DefineNamedFunc{asSet}{(X,R)}{}{X}
+	\\
+	\DeclareFunc{preorder}{\prod (X,R) : \Pres \. \TYPE{Preorder}(X)}
+	\DefineNamedFunc{preorder}{}{\preceq_{(X,R)}}{R}
+	\\
+	\DeclareFunc{orderQuotient}{\Pres \to \Poset}
+	\DefineNamedFunc{orderQuotient}{X}{\widehat{X}}{\frac{X}{\{ (x,y) \in X^2 :  x \preceq y \And y \preceq x  \}}}
+}
+\newpage
+\subsection{Categories}
+\subsubsection{One and Infinity}
+\Page{
+	\DeclareType{Monotonic}{\prod X,Y : \Poset \. ?(X \to Y)}
+	\DefineType{f}{Monotonic}{\forall a,b \in X \. a \le b \Imply f(a) \le f(b)}
+	\\
+	\DeclareFunc{posetCategory}{\CAT}
+	\DefineNamedFunc{posetCategory}{}{\POSET}
+	{
+		( \TYPE{Poset}, \TYPE{Monotonic}, \circ, \id )
+	}
+	\\
+	\DeclareFunc{imagePosetFunctor}{\Cov(\SET,\POSET)}
+	\DefineNamedFunc{imagePosetFunctor}{X}{\P(X)}{?X}
+	\DefineNamedFunc{imagePosetFunctor}{X,Y,f}{\P_{X,Y}(f)}{\FUNC{image}(f)}
+	\\
+	\DeclareFunc{preimagePosetFunctor}{\Contra(\SET,\POSET)}
+	\DefineNamedFunc{preimagePosetFunctor}{X}{\P'(X)}{?X}
+	\DefineNamedFunc{preimagePosetFunctor}{X,Y,f}{\P'_{X,Y}(f)}{\FUNC{preimage}(f)}
+	\\
+	\DeclareFunc{freePosetFunctor}{\Cov(\SET,\POSET)}
+	\DefineNamedFunc{freePosetFunctor}{X}{\F_\POSET(X)}{\Big(X,\Delta(X)\Big)}
+	\DefineNamedFunc{imagePosetFunctor}{X,Y,f}{\F_\POSET{X,Y}(f)}{f}
+	\\
+	\DeclareFunc{forgetfulPosetFunctor}{\Cov(\POSET,\SET)}
+	\DefineNamedFunc{forgetfulPosetFunctor}{X}{\U_\POSET(X)}{X}
+	\DefineNamedFunc{forgetfulPosetFunctor}{X,Y,f}{\U_\POSET{X,Y}(f)}{f}
+	\\
+	\Theorem{FreePosetAdjointness}
+	{
+		\F_\POSET \dashv \U_\POSET
+	}
+	\Assume{X}{\SET}
+	\Assume{Y}{\POSET}
+	\Conclude{[*]}{ \Elim \F \Intro \U  }
+	{
+		\SET\Big(\F(X), Y\Big) =_{\SET}
+		\SET\Big( X, Y  \Big) =_{\SET}
+		\POSET\Big( X, \U(Y) \Big)
+	}
+	\DeriveConclude{[*]}{\THM{HomSetAdjunction}}
+	{
+		\F_\POSET \dashv \U_\POSET
+	}
+	\EndProof
+	\\
+	\DeclareFunc{posetAsCategory}
+	{   
+		\POSET \to \CAT
+	}
+	\DefineNamedFunc{posetAsCategory}{X}{}
+	{
+		\Big( X, \Lambda x,y \in X \. \If x \le y \Then \{1\} \Else \emptyset   , (1,1) \mapsto 1 ,1\Big)
+	}
+	\\
+	\Theorem{MonotonicAreFunctors}{\forall X,Y \in \POSET \. \forall f \in \POSET(X,Y) \. \Cov(X,Y,f)}
+	\NoProof
+}
+\subsubsection{products}
+\Page{
+	\DeclareFunc{posetProduct}{\prod \I \in \SET \. (\I \to \POSET) \to \POSET}
+	\DefineNamedFunc{posetProduct}{X}{\prod_{i \in \I} X_i}
+	{ 
+		\left(
+		\left( 
+			\prod_{i \in \I} X_i, 
+			\left\{ (x,y) \in \left(\prod_{i \in \I} X_i  \right)^2 : \forall i \in \I \. x_i \le y_i \right\}  
+		\right), \pi
+		\right)
+	}
+	\\
+	\Theorem{posetProductIsProduct}{ \TYPE{Product}\Big( \POSET, \FUNC{posetProduct} \Big) }
+	\AssumeIn{\I}{\SET}
+	\Assume{X}{\I \to \POSET}
+	\AssumeIn{P}{\POSET}
+	\Assume{f}{\prod_{i \in \I} \POSET(P,X_i)  }
+	\Say{h}{ \Lambda p \in P \. \Lambda i \in \I \. f_i(p) }
+	{ 
+		P \to \prod_{i \in \I} X_i
+	}
+	\AssumeIn{a,b}{P}
+	\Assume{[1]}{a \le b}
+	\Say{[2]}{\forall i \in I \. \Elim \POSET(P,X_i)(f_i)(a,b) }
+	{
+		\forall i \in I \. f_i(a) \le f_i(b)
+	}
+	\Conclude{\Big[(a,b).*\Big]}{ \Elim h \Elim \prod_{i \in \I} X_i [2] \Intro h }
+	{
+		h(a) \le h(b)
+	}
+	\DeriveConclude{[\I.*]}{\Intro \POSET}
+	{
+		h \in \POSET\left(P, \prod_{i \in \I} X_i \right)
+	}
+	\DeriveConclude{[*]}{\Intro \TYPE{Product}}
+	{
+		\TYPE{Product}\Big(\POSET, \FUNC{posetProduct}  \Big)
+	}
+	\EndProof
+	\\
+	\Theorem{PosetHasEqualisers}{
+		\TYPE{WithEqualizers}(P,)
+	}
+	\NoProof
+	\\
+	\Theorem{PosetsAreComplete}
+	{
+		\TYPE{Complete}(\POSET)
+	}
+	\NoProof
+}
+\subsubsection{Coproducts}
+\Page{
+	\DeclareFunc{posetSum}{\prod \I \in \SET \. (\I \to \POSET) \to \POSET}
+	\DefineNamedFunc{posetSum}{X}{\coprod_{i \in \I} X_i}
+	{ 
+		\left(
+		\left( 
+			\bigsqcup_{i \in \I} X_i, 
+			\bigcup_{i \in \I} \bigg\{ \Big( (i,x), (i,y) \Big) \bigg| (x,y) \in (\le)_{X_i}  \bigg\} 
+		\right), \iota
+		\right)
+	}
+	\\
+	\Theorem{PosetSumIsCoproduct}{\TYPE{Coproduct}\Big( \POSET, \FUNC{posetSum}  \Big)}
+	\AssumeIn{\I}{\SET}
+	\Assume{X}{\I \to \POSET}
+	\AssumeIn{P}{\POSET}
+	\Assume{f}{\prod_{i \in \I} \POSET(X_i,P)  }
+	\Say{h}{ \Lambda (i,x) \in \coprod_{i \in \I} \.  f_i ( x  ) }
+	{ 
+		\coprod_{i \in \I} X_i \to P
+	}
+	\AssumeIn{(i,a),(j,b)}{\coprod_{i \in \I} X_i}
+	\Assume{[1]}{(i,a) \le (j,b)}
+	\Say{[2]}{\Elim \coprod_{i \in \I} X_i [1] }
+	{
+		i = j \And a \le b
+	}
+	\Say{[2]}{ \Elim \POSET(X_i,P)(f_i)(a,b) }
+	{
+		f_i(a) \le f_i(b)
+	}
+	\Conclude{\bigg[\Big((i,a),(j,b)\Big).*\bigg]}{\Intro h [1][2]}
+	{
+		h(i,a) \le h(j,b)
+	}
+	\DeriveConclude{[\I.*]}{\Intro \POSET}
+	{
+		h \in \POSET\left( \coprod_{i \in \I} X_i, P \right)
+	}
+	\DeriveConclude{[*]}{\Intro \TYPE{Product}}
+	{
+		\TYPE{Coproduct}\Big(\POSET, \FUNC{posetSum}  \Big)
+	}
+	\EndProof
+	\\
+	\DeclareType{Between}{
+		\forall X \in \POSET \.
+		X^2 \to ?X
+	}
+	\DefineType{a}{Between}{\Lambda x,y \in X \. x \le a \le y | y \le b \le x}
+	\\
+	\Theorem{PosetHasCoequalisers}{
+		\TYPE{WithCoequalizers}(P,H)
+	}
+	\AssumeIn{X,Y}{\POSET}
+	\AssumeIn{f,g}{\POSET(X,Y)}
+	\Say{(\preceq)}{\bigg\{ \Big( [x],[y] \Big) \in \mathsf{coeq}_\SET(X,Y,f,g)  :  x \le y  \bigg\}}
+	{
+		\TYPE{Preorder}\Big(\mathsf{coeq}_\SET(X,Y,f,g)\Big)
+	}
+	\Say{Z}{\widehat{\mathsf{coeq}}_\SET(X,Y,f,g)}{\POSET}
+	\AssumeIn{a,b}{Y}
+	\Assume{[1]}{a \le b}
+	\Say{[2]}{\Intro (\preceq)}{[a] \preceq [b]}
+	\Conclude{[*.3]}{\Intro \pi_Z[2]}{\pi_Z(a) \le \pi_Z(b)}
+	\DeriveConclude{[1]}{\Intro \POSET}{\pi_Z \in \POSET(Y,Z)}
+	\Say{[2]}{\Elim Z \Elim \mathsf{coeq} \Intro \pi_Z}{f\pi_Z = g\pi_Z}
+}\Page{
+	\AssumeIn{A}{\POSET}
+	\AssumeIn{h}{\POSET(Y,A)}
+	\Assume{[3]}{fh = gh}
+	\AssumeIn{z}{Z}
+	\AssumeIn{a,b}{z}
+	\Say{\Big(u,[4]\Big)}{\Elim Z \Elim \FUNC{EqClass}(z) (a,b)}
+	{
+		\sum u \in X \.  f(u) \le  a,b  \le g(u) \Big|  g(u) \le a,b \le f(u)
+	}
+	\Say{[5]}{\Elim \POSET(h)[4]}{fh(u) \le h(a),h(b) \le fh(u)}
+	\Say{[6]}{[3](u)}{fh(u) = gh(u)}
+	\Conclude{ \Big[ (a,b).*\Big]}{\Elim \POSET(A) \Elim \TYPE{Antisymmetric}[5][6]}{ h(a) = h(b) } 
+	\Say{[4]}{\Intro(\exists)\Intro(\forall)}
+	{
+		\exists u \in X : \forall a,b \in z \. h(a) = h(b) = fh(u)
+	}
+	\Conclude{\hat h(z)}{fh(u)}{A}
+	\Derive{\hat h}{\Intro(\to)}{\hat h : Z \to A}
+	\Say{[4]}{\Elim \hat h }{\forall y \in Y \. h(y) = \hat h [y]}
+	\AssumeIn{[a],[b]}{Z}
+	\Assume{[5]}{[a] \le [b]}
+	\Say{[6]}{\Elim Z [4]}{ a \le b  }
+	\Say{[7]}{\Elim \POSET(Y,A)(h)[5]}{h(a) \le h(n)}
+	\Conclude{\Big[ \big( [a],[b]\big)i.*\Big]}{[4][7]}
+	{
+		\hat h[a] \le \hat h [b]
+	}
+	\DeriveConclude{[A.*]}{\Elim \POSET}{\hat h \in \POSET(Z,A)}
+	\DeriveConclude{[*]}{\Intro \TYPE{Coequalizer} }{\TYPE{Coequalizer}\Big( \POSET,X,Y,f,g\Big)}
+	\EndProof
+	\\
+	\Theorem{PosetsAreBicomplete}
+	{
+		\TYPE{Bicomplete}(\POSET)
+	}
+	\NoProof
+}
+\subsubsection{min and max} 
+\Page{
+	\DeclareFunc{maximum}{\prod X \in \POSET \. X^2 \to X}
+	\DefineNamedFunc{maximum}{x,y}{\max(x,y)}{\If x \le y \Then y \Else x}
+	\\
+	\Theorem{MaximumProperty}{\forall X : \Toset \. \forall x,y \in X \. x \le \max(x,y) \And y \le \max(x,y) }
+	\Say{[1]}{
+		\Intro(\Imply)
+		\Lambda P : x \le y \. 
+		\Intro(\And) \bigg( 
+			\Elim(=)
+			\Big( 
+				\Elim \max(x,y) 
+				\Elim \FUNC{ifElseThen} P, 
+				P
+			\Big), \NewLine
+			\Elim(=,2)
+			\Big( 
+				\Elim \max(x,y) 
+				\Elim \FUNC{ifElseThen} P, 
+				\Elim \TYPE{Reflexive}(\le_X)(y)
+			\Big)
+		\bigg)
+	}
+	{
+		x \le y \Imply x \le \max(x,y) \And y \le \max(x,y) 
+	}
+	\Say{[2]}{
+		\Intro(\Imply)
+		\Lambda P : \neg(x \le y) \.
+		\Intro(\And) \bigg(	
+			\Elim(=,2)
+			\Big( 
+				\Elim \max(x,y) 
+				\Elim \FUNC{ifElseThen} P, 
+				\Elim \TYPE{Reflexive}((\le_X),x)
+			\Big), \NewLine
+			\Elim(=)
+			\Big( 
+				\Elim \max(x,y) 
+				\Elim \FUNC{ifElseThen} P, 
+				\Elim \Toset(X,P)
+			\Big)
+		\bigg)
+	}{
+		\neg(x \le y) \Imply x \le \max(x,y) \And y \le \max(x,y)
+	}
+	\Conclude{[*]}{\Elim(|)\Big(\Elim \TYPE{Bool}(x \le y),[1],[2]\Big)}
+	{
+		x \le \max(x,y) \And y \le \max(x,y)
+	}
+	\EndProof
+	\\
+	\DeclareFunc{minimum}{\prod X \in \POSET \. X^2 \to X}
+	\DefineNamedFunc{minimum}{x,y}{\min(x,y)}{\If x \le y \Then x \Else y}
+	\\
+	\Theorem{MinimumProperty}{\forall X : \Toset \. \forall x,y \in X \. x \ge \min(x,y) \And y \ge \min(x,y) }
+	\Conclude{[*]}{\FUNC{dualize}(X,\THM{MaximumProperty})(x,y)}{\LOGIC{This}}
+	\EndProof
+}
+\subsubsection{Isomorphisms of finite Tosets}
+\Page{
+	\Theorem{FiniteTosetHasTop}
+	{
+		\forall X : \Toset \.
+		 0 < |X| < \infty \Imply
+		\exists \top(X)
+	}
+	\Say{\leo}{\Lambda n \in \Nat \. \forall X \in \Toset \. |X| = n \Imply \exists \top(X) }
+	{
+		\Nat \to \Type
+	}
+	\Assume{X}{\Toset}
+	\Assume{[1]}{|X| = 1}
+	\Say{[2]}{\THM{SingltonByCardinality}[1]}{\TYPE{Singleton}(X)}
+	\Say{\Big( x,[3]\Big)}{\Elim \TYPE{Singleton}(x)}
+	{
+		\sum x \in X \. \{x\} = X	
+	}
+	\Conclude{[4]}{\Elim \TYPE{Reflexive}(X,x)}{x \le x}
+	\AssumeIn{y}{X}
+	\Say{[5]}{[3](y)}{y = x}
+	\Conclude{[y.*]}{ \Elim(=,1)[5][4]}{ y \le x}
+	\DeriveConclude{[5]}{\Intro \forall \Intro \top }{ x \in \top X  } 
+	\Derive{[1]}{\Intro \leo}{ \leo(1)  }
+	\Assume{n}{\Nat}
+	\Assume{[2]}{\leo(n)}
+	\Assume{X}{\Toset}
+	\Assume{[3]}{|X| = n + 1}
+	\Say{[4]}{\THM{EmptyByCardinality}[3]}{X \neq \emptyset}
+	\SayIn{x}{\Elim \TYPE{NonEmpty}[4]}{X}
+	\Say{X'}{X \setminus \{x\}}{\TYPE{Subset}(X)}
+	\Say{[5]}{\Elim X' \THM{CardinalDiff}(X)[3] }{ |X'| = n }
+	\Say{[6]}{\Elim \leo(n) [2](X')[5]}{\top(X') \neq \emptyset}
+	\SayIn{x'}{\Elim \TYPE{NonEmpty}[6]}{\top(X')}
+	\SayIn{y}{\max(x,x')}{X}
+	\Say{[7]}{\Elim X' \THM{DifferenceStructure}}{X = X' \sqcup \{x\}}
+	\AssumeIn{z}{X}
+	\Say{[8]}{\Elim \TYPE{DisjointUnion} [7] (z) }{ z \in X' | z \in \{x\}}
+	\Say{[9]}{
+		\Intro (\Imply)  
+		\Lambda P :  z \in X' \. 
+			\Elim \TYPE{Transitive}(\le_X)
+			\Big(
+				\Elim \top(X')(x')(z,P) , 
+				\Elim y \THM{MaxProperty}(X,x,x') \pi_2 
+			\Big)
+			\NewLine 
+			\Intro y
+	}
+	{
+		z \in X' \Imply  z \le y
+	}
+	\Say{[10]}
+	{
+		\Intro (\Imply) 
+		\Lambda P : z \in \{x\} \.
+		\Elim \TYPE{Transitive}(\le_X)
+		\Big(
+			\Elim \TYPE{Singleton}(P)
+			\Elim \TYPE{Reflexive}(\le_X)
+			\Elim y
+			\THM{MaxProperty}(X,x,x') \pi_1
+		\Big)
+		\NewLine
+		\Intro y
+	}
+	{
+		z \in \{x\} \Imply z \le y
+	}
+	\Say{[z.*]}{\Elim(|)([8],[9],[10])}
+	{
+		z \le y
+	}
+	\DeriveConclude{[n.*]}{\Intro(\forall) \Intro(\top)}{y \in \top(X)}
+	\DeriveConclude{[2]}{\Intro(\exists)\Elim(\Imply)\Elim(\forall)\Intro(\leo) \Elim \Nat [1] \Elim \leo   }
+	{
+		\forall n \in \Nat \. 
+		\forall X  : \Toset \. 
+		|X| = n \Imply \exists \top(n)
+	}
+	\Conclude{[*]}{ 
+		\Intro(\forall) 
+		\Lambda X : \Toset \. 
+		\Intro(\Imply) 
+		\Lambda P : 0 <|X| < \infty \. 
+			[2]\big(|X|,P\big)(X)\bigg( \Intro(=)\Big(\Nat, \big( |X|,P \big) \Big) \bigg)  
+		}{
+			\NewLine \. 
+			\forall X : \Toset \. 
+			|X| < \infty \Imply \exists \top(X)
+		}
+	\EndProof
+}\Page{
+	\Theorem{FiniteTosetHasBottom}
+	{
+		\forall X : \Toset \.
+		 0 < |X| < \infty \Imply
+		\exists \bot(X)
+	}
+	\Conclude{[*]}{\FUNC{dualize}\Big(X, \THM{FiniteTosetHasTop} \Big)}{ \exists \bot(X)  }
+	\EndProof
+	\\
+	\DeclareFunc{setMaximum}{\prod X : \Toset \. ?X}
+	\DefineNamedFunc{setMaximum}{}{\max X}{\Elim \TYPE{Singleton}\Big(\THM{FiniteTosetHasTop}(X),\THM{TopIsUnique}(X)\Big)}
+	\\
+	\DeclareFunc{setMinimum}{\prod X : \Toset \. ?X}
+	\DefineNamedFunc{setMunimum}{}{\min X}{\Elim \TYPE{Singleton}\Big(\THM{FiniteTosetHasBottom}(X),\THM{BottomIsUnique}(X)\Big)}
+	\\
+	\Theorem{FiniteTosetsAreIsomorphic}
+	{
+		\forall X,Y : \Toset \.
+		|X| = |Y| < \infty \Imply
+		X \cong_{\POSET} Y
+	}
+	\Say{\leo}{
+		\Lambda n \in \Int_+ \. 
+		\forall X,Y : \Toset \. 
+		|X| = |Y|  = n
+		\Imply
+		X \cong_{\POSET} Y
+	}
+	{
+		\Nat \to \Type
+	}
+	\Say{[1]}{ \Intro \TYPE{Isomorphic}( \POSET ,\id_{\emptyset}   )  }
+	{
+		\emptyset \cong_\POSET \emptyset
+	}
+	\Say{[2]}{
+		\Intro \leo 
+		\Intro(\forall) 
+		\Lambda X,Y : \Toset \. 
+		\Intro(\Imply)
+		\Lambda P : |X| = |Y| = 0 \.
+		\Elim(=,1)\Big( \THM{EmptyByCardinality}(P_1), \Elim(=,2)(\THM{EmptyByCardinality}(P_2)), [1]  \Big)
+	}
+	{
+		\leo(0)
+	}
+	\Assume{n}{\Int_+}
+	\Assume{[3]}{\leo(n)}
+	\Assume{X,Y}{\Toset}
+	\Assume{[4]}{ |X| = |Y| = n + 1 }
+	\SayIn{x}{\min X}{X}
+	\SayIn{y}{\min Y}{Y}
+	\Say{X'}{X \setminus \{x\}}{?X}
+	\Say{Y'}{Y \setminus \{y\}}{?Y}
+	\Say{[5]}{\Elim X' \THM{CardinalDiff}(X)[4] }{ |X'| = n }
+	\Say{[6]}{\Elim Y' \THM{CardinalDiff}(Y)[4] }{ |Y'| = n }
+	\Say{[7]}{\Elim \leo [3](X',Y')[5][6] }{ X' \cong_\POSET Y'}
+	\Say{\Big(f',[8]\Big)}{\Elim \TYPE{Isomorphic}[7]}
+	{
+		\sum f' : X' \to Y' \. X \ToIso{f'} Y : \POSET
+	}
+	\Say{f}{\Lambda u \in X \. \If x == u \Then y \Else f(u) }{X \to Y}
+	\Say{[8]}{\Elim X' \THM{DifferenceStructure}}{X = X' \sqcup \{x\}}
+	\AssumeIn{u,v}{X}
+	\Assume{[9]}{u \le v}
+	\Say{[10]}{\Elim \TYPE{DisjointUnion}[8](X,u)}{u \in X' | u \in \{x\}}
+	\Say{[11]}{
+		\Lambda P : u \in X' \. 
+		\Intro f 
+		\Elim  \POSET(X',Y',f')\bigg( (u,P) ,
+			\Big(
+				v,  
+				\Intro X'
+				\Elim \TYPE{StriclyLess}
+				\TYPE{Transitive}\big(
+					\Elim x \Elim \min \Elim \bot (u,P),
+					[9]
+				\big)
+			\Big)
+		\bigg)
+	}
+	{
+		u \in X' \Imply f(u) \le f(v)
+	}
+	\Say{[12]}{
+		\Lambda P : u \in \{x\} \.
+		\Elim(=)\Big( \Elim \TYPE{Singleton}(P)\Intro f(x),
+			      \Elim y \Elim \min \Elim \bot \big(f(v)\big)
+			\Big)
+	}
+	{
+		u \in \{x\} \Imply f(u) \le f(v)
+	}
+	\Conclude{\Big[(u,v).*\Big]}
+	{
+		\Elim(|)[10][11][12]
+	}
+	{
+		f(u) \le f(v)
+	}
+	\Derive{[9]}{\Elim \POSET}{f \in \POSET(X,Y)}
+	\Say{[10]}{\Elim Y' \THM{DifferenceStructure}}{Y = Y' \sqcup \{y\}}
+}\Page{
+	\AssumeIn{u,v}{X}
+	\Assume{[11]}{f(u) = f(v)}
+	\Say{[12]}{\Elim \TYPE{DisjointUnion}[10](Y,f(u))}{f(u) \in Y' | f(u) \in \{y\}}
+	\Say{[13]}{
+		\Lambda P : f(u) \in Y' \. 
+		\Elim f \Elim \FUNC{IfThenElse}(P) \Elim \TYPE{Injective}(X',Y',f')[11]
+	}
+	{
+		f(u) \in Y'  \Imply u = v
+	}
+	\Say{[14]}{\Lambda P : f(u) \in \{y\} \. \Elim f \Elim \FUNC{IfThenElse}(P)}
+	{
+		f(u) \in \{y\} \Imply u = v
+	}
+	\Conclude{\Big[(u,v).*\Big]}
+	{
+		\Elim(|)[12][13][14]
+	}
+	{
+		f(u) \le f(v)
+	}
+	\Derive{[11]}{\Intro \TYPE{Injective}}
+	{
+		\TYPE{Injective}(X,Y,f)
+	}
+	\AssumeIn{z}{Y}
+	\Say{[13]}{\Elim \TYPE{DisjointUnion}[10](Y,z)}{z \in Y' | z \in \{y\}}
+	\Say{[14]}{
+		\Lambda P : z \in Y' \. 
+		\Elim f \Elim \FUNC{IfThenElse}(P) \Elim \TYPE{Surjective}(X',Y',f')[12] \Intro f
+	}
+	{
+		f(u) \in Y'  \Imply \exists f^{-1}(y)
+	}
+	\Say{[14]}{\Lambda P : f(u) \in \{y\} \. \Elim f \Elim \FUNC{IfThenElse}(P)}
+	{
+		f(u) \in \{y\} \Imply \exists f^{-1}(y)
+	}
+	\Conclude{\Big[(u,v).*\Big]}
+	{
+		\Elim(|)[13][14][15]
+	}
+	{
+		f^{-1}(y)
+	}
+	\Derive{[12]}{\Intro \TYPE{Surjectiv}}
+	{
+		\TYPE{Surjective}(X,Y,f)
+	}
+	\Say{[13]}{\Intro \TYPE{Isomorphism}[9][11][12]}
+	{
+		\TYPE{Isomorphism}(\POSET,X,Y,f)
+	}
+	\Conclude{[n.*]}{\Elim \TYPE{Isomorphic}[13]}
+	{
+		X \cong_\POSET Y
+	}
+	\Derive{[3]}{\Intro \Imply \Intro \forall \Intro \leo \Elim \Intro \Elim \forall \Elim \Nat [2] \Elim \leo}
+	{
+		\forall n \in \Nat \. 
+		\forall X,Y \in \Toset \.
+		|X| = |Y| = n \Imply X \cong_\POSET Y
+	}
+	\Conclude{[*]}{ 
+		\Intro(\forall) 
+		\Lambda X,Y : \Toset \. 
+		\Intro(\Imply) 
+		\Lambda P : |X| = |Y| < \infty \. 
+			[2]\big(|X|,P\big)(X)\bigg( \Intro(=)\Big(\Nat, \big( |X|,P \big) \Big) \bigg)  
+		}{
+			\NewLine \. 
+			\forall X,Y : \Toset \. 
+			|X| = |Y| < \infty \Imply X \cong_\POSET Y
+		}
+	\EndProof	
+}
+\newpage
+\subsection{Well Ordering}
+\subsubsection{Well Founded Sets}
+\Page{
+	\DeclareType{WellFounded}{?\POSET}
+	\DefineType{X}{\TYPE{WellFounded}}
+	{
+		\forall T : X \to \Type \.
+		\Big( \forall x \in X \. (\forall y \in X \. y < x \Imply T(y) \Big) \Imply T(X)  \Big)  \Imply \forall x \in X \. T(x)
+	}
+	\\
+	\Theorem{WellFoundedHasMin}
+	{
+		\forall X : \TYPE{WellFounded} \.
+		\forall A \subset X \.
+		A \neq \emptyset \Imply \exists \min A
+	}
+	\Assume{[1]}{\min A = \emptyset}
+	\AssumeIn{x}{X}
+	\Assume{[2]}{\forall y \in X \. y < x \Imply y \in A^\c}
+	\Assume{[3]}{x \in A}
+	\Say{[4]}{\Intro \min [2][3]}{x \in \min A}
+	\Conclude{[3.*]}{\Elim \emptyset[1][4]}{ \bot }
+	\DeriveConclude{[x.*]}{\Elim(\bot)}{x \in A^\c}
+	\DeriveConclude{[2]}{\Intro(\Imply)\Intro(\forall)\Elim \TYPE{WellFounded}}
+	{
+		\forall x \in X \. x \in A^\c
+	}
+	\Say{[3]}{\Intro \TYPE{Subset}\Intro \TYPE{SetEq}}{ X = A^\c }
+	\Say{[4]}{[3]^\c}{A = \emptyset}
+	\Conclude{[1.*]}{\Intro(\bot)[0][4]}{\bot}
+	\Derive{[*]}{\Elim \bot}{\exists \min A}
+	\EndProof
+	\\
+	\DeclareType{StrictlyDecreasing}
+	{
+		\prod_{X,Y \in \POSET} ? \POSET(X,Y) 
+	}
+	\DefineNamedType{f}{StrictlyDeceasing}{\forall a,b \in X \. a > b \Imply f(a) < f(b) }
+	\\
+	\DeclareType{StrictlyIncreasing}
+	{
+		\prod_{X,Y \in \POSET} ? \POSET(X,Y) 
+	}
+	\DefineNamedType{f}{StrictlyIncreasing}{\forall a,b \in X \. a > b \Imply f(a) > f(b) }
+	\\
+}\Page{
+	\Theorem{WellFoundedByAbscenceOfDecreasingSequences}
+	{
+		\NewLine :
+		\forall X \in \POSET \. 
+		\TYPE{StrictlyDecreasing}(\Nat,X) = \emptyset
+		\Imply \TYPE{WellFounded}(X)
+	}
+	\Assume{A}{?X}
+	\Assume{[1]}{A \neq \emptyset}
+	\Assume{[2]}{\min A = \emptyset}
+	\Say{B_1}{A}{?X}
+	\Say{[3_1]}{[1]}{A \neq \emptyset}
+	\Assume{n}{\Nat}
+	\SayIn{ b_{n}}{\Elim \TYPE{NonEmpty}[3_n]}{B_n}
+	\Say{B_{n+1}}{\{ a \in A : a < b_n \}}{?A}
+	\Say{[3_{n+1}]}{\Elim \min [2]\Elim B_{n+1}}{B_{n+1} \neq \emptyset}
+	\Conclude{[n.*]}{\Elim b_n \Elim B_{n+1}}{B_{n+1} < b_n}
+	\Derive{b}{\Intro\Act{\prod} \Intro \TYPE{StrictlyDecreasing}}
+	{
+		\TYPE{StrictlyDecreasing}(\Nat,A)
+	}
+	\Conclude{[A.*]}{\Elim \emptyset [0](b)\Intro(\bot)}{\bot}
+	\Derive{[1]}{\Elim(\bot)\Intro(\Imply)\Intro(\forall)}
+	{
+		\forall A \subset X \. A \neq \emptyset \Imply \exists \min A
+	}
+	\Assume{T}{X \to \Type}
+	\Assume{[2]}{\forall x \in X \. \Big(\forall y \in X \. y < x \Imply T(y)\Big) \Imply T(X)}
+	\Say{A}{\{ x \in X : \neg T(x) \}}{?X}
+	\Assume{[3]}{A \neq \emptyset}
+	\SayIn{a}{[1](A)[3]\Elim \TYPE{NoneEmpty}}{ \min A}
+	\Say{[4]}{\Elim \min A (a)\Elim A}{\forall x \in X \. x < a \Imply T(x)}
+	\Say{[5]}{[2](a)[4]}{T(a)}
+	\Say{[6]}{\Elim A(a) }{\neg T(A)}
+	\Conclude{[3.*]}{[6][5]}{\bot}
+	\Derive{[3]}{\Elim(\bot)}{A = \emptyset}
+	\Conclude{[T.*]}{\Elim A [3]}{ \forall x \in X \. T(x)}
+	\DeriveConclude{[*]}{\Intro \TYPE{WellFounded}}{\TYPE{WellFounded}(X)}
+	\EndProof
+	\\
+	\Theorem{WellFoundedSubset}
+	{
+		\forall X : \TYPE{WellFounded} \.
+		\forall A \subset  X \. 
+		\TYPE{WellFounded}(A)
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Well Ordered Sets}
+\Page{
+	\Conclude{\WO}{\Toset \And \WF}{?\POSET}
+	\\
+	\DeclareFunc{minimumWO}{\prod X : \WO \. ?X \to X}
+	\DefineNamedFunc{minimumWO}{A}{\min A}{\Elim \Toset \THM{WellFoundedHasMin} (X,A)}
+	\\
+	\DeclareType{Next}{\prod_{X \in \POSET} X \to ?X}
+	\DefineType{y}{Next}
+	{
+		\Lambda x \in X \. 
+		x < y \And \{ z \in X : x < z < y\} = \emptyset
+	}
+	\\
+	\DeclareType{HasNext}{\prod_{X \in \POSET}  ?X}
+	\DefineType{x}{HasNext}{\exists \TYPE{Next}(X,x) }
+	\\
+	\Theorem{WellOrderedNextIsUnique}
+	{
+		\forall X : \WO \.
+		\forall x : \TYPE{HasNext}(X) \.
+		\exists! \TYPE{Next}(X,x) 
+	}
+	\Assume{y,z}{\TYPE{Next}(X,x)}
+	\Say{[1]}{\Elim \TYPE{Toset}(X)(y,z)}{y \le z | z \le y}
+	\Say{[2]}{\Elim_2 \TYPE{Next}(X,x,y)}{  \{ u \in X : x < u < y\} = \emptyset }
+	\Say{[3]}{\Elim_2 \TYPE{Next}(X,x,z)}{  \{ u \in X : x < u < z\} = \emptyset }
+	\Say{[4]}{\Elim_1 \TYPE{Next}(X,x,y)}{ x < y } 
+	\Say{[5]}{\Elim_1 \TYPE{Next}(X,x,z)}{ x < z }
+	\Conclude{\Big[(y,z).*\Big]}{\Elim(|)\Big( \Lambda P : y \le z \. [4][3], \Lambda P : z \le y \. [5][2] \Big)}
+	{
+		y = z
+	}
+	\DeriveConclude{[*]}{\Intro \exists! \Elim \TYPE{HasNext}(X,x)}{\exists! \TYPE{Next}(X,x)}
+	\EndProof
+	\\
+	\DeclareFunc{next}{\prod X : \WO \. \TYPE{HasNext}(X) \to X}
+	\DefineNamedFunc{next}{x}{\sigma(x)}{\THM{WellOrderedNextIsUnique}(X)(x)}
+	\\
+	\DeclareType{HasPredecessor}{\prod_{X \in \POSET} ?X}
+	\DefineType{y}{HasPredecessor}{\exists x \in X : \TYPE{Next}(X,y,x)}
+	\\
+	\DeclareFunc{pred}{\prod X : \WO \. \TYPE{HasPredecessor}(X) \to X}
+	\DefineNamedFunc{pred}{x}{p(x)}{\Elim \TYPE{HasPredecessor}(X,x)}
+	\\
+	\Conclude{\TYPE{Limit}}{\neg \TYPE{HasPredecessor}}{\prod_{X\in \POSET} ?X}
+}\Page{
+	\Theorem{WellOrderedNextDecomposition}
+	{
+		\forall X : \WO \. 
+		X = \TYPE{HasNext}(X) \sqcup \max X
+	}
+	\Assume{x}{\neg \TYPE{HasNext}(X)}
+	\Say{A}{\{ y \in X : x < y\} }{?X}
+	\Assume{[0]}{A \neq \emptyset}
+	\SayIn{a}{\min A}{A}
+	\AssumeIn{z}{X}
+	\Assume{[1]}{x < z < a}
+	\Say{[2]}{\Elim A [1]}{z \in A}
+	\Say{[3]}{\Elim a \Elim  \min A [2]}{a \le z}
+	\Conclude{[1.*]}{\Elim (z < a)[1][3]}{\bot}
+	\Derive{[1]}{\Elim(\bot)\Intro\TYPE{Next}}{ \TYPE{Next}(X,x,a)}
+	\Conclude{[0.*]}{\Elim x \Intro \TYPE{HasNext}[1]}{\bot}
+	\Derive{[1]}{\Elim(\bot)}{A = \emptyset}
+	\Conclude{[1.*]}{\Elim A \Intro \max X}{x \in \max X}
+	\Derive{[1]}{\Intro \TYPE{Subset}}{\neg\TYPE{HasNext}(X) \subset \max X}
+	\AssumeIn{x}{ (\max X)^\c}
+	\Say{A}{\{ y \in X : x < y\}}{?X}
+	\Say{[3]}{\Elim x \Elim \max X \Intro A}{A \neq \emptyset}
+	\SayIn{a}{\min A}{A}
+	\Assume{[4]}{x < z < a}
+	\Say{[5]}{\Elim A [1]}{z \in A}
+	\Say{[6]}{\Elim a \Elim  \min A [2]}{a \le z}
+	\Conclude{[4.*]}{\Elim (z < a)[1][3]}{\bot}
+	\Derive{[4]}{\Elim(\bot)\Intro\TYPE{Next}}{ \TYPE{Next}(X,x,a)}
+	\Conclude{[x.*]}{\Intro \TYPE{HasNext}}{\TYPE{HasNext}(X,x)}
+	\DeriveConclude{[2]}{\Intro \TYPE{Subset}}{(\max X)^\c \Imply \TYPE{HasNext}(X,x)}
+	\Say{[3]}{\THM{UnionCrossIntroduction}[1][2]}{X = (\max X) \cup \TYPE{HasNext}(X,x)}
+	\Assume{x}{\max X \sqcup \TYPE{WithNext}(X)}
+	\Say{y}{\Elim \TYPE{HasNext}(X,x)}{y}
+	\Say{4}{\Elim_1 \TYPE{Next}(X,x,y)}{ x < y }
+	\Say{[5]}{\Elim \max X (x)(y)}{y \le x}
+	\Conclude{[6]}{\THM{TrichtomyPrincple}[4][5]}{\bot}
+	\Derive{[4]}{\Intro \emptyset}{\max X \cap \TYPE{HasNext}(X) = \emptyset}
+	\Conclude{[*]}{\Intro \TYPE{Disjoint}[3][4]}{X = \TYPE{HasNext}(X) \sqcup \max X }
+	\EndProof 	
+}
+\Page{
+	\Theorem{LimitRepresentation}
+	{
+		\forall X : \WO \.
+		\forall x \in X \.
+		\exists n \in \Int_+ :
+		\exists a : \TYPE{Limit}(X) \.
+		x = \sigma^n(a)
+	}
+	\Say{A}{ \Big\{ a \in X : \exists n \in \Int_+ :  x = \sigma^n(a) \Big\} }{ ?X  }
+	\Say{[1]}{\Elim A \Elim \sigma^0 \Intro(=)(x)}{x \in A}
+	\Say{[2]}{\Intro \emptyset [1]}{ A \neq \emptyset }
+	\SayIn{a}{\min A}{a}
+	\Say{\Big( n, [3]\Big)}{\Elim A (a)}{\sum n \in \Int_+ \. x = \sigma^n(a)}
+	\AssumeIn{b}{X}
+	\Assume{[4]}{\TYPE{Next}(X,b,a)}
+	\Say{[5]}{\Elim_1 \TYPE{Next}(X,b,a)}{b < a}
+	\Say{[6]}{\Intro \sigma [4][3]}{x = \sigma^{n+1}(b)}
+	\Say{[7]}{\Elim A [6] }{b \in A}
+	\Say{[8]}{\Elim \min A(a)(b)}{a \le a}
+	\Conclude{[b.*]}{\THM{TrichtomyPrinciple}[5][8]}{\bot}
+	\DeriveConclude{[*]}{\Elim(\bot)\Elim(\forall)\Intro \TYPE{Limit}}
+	{
+		\TYPE{Limit}(X,a)
+	}
+	\EndProof
+	\\
+	\DeclareFunc{zero}{\prod X : \WO \And \TYPE{nonEmpty} \.  X}
+	\DefineNamedFunc{zero}{}{0_X}{\min X}
+	\\
+	\Theorem{WellOrderedSubset}{   \forall X : \WO \. \forall A \subset X \. \WO(A)}
+	\NoProof
+}\newpage
+\subsubsection{Initial Intervals}
+\Page{
+	\DeclareType{InitialInterval}{\prod_{X \in \POSET} ?X}
+	\DefineType{I}{InitialInterval}{\forall a \in I \. \forall x \in X \. x \le a \Imply x \in I }
+	\\
+	\Theorem{InitialIntervalTransitivity}
+	{
+		\forall X \in \POSET \.
+		\forall I : \II(X) \.
+		\forall J : \II(I) \.
+		\II(X,J)
+	}
+	\AssumeIn{j}{J}
+	\AssumeIn{x}{X}
+	\Assume{[1]}{x \le j}
+	\Say{[2]}{\Elim \II(X,I)[1]}{x \in I}
+	\Conclude{[3]}{\Elim \II(I,J)}{x \in J}
+	\DeriveConclude{[*]}{\Intro(\II)}{ \II(X,J)  }
+	\EndProof
+	\\
+	\Theorem{InitialInervalIntersection}
+	{
+		\forall X \in \POSET \.
+		\forall \I \in \SET \. 
+		\forall I : \I \to \II(X) \. \NewLine \.  
+		\II\Act{X,\bigcap_{i \in \I} I_i }  
+	}
+	\AssumeIn{a}{\bigcap_{i \in \I} I_i}
+	\AssumeIn{x}{X}
+	\Assume{[1]}{x \le a}
+	\Say{[2]}{\forall i \in \I \. \Elim \II(X,I_i)(a,x)[1]}
+	{
+		\forall i \in \i \. x \in I_i
+	}
+	\Conclude{[a.*]}{\Elim \FUNC{intersection}[2]}
+	{
+		x \in \bigcup_{i \in \I} I_i
+	}
+	\DeriveConclude{[*]}{\Intro(\II)}{\II\Act{X,\bigcup_{i \in \I} I_i}}
+	\EndProof
+}\Page{
+	\Theorem{ WellOrderedInitialIntervalRepresentation}
+	{
+		\NewLine ::
+		\forall X : \WO \. 
+		\forall I : \II(X) \.
+		I \neq X \Imply
+		\exists x \in X \.
+		I = \{ i \in X : i < x \}
+	}
+	\Say{[1]}{[0]^\c}{I^\c \neq \emptyset}
+	\SayIn{x}{\min I^\c}{I^\c}
+	\AssumeIn{i}{I}
+	\Assume{[2]}{x \le i  }
+	\Say{[3]}{\Elim \II [2]}
+	{
+		x \in I
+	}
+	\Say{[4]}{\Elim \FUNC{complement}(I,x)}{x \not \in I}
+	\Conclude{[2.*]}{[3][4]}{\bot}
+	\DeriveConclude{[i.*]}{\THM{TrichtomyPrinciple}}{i < x}
+	\Derive{[2]}{\Intro \TYPE{Subset}}{I \subset \{ i \in X \. i < x\}}
+	\AssumeIn{i}{X}
+	\Assume{[3]}{i < x}
+	\Say{[4]}{\Elim x \Elim \min I^\c (i)[3]}{i \in I^{\c\c}}
+	\Conclude{[i.*]}{\THM{IdempotentComplement}[4]}{i \in I}
+	\DeriveConclude{[*]}{\Intro\TYPE{Subset}\Intro\TYPE{SetEq}[2]}{I = \{ i \in X \. i < x\}}
+	\EndProof
+	\\
+	\Theorem{InitialIntervalTotallity}
+	{
+		\forall X : \WO \.
+		\forall I,J : \II(X) \.
+		I \subset J | J \subset I
+	}
+	\Say{\Big(x,[1]}{\THM{WellOrderedInitilIntervalRepresentation}(X,I)}
+	{
+		\sum x \in X \. I = \{ i \in X : i < x \}
+	}
+	\Say{\Big(y,[2]}{\THM{WellOrderedInitilIntervalRepresentation}(X,J)}
+	{
+		\sum y \in X \. J = \{ j \in X : j < y \}
+	}
+	\Say{[3]}{\Elim \Toset(X)(x,y)}{x \le y | y \le x}
+	\Conclude{[*]}{\Intro \TYPE{Subset}[1][2][3]}{I \subset J | J \subset I}
+	\EndProof
+	\\
+	\Theorem{WellOrderedInitialIntervals}
+	{
+		\forall X : \WO \. \WO\Big( \II(X), \subset \Big)
+	}
+	\NoProof
+	\\
+	\Theorem{WellOrderedInitialIntervalsIsomorphisms}
+	{
+		\forall X : \WO \. \II(X) \setminus \{X\} \cong_{\POSET} X
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Isomorphisms Of Countable Tosets}
+\Page{
+	\Theorem{NaturalNumbersAreWellOrdered}
+	{
+		\WO(\Nat)
+	}
+	\NoProof
+	\\
+	\DeclareType{Unbounded}{?\POSET}
+	\DefineType{X}{Unbounded}{\max X = \min X = \emptyset}
+	\\
+	\DeclareType{Dense}{?\POSET}
+	\DefineType{X}{Dense}{\forall x \in X \. \TYPE{Next}(x)}
+	\\
+	\Theorem{CountableTosetIsoMorphism}
+	{
+		\forall X,Y : \Toset \And \TYPE{Unbounded} \And \TYPE{Dense} \.
+		|X| = |Y| = \aleph_0 \Imply X \cong_{\POSET} Y
+	}
+	\NoProof
+	\\
+	\Theorem{RationalNumbersClassifyCountableSubsets}
+	{
+		\forall X : \Toset \.
+		|X| \le \aleph_0 \Imply
+		\exists A \subset \Rats : 
+		A \cong_{\POSET} X
+	}
+	\NoProof
+}
+\newpage
+\subsection{The Choice}
+\subsubsection{Transfinite Inducion}
+\Page{
+	\Theorem{StriclyIncreasingWellOrdered}
+	{
+		\forall X : \WO : 
+		\forall f : \TYPE{StrictltIncreasing}(X,X) \. 
+		\forall x \in X \. f(x) \ge x
+	}
+	\Say{T}{ \Lambda x \in X \. f(x) \ge x }{X \to \Type}
+	\AssumeIn{x}{X}
+	\Say{A}{\{ y \in X : y < x \}}{?X}
+	\Assume{[0]}{A \neq \emptyset}
+	\Say{[1]}{\Elim \TYPE{StrictlyIncreasing}(X,X,f)\Elim A}{  f(A) < f(x)  }
+	\AssumeIn{[2]}{\forall a \in A \. f(a) \ge a}
+	\Say{[3]}{[1][2]}{ A < f(x) }
+	\Assume{[4]}{f(x) < x }
+	\Say{[5]}{\Elim A [4]}{f(x) \in A}
+	\Say{[6]}{[3][5]}{f(x) < f(x)}
+	\Conclude{[0.*]}{\Elim \TYPE{StrictlyLess}(X,f(x))\Intro(=)(X,f(x))}{\bot}
+	\Derive{[1]}{\Elim \bot \Elim^2(\Imply)}{A \neq \emptyset \Imply \forall a \in A \. f(a) \ge a \Imply x \le f(x)}
+	\Assume{[2]}{A = \emptyset}
+	\Say{[3]}{\Elim \WO \Intro \min \Intro 0}{ x = 0 }
+	\Conclude{[2.*]}{\Elim 0 (f(x))\Elim(=,2)[3]}{f(x) \ge 0 = x}
+	\Derive{[2]}{\Intro(\Imply)\Intro(\forall)}
+	{
+		A = \emptyset \Imply \forall a \in A \. f(a) \ge a \Imply x \le f(x)
+	}
+	\Conclude{[x.*]}{\Elim(|)\LOGIC{LEM}(A=\emptyset)[1][2]}{\forall a \in A \. f(a) \ge a \Imply x \le f(x)}
+	\DeriveConclude{[*]}{\Elim \WF(X)}{\forall x \in X \. x \le f(x)}
+	\EndProof
+}\Page{
+	\Theorem{TransfiniteRecursion}
+	{
+		\forall X : \WO \.
+		\forall Y \in \SET \. \NewLine \.
+		\forall G : \left(\prod_{x \in X} [0,x) \to Y\right) \to Y \.
+		\exists! f : X \to Y : 
+		\forall x \in X \. f(x) = G\Big(x, f_{|[0,x)} \Big)
+	}
+	\AssumeIn{x}{X}
+	\Assume{[1]}
+	{
+		\forall z \in X \. 
+		z < x \Imply \exists f'_y : [0,z] \to Y \. 
+		\forall u \in [0,z] \.f'(u) = G(u, f'_{|[0,u)}) 
+	}
+	\Assume{u,v}{[0,x)}
+	\Say{\Big(f'_u,[2]\Big)}{[1](u)}
+	{
+		\sum f'_u : [0,u] \to Y \. 
+		\forall a \in [0,u] \.
+		f(a) = G(a, f'_{u|[0,a)})
+	}
+	\Say{\Big(f'_v,[3]\Big)}{[1](v)}
+	{
+		\sum f'_v : [0,v] \to Y \. 
+		\forall a \in [0,v] \.
+		f(a) = G(a, f'_{v|[0,a)})
+	}
+	\SayIn{m}{\min(u,v)}{X}
+	\AssumeIn{a}{[0,m)}
+	\Assume{[5]}{ \forall b \in [0,m)  \. b < a \Imply f'_v(b) = f'_u(b)  }
+	\Say{[6]}{[5]\Intro\FUNC{constraint}[0,a)}{f'_{v|[0,a)} = f'_{u|[0,a)} }
+	\Conclude{[a.*]}{[2][6][3]}{
+		f'_{v}(a) = 
+		G(a, f'_{v|[0,a)}) =
+		G(a, f'_{u|[0,a)}) =
+		f'_{u}(a)
+	}
+	\DeriveConclude{\Big[(u,v).*\Big]}{\Elim \WF\Big( [0,m) \Big)}
+	{
+		f'_{v|[0,m)} = f'_{U|[0,m)}
+	}
+	\Derive{[2]}{\Elim m I(\forall)}
+	{
+		\forall u,v \in [0,x) \. 
+		f'_{v|[0,\min(u,v)]} = f'_{u|[0,\min(u,v)]}
+	}
+	\Say{f''}{\Lambda a \in [0,x) \. [1](a)(a)}{[0,x) \to Y }
+	\Say{f'_x}
+	{
+		\Lambda a \in [0,x] \. 
+		\If a < x 
+		\Then  f''(a) 
+		\Else G\Big(x, f'' \Big)
+	}
+	{
+		[0,x] \to Y
+	}
+	\Conclude{[1.*]}{\Elim f'_x [2]}
+	{
+		\forall a \in [0,x] \.
+		f'_x(a) = G\Big( x, f'_{|[0,a)} \Big) 
+	}
+	\Derive{[1]}{\Elim \WF(X)}
+	{
+		\forall a \in X \.
+		\exists f'_a(a) : [0,a] \to Y :
+		\forall a \in [0,x] \.
+		f'_x(a) = G\Big( x, f'_{|[0,a)} \Big) 
+	}
+	\Say{f}{\Lambda a \in X \. [1](a)(a)}{X \to Y }
+	\Assume{u,v}{[0,x)}
+	\Say{\Big(f'_u,[2]\Big)}{[1](u)}
+	{
+		\sum f'_u : [0,u] \to Y \. 
+		\forall a \in [0,u] \.
+		f(a) = G(a, f'_{u|[0,a)})
+	}
+	\Say{\Big(f'_v,[3]\Big)}{[1](v)}
+	{
+		\sum f'_v : [0,v] \to Y \. 
+		\forall a \in [0,v] \.
+		f(a) = G(a, f'_{v|[0,a)})
+	}
+	\SayIn{m}{\min(u,v)}{X}
+	\AssumeIn{a}{[0,m)}
+	\Assume{[5]}{ \forall b \in [0,m)  \. b < a \Imply f'_v(b) = f'_u(b)  }
+	\Say{[6]}{[5]\Intro\FUNC{constraint}[0,a)}{f'_{v|[0,a)} = f'_{u|[0,a)} }
+	\Conclude{[a.*]}{[2][6][3]}{
+		f'_{v}(a) = 
+		G(a, f'_{v|[0,a)}) =
+		G(a, f'_{u|[0,a)}) =
+		f'_{u}(a)
+	}
+	\DeriveConclude{\Big[(u,v).*\Big]}{\Elim \WF\Big( [0,m) \Big)}
+	{
+		f'_{v|[0,m)} = f'_{U|[0,m)}
+	}
+	\Derive{[2]}{\Elim m I(\forall)}
+	{
+		\forall u,v \in X  \. 
+		f'_{v|[0,\min(u,v)]} = f'_{u|[0,\min(u,v)]}
+	}
+	\Conclude{[3]}{\Elim f [2]}
+	{
+		\forall a \in X  \.
+		f'_x(a) = G\Big( x, f'_{|[0,a)} \Big) 
+	}
+	\EndProof
+}
+\Page{
+	\Theorem{WellOrderedTotality}
+	{
+		\forall X,Y  : \WO \. \NewLine \. 
+		\exists I : \II(X) \. I \cong_{\POSET} X
+		\Big|
+		\exists I : \II(Y) \. I \cong_{\POSET} Y
+	}
+	\Say{G}
+	{
+		\Lambda x \in X \. \Lambda g : [0,x) \to Y \sqcup \{\infty\} \.
+		\If  ( Y \sqcup \{\infty\}) \setminus \im g \neq \emptyset
+		\Then \min (Y \sqcup \{\infty\}) \setminus \im g 
+		\Else \infty
+	}
+	{
+		\NewLine :
+		\prod_{x \in X} \Big( [0,x) \to Y \sqcup \{\infty\} \Big) \to Y \sqcap \{\infty\}
+	}
+	\Say{\Big(f,[1] \Big)}{\THM{TranssfiniteRecursion}(X,Y\sqcup\{\infty\},G)}
+	{
+		\sum f : X \to Y \sqcup \{\infty\} \. 
+		\forall x \in X \. f(x) = G\Big(x, f_{|[0,x)} \Big)
+	}
+	\Say{[2]}{ [1] \Elim G \Elim \min \Intro \POSET}
+	{
+		\POSET(X,Y \sqcup \{\infty\},f)
+	}
+	\Assume{[3]}{\infty \not \in \im f}
+	\Say{[4]}{\Elim f \Elim G [3]}
+	{
+		\TYPE{injective}(X,Y,f)
+	}
+	\AssumeIn{y}{\im f}
+	\AssumeIn{a}{Y}
+	\Assume{[5]}{ a < y}
+	\Say{\Big(x,[6]\Big)}
+	{
+		\Elim \im f (y)
+	}
+	{
+		\sum x \in X \.  y = f(x)
+	}
+	\Say{[7]}{\Elim f [6] \Elim G}
+	{
+		y = \min Y \setminus f([0,x))  
+	}
+	\Conclude{[y.*]}{\Elim \FUNC{image} \Elim \min [7][5] \Intro \im f}{ a \in \im f }
+	\DeriveConclude{[3.*]}{\Intro \II}{\II(Y,\im f)}
+	\Say{[4]}{\Intro(\Imply)}
+	{
+		\infty \not \in \im f 
+		\Imply
+		\exists I : \II(Y) \. I \cong_\POSET X
+	}
+	\Assume{[4]}{\infty \in \im f}
+	\Say{I}{f^{-1}(Y)}{?X}
+	\Say{g}{f_{|I}}{I \to Y} 
+	\Say{[5]}{\Elim f \Elim G [3]}
+	{
+		\TYPE{Isomorphism}(\POSET,X,Y,g)
+	}
+	\AssumeIn{i}{I}
+	\AssumeIn{x}{X}
+	\Assume{[6]}{x < i}
+	\Say{[7]}{\Elim I \Elim f [6]}{f(x) \neq \infty}
+	\Conclude{[i.*]}{\Elim I [7]}{x \in I}
+	\DeriveConclude{[4.*]}{\Intro \II}{\II(X,I)}
+	\Derive{[4]}{\Intro(\Imply)}
+	{
+		\infty \in \im f 
+		\Imply
+		\exists I : \II(X) I \cong_\POSET X
+	}
+	\Conclude{[*]}{\LOGIC{OrPushforward}\LOGIC{LEM}(|)[3][4]}
+	{
+		\NewLine :
+		\exists I : \II(X) \. I \cong_{\POSET} Y
+		\Big|
+		\exists I : \II(Y) \. I \cong_{\POSET} X	
+	}
+	\EndProof
+}\Page{
+	\Theorem{InitialIntervalIsNotIsomorphic}
+	{
+		\forall X : \WO \.
+		\forall I : \II(X) \.
+		\NewLine \. 
+		I \neq X \Imply 
+		\neg\Big(X \cong_{\POSET} I\Big)  
+	}
+	\Assume{[1]}{X \cong_\POSET I}
+	\Say{f}{\Elim \TYPE{Isomorphic}[1] }{X \ToIso{\POSET} I}
+	\Say{x}{\Elim[0]}{I^\c}
+	\Say{[2]}{\Elim \II(X)(x)}{I < x}
+	\Say{[3]}{\THM{StrictlyIncreasingWellOrdered}(X,f,x)}
+	{
+		x \le f(x)
+	}
+	\Say{[4]}{[2][3]}{I < f(x)}
+	\Say{[5]}{\Elim f}{f(x) \in I}
+	\Say{[6]}{\Elim (I < f(x))}{ f(x) \not \in I}
+	\Conclude{[1.*]}{[5][6]}{\bot}
+	\DeriveConclude{[*]}{\Intro(\neg)}
+	{
+		\neg\Big(X \cong_{\POSET} I\Big)  	
+	}
+	\EndProof
+	\\
+	\DeclareType{OrderType}{?(\WO \times \WO)}
+	\DefineNamedType{X,Y}{OrderType}{X \le_{\ORD} Y}
+	{
+		\exists I : \II(Y) \. I \cong_{\POSET} X	
+	}
+	\\
+	\Theorem{OrderTypeIsWellOrdering}
+	{
+		\forall \mathcal{X} : ?\WO \.  
+		\WO(\mathcal{X},\le_{\ORD})
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Zermelo's Theorem}
+\Page{
+	\DeclareType{DiscriminationFunction}{\prod_{X \in \SET} ?X \setminus \{X\} \to X }
+	\DefineType{f}{DiscriminationFunction}{\forall A : ?X \setminus \{X\} \. f(A) \in A^\c}
+	\\
+	\Theorem{DiscriminationFunctionExists}
+	{
+		\forall X \in \SET \. X \neq \emptyset 
+		\Imply 
+		\exists\TYPE{DiscriminationFunction}(X)
+	}
+	\Conclude{f}{\LOGIC{Choice} \Big\{ A^\c | A \subset X : A \neq \emptyset\Big\} }
+	{
+		\TYPE{DiscriminationFunction}(X)
+	}
+	\EndProof
+	\\
+	\DeclareType{CorrectFragment}
+	{
+		\prod_{X \in \SET} 
+		\prod f : \TYPE{DiscriminationFunction}(X) \.
+		?\sum_{A \subset X} \TYPE{Order}(A)
+	}
+	\DefineType{(A,\le)}{CorrectFragment}
+	{
+		\WO(A,\le)
+		\And
+		\forall a \in A \. f[0,a) = a
+	}
+}\Page{
+	\Theorem{CorrectFragmentTotallity}
+	{
+		\forall X \in \SET \.
+		\forall f : \TYPE{DiscriminationFunction}(X) \. \NewLine \. 
+		\forall A,B : \TYPE{CorrectFragment}(X,f) \.
+		A \le_{\ORD} B | B \le_{\ORD} A
+	}
+	\Say{[1]}{\THM{WellOrderedTotality}(A,B)}
+	{
+		\NewLine :
+		\exists I : \II(A) \. 
+		I \cong_{\POSET} X
+		\Big|
+		\exists I : \II(B) \.
+		I \cong_{\POSET} Y
+	}
+	\Assume{I}{\II(A)}
+	\Assume{[2]}{I \cong_{\POSET} B}
+	\Say{g}{\Elim \TYPE{Isomorphic}(\POSET)}
+	{
+		\TYPE{Isomorphism}(\POSET,I,B)
+	}
+	\AssumeIn{i}{I}
+	\Assume{[3]}{\forall j \in I \. j < i \Imply g(j) = j}
+	\Say{[4]}{\Elim \TYPE{CorrectFragment}(A,i)}
+	{
+		i = f[0,i) 
+	}
+	\Say{[5]}{\Elim \FUNC{image} [3] \Intro \TYPE{Subset} }
+	{
+		[0,i) \subset B
+	}
+	\Say{[6]}{\Elim \POSET(I,B)[5]}
+	{
+		[0,i) \le g(i)
+	}
+	\Say{\Big( j, [7] \Big)}{\THM{InitialIntervalStructure}\Big(B,[0,i)\Big)}
+	{
+		\sum j \in B \. 
+		[0,j)_B = [0,i)_A  
+	}
+	\Say{[8]}{\Elim \Big(\Poset,I,B,g\Big)[7]}
+	{
+		j = g(i)
+	}
+	\Conclude{[i.*]}{[8]\Elim \TYPE{CorrectFragment}(B,j)[7]}
+	{
+		g(i) = j = f[0,j)_B = f[0,i)_A = i
+	}
+	\Derive{[3]}{ \Elim  \WO(I) }{ g = {\id}_I }
+	\Conclude{[2.*]}{\Elim g [3] \Intro \TYPE{Subset}}{B \subset_{\POSET} A}
+	\Derive{[2]}{\Intro \Imply }{ \Big(\exists I : \II(A) \. I \cong_{\POSET} B \Big) \Imply B \subset_{\POSET} A}
+	\Assume{I}{\II(B)}
+	\Assume{[3]}{I \cong_{\POSET} A}
+	\Say{g}{\Elim \TYPE{Isomorphic}(\POSET)}
+	{
+		\TYPE{Isomorphism}(\POSET,I,A)
+	}
+	\AssumeIn{i}{I}
+	\Assume{[4]}{\forall j \in I \. j < i \Imply g(j) = j}
+	\Say{[5]}{\Elim \TYPE{CorrectFragment}(B,i)}
+	{
+		i = f[0,i) 
+	}
+	\Say{[6]}{\Elim \FUNC{image} [4] \Intro \TYPE{Subset} }
+	{
+		[0,i) \subset A
+	}
+	\Say{[7]}{\Elim \POSET(I,A)[6]}
+	{
+		[0,i) \le g(i)
+	}
+	\Say{\Big( j, [8] \Big)}{\THM{InitialIntervalStructure}\Big(A,[0,i)\Big)}
+	{
+		\sum j \in A \. 
+		[0,j)_A = [0,i)_B 
+	}
+	\Say{[9]}{\Elim \Big(\Poset,I,A,g\Big)[8]}
+	{
+		j = g(i)
+	}
+	\Conclude{[i.*]}{[9]\Elim \TYPE{CorrectFragment}(B,j)[8]}
+	{
+		g(i) = j = f[0,j)_A = f[0,i)_B = i
+	}
+	\Derive{[4]}{ \Elim  \WO(I) }{ g = {\id}_I }
+	\Conclude{[3.*]}{\Elim g [3] \Intro \TYPE{Subset}}{A \subset_{\POSET} B}
+	\Derive{[3]}{\Intro \Imply }{ \Big(\exists I : \II(A) \. I \cong_{\POSET} A \Big) \Imply A \subset_{\POSET} B}
+	\Conclude{[*]}{\LOGIC{OrPushforward}[1,2,3]}
+	{
+		\NewLine 
+		\exists I : \II(A) \. 
+		I \cong_{\POSET} X
+		\Big|
+		\exists I : \II(B) \.
+		I \cong_{\POSET} Y	
+	}
+	\EndProof
+}\Page{
+	\DeclareFunc{correctFragmentUnion}
+	{
+		\prod_{ X \in \SET} \.
+		\prod f : \TYPE{DiscriminationFunction}(X)  
+		\. \NewLine \. 
+		\TYPE{CorrectFragment}^2(X,f) \to 
+		\TYPE{CorrectFragment}(X,f)
+	}
+	\DefineNamedFunc{correctFragmentUnion}{A,B}
+	{ A \cup B }{ \If A \subset B \Then B \Else A }
+	\\
+	\Theorem{ZeremeloTHM}
+	{
+		\forall X \in \SET \.
+		\exists (\le) : \TYPE{Order}(X) \.
+		\WO\Big(X, (\le) \Big)
+	}
+	\Say{f}{\THM{DiscriminationFunctionExists}(X)}
+	{
+		\TYPE{DiscriminationFunctionExists}(X)
+	}
+	\SayIn{C}{\TYPE{CorrectFragment}(X,f)}{\SET}
+	\Say{[1]}{\Intro \TYPE{CorrectFragment}(X,f)(\emptyset)}
+	{
+		\emptyset \in C
+	}
+	\Say{a}{\bigcap C}{?X}
+	\Say{R}{\{ (x,y) \in a : \exists b \in A : x \le_b y  \}}
+	{
+		?a^2
+	}
+	\Say{[3]}{\THM{CorrectFragmentTotality}(X,C)}
+	{
+		\TYPE{Toset}(a,R)
+	}
+	\Assume{A}{?a}
+	\Assume{[4]}{A \neq \emptyset}
+	\Say{(c,[5])}{\Elim a \Elim A[4]}
+	{
+		\sum c \in C \. c \cap A = \emptyset
+	}
+	\SayIn{x}{ \min c \cap A }{c \cap A}
+	\AssumeIn{y}{A}
+	\Assume{[6]}{x < y}
+	\Say{(b,[7])}{\Elim a \Elim A[6]}
+	{
+		\sum b \in C \.  y \in b
+	}
+	\Say{[8]}{\THM{CorrectFragmentTotality}[5][6][7]}
+	{
+		y \in c \cap A
+	}
+	\Conclude{[y.*]}{\Elim \min [6][8]}{\bot}
+	\DeriveConclude{[A.*]}{\Intro \min}{ x = \min A }
+	\Derive{[3]}{\Intro \WO}{ \WO(a)  }
+	\Assume{[4]}{a \neq X}
+	\Say{x}{f(a)}{a^\c}
+	\Say{b}{a \cup \{x\}}{?X}
+	\Say{R}{ \le_a \cup \{ (y,x) | y \in b \} }{\TYPE{Order}(b)}
+	\Say{[5]}{\Elim R \Elim \WO(a) \Intro \WO}
+	{   
+		\WO(b,R)
+	}
+	\Say{[6]}{\Elim b \Intro x }{f[0,x)_b = f(a) = x}
+	\Say{[7]}{ [5][6] \Intro C}{ b \in c }
+	\Say{[8]}{\Elim b \Elim x \Elim a \Intro b \Intro c}
+	{
+		b \not\in c
+	}
+	\Conclude{[9]}{[7][8]}{\bot}
+	\Derive{[4]}{ \Elim \bot }{X = a}
+	\Conclude{[2]}{\Elim(=)[4][3]}
+	{
+		\WO(a)
+	}
+	\EndProof
+}\Page{
+	\Theorem{CardinalsAreComparable}
+	{
+		\forall X,Y \in \SET \. 
+		|X| \le |Y| \Big|
+		|Y| \le |x|
+	}
+	\Say{\Big(\le_X,[1]\Big)}{\THM{ZermeloTHM}(X) }
+	{
+		\sum \le_X : \TYPE{Order}(X) 
+		\.
+		\WO(X,\le_X)
+	}
+	\Say{\Big(\le_Y,[2]\Big)}
+	{
+		\THM{ZermeloTHM}(X)
+	}
+	{
+		\sum \le_Y : \TYPE{Order}(Y) \.
+		\WO(X,\le_X)
+	}
+	\Say{[3]}{\THM{WellOrderedTotality}}
+	{
+		\exists I : \II(X) \. I \cong_\POSET Y 
+		\big| \NewLine \big|
+		\exists I : \II(Y) \. I \cong_\POSET X
+	}
+	\Conclude{[*]}{\LOGIC{OrPushforward}[3]\Intro \TYPE{CardinalityLess}}
+	{
+		|X| \le |Y| \Big| |Y| \le |X|
+	}
+	\EndProof
+}
+\newpage
+\subsubsection{Zorn's Lemma}
+\Page{
+	\DeclareType{Chain}{\prod_{X \in \POSET} ??X}
+	\DefineNamedType{C}{Chain}{C \in \C(X)}{ \Toset(X)}
+	\\
+	\DeclareType{UpperBound}{\prod_{X \in \POSET} ?X \to ?X}
+	\DefineType{x}{UpperBound}{\Lambda A \subset X \. A \le x}
+}\Page{
+	\Theorem{ZornsLemma}
+	{
+		\forall X \in \POSET \.
+		\Big( 
+			\forall C \in \C(X) \. 
+			\exists \UB(X,C)
+		\Big)
+		\Imply
+		\exists \max X
+	}
+	\Say{\Big((\prec),[1]\Big)}
+	{
+		\THM{ZermeloTHM}(X)
+	}
+	{
+		\sum  (\prec) : \TYPE{Order}(X) \. \WO(X,\prec)
+	}
+	\AssumeIn{x}{X}
+	\Assume{f}{ [0,x)_\prec \to  X \sqcup \{\star\} }
+	\Assume{[2]}{ f[0,x) \in \C(X,\le)}
+	\Say{[3]}{[0]\Big( f[0,x), [1]\Big)}{\UB\Big( (X,\le), f[0,x) \Big) \neq \emptyset }
+	\Say{G(x,f_{|[0,x)})}
+	{
+		\If x \in \UB\Big( (X,\le), f[0,x)\Big) 
+		\Then x
+		\Else  \Elim \TYPE{NonEmpty}\UB\Big( (X,\le), f[0,x)\Big)
+	}
+	{
+		\NewLine : 
+		\UB\Big( (X,\le), f[0,x) \Big) 
+	}
+	\Derive{[2]}{\Intro(\Imply) \Intro \sqcup}
+	{
+		f[0,x) \in \C(x,\le) \Imply X \sqcup \{\star\}
+	}
+	\Assume{[3]}{f[0,x) \not \in \C(x,\le)} 
+	\Conclude{G(x,f)}{\star}{\UB\Big( (X,\le), f[0,x) \Big)}
+	\Derive{[3]}{\Intro(\Imply) Intro \sqcup} 
+	{
+		f[0,x) \not\in \C(x,\le) \Imply X \sqcup \{\star\}
+	}
+	\Conclude{G(x,f)}{\Elim(|)\LOGIC{LEM}[2][3]}{X \sqcup \{\star\}}
+	\Derive{G}{\Intro\Act{\prod}}
+	{
+		\prod_{x \in X} f[0,x) \to X \sqcup \{\star\} \to X \sqcup \{\star\}
+	}
+	\Say{\Big(f,[2]\Big)}{\THM{TransfinitrRecursion}\Big(X, X \sqcup\{\star\},G\Big)}
+	{
+		\sum f : X \to X \sqcup \{\star\} \.
+		\forall x \in X \. f(x) = G(x,f_{|[0,x)})
+	}
+	\AssumeIn{x}{X}
+	\Assume{[3]}
+	{
+		\forall y \in Y \.  
+		y \prec x \Imply f(y) \neq \star
+	}
+	\Say{[4]}{[2]\Elim G}
+	{
+		\forall y \in [0,x) \. 
+		f[0,y) \in \C(X)
+	}
+	\Say{[5]}{\THM{ImageUnion}\Big(f,[0,x)\Big) \Elim \C(X) \Elim\FUNC{union} \Intro \C(X)  }
+	{
+		f[0,x) = \bigcup_{y \in [0,x)} f[0,y] \in \C(X) 
+	}
+	\Conclude{[*]}{[2](x)\Elim G [5]}{f(x) \neq \star}
+	\Derive{[3]}{\Elim \WO(X)}{\star \not \in \im f }
+	\Say{[4]}{\Elim f \Elim G}{\TYPE{StrictlyIncreasing}\Big( (X,\prec),(X,\le) \Big)}
+	\Say{[5]}{\Elim \POSET(X) \Intro \C }{f(X) \in \C(X)}
+	\Say{x}{[0]\Big(f(X)\Big)}{\UB\Big((X,\le),f(X)\Big)}
+	\AssumeIn{z}{X}
+	\Assume{[6]}{f(z) < z}
+	\Say{[7]}{[2]\Elim f \Elim G}
+	{
+		f(z) \in \UB\Big( (X,\prec)  ,f[0,z) \Big)
+	}
+	\Say{[8]}{[7] \Elim \UB\Big( (X,\prec), f[0,z) \Big) [7] \Intro \UB\Big( (X,\prec), f[0,z]\Big)}
+	{
+		z \in \UB\Big( (X,\prec), f[0,z) \Big) 
+	}
+	\Say{[9]}{[2] \Elim f \Elim G [9]}
+	{
+		f(z) = z
+	}
+	\Conclude{[[z.*]]}{\Elim \TYPE{StrictlyLess}[6][9]}{\bot}
+	\Derive{[6]}{\Elim(\bot)\Intro(\forall)}{\forall z \in X \. z \not < f(z) }
+	\AssumeIn{y}{X}
+	\Assume{[7]}{y > x}
+	\Say{[8]}{\Elim f \Elim G [6]}{ f(y) < x < y  }
+	\Say{[9]}{[6][8]}{\bot}
+	\DeriveConclude{[*]}{\Intro \max X}{x \in \max X}
+	\EndProof
+}
+\Page{
+	\Theorem{SpecialZornsLemma}
+	{
+		\forall X : \POSET \.
+		\Big( \forall C \in \C(X) \. \exists \UB(X,C)  \Big)
+		\forall x \in X \.
+		\exists m \in \max X \. x \le m
+	}
+	\NoProof
+	\Theorem{TotalExtensionExists}
+	{
+		\forall X : \POSET \. 
+		\exists R : \TYPE{TotalOrder}(X) :
+		(\le_X) \subset R
+	}
+	\AssumeIn{C}{\C\Big( \TYPE{Order}(X), \subset\Big)}
+	\Say{R}{\bigcup C}{?(X^2)}
+	\Say{[1]}{\Elim R \Elim C \Intro \TYPE{Order}\Intro R}
+	{
+		\TYPE{Order}(X,R)
+	}
+	\Conclude{[C.*]}{\Elim R \Elim \FUNC{union} \Intro \UB}
+	{
+		\UB\bigg( \Big( X,\subset \Big), C, R \bigg)
+	}
+	\Derive{[2]}
+	{
+		\Intro(\forall)
+	}
+	{
+		\forall C \in \C\Big( \TYPE{Order}(X),\subset\Big) \.
+		\exists \UB\bigg( \Big(\TYPE{Order}(X),\subset \Big), C, R \bigg)
+	}
+	\Say{\Big(R,[3]\Big)}{\THM{SpecialZornsLemma}\bigg(\Big(\TYPE{Order}(X),\subset\Big), [2],(\le_X)\bigg)}
+	{
+		\sum R \in \max\Big(\TYPE{Order}(X), \le\Big) \. 
+		(\le)_X \subset R
+	}
+	\AssumeIn{x,y}{X}
+	\AssumeIn{[4]}{\neg(xRy) \And \neg(yRx)}
+	\Say{[5]}{\Elim \TYPE{Transitive}(R)[4]}
+	{
+		\forall z \in X \. 
+		xRz \Imply \neg (zRy) \And
+		yRz \Imply \neg (zRy) \And
+		zRx \Imply  \neg (yRz) \And
+		zRy \Imply \neg (xRz)
+	}
+	\Say{[6]}{\Elim \TYPE{Reflexive}(R)[5]}
+	{
+		x \neq y
+	}
+	\Say{R'}
+	{
+		\Big\{
+			(a,b) \in X^2 \Big| 
+			n \in \Nat,
+			z : [1,\ldots,n] \to X,
+			a = z_1,
+			b = z_n, \NewLine , 
+			\forall i \in [1,\ldots,n-1]  \. 
+			(z_i,z_{i+1}) \in R | z_i = x \And z_{i+1} = y
+		\Big\}
+	}{?X^2}
+	\Say{[7]}{\Elim R' \Elim(2)}{R \subset R'}
+	\Say{[8]}{\Elim R' \Elim(1)}{\TYPE{Reflexive}(X,R')}
+	\Say{[9]}{\Elim R'}{\TYPE{Transitive}(X,R')}
+	\AssumeIn{x',y'}{X}
+	\Assume{[10]}{x'R'y' \And y'Rx'}
+	\Assume{[11]}{x' \neq y'}
+	\Say{\Big( n,u,[12]\Big)}{\Elim R [10.1]}
+	{
+		\sum^\infty_{n=1} 
+		\sum y : [1,\ldots,n] \to  X \.
+			x' = y_1 \And
+			y' = y_n \And \NewLine \And
+			\forall i \in [1,\ldots,n-1] \. 
+			\Big( (u_i,u_{i+1}) \in R | (u_i = x \And u_{i+1} = y) \Big)
+	}
+	\Say{\Big( m,v,[13]\Big)}{\Elim R [10.2]}
+	{
+		\sum^\infty_{m=1} 
+		\sum v : [1,\ldots,n] \to  X \.
+			y' = v_1 \And
+			x' = v_n \And \NewLine \And
+			\forall i \in [1,\ldots,m-1]  \.
+			\Big( (v_i,v_{i+1}) \in R | (v_i = x \And v_{i+1} = y) \Big)
+	}
+	\Say{[14]}{\Elim \TYPE{Antisymmetric}(X,R)[4][11][12][13]}
+	{
+		\sum^{m-1}_{i=1} \sum^{n-1}_{j=1} v_i = x \And v_{i+1} = y   
+		\And u_j = x \And u_{j+1} = y
+	}
+	\Say{[15]}{\Elim \TYPE{Transtive}(X,R)[14]}
+	{
+		 x'Rx \And y'Rx \And yRx' \And yRy'  
+	}
+	\Conclude{[11.*]}{[5](x')'\Big[15.(1,2)\Big]}{\bot}
+	\DeriveConclude{\Big[ (x',y').* \Big]}
+	{
+		\Elim(\bot)
+	}
+	{
+		x'\neq y'
+	}
+	\Derive{[10]}{\Intro \TYPE{Order}(X)[8,9]}{\TYPE{Order}(X,R)}
+	\Conclude{\Big[(x,y).*\Big]}{\Elim \max \Big(\TYPE{Order}(X),\subset\Big)\Big(R',[10]\Big)[7]}
+	{  
+		\bot
+	}
+	\DeriveConclude{[*]}{\Elim \bot \Intro \forall \Intro \Toset}
+	{
+		\Toset(X,R)
+	}
+	\EndProof
+}
+\newpage
+\subsection{Ordinal}
+\subsubsection{Numbers}
+\Page{
+	\DeclareFunc{ordinals}{\CAT}
+	\DefineNamedFunc{ordinals}{}{\ORD}
+	{
+		\Big(
+			\WO,
+			\Lambda X,Y : \WO \ \If X \le_\ORD Y \Then 1 \Else 0,
+			(1,1) \mapsto 1,
+			1
+		\Big)
+	}
+	\\
+	\Theorem{OrdinalsAreWellOrdered}
+	{
+		\forall X \in \SET \.
+		\forall n : X \to \ORD \. 
+		\WO(\im n)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{ordinalOuterPredicatTransfer}
+	{
+		\Big( \prod X : \WO \. ?X \to  ?X \Big) \to ?\ORD \to ?\ORD
+	}
+	\DefineNamedFunc{ordinalOuterPredicatTransfer}
+	{P}{P}
+	{
+		\Lambda A \in \ORD \.
+		\Lambda a  \in \ORD \. 
+		\exists X \in \SET :
+		\exists n : X \to \ORD \. 
+		\NewLine
+		\.
+		a \in \im n  \And P(\im n \cap A, a) \And
+		\forall Y \in \SET :
+		\forall m : Y \to \ORD \. 
+		\im n \subset \im m \Imply 
+		P(\im m \cap A , a)
+	}
+	\\
+	\DeclareFunc{ordinalInnerPredicatTransfer}
+	{
+		\Big( \prod X : \WO \. \prod_{A : ?X} ?A  \Big) \to \prod_{A :?\ORD} \ORD
+	}
+	\DefineNamedFunc{ordinalInnerPredicatTransfer}
+	{P}{P}
+	{
+		\Lambda A : ?\ORD \. 
+		\Lambda a \in A \. 
+		\forall X \in \SET \.
+		\forall  n : X \to \ORD \. 
+		\im n \subset A 
+		\Imply \NewLine \Imply 
+		\exists Y \in \SET \.
+		\exists m : Y \to \ORD :
+		\im n \subset \im n \And 
+		a \in \im n \And
+		P(\im n,a)	
+	}
+	\\
+	\Theorem{OrdinalAsInterval}
+	{
+		\forall n \in \ORD \.
+		n \cong_{\POSET} [0,n)_\ORD
+	}
+	\NoProof
+	\\
+	\DeclareFunc{nextOrd}{\ORD \Arrow{\CAT} \ORD}
+	\DefineNamedFunc{nextOrd}{a}{\sigma(a)}{\II(a)}
+	\\
+	\DeclareType{LimitOrdinal}
+	{
+		?\ORD
+	}
+	\DefineType{n}{LimiOrdinal}{\forall a \in \ORD \. n \not \cong_\ORD \sigma(a)}
+	\\
+	\DeclareType{Bounded}{\prod_{X \in \POSET} ??X}
+	\DefineNamedType{A}{Bounded}{\exists\UB(X,A) }
+	\\
+	\Theorem{BoundedOrdinalsHaveLub}
+	{
+		\forall A : \TYPE{Bounded}(\ORD) \. 
+		\exists \min \UB(\ORD,A)
+	}
+	\NoProof
+}
+\Page
+{
+	\DeclareType{TransitiveSet}{?\SET}
+	\DefineType{A}{TransitiveSet}{\forall a \in A \. \forall b \in a \. b \in A}
+	\\
+	\DeclareFunc{ZFOrder}{\prod_{X \in \SET} ?X^2}
+	\DefineNamedFunc{ZFOrder}{}{\le_{\mathsf{ZF}}}{\Big\{ (x,y) \in X^2 \Big| x = y | x \in y  \Big\}}
+	\\
+	\Conclude{\TYPE{WellFoundnesAxiom}}{\forall X \in \SET \. X \neq \emptyset \Imply \exists a \in X \. a \cap X = \emptyset }{\Type}
+	\\
+	\DeclareType{OrdinalSet}{?\TYPE{TransitiveSet}}
+	\DefineType{A}{OrdinalSet}{\forall a \in A \. \TYPE{TransitiveSet}(a)}
+	\\
+	\Theorem{OrdinalSetIsWellFounded}
+	{
+		\TYPE{WellFoundnesAxiom} \Imply
+		\forall A : \TYPE{OrdinalSet} \. 
+		\WO(A,\le_{\mathsf{ZF}})
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalOrderCorrespondsToSubsetOrder}
+	{
+		\forall X : \WO 
+		\forall A \subset X \. 
+		A \le_\ORD X 
+	}
+	\Assume{[1]}{X <_\ORD A}
+	\Say{\Big( I, [2]\Big)}{\Elim(<_\ORD)[1]}
+	{
+		\sum I : \II(A) \. I \cong_{\POSET} X   \And I \subsetneq A
+	}
+	\Say{f}{\Elim \TYPE{Isomorphism}[2.1]}
+	{
+		\TYPE{Isomorphism}(\POSET,X,I)
+	}
+	\Say{\Big(a,[3]\Big)}{\Elim \II(A,I) [2.2]}{\sum a \in A \. \forall i \in I \. i < a}
+	\Say{[4]}{[3]\Big(f(a)\Big)}{f(a) < a}
+	\Say{[5]}{\THM{StrictlyIncreaingWellOrdered}(X,X,f)(a)}
+	{
+		a \le f(a)
+	}
+	\Conclude{[1.*]}{\THM{TrichtomyPrinciple}[4,5]}{\bot}
+	\Derive{[*]}{\Elim(\bot)}{A \le_\ORD X}
+	\EndProof
+}
+\newpage
+\subsubsection{Arithmetics}
+\Page{
+	\DeclareFunc{ordinalSum}{\ORD \times \ORD \to \ORD}
+	\DefineNamedFunc{ordinalSum}{a,b}{a+b}
+	{
+		\left(
+			a \sqcup b,
+			(\le)_a \sqcup (\le)_b \sqcup
+			\Big\{ (x,y) \Big| x \in a, y \in b   \Big\}    
+		\right)
+	}
+	\\
+	\DeclareFunc{ordinalProduct}{\ORD \times \ORD \to \ORD}
+	\DefineNamedFunc{ordinalProduct}{a,b}{ab}
+	{
+		\left(
+			a \times b,
+			\bigg\{   
+				\Big((x,y),(x',y')\Big)  
+				\bigg|
+				x \le x' | (x = x' \And y \le y')
+			\bigg\}
+		\right)
+	}
+	\\
+	\Theorem{OrdinalSumIsAssoc}
+	{
+		\forall a,b,c \in \ORD \.
+		(a + b) + c = a + (b + c)
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalSumNeutralElement}
+	{
+		\forall a \in \ORD \. 
+		0 + a = a = 0 + a
+	}
+	\\
+	\Theorem{OrdinalSumIncreasing}
+	{
+		\forall a,b,b' \in \ORD \.
+		b < b' \Imply
+		a + b < a + b'
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalSumNonDecreasing}
+	{
+		\forall a,a',b \in \ORD \.
+		a \le a' \Imply
+		a + b \le a' + b
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalEquationSolution}
+	{
+		\forall a,b \in \ORD \. 
+		a \le b \Imply
+		\exists! c \in \ORD : a + c = b
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalIndexedSum}
+	{
+		\prod I : \WO \. 
+		(I \to \ORD) \to \ORD
+	}
+	\DefineNamedFunc{ordinalIndexedSum}{a}{\sum_{i \in I} a_i}
+	{
+		\left(
+			\sum_{i \in I} a_i
+			,
+			\Big\{   
+				\Big((x,i),(y,j)\Big)  
+				\Bigg|
+				i < j | (i = j \And x \le y )
+			\Big\}
+		\right)
+	}
+}
+\Page{
+	\Theorem{OrdinalProductIsAssoc}
+	{
+		\forall a,b,c \in \ORD \.
+		(a b)c = a(b c)
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalProductNeutralElement}
+	{
+		\forall a \in \ORD \. 
+		1a = a = a1
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalProductZeroElement}
+	{
+		\forall a \in \ORD \.
+		0a = 0 = a0
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalDistributivity}
+	{
+		\forall a,b,c \in \ORD  \.
+		a(b + c) = ab + ac
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalProductIncreasing}
+	{
+		\forall a,b,b' \in \ORD \.
+		b < b' \Imply
+		ab < ab'
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalProductNonDecreasing}
+	{
+		\forall a,a',b \in \ORD \.
+		a \le a' \Imply
+		a b \le a'b
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalMultEquationSolution}
+	{
+		\forall a,b,c \in \ORD \. 
+		c \le a b \Imply
+		\exists! d, e \in \ORD : c = ad + e
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalReminder}
+	{
+		\forall a,b \in \ORD \. 
+		a > 0 \And b \ge a \Imply 
+		\exists! c,r \in \ORD :
+		c \le b \And r \le a \And 
+		b = ca + r
+	}
+	\NoProof
+	\\
+	\Theorem{MultipleOrdinalReminder}
+	{
+		\forall a,b \in \ORD \. 
+		\forall n \in \Nat 
+		a > 0 \And  a^{n+1} \ge b \ge a^n \Imply 
+		\exists! r \in \ORD : \exists! c : n \to \ORD :
+		\forall i \in [1,\ldots,n]  c_i < a  \And r <  a \And 
+		b = \sum^n_{i=1} a^i c_i + r
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Powers}
+\Page{
+	\DeclareFunc{ordinalPower}
+	{
+		\ORD \times \ORD \to \ORD
+	}
+	\DefineNamedFunc{ordinalPower}{\alpha,\beta}{\alpha^\beta}
+	{
+		\Bigg(
+			\bigg\{
+				f : \beta \to \alpha  :
+				\Big|\{ b \in \beta :  f(b) \neq \emptyset   \}\Big| < \infty
+			\bigg\}, \NewLine 
+			\bigg\{
+				f,g \in \alpha :  
+				f= g \Big| \min \Big\{ b \in \beta : f(b) < g(a)\Big\} < \min \Big\{ b \in \beta : g(a) < f(b) \Big\}      
+			\bigg\}
+		\Bigg)
+	}
+	\\
+	\Theorem{ZeroPower}
+	{
+		\forall a \in \ORD \. 
+		a^0 = 1
+	}
+	\NoProof
+	\\
+	\Theorem{IncreasingPower}
+	{
+		\forall a,b,b' \in \ORD \. 
+		b \ge  b' \Imply
+		a^b \ge a^{b'}
+	}
+	\NoProof
+	\\
+	\Theorem{CountablePower}
+	{
+		\forall a,b \in \ORD \.
+		|a| \le \aleph_0 \And |b| \le \aleph_0 \Imply
+		\Big|a^b\Big| \le \aleph_0
+	}
+	\NoProof
+	\\
+	\Theorem{OrdinalPowerSeriesRepresentation}
+	{
+		\forall a,b,z \in \ORD
+		z  <  a^b \Imply 
+		\exists! c : [0,b) \to [0,a) :
+		z = \sum_{i \in [0,b)} a^i c_i
+	}
+	\NoProof
+	\\
+	\DeclareFunc{countablePower}{\Int_+ \to \ORD}
+	\DefineNamedFunc{countablePower}{0}{\omega_0}{\Nat}
+	\DefineNamedFunc{countablePower}{n}{ \omega_n   }{\Nat^{\omega_{n-1}}}
+	\\
+	\DeclareFunc{continualPower}{\Int_+ \to \ORD}
+	\DefineNamedFunc{continualPower}{0}{\epsilon_0}{\sup \{ \omega_n | n \in \Int \}}
+	\DefineNamedFunc{continualPower}{n}{ \epsilon_n}{(\epsilon_0)^{\epsilon_{n-1}}}
+}
+\newpage
+\end{document}
+

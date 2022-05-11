@@ -1,0 +1,2852 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left(#1\right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\DeclareMathOperator*{\supp}{supp}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cat}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\}
+\newcommand{\Assume}[2]{& \LOGIC{Assume} \; #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;}
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%SET
+%CAT
+\newcommand{\Arrow}[1]{\xrightarrow{#1}}
+\newcommand{\ToIso}[1]{\xleftrightarrow{#1}}
+%CategoryTheorey
+%Types
+\newcommand{\Cov}{\TYPE{Covariant}}
+\newcommand{\Contra}{\TYPE{Contravariant}}
+\newcommand{\NT}{\TYPE{NaturalTransform}}
+\newcommand{\UMP}{\TYPE{UnversalMappingProperty}}
+\newcommand{\CMP}{\TYPE{CouniversalMappingProperty}}
+\newcommand{\paral}{\rightrightarrows}
+%functions
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\obj}{\mathrm{obj}}
+\DeclareMathOperator*{\dom}{dom}
+\DeclareMathOperator*{\codom}{codom}
+\DeclareMathOperator*{\colim}{colim}
+%variable
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\G}{\mathsf{G}}
+%Cats
+\newcommand{\CAT}{\mathsf{CAT}}
+\newcommand{\SET}{\mathsf{SET}}
+\newcommand{\PARALLEL}{\bullet \paral \bullet}
+\newcommand{\WEDGE}{\bullet \to \bullet \leftarrow \bullet}
+\newcommand{\VEE}{\bullet \leftarrow \bullet \to \bullet}
+%Algebra
+%Groups
+%Types
+\newcommand{\Group}{\TYPE{Group}}
+\newcommand{\Abel}{\TYPE{Abelean}}
+\newcommand{\Sgrp}{\subset_{\mathsf{GRP}}}
+\newcommand{\Nrml}{\vartriangleleft}
+\newcommand{\FG}{\TYPE{FiniteGroup}}
+\newcommand{\Stab}{\mathrm{Stab}}
+\newcommand{\FGA}{\TYPE{FinitelyGeneratedAbelean}}
+\newcommand{\DN}{\TYPE{DirectedNormality}}
+%Func
+\DeclareMathOperator{\tor}{tor}
+\DeclareMathOperator{\bool}{bool}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\coker}{coker}
+%Cats
+\newcommand{\GRP}{\mathsf{GRP}}
+\newcommand{\ABEL}{\mathsf{ABEL}}
+%Ops
+\newcommand{\SDP}{\rightthreetimes}
+%LINEAR
+%Types
+\newcommand{\Basis}{\TYPE{Basis}}
+\newcommand{\submod}[1]{\subset_{\LMOD{#1}}}
+\newcommand{\gsubmod}[3]{\subset_{\GLMOD{#1}{#2}{#3}}}
+\newcommand{\FGM}{\TYPE{FinitelyGeneratedModule}}
+\newcommand{\LI}{\TYPE{LinearlyIndependent}}
+\newcommand{\LIS}{\TYPE{LinearlyIndependentSet}}
+\newcommand{\FM}{\TYPE{FreeModule}}
+\newcommand{\IBP}{\TYPE{InvariantBasisProperty}}
+\newcommand{\FP }{\TYPE{FinitelyPresented}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\SL}{\mathrm{SL}}
+%Func
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\Ann}{Ann}
+\DeclareMathOperator{\Ass}{Ass}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\adj}{adj}
+\DeclareMathOperator{\tr}{tr}
+%Cats
+\newcommand{\VS}{\mathsf{VS}}
+\newcommand{\LMOD}[1]{#1\hyph\mathsf{MOD}}
+\newcommand{\RMOD}[1]{\mathsf{MOD}\hyph#1}
+\newcommand{\GLMOD}[3]{\Act{#1,#2}\hyph\mathsf{GMOD}(#3)}
+\newcommand{\GRMOD}[3]{\mathsf{GMOD}(#3)\hyph\Act{#1,#2}}
+\newcommand{\LLMAP}[1]{#1\hyph\mathsf{LMAP}}
+\newcommand{\LMAT}[1]{#1\hyph\mathsf{MAT}}
+%FIELDS
+\newcommand{\Field}{\mathbb{F}}
+%RINGS
+%TYPE
+\newcommand{\Ring}{\TYPE{Ring}}
+\newcommand{\CR}{\TYPE{CommutativeRing}}
+\newcommand{\Ideal}{\TYPE{Ideal}}
+\newcommand{\ID}{\TYPE{IntegralDomain}}
+\newcommand{\UFD}{\TYPE{UniqueFactorizationDomain}}
+\newcommand{\PID}{\TYPE{PrincipleIdealDomain}}
+\newcommand{\FGI}{\TYPE{FinitelyGeneratedIdeal}}
+\newcommand{\ER}{\TYPE{EuclideanRing}}
+\newcommand{\DVR}{\TYPE{DiscreteValuationRing}}
+\newcommand{\MoFT}{\TYPE{MonoidOfFiniteType}}
+\newcommand{\GA}{\TYPE{GradedAbelean}}
+%CATS
+\newcommand{\RING}{\mathsf{RING}}
+\newcommand{\ANN}{\mathsf{ANN}}
+\newcommand{\GRING}{\mathsf{GRING}}
+%FUNCS
+\DeclareMathOperator{\lcd}{lcd}
+\DeclareMathOperator{\lc}{lc}
+\DeclareMathOperator{\cont}{cont}
+\DeclareMathOperator{\antideg}{antideg}
+%Symbols
+\newcommand{\F}{\mathcal{F}}
+%ALGEBRA
+\newcommand{\LALG}[1]{#1\hyph\mathsf{ALG}}
+\newcommand{\RALG}[1]{\mathsf{ALG}\hyph#1}
+%HOMOLOg
+\newcommand{\Exact}{\TYPE{Exact}}
+\newcommand{\ShortExact}{\TYPE{ShortExact}}
+\newcommand{\CH}[1]{#1\hyph\mathsf{CH}}
+%Numbers
+%Integers
+%FUNCS
+\DeclareMathOperator{\divi}{div}
+\DeclareMathOperator{\remi}{rem}
+\DeclareMathOperator{\Frac}{Frac}
+\title{Linear Modules}
+\author{Uncultured Tramp}
+\begin{document}
+\maketitle
+\Huge
+\topskip0pt
+\vspace*{\fill}
+$$
+MAN = \left[
+\begin{array}{ccccc}
+23& &  &  &   \\
+ &23&  &  &   \\
+ & &23&  &   \\
+ & &  &46&   \\
+ & &  &  & \quad \\
+\end{array}
+\right]
+$$
+\vspace*{\fill}
+\normalsize
+\newpage
+\tableofcontents
+\newpage
+\section{Basic Categorical Module theory}
+\subsection{Category of Modules}
+\Page{
+	\DeclareType{LeftModule}{\prod R \in \RING \. \sum M \in \Set \. (M \to M \to M)\times (R \to M \to M)}      
+	\DefineType{M,+,\cdot}{LeftModule}{ 
+		(M,+) \in \ABEL \And \NewLine \And 
+		\forall a,b \in M \. \forall \alpha \in M \. \alpha(a + b) = \alpha a + \alpha b \And \NewLine \And
+		\forall a \in M \. \forall \alpha, \beta \in M \. (\alpha + \beta)a = \alpha a + \beta b \And \NewLine \And
+		\forall a \in M \. \forall \alpha, \beta \in M \. \beta(\alpha a) = (\beta \alpha)a \And \NewLine \And
+		\forall a \in M \.   1a =  a
+		}
+	\\
+	\DeclareType{RightModule}{\prod R \in \RING \. \sum M \in \SET \. (M \to M \to M) \times (M \to R \to M) }
+	\DefineType{(M,+,\cdot)}{RightModule}{\Big(M,+,\FUNC{swap}(\cdot)\Big) : \TYPE{LeftModule}(R^\op) } 
+	\\
+	\Assume{R}{\Ring}
+	\\
+	\DeclareFunc{moduleAsGroup}{  \TYPE{LeftModule}(R) \to \ABEL }
+	\DefineNamedFunc{moduleAsSet}{(M,+,\cdot)}{\FUNC{implicit}}{(M,+)}
+	\\
+	\DeclareFunc{scalarMult}{\prod M : \TYPE{LeftModule}(R) \. M \to M \to M}
+	\DefineNamedFunc{scalarMult}{M,+,\cdot}{\cdot_M}{\cdot}
+	\\
+	\Theorem{ZeroMultInModule}{\forall M : \TYPE{LeftModule}(R) \. \forall a \in M \. 0a = 0 }
+	\Say{(1)}{\bd \TYPE{LeftModule}(R)(M) \bd \TYPE{Neutral}(R,+)(0)(1)\bd \TYPE{LeftModule}(R)(M) }
+	{ \NewLine :  a = 1a = (1 + 0)a = 1a + 0a = a + 0a  }
+	\Say{(2)}{ \bd \TYPE{Neutaral}(M,+)(0)(a) }{ a + 0 = 0}
+	\Conclude{(*)}{\THM{TotalGroupMult}(1)(2)}{0a = 0}
+	\EndProof
+	\\
+	\Theorem{NegativeMultInModule}{\forall M : \TYPE{LeftModule}(R) \. \forall a \in M \. (-1)a = -a}
+	\Say{(1)}{\THM{ZeroMultInModule}(a)\bd\FUNC{inverse}(R,+)(1)\bd \TYPE{RightModule}(M) }{0 = 0a = (1 - 1)a = 1 + (-1)a}
+	\Say{(2)}{\bd \FUNC{inverse}(a)}{  0 = a + (-a) }
+	\Conclude{(*)}{\THM{TotalGroupMult}(1)(2)}{ (-1)a  = -a}
+	\EndProof
+	\\
+	\DeclareType{LeftLinear}{\prod A,B : \TYPE{LeftModule}(R) \. ?(A \Arrow{\ABEL} B)}
+	\DefineType{T}{LeftLinear}{ \forall a \in A \. \forall \theta \in R \. T(\theta a) = \theta T(a)    }
+	\\
+	\DeclareType{RightLinear}{\prod A,B : \TYPE{LeftModule}(R) \. ?(A \Arrow{\ABEL} B)}
+	\DefineType{T}{RightLinear}{ \forall a \in A \. \forall \theta \in R \. T( a \theta) =  T(a \theta) = T(a)\theta    }
+}
+\Page{
+	\Theorem{IdIsiLeftLinear}{\forall A : \TYPE{LeftModule}(R) \. {\id}_A : \TYPE{LeftLinear}(A,A)}
+	\NoProof
+	\\
+	\Theorem{IdIsRightLinear}{\forall A : \TYPE{RightModule}(R) \. {\id}_A : \TYPE{RightLinear}(A,A)}
+	\NoProof
+	\\
+	\Theorem{ LeftLinearComp  }{ \forall A,B,C : \TYPE{LeftModule}(R) \. \forall T : \TYPE{LeftLinear}(A,B) \. \forall S : \TYPE{LeftLinear}(B,C) \. 
+		\NewLine \. S \circ T : \TYPE{LeftLinear}(A,C)   }
+	\Assume{a}{A}
+	\Assume{\theta}{R}
+	\Conclude{a}{\bd \FUNC{compose}(S,T)\bd \TYPE{LeftLinearComp}(T) \bd \TYPE{LeftLinear}(S)\bd^{-1}\FUNC{compose}(S,T)}
+	{ \NewLine : 
+	S \circ T (\theta a ) = S\Big( T(\theta a) \Big) = S\Big(\theta T(a) \Big) = \theta S\Big(T(a)\Big) = \theta S \circ T(a) }
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{RightLinear}}{ \Big[  S \circ T : \TYPE{RightLinear}(A,C)   \Big]  }
+	\EndProof
+	\\
+	\Theorem{ RightLinearComp  }{ \forall A,B,C : \TYPE{RightModule}(R) \. \forall T : \TYPE{RightLinear}(A,B) \. \forall S : \TYPE{RightLinear}(B,C) \. 
+		\NewLine \. S \circ T : \TYPE{RightLinear}(A,C)   }
+	\NoProof
+	\\
+	\DeclareFunc{LeftModuleCategory}{ \RING \to \CAT  }
+	\DefineNamedFunc{LeftModuleCategory}{R}{\LMOD{R}}
+	{\Big( \TYPE{LeftModule}(R),\TYPE{LeftLinear},\id,\circ \Big)}
+	\\
+	\DeclareFunc{RightModuleCategory}{ \RING \to \CAT  }
+	\DefineNamedFunc{RightModuleCategory}{R}{\RMOD{R}}
+	{\Big( \TYPE{RightModule}(R),\TYPE{RightLinear},\id,\circ \Big)}
+	\\
+	\Theorem{ABELIsZMOD}{\ABEL \cong_{\CAT} \RMOD{\Int}}
+	\NoProof
+	\\
+	\Theorem{CommutativeLeftModuleIsRight}{\forall R \in \ANN \. \LMOD{R} \cong_{\CAT} \RMOD{R}}
+	\NoProof
+}\Page{
+	\Theorem{LinearMapsAreModule}{ \forall R \in \ANN \. \forall A,B \in \LMOD{R} \. A \Arrow{\LMOD{R}} B \in \LMOD{R}  }
+	\Assume{T,S}{A \Arrow{\LMOD{R}} B}
+	\Assume{a,a'}{A}
+	\Conclude{()}{\bd \FUNC{mapOp}(B,+)(T,S)\bd\LMOD(R)(T,S)\bd^{-1}\FUNC{mapOp}(B,+)(T,S)}
+	{ \NewLine : 
+		(T + S)(a + a') = T(a + a') + S(a + a') = T(a) + T(a') + S(a) + S(a') = (T + S)(a) + (T + S)(a')}
+	\Derive{(1)}{\bd\ABEL}{\Big[ T + S : A \Arrow{\ABEL} B \Big]}
+	\Assume{a}{A}
+	\Assume{\theta}{R}
+	\Conclude{()}{\bd \FUNC{mapOp}(B,+)(T,S)}
+	{  \NewLine :
+	  	(T + S)(\theta a) = T(\theta a) + S(\theta a) =\theta T(a) + \theta S(a) = \theta \Big( T(a) + S(a)\Big) = \theta (T + S)(a) }
+	\DeriveConclude{()}{\bd \LMOD{R}(1) }{\Big[ T + S : A \Arrow{\LMOD{R}} B  \Big]}
+	\Derive{(1)}{I(\forall)}{\forall T,S \in \LMOD(R) \. T + S \in \LMOD(R)}
+	\Assume{T}{\LMOD(R)}
+	\Assume{\theta}{R}
+	\Assume{a,a'}{A}
+	\Conclude{()}{\bd \FUNC{mapOp}(B,\cdot)(\theta,T) \bd\LMOD(R)(T)\bd^{-1}\FUNC{mapOp}(B,\cdot)(\theta,T)}
+	{ \NewLine :
+		(\theta T)(a + a') = \theta\Big(T(a + a'\Big) ) = \theta\Big(T(a) + T(a') = \theta T(a) + \theta T(a')}
+	\DeriveConclude{(2)}{\bd \ABEL}{\Big[\theta T : A \Arrow{\ABEL} B\Big]}
+	\Assume{a}{A}
+	\Assume{\rho}{R}
+	\Conclude{()}{ \bd \FUNC{mapOp}(B,\cdot) \bd \LMOD(T)\bd \ANN(R) \bd^{-1}\FUNC{mapOp}(B,\cdot)(\theta,T) }
+	{
+	   \NewLine :
+		( \theta T ) (\rho a) =  \theta(T(\rho a)) = \theta \rho T(a) = \rho \theta T(a) 
+	}
+	\DeriveConclude{() }{\bd\LMOD{R}(2)}{\Big[ \theta T : A \Arrow{\LMOD{R}} B\Big] }
+	\Derive{(2)}{I(\forall)}{\forall T : A \Arrow{\LMOD{R}} B \. \forall \theta \in R \. \theta T : A \Arrow{\LMOD{R}} B }
+	\Conclude{(*)}{\bd \LMOD(R)(1)(2)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\DeclareType{Submodule}{\prod M \in \LMOD{R} \. ??M}
+	\DefineNamedType{S}{Submodule}{ S \subset_{\LMOD{R} }M}{ (S,+_M,\cdot_M) \in \LMOD{R}    }
+	\\
+	\Theorem{LinearImageIsSubmodule}{\forall A,B \in \LMOD{R} \. \forall T : A \Arrow{\LMOD{R}} B \. \im T \subset_{\LMOD{R}} B }
+	\Say{(1)}{\THM{GroupImage}}{\im T \Sgrp B}
+	\Assume{y}{\im T}
+	\Say{\Big(x,(2)\Big)}{\bd \FUNC{image}(T)}{ \sum x \in A \. Tx = y}
+	\Assume{ \rho  }{ R } 
+	\Say{(3)}{(2)(\rho y)\bd \LMOD{R}(A,B)(T)(x,\rho)}{ \rho y =  \rho Tx = T\rho x }
+	\Conclude{()}{\bd \FUNC{image}(T)(3)}{ \rho y \in \im T    }
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Suvset}(B)(1)}{\im T \subset_{\LMOD{R}} B}
+	\EndProof
+}
+\Page{
+	\Theorem{LinearConstriction}{\forall A,B \in \LMOD{R} \. \forall S \submod{R} A \.   
+		\forall T : A \Arrow{\LMOD{R}} B \. T_{|S} : S \Arrow{\LMOD{R}} B}
+	\NoProof
+	\\
+	\Theorem{SubspacrLinearImageIsSubspace}{\forall A,B \in \LMOD{R} \. \forall S \submod{R} A \. 
+		\forall T : A \Arrow{\LMOD{R}} B \.  \NewLine \. T(S) \submod{R} B
+	}
+	\NoProof
+	\\
+	\Theorem{LinearPreimageiIsSubmodule}{\forall A,B \in \LMOD{R} \. \forall S \submod{R} B \. 
+		\forall T : A \Arrow{\LMOD{R}} B \. \NewLine \. T^{-1}(S) \submod{R} A }
+	\Say{(1)}{\THM{GroupPreimage}(T,S)}{T^{-1}(S) \Sgrp A}
+	\Assume{x}{T^{-1}S}
+	\Say{(2)}{\bd T^{-1}S(x)}{T(x) \in S}
+	\Assume{\rho}{R}
+	\Say{(3) }{\bd \LMOD{R}(A,B)T(x,\rho) \bd \TYPE{Submodule}(B)(S)(2)(\rho,T(x))}{ T(\rho x) = \rho T(x) \in S}
+	\Conclude{()}{\bd T^{-1}S(3)}{\rho x \in T^{-1}S}
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Submodule}(A)(1)}{ T^{-1}S \submod{R} A}
+	\EndProof
+	\\
+	\Theorem{ZeroModule}{\Big(\{\star\},(\star,\star)\mapsto \star, (\rho,\star) \mapsto \star\Big) \in \LMOD{R}}
+	\NoProof
+	\\
+	\DeclareFunc{zeroModule}{\LMOD{R}}
+	\DefineNamedFunc{zeroModule}{}{\star}{\Big(\{\star\},(\star,\star)\mapsto \star, (\rho,\star) \mapsto \star\Big) }
+	\\
+	\Theorem{ZeroElementStable}{\forall M \in \LMOD{R} \. \forall \alpha \in R \. \alpha 0 = 0 }
+	\Assume{(1)}{M \cong_{\LMOD{R}} \star }
+	\Conclude{(2)}{\bd \star}{\alpha 0 = 0}
+	\Derive{(1)}{I(\rightarrow)}{M \cong_{LMOD{R}} \star \Rightarrow \alpha 0 = 0 }
+	\Assume{(2)}{M \not \cong_{\LMOD{R}} \star}
+	\Say{\Big(m,(3)\Big)}{\bd \star (2)}{\sum m \in M \. m \neq 0}
+	\Say{(4)}{\bd \LMOD{R}\bd \TYPE{Neutral}(M,+)(0)(m)}{ \alpha m + \alpha 0 = \alpha(m + 0) = \alpha m  }
+	\Say{(5)}{ \bd \TYPE{Neutral}(M,+)(0)(m) }{  \alpha m + 0 = \alpha m   }
+	\Conclude{()}{\THM{GroupTotalMult}(4)(5) }{ \alpha 0 = 0 }
+	\EndProof
+}\Page{
+	\Theorem{ZeroSubmodule}{\forall M \in \LMOD{R} \. \{0\} \submod{R} M }
+	\NoProof
+	\\
+	\Theorem{kerIsSubmodule}{\forall A,B \in \LMOD{R} \. \forall T : A \Arrow{\LMOD{R}} B \. \ker T \submod{R} A}
+	\Say{(1)}{\bd \ker T}{ \ker T = T^{-1}\{0\}}
+	\Conclude{(*)}{\THM{LinearPreimageIsSubmodule}(T)\THM{ZeroSubmodule}(B)(1)}{\ker T \submod{R} A}
+	\EndProof
+	\\
+	\DeclareFunc{quotScalarMult}{  \prod M \in \LMOD{R} \. \prod S \in \LMOD{S} \. R \to \frac{M}{S} \to \frac{M}{S}}
+	\DefineNamedFunc{quotScalarMult}{\rho,[m]}{\rho[m]}{[\rho m]}
+	\Assume{s}{S}
+	\Conclude{(*)}{ \bd \FUNC{quotScalarMult}(m + s)\bd \LMOD{R}(M) \bd \TYPE{Submodule}(S)(\rho,s)\bd \FUNC{quotientGroup}(M,S)  }
+	{ \NewLine : \rho[m + s] = \big[\rho(m + s)\big] = [\rho m + \rho s] = [\rho m] = \rho [m]}
+	\EndProof
+	\\
+	\Theorem{QuotientModule}{\forall M \in \LMOD{R} \. \forall S  \submod{R} M \. \left( \frac{S}{M}, +_{\frac{S}{M}}, \FUNC{quotScalarMult}  \right)}
+	\NoProof
+	\\
+	\Theorem{LinearSubmoduleProjection}{\forall M \in \LMOD{R} \. \forall S \submod{R} M \.  \pi_S :   M \Arrow{\LMOD{R}} \frac{S}{M}}
+	\NoProof
+	\\
+	\Theorem{SubmoduleProjUP}{\forall M \in \LMOD{R} \. \forall S \submod{R} M \. \forall N \in \LMOD{R}  \. 
+		\forall T : M \Arrow{\LMOD{R}} N \.  \NewLine \. \forall (0) : S \subset \ker T \. 
+		\exists! T' : \frac{S}{M} \Arrow{\LMOD{R}} N \.
+		\pi_S T' = T 
+	}
+	\Say{\Big(T',(1)\Big)}{\THM{SubgroupProjUP}}{\sum T' :  \frac{M}{S} \Arrow{\GRP} N  \. \pi_S T' = T \And \NewLine \And 
+		\forall T'' : \frac{M}{S} \Arrow{\GRP} N \. \pi_S T'' = T' \Rightarrow T' = T''  }
+	\Assume{[m]}{\frac{M}{S}}
+	\Assume{\alpha}{R}
+	\Say{(2)}{\bd^{-1} \pi_S\bd \FUNC{quotScalarMult} \bd (1) \bd \LMOD{R}(M,N)(T)(m,\alpha)}{   T'\alpha[m]   = \pi_S T'(\alpha m) = T(\alpha m) = \alpha T(m)  }
+	\Say{(3)}{\bd^{-1} \pi_S(1)}
+	{ T'[m] = \pi_S T'(m) = T(m)  }
+	\Conclude{()}{(2)(3)}{T'\alpha[m] = \alpha T'[m]}
+	\Derive{(2)}{\bd \LMOD{R}}{[T' : \frac{M}{S} \Arrow{\LMOD{R}} N ]}
+	\Conclude{(*)}{(1)(2)}{\LOGIC{This}}
+	\EndProof
+}
+\Page{
+	\Theorem{IntersectionOfSubmodule}{\forall N \in \LMOD{R} \. \prod I \in \SET \. \forall S : I \to \TYPE{Submodule}(M) \. \bigcap_{i \in I} S_i \submod{R} M}
+	\NoProof
+	\\
+	\Theorem{SumOfSubmodules}{\forall M \in \LMOD{R} \. \prod I \in \SET \. \forall S : I \to \TYPE{Submodule}(M) \. \sum_{i \in I} S_i \submod{R} M}
+	\NoProof
+	\\
+	\Theorem{UnionOfSubmodules}{\forall M \in \LMOD{R} \. \prod I : \TYPE{Toset} \. \forall S :\TYPE{Nondecreasing}(M)(I,\TYPE{Submodule}(M)) \. 
+		\NewLine \bigcup_{i \in I} S_i \submod{R} M}
+	\NoProof
+	\\
+	\DeclareType{Simple}{?\LMOD{R}}
+	\DefineType{M}{Simple}{\Big\{M,\{0\}\Big\} = \TYPE{Submodule}(M)}
+	\\
+	\Theorem{LinearInverse}{\forall A,B : \TYPE{LMOD}{R} \. \forall T : A \Arrow{\LMOD{R}} B \And A \ToIso{\SET} B \. T^{-1} : A \ToIso{\LMOD{R}}  B }
+	\Assume{y}{B}
+	\Assume{\alpha}{R}
+	\Say{x}{T^{-1}(y)}{A}
+	\Say{(1)}{\bd \LMOD{R}(A,B)\bd x}{  T(\alpha x) = \alpha T(x) = \alpha y  }
+	\Conclude{()}{ \bd \TYPE{Inverse}(T)(1)\bd x  }{T^{-1}(\alpha y) = \alpha x = \alpha T^{-1}(y)}
+	\DeriveConclude{(*)}{\bd \LMOD{R}}{[T^{-1} : A \ToIso{\LMOD{R}} B]}
+	\EndProof
+	\\
+	\Theorem{SchurLemma}{\forall A,B : \TYPE{Simple} \. \forall T : A \Arrow{\LMOD{R}} B \. \forall (0) : T \neq 0 \Rightarrow T : A \ToIso{\LMOD{M}} B }
+	\Say{(1)}{\THM{LinearImageIsSubmodule}}{ T(A) \submod{R} B}
+	\Say{(2)}{\bd \TYPE{Simple}(A,B)(1)(0)}{T(A) = B}
+	\Say{(3)}{\THM{KerIsSubmodule}(T)}{\ker T \submod{R} A}
+	\Say{(4)}{\bd \TYPE{Simple}\bd \ker T (0)(3)}{\ker T = \{0\} }
+	\Conclude{(*)}{\bd^{-1}\TYPE{Iso}(\LMOD{R})\THM{InjectiveByKernel}(M,N,T)(4)(2)}{ [ T :A \ToIso{\LMOD{R}} B]   }
+	\EndProof
+}
+\Page{
+	\Theorem{LinearMapsFromTheRing}{\forall A \in \ANN \. \forall M \in \LMOD{A} \. \Mor_{\LMOD{A}}(A,M) \cong_{\LMOD{A}} M }
+	\Say{\varphi}{ \Lambda T : A \Arrow{\LMOD{A}} M \.  T(1)   }{ \Mor_{\LMOD{A}}(A,M) \Arrow{\LMOD{A}} M  }
+	\Assume{T}{A \Arrow{\LMOD{A}} M}
+	\Assume{(1)}{\varphi(T) = 0}
+	\Say{(2)}{\bd \varphi(0)}{ T(1) = 0 }
+	\Assume{a}{A}
+	\Conclude{()}{\bd \LMOD{A}(A,M)(T)()}{T(a) = aT(1) = a0 = 0}
+	\DeriveConclude{()}{ E(\to,=)}{T = 0}
+	\Derive{(1)}{\THM{InjevtiveByKernel}}{[T : A \ToInj M]}
+	\Assume{m}{M}
+	\Say{T}{ \Lambda a \in A \. am}{A \Arrow{\LMOD{A}} M}
+	\Conclude{()}{\bd \varphi(T)}{\varphi(T) = m}
+	\Derive{(2}{\bd \TYPE{Iso}(\LMOD{R})(1)}{[\varphi : A \ToIso{\LMOD{A}} M ]}
+	\Conclude{(*)}{\bd \TYPE{Isomotphic}(2)}{ \Mor_{\LMOD{A}}(A,M) \cong_{\LMOD{A}} M}
+	\EndProof
+	\\
+	\Theorem{PolynomialModuleStructure}{\forall A \in \RING \. \forall M \in \LMOD{A} \. \Big\{ (M,\cdot) : \LMOD{A\big[\Int_+\big]} \Big\} \cong_\SET \End_{\LMOD{A}}(M)  }
+	\Say{\odot}{\Lambda T : \End_{\LMOD{A}}(M) \. \Lambda f \in A\Big[\Int_+\Big] \. \Lambda m \in M \. \sum_{i=0} f_i T^i(m)}
+	{\End_{\LMOD{A}}{M} \to \Big\{ (M,\cdot) : \LMOD{A\big[\Int_+\big]} \Big\}}
+	\EndProof
+}
+\newpage
+\subsection{Limits of Modules}
+\Page{
+	\Theorem{DirectProductOfModulesIsAModule}{\forall I \in \SET \. \forall M : I \to \LMOD{R} \. \prod_{i \in I } M_i \in \LMOD{R}}
+	\NoProof
+	\\
+	\Theorem{ProjectionIsLinear}{\forall I \in \SET \. \forall M : I \to \LMOD{R} \. \forall i \in I \. \pi_i : \prod_{j \in I} M_j  \Arrow{\LMOD{R}} M_i  }
+	\NoProof
+	\\
+	\Theorem{DirectProductIsProduct}{\Big(\FUNC{directProduct},\pi \Big) : \TYPE{Product}(M) }
+	\Assume{I}{\SET}
+	\Assume{M}{I \to \LMOD{R}}
+	\Assume{N}{\LMOD{R}}
+	\Assume{T}{\prod i \in I \. N \Arrow{\LMOD{R}} M_i}
+	\Say{\Big( T',(1) \Big)}{\bd \TYPE{Product}(\ABEL)(I,M,N,T)}{ \sum T' : N \Arrow{\ABEL} \prod_{i \in I} M_i \. \forall i \in I \. T'\pi_i = T_i  }
+	\Assume{n}{N}
+	\Assume{\alpha}{R}
+	\Assume{i}{I}
+	\Say{(2)}{\bd^{-1}\pi_i(1)\bd\LMOD{R}(N,M_i)(T_i)}{  \Big(T'(\alpha n)\Big)_i =   T'\pi_i(\alpha n) = T_i(\alpha n) = \alpha T_i(n)}
+	\Say{(3)}{ \bd^{-1}\pi_i }{\Big(T'(n)\Big)_i = T'\pi_i(n) =T_i(n)}
+	\Conclude{()}{(2)(3)}{\Big(T'(\alpha n)\Big)_i =\alpha \Big( T'(n) \Big)_i}
+	\DeriveConclude{()}{\bd \FUNC{product}}{T'(\alpha n) = \alpha T'(n)}
+	\DeriveConclude{(*)}{\bd^{-1}\LMOD{R}}{ \left[ T' : N \Arrow{\LMOD{R}} \prod_{i \in I} M_i \right]   }
+	\EndProof
+	\\
+	\Theorem{DirectSumOfModulesIsAModule}{\forall I \in \SET \. \forall M : I \to \LMOD{R} \. \bigoplus_{i \in I } M_i \in \LMOD{R}}
+	\NoProof
+}\Page{
+	\Theorem{InclusionIsLinear}{\forall I \in \SET \. \forall M : I \to \LMOD{R} \. \forall i \in I \. \iota_i : M_i \Arrow{\LMOD{R}} \bigoplus_{j \in I} M_j }
+	\NoProof
+	\\
+	\Theorem{DirectSumIsCoproduct}{\Big(\FUNC{directSum},\iota \Big) : \TYPE{Coproduct}(M) }
+	\Assume{I}{\SET}
+	\Assume{M}{I \to \LMOD{R}}
+	\Assume{N}{\LMOD{R}}
+	\Assume{T}{\prod i \in I \.  M_i \Arrow{\LMOD{R}} N}
+	\Say{\Big( T',(1) \Big)}{\bd \TYPE{Product}(\ABEL)(I,M,N,T)}{ \sum T' :  \bigoplus{i \in I} M_i \to N \. \forall i \in I \. \iota_iT' = T_i  }
+	\Assume{m}{\bigoplus_{i \in I} M_i}
+	\Assume{\alpha}{R}
+	\Assume{i}{I}
+	\Say{(2)}{\bd^{-1}\iota_i(1)\bd\LMOD{R}(M_i,N)(T_i)}{  T'(\alpha m_i) = \iota_i T'(\alpha m) = T_i(\alpha m) = \alpha T_i(m)}
+	\Say{(3)}{ \bd^{-1}\pi_i }{ T'(m_i) = \iota_i T'(m) = T_i(m)}
+	\Conclude{()}{(2)(3)}{ T'(\alpha m_i) = \alpha T(m_i)}
+	\DeriveConclude{()}{\bd \FUNC{directSum} \bd \LMOD{R} \bd \LMOD{R}(\iota)  }
+	{	\NewLine : T'(\alpha m) = \sum_{i \in I } T'\big(\alpha \iota_i (m_i)\big) = \sum_{i \in I} \alpha T'\big(\iota_i(m_i)\big) = 
+		\alpha\sum_{i \in I} T'(\iota_i(m_i)) = \alpha  T'(m) }
+	\DeriveConclude{(*)}{\bd^{-1}\LMOD{R}}{ \left[ T' : \bigoplus_{i \in I} M_i \Arrow{\LMOD{R}} N \right]   }
+	\EndProof
+	\\
+	\Theorem{ZeroModuleIsZero}{\star : \TYPE{Zero}\left( \LMOD{R} \right)}
+	\Assume{M}{\LMOD{M}}
+	\Say{0_1}{\star \mapsto  0}{\star \Arrow{\LMOD{R}} M}
+	\Say{0_2}{m \mapsto \star}{ M \Arrow{\LMOD{R}} \star}
+	\Assume{T}{\star \Arrow{\LMOD{R}} M}
+	\Say{(1)}{\THM{NeutralImage}(T)}{T(\star) = 0}
+	\Conclude{( )}{ \bd T(1)}{ T = 0_1}
+	\Derive{(1)}{I(\forall)(T)}{ \forall T : \star \Arrow{\LMOD{R}} M \. T = 0_1}
+	\Assume{T}{M \Arrow{\LMOD{R}} M}
+	\Conclude{()}{\bd\star(T)}{T = 0_2}
+	\Derive{(2)}{I(\forall)}{\forall T : M \Arrow{\LMOD{R}} \star \. T = 0_2}
+	\Conclude{(*)}{\bd^{-1}\TYPE{Zero}(1)(2)}{[\star : \TYPE{Zero}(\LMOD{R})]}
+	\EndProof
+}
+\Page{
+	\DeclareFunc{fibredModule}{\prod I \in \SET \. \prod M : I \to \LMOD{R} \. \prod N \in \LMOD{R} \. 
+		\left( \prod_{i \in I} M_i \Arrow{\LMOD{R}} N  \right) \to \LMOD{R} }
+	\DefineNamedFunc{fibredModule}{\nu}{ \prod_{ \begin{array}{c}i \in I \\ N\;\square\;\nu \end{array}} M_i  }
+	{\bigcap_{i,j \in I} \ker \Big( \pi_i\nu_i - \pi_j\nu_j \Big)}
+	\\
+	\Theorem{FibredModuleIsPullback}{ \FUNC{fibredModule} : \TYPE{Pullback}\Big(\LMOD{R}\Big)}
+	\Assume{I}{\SET}
+	\Assume{M}{I \to \LMOD{R}}
+	\Assume{N}{\LMOD{R}}
+	\Assume{\nu}{\prod i \in I \. M_i \Arrow{\LMOD{R}} N} 
+	\Assume{P}{\LMOD{R}}
+	\Assume{T}{\prod i \in I \. P \Arrow{\LMOD{R}} M_i}
+	\Assume{(1)}{\forall i,j \in I \. T_i\nu_i = T_j\nu_j }
+	\Assume{(i,j)}{I}
+	\Assume{p}{P}
+	\Say{(2)}{ (1)(\pi_i\nu_i - \pi_j\nu_i)}{\forall p \in P \. (\pi_i\nu_i - \pi_j\nu_j )T(p) = T_i\nu_i(p) - T_j\nu_j(p) = 0 }
+	\Conclude{()}{\bd \ker}{T(p) \in \ker T_i\nu_i - T_j\nu_j}
+	\Derive{(2)}{\bd^{-1}\TYPE{fibredModule}}{\im T \subset \prod_{\begin{array}{c} i \in I \\ N\;\square\;\nu  \end{array}} M_i }
+		\Say{T'}{T^{|\FUNC{fibredProduct}(I,M,N,\nu)}}
+		{ P \Arrow{\LMOD{R}} \prod_{\begin{array}{c} i \in I\\ N\; \square\; \nu \end{array}} M_i}
+	\Assume{T''}{P \Arrow{\LMOD{R}} \prod_{\begin{array}{c} i \in I\\ N\; \square\; \nu \end{array}} M_i}
+	\Assume{(3)}{\forall i \in I \. T''\pi_i = T_i}
+	\Conclude{()}{\bd T'(3)}{T'' = T'}
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Pushout}}{ \Big[\FUNC{fibredModule} : \TYPE{Pullback}\Big(\LMOD{R}\Big)\Big] }
+	\EndProof
+	\\
+	\DeclareFunc{span}{\prod M \in \LMOD{R} \. ?M \to \TYPE{Submodule}(M)}
+	\DefineNamedFunc{span}{X}{\Span(X)}{\bigcap_{X \subset S \submod{R} M} S  }
+	\\
+	\DeclareFunc{fibredSum}{\prod I \in \SET \. \prod M : I \to \LMOD{R} \. \prod N \in \LMOD{R} \. 
+		\left( \prod_{i \in I} M_i \Arrow{\LMOD{R}} N  \right) \to \LMOD{R} }
+	\DefineNamedFunc{fibredSum}{\nu}{ \bigoplus_{ \begin{array}{c}i \in I \\ N\;\square\;\nu \end{array}} M_i  }
+		{      \frac{\bigoplus_{i \in I} M_i }{\Span\{ \nu_i\iota_i(n) - \nu_j\iota_j(n) |  i,j\in I, n \in N \}}}
+}
+\Page{
+	\Theorem{FibredSumIsPushout}{ \FUNC{fibredModule} : \TYPE{Pushout}\Big(\LMOD{R}\Big)}
+	\Assume{I}{\SET}
+	\Assume{M}{I \to \LMOD{R}}
+	\Assume{N}{\LMOD{R}}
+	\Assume{\nu}{\prod i \in I \. N \Arrow{\LMOD{R}} M_i} 
+	\Assume{P}{\LMOD{R}}
+	\Assume{T}{\prod i \in I \. M_i \Arrow{\LMOD{R}} P}
+	\Assume{(1)}{\forall i,j \in I \. \nu_iT_i = \nu_jT_j }
+	\Assume{ m }{ \Span\{ \nu_i\iota_i(n) - \nu_j\iota_j(n) | i,j \in I, n \in N  \}  }
+	\Say{L,i,j,n,2)}{\bd \Span (m)}{\sum L \in \Int_+ \. \sum i,j : L \to I \. n : L \to N \. m = \sum^{L}_{l=1} \nu_{i_l}\iota_{i_l}(n_l) - \nu_{j_l}\iota_{j_l}(n_l)}
+	\Say{(3)}{(2)(1)}{  \sum_{i \in I} T_i(m_i) = 
+		= \sum^L_{l = 1} \nu_{i_l}T_{i_l}(n_l) - \nu_{j_l}T_{j_l}(n_l) = 0  }
+	\Conclude{()}{\bd \ker(3)}{m  \in \bigoplus_{I \in i} T_i(m)}
+	\DeriveConclude{(T', ())}{ \THM{SubmoduleUP} }{\sum T' : \bigoplus_{ \begin{array}{c}i \in I \\ N\;\square\;\nu \end{array}} M_i  \to P  \. 
+		\forall m \in \bigoplus_{i \in I} M_i \. T'[m] = \bigoplus_{i \in I} T_i(m) \And \NewLine \And
+		\forall T'' :  \bigoplus_{ \begin{array}{c}i \in I \\ N\;\square\;\nu \end{array}} M_i  \to P \. 
+		\left( \forall m \in \bigoplus_{i \in I} M_i \. T''[m] = \bigoplus T'(m)\right) \Rightarrow T'' = T'  } 
+	\DeriveConclude{()}{\bd^{-1}\TYPE{Pushout}}{\left[\bigoplus_{ \begin{array}{c}i \in I \\ N\;\square\;\nu \end{array}} M_i :
+			\TYPE{Pushout}(\LMOD{R},I,M,N,\nu)\right]}
+	\DeriveConclude{(*)}{I(=,\to)}{\bigg(\FUNC{fibedModule} : \TYPE{Pushout}\Big(\LMOD{R}\Big)\bigg)}
+	\EndProof
+	\\
+	\Theorem{LeftModulesAreBicomplete}{\LMOD{R} : \TYPE{Complete} \And \TYPE{Cocomplete}}
+	\NoProof
+}
+\newpage
+\Page{
+	\DeclareType{InnerDirectSum}{\prod A \in \ANN \. \prod M \in \LMOD{A} \. ?\TYPE{Submodule}^2(M)}
+	\DefineNamedType{(X,Y)}{InnerDirectSum}{M = X \oplus Y}{X + Y = M \And X \cap Y = \{0\} }
+	\\
+	\Theorem{InnerDirectSumIsDirectSum}{
+		\forall A \in \ANN \. \forall M \in \LMOD{A} \. \forall X,Y \submod{A} M \. \NewLine \. 
+		 M = X \oplus Y \Rightarrow M \cong_{\LMOD{A}} X \oplus Y
+	}
+	\Say{\varphi}{\Lambda (x,y) : X \oplus Y \. x + y }{X \oplus Y \Arrow{\LMOD{A}} M}
+	\Say{[1]}{ \bd \TYPE{InnerDirectSum}(A,M,X,Y) }{ X + Y = M \And X \cap Y = \{0\} }
+	\Conclude{[*]}{\bd^{-1} \TYPE{Iso}[1] }{  M \cong_{\LMOD{A}} X \oplus Y}
+	\EndProof
+	\\
+	\DeclareType{MultiInnerDirectSum}{
+		\prod A \in \ANN \. \prod M \in \LMOD \. ? \sum I \in \Set \. I \to \TYPE{Submodule}(M) 
+	}
+	\DefineNamedType{(I,X)}{MultiInnerDirectSum}{M = \bigoplus_{i \in I} X_i}
+	{M = \sum_{i \in I} X_i \And \forall i \in I \. X_i \cap \sum_{j \in I, j \neq i} X_j = \{0\}}
+	\\
+	\Theorem{MultiInnerDirectSumIsDirectSum}{
+		\forall A \in \ANN \. \forall M \in \LMOD{A} \. \forall I \in \SET \. 
+		\forall I : X \to \TYPE{Submodule}( M) \. \NewLine \. 
+		 M = \bigoplus_{i \in I} X_i \Rightarrow M \cong_{\LMOD{A}} \bigoplus_{i \in I} X_i
+	}
+	\Say{\varphi}{\Lambda x : \bigoplus_{i \in I} X_i \. \sum_{i \in I} x_i }{\bigoplus_{i \in I} X_i  \Arrow{\LMOD{A}} M}
+	\Say{[1]}{ \bd \TYPE{InnerDirectSum}(A,M,X,Y) }
+	{ M = \bigoplus_{i \in I} X_i \Rightarrow M \cong_{\LMOD{A}} \bigoplus_{i \in I} X_i}
+	\Conclude{[*]}{\bd^{-1} \TYPE{Iso}[1] }{  \bigoplus_{i \in I} X_i \cong_{\LMOD{A}} \bigoplus_{i \in I} X_i}
+	\EndProof
+}
+\subsection{Free Modules and Generation of Submodules}
+\Page{
+	\DeclareFunc{freeModule}{\Cov(\SET,\LMOD{R})}
+	\DefineNamedFunc{freeModule}{X}{R^{\oplus X}}{ \bigoplus_{i \in I} R  }
+	\DefineNamedFunc{freeModule}{X,Y,f}{R^{\oplus f}_{X,Y}}{ \Lambda v \in \R^{\oplus f} \. \sum_{x \in X} v_x \iota_{f(x)}(1)  }
+	\\
+	\Theorem{FreeModuleIsAdjoint}{ \FUNC{freeModule} \vdash \FUNC{forgetful}(\LMOD{R},\SET)}
+	\Assume{X}{\SET}
+	\Assume{M}{\LMOD{R}}
+	\Say{\phi}{\Lambda f : X \to M \. \Lambda \sum_{x \in X} v_x\iota_x(1) \in R^{\oplus X} \. \sum_{x \in X} v_x f(x)}
+	{  (X \to M) \to ( R^{\oplus X} \Arrow{\LMOD{R}}) M }
+	\Say{\psi}{\Lambda T : R^{\oplus X} \Arrow{\LMOD{R}} M \. \Lambda x \in X \. T\big(\iota_x(1)\big)}
+	{  (R^{\oplus X} \Arrow{\LMOD{R}} M) \to (X \to M)}
+	\Assume{f}{X \to M}
+	\Conclude{()}{\bd \phi \bd \psi}
+	{  
+		\psi \circ \phi(f) = \psi\left(\Lambda \sum_{x \in X} v_x\iota_x \in R^{\oplus X} \.
+		\sum_{x \in X}  v_x f(x) \right) = \Lambda x \in X \. f(x) = f }
+	\Derive{(1)}{\bd^{-1}\TYPE{RightInverse}}{ \Big[\psi : \TYPE{RightInverse}(\phi)\Big]}
+	\Assume{T}{ R^{\oplus X} \Arrow{\LMOD{R}} M}
+	\Conclude{()}{\bd \psi \bd \phi}
+	{
+		\phi \circ \psi(T) = \phi\Big( \Lambda x \in X \. T\big(\iota_x(1)\big) \Big) = 
+		\Lambda \sum_{x \in X} v_x \iota_x(1) \.  \sum_{x \in X} v_x xT\big( \iota_x) = T 
+	}
+	\DeriveConclude{()}{\bd^{-1}\TYPE{inverse}}{\psi = \phi^{-1}}
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{LeftAdjoint}}{\LOGIC{This}}
+	\EndProof
+	\\
+	\DeclareFunc{basisVector}{\prod X \in \SET \. X \to R^{\oplus X}}
+	\DefineNamedFunc{basisVector}{x}{e_x}{\iota_x(1)}
+	\\
+	\DeclareFunc{linearCombination}{\prod X \in \SET \. \prod M \in \LMOD{R} \. R^{\otimes X} \times M^X \to M }
+	\DefineNamedFunc{linearCombination}{a,m}{am}{\sum_{x \in X} a_xm_x}
+	\\
+	\DeclareFunc{spanWithFamily}{\prod X \in \SET \. \prod M \in \LMOD{R} \. (X \to M) \to \TYPE{Subspace}(M) }
+	\DefineNamedFunc{spanWithFamily}{v}{\Span(v_x)_{x \in X}}{\Big\{ av | a \in R^{\oplus X} \Big\}}
+	\\
+	\Theorem{SpanIsSpan}{\forall X \in \SET \. \forall M \in \LMOD{R} \. \forall m : X \to M \. \Span(m_x)_{x \in X} = \Span\im m}
+	\NoProof
+}
+\Page{
+	\DeclareType{\FGM}{?\LMOD{R}}
+	\DefineType{M}{\FGM}{\exists F : \TYPE{Finite}(M) : M = \Span(F)}
+	\\
+	\DeclareType{Noetherian}{?\LMOD{R}}
+	\DefineType{M}{Noetherian}{\forall A \submod{R} M \. A : \FGM(R) }
+	\\
+	\Theorem{FGMBySubspace}{\forall M \in \LMOD{R} \. \forall N \submod{R} M \. \NewLine \. 
+		 N,\frac{M}{N}  : \FGM  \Rightarrow M : \FGM }
+	\Say{\Big(n,a,(1)\Big)}{\bd \FGM(R)(N)}{\sum n \in \Nat \. \sum a : n \to N \. N = \Span(a_i)^n_{i=1}}
+	\Say{\Big(m,[b],(2)\Big)}{\bd \FGM(R) \; \frac{M}{N}}{\sum m \in \Nat \. \sum [b] : m \to \frac{M}{N} \. 
+		\frac{M}{N} = \Span\Big([b_i]\Big)_{i=1}^m  }
+	\Assume{x}{M}
+	\Say{\Big(\alpha,(3)\Big)}{\bd \frac{M}{N}[x]}{\sum \alpha : m \to R \. 
+		\sum^m_{i=1} \alpha_i[b_i] = \left[ \sum^m_{i=1} \alpha_i b_i \right]}
+	\Say{(y,4)}{\bd \frac{M}{N}(3)}{\sum y \in N \. x = y + \sum^m_{i=1} \alpha_ib_i}
+	\Say{(\beta,5)}{(2)(y)}{\sum \beta : n \to R \. y = \sum^n_{i=1} \beta_i a_i }
+	\Conclude{()}{(5)(4)}{x = \sum^n_{i=1} \beta_i a_i + \sum^m_{i=1}\alpha_i b_i}
+	\DeriveConclude{(*)}{\bd^{-1}\FGM(R)}{\Big[M : \FGM\Big] }
+	\EndProof
+	\\
+	\Theorem{NoetherianBySubspace}{\forall M : \FGM(R) \. \forall N \submod{R} M \. \NewLine \. 
+		 N,\frac{M}{N}  : \TYPE{Noetherian}(R)  \iff M : \TYPE{Noetherian}(R) }
+	\Assume{B}{\TYPE{Submodule}(A)}
+	\Say{(3)}{\THM{SecondIsomorphism}(M,N,B)}{\frac{B}{B \cap N} \cong_{\LMOD{R}} \frac{B + N}{N}}
+	\Say{(4)}{\bd \TYPE{Noetherian}\;\frac{M}{N}(3)}{\left[\frac{B}{B \cap N} : \FGM(R)\right]}
+	\Say{(5)}{\bd \TYPE{Noetherian}(N)(N \cap B)}{ [N \cap B  : \FGM(R)]}
+	\Conclude{()}{\THM{FGMBySubspace}(4)(6)}{\Big[ B : \FGM(R)  \Big]}
+	\Derive{(*)}{\bd^{-1}\TYPE{Noetherian} }{[M : \TYPE{Noetherian}(R)]}
+	\EndProof
+}
+\Page{
+	\Theorem{NoetherianByNoetherian}{\forall A : \TYPE{Noetherian} \. \forall M : \FGM(A) \. 
+		M : \TYPE{Noetherian}(A)
+	}
+	\Say{\Big(n,N,(1)\Big)}{\bd \TYPE{FGM}(A)(M)}{ \sum n \in \Nat \. \sum N \submod{A} A^{\oplus n} \. 
+			M = \frac{A^{\oplus n}}{N} }
+	\Say{ \mercury}{\Lambda n \in \Nat \. A^{\oplus n} : \TYPE{Noetherian}(n)}
+	{ \Nat \to \Type  }
+	\Say{(2)}{\bd \TYPE{Noetherian}(A)}{\mercury(1)}
+	\Assume{m}{\Nat}
+	\Assume{(3)}{\mercury(n)}
+	\Say{(4)}{\bd \FUNC{quotientModule}(A^{\oplus n +1},A^{\oplus n})}{ \frac{A^{\oplus n+1}}{A^\oplus} \cong_{\LMOD{A}} A   }   
+	\Say{(5)}{\THM{NoetherianBySubspace}(2)(3)(4)}{\mercury{n+1}}
+	\Derive{(3)}{\bd \TYPE{InductiveSet}(\Nat)}{\forall n \in \Nat \. \mercury(n)}
+	\Say{(4)}{(3)}{\mercury(n)}
+	\Conclude{(*)}{\THM{NoetherianBySubspace}(1)(4)}{[M : \TYPE{Noetherian}]}
+	\EndProof
+	\\
+	\DeclareType{Generating}{\prod M \in \LMOD{R} \.?\sum X \in \SET \. X \to M}
+	\DefineType{m}{Generating}{\Span(m_i)_{i \in X} = M}
+	\\
+	\DeclareType{\LI}{\prod M \in \LMOD{R} \. ?\sum X \in \SET \. X \to M}
+	\DefineType{m}{\LI}{\forall \alpha \in R^{\oplus X} \. \alpha m = 0 \iff \alpha = 0}
+	\\
+	\Conclude{Basis}{\Lambda M \in \LMOD{R} \.  \TYPE{Generaring} \And \LI(M)}{\LMOD{R} \to \TYPE}
+	\\
+	\DeclareType{\FM}{?\LMOD{R}}
+	\DefineType{M}{\FM}{\exists X \in \SET \.  M \cong_{\LMOD{R}} R^{\oplus X}}
+	\\
+	\Theorem{BasisIffFree}{\prod M \in \LMOD{R} \. \exists (X,m) : \TYPE{Basis}(M) \iff M : \FM}
+	\Assume{(X,m)}{\TYPE{Basis}(M)}
+	\Say{\varphi}{\Lambda \alpha \in A^{\oplus X} \. \sum_{x \in X} \alpha_x m_x }{A^{\oplus X} \Arrow{\LMOD{R}} M}
+	\Say{(1)}{\bd \TYPE{Generating}(X,m)\bd^{-1} \TYPE{Surjective}}{[\varphi : A^{\oplus X} \ToSurj M]}
+	\Say{(2)}{\bd \LI(X,n)\bd^{-1}\TYPE{Injective}}{[\varphi : A^{\oplus X} \ToSurj M]}
+	\Say{(3)}{\THM{LinearInversion}\bd \TYPE{Bijective}(2)(1)}{[\varphi : A^{\oplus X} \ToIso{\LMOD{R}} M]}
+	\Say{(4)}{\bd\TYPE{Isomorphic}}{[A^{\oplus X} \cong_{\LMOD{R}} M]}
+	\Conclude{()}{\bd^{-1}\FM}{[M : \FM]}
+	\Derive{(1)}{I(\Rightarrow)}{\exists (X,m) : \TYPE{Basis}(M) \Rightarrow M : \FM}
+	\Assume{(2)}{[M : \FM]}
+	\Say{\Big(X,(3)\Big)}{\bd \FM(X)}{[M = R^{\oplus X}]}
+	\Conclude{()}{\bd^{-1} \TYPE{Basis}\bd \FUNC{basis}}{[e(R,X) : \TYPE{Basis}(X)]}
+	\EndProof
+}
+\Page{
+	\DeclareType{\LIS}{\prod M : \LMOD{R} \. ?M}
+	\DefineType{S}{\LIS}{ \exists m : \LI(M) \. S = \im m }
+	\\
+	\Theorem{MaximalLinearIndependentExists}{ 
+		\forall M : \LMOD{R} \. \forall S : \LIS(M) \. 
+		\NewLine \.\exists S' \in \max \LIS(M) \. S \subset S'
+	}
+	& \text{ Use Zorn Lemma.  } \\
+	\EndProof
+	\\
+	\Theorem{LinearIndependenceOverFaF}{
+		\forall A : \ID \. 
+		\forall X,Y \in \SET \. \forall m : Y \to A^{\oplus X} \. \NewLine \.
+		(Y,m) : \LI(A^{\oplus X} ) \iff (Y,m) : \LI(\Frac{A}^{\oplus X})
+		}
+	\Assume{(1)}{[(Y,m) : \LI(A^{\oplus X})]}
+	\Assume{\frac{\alpha}{\beta}}{Y \to \Frac(A)^{\oplus X}}
+	\Assume{(2)}{\frac{\alpha}{\beta} m = 0}
+	\Say{(3)}{\bd \LMOD{A}(2)}{
+		0 = 
+		\frac{\alpha}{\beta} m = 
+		\sum_{y \in Y} \frac{\alpha_y}{\beta_y}m_y =
+		 \frac{\sum_{y \in Y} \alpha_y \left(\prod_{y' \neq y} \beta_y\right)m_y }{\prod_{y \in Y} \beta_y} }
+	 \Say{(4)}{\bd \TYPE{VectorSpace}(\Frac(A))(3)}{\sum_{y \in Y} \alpha_y \left(\prod_{y' \neq y} \beta_{y'}\right)m_y=0} 
+	\Say{(5)}{\bd \LI(m)(a)(4)}{\forall y \in Y \. \alpha_y \prod_{y' \neq y} \beta_{y'} = 0}
+	\Say{(6)}{\bd \Frac{A}(5)}{\forall y \in Y \. \alpha_y = 0}
+	\Conclude{()}{\bd \Frac{A}\left( \frac{\alpha}{\beta}\right)}{ \frac{\alpha}{\beta} = 0 }
+	\DeriveConclude{(*)}{\bd^{-1} \LI(\Frac(A)^{\oplus X})}{[m : \LI(\Frac(A)^{\oplus X})]}
+	\EndProof
+        \\
+	\Theorem{BasisIso}{
+		\forall M,N : \LMOD{R} \.
+		\forall (X,f) : \TYPE{Basis}(M) \.
+		\forall T : M \ToIso{\LMOD{R}} N \.
+		 \Big(X,T(f)\Big) : \TYPE{Basis}(M) 
+	}
+	\Assume{\alpha}{A^{\oplus X}}
+	\Assume{(1)}{\alpha T(f) = 0}
+	\Say{(2)}{\bd\LMOD{R}(T)(1)}{T(\alpha f) = 0}
+	\Say{(3)}{\bd\TYPE{Iso}\Big(\LMOD{R}\Big)(T)(2)}{\alpha f = 0}
+	\Conclude{()}{\bd \LI(а)(3)}{ \alpha = 0 }
+	\Derive{(1)}{\bd^{-1}\LI(a)}{[T(f) : \LI(N)]}
+	\Assume{n}{N}
+	\Say{(m,(2))}{\bd \TYPE{Iso}(T)(n)}{ \sum m \in M \. n = T(m)}
+	\Say{(\alpha,(3))}{ \bd \TYPE{Generating}(M)(f)(m)  }{  m = \alpha f   }
+	\Conclude{(4)}{\bd \LMOD{R}(M)(T)}{T(m) = T(\alpha f) = \alpha T(f)}
+	\Derive{(5)}{\bd^{-1}\TYPE{Basis} }{ [T(f) : \TYPE{Basis}(M)]  }
+	\EndProof
+}\Page{
+	\Theorem{MaximalLinearIndDominates}{
+		\forall A : \ID \. \forall M : \FM{A} \. \NewLine \. 
+		\forall E \in \max \LIS(M) \. \forall S \in \LIS(M) \.\NewLine \.
+		|E| \le |S|
+	}
+	\Say{\Big(X,e)}{\bd \LIS(M)(E)}{\sum X \in \SET \. e : X \ToIso{\SET} E \And \LI(M)}
+	\Say{\Big(Y,s)}{\bd \LIS(M)(S)}{ \sum X \in \SET \. s : Y \ToIso{\SET} S \And \LI(S) }
+	\Say{Y'}{Y \sqcup \{0\}}{\SET}
+	\Say{(1)}{\THM{WellOrderingTheorem}(X',0)}{[X' : \TYPE{WellOrdered} \And 0 = \min X']}
+	\Say{I_0}{\emptyset}{\emptyset \to X}
+	\Say{m_0}{ e }{X \to E}
+	\Assume{y}{Y}
+	\Say{\Big(\alpha,\beta,(2)\Big)  }{\bd \max \LIS(\im m_{y{-}{-}})(s_y)}
+	{
+		\sum \alpha : A^{\oplus X} \. \sum \beta \in A^* \. \NewLine \.  
+		\sum_{x \in X} \alpha_x m_{y{-}{-},x} = \beta s_y  
+	}
+	\Say{\Big(a,b,(3)\Big)}{\bd m_{y{-}{-}}}{ 
+		\sum a : I_{y{-}{-}}\Big(\TYPE{Less}(y)\Big) \to S \. \NewLine \.    
+		\sum b ; X \setminus I_{y{-}{-}}\Big(\TYPE{Less}(y)\Big) \to E
+		\. m = a \oplus b }
+	\Say{\Big(\xi,\zeta,(4)\Big)}{ \FUNC{decomp}(\alpha,\im I_{y{--}})   }{\sum \xi : \im I_{y{-}{-}} \to A \. \NewLine  
+		\sum X \setminus \in I_{y{-}{-}}  \to\.   \. \alpha = \xi \oplus \zeta}
+	\Say{(5)}{(3)(4)}{\beta s_y = \sum_{x} \xi_{x}a_x  + \sum_{x} \zeta_x b_x }
+	\Say{\Big(x,(6)\Big)}{  \bd \LIS(M)(S)(a,b)(5) }{  \sum x \in X \. \zeta_x \neq 0}
+	\Say{I_{y}}{I_{y{-}{-}} \oplus (y \mapsto x)}{ \TYPE{Less}(y++) \ToInj X  }
+	\Say{m_y}{
+		\Lambda x \in X \. 
+		\If x \in \im I \Then s\Big(I^{-1}(x)\Big) \Else e(x) 	
+	}{X \to M}
+	\Assume{\gamma}{A^{\oplus X}}
+	\Assume{(7)}{ \gamma m_y = 0  }
+	\Assume{(8)}{\gamma \neq 0 }
+	\Say{(9)}{\bd\LI(m_{y{-}{-}})(8)}{\gamma_x \neq 0}
+	\Say{(10)}{(2)(9)}{
+		0 = 
+		\alpha^{-1}_x\beta_{x}\gamma_xe_{x} +
+		\sum_{x' \in X : x' \neq x} \alpha^{-1}_x\beta\gamma_x m_{x'} - \gamma_{x'} m_{x'}    
+	}
+	\Say{(11)}{\bd\LI(m_{y{-}{-}})(10)}{ \alpha^{-1}_x\beta\gamma_x = 0}
+	\Conclude{()}{(8)(6)(11)}{\bot}
+	\Derive{(12)}{ \bd \LI(M)}{[m_y : \LI(M)]  }
+	\Say{(13)}{\bd m_y(6)(5)}{e_x \in \Span(m_{y,x'})_{x' \in X}}
+	\Conclude{(14)}{\bd \max \LIS(M)(\im m_{y--})(13)}{[\im m_{y} \in \max \LIS(M)]}
+	\Derive{\Big(I,m,(2)\Big)}{I\left( \sum \right) }
+	{ 
+		\sum I : \prod y \in Y' \. \TYPE{Less}(y++) \ToInj X \.
+		\sum m : \prod y \in Y' \. X \to M \. \NewLine \.
+		\im m \in \max \LIS(M)  \And  
+		\forall x \in \im I \. m_x = s_{I^{-1}(x)} 
+		\And
+		\forall x \not \in \im I \. m_x = e_x
+	}
+	\Say{(I')}{\THM{TransfiniteInduction}(Y')(2)}{I' : X \ToInj Y}
+	\Conclude{(*)}{\THM{CardByInclusion}(I')\THM{CardIso}(e,s)}{|S| \le |E|}
+	\EndProof
+}\Page{
+ 	\Theorem{FreeReflectsIso}
+	{  
+		\forall X,Y \in \SET \. \forall A : \ID \.
+		\forall (0) : A^{\oplus X} \cong A^{\oplus Y} \.
+		X \cong_{\SET} Y
+	}
+	\Say{T}{\bd \TYPE{Isomorphic}(0)}{ : A^{\oplus X} \ToIso{\LMOD{A}} A^{\oplus Y} }
+	\Say{(1)}{\THM{Isobasis}(T,e(A,X))}{\Big[T\big(e(A,X)\big) : \TYPE{Basis}(A^{\oplus Y})  \Big]}
+	\Say{(2)}{\THM{MaximalLinearIndDomianates}(1)(T\big(e(A,X)\big))}{|X| \le |Y|}
+	\Say{(3)}{\THM{MaximalLinearIndDominates}(1)(e(A,Y),T\big(e(A,X)\big))}{|Y| \le |X| }
+	\Conclude{()}{\THM{EqCard}\big((2),(3)\big)}{ |Y| = |X|  }
+	\EndProof
+	\\
+	\DeclareFunc{idealModule}{\prod A \in \ANN \. \prod M \in \LMOD{A} \. \Ideal(A) \to \TYPE{Subspace}(M) }
+	\DefineNamedFunc{idealModule}{I}{IM}{\Span\{ am | a\in I, m \in M  \}}
+	\\
+	\Theorem{QuotientRingModule}{\forall A \in \ANN \. \forall I : \Ideal(A) \. \forall M \in \LMOD{A} \. 
+	     \forall (0) : IM = 0 \. M \in \LMOD{ \left(\frac{A}{I}\right) }   }
+	\Say{\odot}{\Lambda [a] \in \frac{A}{I} \. \Lambda m \in M \. am }
+	{ \Lambda \frac{A}{I} \times M \to M  }
+	\Assume{a}{A}
+	\Assume{i}{I}
+	\Assume{m}{M}
+	\Conclude{(1)}{\bd \odot \bd \LMOD{A}(M) (0)\bd^{-1}\odot}{ [a + i]\odot m = (a + i)m = am + im = am = [a]\odot   }
+	\DeriveConclude{()}{\bd \LMOD{A}(M)\bd \odot}{\left[  (M,\odot) \in \LMOD{\left( \frac{A}{I}\right)} \right]}
+	\EndProof
+	\\
+	\Theorem{FreeIdealModule}{ \forall A \in \ANN \. \forall X \in \SET \. \forall I : \Ideal(A)  \. 
+		\forall \frac{A^X}{IA^X} \cong_{\LMOD{\left(\frac{A}{I}\right)}}  \left(\frac{A}{I}\right)^X  }
+	\NoProof
+	\\
+	\DeclareType{\IBP}{?\RING}
+	\DefineType{R}{\IBP}{\TYPE{freeModule}(R) : \TYPE{Conservative}\Big(\SET,\LMOD{R}\Big)}
+}\Page{
+	\Theorem{CRingIsIBP}{\forall A \in \ANN \. A : \IBP}
+	\Say{I}{\THM{MaximalIdealExists}(A)}{\TYPE{MaximalIdeal}(A)}
+	\Assume{X,Y}{\SET}
+	\Assume{(1)}{A^{\oplus X} \cong_{\LMOD{A}} A^{\oplus Y}}
+	\Say{T}{\bd \TYPE{Isomorphic}}{ A^{\oplus X} \cong_{\LMOD{A}} A^{\oplus Y}  }
+	\Say{f}{T\Big(e(A,X)\Big)}{\TYPE{Basis}\Big(A^{\oplus Y} \Big)}
+	\Say{T'}{\Lambda \sum_{x \in X} [a_i][e_x] \. \sum_{x \in X} [a_x][f_x]  }
+	{
+		\left(\frac{A}{I}\right)^{\oplus X}  \ToIso{\LMOD{\left(\frac{A}{I}\right)}} 
+		\left( \frac{A}{I}\right)^{\oplus Y}
+	}
+	\Conclude{(1)}{ \THM{FreeModCreate} \bd \TYPE{Isomorphic}(A)}{|X| = |Y|}
+	\EndProof
+	\\
+	\DeclareFunc{rank}{\prod A \in \ANN \. \FGM(A) \to \Nat} 
+	\DefineNamedFunc{rank}{M}{ \rank M}{  |X| \quad \where \quad A^{\oplus X} \cong_{\LMOD{A}} M   }
+	\\
+	\Theorem{NoetherianACC}{ 
+		\forall M : \TYPE{Noetherian}(R) \. \forall N : \TYPE{Nondescending}\Big( \Nat , \TYPE{Submodule}(M) \Big) \.
+		\NewLine \. \exists n \in \Nat : \forall k \in \Nat \. k \ge n \Rightarrow N_k = N_n
+	}
+	\Say{V}{\bigcup_{n=1}^\infty N_n}{\TYPE{Submodule}(R)}
+	\Say{(m,v,1)}{\bd \TYPE{Noetherian}(A)(M)(V)}{\sum m \in \Nat \. \sum v : m \to V \. V = \Span(v_i)^m_{i=1}}
+	\Say{(n,2)}{ \bd \TYPE{Nondescending}(N)\bd\FUNC{union}(N)(v)}{ \exists n \in \Nat \. N_n = V  }
+	\Conclude{(3)}{\bd \TYPE{Nondescending}(N)\THM{UnionContains}(N,V)}{\LOGIC{THIS}}
+	\EndProof
+}
+\newpage
+\subsection{Chain Complexes and Exact Sequences}
+\Page{
+	\Conclude{\TYPE{MorphismChain}}{ \Lambda R \in \RING \. \sum V : \Int \to \LMOD{R}  \. \sum \prod^\infty_{i=-\infty} \phi : V_{i} \Arrow{\LMOD{R}} V_{i-1}}{\RING \to \Type}
+	\\
+	\DeclareType{ChainComplex}{\prod R \in \RING \. ?\sum V : \Int \to \LMOD{R}  \. \sum \phi : V_{i} \Arrow{\LMOD{R}} V_{i-1}  }
+	\DefineType{(V,\phi)}{ChainComplex}{ \forall i \in \Int \. \im  \phi_{i+1} \subset \ker \phi_i  }
+	\\
+	\DeclareType{Exact}{\prod R \in \RING \. ?\TYPE{ChainComplex}(R)  }
+	\DefineType{(V,\phi)}{Exact}{ \forall i \in \Int \. \im  \phi_{i+1} = \ker \phi_i  }
+	\\
+	\DeclareType{Finite}{\prod R \in \RING \. ?\TYPE{ChainComplex}(R)  }
+	\DefineType{V,\phi}{Finite}{ \exists n \in \Nat \. \exists m \in \Nat : \forall i \in \Int \. i < -n \And i > m \Rightarrow V_i = 0}
+	\\
+	\DeclareFunc{finiteChain}{
+		\prod R \in \RING \. 
+		\left( \sum n \in \Nat \. \sum V : n \to \LMOD{R} \. \sum 
+			\phi : \prod i \in (n-1) \. V_{i+1} \Arrow{\LMOD{R}} V_{i}
+		\right) \to \NewLine \to \TYPE{MorphismChain}(R) }
+	\DefineNamedFunc{finiteChain}{V,\phi}{V_n \Arrow{\phi_{n-1}} V_{n-1} \Arrow{\phi_{n-2}} \ldots \Arrow{\phi_1} V_1 }
+		{ 
+			\NewLine \de
+			\Big(\Lambda i \in \Int \. \If i \in n \Then V_i \Else 0, \Lambda i \in \Int . 
+			\If 2 \le i \le n \Then \phi_{i-1} \Else 0 \Big)  
+		}
+	\\
+	\DeclareType{RightChain}{\prod R \in \RING \. ?\TYPE{MorphismChain}(R)  }
+	\DefineType{V,\phi}{RightChain}{  \forall i \in \Int \. i > 0 \Rightarrow V_i = 0}
+	\\
+	\DeclareType{LeftChain}{\prod R \in \RING \. ?\TYPE{MorphismChain}(R)  }
+	\DefineType{V,\phi}{LeftChain}{  \forall i \in \Int \. i < 0 \Rightarrow V_i = 0}
+	\\
+	\Theorem{InjectionByRightChain}{\forall (V,\varphi) ; \TYPE{RightChain} \And \TYPE{Exact}(R) \. \varphi_1 : V_1 \ToInj V_0   }
+	\Say{[1]}{\TYPE{RightChain}(V,\varphi)\bd \LMOD{R}(0)}{\varphi_1 = 0}
+	\Say{[2]}{\bd^{-1}\im \varphi_0[1]}{\im \varphi_1=0}
+	\Say{[3]}{\bd \TYPE{Exact}[2]}{ \ker \varphi_0 = 0   }
+	\Conclude{[*]}{\THM{ZeroKernelTHM}[4]}{(\varphi_1 : V_1 \ToInj V_0)}
+	\EndProof
+	\\
+	\Theorem{SurjectionByLeftChain}{\forall (V,\varphi) ; \TYPE{LeftChain} \And \TYPE{Exact}(R) \. \varphi_0 : V_{0} \ToSurj V_{-1}   }
+	\Say{[1]}{\TYPE{LeftChain}(V,\varphi)\bd \LMOD{R}(0)}{\varphi_1 = 0}
+	\Say{[2]}{\bd^{-1}\ker \varphi_1[1]}{\ker \varphi_1 = V_0}
+	\Say{[3]}{\bd \TYPE{Exact}[2]}{ \im \varphi_0 = V_0   }
+	\Conclude{[*]}{\bd^{-1} \TYPE{Surjective}}{(\varphi_0 : V_{0} \ToSurj V_-1)}
+	\EndProof
+}
+\Page{
+	\DeclareType{MorphismOfChains}{\prod (V,\varphi),(W,\psi) : \TYPE{ChainComplex}(R) \. ?\prod^\infty_{i=-\infty} V_i \Arrow{\LMOD{R}} W_i }
+	\DefineType{f}{MorphismOfChains}{ \forall i \in \Int \. f_{i-1}\psi_{i} = \phi_{i}f_{i}  }
+	\\
+	\Theorem{MorphismOfChainsComposition}{
+		\prod (V,\varphi),(W,\psi),(U,\eta) : \TYPE{ChainComplex}(R) \. 
+		\NewLine \. \forall f : \TYPE{MorphismOfChains}\Big((V,\varphi),(W,\psi)\Big) \. 
+		\forall g : \TYPE{MorphismOfChains}\Big((W,\psi),(U,\eta)\Big)	\.
+		\NewLine \. g \circ f : \TYPE{MorphismOfChains}\Big((V,\varphi),(U,\eta)\Big) 
+	}
+	\Assume{i}{\Int}
+	\Conclude{[i.*]}{ \bd^2 \TYPE{MorphismOfChains}\Big((V,\varphi),(W,\psi)\Big)\Big((W,\psi),(U,\eta)\Big)(f)(g)}
+	{
+		f_{i-1}g_{i-1}\eta_i = 
+		f_{i-1}\psi_i g_{i} =
+		\varphi_i f_{i} g_{i} 
+	}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{MorphismOfChains}}{\bigg(g \circ f : \TYPE{MorphismOfChains}\Big((V,\varphi),(U,\eta)\Big)\bigg)} 
+	\EndProof
+	\\
+	\DeclareFunc{CategoryOfChains}{\RING \to \CAT}
+	\DefineNamedFunc{CategoryOfChains}{R}{\CH{R}}{\Big( \TYPE{ChainComplex},\TYPE{MorphismOfChains},(\circ)_*, \Lambda n \in \Int \. \id \Big)}
+	\\
+	\Theorem{IsoByExact}{ \forall A \Arrow{\varphi} B : \Exact(R) \. \varphi : A \ToIso{R} B }
+	&\text{Combine $\THM{InjectionByRightChain}$ and $\THM{SurjectionByLeftChain}$.} \\
+	\EndProof
+	\\
+	\DeclareType{ShortExact}{\prod R \in \RING \. ?\Exact{R}}
+	\DefineType{(V,\varphi)}{ShortExact}{
+		\exists A,B,C \in \LMOD{R} : 
+		\exists \alpha : A \Arrow{\LMOD{R}} B : 
+		\exists \beta : B \Arrow{\LMOD{R}} C :
+		(V,\varphi) = A \Arrow{\alpha} B \Arrow{\beta} C                           
+	}
+	\\
+	\Theorem{ShortExactProperty}{\forall A \Arrow{\alpha} B \Arrow{\beta} C : \ShortExact(R) \. C \cong_{\LMOD{R}} \frac{B}{\im \alpha}}
+	& \text{Combine exactens with the first isomorphism theorem.} \\
+	\EndProof
+	\\
+	\Theorem{ShortExactOfHomo}{\forall R \in \RING \. \forall A,B \in \LMOD{R} \. \forall T : A \Arrow{\LMOD{R}} B \. 
+		\NewLine \. \ker T \Arrow{\iota} A \Arrow{T^{|\im T}} \im T : \ShortExact(R)}
+	\NoProof
+}\Page{
+	\Theorem{ExactIsNaturalForChains1}{\forall (V,\varphi),(W,\psi) \in \CH{R} \. \forall f : (V,\varphi) \ToIso{\CH{R}} (W,\psi) \. 
+		\NewLine (V,\varphi) : \Exact(R) \Rightarrow (W,\varphi)  : \Exact(R)}
+	\Assume{[1]}{\Big( (V,\varphi) : \Exact(R) \Big)}
+	\Assume{i}{\Int}
+	\Say{[2]}{\bd\TYPE{Iso}(f)\bd \CH{R}}{f_i : V_i \ToIso{\LMOD{R}} W_i \And f_{i-1} : V_{i-1} \ToIso{\LMOD{R}}  W_{i-1}  }
+	\Say{[3]}{\bd \Exact(V,\varphi)(i-1)}{\ker \varphi_{i-1} = \im \varphi_i}
+	\Say{[4]}{\bd \CH(R)(f)(i-1)}{  f_{i-1} \psi_{i-1} = \varphi_{i-1} f_{i-2}}
+	\Say{[5]}{\bd \TYPE{Iso}(f)[2][4]}{  \ker \psi_{i-1} = f_{i-1}(\ker \varphi_{i-1})   }
+	\Say{[6]}{\bd \CH(R)(f)(i) }{  f_i \psi_i = \varphi_i f_{i-1} }
+	\Say{[7]}{\bd\TYPE{Iso}(f)[2][6]}{   \im \psi_i = f_{i-1}(\im \varphi_i) }
+	\Conclude{[1.*]}{[3][5][7]}{\im \psi_i = \ker \psi_{i-1}}
+	\DeriveConclude{[*]}{ I(\Rightarrow)\bd^{-1} \CH(R)(V,\varphi)(W,\psi) }
+	{
+	(V,\varphi) : \Exact(R) \Rightarrow (W,\psi)  : \Exact(R)	
+	}
+	\EndProof
+	\\
+	\Theorem{ExactIsNaturalForChains2}{\forall (V,\varphi),(W,\psi) \in \CH{R} \. \forall f : (V,\varphi) \ToIso{\CH{R}} (W,\psi) \. 
+		\NewLine (V,\varphi) : \Exact(R) \iff (W,\varphi)  : \Exact(R)}
+	\Say{[1]}{\THM{ExactIsNaturalForChains}(f)}
+	{
+	(V,\varphi) : \Exact(R) \Rightarrow (W,\psi)  : \Exact(R)	
+	}
+	\Say{[2]}{ \THM{ExactIsNaturalForChains}(f^{-1}) }
+	{
+	(W,\psi) : \Exact(R) \Rightarrow (V,\varphi)  : \Exact(R)	
+	}
+	\Conclude{[*]}{I(\iff)[1][2]}{\LOGIC{This}}
+	\EndProof
+}
+\newpage
+\subsection{Split Exact Sequences}
+\Page{
+	\DeclareType{DirectSumShortExact}
+	{
+		\forall R \in \RING \. \forall A,B \in \LMOD{R} \. 
+		A \Arrow{\iota_1} A \oplus B \Arrow{\pi_2} B : \ShortExact(R)
+	}
+	\NoProof
+	\\
+	\DeclareType{Split}{\prod R \in \RING \. ?\ShortExact(R)}
+	\DefineType{(V,\varphi)}{Split}{\exists A,B \in \LMOD{R} \.  A \Arrow{\iota_1}A \oplus B \Arrow{\pi_2} B \cong_{\CH{R}} (V,\varphi)}
+	\\
+	\Theorem{LeftInverseBySplit}
+	{
+		\forall R \in \RING \. \forall A,B \in \LMOD{R} \. \forall \varphi : A \Arrow{\LMOD{R}} B \.  \NewLine
+		\varphi : \TYPE{LeftInvertible}(A,B) \iff  A \Arrow{\varphi} B \Arrow{\pi} \coker \varphi : \TYPE{Split} 
+	}
+	\Assume{[0]}{\Big(\varphi :\TYPE{LeftInvertible}(A,B)\Big)}
+	\Say{\Big(\psi,[1]\Big)}{ \bd \TYPE{LeftInvertible}(\varphi)}{ \sum \psi : B \Arrow{\LMOD{R}} A \. \varphi \psi = \id }
+	\Say{[2]}{[1]\THM{ZeroKernelTHM}}{ (\varphi  : A \ToInj B ) }
+	\Say{[3]}{ \bd^{-1} \TYPE{Iso}[2] }{ (\varphi^{|\im \varphi} : A \ToIso{\LMOD{R}} \im \varphi)}
+	\Say{T}{\Lambda (a,t) \in \im \varphi \oplus \ker \psi \. a  + t}{ \im \varphi \oplus \ker \psi \Arrow{\LMOD{R}} B}
+	\Say{S}{\Lambda b \in B \. \Big(\psi\varphi(b), b - \psi\varphi(b)\Big)}{ B \Arrow{\LMOD{R}} \im \varphi \oplus \ker \psi}
+	\Say{[5]}{\forall (b,t) \in \im \varphi \oplus \ker \psi \. \bd T [1]\bd S}{\forall (b,t) \in \im \varphi \oplus \ker \psi \.  ST(a,t)= S\big(a + t\big) = (a,t)}
+	\Say{[6]}{\forall b \in B \.\bd S [1]\bd T}{\forall b \in  B \.  TS(b)= S\big(\psi\varphi(b) , b - \psi\varphi(b)\big) = b}
+	\Say{[7]}{[5][6]\bd \TYPE{Iso}}{\big(T : \ker \varphi \oplus \im \psi \ToIso{\LMOD{R}} A\Big)}
+	\Say{[8]}{\THM{IsomorphismTHM3}(\im \varphi)[1]}{\Big(\pi_{|\ker \psi}^{-1} : \coker \varphi \ToIso{\LMOD{R}} \ker \psi  \Big)}
+	\Say{[9]}{\forall a \in A \. [1](a)}{ \forall a \in A \. \varphi^{|\im \varphi} \iota(a) = (\varphi(a),0) = \big(\varphi \psi\varphi(a),\varphi(a) - \varphi \psi \varphi(a) \big) = \varphi S(a)}
+	\Say{[10]}{I(=,\to)[9]}{\varphi^{|\im \varphi} \iota  = \varphi S}
+	\Say{[11]}{ \forall b \in B \. \ldots   }{ \pi_2 S(b) = b - \psi \varphi (b) = \pi_{\im \varphi} \pi^{-1}_{\ker \psi}(b)  }
+	\Say{[12]}{I(=,\to)[11]}{\pi_2 S = \pi_{\im \varphi} \pi^{-1}_{\ker \psi} }
+	\Conclude{[0.*]}{\bd^{-1}\TYPE{Split}\bd^{-1}\CH{R}[10][12]}{A \Arrow{\varphi} B \Arrow{\pi} \coker \varphi : \TYPE{Split}}
+	\Derive{[0]}{I(\Rightarrow)}{\LOGIC{Left} \Rightarrow \LOGIC{Right}}
+	\Assume{[1]}{\Big(A \Arrow{\varphi} B \Arrow{\pi} \coker \varphi : \TYPE{Split}\Big)} 
+	\Say{\big(X,Y,[2]\big)}{ \bd \TYPE{Split}[1] }{ \sum X,Y \in \LMOD{R} \. X \Arrow{\iota_1} X \oplus Y \Arrow{\pi_2} Y \cong_{\CH{R}} A \Arrow{\varphi} B \Arrow{\pi} \coker \varphi}
+	\Say{[3]}{ \bd \TYPE{Isomorphic}\big(\CH(R)\big) }{ \sum f : X \Arrow{\iota_1} X \oplus Y \Arrow{\pi_2} Y \ToIso{\CH{R}} A \Arrow{\varphi} B \Arrow{\pi} \coker \varphi }
+	\Say{[4]}{\bd \iota \bd \pi}{\iota_1 \pi_1 = \id} 
+	\Say{[5]}{\bd \CH{R}(f)[4]\bd \TYPE{Inverse}(f_{0})}{  \varphi f_{-1} \pi_1  f_{0}^{-1}  = f_{0} \iota_1 \pi_1 f^{-1}_{0} = \id    }
+	\Conclude{[1.*]}{\bd \TYPE{LeftInvertible}}{\Big(\varphi : \TYPE{LeftInvertible}(A,B)\Big)}
+	\DeriveConclude{[1]}{I(\Leftarrow)[0]I(\iff)}{\LOGIC{This}}
+	\EndProof
+}
+\Page{
+	\Theorem{RightInverseBySplit}
+	{
+		\forall R \in \RING \. \forall A,B \in \LMOD{R} \. \forall \varphi : A \Arrow{\LMOD{R}} B \.  \NewLine
+		\varphi : \TYPE{RightInvertible}(A,B) \iff  \ker \varphi \Arrow{\iota} A \Arrow{\varphi} B  : \TYPE{Split} 
+	}
+	\Assume{[0]}{\Big(\varphi :\TYPE{RightInvertible}(A,B)\Big)}
+	\Say{\Big(\psi,[1]\Big)}{ \bd \TYPE{RightInvertible}(\varphi)}{ \sum \psi : B \Arrow{\LMOD{R}} A \. \psi \varphi  = \id }
+	\Say{[2]}{[1]\bd^{-1} \TYPE{Surjective}}{ (\varphi  : A \ToSurj B ) }
+	\Say{[3]}{ \THM{IsomorphismTHM}[2] }{ \Big(\hat \varphi : \frac{A}{\ker \varphi } \ToIso{\LMOD{R}} B  \Big)}
+	\Say{f}{pi_{\ker\varphi|\im \psi}\hat \varphi}{\im \psi  \ToIso{\LMOD{R}} B  }
+	\Say{T}{\Lambda (b,t) \in \ker \varphi \oplus \im \psi \. b  + t}{ \ker \varphi \oplus \im \psi \Arrow{\LMOD{R}} A}
+	\Say{S}{\Lambda a \in A \. \Big(a - \varphi\psi(a), \varphi\psi(a)\Big)}{ A \Arrow{\LMOD{R}} \ker \varphi \oplus \im \psi}
+	\Say{[5]}{\forall (a,t) \in \ker \varphi \oplus \im \psi \.\bd T [1]\bd S}{\forall (a,t) \in \ker \varphi \oplus \im \psi \.  ST(a,t)= S\big(a + t\big) = (a,t)}
+	\Say{[6]}{\forall b \in B \.\bd S [1]\bd T}{\forall a \in A \.  TS(a)= S\big(\varphi\psi(a) , a - \varphi\psi(a)\big) = a}
+	\Say{[7]}{[5][6]\bd \TYPE{Iso}}{\big(S : A \ToIso{\LMOD{R}} \ker \varphi \oplus \im \psi \Big)}
+	\Say{[8]}{\forall a \in ker \varphi \. [1](a)}{ \forall a \in \ker \varphi \. \iota_1(a) = (a,0) = \big(a - \varphi \psi (a),\varphi \psi (a) \big) =  \iota S(a)}
+	\Say{[9]}{I(=,\to)[8]}{    \iota_1  = \iota S}
+	\Say{[10]}{ \forall a \in A \. \ldots   }{ \varphi f^{-1} (a) =   \varphi \psi (a) = S \pi_2(b)  }
+	\Say{[11]}{I(=,\to)[10]}{\varphi f^{-1} = S \pi_2 }
+	\Conclude{[12]}{\bd^{-1}\TYPE{Split}\bd^{-1}\CH{R}[10][12]}{\ker \varphi \Arrow{\iota} A \Arrow{\varphi} B : \TYPE{Split}}
+	\Derive{[0]}{I(\Rightarrow)}{\LOGIC{Left} \Rightarrow \LOGIC{Right}}
+	\Assume{[1]}{\Big(\ker \varphi \Arrow{\iota} A \Arrow{\varphi} B \Arrow{\pi} : \TYPE{Split}\Big)} 
+	\Say{\big(X,Y,[2]\big)}{ \bd \TYPE{Split}[1] }{ \sum X,Y \in \LMOD{R} \. X \Arrow{\iota_1} X \oplus Y \Arrow{\pi_2} Y \cong_{\CH{R}} \ker \varphi \Arrow{\iota} A \Arrow{\varphi} B }
+	\Say{[3]}{ \bd \TYPE{Isomorphic}\big(\CH(R)\big) }{ \sum f : X \Arrow{\iota_1} X \oplus Y \Arrow{\pi_2} Y \ToIso{\CH{R}} \ker \varphi \Arrow{\iota} A \Arrow{\varphi} B  }
+	\Say{[4]}{\bd \iota \bd \pi}{\iota_2 \pi_2  = \id} 
+	\Say{[5]}{\bd \CH{R}(f)[4]\bd \TYPE{Inverse}(f_{0})}{   f_{-2} \iota_2  f_{-1}^{-1} \varphi  = f_{-2} \iota_2 \pi_2 f^{-1}_{-2} = \id    }
+	\Conclude{[1.*]}{\bd \TYPE{RightInvertible}}{\Big(\varphi : \TYPE{RightInvertible}(A,B)\Big)}
+	\DeriveConclude{[1]}{I(\Leftarrow)[0]I(\iff)}{\LOGIC{This}}
+	\EndProof
+}
+\newpage
+\subsection{Homology And Snake Lemma}
+\Page{
+	\DeclareFunc{homology}{\TYPE{ChainComplex}(R) \to \Int \to \LMOD{R}}
+	\DefineNamedFunc{homology}{(V,\varphi),i}{H_i(V,\varphi)}{\frac{\ker \varphi_i}{\im \varphi_{i+1}}}
+	\\
+	\Theorem{SnakeLemma}{
+		\forall L_1 \Arrow{\alpha_1} M_1 \Arrow{\beta_1} N_1,
+		\forall L_0 \Arrow{\alpha_0} M_0 \Arrow{\beta_0} N_0 : \ShortExact(R) \. \NewLine \.
+		\forall (\lambda,\mu ,\nu) :L_1 \Arrow{\alpha_1} M_1 \Arrow{\beta_1} N_1 \Arrow{\CH{R}} 
+			L_0 \Arrow{\alpha_0} M_0 \Arrow{\beta_0} N_0   \. \NewLine
+		\exists \delta : \ker \nu \Arrow{\LMOD{R}} \coker \lambda :
+		\ker \lambda \Arrow{\alpha_{1|\ker \lambda}} \ker \mu \Arrow{\beta_{1|\ker \mu}} \ker \nu
+		\Arrow{\delta}
+		\coker \lambda \Arrow{\hat \alpha_0 } \coker \mu \Arrow{\hat \beta_0 } \coker \nu : \Exact(R)
+		}
+	\Assume{a}{\ker \nu}
+	\Say{[1]}{\bd \ShortExact(\beta_1)}{\big(\beta_1:M_1 \ToSurj N_1}
+	\Say{[2]}{\bd \TYPE{Surjective}(\beta_1)}{\{ b \in M_1 : \beta_1(b) = a  \} \neq \emptyset}
+	\Assume{b}{M_1}
+	\Assume{[4]}{\beta_1(b) = a}
+	\Say{c}{\mu(b)}{M_0}
+	\Say{[5]}{\bd \CH(R)(\mu)\bd \ker \nu}{ \beta_0(c) = \mu\beta_0(b) = \beta_1\nu(b) = 0  }
+	\Say{[6]}{\bd^{-1}\ker \beta_0}{c \in \ker \beta_0}
+	\Say{[7]}{\bd \Exact[6]}{c \in \im \alpha}
+	\Assume{d,d'}{L_0}
+	\Assume{[8]}{\alpha_0(d') = c \And \alpha_0(d) = c}
+	\Say{\delta(a)}{[d]}{\coker \lambda}
+	\Say{[9]}{\bd \ShortExact(\alpha_0)}{ \Big(\alpha_0 : \ToInj(L_0,M_0)\Big)}
+	\Conclude{[d.*]}{\bd \TYPE{Injective}(\alpha_0)[8]}{a = a'}
+	\Derive{(\delta(a),[8])}{\bd\LOGIC{WellDefined}}{\sum \delta(a) \in \coker \lambda \. \exists d \in L_0 : [d] =  \delta(a) \and \alpha_0(d) = c}
+	\Assume{b'}{M_1}
+	\Assume{[9]}{\beta_1(b') = a}
+	\Say{[10]}{ \bd \LMOD{R}\beta_1[9] - [4]}{0 = \beta_1(b') - \beta_1(b) = \beta_1(b'-b)}
+	\Say{[11]}{\bd^{-1} \ker \beta_1 [10]}{b' - b \in \ker \beta_1}
+	\Say{[12]}{\bd \TYPE{Exact}}{b' - b \in \im \alpha_1 }
+	\Say{(z,[13])}{\bd \im [12]}{\sum z \in L_1 \. \alpha_1(z) = b'-b}
+	\Say{[14]}{\bd \CH{R}[13]}{  \lambda \alpha_0(z) = \alpha_1 \mu(z) = \mu( b' - b) }
+	\Conclude{[a.*]}{\bd^{-1}\im \lambda[14]}{ \mu(b'-b) \in \im \lambda }
+	\Derive{\big(\delta,[1]\big)}{\bd^{-1}\LOGIC{WellDefined}}{
+		\sum  \delta : \ker \nu \Arrow{\LMOD{R}} \coker \lambda \. 
+		\NewLine \. \forall a \in \ker \nu \. 
+		\exists d \in L_0 : \delta(a) = [d]  \And \exists b \in M_1 :
+		\beta_1(b) = a \And \mu(b) = \alpha_0(d)}
+}
+\Page{
+	\Assume{a}{\ker \lambda}
+	\Say{[2]}{\bd \CH{R}(\lambda,\mu,\nu)}{  \lambda \alpha_0 = \alpha_1 \mu  }
+	\Say{[3]}{[2]\bd \ker \lambda (a)}{ 0 = \lambda \alpha_0(a) = \alpha_1 \mu(a)}
+	\Conclude{[a.*]}{\bd^{-1}\ker \alpha_1}{ \alpha_1(a) \in \ker \mu}
+	\Derive{[2]}{\bd^{-1}\FUNC{image}\bd^{-1}\TYPE{Subset}}{\alpha_1(\ker \lambda) \subset \ker \mu}
+	\Assume{a}{\ker \mu}
+	\Say{[a.2]}{\bd \CH{R}(\mu,\mu,\nu)}{  \mu \beta_0 = \beta_1 \nu  }
+	\Say{[a.3]}{[a.2]\bd \ker \mu (a)}{ 0 = \mu \beta_0(a) = \beta_1 \nu(a)}
+	\Conclude{[a.*]}{\bd^{-1}\ker \beta_1}{ \beta_1(a) \in \ker \nu}
+	\Derive{[3]}{\bd^{-1}\FUNC{image}\bd^{-1}\TYPE{Subset}}{\beta_1(\ker \mu) \subset \ker \nu}
+	\Assume{a}{\im \lambda}
+	\Say{[a.1]}{\bd \CH{R}(\lambda,\mu,\nu)}{  \lambda \alpha_0 = \alpha_1 \mu  }
+	\Say{(b,[a.2])}{\bd \im \lambda a}{\sum b \in L_1 \. a = \lambda(b) }
+	\Say{[a.3]}{ [a.2][a.1] \bd \FUNC{quotientModule} }{ \alpha_0\pi_{\im \mu}(a) =  \lambda \alpha_0 \pi_{\im \mu}(b) =  \alpha_1 \mu \pi_{\im \mu}(b) = 0  }
+	\Conclude{[a.*]}{\bd^{-1}\ker [a.3]}{ a \in \ker \alpha_0\pi_{\im \mu} }
+	\Derive{\Big(\hat\alpha_0,[4]\Big)}{\THM{RestrictMorphism}}{\sum \hat \alpha_0 : \coker \lambda \Arrow{\LMOD{R}} \coker \mu \. \hat \alpha_0 [a] = [\alpha_0(a)]}
+	\Assume{a}{\im \mu}
+	\Say{[a.1]}{\bd \CH{R}(\lambda,\mu,\nu)}{  \mu \beta_0 = \beta_1 \nu  }
+	\Say{(b,[a.2])}{\bd \im \mu a}{\sum b \in L_1 \. a = \mu(b) }
+	\Say{[a.3]}{ [a.2][a.1] \bd \FUNC{quotientModule} }{ \beta_0\pi_{\im \nu}(a) =  \mu \beta_0 \pi_{\im \nu}(b) =  \beta_1 \nu \pi_{\im \nu}(b) = 0  }
+	\Conclude{[a.*]}{\bd^{-1}\ker [a.3]}{ a \in \ker \beta_0\pi_{\im \nu} }
+	\Derive{\Big(\hat\beta_0,[5]\Big)}{\THM{RestrictMorphism}}{\sum \hat \beta_0 : \coker \mu \Arrow{\LMOD{R}} \coker \nu \. \hat \beta_0 [a] = [\beta_0(a)]}
+	\Assume{a}{\ker \nu \cap \beta_1(\ker \mu)}
+	\Say{(d.b,[6])}{[1](a)}{\sum d \in L_0 \. \sum b \in M_1 \. \delta(a) = [d] \And \beta_1(b) = a \And \mu(b) = \alpha_0(d)  }
+	\Say{[7]}{ [6]\bd a}{b \in \ker \mu}
+	\Say{[8]}{[7]\bd \ker \mu[6] }{\alpha_0(d) = 0}
+	\Say{[9]}{\bd \TYPE{Injective}[8]}{d = 0}
+	\Conclude{[a.*]}{\bd^{-1}\ker \delta[9][6]}{a \in \ker \delta}
+	\Derive{[6]}{\bd^{-1}\TYPE{Subset}}{\im \beta_{1|\ker \mu} \subset \ker \delta}
+	\Assume{c}{\im \delta}
+	\Assume{(a,[c.1])}{\sum a \in \ker \nu \. a = \delta(c)}
+	\Say{\Big(d,b,[c.2]\Big)}{[1](a)}{\sum d \in L_0 \. \sum b \in M_1 \. \delta(a) = [d] \And \beta_1(b) = a \And \mu(b) = \alpha_0(d) }
+	\Say{[c.3]}{ [c.1][c.2][4]\bd \FUNC{quotientModule}  }{ 
+		\hat \alpha_0 (c) = 
+		\hat \alpha_0 \delta (a) = 
+		\hat \alpha_0 [d] = 
+		[\alpha_0(d)] =
+		[\mu(b)] = 
+		0
+	}
+	\Conclude{[c.*]}{\bd^{-1}\ker \hat \alpha_0[c.3]}{  c \in \ker \hat \alpha_0   }
+	\Derive{[7]}{\bd \TYPE{Subset}}{ \im \alpha_0 \subset \ker \hat \alpha_0   }
+}\Page{
+	\Assume{a}{\ker \delta}
+	\Say{\Big(d,b,[a.1]\Big))}{[1](a)}{ \sum d \in L_0 \. \sum b \in M_1 \. \delta(a) = [d] \And \beta_1(b) = a \And \mu(b) = \alpha_0(d)}
+	\Say{[a.2]}{\bd \ker \delta (a) [a.1]}{ d \in \im \lambda}
+	\Say{(c,[a.3])}{\bd \ker \delta }{  \sum c \in L_1 \. d = \lambda(c)   }
+	\Say{[a.4]}{[a.3]\bd \CH(R)(\lambda,\mu,\nu)}{ \mu(b) = \lambda\alpha_0(c) =  \alpha_1\mu(c) }
+	\Say{[a.5]}{\ldots}{ 0 = \mu\big(b - \alpha_1(c)\big)  }
+	\Say{[a.6]}{ \LMOD{R}(\beta_1)\bd \TYPE{ChainComplex}(\ldots)[a.3]}{  \beta_1\big(b - \alpha_1(c)\big) = \beta_1(b) = a  }
+	\Conclude{[a.*]}{[a.6][a.5]}{  a \in \beta_1(\ker \mu)  }
+	\Derive{[8]}{\bd^{-1}\TYPE{Subset}\bd^{-1}\TYPE{SetEq}[6]}{ \beta_1(\ker \mu) =  \ker \delta  }
+	\Assume{[d]}{\ker \hat \alpha_0}
+	\Say{[d.1]}{\bd \ker \hat \alpha_0 \bd \coker \mu}{ \alpha_0(d) \in \im \mu    }
+	\Say{(b,[d.2])}{\bd \im \mu [d.1]}{\sum b \in  M_1 \. \alpha_0(d) = \mu(b) }
+	\Conclude{[d.*]}{\bd \delta [d.2]}{\delta \beta_1(b) = [d]}
+	\Derive{[8]}{\bd^{-1}\TYPE{Subset}\bd^{-1}\TYPE{SetEq}[6]}{ \beta_1(\ker \mu) =  \ker \delta  }
+	\Conclude{[*]}{\bd^{-1}\Exact[2][3][4][5][6][7][8]}{\LOGIC{This}}
+	\EndProof
+}
+\newpage
+\subsection{Torsion, Presentation and Resolution}
+\Page{
+	\DeclareType{Torsion}{\prod M \in \LMOD{R} \. ?M}
+	\DefineType{m}{Torsion}{\{m\} \IsNot \LI(M)}
+	\\
+	\Assume{A}{\ID}
+	\\
+	\DeclareFunc{torsion}{\prod M \in \LMOD{A} \. \TYPE{Submod}(M)}
+	\DefineNamedFunc{torsion}{M}{\tor M}{ \{ m \in M : m : \TYPE{Torsion}(M) \} }
+	\\
+	\DeclareType{TorsionFree}{?\LMOD{A} }
+	\DefineType{M}{TorsionFree}{\tor M = \{0\}}
+	\\
+	\DeclareType{Torsion}{?\LMOD{A}}
+	\DefineType{M}{Toraion}{ \tor M = M }
+	\\
+	\Theorem{TorsionFreeSubmoduleIsTorsionFree}
+	{
+		\forall M : \TYPE{TorsionFree}(A) \. \forall S \submod{A} M \. S : \TYPE{TorsionFree}(A) 
+	}
+	\NoProof
+	\\
+	\Theorem{TorsionFreeSumIsTorsionFree}
+	{
+		\forall I \in \SET \. \forall M : I \to \TYPE{TorsionFree}(A) \. 
+		\bigoplus_{i \in I} M_i : \TYPE{TorsionFree}(R)
+	}
+	\NoProof
+	\\
+	\Theorem{FreeModuleIsTorsionFree}
+	{ \forall X \in \SET \. A^{\oplus X} : \TYPE{TorsionFree}(A)    }
+	\NoProof
+	\\
+	\DeclareType{Cyclic}{?\LMOD{R}}
+	\DefineType{M}{Cyclic}{\exists m \in M \. M = \langle m \rangle}
+	\\
+	\Theorem{FieldByCyclic}{\Big(\forall M : \TYPE{Cyclic}(A) \.  M : \TYPE{TorsionFree} \Big) \Rightarrow A : \TYPE{Field}}
+	\NoProof
+}\Page{
+	\DeclareFunc{annihilator}{\prod M : \LMOD{R} \. M \to \TYPE{LeftIdeal}(R)}
+	\DefineNamedFunc{annihilator}{m}{\Ann(m)}{\{ r \in R : rm = 0   \} }
+	\\
+	\DeclareFunc{annihilator}{\LMOD{R} \to \TYPE{LeftIdeal}(R)}
+	\DefineNamedFunc{annihilator}{M}{\Ann M}{\bigcap_{m \in M} \Ann(m) }
+	\\
+	\Theorem{TorsionHasNontrivalAnnihilator}
+	{ \forall M : \TYPE{Torsion} \And \FGM(A) \. \Ann M \neq \{0\}   }
+	\Say{(n,m,1)}{\bd \FGM(A)(M)}{\sum n \in \Nat \. m : n \to M \. \Span(m_i)_{i=1}^n}
+	\Say{(2)}{\forall i \in n \. \bd \TYPE{Torsion}(A)(M)(a_i)\bd^{-1}\Ann(a_i)}
+	{  \forall i \in n \. \Ann(a_i) \neq \{ 0 \}   }
+	\Say{(3)}{\bd \ID(A)(2)}{\prod_{i=1}^n \Ann(a_i) \neq \{0\} }
+	\Conclude{(4)}{\bd \Ann M(3)}{ \{0\} \neq \prod_{i=1}^n \Ann(a_i)  \subset \Ann M }
+	\EndProof
+	\\
+	\DeclareType{Presentation}{ \LMOD{R} \to ?\TYPE{Exact}(\LMOD{R})}
+	\DefineType{\Big([A,B,C,D],[\phi,\pi,z]\Big)}{Presentation}
+	{\Lambda M \in \LMOD{R} \. \NewLine \. C = M \And D = 0 \And A,B : \FM(R)}
+	\\
+	\DeclareType{\FP}{?\LMOD{R}}
+	\DefineType{M}{\FP}{\exists \TYPE{Presentation}(M)}
+	\\
+	\Theorem{OverNoetherianRingFGMIsFI}{\forall A : \TYPE{Noetherian} \. 
+		\forall  M : \FGM(A) \. \NewLine \. M : \FP(A) }
+	\Say{\Big(n,m,(1)\Big)}{\bd \FGM(A)(M)}{\sum n \in \Nat \. m : n \to M \. \Span(m_i)_{i=1}^n}
+	\Say{T}{\Lambda \alpha \in A^n \. \alpha m}{A^n \Arrow{\LMOD{A}} M}
+	\Say{(2)}{\bd T(2)}{[T : A^n \ToSurj M]}
+	\Say{(3)}{\bd \TYPE{Noetherian}(A^n,\ker T)\bd \THM{NoetherianByNoetherian}(A,A^n)}
+	{  \Big[\ker T : \FGM(A)\Big]  }
+	\Say{\Big(k,v,(4)\Big)}{\bd \FGM(A)(\ker T) }{
+		\sum k \in \Nat \.  v : k \to \ker T \. \ker T = \Span(v_i)_{i=1}^k }
+	\Say{T'}{\Lambda \alpha \in A^k \. \alpha v }{ A^k \to A^n  }
+	\Conclude{(*)}{\bd^{-1}\TYPE{Presentation}}{\bigg[\Big([A^k,A^n,M,0],[T',T,0]\Big) : \TYPE{Presentation}(M)\bigg]}
+	\EndProof
+}\Page{
+	\DeclareType{FreeResolution}{\LMOD{R} \to ?\TYPE{Exact}(\LMOD{R})}
+	\DefineType{(P,\varphi)}{FreeResolution}{
+		\Lambda M \in \LMOD{R} \.
+		P_{-1} = 0 \And
+		P_{0} = M  \And \NewLine \And
+		\forall n \in \Nat \. P_n : \FM(R)
+	}
+	\\
+	\DeclareType{FreeResolutionExtends1}{?\RING}
+	\DefineType{A}{FreeResolutionExtends1}{
+		\forall M : \LMOD{R} \. 
+		\forall n \in \Int_+ \. 
+		\forall T : R^n \Arrow{\LMOD{R}} M \.
+		\forall (0) : \im T = M \. \NewLine \. 
+		\exists m \in \Nat \. 
+		\exists S : R^m \Arrow{\LMOD{R}} R^n :
+		\im S \subset \ker T \And \ker S = 0
+	}
+	\\
+	\Theorem{FreeResolutionImpliesPID}
+	{ \forall A \in \ANN \. \forall (0) : [A : \TYPE{FreeResulionExtends1}] \. \NewLine \. A : \PID}
+	\Assume{I}{\Ideal(A)}
+	\Say{\Big(m,T,(1)\Big)}{\bd \TYPE{FreeResolutionExtends1}\left(\frac{A}{I},1,\pi_I \right)}{ 
+		\sum m \in \Nat \. \sum T : A^n \Arrow{A} A \. \NewLine \. \im T = \ker \pi_I \And \ker T = \{0\}}
+	\Say{(2)}{\bd \pi_I (1)}{\im T = I}
+	\Assume{(3)}{n > 1}
+	\Say{(4)}{\bd \LMOD{A}(A^n,A)(T)}{T\Big( \big(T(e_2),-T(e_1) \big) \oplus 0 \Big) = T(e_1)T(e_2) - T(e_1)T(e_2) = 0 }
+	\Say{(4)}{\bd e (1)_2}{T(e_1)\neq 0 \And T(e_2)\neq 0}
+	\Conclude{()}{(1)_2(5)(4)}{\bot}
+	\Derive{(3) }{E(\bot)}{n = 1}
+	\Conclude{()}{(3)(1)_1}{I = \langle T(1) \rangle}
+	\DeriveConclude{(*)}{\bd^{-1}\PID}{[A : \PID]}
+	\EndProof
+	\\
+	\Theorem{MapsToTorsionFreeIsTorsionFree}
+	{
+		\forall M : \TYPE{TorsionFree}(A) \. \forall N : \LMOD{A} \. \NewLine \.
+		\forall \Mor_{\LMOD{A}}(N,M) : \TYPE{TorsionFree}(A) 
+	}
+	\NoProof
+	\\
+	\Theorem{IncreasingAnnihilator}{
+		\forall A \in \ANN \. 
+		\forall M \in \LMOD{A} \. 
+		\forall m \in M \.
+		\forall a \in A \.
+		\Ann(m) \subset \Ann(am) 
+	}
+	\NoProof	
+}
+\newpage
+\subsection{Associated Primes}
+\Page{
+	\Theorem{SubmoduleByIdeal}{
+		\forall A \in \ANN \. 
+		\forall M : \LMOD{A} \.
+		\forall I : \Ideal(A) \.
+		\forall m \in M \.
+		\forall (0) : \Ann(m) = I \. \NewLine \.
+		\exists S \submod{A} M \.
+		S \cong_{\LMOD{A}} \frac{M}{I}
+	}
+	\Conclude{(*)}{\ldots}{\Span\{m\} \cong_{\LMOD{A}} \frac{M}{I}}
+	\EndProof
+	\\
+	\DeclareFunc{associated}{
+		\prod A \in \ANN \.
+		\prod M \in \LMOD{A} \.
+		 ?\Ideal(A)
+	}
+	\DefineNamedFunc{associated}{}{\Ass(M)}{\{ \Ann(m) | m \in M \And \Ann(m) : \TYPE{Prime}(M)\}}
+	\\
+	\Theorem{MaximalAnnihilatorsAreAssociated}{ \forall a \in A \. \forall M : \LMOD{A} \. \NewLine  
+		\max \{ \Ann(m) | m \in M \setminus \{0\}   \}  \subset  \Ass(M)                                    
+	}
+	\Assume{\Ann(m)}{\max\{ \Ann(m) | m \in M \setminus \{ 0 \} \}}
+	\Assume{a,b}{A}
+	\Assume{(1)}{ab \in \ANN(m)}
+	\Say{(2)}{\bd \Ann(m)\bd^{-1} \TYPE{Subset}(a,b)}{\Ann(m)\subset\Ann(am)\And \Ann(m)\subset\Ann(bm)}
+ 	\Assume{(3)}{am \neq 0}
+	\Say{(4)}{(1)\bd \Ann(bm)}{b \in \Ann(am)}
+	\Conclude{()}{\bd \FUNC{max}(4)(2)I(|)}{b \in \Ann(m) | a \in \Ann(m)}
+	\Derive{(3)}{I(\Rightarrow)}{am \neq 0 \Rightarrow b \in \Ann(m) | a \in \Ann(m)}
+	\Assume{(4)}{am=0}
+	\Conclude{()}{\bd \Ann(m)(4)I(|)}{a \in \Ann(m)|b \in \Ann(m)}
+	\DeriveConclude{()}{E(|)(2)(3)I(\Rightarrow)}{b \in \Ann(m)|a \in \Ann(m)}
+	\Derive{(1)}{\bd^{-1}\TYPE{Prime}}{[\Ann(m) : \TYPE{Prime}(M)]}
+	\Conclude{()}{\bd^{-1}\Ass(M)}{\Ann(m) \subset \Ass(M)}
+	\DeriveConclude{(*)}{ \bd^{-1} \TYPE{Subset} }{ \max\{ \Ann(m) | m \in M \setminus \{0\}  \} \subset \Ass(M)}
+	\EndProof
+	\\
+	\Theorem{AssociatedPrimesExistInNoetherian}
+	{\forall A : \TYPE{Noetherian}(M) \. \NewLine \. \forall M : \LMOD{A} \. \exists I \in \Ass(M)}
+ 	\NoProof
+}\Page{
+	\Theorem{PrimeFactorizationSeria}{\forall A : \TYPE{Noetherian}(M) \.
+		\forall M : \FGM(A) \. \exists n \in \Nat : \NewLine :
+		\exists (N,P) : n \to \TYPE{Submodule}(M)  : \exists P : (n-1) \to \TYPE{Prime}(n) \.
+		N_n = M \And N_1 = \{0\} \And \NewLine \And 
+		\forall i \in (n-1) \. N_{i} \subset N_{i + 1} \And \frac{N_{i +1}}{N_{i}} \cong \frac{A}{P_i} 
+	}
+	\Say{N'_1}{M}{\LMOD{A}}
+	\Say{f_1}{{\id}_M}{M \Arrow{\LMOD{A}} N'_1}
+	\Assume{n}{\Nat}
+	\Say{(1)}{\THM{NoetherianFactor}(N'_n)}{[N'_n : \TYPE{Noetherian}]}
+	\Say{\Big(m,P_n,(2)\Big)}{\THM{AssociatedPrimesExistInNoetherian}(A)(N_n')}
+	{ \NewLine : \sum m \in M \. \sum P_n  : \Ideal(A) \.  P_n = \Ann(m) \And N'_n \neq 0 \Rightarrow P_n : \TYPE{Prime} }
+	\Say{\Big(S,(3)\Big)}{\THM{SubmoduleByIdeal}\Big(N'_n,P_n,(2)\Big)}
+	{\sum S \submod{A} N'_N \. S \cong_{\LMOD{A}} \frac{A}{P_n} }
+	\Say{N_{n+1}'}{\frac{N_n'}{S}}{\LMOD{A}}
+	\Conclude{f_{n+1}}{f_{n}\pi_S}{ M \Arrow{\LMOD{A}} N_{n+1}'  }
+	\Derive{\Big(N',P,f,(1)\Big)}{\LOGIC{IductiveConstr}}
+	{  \sum N' : \Nat \to \LMOD{A} \. \sum P : \Nat \to \TYPE{\Ideal}(A)  \.  \NewLine \sum f : \prod n \in \Nat \. M \Arrow{\LMOD{A}} N'_{n} \.   
+		\forall n \in \Nat \. \Im f_n = N'_{n}  \And  N'_n \neq 0 \Rightarrow P_n : \TYPE{Prime}(A)  \NewLine \And
+		\exists g : N'_n \Arrow{\LMOD{A}} N'_{n + 1} : \ker g \cong_{\LMOD{A}} \frac{A}{P_n} 
+		\And f_{n + 1} = f_{n} g
+	}
+	\Say{N}{\ker f}{ \Nat \to \TYPE{Submodule}(M)}
+	\Say{(2)}{\bd^{-1} \TYPE{Nodecreasing}(1)}{\Big[N : \TYPE{Nondecreasing}\big(\Nat,\TYPE{Submodule}(M)\big)\Big]}
+	\Say{\Big(n,(3))}{\THM{NoetherianACC}(N)(2)}{\sum n \in \Nat \. \forall k \in \Nat \.k \ge N \Rightarrow N_k = N_n}
+	\Say{(4)}{(3)(n+1)}{ N_n = N_{n + 1} }
+	\Say{(5)}{(1)(n )}{\im f_{n + 1} = N'_{n+1}}
+	\Say{\Big(g,(6)\Big)}{(1)(n)}{\sum g : N'_n \Arrow{\LMOD{A}} N'_{n+1} \. f_ng = f_{n+1} \And \ker g \cong \frac{A}{P_n} }
+	\Say{(7)}{(6)_1(1)(3)}{\ker g = \{0\}}
+	\Say{(8)}{(6)_2(7)}{\frac{A}{P_n} \cong \{ 0\}}
+	\Say{(9)}{\bd \FUNC{quotientRing}(A,P_n)(8)}{P_n = A}
+	\Say{(10)}{(1)\bd \TYPE{Prime}(A)(9)}{N'_n = 0}
+	\Say{(11)}{\bd N \bd \ker (10)}{N_n = M}
+	\Assume{k}{(n-1)}
+	\Say{(k.1)}{(3)(k + 1)}{  \im f_{k + 1} = N'_{n + 1} }
+	\Say{\Big(g ,(k.2)\Big)}{ (3)(k) }
+	{ 
+		\sum g : N_{k}' \Arrow{\LMOD{A}} N'_{k + 1} \. f_{k+1} = f_k g \And \ker g \cong \frac{A}{P_k}
+	}
+	\Conclude{(k.*)}{  \bd N(k.2)_2\THM{CompositionKernel}(f_k,g)(k.1)\bd \FUNC{qutientModule}(k.2)_2}
+	{ 
+		\NewLine :
+		\frac{N_{k+1}}{N_{k}} = 
+		\frac{\ker f_{k+1}}{\ker f_k} =
+		\frac{\ker f_k g}{\ker f_k} = 
+		\frac{\ker f_k \oplus \ker g}{\ker f_k} \cong \ker f \cong \frac{A}{P_k}
+	}
+	\Derive{(*)}{I(\forall)}{\LOGIC{This}(n,N_{|_n})}
+	\EndProof
+}
+\Page{
+	\DeclareFunc{listOfAssPrimes}{\prod A : \TYPE{Noetherian} \. \prod M : \FGM(A) \. \sum n \in \Nat \. n \to \Ass(M) }
+	\DefineNamedFunc{lisOfAssPrimes}{}{(n(M),\mathfrak{p}(M))}{\THM{PrimeFactorizationSeria}(M)}
+	\\
+	\Theorem{AllTheAssesAreListed }{ \forall A : \TYPE{Noetherian} \. \forall M : \FGM(A) \. \im \mathfrak{p}(M) = \Ass(M)}
+	\Assume{M}{\FGM(A)}
+	\Assume{P}{\Ass(M)}
+	\Say{Q}{\mathfrak{p}_1(M)}{\Ass(M)}
+	\Say{\Big(m,n,(M.P.1)\Big)}{\Big(\bd \Ass(M)\Big)^2(P)(Q)}{ \sum m,n \in M \. P = \Ann(m) \And Q = \Ann(n)}
+	\Assume{(M.P.2)}{P \neq Q}
+	\Assume{\alpha,\beta}{A}
+	\Assume{(M.P.2.1)}{\alpha m = \beta n}
+	\Say{a}{\alpha m}{M}
+	\Say{(M.P.2.1.1)}{\THM{IncreasingAnnihilator}\bd a (M.P.2.1)}{ \Ann(m) \subset \Ann(a) \And \Ann(n) \subset \Ann(a) }
+	\Say{(M.P.2.1.2)}{\bd \TYPE{Subset}(M.P.2)(M.P.2.1.1)}{\Ann(m) \subsetneq \Ann(a) \And \Ann(n) \subsetneq \Ann(a)}
+	\Say{(M.P.2.1.3)}{\THM{MaximalAnnihilatorsAreAssociated}(M.P.2.1.2)}{\Ann(a) = \Ann(0) =  A}
+	\Conclude{(P.2.*)}{ \bd \Ann(a)\bd\LMOD{A}(M)(M.P.2.1.3)}{a = 0}
+	\DeriveConclude{(M.*)}{\LOGIC{InverseImplication}I(\Rightarrow)I(\forall)I(\Rightarrow)\bd^{-1}\FUNC{span}}
+	{  P = Q | \Span(n) \cap \Span(m) = \{0\} }
+	\DeriveConclude{(*)}{\bd (n(M),\mathfrak{p}(M))}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{FGMHasFiniteAss}{\forall A : \TYPE{Noetherian} \. \forall M : \FGM(A) \. |\Ass(M)|<\infty  }
+	\NoProof
+	\\
+	\Theorem{UnionOfAnnihilators}{ \forall A \in \ANN \. \forall M \in \LMOD{A} \. 
+	\bigcup_{m \in M : m \neq 0} \Ann(m) = \bigcup \Ass(M)  }
+	\NoProof
+}
+\newpage
+\subsection{Free Modules over PID }
+\Page{
+	\Theorem{IdealIsLinearlyARingInPID}{\forall A : \PID \. \forall I : \TYPE{Proper}(A) \. I \cong_{\LMOD{A}} A }
+	\Say{\Big( a, [1]  \Big)}{\bd \PID(A)(I)}{\sum a \in A \. I = \langle a \rangle}
+	\Say{[2]}{\bd \TYPE{Proper}(I)\bd \FUNC{genIdeal}[1]}{a \neq 0}
+	\Say{\varphi}{\Lambda x \in A \. xa}{A \Arrow{\LMOD{A}} I}
+	\Say{[3]}{[2]\bd \ID(A)}{\ker \varphi = \{0\}}
+	\Say{[4]}{\THM{ZeroKernelTHM}(2)}{(\varphi : A \ToInj I)}
+	\Say{[5]}{\bd \FUNC{genIdeal}[1]}{(\varphi : A \ToSurj I)}
+	\Say{[6]}{\bd \ANN(A)[4][5]}{ (\varphi  : A \ToIso{\LMOD{A}} I)  }
+	\Conclude{[*]}{\bd^{-1} \TYPE{Isomorphic}(\ANN)[6]}{A \cong_{\LMOD{A}} I}
+	\EndProof
+	\\
+	\Theorem{NonZeroFunctionalExist}{\forall A : \PID \. \forall M : \FM(A) \. \NewLine \. \forall N \submod{A} \. 
+		\forall [0] : N \neq \{0\} \. \exists \varphi : M \Arrow{A} A \. \varphi(N) \neq 0
+	}
+	\Say{\Big(n,[1]\Big)}{\bd \TYPE{Singleton}[0]}{\sum n \in N \. n \neq 0}
+	\Say{(k,x)}{\bd \FM(A)(M)}{\sum k \in \SET \.  M \ToIso{\LMOD{A}} A^k }
+	\Say{\Big(i,[2]}{\bd \TYPE{Iso}(x)[1]}{\sum i \in k \. x_i(n) \neq 0 }
+	\Say{[*]}{\bd \FUNC{image}(x_i,N)[2]}{x_i(N) \neq \{0\}}
+	\EndProof
+	\\
+	\Theorem{OneDimensionalSubspaceDecomposition}{
+		\forall A : \PID \.  \NewLine \. \forall M : \FM(A) \.  \forall N  \submod{A} M  \. 
+		\forall (0) : N \neq \{0\}  \. \NewLine \. \exists a \in A :  : \exists m \in M :  \exists n \in N : 
+		\exists M' \submod{A} M : \exists N' \submod{A} N : \NewLine :
+		n = am \And N' = M' \cap N \And M = \Span(m) \oplus M' \And N = \Span(n) \oplus N'
+		}
+	\Assume{\varphi}{M \Arrow{\LMOD{A}} A }
+	\Say{I_\varphi}{\varphi(N)}{\TYPE{Submodule}(A)}
+	\Conclude{[\varphi.*]}{\bd \ANN(A)(I_\varphi)}{ \big(I_\varphi : \Ideal(A)\big)  }
+	\Derive{I}{I(\to)}{M \Arrow{\LMOD{A}} A \to \Ideal(A)}
+	\Say{[1]}{\bd (M \Arrow{\LMOD{A}} A)(0)}{0 \in \im I}
+	\Say{[2]}{\bd \TYPE{NonEmpty}\big([1]\big)}{\im I \neq \emptyset}
+	\Say{J}{\max I}{\Ideal(A)}
+	\Say{\Big(\alpha,[3]\Big)}{\bd J}{\sum \alpha : M \Arrow{\LMOD{A}} A \to \Ideal(A) \. \alpha(N) = J}
+	\Say{[4]}{\THM{NonZeroFunctionalExists}(A,M,N,[0])(\bd \alpha)}{\alpha \neq 0}
+	\Say{\Big(a,[5]\Big)}{\bd \PID(A)(J) }{ \sum a \in A : \langle a \rangle = J }
+	\Say{[6]}{[3][4][5]}{a \neq 0}
+	\Say{\Big( n, [7] \Big)}{\bd \FUNC{genIdeal}[3][4]}{ \sum n \in N \. a = \alpha(n)}  
+}\Page{
+	\Assume{\varphi}{M \Arrow{\LMOD{A}} A}
+	\Say{\Big(b,[\varphi.1]\Big)}{\bd \PID(A)\langle a,\varphi(n) \rangle}{\sum b \in A : \langle a,\varphi(n) \rangle = \langle b \rangle }
+	\Say{\Big(s,r,[\varphi.2]\Big])}{\bd \TYPE{Ideal}[\varphi.1]}{  \sum s,r \in A \. b = sa + r\varphi(n)}
+	\Say{\psi}{s\alpha + r\varphi}{M \Arrow{\LMOD{A}} A}
+	\Say{[\varphi.3]}{\bd \psi [\varphi.2]}{b \in \psi(N)}
+	\Say{[\varphi.4]}{[5][\varphi.2][\varphi.3]}{ J \subset  \psi(N)}
+	\Say{[\varphi.5]}{\bd J [\varphi.4]}{J = \psi(N)}
+	\Say{[\varphi.*]}{\bd \TYPE{Principle}(J)[\varphi.5]}{a | \varphi(n)}
+	\Derive{[8]}{I(\forall)}{\forall \varphi : M \Arrow{\LMOD{A}} A \. a | \varphi(n)}
+	\Say{(k,x)}{\bd \FM(A)(M)}{\sum k \in \SET \.  M \ToIso{\LMOD{A}} A^k }
+	\Say{[9]}{\forall i \in k \. [8](x_i)}{\forall i \in k \. a | x_i(n)}
+	\Say{\Big(r,[10]\Big)}{\bd \TYPE{Divides}[9] }{\sum r : A^k \.  x(n) = ar}
+	\Say{m}{x^{-1}(r)}{M}
+	\Say{[11]}{\bd m [10]}{ n = am }
+	\Say{[12]}{ [7][11]\bd \LMOD{A}(M,A)(\alpha) }{a = \alpha(n) = \alpha(am) = a\alpha(m)}
+	\Say{[13]}{ \bd \ID(A)[12]}{\alpha(m) = 1}
+	\Say{M'}{\ker \alpha}{\TYPE{Submodule}(M)}
+	\Say{N'}{M' \cap N}{ \TYPE{Submodule}(N)}
+	\Assume{v}{M}
+	\Say{[v.1]}{\bd \Func{inverse}(\alpha(v)m) + v}{v = \alpha(v)m + (v - \alpha(v)m)}
+	\Say{[v.2]}{[13]\bd\LMOD{A}(M,A)\alpha\bd \TYPE{Inverse}}{\alpha(v - \alpha(v)m) = \alpha(v) - \alpha(v) = 0}
+	\Conclude{[v.*]}{ [v.1][v.2]\bd^{-1}M'}{(v - \alpha(v)m) \in M' }
+	\Derive{[14]}{ \THM{DirectDecmposition}}{M = \langle m \rangle \oplus M'}
+	\Assume{w}{N}
+	\Say{\Big(c.[w.1]\Big)}{ \bd \FUNC{genIdeal}[5](w) }{ \sum c \in A \. \alpha(w) = ca}
+	\Say{[w.2]}{ [w.1][11]}{ \alpha(w)m = cam =cn \in \Span(n) } 
+	\Say{[w.3]}{\bd \FUNC{inverse}(\alpha(w)m) + w}{w = \alpha(w)m + (w - \alpha(w)m)}
+	\Say{[w.4]}{[13]\bd\LMOD{A}(M,A)(\alpha)\bd \TYPE{Inverse}}{\alpha(w - \alpha(w)m) = \alpha(w) - \alpha(w) = 0}
+	\Say{[w.*]}{[w.3][w.4]\bd \TYPE{Sumodule}(M)(N)\bd M'\bd N'}{(w - \alpha(w)m) \in N'}
+	\DeriveConclude{[*]}{\THM{DirectDecomposition}}{N = \Span(n) \oplus N'}
+	\EndProof
+}\Page{
+	\Theorem{SubmodOfFreeIsFree}{\forall A : \PID \. \forall F : \FM \And \FGM(A) \. \NewLine \.\forall M \submod{A} F \.  M : \FM(A) }	
+	\Say{V_0}{M}{\TYPE{Submodule}(F)}
+	\Say{[1.0]}{\bd V_0}{V_0 = M}
+	\Assume{n}{\Nat}
+	\Assume{[n.1]}{V_{n-1} = \{0\}}
+	\Say{v_n}{0}{V_{n-1}}
+	\Say{V_n}{V_{n-1}}{\TYPE{Submodule}(F)}
+	\Conclude{[1.n]}{[1.(n-1)]\bd V_n \bd v_n}{M = \bigoplus^n_{i=1} \Span(v_i) \oplus V_n}
+	\Derive{[n.1]}{I(\Rightarrow)}{ V_{n-1} = \{0\} \Rightarrow (\ldots)}
+	\Assume{[n.2]}{V_{n-1} \neq \{0\}}
+	\Say{\Big(\ldots,V_n,v_n, [n.3] \Big)}{\THM{OneDimensionalSubspaceDecompasition}(F,V_{n-1},[n.2])}
+	{ \NewLine : \ldots \. \sum V_{n} : \TYPE{Submodule}(F) \. \sum v_n \in V_{n-1} \. V_{n-1} = \Span(v_i) \oplus V_{n}  }
+	\Conclude{[1.n]}{[1.(n-1)][n.3]}{M = \bigoplus^n_{i=1} \Span(v_i) \oplus V_n}
+	\DeriveConclude{[n.*]}{I(\Rightarrow)E(|)[n.1]}{(\ldots)}
+	\Derive{\Big(V,v,[2])}{I\left(\sum\right)}{ 
+		\sum V : \Nat \to \TYPE{Submodule}(F) \. \sum v : \Nat \to M \. \forall n \in \Nat \. 
+		M = \bigoplus^n_{i=1} \{v_i\} \oplus V_n 
+	}
+	\Say{[3]}{\bd \FGM(F)(v)}{\exists k \in (\rank F + 1) \. (v_i)_{i=1}^k \IsNot \LI(F)}
+	\Say{[4]}{\bd \TYPE{InnerDirectSum}\bd(v,V,[2])[3]}{M = \bigoplus^{k-1}_{i=1}\Span(v_i)}      
+	\Conclude{[*]}{\bd^{-1}\FM(A)\THM{IdealIsLinearlyARingInPID}[4]}{(M : \FM(A) )}
+	\EndProof
+	\\
+	\DeclareType{Snowball}{\prod A : \ID \. ?A^n}
+	\DefineType{a}{Snowball}{\forall i \in (n-1) \. a_{i-1} | a_{i}}
+	\\
+	\Theorem{FreeSubmodBasisTHM}{
+		\forall A : \PID \. \forall F : \FM \And \FGM(A) \.  \NewLine \. \forall M \submod{A} F 
+		\.  \forall [0] : M \neq \{0\} \.
+		\exists (e_i)^n_{i=1} : \TYPE{Basis}(F) : (f_i)^m_{i=1} : \TYPE{Basis}(M) \. 
+		\exists a  : \TYPE{Snowball}(m,A) :  ae_{|m} = f \NewLine \quad  \where \quad n = \rank F, \quad m = \rank M  
+		}
+	\Say{V_0}{F}{\FM \And \FGM(A)}
+	\Say{W_0}{N}{\TYPE{Submodule}(V_0)}
+	\Say{[1.0]}{\bd V_0}{V_0 = F}
+	\Say{[2.0]}{\bd W_0}{W_0 = M}
+	\Say{[3.0]}{[0]\bd W_0}{W_0 \neq \{0\}}
+	\Assume{k}{m}
+	\Say{\Big( V_k,W_k,v_k,w_k,a_k,[k.1] \Big)}
+	{ \THM{OneDimensionalSubspaceDecomposition}\Big(V_{k-1},W_{k-1},[3.(k-1)]\Big)  }
+	{   
+		\NewLine : 
+		\sum V_k \submod{A} V_{k-1} \. \sum W_k \submod{A} W_{k-1} \. \sum v_k \in V_{k-1}  \.  \sum w_k \in W_{k-1} \. \sum a_n \in A \. 
+		\NewLine \.
+		w_k = a_kv_k \And  \Span(w_k) \oplus W_k = W_{k-1} \And \oplus \Span(v_k) \oplus V_k = V_{k-1} \And W_k = V_k \cap W_{k-1}
+	}
+}\Page{
+	\Say{[k.2]}{\THM{SubmodOfFreeIsFree}(V_{k-1},V_k)}{(V_k : \FM(A))}
+	\Say{[1.k]}{[k.1][1.(k-1)]}{F = \bigoplus^k_{i=1} \Span(v_i) \oplus V_k}
+	\Say{[2.k]}{[k.1][2.(k-1)]}{M = \bigoplus^k_{i=1} \Span(w_i) \oplus W_k}
+	\Conclude{[3.k]}{\bd m \bd \rank [2.k]}{k = m | W_k \neq \{0\}}
+	\Derive{\Big( V,W,v,w,a, [4] \Big)}{I\left(\sum\right)}
+	{  
+		\sum V : m \to \TYPE{Submodule}(F) \. \sum W : m \to \TYPE{Submodule}(M) \.   \NewLine \. \sum v : \prod k \in m \. V_[k-1] \.
+		\sum w : \prod k \in m \. W_{k-1} \. \sum a : m \to A \.  \NewLine \.  w = av \And \forall k \in m \.
+		F = \bigoplus^k_{i=1} \Span(v_i) \oplus V_k  \And M = \bigoplus^k_{i=1} \oplus W_k \And  
+		W_k = V_k \cap V_[k-1]
+	}
+	\Say{v'}{\THM{FreeHasBasis}(V_m)}{\TYPE{Basis}(V_m)}
+	\Say{e}{v \oplus v'}{\TYPE{Basis}(F)}
+	\Say{f}{w}{\TYPE{Basis}(M)}
+	\Say{[5]}{\bd f \bd 4 [4]_1}{ae_{|m} = f}
+	\Assume{k}{(m-1)}
+	\Say{\varphi}{ \FUNC{free}(\{k,n\},A)(i \mapsto \If i \le k+1 \Then 1 \Else 0 ) }{V_{i-1} \Arrow{\LMOD{A}} A}
+	\Say{[k.1]}{\bd \FUNC{free}\bd \varphi}{\varphi(e_k) = 1 \And \varphi(e_{k+1})=1}
+	\Say{[k.2]}{[5]\bd \LMOD{A}(V_{k-1},A)(\varphi)[k.1]}
+	{\varphi(f_k) = \varphi(a_k e_k) = a_k\varphi(e_k) = a_k}
+	\Say{[\varphi.3]}{\bd a_k \bd \THM{OneDimensionalSubspaceDecomposition}[\varphi.2]}
+	{  \varphi(W_{k-1}) = \langle a_k \rangle  }
+	\Say{[\varphi.4]}{[5]\bd \LMOD{A}(V_{k-1},A)(\varphi)[k.1]}
+	{\varphi(f_{k+1}) = \varphi(a_{k+1}e_{k+1}) = a_{k+1}\varphi(f_{k+1}) = a_{k +1}}
+	\Conclude{[k.*]}{[k.4][k.3]}{a_k | a_{k+1}}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Snowball}}{\Big(a : \TYPE{Snowball}(A,m)\Big)}
+	\EndProof
+	\\
+	\Theorem{PIDExtendsToFreeResolution}{\forall A : \PID \. A : \TYPE{FreeResolutionExtends1}}
+	\Assume{M}{\FGM(A)}
+	\Assume{n}{\Nat}
+	\Assume{\pi}{\TYPE{Epi}(\LMOD(A),A^n,M)}
+	\Say{[1]}{\THM{SubmodOfFreeIsFree}(A,\ker \pi)}{ (\ker \pi : \FM(A)) }
+	\Say{(m,x)}{\bd \FM(A)(\ker \pi)}{\sum m \in \Nat \. x : A^m \ToIso \ker \pi}
+	\Conclude{[*]}{ \bd^{-1} \TYPE{FreeResoluton} \bd x }
+	{0 \Arrow{0} A^m \Arrow{x}  A^n \Arrow{x} M \Arrow{0} 0  : \TYPE{FreeResolution}(A,M)}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{FreeResolutionExtends1}}{(A : \TYPE{FreeResolutionExtend1})}
+	\EndProof
+}
+\newpage
+\subsection{Classification of Finitely Generated Modules over PID}
+\Page{
+	\Theorem{PidClassificationTheorem1}{
+		\forall A : \PID \. \forall M : \FGM(A) \. \NewLine \.  \exists n \in \Nat  : \exists a :  \TYPE{Snowball}(n,A) \.
+		M \cong A^{\rank M} \oplus \bigoplus^n_{i=1} \frac{A}{\langle a_i \rangle}
+	}
+	\Say{(m,\pi)}{\bd \FGM(A)(M)}{\sum m \in \Nat \.  \pi : \TYPE{Epi}(\LMOD{A},A^m,M)}
+	\Say{\Big(n,x\Big)}{\THM{PIDExtensToFreeResolution}(m,\pi,M)}{\sum n \in \Nat \. \sum x :A^n \ToIso{\LMOD{A}} \ker \pi}
+	\Say{\Big(e,a,f,[1]\Big)}{\THM{FreeSubmodBasisTHM}(A,M,\ker \pi)}
+	{
+		\sum e : \TYPE{Basis}(A^m) \. \sum a : \TYPE{Snowball}(A,n) \. 
+		\NewLine \. \sum f : \TYPE{Basis}(\ker \pi) \.
+		 f = ae_{|n} 
+	}
+	\Conclude{[*]}{[1]\bd \ker \pi \bd x\bd^{-1} \TYPE{InnerDirectSum}}
+	{ M = A^{\rank M} \oplus \bigoplus^n_{i=1} \frac{A}{\langle a_i\rangle} }
+	\EndProof
+	\\
+	\Theorem{PidClassificationTheorem2}{
+		\forall A : \PID \. \forall M : \FGM(A) \. \NewLine \.  \exists n \in \Nat  : 
+		\exists p : n \to \TYPE{PrimeElement}(A) : \exists k : n \to \Nat : \exists t : \prod i \in n \. k_i \to \Nat :  
+		M \cong A^{\rank M} \oplus \bigoplus^{n}_{i=1}\bigoplus^{k_i}_{j=1} \frac{A}{\langle p_i^{t_j} \rangle}
+	}
+	& a_i = \prod^n_{j=1} p^{k_j}_{i,j} \\
+	&  \frac{A}{\langle a_i \rangle} = \bigoplus^n_{j=1} \frac{A}{\langle p^{t_j}_{i,j}\rangle}\\
+	\EndProof
+	\\
+	\DeclareFunc{snowballOfMod}{ \prod A : \PID \. \FGM(A) \to \NewLine \to \sum n \in \Int_+ \.  \TYPE{Snowball}(A,n) }
+	\DefineFunc{snowballOfMod}{M}{\THM{PidClassificationTheorem1}(A,M)}
+	\\
+	\DeclareFunc{primesOfMod}{\prod A : \PID \. \FGM(A) \to \NewLine \to \sum n \in \Nat  : 
+		\sum p : n \ToInj \TYPE{PrimeElement}(A) : \sum k : n \to \Nat : \sum t : \prod i \in n \. k_i \to \Nat }
+	\DefineFunc{primesOfMod}{M}{\THM{PidClassificationTheorem2}(A,M)}
+	\\
+	\Theorem{AnnihilatorBySnowball}{\forall A : \PID \. \forall M : \FGM \And \TYPE{Torsion}(A) \. 
+		\NewLine \. \Ann(M) = \langle a_n \rangle  \quad \where \quad (n,a) = \FUNC{snowballOfMod}(M)  }
+	\NoProof
+}
+\newpage
+\subsection{Graded Modules}
+\Page{
+	\DeclareType{LeftGradedModule}
+	{ 
+		\prod \Delta : \TYPE{CommutativeMonoid} \.  \prod (R,H) \in \GRING(\Delta) \. 
+		\NewLine \. ?\sum M \in \LMOD{R} \. \Delta \to \TYPE{LeftSubmodule}(M)  
+	}
+	\DefineType{(M,S)}{LeftGradedModule}{ (M,\Delta,S) : \GA \And \forall a,b \in \Delta \.  H_a S_b \subset S_{a+b}  }
+	\\
+	\DeclareType{RightGradedModule}{ 
+		\prod \Delta : \TYPE{CommutativeMonoid} \.  \prod (R,H) \in \GRING(\Delta) \. 
+		\NewLine \. ?\sum M \in \RMOD{R} \. \Delta \to \TYPE{RightSubmodule}(M)  
+		}
+	\DefineType{(M,S)}{RightGradedModule}{ (M,\Delta,S) : \GA \And \forall a,b \in \Delta \.   S_b H_a \subset S_{a+b}  }
+	\\
+	\DeclareType{GradedModule}{
+		\prod \Delta : \TYPE{CommutativeMonoid} \. \prod (R,H) \in \GRING(\Delta) \.  
+		\NewLine \. ?\sum M \in \LMOD{R} \And \RMOD{R} \. \Delta \to \TYPE{Submodule}(M) 
+	}
+	\DefineType{(M,S)}{GradedModule}{ (M,\Delta,S) : \GA \And \forall a,b \in \Delta \.   H_aS_b \cup S_bH_a  \subset S_{a+b}  }
+	\\
+	\Theorem{HomogeneousSubmodule}{
+		\forall (M,S) : \TYPE{LeftGadedModule}(\Delta,R,H) \. 
+		\forall [0] : (\Delta  : \TYPE{Cancelable}) \. \NewLine \.  
+		\forall \delta \in \Delta \.
+		M_\delta : \LMOD{R_0}
+	}
+	\NoProof
+	\\
+	\DeclareType{GradedLeftModuleHomo}{ 
+		\prod (M,S),(M',S') : \TYPE{LeftGradedModule}(\Delta,R,H) \.
+		? M \Arrow{\LMOD{R}} M'                            
+	}
+	\DefineType{f}{GradedLeftModuleHomo}{  
+		\exists \delta \in \Delta : \. 
+		\forall \alpha \in \Delta \.  
+		f\Big(  S_\alpha \Big) \subset  S_{\alpha + \delta}        
+	}
+	\\
+	\DeclareType{GradedRightModuleHomo}{ 
+		\prod (M,S),(M',S') : \TYPE{RightGradedModule}(\Delta,R,H) \.
+		? M \Arrow{\RMOD{R}} M'                            
+	}
+	\DefineType{f}{GradedRightModuleHomo}{  
+		\exists \delta \in \Delta : \. 
+		\forall \alpha \in \Delta \.  
+		f\Big(  S_\alpha \Big) \subset  S_{\alpha + \delta}        
+	}
+	\\
+	\DeclareFunc{degreeOfMorphism}{ \prod (M,S),(M',S')  : \TYPE{GradedLeftModule}(R,\Delta,H) \. \TYPE{GradedLeftModuleHomo}(R,\Delta,H) \to \Delta}
+	\DefineNamedFunc{degreeOfMorphism}{\varphi}{\deg \varphi}{ \bd \TYPE{GradedRightModuleHomo}{R}{H}{\Delta}(M,S)(M',S')(\varphi) }
+	\\
+	\DeclareFunc{degreeOfMorphism}{ \prod (M,S),(M',S') : \TYPE{GradedRightModule}(R,\Delta,H) \. \TYPE{GradedRightModuleHomo}(R,\Delta,H) \to \Delta}
+	\DefineNamedFunc{degreeOfMorphism}{\varphi}{\deg \varphi}{ \bd \TYPE{GradedRightModuleHomo}{R}{H}{\Delta}(M,S)(M',S')(\varphi) }
+	\\
+	\Theorem{degreeOfMorphismComp}{
+		\forall (M,S),(M',S'),(M'',S'') \in \TYPE{GradedLeftModule} \. \NewLine \.  
+		\forall \varphi : \TYPE{GradedLeftModuleHomo}(R,\Delta,H)(M,S)(M',S') \. \NewLine \. 
+		\forall \psi  : \TYPE{GradedLeftModuleHomo}(R,\Delta,H)(M',S')(M'',S'') \. 
+		\deg \varphi \psi = \deg \varphi + \deg \psi
+	}
+	\NoProof
+}
+\Page{
+	\DeclareFunc{categoryOfGradedLeftModules}{ \GRING \to \CAT }
+	\DefineNamedFunc{categoryOfGradedLeftModules}{R,\Delta,H}
+	{ 
+		\GLMOD{R}{H}{\Delta}  
+	}
+	{ 
+	    	\NewLine  \de \Big(\TYPE{GradedLeftModules}(R,\Delta,H), 
+		\NewLine, \{ f : \TYPE{GradedLeftModuleHomo}(R,\Delta,H) : \deg f = 0\} ,\circ, \id\Big)         
+	}
+	\\
+	\DeclareFunc{categoryOfGradedRightModules}{ \GRING \to \CAT }
+	\DefineNamedFunc{categoryOfGradedRightModules}{R,\Delta,H}
+	{ 
+		\GRMOD{R}{H}{\Delta}  
+	}
+	{ 
+		\NewLine  \de \Big(\TYPE{GradedRightModules}(R,\Delta,H), \NewLine ,
+			\{ f : \TYPE{GradedRightModuleHomo}(R,\Delta,H) : \deg f = 0\},\circ, \id\Big)         
+	}
+	\\
+	\DeclareType{GradedSubmodule}{\prod (M,S) \in \GLMOD{R}{H}{\Delta} \. ?\GLMOD{R}{H}{\Delta}}
+	\DefineNamedType{(N,Z)}{GradedSubmodule}{ (N,Z) \gsubmod{R}{H}{\Delta} (M,S) }{ N \subset M \And \forall \delta \in \Delta \. Z_\delta = S_\delta \cap N  }
+	\\
+	\Theorem{GradedSubmoduleByHomogeneousPart}{
+		\forall (M,S),(N,Z) : \GLMOD{R}{H}{\Delta} \. \NewLine \.  
+		(M,S) \gsubmod{R}{H}{\Delta} (N,Z) \iff 
+		\forall n \in N \. \forall \delta \in \Delta \. 
+		n_\delta \in N 
+	}
+	\NoProof
+	\\
+	\Theorem{GeneratedGratedSubmodule}{  
+		\forall (M,S),(N,Z) : \GLMOD{R}{H}{\Delta} \. \NewLine \.           
+		(N,Z) \gsubmod{R}{H}{\Delta} (M,S) \iff
+		\exists A : ?\TYPE{Homogeneous}(M) \.
+		N = \Span(A)
+	}
+	\NoProof
+	\\
+	\Theorem{HomogeneousGeneration}{
+		\forall (M,S) : \GLMOD{R}{H}{\Delta} \.
+		\forall (N,Z) \gsubmod{R}{H}{\Delta} (M,S) \. \NewLine \. 
+		\forall A : \TYPE{Generating}(N) \. 
+		\{ a_\delta | a \in A, \delta \in \Delta  \} : \TYPE{Generating}(N)
+	}
+	\NoProof
+	\\
+	\Theorem{FiniteHomogeneousGeneration}{
+		\forall (M,S) : \GLMOD{R}{H}{\Delta} \. \NewLine \. 
+		\forall [0] : \big( M : \FGM(R) \big) \.  
+		\exists F : ?\TYPE{Homogeneous} \And \TYPE{Finite} \And \TYPE{Generating}(M,\Delta,H)
+	}
+	\NoProof
+	\\
+	\Theorem{GradedQuotient}{
+		\forall (M,S) : \GLMOD{R}{H}{\Delta} \.  
+		\forall (N,Z) \gsubmod{R}{H}{\Delta} (M,S) \. 
+		\NewLine \.
+		\left( \frac{M}{N}, \left(\frac{S_\delta + N}{N}\right)_{\delta \in \Delta}  \right) 
+		: \GLMOD{R}{H}{\Delta}                    
+	}
+}
+\Page{
+	\Theorem{GradedImage}{ 
+		\forall (M,S),(M',S') : \GLMOD{R}{H}{\Delta} \.
+		\forall \phi : (M,S) \Arrow{\GLMOD{R}{H}{\Delta}} (M',S') \. \NewLine \.
+		(\phi(M),\phi(S)) \gsubmod{R}{H}{\Delta} (M',S')
+	}
+	\NoProof
+	\\
+	\Theorem{GradedKernel}
+	{    
+		\forall (M,S),(M',S') : \GLMOD{R}{H}{\Delta} \.
+		\forall \phi : (M,S) \Arrow{\GLMOD{R}{H}{\Delta}} (M',S') \. \NewLine \.
+		\forall [0] : \deg \phi : \TYPE{Cancelable}(\Delta) \.  
+		(\ker \varphi,\ker \varphi \cap S) \gsubmod{R}{H}{\Delta}  (M,S)
+	}
+	\NoProof
+	\\
+	\Theorem{GradedIsomorphismTheorem}
+	{
+		\forall (M,S),(M',S') : \GLMOD{R}{H}{\Delta} \.
+		\forall \phi : (M,S) \Arrow{\GLMOD{R}{H}{\Delta}} (M',S') \. \NewLine \.
+		\forall [0] : \deg \phi = 0 \.
+		\exists \psi : \left( \frac{M}{\ker \phi}, \frac{S + \ker \phi}{\ker \phi} \right) 
+		\ToIso{\GLMOD{R}{H}{\Delta} } (\im(\phi),\im(\phi) \cap S') :
+		\forall x \in M \. \psi[x] = \phi(x) 
+	}
+	\NoProof
+	\\
+	\Theorem{GradedSum}
+	{
+		\forall (M,S) : \GLMOD{R}{H}{\Delta} \.
+		\forall I \in \SET \. \NewLine \. 
+		\forall (N,Z) : I \to \TYPE{GradedLeftSubmodule}(R,\Delta,H)(M,S) \. 
+		\left(  \sum_{i \in I} N_i, \sum_{i \in I} Z_i \right) : \GLMOD{R}{H}{\Delta}
+	}
+	\NoProof
+	\\
+	\Theorem{GradedIntersect}
+	{
+		\forall (M,S) : \GLMOD{R}{H}{\Delta} \.
+		\forall I \in \SET \. \NewLine \. 
+		\forall (N,Z) : I \to \TYPE{GradedLeftSubmodule}(R,\Delta,H)(M,S) \. 
+		\left(  \bigcap_{i \in I} N_i, \bigcap_{i \in I} Z_i \right) : \GLMOD{R}{H}{\Delta}
+	}
+	\NoProof
+	\\
+	\Theorem{GradedAnnihilator}{
+		\forall (M,S) : \GLMOD{R}{H}{\Delta} \. 
+		\forall \delta : \TYPE{Cancelable}(\Delta) \.
+		\forall x \in S_\delta \. 
+		\Ann(x) : \TYPE{GradedLeftIdeal}(R,\Delta,H) 
+	}
+	\NoProof
+	\\
+	\Theorem{GradedAnnihilator}{
+		\forall (M,S) : \GLMOD{R}{H}{\Delta} \. 
+		\forall \delta : \TYPE{Cancelable}(\Delta) \.
+		\forall x \in S_\delta \. 
+		\Ann(x) : \TYPE{GradedLeftIdeal}(R,\Delta,H) 
+	}
+	\NoProof
+}\Page{
+	\Theorem{GradedAnnihilator}{
+		\forall (M,S) : \GLMOD{R}{H}{\Delta} \. 
+		\forall [0]  : \big(\Delta :\TYPE{Cancelable}(\Delta)\big) \. \NewLine \.  
+		\Ann(M) : \TYPE{GradedLeftIdeal}(R,\Delta,H) 
+	}
+	\NoProof
+}
+\newpage
+\section{Linear Operators and Matrices}
+\subsection{Matrices as Tables}
+\Page{
+	\DeclareFunc{transpose}{\prod X,n,m \in \SET \. X^{n \times m} \to X^{m \times n} }
+	\DefineNamedFunc{transpose}{A}{A^\top}{\Lambda (j,i) \in m \times n \. A_{i,j}}
+	\\
+	\DeclareType{Symmetric}{\prod X,n \in \SET \. ?X^{n \times n}}
+	\DefineType{A}{Symmetric}{A^\top = A}
+	\\
+	\DeclareFunc{column}{\prod X,n,m \in \SET \. X^{n \times m} \to m \to X^n}
+	\DefineNamedFunc{column}{A,j}{\C_j(A)}{\Lambda i \in n \. A_{i,j}}
+	\\
+	\DeclareFunc{row}{\prod X,n,m \in \SET \. X^{n \times m} \to n \to X^m}
+	\DefineNamedFunc{row}{A,i}{\R_i(A)}{\Lambda j \in m \. A_{i,j}}
+	\\
+	\DeclareFunc{fromColumns}{\prod X,n,m \in \SET \. m \to X^n \to X^{n \times m}}
+	\DefineFunc{fromColumns}{C}{\Lambda (i,j) \in n \times m \. C_i(j)}
+	\\
+	\DeclareFunc{fromRows}{\prod X,n,m \in \SET \. n \to X^m \to X^{n \times m}}
+	\DefineFunc{fromRows}{R}{\FUNC{fromColumns}(R)^\top}
+	\\
+	\DeclareFunc{diagonal}{\prod X,n \in \SET \. X^{n \times n} \to X^n}
+	\DefineNamedFunc{diagonal}{A}{\diag(A)}{\Lambda i \in n \. A_{i,i} }
+	\\
+	\DeclareType{Submatrix}{\prod X,n,m,n',m' \in \SET \. X^{n\times m} \to ?X^{n'\times m'}}
+	\DefineType{A'}{Submatrix}{\Lambda A \in X^{n\times m} \. 
+		\exists k : n' \ToInj n : \exists l : m' \ToInj m \. A' = A_{k,l} }
+	\\
+	\DeclareFunc{fromBlocks}{
+		\prod X,n,m,k,l \in \SET \. 
+		\prod p : \TYPE{Partition}(n,k) \.
+		\prod q : \TYPE{Partition}(m,l) \.
+		\NewLine \.
+		\left(\prod (i,j) \in k \times l \. X^{p_i \times q_j}\right) \to X^{n \times k}
+	}
+	\DefineFunc{fromBlocks}{B}{
+		\Lambda (i,j) \in n \times m \. 
+		B_{i,j}(i',j') \NewLine
+		\quad \where \quad
+		i' = \bd \TYPE{Partition}(n,k)(p)(i),
+		j' = \bd \TYPE{Partition}(m,l)(q)(j)
+	}
+	\\
+	\Theorem{TransposeIsConvolution}{\forall X,n,m \in \SET \. \forall A \in A^{n\times m} \. A^{\top\top} = A}
+	\NoProof
+	\\
+	\DeclareFunc{blockDiagonal}{
+		\prod R \in \RING \. \prod n,k \in \SET \. \prod p : \TYPE{Partition}(n,k) \. 
+		\left( \prod i \in k \. 
+		X^{p_i \times p_i} \right) \to X^{n,\times n}
+	}
+	\DefineFunc{blockDiagonal}{A}{\FUNC{fromBlocks}(X,n,m,k,l)(p,p)(\Lambda (i,j) \in n \times n \. \If i == j \Then A_{i,j} \Else 0 )}
+}
+\subsection{Elementary Matrix algebra}
+\Page{
+	\DeclareFunc{matrixMult}{\prod R \in \RING \. \prod n,m,k \in \Int \. 
+		R^{n\times m}\times R^{m\times k} \to R^{n\times k}}
+	\DefineNamedFunc{matrixMult}{A,B}{AB}{\Lambda (i,j) \in n \times k \. \R_i(A)\C_j(B)}
+	\\
+	\Theorem{matrixMultIsAssoc}{ 
+		\forall R \in \RING \. 
+		\forall n : 4 \to \Int \. 
+		\forall A \in R^{n_1 \times n_2} \.
+		\forall B \in R^{n_2 \times n_3} \.
+		\forall C \in R^{n_3 \times n_4} \. \NewLine \. 
+		(AB)C = A(BC)
+	}
+	\Assume{(i,j)}{n_1 \times n_4}
+	\Conclude{[j.*]}{\bd \FUNC{matixMult}((AB),C)\bd \R_i \bd \RING(R) \bd^{-1} C_j(BC)\bd^{-1}\FUNC{matrixMult}}
+	{
+		\NewLine :
+		\Big((AB)C\Big)_{i,j} = 
+		\R_i(AB)\C_j(C) = 
+		\sum^{n_3}_{t=1} \R_i(A)\C_t(B)C_{t,j} =
+		\R_i(A) \sum^{n_3}_{t=1} \C_t(B)C_{t,j} = \NewLine =
+		\R_i(A) \C_j(BC) =
+		\Big(A(BC)\Big)_{i,j}
+	}
+	\DeriveConclude{[*]}{I(=,\to)}{ (AB)C = A(BC)  }
+	\EndProof
+	\\
+	\Theorem{MatrixAlgebra}{
+		\forall R \in \RING \. \forall n \in \Nat \. 
+		\Big(R^{n \times n},\FUNC{matrixMult}\Big) : \TYPE{AssociativeAlgebra}(R)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{fromDiag}{\prod R \in \RING \. \prod n \in \Nat \. R^n \to R^{n \times n}}
+	\DefineFunc{fromDiag}{a}{\Lambda (i,j) \in n \times n \. \If i == j \Then a_i \Else 0}
+	\\
+	\DeclareFunc{identityMatrix}{\prod R \in \RING \. \prod n \in \Nat \. R^n }
+	\DefineNamedFunc{indentityMatrix}{}{I}{\FUNC{fromDiag}(i \mapsto 1)}
+	\\
+	\Theorem{IdentityMatrixIsIdentity}{
+		\forall R \in \RING \. \forall n \in \Nat \. \forall A \in R^{n \times n} \. 
+		IA = A = AI             
+	}
+	\Assume{i,j}{n \times n}
+	\Conclude{[j.*]}{\bd \TYPE{matrixMult}(i,j)\bd\FUNC{identityMatrix}}
+	{(IA)_{i,j} = \R_i(I)\C_j(A) = A_{i,j} = \R_i(A)\C_j(I) = (AI)_{i,j}}
+	\Derive{[*]}{I(=,\to)}{IA = A = AI}
+	\EndProof
+	\\
+	\Theorem{MatrixAlgebra2}{
+		\forall R \in \RING \. \forall n \in \Nat \. 
+		\Big(R^{n \times n},\FUNC{matrixMult},I\Big) : \TYPE{UnitaryAlgebra}(R)
+	}
+	\NoProof
+	\\
+	\Theorem{IdentityIsSymmetric}{\forall R \in \RING \. \forall n \in \Nat \. I_{R,n} : \TYPE{Symmetric}(R,n,n)}
+	\NoProof
+}
+\Page{
+	\Theorem{TransposeIsLinear}
+	{
+		\forall R \in \RING \.
+		\forall n,m \in \Nat \.
+		\FUNC{transpose}(R,n,m) : R^{n\times m} \Arrow{\LMOD{R}} R^{m \times n}
+	}
+	\NoProof
+	\\
+	\Theorem{TransposeIsAlgebraAntihomomorphism}{
+		\forall R \in \ANN \. \NewLine \. 
+		\forall n,m,k \in \Nat \. \forall A \in R^{n \times m} \. \forall B \in R^{m \times k} \. 
+		(AB)^\top = B^\top A^\top 
+	}
+	\Assume{(i,j)}{k \times n}
+	\Conclude{j.*}{\bd \FUNC{transpose}(AB) \bd \FUNC{MatrixMult}
+		\bd^{-2}\FUNC{transpose}(A)(B)\bd\ANN(R)\bd^{-1}\FUNC{matrixMult}}{  
+			\NewLine :
+			(AB)^\top_{i,j} = 
+			(AB)_{j,i} = 
+			\R_j(A)\C_i(B) = 
+			\C_j(A^\top)\R_i(B^\top) = 
+			\R_i(B^\top)\C_j(A^\top) =
+			\Big(B^\top A^\top\Big)_{i,j}
+	}
+	\DeriveConclude{[*]}{ I(=m,\to) }{ (AB)^\top = B^\top A^\top }
+	\EndProof
+	\\
+	\DeclareFunc{rowExchange}{\prod R \in \RING \. \prod n \in \Nat \. n \times n \to R^{n\times n}}
+	\DefineFunc{rowExchange}{i,j}{\FUNC{fromRows}(\Lambda k \in n \. 
+		\If k == i \Then \delta^j \Else \If k == j  \Then \delta^i \Else \delta^k )}
+	\\
+	\DeclareFunc{rowScalarMult}{\prod R \in \RING \. \prod n \in \Nat \. n \to R^* \to R^{n\times n}}
+	\DefineFunc{rowScalarMult}{i,\alpha}{\FUNC{fromRows}(\Lambda k \in n \. \If k == i \Then \alpha \delta^i \Else \delta^k)}
+	\\
+	\DeclareFunc{rowAddScalarMult}{\prod R \in \RING \. \prod n \in \Nat \. n \to n \to R \to R^{n\times n}}
+	\DefineFunc{rowAddScalarMult}{i,j,\alpha}{I + \TYPE{FromRows}(\Lambda k \in n \.\If k == i \Then \alpha \delta^j \Else 0)}
+	\\
+	\DeclareType{ElementaryRowOperation}{\prod R \in \RING \. \prod n  \in \Nat \. ?R^{n\times n}}
+	\DefineType{E}{ElementaryRowOperation}{ \exists i,j \in n : \exists \alpha \in R^* : \exists \beta \in R \. 
+		E = \FUNC{rowExchange}(i,j)  \NewLine | E = \FUNC{rowScalarMult}(i,\alpha)  \NewLine |  E = \TYPE{rowAddScalarMult}(i,j,\beta) }
+	\\
+	\DeclareType{RowEquivalent}{\prod R \in \RING \. \prod n,m \in \Nat \. ?\Big(R^{n\times m} \times R^{n \times m}\Big)}
+	\DefineType{A,B}{RowEquivalent}
+	{
+		\exists N \in \Int_+ \. 
+		\exists E : N \to \TYPE{ElementaryRowOperations}(R,n) :
+		\left(\prod^N_{i=1} E_i\right)A = B
+	}
+	\\
+	\DeclareType{ColumnEquivalent}{\prod R \in \RING \. \prod n,m \in \Nat \. ?\Big(R^{n\times m} \times R^{n \times m}\Big)}
+	\DefineType{A,B}{ColumnEquivalent}
+	{
+		\exists N \in \Int_+ \. 
+		\exists E : N \to \TYPE{ElementaryRowOperations}(R,m) :
+		A\left(\prod^N_{i=1} E_i\right) = B
+	}
+	\\
+	\DeclareType{RowColumnEquivalent}{\prod R \in \RING \. \prod n,m \in \Nat \. ?\Big(R^{n \times m} \times R^{n \times m})}
+	\DefineType{A,B}{RowColumnEquivalent}{
+			\exists N,N' \in \Int_+ \. 
+			\exists E : N \to \TYPE{ElementaryOperations}(R,n) : \NewLine :
+			\exists E': N' \to \TYPE{ElementaryOperation}(R,m) :
+			\left(\prod^N_{i=1} E_i \right)A\left( \prod^N_{i=1} E_i' \right) = B
+		}
+}
+\newpage
+\Page{
+	\DeclareType{SmithNormalForm}{ \prod R \in \ID \. \prod n,m \in \Nat \. ?R^{n \times m}   }
+	\DefineType{A}{SmithNormalForm}{ \exists r \in \min(n,m) \. \exists a : \TYPE{Snowball}(R,r) \. \NewLine 
+		A = \FUNC{fromColumns}(\Lambda i \in n \. \Lambda j \in m \. \If i == j \And i \le r \Then a_i \Else 0)}
+	\\
+	\Theorem{SmithNormalFormTHM}{\forall R \in \ER \. \forall n,m \in \Nat \. \forall X \in R^{n \times m} \. 
+		\exists A : \TYPE{SmithNormalForm}(R,n,m) : \NewLine \Big((X,A) : \TYPE{RowColumnEquivalent}(R,n,m)\Big)}
+	\Say{M^{0,0}}{X}{R^{n \times m}}
+	\Say{\mars}{
+		\Lambda K \in \min(n,m) \. 
+		\forall k \in [1,K]_\Nat \. 
+		\forall j \in n \. \forall j' \in m \. \NewLine \.
+		j \neq k \Rightarrow M_{j,k}^{K,0} = 0 \And
+		j' \neq k \Rightarrow M_{k,j'}^{K,0} = 0
+	}{\min(n,m) \to \Type}
+	\Say{\venus}{\Lambda K \in \min(n,m) \. \forall i \in k \. \forall j \in i \.  M^{K,0}_{j,j} | M^{K,0}_{i,i}}
+	{\min(n,m) \to \Type}
+	\Say{1.0}{\bd \emptyset\bd \mars}{\mars(0)}
+	\Say{2.0}{\bd \emptyset\bd \venus}{\venus(0)}
+	\Assume{K}{\min(n,m)}
+	\Assume{[1.(K-1)]}{\mars(K-1)}
+	\Assume{[2.(K-1)]}{\venus(K-1)}
+	\Assume{[3.0]}{\exists (i,j) \in [k,n]\times[k,m] : M^{(K-1),0} \neq 0}
+	\Say{v_{0}}{+\infty}{\Int_+ \cup \{+ \infty \}}
+	\Assume{k}{\Nat}
+	\Say{\Big(I,J, [4]\Big)}{\THM{ArgMinExists}([3.k-1])(\FUNC{normOfEuclid}(R)(M))}
+	{ \NewLine : \sum (I,J) \in [K,n] \times [K,m] \. M^{ K,(k-1)}_{I,J} \neq 0 
+		\And \forall (i,j) \in [K,n]\times[K,m] \. |M^{(K-1),(k-1)}_{I,J}| \le |M^{(K-1)),(k-1)}_{i,j}|}
+	\Say{N}{\FUNC{RowExchange}(K,I)M^{(K-1),(k-1)}}{R^{n \times m}}
+	\Say{v_{k}}{|N_{K,K}|}{\Int_+}
+	\Say{\I}{ \{ i \in [K+1,n] : N_{i,K} \neq 0 \}}{?[K+1,n]}
+	\Say{\J}{\{ j \in [K+1,m] : N_{K,j} \neq 0 \}}{?[K+1,n] \neq 0}
+	\Assume{i}{\I}
+	\Conclude{\Big( a_i,r_i,[i.*]\Big)}{\bd \ER(R)(N_{i,K},N_{K,K})}
+	{ \sum a_i \in R \. \sum r_i \in R \. N_{i,K} = a_iN_{K,K} + r_i \and |r_i| < N_{K,K}}
+	\Derive{\Big(a,r,[k.1]\Big)}{I\left( \sum \right)}
+	{ \sum (a,r) : \I \to R^2 \. \forall i \in I \. N_{i,K} = a_iN_{K,K} + r_i \and |r_i| < |N_{K,K}|    }
+	\Assume{j}{\J}
+	\Conclude{\Big( b_j,r_j',[j.*]\Big)}{\bd \ER(R)(N_{K,j},N_{K,K})}
+	{ \sum b_j \in R \. \sum r_j' \in R \. N_{K,j} = b_jN_{K,K} + r_j' \and |r_j'| < |N_{K,K}|}
+	\Derive{\Big(b,r',[k.2]\Big)}{I\left( \sum \right)}
+	{ \sum (b,r') : \J \to R^2 \. \forall j \in J \. N_{K,j} = a_jN_{K,K} + r_j' \and |r_j'| < |N_{K,K}|    }
+	\Assume{[5]}{\I \neq \emptyset | \J \neq \emptyset}
+	\Say{M^{(K-1),k}}{\Big(\prod_{i \in \I}\FUNC{rowAddScalarMult}(i,K,-a_i)\Big)N\Big(\prod_{j \in \J}\FUNC{rowAddScalarMult})(j,K,-b_k)}
+	{R^{n \times m}}
+	\Conclude{[3.k]}{\bd N \bd M^{(K-1),k}}{M^{(K-1),k}_{K,K} \neq 0}
+	\Assume{[5]}{\I = \emptyset = \J}
+	\Assume{(i,j)}{[K+1,n]\times[K+1,m]}
+}\Page{	
+	\Assume{[6]}{ N_{(K-1),K} \not | N_{i,j}   }
+	\Say{M^{(K-1),k}}{\FUNC{rowAddScalarMult}(K,i,1)N}{R^{n \times m}}
+	\Conclude{[3.k]}{\bd N [5] \bd M^{(K-1),k}}{M^{(K-1),k}_{K,K} \neq 0}
+	\Assume{[6]}{\forall (i,j) \in [K+1,n] \. N_{K,K} | N_{i,j}}
+	\Say{M^{(K-1),k}}{N}{R^{n \times m}}
+	\Conclude{[3.k]}{\bd N \bd M^{(K-1),k}}{M^{(K-1),k}_{K,K} \neq 0}
+	\Derive{\Big(M^{(K-1),v,[K.1]})}{I\left(\sum\right)}
+	{ \sum M^{(K-1)} : \Nat \to R^{n \times m} \. \sum v : \TYPE{Nonincreasing}(\Nat,\Int_+) \. \ldots}
+	\Say{\Big(k,[4]\Big)}{\bd \TYPE{WellOrdered}(\Int_+)(v)}{ \sum k \in \Nat : \forall k' : \FUNC{after}(k) \. v_k = v_k' }
+	\Say{[5]}{[4][K.1]}{\forall k' : \FUNC{after}(k) \. M^{(K-1),k'} = M^{(K-1),k')}}
+	\Say{M^{K,0}}{M^{{K-1},k}}{R^{n\times m}}
+	\Say{1.K}{[5][K.1][1.(K-1)]}{\mars(K)}
+	\Conclude{2.K}{[5][K.1][2.(K-1)]}{\venus(K)}
+	\Assume{[3.0]}{ \forall (i,j) \in [K,n] \times [K,m] \. M^{(K-1),(k-1)} = 0}
+	\Say{M^{K,0}}{ M^{{K-1},0}}{R^{n\times m}}
+	\Say{1.K}{\bd M^{K,0}[3.0][1.K-1]}{\mars(K)}
+	\Conclude{2.K}{\bd M^{K,0}[2.0][2.K-1]}{\venus(K)}
+	\Derive{(M,[1],[2])}{I(\left(\sum\right))I\left(\prod\right)}
+	{ \sum M : \min(n,m) \to R^{n,m}\. \prod k \in \min(n,m) \. \mars(k) \and \venus(k)}
+	\Say{A}{M^{\min(n,m)}}{R^{n,m}}
+	\Say{[3]}{\bd^{-1}\TYPE{SmithNormalForm}\bd A 1.\min(n,m)2.\min(n,m)}{(A : \TYPE{SmithNormalForm})}
+	\Conclude{[*]}{\bd M \bd A}{\Big(\left( X,A \right) : \TYPE{RowColumnEquivalent}(R,n,m)\Big)}
+	\EndProof
+}
+\newpage
+\subsection{Matrices as Linear Operators, Change of Basis}
+\Page{
+	\DeclareFunc{matrixOfOperator}{\prod R \in \RING \. \prod A,B : \FM(R) \. \NewLine \. 
+		(A \Arrow{\LMOD{R}} B) \to \TYPE{Basis}(A) \to \TYPE{Basis}(B) \to R^{\dim B \times \dim A}  }
+	\DefineNamedFunc{matrixOfOperator}{T,e,f}{T^{e,f}}{
+		\Lambda x \in \dim A \. \Lambda y \in \dim B \. r_y
+		\quad \where \quad Ae_x = \sum_{y \in Y} r_y f_y 
+	}
+	\\
+	\DeclareFunc{operatorFromMatrix}{\prod R \in \RING \. \prod A,B : \FM(R) \And \FGM(R) \. \NewLine \.
+		R^{\dim B \times \dim A} \to \TYPE{Basis}(A) \to \TYPE{Basis}(B) \to (A \Arrow{\LMOD{R}} B) 
+	}
+	\DefineNamedFunc{operatorFromMatrix}{M,e,f}{M_{e,f}}{
+		\Lambda  a e \in A  \.  a_i M_{j,i} f_j     
+	}
+	\\
+	\Theorem{ChoiceOfBasisDefinesIso}{
+		\forall R \in \RING \.  
+		\forall A,B : \FM(R) \And \FGM(R) \. \NewLine \.  
+		\forall e : \TYPE{Basis}(A) \. \forall f : \TYPE{Basis}(B) \. 
+		(\cdot)^{e,f} : \LMOD{R}(A,B) \ToIso{\LMOD{R}} R^{\dim B \times \dim A} 
+	}
+	\NoProof
+	\\
+	\Theorem{MatricesAreLinearMaps}{
+		\forall R \in \RING \.  
+		\forall A,B : \FM(R) \And \FGM(R) \. \NewLine \.  
+		\LMOD{R}(A,B) \cong_{\LMOD{R}} R^{\dim B \times \dim A} 
+	}
+	\NoProof
+	\\
+	\Theorem{ChoiceOfBasisDefinesAlgIso}{
+		\forall R \in \ANN \.
+		\forall A \in \FM \And \FGM(R) \. \NewLine
+		\forall e : \TYPE{Basis}(A) \.  (\cdot)^{e,e} : \End_{\LMOD{R}}(A) \ToIso{\LALG{R}} R^{\dim A \times \dim A}
+	}
+	\Say{n}{\rank A}{\Int_+}
+	\Assume{T,S}{ \End_{\LMOD{R}}(A) }
+	\Assume{i}{n}
+	\Conclude{(a_{\cdot,i},[1.i])}{\bd \TYPE{Basis}(e)(Te_i)}{\sum a : n \to A \. a_{\cdot,i}e = Te_i }
+	\Derive{(a,[1])}{I\left(\sim\right)}{\sum a : n \to n \to A \. \forall i \in n \. \C_i(a)e = Te_i}
+	\Assume{i}{n}
+	\Conclude{(b_{\cdot,i},[2.i])}{\bd \TYPE{Basis}(e)(Se_i)}{\sum b : n \to A \. b_{\cdot,i}e = Se_i }
+	\Derive{(b,[2])}{I\left(\sim\right)}{\sum b : n \to n \to A \. \forall i \in n \. \C_{i}(b)e = Se_i}
+	\Assume{i,j}{n}
+	\Say{[j.1]}{ [1.j] \THM{EinsteinSummation}\bd\C_{j} \forall k \in n \. [2.i] \THM{EinstenSummation}\bd\C_{k}(b)  }{
+		\NewLine : 
+		STe_j = 
+		S\C_{j}(a)e = 
+		Sa_{k,j}e_k = a_{k,j}Se_k =
+		a_{k,j}\C_k(b)e = a_{k,j}b_{t,k}e_t
+	}
+	\Conclude{[j.*]}{\bd \TYPE{matrixOfOperator} [j.1]\bd^{-1}\R_i(b)\C_j(a) }{ : (ST)_{i,j}^{e,e} = a_{k,j}b_{i,k} = \R_i(b)\C_j(a)}
+	\Derive{[3]}{I(\forall)}{\forall i,j \in n \.   (ST)_{i,j}^{e,e} = \R_i(b)\C_j(a) }
+	\Conclude{[*]}{[3]\bd a \bd b \bd^{-1}\FUNC{matrixOfOperator}}{(ST)^{e,e} = S^{e,e}T^{e,e}}
+	\EndProof
+}\Page{
+	\Theorem{MatricesAreOperators}{
+		\forall R \in \RING \.  
+		\forall A : \FM(R) \And \FGM(R) \. \NewLine \.  
+		\End_{\LMOD{R}}(A) \cong_{\LALG{R}} R^{\dim A \times \dim A} 
+	}
+	\NoProof
+	\\
+	\DeclareFunc{changeOfBasisMatrix}{\prod R \in \ANN \.\prod A : \FM \And \FGM(R) \. \NewLine \.  
+		\TYPE{Basis}(A) \to \TYPE{Basis}(A) \to R^{\dim A \times \dim A}
+	}
+	\DefineNamedFunc{changeOfBasisMatrix}{e,f}{C^{e \to f}}
+	{ \FUNC{coordinate}(f,e) }
+	\\
+	\Conclude{\TYPE{GeneralLinearGroup} = \GL}{\Lambda R \in \RING \. \Lambda n \in \Nat \. \left(R^{n \times n}\right)^*}
+	{ \RING \to \Nat \to \GRP}
+	\\
+	\Theorem{BasisMatrixInvertible}{
+		\forall R \in \ANN \.  
+		\forall A : \FM \And \FGM(R) \. \NewLine \.
+		\forall f,e : \TYPE{Basis}(A) \. 
+		C^{e \to f} \in \GL(R,\rank  R) \Big)
+		}
+	\Say{n}{\rank A}{\Int_+}
+	\Say{E}{ C^{e \to f}}{R^{\rank A \times \rank A}}
+	\Say{[1]}{\bd E}{\forall i \in n \. E_{f,f} f_i = e_i }
+	\Assume{v}{A} 
+	\Say{\Big( \alpha, [v.1] \Big)}{\bd \TYPE{Basis}(A)(e)(v)}{ \sum \alpha \in R^n \.  v = \alpha e}
+	\Conclude{[v.*]}{ \bd \LMOD{R}(A,A)(E_{f,f})(\alpha f)[1][v.1] }{E_{f,f} \alpha f = \alpha e = v}
+	\Derive{[2]}{\bd^{-1} \TYPE{Surjective}}{\Big(E_{f,f} : \TYPE{Surjective}(A,A)\Big)}
+	\Assume{v}{\ker E_{f,f}}
+	\Say{\Big( \alpha, [v.1] \Big)}{\bd \TYPE{Basis}(A)(f)(v)}{ \sum \alpha \in R^n \.  v = \alpha f}
+	\Say{[v.2]}{ \bd \LMOD{R}(A,A)(E_{f,f})(\alpha f)[1][v.1] }{ 0 = E_{f,f}v = E_{f,f} \alpha f = \alpha e}
+	\Conclude{[v.*]}{\bd \TYPE{Basis}(e)[v.2][v.1]}{v = 0 }
+	\Derive{[3]}{\bd \TYPE{Iso}(\LMOD) [2] \THM{ZeroKernelTHM}}{ \Big(E_{f,f} : A \ToIso{\LMOD{R}} A\Big)}
+	\Conclude{[*]}{\THM{ChoiceOfBasisDefinesAlgIso}[3]}{E \in \GL(R,n)}
+	\EndProof
+	\\
+	\Theorem{ChangeOfBasisInversion}{\forall R \in \RING \. \prod A : \FM \And \FGM(R) \. \NewLine \. 
+		\forall e,f : \TYPE{Basis}(A) \. C^{e \to f} C^{f \to e} = I = C^{f \to e}C^{e \to f}
+	}
+	\Say{[1]}{\bd C \bd^{-1}\FUNC{coordinates}}{  C^{e \to f}C^{f \to e} = \FUNC{coordinate}(f,e)\FUNC{coordinates}(e,f) = \FUNC{coordinates}(e,e) = I  }
+	\Say{[2]}{\bd C \bd^{-1}\FUNC{coordinates}}{  C^{f \to e}C^{e \to f} = \FUNC{coordinate}(e,f)\FUNC{coordinates}(f,e) = \FUNC{coordinates}(f,f) = I  }
+	\Say{[*]}{[1][2]}{\LOGIC{This} }
+	\EndProof
+}\Page{
+	\DeclareFunc{LinearMapCategory}{\RING \to \CAT}
+	\DefineNamedFunc{LinearMapCategory}{}{\LLMAP{R}}{ 
+		\NewLine :\!= \left( \sum A \in \FM \And \FGM(R) \. \TYPE{Basis}(A) , \LMOD{R} , \id  , \circ  \right) 
+		}
+	\\
+	\DeclareFunc{MatrixCategory}{\RING \to \CAT}
+	\DefineNamedFunc{MatrixCategory}{}{\LMAT{R}}{  
+		\NewLine :\!=
+		\Big( \sum A \in \FM \And \FGM(R) \. \TYPE{Basis}(A) , \NewLine, (A,e),(B,f) \mapsto R^{\rank B \times \rank A}, I  , \FUNC{matrixMult}  
+		\Big) 
+		}
+	\\
+	\DeclareFunc{inCoord}{\prod R \in \RING \. \LLMAP{R} \ToIso{\CAT} \LMAT{R}}
+	\DefineFunc{inCoord}{A,e}{(A,e)}
+	\DefineFunc{inCoord}{(A,e),(B,f),T}{T^{e,f}}
+	\\
+	\Theorem{ChangeOfBasis}{\forall R \in \RING \. \prod A,B : \FM \And \FGM(R) \.
+		\NewLine \. \forall T \in A \Arrow{\LMOD{R}} B \. 
+		\forall e,e' : \TYPE{Basis}(A) \.  
+		\forall f,f' : \TYPE{Basis}(B) \. 
+		T^{e',f'} = C^{f \to f'} T^{e,f} C^{e' \to e}
+	}
+	\Say{n}{\rank A}{\Int_+}
+	\Say{m}{\rank B}{\Int_+}
+	\Assume{i}{n}
+	\Conclude{[i.*]}{
+		\bd \TYPE{Covariant}\FUNC{inCoord}(\LLMAP{R},\LMAT{R}) 
+		\bd C^{e'\to e}_{e',e} \bd C^{f \to f'} \bd \FUNC{operatorFromMatrix}                                       
+	}
+	{
+		\NewLine :
+		\Big(  C^{f \to f'} T^{e,f} C^{e' \to e} \Big)_{e',f'}e_i' = 
+		C^{f \to f'}_{f,f'} T^{e,f}_{e,f} C^{e' \to e}_{e',e}e_i'  =
+		C^{f \to f'}_{f,f'} Te_i' = Te_i'
+	}
+	\Derive{[1]}{ I(=,\to)}{ \Big( C^{f \to f'} T^{e,f} C^{e' \to e}\Big)_{e',f'} = T}
+	\Conclude{[*]}{ \THM{ChoiceOfBasisDefinesIso}[1]}{  C^{f \to f'}T^{e,f}C^{e' \to e} = T^{e',f'}}
+	\EndProof
+	\\
+	\DeclareType{EquivalentMatrices}{
+		\prod R \in \RING \.  \prod n,m \in \Nat \. ?\Big(R^{n\times m}\times R^{n \times m}\Big)
+	}
+	\DefineNamedType{A,B}{EquivalentMatices}{A \approx B}{
+		\exists T : R^m \Arrow{\LMOD{R}} R^n :
+		\exists e,e' : \TYPE{Basis}(R^m) : 
+		\exists f,f' : \TYPE{Basis}(R^n) : \NewLine :
+		 T^{e,f} = A \And T^{e',f'} = B
+	}
+	\\
+	\Theorem{InvertibleIsChangeOfBasis}
+	{
+		\forall R \in \ANN \.
+		\forall A \in \FM \And \FGM(R) \. \NewLine
+		\forall M \in \Big(R^{\rank A \times \rank A}\Big)^* \.
+		\exists e,f : \TYPE{Basis}(A) : 
+		A = C^{e \to f}
+	}
+	\Say{e}{\THM{FreehasBasis}(A)}{\TYPE{Basis}(A)}
+	\Say{[1]}{\THM{ChoicOfBasisDefineAlgIso}(e,M)}{M_{e,e} \in \Aut_{\LMOD{R}}(A)}
+	\Say{f}{M_{e,e}e}{\rank A \to A}
+	\Say{[2]}{\bd \Aut_{\LMOD{R}}(A)(M_{e,e})[1]\bd^{-1}\TYPE{Basis}}{\big(f : \TYPE{Basis}(A)\big)}
+	\Conclude{[*]}{\bd^{-1}C^{f \to e}[2]\bd f}{M = C^{f \to e}}
+	\EndProof
+}\Page{
+	\Theorem{AltMatrixEquivalence}
+	{
+		\forall R \in \ANN \. \forall n,m \in \Nat \. 
+		\forall A,B \in R^{n\times m} \. \NewLine 
+		A \approx B \iff \exists M \in \GL(R,n) : \exists N \in \GL(R,m) :
+		B = MAN
+	}
+	\NoProof
+	\\
+	\Theorem{MatrixeEquivalenceisEquivalence}
+	{
+		\forall n,m \in \Nat \. \forall  R \in \ANN \. \NewLine \. \TYPE{EquivalentMatrices}(R,n,m) : \TYPE{Equivalence}(R^{n\times m})
+	}
+	\Assume{A,B,C}{R^{n\times m}}
+	\Assume{[1]}{A \approx B \And B \approx C}
+	\Say{\big(T,e,e',f,f',[1.1]\big)}{\bd \TYPE{EquivalentMatrices}[1]_1}{ 
+		\NewLine : \sum T : R^m \Arrow{\LMOD{R}} R^n \.
+		\sum e,e'  \TYPE{Basis}(R^m) \. 
+		\sum f,f' : \TYPE{Basis}(R^n) \.
+		 T^{e,f} = A \And T^{e',f'} = B
+	}
+	\Say{\big(S,e'',e''',f'',f''',[1.2]\big)}{\bd \TYPE{EquivalentMatrices}[1]_2}{ 
+		\NewLine : \sum S : R^m \Arrow{\LMOD{R}} R^n \.
+		\sum e'',e'''  \TYPE{Basis}(R^m) \. 
+		\sum f'',f''' : \TYPE{Basis}(R^n) \. 
+		 S^{e'',f''} = B \And S^{e''',f'''} = C
+	}
+	\Say{[1.3]}{\THM{ChangeOfBasis}([1.1])}{C^{f \to f'}AC^{e' \to e} = B}
+	\Say{[1.4]}{\THM{ChangeOfBasis}([2.2])}{C^{f'' \to f'''}BC^{e''' \to e''} = C}
+	\Say{[1.5]}{[1.3][1.4]}{C^{f'' \to f'''}C^{f \to f'}A C^{e' \to e}C^{e''' \to e''} = C}
+	\Conclude{[*]}{ \THM{ChangeOfBasisInversion}(\ldots)\THM{AltMatixEquivalence}^{-1}(\ldots)}
+	{
+		A \approx C
+	}
+	\EndProof
+}
+\newpage
+\subsection{Determinant and Trace}
+\Page{
+	\DeclareFunc{matrixDeterminant}{\prod R \in \ANN \. \prod n \in \Nat \. R^{n \times n} \to R}
+	\DefineNamedFunc{matrixDeterminant}{A}{\det A}{ \sum_{\sigma \in S_n} (-1)^\sigma\prod^n_{i=1} A_{i,\sigma(i)}}
+	\\
+	\Theorem{DetTranspose}{
+		\forall R \in \ANN \. 
+		\forall n \in \Nat \. 
+		\forall A \in R^{n \times n} \. 
+		\det A^\top = \det A
+	}
+	\NoProof 
+	\\
+	\Theorem{DetMultilinear}{  
+		\forall R \in \ANN \.
+		\forall n \in \Nat \. 
+		\det \circ \FUNC{fromRows}(n) \in \mathcal{L}_R(n ; i \mapsto R^n; R)
+	}
+	\Assume{A}{R^{n \times n}}
+	\Assume{v}{R^n}
+	\Assume{\alpha}{R}
+	\Assume{B}{R^{n \times n}}
+	\Assume{i}{n}
+	\Assume{[1]}{ \R_i(A) + v = \R_i(B) \And\forall j \in n \. i \neq j \Rightarrow \R_j(A) = \R_j(B)}
+	\Say{C}{\FUNC{fromRows}\Big(\Lambda j \in n \. \If j == i \Then v \Else \R_j(A)\Big)}{R^{n\times n}}
+	\Conclude{[1.*]}{\bd \det B[1]\bd \ANN(R) \bd^{-1}C}{ 
+		\NewLine :
+		\det B = 
+		\sum_{\sigma \in S_n} (-1)^{\sigma} \prod^n_{i=1} B_{i,\sigma(i)} =
+		\sum_{\sigma \in S_n} (-1)^{\sigma} (A_{i,\sigma(i)} + v_{\sigma(i)})\prod^n_{j=1:j\neq i} A_{j,\sigma(j)} = \NewLine =
+		\sum_{\sigma \in S_n} (-1)^\sigma\prod^n_{i=1} A_{i,\sigma(i)}  +
+		\sum_{\sigma \in S_n} (-1)^\sigma v_{\sigma(i)}\prod^n_{j=1:i\neq i} A_{i,\sigma(i)}  = 
+		\det A + \det C
+	}
+	\Derive{[1]}{I(\Rightarrow)}{(\ldots) }
+\\
+	\Assume{[2]}{\R_i(B) = \alpha \R_i(B)\And \forall j \in n \. i \neq j \Rightarrow \R_j(A) = \R_j(B)}
+	\Conclude{[2.*]}{  \bd \det  B[2] \bd \Ann(A) \bd^{-1} \det A}
+	{
+		\NewLine :
+		\det B =
+		\sum_{\sigma \in S_n} (-1)^{\sigma} \prod^n_{i=1} B_{i,\sigma(i)} =
+                \sum_{\sigma \in S_n} (-1)^{\sigma} \alpha A_i \prod^n_{j=1:j\neq i} A_{j,\sigma(j)}
+		\alpha \sum_{\sigma \in S_n} (-1)^{\sigma}  \prod^n_{i=1} A_{i,\sigma(i)} =
+		\alpha \det A
+	}
+	\Derive{[2]}{I(\Rightarrow)}{(\ldots)}
+	\Conclude{[*]}{\bd^{-1}\TYPE{Multilinear}(R,n,i \mapsto R^n,R)[1][2]}
+	{ \det \circ \FUNC{fromRows} \in \mathcal{L}_R(n;i \mapsto R^n;R) }
+	\EndProof
+}\Page{
+	\Theorem{DetAntisymmetic}{
+		\forall R \in \ANN \.
+		\forall n \in \Nat \.
+		\det \circ \FUNC{fromRows}(n) : \TYPE{Antisymmetric}(R,n, i \mapsto R^n, R)
+	}
+	\Assume{A}{R^{n \times n}}
+	\Assume{\tau}{2\hyph\TYPE{Cycle}(n)}
+	\Say{B}{\FUNC{fromRows} \circ \tau\big( \R(A)\big)}{R^{n \times n}}
+	\Conclude{[\tau.*]}{\bd \det B \bd B \bd \FUNC{sign}\bd \GRP(S_n)\bd \GRP(S_n,\TYPE{Sign})\FUNC{sign}\bd \GRP(S_n)\bd^{-1}\det A}{
+		\NewLine :
+		\det B =
+		\sum_{\sigma \in S_n} (-1)^{\sigma} \prod^n_{i=1} B_{i,\sigma(i)} =
+		\sum_{\sigma \in S_n} (-1)^{\sigma} \prod^n_{ i=1 } A_{\tau(i),\sigma(i)}
+		- \sum_{\sigma \in S_n} (-1)^{\sigma}(-1)^\tau \prod^n_{i=1} A_{i,\sigma\tau(i)} = 
+		\NewLine =
+		- \sum_{\sigma \in S_n} (-1)^{\sigma\tau} \prod^n_{i=1} A_{i,\sigma\tau(i)} =
+		- \sum_{\sigma \in S_n} (-1)^\sigma\prod^n_{i=1} A_{i,\sigma(i)}  =
+		- \det A
+	}
+	\DeriveConclude{[*]}{\bd^{-1}\THM{AntisymmetricByTranspositions}}
+	{\big(\det \circ \FUNC{fromRows}(n) : \TYPE{Antysymmetric}(R,n,i \mapsto R^n,R)\big)}
+	\EndProof
+\\
+	\Theorem{DetHomo1}{\forall R \in \ANN \. \forall n \in \Nat \. \forall A,B \in R^{n \times n} \. \det AB = \det A \det B}
+	\Conclude{[*]}{
+		\bd \det AB \bd \C \bd \R \bd \ANN(R) \bd \FUNC{sign} 
+		\bd \GRP(S_n,\TYPE{Signs})\FUNC{sign}
+		\THM{MultIsBij}(S_n)  \bd \ANN(R)\bd^{-1}\det
+	}
+	{ 
+		\NewLine :
+		\det AB = \sum_{\sigma \in S_n} (-1)^\sigma\prod^n_{i=1} \R_i(A)\C_{\sigma(i)}(B) = 
+		 \sum_{\sigma \in S_n} (-1)^\sigma\prod^n_{i=1} \sum^n_{j=1} A_{i,j}B_{j,\sigma(i)} = \NewLine = 
+		 \sum_{\sigma \in S_n} (-1)^{\sigma}\sum_{J : n \to n} \prod^n_{i=1} A_{i,J_i}B_{J_i,\sigma(i)} =
+		 \sum_{\sigma \in S_n} (-1)^{\sigma}\sum_{\tau \in S_n} \prod^n_{i=1} A_{i,\tau(i)} \prod^n_{i=1} B_{\tau(i),\sigma(i)} =
+		 \NewLine =
+		 \sum_{\sigma \in S_n} \sum_{\tau \in S_n} (-1)^{\sigma\tau^{-1}}(-1)^\tau 
+		 \prod^n_{i=1} A_{i,\tau(i)} \prod^n_{i=1} B_{i,\sigma\tau^{-1}(i)} =
+		 \sum_{\sigma \in S_n} \sum_{\tau \in S_n} (-1)^{\sigma}(-1)^\tau 
+		 \prod^n_{i=1} A_{i,\tau(i)} \prod^n_{i=1} B_{i,\sigma(i)} = \NewLine = 
+		 \left(\sum_{\sigma \in S_n} (-1)^\sigma\prod^n_{i=1} A_{i,\sigma(i)}  \right)
+		 \left(\sum_{\sigma \in S_n} (-1)^\sigma\prod^n_{i=1} B_{i,\sigma(i)}  \right) =
+		 \det A \det B
+	}
+	\EndProof
+	\\
+	\Theorem{DetHomo2}{\forall R \in \ANN \. \forall n \in \Nat \. \det : \GL(R,n) \Arrow{\GRP} R^*}
+	\Say{[1]}{\bd I \bd \det}{\det I = 1}
+	\Conclude{[*]}{\THM{detHomo}\bd^{-1}\GRP\big(\GL(R,n),R^*\big)}{ (\det : \GL(R,n) \Arrow{\GRP} R^*)   } 
+	\EndProof
+	\\
+	\Theorem{DetBasisInvariant}{
+		\forall R \in \ANN \. \forall M \in \FM \and \FGM(R) \.
+		\NewLine \. \forall T \in \End_{\LMOD{R}}(M) \. 
+		\forall e,f : \TYPE{Basis}(M) \.
+		\det T^{e,e} = \det T^{f,f}
+	}
+	\Say{[1]}{\THM{ChangeOfBasis}(T,e,f)}{ T^{f,f} =  C^{e \to f} T^{e,e} C^{f \to e}}
+	\Conclude{[*]}{\det [1] \THM{DetHomo}(\ldots) \bd \ANN(R) \THM{ChangeOfBasisInversion}(e,f)  \THM{DetHomo2}(\ldots)}{  
+		\NewLine :
+		\det T^{f,f} = 
+		\det C^{e \to f} T^{e,e} C^{f \to e} =
+		\det C^{e \to f} \det T^{e,e} \det C^{f \to e} =
+		\det C^{e \to f} \det C^{f \to e} \det T^{e,e} =
+		\det T^{e,e}
+	}
+	\EndProof
+	\\
+}
+\Page{
+	\DeclareFunc{determinantOfTheOperator}{\prod R \in \ANN \. \prod M : \FM \And \FGM(R) \. \NewLine \. \End_{\LMOD{R}}(M) \to R}
+	\DefineNamedFunc{determinantOfTheOperator}{T}{\det T}{\det T^{e,e} \quad \where \quad e = \THM{FreeHasBasis}(M)}
+	\\
+	\Theorem{DetOperatorHomo}{\forall R \in \ANN \. \prod M : \FM \And \FGM(R) \. 
+		\NewLine \. 
+		\forall A,B \in \End_{\LMOD{R}}(M) \. \det AB = \det A \det B}
+	\NoProof
+	\\
+	\Theorem{DetOperatorHomo1}{
+		\forall  R \in \Ann \. \forall M : \FM \And \FGM(R) \.  \NewLine \.
+		\det : \Aut_{\LMOD{R}}(M) \Arrow{\GRP} R^*
+	}
+	\NoProof
+	\\
+	\DeclareFunc{antiindex}{ n \to (n-1) \to n}
+	\DefineNamedFunc{antiindex}{i}{\hat i}{\Lambda j \in (n-1) \. \If j < i \Then j \Else j + 1}
+	\\
+	\DeclareFunc{minor}{\prod R \in \ANN \. \prod n \in \Nat \. R^{n \times n} \to (n \times n) \to R }
+	\DefineNamedFunc{minor}{A,i,j}{\Delta_{i,j}(A)}{(-1)^{i+j}\det A_{\hat i,\hat j}}
+	\\
+	\Theorem{DeterminantComputation}{
+		\forall R \in \Ann \. 
+		\forall n \in \Nat \. 
+		\forall A \in R^{n \times n} \.  
+		\forall i \in n \.
+		\det A  = \sum_{j=1}^n A_{i,j} \Delta_{i,j}(A)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{adjointMatrix}{\prod R \in \ANN \. \prod n \in \Nat \. R^{n \times n} \to R^{n \times n}}
+	\DefineNamedFunc{adjointMatrix}{A}{\adj A}{\Delta^{\top}(A)}
+}\Page{
+	\Theorem{CramerMatrixInversion}{
+		\forall R \in \Ann \. 
+		\forall n \in \Nat \. 
+		\forall A \in \GL(R,n) \.
+		A^{-1} = \frac{\adj A}{\det A}
+	}
+	\Assume{i}{n}
+	\Say{[1]}{\bd \FUNC{matrixMult}\bd \adj A \THM{DeterminantComputation}(A)\bd \TYPE{Inverse}(\det A)}
+	{
+		\NewLine :
+		\left( \frac{A\adj A}{\det A} \right)_{i,i} = 
+		\frac{1}{\det A} \sum_{j=1}^n A_{i,j} \Delta_{i,j}(A) = 
+		\frac{\det A}{\det A} = 1
+	}
+	\Assume{j}{n}
+	\Assume{[2]}{j \neq i}
+	\Say{C}{\FUNC{fromRows}(\Lambda k \in i \. \If k == j \Then \R_i(A) \Else \R_k(A))}{R^{n \times n}}
+	\Conclude{[2.*]}{\bd \FUNC{matrixMult}\bd \adj A \THM{DeterminantComputation}(C) \THM{AntisymmetricZero}(\det C) }{  
+		\NewLine :
+		\left( \frac{A\adj A}{\det A} \right)_{i,j} = 
+		\frac{1}{\det A} \sum_{k=1}^n A_{i,k} \Delta_{i,k}(A) = 
+		\frac{\det C}{\det A} = 0
+	}
+	\DeriveConclude{[*]}{\bd^{-1}I}{  \frac{A \adj A}{\det A} = I }
+	\EndProof
+	\\
+	\Theorem{CramerMatrixInversionCorollary}{\forall R \in \ANN \. \forall n \in \Nat \. \forall A \in R^{n \times n}  \. 
+		\det A \in R^* \Rightarrow A \in \GL(R,n)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{specialLinearGroup}{\ANN \to \Nat \to \GRP}
+	\DefineNamedFunc{specialLinearGroup}{R,n}{ \SL(R,n)}{\Lambda R \in \Ann \. \Lambda n \in \Nat \. {\det}_{R,n}^{-1}(1)}
+	\\
+	\DeclareFunc{trace}{\prod R \in \RING \. \prod n \in \Nat \. R^{n \times n} \LMOD{R} R}
+	\DefineNamedFunc{trace}{A}{\tr A}{A_{i,i}}
+	\\
+	\Theorem{TraceTransInvariant}{\forall R \in \RING \. \forall n \in \Nat \. \forall A \in R^{n \times n} \. \tr A = \tr A^\top}
+	\NoProof
+	\\
+	\Theorem{TraceProduct}{\forall R \in \Ann \. \forall n \in \Nat \. \forall A,B \in R^{n \times n} \. \tr AB^\top = A_{i,j}B_{i,j}}
+	\NoProof
+	\\
+	\Theorem{ShiftInTrace}{\forall R \in \Ann \. \forall n \in \Nat \. \forall A,B \in R^{n \times m} \. \tr AB = \tr BA}
+	\NoProof
+}\Page{
+	\Theorem{TraceIsBasisInvariant}{
+		\forall R \in \Ann \. 
+		\forall M : \FM \And \FGM(R) \. \NewLine \. 
+		\forall T \in \End_{\LMOD{R}}(M) \.
+		\forall e,f : \TYPE{Basis}(M) \. 
+		\tr T^{e,e} = \tr T^{f,f}}
+	\Say{[1]}{\THM{ChangeOfBasis}(T,e,f)}{ T^{f,f} =  C^{e \to f} T^{e,e} C^{f \to e}}
+	\Conclude{[*]}{\det [1] \THM{ShiftInTrace} \THM{ChangeOfBasisInversion}(e,f) }{  
+		\NewLine :
+		\tr T^{f,f} = 
+		\tr C^{e \to f} T^{e,e} C^{f \to e} =
+		\tr C^{f \to e}C^{e \to f} \det T^{e,e} =
+		\tr T^{e,e}
+	}
+	\EndProof
+	\\
+	\DeclareFunc{traceOfTheOperator}
+	{
+		\prod R \in \Ann \.
+		\prod M : \FM \And \FGM(R) \. \NewLine \.
+		\End_{\LMOD{R}}(M) \Arrow{\LMOD{R}} R
+	}
+	\DefineNamedFunc{traceOfTheOperator}{T}{\tr T}{\tr T^{e,e} \quad \where \quad e = \THM{FreeHasBasis}(M)}
+	\\
+	\Theorem{ShiftInTrace2}{
+		\forall R \in \Ann \.
+		\forall M \in \FM \And \FGM(R) \. \NewLine \.
+		\forall A,B \in \End_{\LMOD{R}}(M) \. 
+		\tr AB = \tr BA
+	}
+	\NoProof
+	\\
+	\Theorem{DetOfBlockDiagonalMatrix}{
+		\forall R \in \Ann \. 
+		\forall n,k \in \Nat \.
+		\forall p : \TYPE{Partition}(n,k) \.
+		\forall A \in R^{n \times n} \. \NewLine \.  
+		\forall B : \prod i \in k \. R^{p_i \times p_i} \.
+		\forall [0] : A = \FUNC{blockDiagonal}(n,k,p,B) \.
+		\det A = \prod^k_{i=1} \det B_i
+	}
+	\NoProof
+}
+\newpage
+\subsection{Upper and Lower Triangular Matrices}
+\Page{
+	\DeclareType{UpperTriangularMatrix}{\prod R \in \RING \. \prod n \in \Nat \. ?R^{n \times n}}
+	\DefineType{A}{UpperTriangularMatrix}{ \forall i,j \in n \. i > j \Rightarrow A_{i,j} = 0}
+	\\
+	\DeclareType{LowerTriangularMatrix}{\prod R \in \RING \. \prod n \in \Nat \. ?R^{n \times n}}
+	\DefineType{A}{LowerTriangularMatrix}{ \forall i,j \in n \. i < j \Rightarrow A_{i,j} = 0}
+	\\
+	\DeclareType{DiagonalMatrix}{\prod R \in \RING \. \prod n \in \Nat \. ?R^{n \times n}}
+	\DefineType{A}{DiagonalMatrix}{ A : \TYPE{UpperTriangularMatrix}(R,n) \And A : \TYPE{LowerTriangularMatrix}(R,n)}
+	\\
+	\Theorem{DetOfUpperTriangular}{\forall R \in \ANN \. \forall A : \TYPE{UpperTriangularMatrix}(A) \. \det A = \prod^n_{i=1} A_{i,i}}
+	\NoProof
+	\\
+	\Theorem{DetOfLowerTriangular}{\forall R \in \ANN \. \forall A : \TYPE{LowerTriangularMatrix}(A) \. \det A = \prod^n_{i=1} A_{i,i}}
+	\NoProof
+	\\
+	\DeclareType{UpperTriangularizable}{\prod M \in \FGM \And \FM(R) \. ?\End_{\LMOD{R}}(M)}
+	\DefineType{T}{UpperTriangularizable}{ \exists e : \TYPE{Basis}(M) : T^{e,e} : \TYPE{UpperTriangularMatix}}
+	\\
+	\DeclareType{LowerTriangularizable}{\prod M \in \FGM \And \FM(R) \. ?\End_{\LMOD{R}}(M)}
+	\DefineType{T}{LowerTriangularizable}{ \exists e : \TYPE{Basis}(M) : T^{e,e} : \TYPE{LowerTriangularMatix}}
+	\\
+	\DeclareType{Diagonalizable}{\prod R \in \RING \. \prod n \in \Nat \. ?R^{n \times n}}
+	\DefineType{A}{Diagonalizable}{\exists e : \TYPE{Basis}(M) : T^{e,e} : \TYPE{DiagonalMatix} }
+}
+\newpage
+\subsection{Eigenelemments and Simmilarity}
+\Page{
+	\DeclareType{SimmilarMatrices}{\prod R \in \RING \. \prod n \in \Nat \. ?(R^{n\times n} \times R^{n\times n})}
+	\DefineNamedType{(A,B)}{SimmilarMatrices}{A \sim B}
+	{
+		\exists M \in \FM \And \FGM(R) \. 
+		\NewLine \.
+		\exists T \in \Aut_{\LMOD{R}}(M) \.
+		\exists e,f : \TYPE{Basis}(M) \.
+		 A_{e,e} = T = B_{f,f}
+	}
+	\\
+	\DeclareFunc{characteristicIdeal}{\prod R \in \ANN \. R^{n\times n} \to\Ideal(R[\Int_+])}
+	\DefineNamedFunc{characteristicIdeal}{N}{\A(N)}{ \Ann_{R[\Int_+]}(N) }
+	\\
+	\Theorem{characteristicIdealOfSimmilarMatricesAgree}{
+		\forall R \in \ANN \. \forall n \in \Nat \. 
+		\forall X,Y \in R^{n \times n} \. \NewLine \. 
+		X \sim Y \Rightarrow \A(X) = \A(Y)
+	}
+	\Say{\big(A,[1]\big)}{\THM{ChangeOfBasis}(\ldots)\bd \TYPE{Simmilar}(X,Y)}{ \sum A \in \GL(R,n) \. Y =  A X A^{-1}}
+	\Assume{f}{\A(X)}
+	\Say{[f.1]}{ 
+		\bd \FUNC{applyPolynimial}(f,Y)[1]\forall i \in \deg f \. \THM{ConjugatePower}(A,X) 
+		\bd \LALG(R)(R^{n\times n}) \NewLine \bd^{-1}\FUNC{applyPolynomial}(F,X) \bd \A(X)(f)
+	}
+	{
+			f(Y) = 
+			\sum^{\deg f}_{i=0} f_i Y^i = 
+			\sum^{\deg f}_{i=0} f_i \Big(AXA^{-1})^i = 
+			\sum^{\deg f}_{i=0} f_i  A X^{i} A^{-1} = \NewLine =
+			A\left(\sum^{\deg f}_{i=0} f_iX^{i} \right) A^{-1} =
+			Af^{-1}(X)A^{-1} = 0
+	}
+	\Conclude{[f.*]}{\bd \A(Y)[f.1]}{f \in \A(Y)}
+	\Derive{[2]}{\bd^{-1}\TYPE{Subset}}{\A(Y) \subset \A(X)}
+	\Assume{f}{\A(Y)}
+	\Say{[f.1]}{ 
+		\bd \FUNC{applyPolynomial}(f,X)[1]\forall i \in \deg f \. \THM{ConjugatePower}(A,Y) 
+		\bd \LALG(R)(R^{n\times n}) \NewLine \bd^{-1}\FUNC{applyPolynomial}(F,X) \bd \A(Y)(f)
+	}
+	{
+			f(X) = 
+			\sum^{\deg f}_{i=0} f_i X^i = 
+			\sum^{\deg f}_{i=0} f_i \Big(A^{-1}YA)^i = 
+			\sum^{\deg f}_{i=0} f_i  A^{-1} Y^{i} A = \NewLine =
+			A^{-1}\left(\sum^{\deg f}_{i=0} f_iY^{i} \right) A =
+			A^{-1}f^{-1}(Y)A = 0
+	}
+	\Conclude{[f.*]}{\bd \A(Y)[f.1]}{f \in \A(X)}
+	\Derive{[*]}{\bd^{-1}\TYPE{SetEq}[2]}{\A(X) = \A(Y)}
+	\EndProof
+	\\
+	\DeclareType{Eigenvalue}{\prod R \in \RING \. \prod M \in \LMOD{R} \. \End_{\LMOD{R}}(M) \to ?R}
+	\DefineType{\lambda}{Eigenvalue}{\Lambda T \in \End_{\LMOD{R}}(M) \. \exists m \in M \setminus \{0\} \. Tm = \lambda m}i
+	\\
+	\DeclareType{Eigenspace}{\prod R \in \RING \. \prod M \in \LMOD{R} \. \End_{\LMOD{R}}(M) \to R \to ?M}
+	\DefineType{m}{Eigenspace}{\Lambda T \in \End_{\LMOD{R}}(M) \. \Lambda \lambda \in R \. \ker \lambda \id - T}
+	\\
+	\DeclareType{GeneralizedEigenelement}{\prod R \in \RING \. \prod M \in \LMOD{R} \. \End_{\LMOD{R}}(M) \to R \to ?M}
+	\DefineType{m}{GeneralizedEigenelement}{\Lambda T \in \End_{\LMOD{R}}(M) \. \Lambda \lambda \in R \. 
+		\bigcup^\infty_{k=1} \ker (\lambda\id - T)^k }
+}\Page{
+	\DeclareFunc{characteristicPolynomial}{\prod R \in \ANN \. \prod n \in \Nat \. R^{n \times n} \to R{\Int_+}}
+	\DefineNamedFunc{characteristicPolynomial}{A}{  \chi_A(\lambda)  }{\det A - \lambda I}
+	\\
+	\DeclareFunc{characteristicPolynomial2}{\prod R \in \ANN \. M : \FM \And \FGM(R)  \. \NewLine \End_{\LMOD{R}}(M) \to R{\Int_+}}
+	\DefineNamedFunc{characteristicPolynomial2}{A}{  \chi_A(\lambda)  }{\det A - \lambda \id}
+	\\
+	\Theorem{characteristicPolynomialsOfSimmilarAgree}{  
+		\forall R \in \ANN \. \forall n \in \Nat \. \forall X,Y \in R^{n \times n} \. \NewLine \.
+		X \sim Y \Rightarrow \chi_X(\lambda) = \chi_Y(\lambda)
+	}
+	\Say{\big(A,[1]\big)}{\THM{ChangeOfBasis}(\ldots)\bd \TYPE{Simmilar}(X,Y)}{ \sum A \in \GL(R,n) \. Y =  A X A^{-1}}
+	\Conclude{[*]}{ \bd \chi_X(\lambda) \bd \GRP (\GL(n,R),R^*)(\det)[1]\bd^{-1}\chi_Y(\lambda)}
+	{ 
+		\NewLine : 
+		\chi_X(\lambda) = 
+		\det (X - \lambda I) = 
+		\det A \det(X - \lambda I) \det A^{-1} = 
+		\det \big(AXA^{-1} - \lambda AA^{-1}\big) = 
+		\det (Y - \lambda I) = \chi_Y(\lambda)
+	}
+	\EndProof
+	\\
+	\DeclareType{SimmilarOperators}{\prod R \in \RING \. \prod M \in \LMOD{R} \. ? \big(\End_{\LMOD{R}}(M) \times \End_{\LMOD{R}}(M)\big)}
+	\DefineNamedType{X,Y}{SimmilarOperators}{X \sum Y}{ \exists A \in \Aut_{\LMOD{R}}(M) \. Y = AXA^{-1}}
+	\\
+	\Theorem{SimmilarOperatorsHaveSameEigenvalues}{
+		\forall R \in \RING \. \forall M \in \LMOD{R} \. 
+		\forall (X,Y) : \TYPE{Simmilar}(M) \.  \NewLine \. \TYPE{Eigenvalue}(X) = \TYPE{Eigenvalue}(Y) 
+	}
+	\Say{\big(A,[1]\big)}{\bd \TYPE{Simmilar}(X,Y)}{ \sum A \in \Aut_{\LMOD{R}}(M) \. Y =  A X A^{-1}}
+	\Assume{\lambda}{\TYPE{Eigenvalue}(X)}
+	\Say{\big(m,[\lambda.1] \big)}{\bd \TYPE{Eigenvalue}(X)}{ \sum m \in M \. m \neq 0 \And  Xm = \lambda m}
+	\Say{[\lambda.2]}{\bd \Aut_{\LMOD{R}}(M)(A)\THM{ZeroKerTHM}(A)}{Am \neq 0}
+	\Say{[\lambda.3]}{[1][\lambda.1]\bd \LALG{R}(\End_{\LMOD{R}}(M))}{YAm = AXA^{-1}Am = AXm = \lambda Am}
+	\Conclude{[\lambda.*]}{\bd^{-1}\TYPE{Eigenvalue}[\lambda.1][\lambda.2]}{\big(\lambda : \TYPE{Eigenvalue}(Y)\big)}
+	\Derive{[2]}{\bd^{-1}\TYPE{Subset}}{\TYPE{Eigenvalue}(X) \subset \TYPE{Eigenvalue}(Y)}
+	\Assume{\lambda}{\TYPE{Eigenvalue}(X)}
+	\Say{\big(m,[\lambda.1] \big)}{\bd \TYPE{Eigenvalue}(Y)}{ \sum m \in M \. m \neq 0 \And  Ym = \lambda m}
+	\Say{[\lambda.2]}{\bd \Aut_{\LMOD{R}}(M)(A^{-1})\THM{ZeroKerTHM}(A^{-1})}{A^{-1}m \neq 0}
+	\Say{[\lambda.3]}{[1][\lambda.1]\bd \LALG{R}(\End_{\LMOD{R}}(M))}{XA^{-1}m = A^{-1}YA^{-1}Am = A^{-1}Ym = \lambda A^{-1}m}
+	\Conclude{[\lambda.*]}{\bd^{-1}\TYPE{Eigenvalue}[\lambda.1][\lambda.2]}{\big(\lambda : \TYPE{Eigenvalue}(X)\big)}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{SetEq}[2]}{\TYPE{EigenValue}(X) = \TYPE{Eigenvalue}(Y)}
+	\EndProof
+	\\
+	\DeclareFunc{PolynomialModuleStructure}{ 
+		\prod R \in \ANN \. 
+		\prod M \in \LMOD{R} \. 
+		 \End_{\LMOD{R}}(M) \to 
+		\LMOD{R[\Int_+]}
+	}
+	\DefineNamedFunc{polynomialModuleStructure}{T}{M_T}{\THM{PolinimialModuleStructure}(M,R)}
+}
+\Page{
+	\Theorem{SimmilarityByPolynomialModuleStructure}
+	{
+		\forall R \in \ANN \.
+		\forall M \in \LMOD{R} \.
+		\forall X,Y \in \End_{\LMOD{R}}(M) \. \NewLine
+		X \sim Y \iff M_X \cong M_Y 
+	}
+	\Assume{[1]}{X \sim Y}
+	\Say{\big(A,[1.1]\big)}{\THM{ChangeOfBasis}(\ldots)\bd \TYPE{Simmilar}(X,Y)}{ \sum A \in \Aut_{\LMOD{R}}(M) \. Y =  A X A^{-1}}
+	\Assume{f}{R[\Int_+]}
+	\Assume{m}{M}
+	\Conclude{[f.*]}{ \bd M_X \bd \Aut_{\LMOD{R}}(M)(A) \forall i \in \deg f \. \THM{ConjugatePower}(X,A)[1.1]\bd^{-1}M_Y  }{
+			\NewLine :
+			Af \cdot_{M_X} m = 
+			A\sum^{\deg f}_{i=0} f_i X^i m =
+			\sum^{\deg f}_{i=0} f_i A X^i A^{-1} Am =
+			\sum^{\deg f}_{i=0} f_i A X^i A^{-1} Am =
+			\sum^{\deg f}_{i=0} f_i \Big(A X A^{-1}\Big)^{i} Am = \NewLine =
+			\sum^{\deg f}_{i=0} f_i Y^i Am =
+			f \cdot_{M_Y} Am
+		}
+	\Derive{[1.2]}{\bd^{-1}\TYPE{Iso}}{\big(A : M_X \ToIso{\LMOD{R[\Int_+]}} M_Y \big)}
+	\Conclude{[1.*]}{\bd^{-1}\TYPE{Isomorphic}[1.2]}{M_X \cong M_Y}
+	\Derive{[1]}{I(\Rightarrow)}{X \sim Y \Rightarrow M_X \cong M_Y}
+	\Assume{[2]}{M_X \cong M_Y}
+	\Say{A}{\bd \TYPE{Isomorphic}[2]}{M_X \ToIso{\LMOD{R[\Int_+]}} M_Y}
+	\Assume{m}{M}
+	\Conclude{[m.*]}{\bd A}{ AX(m)  =  Ax \cdot_{M_X} m = x \cdot_{M_Y} Am = YAm   }
+	\Derive{[2.1]}{I(=,\to)}{AX = YA}
+	\Say{[2.2]}{[2.1]A^{-1}}{AXA^{-1} = Y}
+	\Conclude{[2.*]}{\bd^{-1}\TYPE{Simmilar}[2.2]}{X \sim Y}
+	\DeriveConclude{[*]}{I(\iff)[1]}{X \sim Y \iff A_X \cong A_Y}
+	\EndProof
+}
+\newpage
+\subsection{Elementary Duality}
+\Page{
+	\DeclareFunc{dual}{\prod R \in \RING \. \Contra(\LMOD{R},\LMOD{R})}
+	\DefineNamedFunc{dual}{M}{M^*}{\Mor_{\LMOD{R}}(M,R)}
+	\DefineNamedFunc{dual}{A,B,T}{T^*}{\Lambda f \in B^* \. f \circ T}
+	\\
+	\DeclareFunc{dualBasis}{\prod R \in \RING \. \prod M : \FM(R) \. \Basis(M) \to \rank M \to M^*}
+	\DefineNamedFunc{dualBasis}{e,i}{e_*^i}{\FUNC{free}(\Lambda j \in \rank M \. \delta^i_j   )}
+	\\
+	\Theorem{DualBasisTHM}{\forall R \in \RING \. \forall M \in \FM \And \FGM(R) \. 
+		\NewLine \. \forall e : \TYPE{Basis}(M) \. e_* : \TYPE{Basis}(M^*)}
+	\Say{n}{\rank M}{\Int_+}
+	\Assume{f}{M^*}
+	\Assume{m}{M}
+	\Say{(\alpha,[1])}{\bd \TYPE{Generating}(e)(m)}{ \sum \alpha \in R^n \. m = \alpha e}
+	\Conclude{m.*}{ [1]\bd M^*\bd e_*\bd M^*[1]  }
+	{
+		f(m) = f(\alpha e) = \alpha_i f(e_i) = \alpha_i f(e_j) e_*^j( e_i) = f(e_i)e^i_*(m)
+	}
+	\DeriveConclude{[f.*]}{I(=,to))}{f = f(e)e_*}
+	\Derive{[1]}{\bd^{-1}\TYPE{Generatiting}}{\big(e_* : \TYPE{Generating}(M^*)\big)}
+	\Assume{\alpha}{R^n}
+	\Assume{[\alpha.1]}{\alpha e_* = 0}
+	\Assume{i}{n}
+	\Conclude{[i.*]}{[\alpha.1]\bd e_*}{ 0 = \alpha e_*(e_i) = \alpha_i }
+	\DeriveConclude{[\alpha.*]}{I(\to,=)}{\alpha =0}
+	\Derive{[2]}{\bd^{-1}\LI(M^*)}{\big(e_* : \LI(M^*)\big)}
+	\Conclude{[*]}{\bd^{-1}\TYPE{Basis}[1][2]}{\big(e_* : \TYPE{Basis}(M)\big)}
+	\EndProof
+	\\
+	\Theorem{DualOfFreeModuleIsFree}
+	{
+	\forall R \in \RING \.  \forall M \in \FG \And \FGM(R) \. \NewLine M^* : \FG \And \FGM(R) }
+	\NoProof
+	\\
+	\Theorem{RankOfFreeDual}
+	{
+           \forall R \in \Ring \. \forall M \in \FG \And \FGM(R) \.
+	   \rank M^* = \rank M
+	}
+	\NoProof
+}\Page{
+	\Theorem{DualMapByTranspose}{
+		\forall R \in \RING \. 
+		\forall M,N \in \FM \And \FGM(R) \. \NewLine \.
+		\forall T : M \Arrow{\LMOD{R}} N \.
+		\forall e : \TYPE{Basis}(M) \.
+		\forall f : \TYPE{Basis}(N) \.
+		\Big(T^{e,f}\Big)^\top = \Big(T^*\Big)^{f_*,e_*}
+	}
+	\Say{n}{\rank N}{\Int_+}
+	\Say{m}{\rank M}{\Int_+}
+	\Assume{j}{n}
+	\Assume{i}{m}
+	\Conclude{[(i,j).*]}{\bd T^* \bd^{-1} T^{e,f} \bd f_* \bd \C_i}{
+		T^*f_*^j(e_i) = 
+		f_*^j(Te_i) = 
+		f_*^j\Big( \C_i(T^{e,f})f \Big) =
+		\Big(  \C_i(T^{e,f}) \Big)_j  =
+		T^{e,f}_{i,j}                      
+	}
+	\DeriveConclude{[*] }{I(=,\to) }{ (T^*)^{f_*,e_*} = \Big( T^{e,f} \Big)^\top  } 
+	\EndProof
+	\\
+	\DeclareType{Reflexive}{\prod R \in \RING \. ?\LMOD{R}}
+	\DefineType{M}{Reflexive}{M \cong_{\LMOD{R}} M^*}
+	\\
+	\Theorem{FinitelGenerateFreeModuleIsReflexive}{
+		\forall R \in \RING \. \NewLine \.
+		\forall M \in \FM \And \FGM(R) \. 
+		M : \TYPE{Reflexive}(R)
+	}
+	\\
+	\DeclareFunc{naturalEmbedding}{\prod R \in \RING \. \prod M \in \LMOD{R} \. M \Arrow{\LMOD{R}} M^{**} }
+	\DefineNamedFunc{naturalEmbedding}{m}{\omega_M(m)}{\Lambda f \in M^* \. f(m)} 
+	\\
+	\Theorem{NaturalEmbeddingIsNatural}{\forall R \in \RING \.   \omega : \NT\big({\id}_{\LMOD{R}},(\cdot)^{**}\big) }
+	\Assume{M,N}{\LMOD{R}}
+	\Assume{T}{M \Arrow{\LMOD{R}} N}
+	\Assume{m}{M}
+	\Assume{f}{N^*}
+	\Conclude{\big[(m,f).*\big]}{ \bd \FUNC{compose}\bd \omega_N \bd^{-1} T^* \bd^{-1} \omega_M(m) \bd^{-1} T^{**} \bd^{-1}\FUNC{compose}  }
+	{   
+		\big(T\omega_N(m)\big)(f) = 
+		\omega_N\big(T(m)\big)(f) = 
+		f\big( T(m) \big) = 
+		T^* f(m) =
+		\omega_M(m)\big(T^*f\big) =
+		T^**\big(\omega_M(m)\big)(f) =
+		\big(\omega_M  T^**(m)\big)(f)
+	}
+	\DeriveConclude{\big[(M,N).*,\big]}{}{T\omega_N = \omega_M T^**}
+	\DeriveConclude{[*]}{\bd^{-1}\NT}{\Big( \omega : \NT({\id}_{\LMOD{R}},(\cdot)^**) \Big) }
+	\EndProof
+	\\
+	\Theorem{DoubleDualNaturalIsomorphism}{
+			\forall R \in \RING \. \forall M : \FM \And \FGM \. \NewLine 
+			\omega_M : M \ToIso{\LMOD{R}} M^{**} 
+		}
+	\NoProof
+}
+\newpage
+\section{Advanced Categorical Module Theory}
+\subsection{Duality}
+\end{document}

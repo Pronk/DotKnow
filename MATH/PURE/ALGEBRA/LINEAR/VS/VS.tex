@@ -1,0 +1,3434 @@
+\documentclass[12pt]{scrartcl}% European-style article
+\usepackage{mathtools}%For basic mathimatical symbols
+\usepackage{amsmath}  %For basic mathimatical symbols
+\usepackage{amsfonts} %For mathematical fonts
+\usepackage{hyperref} %For clickable contents
+\usepackage{amssymb}  %For more mathematical symbols
+\usepackage{wasysym}  %For astronomic symbols
+\usepackage{accents}  %For accents
+\usepackage{graphicx} %For images
+\usepackage{scalerel} %For resizing operators
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+%To visually distinguish different things
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}% Types are things that have members
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}% Func are things that trandform typed values
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}% Logical elements are beyond the scope of the type theory
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}% Theorems are things, which need to be proven
+%META
+%Basic elements of the language
+\renewcommand{\.}{\; . \;} %to separate elements of quantified statements
+\newcommand{\de}{: \kern 0.1pc =} %to define values of objects
+\newcommand{\extract}{\LOGIC{Extract}} %produces a whitness of the existentionally typed object !Legacy! use E(\exists) instead
+\newcommand{\where}{\LOGIC{where}} % used to define values post-factum
+\newcommand{\If}{\LOGIC{if} \;} % A part of a famous trenary operator
+\newcommand{\Then}{ \; \LOGIC{then} \;} % A part of a famous trenary operator
+\newcommand{\Else}{\; \LOGIC{else} \;} % A part of a famous trenary operator
+\newcommand{\IsNot}{\; ! \;} % A negation for a compound type (Is not a member of the Type, but of the same essence)
+\newcommand{\Is}{ \; : \;}  % Type membership
+\newcommand{\DefAs}{\; :: \;} % Defuened ti be a membere of a Type (essence)
+\newcommand{\Act}[1]{\left( #1 \right)} % Func acts on an object  !Legacy?
+\newcommand{\Example}{\LOGIC{Example} \; } % Used to identify examples !Legacy! we don't have examples any more
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } % An environment for declaring and defining=prooving a theorem
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\}% An environment for declaring a type (name + essence)   
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\}% An environment for defining a type (member + name + defining Type )
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\}%An environment for defining a type (member +  name + symbol + defining Type ) 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}% An environment for declaring a func (name + type)   
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\}% An environment for defining a type (name + argument + value expression) 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\}% An environment for defining a type (name + argument + symbol + value expression)  
+\newcommand{\NewLine}{\\ & \kern 1pc}% A shorthand for breaking a line inside Page environment      
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}  }% An environment for writting this shit
+\newcommand{ \bd }{ \ByDef }% A shorthand                                                  
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}% An omission of the prove of the theorem
+\renewcommand{\And}{\; \& \;}% A typological and logical and
+\newcommand{\Type}{\TYPE{Type}}% A metatype of Types
+\newcommand{\Imply}{\Rightarrow}
+%%STD
+%Standard mathematical graphic
+\newcommand{\Int}{\mathbb{Z}}% Integers
+\newcommand{\NNInt}{\mathbb{Z}_{+}}% Positive Integers
+\newcommand{\Reals}{\mathbb{R}}% Real Numbers
+\newcommand{\Complex}{\mathbb{C}}% Complex Numbers
+\newcommand{\Quat}{\mathbb{H}}% Quaternions
+\newcommand{\Rats}{\mathbb{Q}}% Rational Numbres
+\newcommand{\Nat}{\mathbb{N}}% Natural Numbers
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}% Extended real Numbers
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}% Extended Real Plane
+\DeclareMathOperator*{\argmin}{arg\,min}% arg min
+\DeclareMathOperator*{\id}{id}% identity map
+\DeclareMathOperator*{\im}{Im}% an image of the function
+\DeclareMathOperator*{\supp}{supp}% a support of something
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}% An Equivalence Classes
+\newcommand{\Cat}{\TYPE{Category}}% Type of categories
+\newcommand{\Mor}{\mathcal{M}}% morphisms of the category
+\newcommand{\Obj}{\mathcal{O}}% objects of the category
+\newcommand{\Aut}{\mathrm{Aut}}% automorphisms of the object in the category
+\newcommand{\End}{\mathrm{End}}% automorphisms of the object in the category
+\mathchardef\hyph="2D % a hyphen for the use in the math mode 
+\newcommand{\ToInj}{\hookrightarrow} % An arrow for injective maps
+\newcommand{\ToSurj}{\twoheadrightarrow} % An arrow for the surjective maps
+\newcommand{\ToBij}{\leftrightarrow} % A arrow for the bijective maps
+\newcommand{\Set}{\TYPE{Set}} % Type of sets
+\newcommand{\du}{\; \triangle \;} % symmetric difference
+\renewcommand{\c}{\complement}% set-theoretic complement
+%%ProofWritting
+% Commands to write proofs
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\} % A Logical Statements (name + expression + type of the expression)
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}% A conclusion which ends a reflection (name with end pointer + expression + type of the expression )
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\} % A Result produced by conlcuding the reflection, must follow comclusion (name + post-reflection + type)         
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\} % Use to follow a conclusion by an another conclusion imedietely ( name with end pointer + post-reflection + type  )
+\newcommand{\Assume}[2]{& \LOGIC{Assume} \; #1 : #2, \\} %Starts a reflection (name + type)
+\newcommand{\As}{\; \LOGIC{as } \;} %An ambigous symbol (Legacy)
+\newcommand{\QED}{\; \square} %A symbol to end the prove
+\newcommand{\EndProof}{& \QED \\} %End of prove
+\newcommand{\ByDef}{\rotatebox[origin=c]{-180}{$D$}}%\text{\textthorn}}  %Extracts defining type statement from the type member, may be inverted  (T -> Type)
+\newcommand{\ByConstr}{\rotatebox[origin=c]{-180}{$C$}}%\text{\textopeno}} %Extract the defining statement from the defined value !Legacy! use \eth instead  
+\newcommand{\Alt}{\LOGIC{Alternative} \;} % Can be used to check multiple alterntives inside the prove !Undeveloped!
+\newcommand{\CL}{\LOGIC{Close} \;} % Was Intended for the use with the Alternative !Undeveloped!
+\newcommand{\More}{\LOGIC{Another} \;} % Was Intended for the use with the Alternative !Undeveloped! 
+\newcommand{\Proof}{\LOGIC{Proof} \; } % Begins a Prove
+%FOUND
+%Foundations of mathematics
+%CAT
+%Catgory Theory
+\newcommand{\Arrow}[1]{\xrightarrow{#1}}% an arrow representatition of the morphism
+\newcommand{\ToIso}[1]{\xleftrightarrow{#1}}% an arrow representation of the isomprphism
+%CategoryTheorey
+%Types
+\newcommand{\Cov}{\TYPE{Covariant}}% A type of Covariant functors
+\newcommand{\Contra}{\TYPE{Contravariant}}% A type of the Contravariant Functors
+\newcommand{\NT}{\TYPE{NaturalTransform}}% A type of the Natural Transormations
+\newcommand{\UMP}{\TYPE{UnversalMappingProperty}}% A type of catgories with the universal mapping property ?
+\newcommand{\CMP}{\TYPE{CouniversalMappingProperty}}% A type of categories with the couniversal mapping property ?
+\newcommand{\paral}{\rightrightarrows} %?
+%functions
+\newcommand{\op}{\mathrm{op}} %opposite cotegory
+\newcommand{\obj}{\mathrm{obj}} %objects?
+\DeclareMathOperator*{\dom}{dom} % domain
+\DeclareMathOperator*{\codom}{codom}% codomain
+\DeclareMathOperator*{\colim}{colim}% colimit
+%variable
+% Varianles for denoting categories
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\G}{\mathsf{G}}
+%Cats
+\newcommand{\CAT}{\mathsf{CAT}} % 2-Category of all Categories
+\newcommand{\SET}{\mathsf{SET}} % Category of Sets
+\newcommand{\PARALLEL}{\bullet \paral \bullet} % A parallel category
+\newcommand{\WEDGE}{\bullet \to \bullet \leftarrow \bullet} % Wedge category
+\newcommand{\VEE}{\bullet \leftarrow \bullet \to \bullet} % Vee Category
+%Algebra
+%Abstract Algebra
+%Groups
+%Group Theory
+%Types
+\newcommand{\Group}{\TYPE{Group}} % Type of groups
+\newcommand{\Abel}{\TYPE{Abelean}} % Type of abelean groups
+\newcommand{\Sgrp}{\subset_{\mathsf{GRP}}} % Subgroup as a subset
+\newcommand{\Nrml}{\vartriangleleft} % Normal Subgroup as a subset
+\newcommand{\FG}{\TYPE{FiniteGroup}} % Finite Groups
+\newcommand{\Stab}{\mathrm{Stab}}  % A stabilizer
+\newcommand{\FGA}{\TYPE{FinitelyGeneratedAbelean}} % A Finitely Generated abelean group
+\newcommand{\DN}{\TYPE{DirectedNormality}} % A noramal complex
+%Func
+\DeclareMathOperator{\tor}{tor} % torsion
+\DeclareMathOperator{\bool}{bool} % boolinization
+\DeclareMathOperator{\rank}{rank} % a rank
+%Cats
+\newcommand{\GRP}{\mathsf{GRP}} % A category of Groups
+\newcommand{\ABEL}{\mathsf{ABEL}} % a category of Abelean Groups
+%Ops
+\newcommand{\SDP}{\rightthreetimes} % A very special norm
+%LINEAR
+%Linear Algebra
+%Types
+\newcommand{\Basis}{\TYPE{Basis}} % Basis of the linear space
+\newcommand{\submod}[1]{\subset_{\LMOD{#1}}}% submodule as a subset
+\newcommand{\subvec}[1]{\subset_{\VS{#1}}}% vector subspace as a subset
+\newcommand{\FGM}{\TYPE{FinitelyGeneratedModule}}% Finitely generated module
+\newcommand{\LI}{\TYPE{LinearlyIndependent}}
+\newcommand{\LIS}{\TYPE{LinearlyIndependentSet}}
+\newcommand{\FM}{\TYPE{FreeModule}}
+\newcommand{\IBP}{\TYPE{InvariantBasisProperty}}
+\newcommand{\UTM}{\TYPE{UpperTriangularMatrix}}
+\newcommand{\LTM}{\TYPE{LowerTriangularMatrix}}
+\newcommand{\Diag}{\TYPE{DiagonalMatrix}}
+\newcommand{\FP }{\TYPE{FinitelyPresented}}
+\newcommand{\GL}{\mathbf{GL}}% General Linear Group
+\newcommand{\SL}{\mathbf{SL}}% Special Linear group
+\newcommand{\SO}{\mathbf{SO}}
+\newcommand{\SU}{\mathbf{SU}}
+\newcommand{\prsubvec}[1]{\subsetneq_{\VS{#1}}}	% poper vector subspace as a subset
+\newcommand{\LC}{\TYPE{LinearComplement}} 
+\newcommand{\IS}{\TYPE{InvariantSubspace}}
+\newcommand{\RP}{\TYPE{ReducingPair}}
+\newcommand{\RCF}{\TYPE{RationalCanonicalForm}}
+\newcommand{\JCF}{\TYPE{JordanCanonicalForm}}
+\newcommand{\Diagble}{\TYPE{Diagonalizable}}
+\newcommand{\UT}{\TYPE{UpperTriangulizable}}
+\newcommand{\LT}{\TYPE{LowerTriangulizable}}
+\newcommand{\IPS}{\TYPE{InnerProductSpace}}
+\newcommand{\OBasis}{\TYPE{OrthonormalBasis}}
+\newcommand{\FDIPS}{\TYPE{FiniteDimensionalInnerProductSpace}}
+\newcommand{\NO}{\TYPE{NormalOperator}}
+\newcommand{\NM}{\TYPE{NormalMatrix}}
+\newcommand{\SA}{\TYPE{SelfAdjoint}}
+\newcommand{\SSA}{\TYPE{SkewSelfAdjoint}}
+\newcommand{\PI}{\TYPE{Pseudoinverse}}
+\newcommand{\OVS}{\TYPE{OrthogonalVectorSpace}}
+\newcommand{\SVS}{\TYPE{SymplecticVectorSpace}}
+\newcommand{\MVS}{\TYPE{MetricVectorSpace}}
+\newcommand{\FDMVS}{\TYPE{FiniteDimensionalMetricVectorSpace}}
+\newcommand{\Sp}{\mathbf{Sp}}
+%Func
+\DeclareMathOperator{\Span}{span} % spann by subset
+\DeclareMathOperator{\Ann}{Ann}   % annihilator
+\DeclareMathOperator{\Ass}{Ass}   % associated primes
+\DeclareMathOperator{\diag}{diag} % diagonal
+\DeclareMathOperator{\adj}{adj}   % an adjoint matrix
+\DeclareMathOperator{\tr}{tr}     % trace
+\DeclareMathOperator{\codim}{codim} % codimension
+\DeclareMathOperator{\Cell}{\mathbf{C}} % a componion matrix
+\DeclareMathOperator{\JC}{\mathbf{J}}  % a Jordan cell
+\DeclareMathOperator{\bigboxplus}{\scalerel*{\boxplus}{\sum}} % a direct sum of operators in the sence of the reducing a pair
+\DeclareMathOperator{\Spec}{Spec} % Spectre
+\DeclareMathOperator{\bigbot}{\scalerel*{\bot}{\sum}} % an othogonal direct sum
+\DeclareMathOperator{\GS}{\mathbf{GS}} %Gramm-Smmidt process
+\DeclareMathOperator{\NGS}{\mathbf{NGS}} %Normalized Gramm-Smmidt process
+\DeclareMathOperator{\WI}{\mathrm{WI}} %Witt Index
+%Cats
+\newcommand{\VS}[1]{#1\hyph\mathsf{VS}} % a category of vector spaces (Field)
+\newcommand{\FDVS}[1]{#1\hyph\mathsf{FDVS}} % a category of finite-dimensional vector spaces (Field)
+\newcommand{\LMOD}[1]{#1\hyph\mathsf{MOD}} % a category of the left modules (Ring)
+\newcommand{\RMOD}[1]{\mathsf{MOD}\hyph#1} % a category of the right modules (Ring)
+\newcommand{\LLMAP}[1]{#1\hyph\mathsf{LMAP}} % a cagory of based linear maps with the left scalar multiplication (Ring)
+\newcommand{\LMAT}[1]{#1\hyph\mathsf{MAT}}  % a category of based matrices with the left scalar multiplication (Ring)
+\newcommand{\NMAT}[1]{#1\hyph\mathbb{N}} % a category of finite matrices (Field)
+%Symbols
+\renewcommand{\L}{\mathcal{L}}
+\renewcommand{\O}{\mathbf{O}}
+\newcommand{\U}{\mathbf{U}}
+\renewcommand{\S}{\mathbf{S}}
+%FIELDS
+\newcommand{\Field}{\TYPE{Field}}
+\newcommand{\ACF}{\TYPE{AlgebraicallyClosedField}}
+%RINGS
+%TYPE
+\newcommand{\Ring}{\TYPE{Ring}}
+\newcommand{\CR}{\TYPE{CommutativeRing}}
+\newcommand{\Ideal}{\TYPE{Ideal}}
+\newcommand{\ID}{\TYPE{IntegralDomain}}
+\newcommand{\UFD}{\TYPE{UniqueFactorizationDomain}}
+\newcommand{\PID}{\TYPE{PrincipleIdealDomain}}
+\newcommand{\FGI}{\TYPE{FinitelyGeneratedIdeal}}
+\newcommand{\ER}{\TYPE{EuclideanRing}}
+\newcommand{\DVR}{\TYPE{DiscreteValuationRing}}
+\newcommand{\MoFT}{\TYPE{MonoidOfFiniteType}}
+%CATS
+\newcommand{\RING}{\mathsf{RING}} % A category of Rings
+\newcommand{\ANN}{\mathsf{ANN}} % A category of Commutative Rings
+%FUNCS
+\DeclareMathOperator{\lcd}{lcd} % least common devided 
+\DeclareMathOperator{\lc}{lc} % leading coefficient of the polynomial
+\DeclareMathOperator{\cont}{cont} % content of the polynomial
+\DeclareMathOperator{\antideg}{antideg} % antideree if the foramal power series
+%Symbols
+\newcommand{\F}{\mathcal{F}}
+%ALGEBRA
+\newcommand{\LALG}[1]{#1\hyph\mathsf{ALG}}% Left associative unital algebras (Ring)
+\newcommand{\RALG}[1]{\mathsf{ALG}\hyph#1}% Right associative unital  algebras (Rings)
+%Numbers
+%Integers
+%FUNCS
+\DeclareMathOperator{\divi}{div} % devide withou reminder
+\DeclareMathOperator{\remi}{rem} % reminder
+\DeclareMathOperator{\Frac}{Frac} % Field of fractions
+\title{Vector Spaces}
+\author{Uncultured Tramp}
+\begin{document}
+\maketitle
+\normalsize
+\newpage
+\tableofcontents
+\newpage
+\section{Structural Theory of Vector Spaces}
+\subsection{Concept of Vector Spaces, Basis Theorem}
+\Page{
+	\DeclareFunc{vectorSpaces}{\TYPE{Field} \to \CAT}
+	\DefineFunc{vectorSpaces}{k}{\LMOD{k}}
+	\\
+	\Theorem{MaximalLIndIsBasis}
+	{
+		\forall V : \VS{k} \.
+		\forall E \in \max \LI(V) \.
+		E : \TYPE{Basis}(V) 
+	}
+	\Assume{v}{V}
+	\Assume{[2]}{ v \neq 0}
+	\Say{(\alpha,\beta,[1])}{\bd \max \LI(V)(E)  }{
+		\sum \alpha \in k \. 
+		\sum \beta : E \to k \.  \alpha v + \sum_{e \in E} \beta_e e = 0 \And \NewLine \And (\alpha,\beta) \neq 0               
+	}
+	\Say{[3.1]}{[1][3]}{ \sum_{e \in E} \beta_e e =  0  }
+	\Say{[3.2]}{\bd \LI(V)(E)[3.1]}{ \beta = 0 }
+	\Say{[3.3]}{\bd \FUNC{zero}[3.2][3.1][1]}{0 \neq 0}
+	\Conclude{[3.1]}{I(\bot)[3.3]}{ \bot  }
+	\Derive{[3]}{E(\bot)}{\alpha \neq 0}
+	\Conclude{[v.*]}{\bd \VS{k} [3][1]}{v = \sum_{e \in E} \frac{\beta_e}{\alpha} e  }
+	\Derive{[1]}{\bd^{-1}\Span}{V = \Span(E)}
+	\Conclude{[*]}{\bd^{-1}\TYPE{Basis}[1]}{(E : \TYPE{Basis}(V))}
+	\EndProof
+	\\
+	\Theorem{MinimalGeneratingIsBasis}
+	{
+		\forall V : \VS{k} \.
+		\forall E \in \min \TYPE{Generating}(V) \.
+		E : \TYPE{Basis}(V) 
+	}
+	\Assume{\alpha}{k^{\oplus E}}
+	\Assume{[1]}{ \alpha E = 0}             
+	\Assume{[2]}{\alpha \neq 0}
+	\Say{(e,[3])}{\bd 0 [2]}{\sum e \in E \. \alpha_e \neq 0}
+	\Say{F}{E\setminus\{e\}}{ ?V }
+	\Say{[4]}{[3][1]\bd \VS{k}(V)}{e = \sum_{f \in F} \frac{\alpha_f}{\alpha_e} f} 
+	\Say{[5]}{\THM{NonemptyRemoval}(E,F){\THM{SingletonIsNonEmpty}}(e)}{ F \subsetneq E  }
+	\Say{[6]}{\bd \TYPE{Generating}(V)(E)[4] }{(F : \TYPE{Generating}(V))}
+	\Conclude{[\alpha.*]}{\bd \min \TYPE{Generating}(V)[5][6] }{(\bot )}
+	\Derive{[1]}{\bd^{-1}\LI}{(E : \LI(E))}
+	\Conclude{[*]}{\bd^{-1}\TYPE{Basis}[1]}{(E : \TYPE{Basis}(V))}
+	\EndProof
+}
+\Page{
+	\Theorem{VectorSpaceIsTorsionFree}
+	{  \forall V : \VS{k} \. \tor V = \{0\}    }
+	\Assume{v}{V}
+	\Assume{[1]}{v \neq 0}
+	\Assume{\alpha}{k}
+	\Say{[1.2]}{\bd \VS{k}(\alpha)}{\alpha^{-1} \alpha v  = v}
+	\Conclude{[1.*]}{ \bd \VS{k}[1][2]}{\alpha v \neq 0}
+	\DeriveConclude{[*]}{\bd^{-1}\tor}{\tor V = \{0\}}
+	\EndProof
+	\\
+	\Theorem{LIndUnionLemma}{
+		\forall V : \VS{k} \. 
+		\forall C : \TYPE{Chain}\big( \LI(V) \big) \.
+		\bigcup^\infty_{n=1} C_i : \LI(V)
+	}
+	\Say{X}{\bigcup^\infty_{n=1} C_i}{?V}
+	\Assume{\alpha}{k^{\oplus X}}
+	\Say{F}{\{ x \in X : \alpha_x \neq 0 \}}{\TYPE{Finite}(V)}
+	\Say{(n,[1]) }{ \THM{FiniteInChain}(C,F) }{\sum n \in \Nat \. F \subset C_n}
+	\Assume{[2]}{\alpha X = 0}
+	\Say{[2.1]}{[2][1]}{\alpha_{|C_n} C_n = 0}
+	\Say{[2.2]}{\bd \LI(V)(C_n)[3]}{\alpha_{|C_n} = 0}
+	\Conclude{[2.*]}{[2.1][1]}{\alpha = 0}
+	\DeriveConclude{[\alpha.*]}{I(\Rightarrow)}{\alpha X = 0 \Rightarrow \alpha = 0}
+	\DeriveConclude{[*]}{\bd^{-1}\LI(V)}{[X : \LI(V) ]}
+	\EndProof
+	\\
+	\Theorem{HamelBasisTheorem}
+	{
+		\forall V : \VS{k} \. \exists E : \TYPE{Basis}(V)
+	}
+	\Assume{[1]}{V=\{0\}}
+	\Conclude{[1.*]}{\bd\emptyset\bd[1]\bd^{-1}\TYPE{Basis}}{(\emptyset : \TYPE{Basis}(V))}
+	\Assume{[1]}{V \neq \{0\}}
+	\Say{[1.2]}{\bd \LI(V) \THM{VectorSpaceIsTorsionFree}}{\LI(V) \neq \emptyset}
+	\Say{E}{\THM{ZornLemma}[1.2]\THM{LIndUnionLemma}}{ \max \LI(V)   }
+	\Conclude{[1.*]}{\THM{MaximalLindIsBasis}(E)}{ (E : \TYPE{Basis}(V))  }
+	\DeriveConclude{[*]}{\LOGIC{EQLEM}(V,\{0\})E(|)I^2(\Rightarrow)I^2 E}{\exists E : \TYPE{Basis}(V)}
+	\EndProof
+	\\
+	\Theorem{VectorSpaceIsFree}{\forall V : \VS{k} \. V : \FM(k)}
+	\NoProof
+}\Page{
+	\DeclareFunc{dimension}{\VS{k} \to \mathsf{CARD}}
+	\DefineNamedFunc{dimension}{V}{\dim_k V}{\rank_k V}
+	\\
+	\DeclareFunc{finiteDimensionalVectorSpaces}{\TYPE{Field} \to \CAT}
+	\DefineNamedFunc{finiteDimensionVectorSpace}{k}{\FDVS{k}}{\{V \in \VS{k} : \dim V < \infty \} }
+	\\
+	\Theorem{LIBasisExtension}{\forall V : \VS{k} \. \forall F : \LI(V) \. \exists E : \Basis(V) : F \subset E}
+	\NoProof
+}
+\newpage
+\subsection{Subspaces of the Vector Space}
+\Page{
+	\DeclareType{VectorSpaceSubspace}{\prod V \in \VS{k} \. ??V}
+	\DefineNamedType{U}{VectorSpaceSubspace}{ U \subvec{k} V}{U \submod{k} V}
+	\\
+	\Theorem{SubspaceDim}{\forall V \in \VS{k} \. \forall U,W \subvec{k} V \. U \subvec{k} W \Rightarrow \dim U \le \dim W   } 
+	\NoProof
+	\\
+	\Theorem{SumDimTHM}{\forall V \in \VS{k} \. \forall U,W \subvec{k} V \. \dim U + W = \dim U + \dim W - \dim u \cap W}
+	\Say{E}{\THM{HamelBasisTHM}(W \cap U)}{\Basis(W \cap U)}
+	\Say{\big(F,[1]\big)}{\THM{LIBasisExtension}(E,W)}{\sum F : \LI(W) \.  F \cup E : \Basis(W)}
+	\Say{\big(G,[2]\big)}{\THM{LIBasisExtension}(E,U)}{\sum G : \LI(U) \.  G \cup E : \Basis(U)}
+	\Say{[3]}{[1]\bd \LI(W)(F \cup E)}{\Span(F) \cap U \cap W = \{0\}}
+	\Say{[4]}{[2]\bd \LI(U)(G \cup E)}{\Span(G) \cap U \cap W = \{0\}}
+	\Say{[5]}{\bd^{-1} \TYPE{Generating}\bd \FUNC{sum}(U,W)\ldots}
+	{    E \sqcup F \sqcup G : \TYPE{Generating}(U + W)  }
+	\Assume{\alpha}{k^{\oplus E \cup F \cup G}}
+	\Assume{[6]}{\alpha(E \cup F \cup G) = 0}
+	\Say{[6.1]}{\bd E}{\alpha_{|E}E \in U \cap W}
+	\Say{[6.2]}{[6][6.1]\bd F \bd G}{  \alpha_{|F}F =  -\alpha_{|G}G - \alpha_{|E}E \in U   }	
+	\Say{[6.3]}{[3][6.2]}{\alpha_{|F}F = 0}
+	\Say{[6.4]}{\bd \LI(W)(F)[6.3]}{\alpha_{|F} = 0}
+	\Say{[6.5]}{[6.3][6]\bd \LI(U)(G \cap E)}{\alpha_{|G \cup E} = 0}
+	\Conclude{[6.*]}{\bd \alpha [6.4][6.5]}{\alpha = 0}
+	\Derive{[6]}{\bd^{-1} \Basis(W + U) [5]}{E \cup F \cup G : \Basis(W + U)}
+	\Conclude{[*]}{\bd \dim(W+U)[6][3][4](\pm |E|)[3][4]\bd^{-1} \dim \ldots}{
+		\NewLine :
+		\dim(W + U) = 
+		|E \cup F \cup G| = 
+		|E| + |F| + |G| = 
+		\big(|E| + |F|\big) + \big(|E| + |G|\big) - |E| = \NewLine =
+		| E \cup F| + |E \cup G| - |E| =
+		\dim W + \dim U - \dim W \cap U }
+	\EndProof
+	\\
+	\Theorem{DirectSumDim}{\forall n \in \Nat \. \forall V : n \to \VS{k} \. \dim \bigoplus^n_{i=1} V_i = \sum^n_{i=1} \dim V_i}
+	\NoProof
+	\\
+	\Theorem{InnerDirectSumDim}{
+		\forall V \in \VS{k} \. 
+		\forall n \in \Nat \. 
+		\forall U : n \to \TYPE{VectorSubspace}(V) \. \NewLine \. 
+		V = \bigoplus^n_{i=1} U_i \Rightarrow \dim V  = \sum^n_{i=1}  \dim U_i
+	}
+	\NoProof
+}\Page{
+	\DeclareType{LinearComplement}{\sum V \in \VS{k} \. \TYPE{VectorSubspace}(V) \to ?\TYPE{VectorSubspace}(V)}
+	\DefineType{W}{LinearComplement}{\Lambda U \subvec{k} V \. U \oplus W = V}
+	\\
+	\Theorem{LinearComplementExists}{\forall V \in \VS{k} \. \forall U \subvec{k} V \. \exists \TYPE{LinearComplement}(V,U)  }
+	\Say{E}{\THM{HamelBasisTHM}(U)}{\Basis(U)}
+	\Say{\big(F,[1]\big)}{\THM{BasisExtension}(V,E)}{\sum F \in \LI(V) \. F \cup E : \TYPE{Basis}(V) }
+	\Say{[2]}{\bd^{-1}\TYPE{InnerDirectSum}\bd \TYPE{Basis}(V)(F \cup E)}{ V = U \oplus \Span(F)  }
+	\Conclude{[*]}{\bd^{-1}\TYPE{LinearComplement}[2]}{(\Span(F) : \TYPE{LinearComplement}(V,U))}
+	\EndProof
+	\\
+	\Theorem{LinearComplementsDimAgree}{\forall V \in \VS{k} \. \forall U \subvec{k} V \. 
+		\forall W,W' : \TYPE{LinearComplement}(V,U) \. \NewLine \. \dim W = \dim W' }
+	\Say{[1]}{\bd^2 \TYPE{LinearComplement}(V,U)(W)(W')}{U \cong W = V  = U \cong W'}
+	\Say{ [2] }{\bd \TYPE{InnerDirectSum}[2]_1}{  \pi_U + \pi_W : U \oplus W \ToIso{\VS{k}} V  }
+	\Say{ [3] }{\bd \TYPE{InnerDirectSum}[2]_2}{  \pi_U + \pi_{W'} : U \oplus W' \ToIso{\VS{k}} V }
+	\Say{  T  }{(\pi_U + \pi_{W'})^{-1}_{|W} \pi_{W'}}{W \Arrow{\LMOD{k}} W'}
+	\Assume{w}{W}
+	\Assume{[w.1]}{ Tw = 0 }
+	\Say{[w.2]}{\bd T [w.1]  }{  w \in U  }
+	\Conclude{[w.*]}{ \bd \TYPE{InnerDirectSum}[2]_1[w.2]}{ w = 0  }
+	\Derive{[4]}{\THM{ZeroKernelTHM}}{\big(T : \TYPE{Injective}(W,W')\big)}
+	\Assume{w'}{W'}
+	\Say{\big(w,u,[w'.1]\big)}{\bd \TYPE{InnerSum}(V,U,W)(-w')}{ \sum w \in W \. \sum u \in U \. -w' = w + u }
+	\Say{[w'.2]}{[w'.1] - w + w'  }{ -w = w' + u}
+	\Conclude{[*]}{\bd T[w'.2]}{ T(-w) = w'}
+	\Derive{[5]}{\bd^{-1} \TYPE{Isomorphic}[4]}{W \cong_{\VS{k}} W'}
+	\Conclude{[6]}{\THM{EqRankTHM}}{\dim W = \dim W'}
+	\EndProof
+	\\
+	\DeclareFunc{codimension}{\prod V \in \VS{k} \. \TYPE{VectorSubspace}(V) \to \Int_+}
+	\DefineNamedFunc{codimension}{U}{\codim U}{\dim W \quad \where \quad W = \THM{LinearComplementExists}(U,W)}
+	\\
+	\Theorem{QuotientDirectSum}{ \forall V \in \VS{k} \. \forall U \subvec{k} V \. V \cong_{\VS{k}}  \frac{V}{U} }
+	\NoProof
+}\Page{
+	\Theorem{QuotientDim}{\forall V \in \VS{k} \. \forall U \subvec{k} V \. \dim \frac{V}{U} = \codim U}
+	\NoProof
+	\\
+	\DeclareType{ProperVectorSubspace}{\prod V \in \VS{k} \. ?\TYPE{VectorSubspace}(V)}
+	\DefineNamedType{U}{ProperVectorSubspace}{ U \prsubvec{k} V }{ U \neq V}
+	\\
+	\DeclareType{ZeroIntersecting}{\prod V \in \VS{k} \. ??\TYPE{ProperVectorSubspace}(V)}
+	\DefineType{S}{ZerpIntersecting}{\forall A,B \in S \. A \cap B = \{0\}}
+	\\
+	\Theorem{CardOfSubspaceUnionByField}{
+		\forall V \in \VS{k} \. 
+		\forall S : \TYPE{ZeroIntersecting}(V) \. 
+		\forall [0] : V = \bigcup S \.
+		|S| \ge |k|
+	}
+	\Say{\big(U,[1]\big)}{ \bd S [0] }{\sum U \in S . U \neq \{0\}}
+	\Say{\big( v, [2] \big)}{\bd \TYPE{ProperVectorSubspace}(v)}{\sum v \in V \. v \not \in U}
+	\Say{(u,[3])}{\bd U[1]}{\sum u \in U \. u \neq 0}
+	\Assume{x,y}{k}
+	\Assume{[4]}{x \neq y}
+	\Say{(A,B,[5])}{[0](xv + u,yv + u)}{\sum A,B \in S \. xv + u \in A \and yv + u \in B }
+	\Assume{[6]}{A = B}
+	\Say{[6.1]}{ [5][6]\bd \TYPE{VectorSubspace}(V)(A) }{ \frac{xv + u - yv - u}{v-u} = v \in A}
+	\Say{[6.2]}{ [5][6]\bd \TYPE{VectorSuvspace}(V)(A) }{ \frac{y(xv + u) - x(yv + u)}{y - x} = u \in A}
+	\Say{[6.3]}{\bd \TYPE{ZeroIntersecting}(V)(S)[6.2]\bd u \bd }{A = U}
+	\Conclude{[6.*]}{[6.3][2]}{\bot}
+	\DeriveConclude{[(x,y).*]}{E(\bot)}{A \neq B}
+	\DeriveConclude{[*]}{\THM{InjCard}}{ |S| \ge |k|}
+	\EndProof
+	\\
+	\Theorem{EqByDim}{\forall V \in \FDVS{k} \. \forall U \subvec{k} \. [0] : \dim U = \dim V \Rightarrow U = V }
+	\Say{(W,[1])}{\THM{LinearComplementExists}}{\TYPE{LinearComplement}(V,U)}
+	\Say{[2]}{\THM{InnerDirectSumDim}[1]}{\dim V = \dim U + \dim W}
+	\Say{[3]}{[2][0]\bd \FDVS{k}(V)}{\dim W = 0}
+	\Conclude{[*]}{\THM{VectorSpaceTorsionFree}[3]\bd U}{U = V}
+	\EndProof
+}\Page{
+	\Theorem{CardOfLinearComplements}{\forall V \in \VS{k} \. \forall U \prsubvec{k} V \. \forall [0] : U \neq \{0\} \# \TYPE{LinearComplement}(U,V) \ge |k|}
+	\Say{W}{\THM{LinearComplementExists}(V)(U)}{\TYPE{LinearComplement}(V,U)}
+	\Say{E}{\THM{HamelBasisTHM}(W)}{\TYPE{Basis}(W)}
+	\Say{(\le)}{\THM{WellOrderingExists}}{\TYPE{WellOrdering}(E)}
+	\Say{e}{\min E}{E}
+	\Say{(u,[1])}{\bd \TYPE{Singleton}[0]}{\sum u \in U \. u \neq 0}
+	\Assume{t}{k}
+	\Say{W_t}{\Span (\FUNC{swapIn}(E,e, e + tu))}{\TYPE{VectorSubspace}(V)}
+	\Say{[t.1]}{\bd W_t \bd \TYPE{LinearComplement}(V,U)}{W_t + U = V}
+	\Assume{v}{U \cap W_t}
+	\Say{\big( w,\alpha ,[v.1]\big)}{\bd W_t \bd v}{ \sum w \in W \. \sum \alpha \in k \. v = \alpha tu + w}
+	\Say{[v.2]}{[v.1] - \alpha tu }{w = v - \alpha tu \in U}
+	\Say{[v.3]}{\bd \FUNC{InnerDirectSum}(V,W,U)[v.2]}{  w = 0 }
+	\Conclude{[v.*]}{\bd v \bd (w,\alpha) [v.3]}{v = 0} 
+	\DeriveConclude{[t.*]}{\bd^{-1}\TYPE{LinearComplement}}{(W_t : \TYPE{LinearComplement}(V,U))}
+	\Derive{W}{I(\to)}{k \to \TYPE{LinearComplement}(V,U)}
+	\Assume{x,y}{k}
+	\Assume{[2]}{x \neq y}
+	\Assume{[3]}{ W_x = W_y  }
+	\Say{(w,[3.1])}{ \bd W_x \bd W_y }{ \sum w \in W \.  \sum \alpha \in k \. xu + e = \alpha yu + w}
+	\Say{[3.2]}{\bd}{(x - \alpha y)u = w - e \in W}
+	\Say{[3.3]}{ \bd \TYPE{InnerDirectSum}(V,U,W)[3.2]}{ x - \alpha y = 0 }
+	\Say{[3.4]}{ \bd \TYPE{Field}(k)[3.3]}{ \alpha = \frac{x}{y}}
+	\Say{(w',[3.5])}{[3.4][3.3]}{ \sum w' \in \Span(E \setminus \{e\}) \. e = \frac{x}{y}e + w'}
+	\Say{[3.6]}{\bd \TYPE{Basis}(W,E)}{x = y}
+	\Conclude{[3.*]}{[2][3.6] }{ \bot }
+	\DeriveConclude{[*]}{\THM{InjCard}}{\#\TYPE{LinearComplement}(V,U) \ge |k|}
+	\EndProof
+}
+\newpage
+\subsection{Linear Maps between Vector Spaces and their Matrices}
+\Page{
+	\DeclareFunc{rank}{\prod V,W : \VS{k} \. V \Arrow{\VS{k}} W \to \mathsf{CARD}}
+	\DefineNamedFunc{rank}{T}{\rank T}{\dim \im T}
+	\\
+	\DeclareFunc{columnRank}{\prod \kappa,\kappa' \in \mathsf{CARD} \. k^{\kappa \times \kappa'} \to \mathsf{CARD}}
+	\DefineFunc{columnRank}{A}{\dim \Span\Big(\C(A)\Big)}
+	\\
+	\DeclareFunc{rowRank}{\prod \kappa,\kappa' \in \mathsf{CARD} \. k^{\kappa \times \kappa'} \to \mathsf{CARD}}
+	\DefineFunc{rowRank}{A}{\dim \Span\Big(\R(A)\Big)}
+	\\
+	\Theorem{RankByColumnRank}{\forall V,W : \VS{k} \. \forall T : V \Arrow{\VS{k}} W \. 
+		\forall e : \Basis(V) \. \forall f : \Basis(W) \. \NewLine \. \rank T = \FUNC{columnRank}{(T^{e,f})}}
+	\Say{\kappa}{\dim V}{\mathsf{CARD}}
+	\Say{\kappa'}{\dim W}{\mathsf{CARD}}
+	\Say{C}{\THM{HamelBasisTHM}\Big(\Span\big(\C(T^{e,f})\big)\Big)}{\Basis\Big(\Span\big(\C(T^{e,f} )\big)\Big)}
+	\Say{\theta}{|C|}{\mathsf{CARD}}
+	\Assume{c}{C}
+	\Say{A(c)}{cf}{W}
+	\Say{(\alpha_C,[1])}{\bd C(c)}{\sum \alpha \in k^{\oplus\kappa} \. c = \alpha \C(T^{e,f})} 
+	\Say{[2]}{\bd A(c) \bd \FUNC{matrixOfLinearTransformation}(e,f,T)[1] \bd T^{e,f} \bd \VS{k}(V,W)(T)}
+	{ \NewLine :  A(c) = cf = \alpha \C(T^{e,f}) f  = \alpha T  e = T \alpha e }
+	\Conclude{[*]}{ \bd^{-1} \im T [2]}{ A(c) \in \im T }
+	\Derive{A}{\THM{FreeFunctorAdjoint}}{\Span\big(\C(T^{e,f})\big) \Arrow{\VS{k}} \im T}
+	\Assume{\alpha}{\Span\big(\C(T^{e,f})\big)}
+	\Say{\big(\beta,[0]\big)}{\bd \TYPE{Basis}(C)(\alpha)}{\sum \beta \in k^{\oplus \theta} \. \alpha = \beta C }
+	\Assume{[1]}{A(\alpha) = 0}
+	\Say{[2]}{[1][0]\bd A}{0 = A(\alpha) = A(\beta C) = \beta A(C) = \beta_c c_j f_j }
+	\Say{[3]}{\bd \Basis(f)[2]}{ \forall j \in \kappa' \.  \beta_c c_j = 0   }
+	\Say{[4]}{ \bd k^{\oplus \kappa'}[3] }{\beta c = 0}
+	\Say{[5]}{\bd \TYPE{Basis}(c)[4]}{\beta = 0}
+	\Conclude{[*]}{[0][5]}{\alpha = 0}
+	\Derive{[1]}{\bd^{-1}\TYPE{Iso}(\VS{k})\THM{zeroKernelTHM}}{\Big( \Span\big(\C(T^{f,e})\big) : V \ToIso{\VS{k}} \im T  \Big)  }
+	\Conclude{[*]}{\THM{IsoRank}(\VS{k})[1]}{ \dim \im T = \dim \Span\big(\C(T^{f,e}) \big) }
+	\EndProof
+}\Page{
+	\Theorem{InvertiblePresevesRank}{\forall T : V\Arrow{\VS{k}}W \. \forall A \in \Aut_{\VS{k}}(V) \. \forall B \in \Aut_{\VS{k}}(V) \. 
+		\NewLine \rank ATB = \rank T  }
+	\NoProof
+	\\
+	\Theorem{GLPreservesColumnRank}{\forall n,m \in \Nat \. \forall T \in k^{n \times m} \. 
+		\forall A \in \GL(k,n) \.  \forall B \in \GL(k,m) \. \NewLine \FUNC{columnRank}(ATB) = \FUNC{columnRank}(T)}
+	\NoProof
+	\\
+	\Theorem{RowRankByTranspose}{\forall n,m \in \Nat \. \forall T \in k^{n \times m} \.  \FUNC{rowRank}(T) = \FUNC{columRank}(T^\top)}	
+	\NoProof
+	\\
+	\Theorem{GLPresevesRowRank}{\forall n,m \in \Nat \. \forall T \in k^{n \times m} \. 
+		\forall A \in \GL(k,n) \.  \forall B \in \GL(k,m) \. \NewLine \FUNC{rowRank}(ATB) = \FUNC{rowRank}(T)}
+	\Say{[1]}{\THM{TransposeInv}(A)}{A^\top \in GL(k,n)}
+	\Say{[2]}{\THM{TrasposeInv}(B)}{B^\top \in GL(k,n)}
+	\Say{[*]}{\THM{RowRankByTranspose}(ATB)\THM{TransposeMult}\bd \THM{GLPreservesColumRank}(n,m,T,A,B)[1][2]\NewLine 
+		\THM{RowRankByTranspose}(T)}{
+		\FUNC{rowRank}(ATB) = 
+		\FUNC{columnRank}(B^\top T^\top B^\top) = 
+		\FUNC{columnRank}{T^\top} -
+		\FUNC{rowRank}(T)
+	}	
+	\EndProof
+	\\
+	\Theorem{RowRankEqualsColumnRank}{\forall n,m \in \Nat \. \forall T \in K^{n \times m} \. \FUNC{columnRank}(T) = \FUNC{rowRank}(T)}
+	\Say{\big(A,E,E',[1]\big)}{\THM{SmithNormalFormTheorem}(T)}{\NewLine : \sum A : \TYPE{SmithNormalForm}(k,n,m) \. \sum E \in \GL(k,m) \. \sum E' \in \GL(k,n) \. ETE' = A}   
+	\Say{[2]}{\bd \TYPE{Field}(k)\bd \TYPE{SmithNormalForm}(n,m,A) \bd^{-1}\FUNC{rowRank}\bd^{-1}\FUNC{columnRank}}
+	{
+		\FUNC{rowRank}(A) = \FUNC{columnRank}(A)
+	}
+	\Say{[3]}{ \THM{GLPreservesRowRank}(n,m,T,E,E')[1]}{ \FUNC{rowRank}(T) = \FUNC{rowRank}(A)}
+	\Say{[4]}{\THM{GLPreservesColumnRank}(n,m,T,E,E')[1]}{\FUNC{columnRank}(T) = \FUNC{columnRank}(A)}
+	\Conclude{[5]}{[3][2][4]}{ \FUNC{rowRank}(T) = \FUNC{columnRank}(A) }
+	\EndProof
+	\\
+	\DeclareFunc{matrixRank}{\prod n,m \in \Nat \. k^{n \times m} \Rightarrow \min(n,m)  }
+	\DefineNamedFunc{matrixRank}{T}{\rank T}{\FUNC{columnRank}(T)}
+	\\
+	\Theorem{TransposePreservesRank}{\forall n,m \in \Nat \. \forall T \in k^{n \times m} \. \rank T^\top = \rank T }
+	\NoProof
+}\Page{
+	\Theorem{DualPreseresRank}{\forall V,W \in \FDVS{k} \. \forall T \in V \Arrow{\VS{k}} W \. \rank T^* = \rank T}
+	\NoProof
+	\\
+	\Theorem{KernelComplementIsImage}{\forall V,W \in \VS{k} \. \forall T \in V \Arrow{\VS{k}} W \. 
+		\NewLine \. \forall U : \TYPE{LinearComplement}(V,\ker T) \. U \cong_{\VS{k}} \im T  
+	}
+	\Say{[1]}{\THM{ZeroKernelTHM}(T_{|U})}{(T_{|U} : U \ToInj \im T)}
+	\Assume{w}{\im T }
+	\Say{(v,[2])}{\bd \im T(w)}{ \sum v \in V \. w = Tv}
+	\Say{(u,z,[3])}{\bd \TYPE{InnerDirectSum}(\ker T,U)}{\sum u \in U \. \sum z \in \ker T \. v = u + z}
+	\Say{[4]}{ \bd T_{|U}u + 0 \bd \ker T (z) \bd \VS{k}(V,W)(T)[3][2] }{T_{|U}u = Tu + 0 = Tu + Tz = Tv = w }
+	\Conclude{[5]}{\bd^{-1} \im T_{|U}[4]}{v \in \im T_{|U}}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Iso}[1]}{\im T \cong_{\VS{k}} U}
+	\EndProof
+	\\
+	\Theorem{RankPlusNullityTHM}{\forall V,W \in \VS{k} \. \forall T \in V \Arrow{\VS{k}} W \. \dim V = \rank T + \dim \ker T}
+	\NoProof
+	\\
+	\Theorem{FDMorphismDeterminism}{ 
+		\forall V,W \in \FDVS{k} \. 
+		\forall T \in V \Arrow{\FDVS{k}} W \. 
+		\forall [0] : \dim V = \dim W \. \NewLine \. 
+		T : V \ToInj W \iff T : \ToSurj W
+	}
+	\NoProof
+	\\
+	\Theorem{InvertibleByRank}{\forall n \in \Nat \. \forall A \in k^{n \times n} \. \forall [0] : \rank A = n \. A \in \GL(k,n) }
+	\NoProof
+	\\
+	\Theorem{InvertibleByDet}{\forall n \in \Nat \. \forall A \in k^{n \times n} \. \forall [0] : \det A \neq 0 \. A \in \GL(k,n) }
+	\Say{\big(A,E,E',[1]\big)}{\THM{SmithNormalFormTheorem}(T)}{\NewLine : \sum A : \TYPE{SmithNormalForm}(k,n,m) \. \sum E \in \GL(k,m) \. \sum E' \in \GL(k,n) \. ETE' = A}   
+	\Say{[2]}{\THM{detProduct}\THM{InvertibleDet}\bd \Field(k)[1]}{ 0 \neq \det E \det T \det E' = \det A}
+	\Say{[3]}{\bd \TYPE{SmithNormalForm}(A)\bd \det [2]}{\rank A = n}
+	\Say{[4]}{\THM{GLPreservesColumnRank}[3]}{\rank T = n}
+	\Conclude{[*]}{\THM{InvertibleByRank}[4]}{ T \in \GL(n,k)}
+	\EndProof
+}
+\Page{
+	\Theorem{InvertibleByDet2}{\forall V \in \FDVS{k} \. \forall T \in \End_{\VS{k}}(V) \. \forall [0] : \det A \neq 0 \. A \in \Aut_{\VS{k}}(V)}
+	\NoProof
+	\\
+	\Theorem{PowerOfConstantRank}{\forall V \in \FDVS{k} \. \forall T \in \End_{\VS{k}}(V) \. \rank T = \rank T^2 \iff \ker T \cap \im T = \{0\}} 
+	\Assume{[1]}{\rank T = \rank T^2}
+	\Assume{v}{\ker T \cap \im T}
+	\Say{(w,[1.1])}{\bd \im T (v)}{\sum w \in V \. v = Tw}
+	\Say{[1.2]}{\bd \ker T (v)[1.1]}{ T^2w = Tv = 0}
+	\Say{[1.3]}{\bd^{-1}\ker T^2[1.2]}{w \in \ker T^2}
+	\Say{[1.4]}{\THM{RankPlusNullityTHM}(V,T)(V,T^2)[1][1.]}{\dim \ker T = \dom \ker T^2}
+	\Say{[1.5]}{\THM{CompositionKernel}(T,T)}{\ker T^2 \subset \ker T}
+	\Say{[1.6]}{\THM{EqByDim}[1.5][1.5]}{\ker T = \ker T^2}
+	\Say{[1.7]}{[1.3][1.6]}{w \in \ker T}
+	\Conclude{[1.*]}{[1.1]\bd \ker T(w)}{ v = Tw = 0}
+	\Assume{[2]}{\ker T \cap \im T = \{0\}}
+	\Say{[2.1]}{\bd^{-1}\TYPE{InnerDirectSum}[2]\THM{EqByDim}(\THM{DirectSumDim}(\ker T,\im T,[2]))}
+	{V = \ker T \oplus \im T }
+	\Say{[2.2]}{\THM{FirstIsoTHM}[2.1]\bd \FUNC{compose}(T,T)}{T_{|\im T} : \im T \ToIso{\VS{k}} \im T^2}
+	\Conclude{[2.3]}{\bd \rank [2.2]}{\rank T = \rank T^2}
+	\EndProof
+	\\
+	\Theorem{SurjectionDontIncreaseDim}{\forall V,W \in \FDVS{k} \. \forall T : V \Arrow{\FDVS{k}} W \. 
+		\forall [0] : T : V \ToSurj W \. \dim W \le \dim V  }
+	\Conclude{[*]}{[0]\bd^{-1}\rank\THM{RankPlusNullityTHM}(T)\THM{NonIncreasingAddition}(\Int_+)(\dim \ker T,\dim V) - \dim \ker T}
+	{\NewLine : \dim W = \dim \im T = \rank T = \dim V - \dim \ker T \le \dim V}
+	\EndProof
+	\\
+	\Theorem{CompositionRankBound}{
+		\forall V,W,U \in \FDVS{k} \.
+		\forall A : V \Arrow{\FDVS{k}} W \.
+		\forall B : W \Arrow{\FDVS{k}} U \. \NewLine \.
+		\rank AB \le \min(\rank(A),\rank(B))
+	}
+	\Say{[1]}{\THM{CompositionImage}}{\im AB \subset \im B}
+	\Say{[2]}{\THM{SubspaceDim}[1]\bd^{-1}\rank}{\rank AB \le \rank B}
+	\Say{[3]}{\THM{SurjictiveToIm}(B)}{(B_{|\im A} : \im A \ToSurj \im AB)}
+	\Say{[4]}{\THM{SurjectionDontIncreaseDim}[3]\bd^{-1}\rank}{ \rank AB \le \rank A}
+	\Conclude{[*]}{\THM{MinimalBound}([2],[4])}{\rank AB \le \min(\rank A,\rank B)}
+	\EndProof
+}\Page{ 
+	\Theorem{CompositionNullityBound}{
+		\forall V,W,U \in \FDVS{k} \.
+		\forall A : V \Arrow{\FDVS{k}} W \.
+		\forall B : W \Arrow{\FDVS{k}} U \. \NewLine \. 
+		\dim \ker AB \le \dim \ker A + \dim \ker B	
+	}
+	\Say{Z}{\ker A \oplus (\ker B \cap \im A)}{\FDVS{k}}
+	\Say{[1]}{\THM{InnerDirectSumDim}(Z)\THM{SubspaceDim}}{\dim Z \le \dim \ker A + \dim \ker B }
+	\Say{(C,[2])}{\THM{SurjectiveToIm}(A)\THM{SurjectiveHasLeftInverse}(A)}{\sum C : \im A \Arrow{\VS{k}} V \. CA =\id}
+	\Say{T}{\id \oplus C_{|\ker B \cap \im A}}{Z \Arrow{\VS{k}} \ker AB}
+	\Assume{v}{\ker AB}
+	\Say{[v.1]}{\bd v[v.2]}{Av \in \ker T \cap \im A}
+	\Say{(x,[v.2])}{\bd C[v.2.1]}{\sum x \in \ker A \. v = CAv + x}
+	\Say{[v.3]}{\bd T(x,Av)[v.2]}{T(x,Av) = x + CAv = v}
+	\Conclude{[v.4]}{\bd^{-1} \im T [v.3]}{v \in \im T}
+	\Derive{[3]}{\bd^{-1}\TYPE{Surjective}}{T : Z \ToSurj \ker AB }
+	\Conclude{[*]}{\THM{SurjectionDontIncreaseDimension}[3][1]}{\dim \ker AB \le \dim \ker A + \dim \ker B}
+	\EndProof
+	\\
+	\Theorem{SumRankBound}{\forall V,W \in \FDVS{k} \. \forall A,B : V \Arrow{\FDVS{k}} W \. \rank(A + B) \le \rank(A) + \rank(B)}
+	\Say{[1]}{\bd \FUNC{sum}}{ \im (A + B) \subvec{k} \im A + \im B}
+	\Conclude{[*]}{\bd^{-1} \rank \THM{SubspaceDim} \THM{SumDimTHM}(\im A,\im B)\bd^{-1}\rank}
+	{ \NewLine : \rank (A + B) \le \dim \im A + \im B \le  \rank(A) + \rank(B)}
+	\EndProof
+	\\
+	\DeclareType{\IS}{\prod V \in \VS{k} \. \End_{\VS{k}}(V) \to ?\TYPE{VectorSubspace}(V)}
+	\DefineType{U}{\IS}{\Lambda T \in \End_{\VS{k}} \. T(U) \subset U}
+	\\
+	\DeclareFunc{restrictOperator}{\prod V \in \VS{k} \. \prod T \in \End_{\VS{k}}(V) \.\prod U : \IS(V,T) \. \End_{\VS{k}}(U)}
+	\DefineNamedFunc{restrictOperator}{}{T|_U}{T_{|U}^{|U}}
+	\\
+	\DeclareType{\RP}{\prod V \in \VS{k} \. \prod T \in \End_{\VS{k}}(V) \. ?\IS^2(V,T)}
+	\DefineNamedType{(U,W)}{\RP}{T = T|_U \boxplus T|_W}{V = U \oplus W}
+	\\
+	\DeclareType{Irreducible}{ ? \sum V \in \VS{k} \. ?\End_{\VS{k}}(V)}
+	\DefineNamedType{(V,\A)}{Irreducible}{V : \A\hyph\TYPE{Irreducible}(k)}{\forall U : \IS(V,\A) \. U = \{0\} | U = V }
+}
+\Page{
+	\Theorem{SchursLemma}{\forall V : \A\hyph\TYPE{Irreducible}(k) \. \forall W : \B\hyph\TYPE{Irreducible}(k) \. 
+		\forall T : V \Arrow{\VS{k}} W \.  \NewLine \. \forall [0] :  \A T = T \B \. T = 0 | T : V \ToIso{\VS{k}} W}
+	\Assume{v}{\ker T}
+	\Assume{A}{\A}
+	\Say{(B,[A.1])}{[0](A)}{\sum B \in \B \. AT = TB}
+	\Say{[A.2]}{[A.1]\bd \ker T(v) \bd \VS{k}(W,W)(B)}{TA(v) = BT(v) = B(0) = 0}
+	\Conclude{[A.*]}{\bd^{-1} \ker T [A.2]}{Av \in \ker T}
+	\Derive{[1]}{\bd^{-1} \IS(V,\A)}{(\ker T : \IS(V,\A))}
+	\Assume{w}{\im T}
+	\Assume{B}{\B}
+	\Say{(v,[B.0])}{\bd \im T (w)}{\sum v \in V \. w = Tv}
+	\Say{(A,[B.1])}{[0](B)}{\sum A \in \A \. AT = TB}
+	\Say{[B.2]}{B[B.0][B.1]}{ Bw = BT(v) = TA(v)}
+	\Conclude{[B.*]}{\bd^{-1}\im T[B.2]}{Bw \in \im T}
+	\Derive{[2]}{\bd^{-1} \IS(W,\B)}{(\im T : \IS(W,\B))}
+	\Conclude{[*]}{\bd^2 \TYPE{Irreducible}(V,\A)(W,\B)[1][2]}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{DimOfOperators}{  
+		\forall V \in \FDVS{k} \. 
+		\dim \End_{\VS{k}}(V) = \dim^2 V
+	}
+	\Say{(e_i)^n_{i=1}}{\THM{HamelBasisTHM}(V)}{\Basis(V)}
+	\Say{E}{\FUNC{Free}\left(\Lambda i,j \in n \. \Lambda k \in n \. \If i == k \Then e_j \Else 0\right)}{n^2 \to \End_{\VS{k}}(V)}
+	\Assume{T}{\End_{\VS{k}}(V)}
+	\Assume{i}{n}
+	\Conclude{(a_i,[i.*])}{ \bd \Basis(Te_i)}{\sum a \in k^n \. a_ie = Te_i}
+	\Derive{a}{I(\to)}{ n^2 \to T }
+	\Conclude{[T.*]}{\bd a \bd \FM(V)}{T = aE} 
+	\Derive{[1]}{ \bd^{-1} \Span}{ \End_{\VS{k}}(V) = \Span(E)}
+	\Assume{\alpha}{k^{n\times n}}
+	\Assume{[2]}{\alpha E = 0}
+	\Assume{i}{n}
+	\Say{[3]}{[2]}{ 0 = \alpha Ee_i = \alpha_ie}
+	\Conclude{[i.*]}{\bd \Basis(V)(e)(3)}{ \alpha_i = 0}
+	\DeriveConclude{[2.*]}{\bd \alpha}{\alpha = 0}
+	\DeriveConclude{[*]}{\bd^{-1}\Basis [1]}{\LOGIC{This}}
+	\EndProof
+}
+\newpage
+\subsection{Projection Operators}
+\Page{
+	\DeclareType{Projection}{\prod V : \VS{k} \. ?\End_{\VS{k}}(V)}
+	\DefineType{P}{Projection}{P^2 = P}
+	\\
+	\Theorem{StructureOfTheProjection}{ 
+		\forall V \in \VS{k} \. 
+		\forall P : \TYPE{Projection}(V) \. 
+		\exists A,B \subvec{k} V : \NewLine : 
+			V = A \oplus B \And 
+			\forall a \in A \. 
+				P(a) = a  \And
+			\forall b \in B \.
+				P(b) = 0
+	}
+	\Say{A}{\im P}{\TYPE{VectorSubspace}(V)}
+	\Say{B}{\ker P}{\TYPE{VectorSubspace}(V)}
+	\Assume{a}{A}
+	\Say{(v,[1])}{\bd A \bd \im P(a)}{\sum v \in V \. a = Pa}
+	\Conclude{[a.*]}{[1]\bd\TYPE{Projector}(P)[1]}{Pa = P^2v = Pv = a }
+	\Derive{[1]}{I(\forall)}{\forall a \in A \. Pa = a}
+	\Assume{v}{A \cap B}
+	\Say{[2]}{[1](v)}{Pv = v}
+	\Say{[3]}{\bd B \bd \ker P (v)}{Pv = 0}
+	\Conclude{[v.*]}{[2][3]}{v = 0}
+	\Derive{[2]}{\bd^{-1}\TYPE{Singleton}(V)(0)}{A \cap B = \{0\}}
+	\Assume{v}{V}
+	\Say{[3]}{I(=, Pv + v) - Pv}{v = Pv + v - Pv}
+	\Say{[4]}{ \bd \ABEL(V,V)(P)[1](v)}{P(v - Pv) = Pv - P^2v = Pv - Pv = 0}
+	\Say{[5]}{\bd^{-1}\ker P[4]}{v - Pv \in \ker P}
+	\Conclude{[v.*]}{[3][5]\bd^{-1}A\bd^{-1}B}{v \in A \oplus B}
+	\Derive{[3]}{\bd^{-1} \TYPE{EqSubset}}{V = A + B}
+	\Conclude{[*]}{\bd^{-1}\TYPE{InnerDirectSum}[2][3]}{V = A \oplus B}
+	\EndProof
+	\\
+	\DeclareFunc{projectionOnAlong}{\prod V \in \VS{k} \. \sum A,B \subvec{k} {V} \. V = A \oplus B \to \TYPE{Projector}(V)}
+	\DefineNamedFunc{projecctionOnAlong}{A,B,[0]}{P_{A,B}}{\Lambda a + b \in A \oplus B \. a}
+	\\
+	\DeclareType{OrthogonalProjections}{\prod V \in \VS{k} \. ?\TYPE{Projection}^2(V)}
+	\DefineNamedType{P,Q}{OrthogonalProjections}{P \bot Q}{ PQ = 0 = QP}
+	\\
+	\DeclareType{ResolutionOfIdentity}{\prod V \in \VS{k} \. \prod \kappa \in \mathsf{CARD} \.  ?(\kappa \to \TYPE{Projection}(V))}
+	\DefineType{P}{ResolutionOfIdentity}{ \id = \sum_{i \in \kappa} P \And \forall i,j \in \kappa \. i \neq j \Rightarrow P_i \bot P_j}
+}
+\Page{
+	\Theorem{ResolutionOfIdentityTHM1}{\forall P : \TYPE{ResolutionOfIdentity}(V,n) \. V = \bigoplus_{i \in n} \im P_i}
+	\Assume{v}{V}
+	\Say{[1]}{\bd \TYPE{ResolutionOfIdentity}(V,n)(P)}{v = \sum_{i \in n}P_i v}
+	\Conclude{[v.*]}{\bd^{-1} \im P [1]   }{v \in \sum_{i \in n} \im P_i}
+	\Derive{[1]}{\bd^{-1}\TYPE{SetEq}}{V = \sum_{i \in n} \im P_i}
+	\Assume{i}{n}
+	\Assume{v}{\im P_i \cap \sum_{j \in n, j \neq i} \im P_i}
+	\Say{[1]}{\bd \TYPE{ResolutionOfIdentity}(V,n)(P)}{v = \sum_{j \in n}P_j v}
+	\Say{[2]}{\THM{StructureOfTheProjection}(P)(v)}{v = P_iv}
+	\Say{[3]}{[1][2]}{0 = \sum_{j\in n, j \neq i} P_jv }
+	\Say{\big(w,[4]\big)}{\bd \FUNC{intersect}\bd v\bd \im P}{\sum w :  n \setminus \{i\} \to V \. v = \sum_{j \in n,j\neq i} P_jw_j }
+	\Conclude{[v.*]}{[3][4]\bd \TYPE{ResolutionOfIdentity}(V,n)(P)\bd \TYPE{OrthogonalProjector}(V)(P)\bd \TYPE{Projector}(P) [4]}{
+		\NewLine : 0 =  
+		\sum_{j \in n, j \neq i} P_jv = 
+		\sum_{j,k \in n;j,k \neq i} P_jP_kw_k =
+		\sum_{j \in n, j \neq i} P^2_jw_j =
+		\sum_{j \in n, j \neq i} P_jw_j = 
+		v
+	}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{InnerDirectSum}}{V = \bigoplus_{i \in n} \im P_i}
+	\EndProof
+	\\
+	\Theorem{ResolutionOfIdentityTHM2}{\forall V \in \VS{k} \. \forall n \in \mathsf{CARD} \. \forall U : n \to \TYPE{VectorSubspace}(V) \. \NewLine \. 
+		\forall [0]: V = \bigoplus_{i \in n} U_i \. \Lambda i \in n \. P_{U_i,\sum_{j\in n,j\neq i} U_j}  : \TYPE{ResolutionOfIdentity}(V,n)} 
+	\Say{P}{\Lambda i \in n \. P_{U_i,\sum_{j\in n,j\neq i} U_j}}{  n \to \TYPE{Projector}(V)   }
+	\Assume{v}{V}
+	\Say{\big(u,[1]\big)}{\bd \TYPE{InnerDirectSum}[0](v)}{\sum u : \prod i \in n \. U_i \. v = \sum_{i \in n} u_i}
+	\Conclude{[v.*]}{[1]\bd \FUNC{projectionOnAlong}(P) [1]}{
+			\sum_{i \in n} P_i v =
+			\sum_{i \in n} P_i\sum_{j \in n} u_j = 
+			\sum_{i \in n} u_i = v
+		}
+	\Derive{[1]}{\bd^{-1}{\id}}{\sum_{i \in n} P_i = \id}
+	\Assume{i}{n}
+	\Assume{j}{n}
+	\Assume{[2]}{i \neq j}
+	\Assume{v}{V}
+	\Say{[v.1]}{\bd \FUNC{projectionOnAlong}(P)[2]}{P_iP_jv = 0}
+	\Say{[v.2]}{\bd \FUNC{projectionOnAlong}(P)[2]}{P_jP_iv = 0}
+	\Conclude{[i.*]}{\bd^{-1}\TYPE{OrthogonalProjection}[v.1][v.2]}{P_j \bot P_i }
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{ResolutionOfIdentity}[1]}{(P : \TYPE{ResolutionOfIdentity}(n,V))}
+	\EndProof
+}
+\Page{
+	\Theorem{InvarianceByProjection}{\forall V \in \VS{k} \. \forall T \in \End_{\VS{k}}(V) \. \forall U \subvec{k} V \.
+		\NewLine \. U : \IS(V,T) \iff \forall W : \TYPE{LinearComplement}(V,U) \. P_{U,W}TP_{U,W} = TP_{U,W}}
+	\Assume{[1]}{(U : \IS(V,T))}
+	\Assume{W}{\LC(V,U)}
+	\Say{P}{P_{U,W}}{\TYPE{Projector}(V)}
+	\Say{[1]}{\bd \FUNC{projectionOnAlong}(P)}{\im P \subset U}
+	\Say{[2]}{\bd \LC(V,U)(T)[1]}{\im TP \subset U}
+	\Conclude{[1.*]}{\bd \FUNC{projectionOnAlong}(P)[2]}{PTP = TP}
+	\Derive{[1]}{I(\Rightarrow)}{(U : \IS(V,T)) \Rightarrow \forall W : \TYPE{LinearComplement}(V,U) \. P_{U,W}TP_{U,W} = TP_{U,W}}
+	\Assume{[2]}{\forall W : \TYPE{LinearComplement}(V,U) \. P_{U,W}TP_{U,W} = TP_{U,W}}
+	\Assume{u}{U}
+	\Assume{[3]}{Tu \not \in U}
+	\Say{W}{\THM{LinearComplementExists}(U)}{\LC(V,U)}
+	\Say{P}{P_{U,W}}{\TYPE{Projector}(V)}
+	\Say{[4]}{[2](P)}{ PTP = TP}
+	\Say{[5]}{\bd^3 \FUNC{projectionAlong}(U,W)(P)(u)[3] }{   TPu = Tu \neq PTu = PTPu  }
+	\Conclude{[2.*]}{[5][4]}{\bot}
+	\DeriveConclude{[3]}{I(\iff)[1]\bd^{-1}\IS}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{ReducedPairByProjection}{\forall V \in \VS{k} \. \forall T \in \End_{\VS{k}}(V) \. \forall U,W \subvec{k} V \. \forall (0) : V = U \oplus W
+		\NewLine \. (U,W) : \RP(V,T) \iff   P_{U,W}T = TP_{U,W}}
+	\Say{P}{P_{U,W}}{\TYPE{Projector}(V)}	
+	\Assume{[1]}{\Big((U,W) ; \RP(V,T)\Big)}
+	\Assume{v}{V}
+	\Conclude{(u,w,[2])}{\bd \TYPE{InnerDirectSum}(V)(U,W)[0]}{\sum u \in U \. \sum w \in W \. v = u + w}
+	\Say{[3]}{ [2]\bd \VS{k}(V,V)(PT)\bd^2 \TYPE{projectionOnAlong}(P) \bd^2 \RP(V,T)(U,W)\bd \VS{k}(V,V)(TP)[2] }
+	{ \NewLine : PTv = PT(u + w) = PTu + PTw = Tu = TPu = TPu + TPw = TP(u + w)  =TPv   }
+	\Derive{[1]}{I(\Rightarrow)}{(U,W) : \RP(V,T) \Rightarrow PT = TP}
+	\Assume{[2]}{PT = TP}
+	\Assume{u}{U}
+	\Conclude{[u.*]}{\bd\FUNC{projectionOnAlong}(V,U,W)(P)[2]\bd\FUNC{projectionOnAlong}(V,U,W)(P)}{  Tu  = TPu  = PTu \in U}
+	\Derive{[3]}{\bd^{-1}\IS}{\big(U : \IS(V,T)\big)}
+	\Assume{w}{W}
+	\Say{[w.1]}{\bd \VS{k}(V,V)(T)\bd \FUNC{projectionOnAlong}(V,U,W)(P)[2]}{ 0 = T0 = TPw = PTw}
+	\Conclude{[w.*]}{\bd \FUNC{projectionOnAlong}(V,U,W)(P)[2]}{Tw \in W}
+	\Derive{[4]}{\bd^{-1}\IS}{\big(W : \IS(V,T)\big)}
+	\Conclude{[2.*]}{\bd^{-1}\RP[3][4]}{\big( (U,W) : \RP(V,T) \big)}
+	\DeriveConclude{[*]}{I(\iff)[1]}{\LOGIC{This}}
+	\EndProof
+}
+\Page{
+	\Conclude{[-1]}{\mathrm{char} \; k \neq 2}{\Type}
+	\\
+	\Theorem{ProjectionAlgebraI}{\forall V : \VS{k} \. \forall P,Q : \TYPE{Projector}(V) \. P + Q : \TYPE{Projection}(V) \iff P \bot Q}
+	\Assume{[1]}{P + Q : \TYPE{Projection}(V)}
+	\Say{[2]}{\bd \TYPE{Projection}(P + Q)}{ P + Q = (P + Q)^2 = P^2 + PQ + QP + Q^2 = P + QP +PQ + Q}
+	\Say{[3]}{ [2] - P - Q}{ -QP = PQ }
+	\Say{[4]}{[3]\bd \TYPE{Projection}(P)}{ PQP = - QP^2 = - QP  }
+	\Say{[5]}{[3]\bd \TYPE{Projection}(P)[3] }{ PQP = - P^2Q = - PQ = QP }
+	\Say{[6]}{[-1][4][5]}{QP = 0}
+	\Say{[7]}{[3]\bd \TYPE{Projection}(Q)}{ QPQ = - PQ^2 = - PQ  }
+	\Say{[8]}{[3]\bd \TYPE{Projection}(Q)[3] }{ QPQ = - Q^2P = - QP = PQ }
+	\Say{[9]}{[-1][8][7]}{PQ = 0}
+	\Conclude{[1.*]}{\bd^{-1}\TYPE{OrthogonalProjections}[6][9]}{P \bot Q}
+	\Derive{[1]}{I(\Rightarrow)}{P + Q : \TYPE{Projection}(V) \Rightarrow P \bot Q}
+	\Assume{[2]}{P \bot Q}
+	\Say{[2.1]}{\bd \TYPE{Projection}(V)(P,Q)\bd \TYPE{OrthogonalProjection}(P,Q)}{(P + Q)^2 = P^2 + PQ + QP + Q^2 = P + Q}
+	\Conclude{[2.*]}{\bd^{-1}\TYPE{Projection}(P + Q)}{\big( P + Q : \TYPE{Projection}(V)\big)}
+	\Derive{[*]}{I(\iff)[1]}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{ProjectionAlgebraII}{\forall V : \VS{k} \. \forall P,Q : \TYPE{Projector}(V) \. P - Q : \TYPE{Projection}(V) \iff PQ = QP = Q}
+	\Assume{[1]}{P - Q : \TYPE{Projection}(V)}
+	\Say{[2]}{\bd \TYPE{Projection}(P - Q)}{ P - Q = (P - Q)^2 = P^2 - PQ - QP + Q^2 = P - QP - PQ + Q}
+	\Say{[3]}{ [2] - P - Q}{  2Q = PQ + QP }
+	\Say{[4]}{[3]\bd \TYPE{Projection}(Q)}{ PQP = 2QP - Q^2P = QP  }
+	\Say{[5]}{[3]\bd \TYPE{Projection}(P) }{ PQP = 2PQ - P^2Q = PQ   }
+	\Say{[6]}{ [4][5]}{QP = PQ}
+	\Conclude{[1.*]}{[6][3]}{QP = Q = PQ}
+	\Derive{[1]}{I(\Rightarrow)}{P - Q : \TYPE{Projection}(V) \Rightarrow PQ = QP = Q}
+	\Assume{[2]}{PQ = QP = Q}
+	\Say{[2.1]}{\bd \TYPE{Projection}(V)(P,Q)[2]}{(P - Q)^2 = P^2 - PQ - QP - Q^2 = P - Q}
+	\Conclude{[2.*]}{\bd^{-1}\TYPE{Projection}(P - Q)}{\big( P - Q : \TYPE{Projection}(V)\big)}
+	\Derive{[*]}{I(\iff)[1]}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{ProjectionAlgebraIII}{\forall V : \VS{k} \. \forall P,Q : \TYPE{Projector}(V) \. \forall [0] :  PQ = QP \Rightarrow PQ : \TYPE{Projector}(V)}
+	\Say{[1]}{\bd \LALG{k}\big(\End_{\VS{k}}(V)\big)[0]}{(PQ)^2 = PQPQ = P^2Q^2 = PQ}
+	\Conclude{[*]}{\bd^{-1}\TYPE{Projector}(V)}{(PQ : \TYPE{Projector}(V))}
+	\EndProof
+}
+\newpage
+\subsection{Canonical Rational Form}
+\Page{	
+	\DeclareFunc{moduleOfJordan}{\prod V : \VS{k} \. \End_{\VS{k}}(V) \to \LMOD{k[\Int_+]}}
+	\DefineNamedFunc{moduleOfJordan}{T}{V_T}{\left(V,\Lambda f \in k[\Int_+] \. \Lambda v \in V \. \sum_{i = 0}^n f_iT^i v\right)}
+	\\
+	\Theorem{JordanModuleIsTorsion}{\forall V \in \FDVS{k} \. \forall T \in \End_{\FDVS{k}}(V) \.  V_T : \TYPE{Torsion}\;k[\Int_+]}
+	\Assume{v}{V}
+	\Say{(n,[1])}{\bd \FDVS{k}(V)(\Lambda i \in \Int_+ \. T^iv)}{ \sum n \in \Int_+ \.(T^i v)^n_{i=0} \IsNot \LI(V) }
+	\Say{(\alpha,[2])}{\bd \LI(V)[1]}{\sum \alpha \in k^n \. \alpha_i T^iv = 0 \And \alpha \neq 0}
+	\Say{f}{\sum^n_{i=0}\alpha_ix^i}{k[\Int_+]}
+	\Say{[3]}{\bd f [2]}{fv = 0}
+	\Conclude{[4]}{\bd^{-1}\FUNC{torsion}[3][2]}{v \in \tor V_T}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Torsion}}{V_T : \TYPE{Torsion}}
+	\EndProof
+	\\
+	\Theorem{JordanSubmodulesAreInvariants}{\forall V \in \VS{k} \. \forall T \in \End_{\VS{k}}(V) \. \forall W \submod{k[x]} V_T \. \NewLine \. W : \IS(V,T)}
+	\Assume{\alpha}{k}
+	\Assume{w}{W}
+	\Conclude{[\alpha.*]}{\bd V_T\bd^{-1}\TYPE{Submodule}(V_T,W)}{  \alpha w = \alpha \odot_{V_T} w \in W   }
+	\Derive{[1]}{\bd^{-1}\TYPE{VectorSubspace}}{W \subvec{k} V }
+	\Assume{w}{W}
+	\Conclude{[*]}{\bd V_T \bd^{-1}\TYPE{Submodule}(V_T,W)}{Tw = x \odot_T w \in W}
+	\DeriveConclude{[*]}{\bd^{-1}\IS[1]}{(W : \IS(V,T))}
+	\EndProof
+	\\
+	\Theorem{InvariantsAreJordanSubmodules}{\forall V \in \VS{k} \. \forall T \in \End_{\VS{k}}(V) \. \forall  W : \IS(V,T) \. \NewLine \. W  \submod{k[x]} V_T}
+	\Assume{f}{k[x]}
+	\Say{n}{\deg f}{\Int_+ \cup \{-\infty\}}
+	\Assume{w}{W}
+	\Assume{i}{n}
+	\Conclude{[i.*]}{\bd \IS(V,T)(W)\bd \TYPE{VectorSubspace}(V)(W)}{f_iT^Iw \in W}
+	\Derive{[1]}{I(\forall)}{\forall i \in n \. f_i T^iw \in W}
+	\Conclude{[f.*]}{\bd V_T [1] \bd \TYPE{Subgroup}(V)(W)}{f \odot_T w = \sum^n_{i=0} f_iT^iw \in W }
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Submodule}}{W \submod{k[x]} V_T}
+	\EndProof
+}
+\Page{
+	\Theorem{MinimalPolynomialExists}{\forall V \in \FDVS{k} \. \forall T \in \End_{\FDVS{k}}(V) \.  \exists! f : \TYPE{Monic}(k) \. \A_T(V) = \langle f \rangle  } 
+	\Say{[1]}{\THM{PolynomialOverAFieldArePID}}{(k[x] : \PID)}
+	\Say{\big(f ,[2] \big)}{ \bd \PID(k[x])(\A_T(V)) }{ \sum f \in k[x] \. \A_T(V) = \langle V \rangle}
+	\Say{n}{\deg f}{\Int_+ \cup \{-\infty\}}
+	\Say{E}{ (T^n)^\infty_{n=0}}{\Int_+ \to \End_{\VS{k}}(V)}
+	\Say{[3]}{\THM{DimOfOperators}(V)}{\dim \End_{\FDVS{k}}(V) = \dim^2 V}
+	\Say{[4]}{\bd \dim[3][4]}{ E \IsNot \LI{\End_{\VS{k}(V)}}}
+	\Say{[5]}{\bd \A_f [4]}{\A_f \neq \{0\}}
+	\Say{[6]}{ \b n [2][5]}{ n \neq -\infty \And f \neq 0}
+	\Say{g}{f_n^{-1}f}{\TYPE{Monic}(k)}
+	\Conclude{[*]}{\bd g [2]}{\A_T(V) = \langle g \rangle}
+	\EndProof
+	\\
+	\DeclareFunc{minimalPolynomial}{\prod V \in \FDVS{k} \. \End_{\FDVS{k}}(V) \to \TYPE{Monic}(k)}
+	\DefineNamedFunc{minimalPolynomial}{T}{m^T}{\THM{MinimalPolynomialExists}(V,T)}
+	\\
+	\Theorem{MinimalPolynomialsOfSimmilarMatricesAgree}{\prod V \in \FDVS{k} \. \forall A,B \in \End_{\FDVS{k}}(V) \. 
+		\NewLine \. A \sim B \Rightarrow m^A = m^B}
+	\Say{[1]}{\THM{AnnihilatorIdealsOfSimmilarMatricesAgree}(\ldots)}{\A_A(V) = \A_B(V)}
+	\Conclude{[*]}{\bd \FUNC{genIdeal}\bd \TYPE{Monic}(k)[1]}{m^A = m^B}
+	\EndProof
+	\\
+	\Theorem{CyclicSubmoduleByBasis}{\forall V \in \FDVS{k} \. \forall T \in\End_{\FDVS{k}}(V) \. \forall W \submod{k[X]} V_T \. \NewLine \.  
+		W : \TYPE{Cyclic}(V_T) \iff \exists w \in W \. (T^iw)^{\dim W - 1}_{i=0} : \Basis(k,W) 	
+	}
+	\Assume{[1]}{[w : \TYPE{Cyclic}(V_T)]}
+	\Say{\big(w,[1]\big)}{\bd \TYPE{Cyclic}(W)}{\sum w \in W \. W = \Span\{w\}}
+	\Say{E}{\{ T^iw | i \in \Int_+ \}}{?W}
+	\Say{[2]}{\bd V_T [1]}{(E : \TYPE{Generating}(W)) }
+	\Conclude{[1.*]}{\bd \TYPE{Minimal}(m^T(W))[2]}{ (T_iw)^{\dim W}_{i=0} : \Basis(k,W)   }
+	\Derive{[1]}{I(\rightarrow)}{W : \TYPE{Cyclic}(V_T) \Rightarrow \exists w \in W \. (T^i w)^{\dim W - 1}_{i=0} : \Basis(k,W)}
+	\Assume{w}{W}
+	\Assume{[2]}{\Big( (T^i w)_{i=0}^{\dim W - 1} : \Basis(k,W) \Big)}
+	\Conclude{[2.*]}{\bd^{-1}\TYPE{Cyclic}[2]}{ (W : \TYPE{Ceclic}(W))  }
+	\DeriveConclude{[*]}{I(\iff)[1]}{\LOGIC{This}} 
+	\EndProof
+	\\
+	\DeclareFunc{characteristicPolynomial}{\prod V \in \FDVS{k} \. \End_{\FDVS{k}}(V_T) \to k[x] }
+	\DefineNamedFunc{characteristPolynomial}{T}{\chi^T(V)}{  \prod^n_{i=1} \prod^{m_i}_{j=1} p_i^{t_{i,j}} \quad \where \quad (n,m,t,p) : \FUNC{primesOfMod}(V_T)  }
+}
+\Page{
+	\DeclareFunc{companionMatrix}{ \prod f : \TYPE{Monic}(k) \.  k^{\deg f \times \deg f}}
+	\DefineNamedFunc{companionMatrix}{f}{\mathbf{C}(f)}{ \FUNC{FromColumns}\Big( \Lambda i \in \deg f \. \If i == \deg f  \Then (f_{i-1})^{\deg f}_{i=1} \Else e_{i+1} \Big)}
+	\\
+	\DeclareType{RationalCanonicalForm}{  \prod n \in \Nat \. k^{n \times n}}
+	\DefineType{A}{RationalCanonicalForm}{\exists (m,p) : \TYPE{Partition}(n) : \exists  f : m \to \TYPE{Monic}(k) : 
+		\NewLine : A = \FUNC{blockDiagonal}\Big(m,p,(\mathbf{C}(f_i))_{i=1}^{m}\Big)    }
+	\\
+	\Theorem{MinimalPolynomialOfCyclic}{\forall V \in \FDVS{k} \. \forall T \in \End_{\VS{k}}(V) \.  f \in \TYPE{Monic}(k) \. \NewLine \.
+	    \forall [0] : V_T \cong_{\LMOD{k[x]}} \frac{k[x]}{\big\langle f(x) \big\rangle} \.  m^T(V) = f } 
+	\Say{\varphi}{\bd \TYPE{isomorphic}[0]}{ V_T \ToIso{\LMOD{k[x]}} \frac{k[x]}{\big\langle f(x) \big\rangle}}
+	\Say{[1]}{  \bd \varphi \bd \FUNC{ringQuotient}(k[x],\langle f \rangle) \bd \FUNC{prinviple}(f)  }
+	{ 
+		\NewLine : \varphi \Big( f(x) \odot_T (V_T)\Big) = f(x) \cdot \varphi(V_T)  = f(x) \cdot \frac{k[x]}{\langle f(x) \rangle} = \{0\} }
+	\Say{[2]}{\bd\TYPE{Iso}{\LMOD{k[x]}}(\varphi)[1]}{f(x) \odot_T V_T = \{0\}}
+	\Say{[3]}{\bd^{-1} \A_T[2]}{f(x) \in \A_T}
+	\Assume{g(x)}{\A_T}
+	\Say{[g.1]}{ \bd^{-1} \varphi \bd \LMOD{k[x]}(\ldots)(\varphi) \bd \A_T(g) \bd \ABEL(\ldots)(\varphi) }
+	{ \NewLine : g(x) \cdot \frac{k[x]}{\langle f(x) \rangle} = g(x) \cdot \varphi(V_T) = \varphi\Big( g(x) \odot_T V_T  \Big) = \varphi\{0\} = \{0\}}
+	\Conclude{[g.*]}{\bd \TYPE{principle}\Big(\big\langle f(x) \big\rangle \Big)[g.1]}{ f(x) | g(x)}
+	\DeriveConclude{[*]}{\bd^{-1} \FUNC{MinimalPolynomial}[3]}{m^T(V) = f}
+	\EndProof
+}\Page{
+	\Theorem{RationalCanonicalFormTHM}{ \forall V \in \FDVS{k} \. \forall T \in \End_{\VS{k}}(V) \. \exists e : \Basis(V) : \NewLine :T^{e,e} : \RCF(k)}
+	\Say{\Big( n,m,p,t,[1] \Big)}{\FUNC{primesOfMod}(V_T)}
+	{
+		\sum n \in \Nat \. 
+		\sum m : n \to \Nat \. 
+		\sum p : n : \ToInj \TYPE{Prime}\Big(k[x]\Big) \. \NewLine \. 
+		\sum t : \prod i \in n \. m_i \to \Nat \. 
+		V_T \cong_{\LMOD{k[x]}} \bigoplus^n_{i=1}\bigoplus^{m_i}_{j=1} \frac{k[x]}{\big\langle p^{t_{i,j}}_{i}(x) \big\rangle} 
+	}
+	\Say{\varphi}{\bd \TYPE{isomorphic}[1]}{ V_T \ToIso{\LMOD{k[x]}} \bigoplus^n_{i=1}\bigoplus^{m_i}_{j=1} \frac{k[x]}{\big\langle p^{t_{i,j}}_{i}(x) \big\rangle}}
+	\Assume{i}{n}
+	\Assume{j}{m_i}
+	\Say{U_{i,j}}{\varphi^{-1}\pi_{i,j}^{-1}\left(\frac{k[x]}{\big\langle p^{t_{i,j}}(x) \big\rangle}\right)}{\LMOD{k[x]}}
+	\Say{ [j.1]}{\THM{JordanSubmodulesAreInvariants}(U_{i,j})}{(U_{i,j} : \IS(V,T))}
+	\Say{f^{i,j}}{\left(\frac{p_i}{\lc(p_i)}\right)^{t_{i,j}}}{\TYPE{Monic}(k)}
+	\Say{ \big(u,[j.2])}{\THM{CyclicSubmoduleByBasis}(U_{i,j})}{\sum u \in U_{i,j} \. (T^{l-1} k )^{\deg f^{i,j}}_{l=1} : \Basis(k,V)}
+	\Say{\varepsilon^{i,j}}{(T^{l-1} k )^{\deg f}_{l=1} }{ \Basis(k,V)}
+	\Say{[j.3]}{\THM{MininalPolynomialOfCyclic}(U_{i,j})\bd f}{ m^{T|_{U_{i,j}}} = f^{i,j}}
+	\Conclude{[j.*]}{\bd^{-1}\FUNC{CompanionMatrix}\bd \varepsilon^{i,j}[j.3] }{ T|_{U_{i,j}}^{\varepsilon_{i,j},\varepsilon_{i,j}} =\Cell(-f^{i,j})  }
+	\Derive{\Big( U,\varepsilon, f [2] \Big)}{ I\left( \prod \right)I\left( \sum  \right) }
+	{
+		\prod i \in n \. 
+		\prod j \in m_i \. 
+		\sum U_{i,j} : \IS(V,T) \. \NewLine \.  
+		\sum \varepsilon^{i,j} : \TYPE{Basis}(U_{i,j}) \. 
+		\sum f^{i,j} : \TYPE{MonicPolynomial}(k) \.
+		T|_{U_{i,j}}^{\varepsilon^{i,j},\varepsilon^{i,j}}  = \Cell(-f^{i,j})
+	}
+	\Say{[3]}{\bd U [1]\bd V_T}{  V = \bigoplus_{i=1}^n\bigoplus^{m_i}_{j=1} U_{i,j}   }
+	\Say{[4]}{\bd^{-1}\TYPE{ReducingSystem}[3]}{T = \bigboxplus^n_{i=1}\bigboxplus^{m_i}_{j=1} T|_{U_{i,j}}}
+	\Say{e}{\bigsqcup_{i=1}^n\bigsqcup^{m_i}_{j=1}\varepsilon^{i,j}}{\TYPE{Basis}(V)}
+	\Say{[5]}{\THM{InnerDirectSumDim}[3]\THM{PolynomialQuotientDim}[1]\bd^{-1}\TYPE{Partition}}{ \NewLine :\Big( (n \otimes m,\deg f) : \TYPE{Partition}(\dim V)\Big)}
+	\Say{[6]}{\THM{ReducingSystemMatrix}[4][2][5]}{ T^{e,e} = \FUNC{blockDiagonal}((n \otimes m, \deg f),\Cell(-f))   }
+	\Conclude{[*]}{\bd^{-1}\RCF(k)[6] }{\Big( T^{e,e} : \RCF(k)\Big)}
+	\EndProof
+}
+\Page{
+	\Theorem{CompanionMatrixDetLemma}{ \forall f : \TYPE{Monic}(k)  \. \forall \lambda \in k \. \det \Big(\lambda I -  \Cell(f)\Big) = f(\lambda)   }
+	\Say{\mercury}{\Lambda n \in \Nat \. \forall f : \TYPE{Monic}(k) \.  \deg f \le n \Rightarrow \LOGIC{This}(f)}{\Nat \to \Type}
+	\Assume{\alpha}{k}
+	\Assume{\lambda}{k}
+	\Conclude{[\alpha.*]}{ \bd \Cell(x - \alpha) \bd \det  }{ \det \Big( \lambda  - \Cell(x  - \alpha)  \Big)  = \lambda - \alpha   }
+	\Derive{[1]}{\bd^{-1}\mercury{1}}{\mercury(1)}
+	\Assume{n}{\Nat}
+	\Assume{[2]}{\mercury(n)}
+	\Assume{f}{\TYPE{Monic}(k)}
+	\Assume{[3]}{  \deg f = n + 1 }
+	\Assume{\lambda}{k}
+	\Say{g}{x^n + \sum^{n-1}_{i=1} f_{i+1} x^i}{\TYPE{Monic}(k)}
+	\Conclude{[n.*]}{ \THM{DeterminantComputation}(\lambda I - \Cell(f))[2](g)\THM{LowerTriangularDet}(\ldots) \NewLine  \THM{EvenPowerOfNegativeOne}(2n+2) \bd g}
+	{  \det(\lambda I  - \Cell(f) ) = \lambda\det (\lambda I - \Cell(g))  + (-1)^{n + 2} (-1)^{n} f_0 = \NewLine = \lambda g(\lambda) + f_0 = f(\lambda)   }
+	\Derive{[1]}{\THM{CompleteInduction}}{\forall n \in \Nat \. \mercury(n)}
+	\Conclude{[*]}{\bd \mercury [1]}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{CharPolynomialByDet}{\forall V \in \FDVS{k} \. \forall T \in \End_{\VS{k}}(V) \.  \chi_T(\lambda) = \det(\lambda \id - T )   }
+	\Say{(e,[1])}{\THM{RationalCanonicalFormTHM}(V,T)}{ \sum e : \TYPE{Basis}(V) \. T^{e,e} : \RCF(k)   }
+	\Say{(n,f,[2])}{\bd \RCF(T)}{ \sum n \in \Nat \. \sum f : n \to \TYPE{Monic}(k) \. \NewLine \. T^{e,e} = \FUNC{blockDiagonal}((n,\deg f),\Cell(f))  }
+	\Say{[3]}{\THM{BlockDiagonalDet}([2])\THM{CompanionMatrixDetLemma}(\Cell(f))}
+	{  \NewLine : \det(\lambda \id - T)\det (\lambda I - T^{e,e}) = \prod^n_{i=1} (\lambda I - \Cell(f_i)) = \prod^n_{i=1}f_i(\lambda)   }
+	\Conclude{[*]}{ \bd \THM{RationalCanonicalFormTHM}(f)\bd^{-1} \chi_T}{ \det(\lambda \id - T ) = \chi_T(\lambda) }
+	\EndProof
+}
+\newpage
+\subsection{Canonical Jordan Form}
+\Page{
+	\DeclareFunc{cellOfJordan}{ \prod n \in \Nat \. k \to \UTM(n,k)}
+	\DefineNamedFunc{cellOfJordan}{\lambda}{\JC(n,\lambda)}
+	{ \FUNC{fromColumns}\Big( \Lambda i \in n \. \lambda e_i + e_{i-1}  \Big) \quad \where \quad e_0 = 0}
+	\\
+	\Theorem{JordanCellMatrix}{\forall V \in \VS{k} \. \forall T \in \End_{\VS{k}}(V) \, \forall \lambda \in k \.
+		\forall n \in \Nat \. \NewLine \. \forall [0] : V_T \cong_{\LMOD{k[x]}} \frac{k[x]}{\big\langle(\lambda - x)^n\big\rangle} \.
+		\exists e : \Basis(V) : T^{e,e} = \JC(n,\lambda)
+	}
+	\Say{[1]}{\THM{MinimalPolynomialOfCyclic}[0]}{m^T(x) = (\lambda - x)^n}
+	\Say{\big(v,[2]\big)}{\bd \FUNC{minimalPolynomial}[1]}{\sum v \in V : (\lambda \id - T)^{n-1}v \neq 0}
+	\Say{e_n}{v}{V}
+	\Say{[e.0.1]}{\bd \FUNC{minimalPolynomial}[1](e_n)}{(\lambda \id - T)^n v = 0 }
+	\Say{[e.0.2]}{[2]\ByConstr e_n}{(\lambda \id - T)^{n-1}e_n \neq 0}
+	\Assume{m}{n-1}
+	\Say{e_{n-m}}{ Te_{n + 1 - m} - \lambda e_{n + 1 - m}}{V}
+	\Say{[e.m.1]}{\ByConstr e_{n-m}[e.(m-1).1]}{(\lambda \id - T)^{n-m}e_{n-m} = -(\lambda \id - T)^{n +1-m}e_{n+1 - m} = 0 }
+	\Conclude{[e.m.2]}{\ByConstr e_{n-m}[e.(m-1).2]}{(\lambda \id - T)^{n-m-1}e_{n-m} = -(\lambda \id - T)^{n -m}e_{n+1 - m} \neq 0 }
+	\Derive{\Big( e [3]\Big)}{I\Act{\sum}I\Act{\forall}}{\sum e : n \to V \. \forall k \in n \. (\lambda \id - T)^m e_m = 0 \And (\lambda \id - T)^{m-1} e_m \neq 0  }
+	\Say{[4]}{[3]_2(1)}{e_1 \neq 0}
+	\Say{[e.0.3]}{\bd^{-1}\LI(V)[4]}{\Big( (e_i)_{i=1}^1 : \LI(V) \Big)}
+	\Assume{m}{n-1}
+	\Assume{[5]}{\Big( (e_i)^{m+1}_{i=1} \; \IsNot \; \LI(V) \Big)}
+	\Say{\big(\alpha,[6]\big)}{\bd \LI(V) [5]}{\sum \alpha \in k^{m+1} \. \alpha e = 0 \And \alpha \neq 0 }
+	\Say{[7]}{[e.(m-1).3][6]}{ \alpha_{k+1} \neq 0  }
+	\Say{[8]}{[7][6]}{e_{m+1} = \sum^m_{i=1} -\frac{\alpha_i}{\alpha_{m+1}} e_i}
+	\Say{[9]}{[3][8]}{  0 \neq (\lambda \id - T)^{m}e_{m+1} = \sum  \sum^m_{i+1}-(\lambda \id _ T)^{m} \frac{\alpha_i}{\alpha_{m+1}} e_i = 0  }
+	\Conclude{[5.*]}{I(\bot)[9]}{\bot}
+	\DeriveConclude{[e.m.3]}{E(\bot)}{\Big((e_i)^{m+1}_{i=1} : \LI(V) \Big)}
+	\Derive{[5]}{I(\forall)(n-1)}{\Big((e_i)^{m+1}_{i=1} : \LI(V) \Big)}
+	\Say{[6]}{\THM{PolynomialQuatienDim}\big(k,(\lambda - x)^n\big)\THM{IsoDim}[0]}{\dim V = n}
+	\Say{[7]}{ \THM{EqByDim}(\Span(e),V )[5][6]\bd^{-1}\TYPE{Basis}}{(e : \TYPE{Basis}(V))}
+	\Say{[8]}{[3](1) + Te_1}{Te_1 = \lambda e_1}
+	\Assume{m}{n-1}
+	\Conclude{[m.*]}{\ByConstr(e_{m+1})}{Te_{m+1} = e_{m} + \lambda e_{m+1}}
+	\DeriveConclude{[*]}{\ByConstr^{-1}\JC(n,\lambda)\ByConstr^{-1}\FUNC{matrixOfOperator}}{T^{e,e} = \JC(n,\lambda)}
+	\EndProof
+}
+\Page{
+	\DeclareFunc{geometricMultiplicity}{\prod V \in \VS{k} \. \prod T \in \End_{\VS{k}}(V) \. \TYPE{Eigenvalue}(T) \to \mathsf{CARD}}
+	\DefineNamedFunc{geometricMultiplicity}{\lambda}{\bar m_T(\lambda)}{\dim \ker(\lambda \id - T) }
+	\\
+	\DeclareFunc{algebraicMultiplicity}{\prod V \in \VS{k} \. \prod T \in \End_{\VS{k}}(V) \. \TYPE{Eigenvalue}(T) \to \mathsf{CARD}}
+	\DefineNamedFunc{algebraicMultiplicity}{\lambda}{\tilde m_T(\lambda)}{\FUNC{mult}(\lambda, \chi^T) }
+	\\
+	\DeclareType{\JCF}{ \prod k : \Field \. ?\UTM(k)}
+	\DefineType{A}{\JCF}{\exists m \in \Nat : \exists n : m \to \Nat : \exists \lambda : m \to k : A = \FUNC{blockDiagonal}(n,\JC(n,\lambda))}
+	\\
+	\Theorem{JordanCanonicalFormTHM}{ 
+		\forall k : \ACF \.  
+		\forall V \in \FDVS{k} \. 
+		\forall T \in \End_{\VS{k}}(V) \. \NewLine \.  
+		\exists e : \Basis(V) : T^{e,e} : \JCF(k)
+	} 
+	\Say{\Big( n,m,p,t,[1] \Big)}{\FUNC{primesOfMod}(V_T)}
+	{
+		\sum n \in \Nat \. 
+		\sum m : n \to \Nat \. 
+		\sum p : n : \ToInj \TYPE{Prime}\Big(k[x]\Big) \. \NewLine \. 
+		\sum t : \prod i \in n \. m_i \to \Nat \. 
+		V_T \cong_{\LMOD{k[x]}} \bigoplus^n_{i=1}\bigoplus^{m_i}_{j=1} \frac{k[x]}{\big\langle p^{t_{i,j}}_{i}(x) \big\rangle} 
+	}
+	\Say{\varphi}{\bd \TYPE{isomorphic}[1]}{ V_T \ToIso{\LMOD{k[x]}} \bigoplus^n_{i=1}\bigoplus^{m_i}_{j=1} \frac{k[x]}{\big\langle p^{t_{i,j}}_{i}(x) \big\rangle}}
+	\Say{(\lambda,[2])}{\bd \ACF(k)(p)}{\sum \lambda : n \to k \.  \forall i \in n \. p_i = (x - \lambda_i)}
+	\Assume{i}{n}
+	\Assume{j}{m_i}
+	\Say{U_{i,j}}{\varphi^{-1}\pi_{i,j}^{-1}\left(\frac{k[x]}{\big\langle p^{t_{i,j}}(x) \big\rangle}\right)}{\LMOD{k[x]}}
+	\Say{ [j.1]}{\THM{JordanSubmodulesAreInvariants}(U_{i,j})}{(U_{i,j} : \IS(V,T))}
+	\Say{\Big(\varepsilon^{i,j},[j,2]\Big)}{ \THM{JordanCellMatrix}(U_{i,j},T|_{U_{i,j}}) }{ \sum \varepsilon^{i,j} : \Basis(k,U_{i,j}) \. 
+		T|_{U_{i,j}}^{\varepsilon^{i,j},\varepsilon^{i,j}} = \JC(t_{i,j},\lambda_i)}
+	\Derive{\Big( U,\varepsilon,  [3] \Big)}{ I\left( \prod \right)I\left( \sum  \right) }
+	{
+		\prod i \in n \. 
+		\prod j \in m_i \. 
+		\sum U_{i,j} : \IS(V,T) \. \NewLine \.  
+		\sum \varepsilon^{i,j} : \TYPE{Basis}(U_{i,j}) \. 
+		T|_{U_{i,j}}^{\varepsilon^{i,j},\varepsilon^{i,j}}  = \JC(t_{i,j},\lambda_i)
+	}
+	\Say{[4]}{\bd U [1]\bd V_T}{  V = \bigoplus_{i=1}^n\bigoplus^{m_i}_{j=1} U_{i,j}   }
+	\Say{[3]}{\bd^{-1}\TYPE{ReducingSystem}[3]}{T = \bigboxplus^n_{i=1}\bigboxplus^{m_i}_{j=1} T|_{U_{i,j}}}
+	\Say{e}{\bigsqcup_{i=1}^n\bigsqcup^{m_i}_{j=1}\varepsilon^{i,j}}{\TYPE{Basis}(V)}
+	\Say{[5]}{\THM{InnerDirectSumDim}[3]\THM{PolynomialQuotientDim}[1]\bd^{-1}\TYPE{Partition}}{ \NewLine :\Big( (n \otimes m, t) : \TYPE{Partition}(\dim V)\Big)}
+	\Say{[6]}{\THM{ReducingSystemMatrix}[4][2][5]}{ T^{e,e} = \FUNC{blockDiagonal}\big((n \otimes m, t),\JC(t,\lambda_{(\cdot)_1})\big)   }
+	\Conclude{[*]}{\bd^{-1}\JCF(k)[6] }{\Big( T^{e,e} : \JCF(k)\Big)}
+	\EndProof
+}
+\Page{
+	\Theorem{AlgebraicMultiplicityByKernel}{
+		\forall k : \ACF \. 
+		\forall V \in \FDVS{k} \. 
+		\forall T \in \End_{\VS{k}}(V) \. \NewLine \.
+		\forall \lambda \in k \. 
+		\tilde m_T(\lambda) =  \dim \bigcup^\infty_{k=1} \ker (  \lambda \id - T  )^k 
+	}
+	\NoProof
+	\\
+	\DeclareFunc{naturalMatrixCategory}{\Field \to \mathsf{SCAT}}
+	\DefineNamedFunc{naturalMatrixCategory}{k}{\NMAT{k}}{\Nat,(n,m) \mapsto k^{n \times m},\FUNC{matrixMult},I}
+	\\
+	\DeclareFunc{cellStructureOfJordan}{ \prod k : \ACF \. \End_{\FDVS{k}} \to ?^*\Mor_{\NMAT{k}}  }
+	\DefineFunc{cellStructurOfJordan}{V,T}{  \{ \JC(t_{i,j},\lambda_i) \} \quad \where \quad (n,m,x-\lambda,t) = \FUNC{primesOfMod}(V_T)}
+	\\
+	\Theorem{cellStructureOfJordanOfSimmilarAgree}{
+		\forall k : \ACF \.  \forall V \in \FDVS{k} \. \NewLine \. \forall A,B \in \End_{\FDVS{k}}  
+		A \sim B \iff \FUNC{cellStructureOfJordan}(A) = \FUNC{cellStructureJordan}(B)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{spectre}{\prod k : \Field \. \prod V \in \FDVS{k} \. \End_{\FDVS{k}}(V) \to k \to \Int}
+	\DefineNamedFunc{spectre}{T}{ \Spec(T) = \sigma_T }{  
+		\Lambda \lambda \in \bar k \. 
+		\Big|\big\{ i \in \dim V \.  \diag(T^{e,e}) = \lambda \big\}\Big|   \NewLine 
+		\quad \where \quad e = \THM{JordanCanonicalFormTHM}(\bar k, V, T)                   
+	}
+	\\
+	\Theorem{SizeOfSpectre}{\forall V \in \FDVS{k} \. \forall T \in \End_{\FDVS{k}}(V) \. \int_{\bar k} \; \mathrm{d}\sigma_T \; = \dim V}
+	\NoProof
+	\\
+	\Theorem{TraceBySpectre}{\forall V \in \FDVS{k} \. \forall T \in \End_{\FDVS{k}}(V) \. \int_{\bar k} \lambda\;\mathrm{d}\sigma_T(\lambda) = \tr T}
+	\Say{\big(e,[1]\big)}{\THM{JordanCanonicalFormTHM}(\bar k,V,\VS{k})}{\sum e : \TYPE{Basis}(\bar k \otimes V) \. T^{e,e} : \JCF(\bar k) }
+	\Say{[2]}{ \bd \tr \bd \JCF(\bar k) [1]\bd^{-1} \sigma_T }{ \tr T^{e,e} = \int_{\bar k}  \lambda\sigma_T(\lambda)     }
+	\Conclude{[*]}{\bd \tr [2] }{ \tr T = \int_{\bar k} \lambda \; \mathrm{d}\sigma_T(\lambda)  }
+	\EndProof
+	\\
+	\Theorem{SchurTheorem}{\forall V \in \FDVS{k} \. \forall T \in \End_{\FDVS{k}}(V) \. 
+		\NewLine \. T : \UT(k) \iff \chi^T : \TYPE{Splits}(k)}
+	\NoProof
+}\Page{
+	\Theorem{DetBySpectre}{\forall V \in \FDVS{k} \. \forall T \in \End_{\FDVS{k}}(V) \. \det T = \prod_{\bar k}  \lambda \; \mathrm{d}\sigma_T(\lambda)} 
+	\Say{\big(e,[1]\big)}{\THM{JordanCanonicalFormTHM}(\bar k,V,\VS{k})}{\sum e : \TYPE{Basis}(\bar k \otimes V) \. T^{e,e} : \JCF(\bar k) }
+	\Say{\big(n,\lambda,t,[2]\big)}{\bd \JCF(\bar k)}{ \sum n \in \Nat \. \sum \lambda : n \to \bar k \. 
+		\NewLine : \sum t : n \to \Nat \. T^{e,e} = \FUNC{blockDiagonal}(n \times t,\JC(t,\lambda))}
+	\Say{[3]}{\THM{BlockDiagonalDet}\THM{UpperTriangularDet}[2]\bd^{-1}\sigma_T}{ \det T^{e,e} = \prod_{\hat k} \lambda  \; \mathrm{d}\sigma(\lambda)  }
+	\Conclude{[*]}{\bd \det [3]}{\det T = \prod_{\hat k} \lambda \; \mathrm{d}\sigma(\lambda)}
+	\EndProof
+	\\
+	\DeclareType{SpectralResolution}{ 
+		\prod V \in \VS{k} \. 
+		\End_{\VS{k}}(V) \to \NewLine \to 
+		?\sum \kappa : \mathsf{CARD} \. 
+		\TYPE{ResolutionOfIdentity}(\kappa,V) \times \kappa \to k                     
+	} 
+	\DefineType{(P,\lambda)}{SpectralResolution}{\Lambda T \in \End_{\VS{k}}(V) \. T = \lambda_i P_i}
+	\\
+	\Theorem{SpectralResolutionTHM}{\forall V \in \VS{k} \. \forall T : \End_{\VS{k}}(V) \. 
+		\NewLine \. T : \Diagble(V) \iff \exists \TYPE{SpectralResolution}(V,T) }
+	\NoProof
+	\\
+	\Theorem{CommutingHasCommonEigenvector}{
+		\forall V \in \FDVS{k} \. 
+		\forall \mathcal{T} : \TYPE{Commuting}\big(\Nat,\End_{\VS{k}}(V)\big) \.
+		\NewLine \.
+		\forall [0] : \forall T \in \mathcal{T} \. \chi^T : \TYPE{Splits}(k) \.
+		\exists v \in V \.
+		\forall T \in \mathcal{T} \.  
+		\exists \lambda \in k : Tv = \lambda v                     
+	}
+	\Say{(\I,T)}{\THM{WellOrderigPrinciple}(\mathcal{T})}{\sum \I : \TYPE{WellOrdered} \. T : I \ToBij \mathcal{T}}
+	\Say{(\lambda_1,v_1,[1])}{\THM{SchurTheorem}(T_1)[0]}{ \sum v_1 \in V \. \sum \lambda_1 \in k \. T_1v_1 = \lambda_1 v_1 \And v_1 \neq 0 }
+	\Say{E_1}{\TYPE{Eigenspace}(T_1,\Lambda_1)}{\TYPE{VectorSubspace}(V)}
+	\Assume{i}{\I_+}
+	\Say{[i.1]}{\THM{CommutingHasInvariantEignspaces}(\bd E_{i-1},T,T_i)}{(E_{i-1} : \IS(V,T_i))}
+	\Say{[i.2]}{\THM{InvariantIsJordanSubmodule}[i.1]}{E_{i-1} \submod_{k[x]} V_{T_i}}
+	\Say{[\lambda_i,v_i,[i.3]]}{ \THM{JordanCanonicalFormTHM}[i.2][i.1]}{ \sum v_i \in E_{i-1} \. \sum \lambda_i \in k \. T_i v_i = \lambda_i v_i \And v_i \neq 0  } 
+	\Conclude{E_i}{\TYPE{Eigenspace}(T_i,\lambda_i) \cap E_{i-1}}{ \TYPE{VectorSubspace}(V)}
+	\Derive{(v,\lambda,E,[2])}{I\Act{\prod}}{ 
+		\prod i \in \I \. \sum (v_i,\lambda_i,E_i) \in V \times k \times \TYPE{VectorSubspace}(V) \.      
+		T_iv_i = \lambda v_i \And v_i \neq 0 \And v_i \in E_i \And E_{i+1} \subvec{k} E_i
+	}
+	\Say{[3]}{[2]\bd\TYPE{Singleton}\{0\}}{\forall i \in \I \. E_i \neq \{0\}}
+	\Say{[4]}{ \bd^{-1}\TYPE{Nonincreasing}[2]}{\big(E : \TYPE{Nonincreasing}\big(\I,\TYPE{Vectorsubspace}(V)\big)\Big)}
+	\Say{(N,[5])}{\THM{FiniteNonIncreasingStabilizes}(E,\THM{EqByDim}(V))}{\sum N \in \I : \forall i \in \I \. i \ge N \. E_i = E_N}
+	\Conclude{[*]}{\ByConstr E [5]}{\LOGIC{This}}
+	\EndProof
+}
+\newpage
+\subsection{Finite-Dimensional Vector Spaces Are Natural Numbers}
+\Page{
+	\Theorem{FiniteDimensionalVectorSpacesAreNaturalNumbers}{\forall k : \Field \. \FDVS{k} \simeq \NMAT{k}}
+	\Assume{V}{\FDVS{k}}
+	\Conclude{e_V}{\THM{FreeHasBasis}(V)}{\Basis(V)}
+	\Derive{e}{I\Act{\prod}}{ \prod V \in \FDVS{k} \. \Basis(V)}
+	\Say{F}{\Big( (\id,e),\id \Big)}{\Cov(\FDVS{k},\LLMAP{k})}
+	\Say{[1]}{\ByConstr F (FU)}{ FU = \id}
+	\Say{[2]}{\ByConstr F (UF)}{ UF = \Big( (V,f) \mapsto (V,e_V), \id   \Big)}
+	\Say{\alpha}{\Lambda (V,f) \in \LLMAP{k} \. \Big((V,f),(V,e_V),\id \Big)}{\NT(\id,UF)}
+	\Say{[3]}{\bd^{-1}\TYPE{EquivalentCategories}(F,U,\alpha)[1][2]}{ \FDVS{k} \simeq \LLMAP{k} }
+	\Say{D}{ \Big(  \dim(\cdot)_1, \id \Big) }{\Cov(\LMAT{k},\NMAT{k})}
+	\Say{N}{ \Big( n \mapsto (k^n,e) , \id  \Big)}{ \Cov(\LMAT{k},\NMAT{k}) }
+	\Say{[4]}{\ByConstr (ND)}{ ND = \id}
+	\Say{[5]}{\ByConstr (DN)}{ DN = ( (V,f) \mapsto (k^{\dim V},e), \id  )  } 
+	\Say{\beta}{\Lambda (V,f) \in \LMAT{k} \. I}{\NT(\id,DN)}
+	\Say{[6]}{\bd^{-1}\TYPE{EquivalentCategories}(D,N,\beta)[1][2]}{ \NMAT{k} \simeq \LLMAP{k} }
+	\Say{[7]}{\bd \TYPE{Transitive}(\TYPE{CategoryEq})([6], \THM{ChoiceOfBasisDefinesIso} ,[3]) }{  \FDVS{k} \simeq \NMAT{k} }
+	\EndProof
+}
+\newpage
+\subsection{Euler Characteristic and Grothendieck Group}
+\Page{
+	\DeclareFunc{charactereristicOfEuler}{\prod k : \Field \. \TYPE{FiniteChain}(\FDVS{k}) \to \Int  }
+	\DefineNamedFunc{chararacteristicOfEuler}{V,f}{\chi(V,f)}{ \sum^\infty_{n = - \infty} (-1)^n \dim V_n  }
+	\\
+	\Theorem{EulerCharHomolog}{\forall k : \Field \. \forall (V,f) : \TYPE{FiniteChain}(\FDVS{k}) \. \chi(V,f) = \sum^\infty_{n=-\infty} (-1)^n \dim H_n(V,f)}
+	\Assume{n}{\Int}
+	\Conclude{[n.*]}{\THM{RankPlusNullityTHM}(f_n)\bd \rank}{ \dim V_n =  \dim \ker f_n  + \dim \im f_n}
+	\DeriveConclude{[*]}{\bd^{-1} \chi(V,f) \bd \ABEL(\Int) \bd^{-1} H(V,f) \THM{QuotientDimansion} }{
+		\NewLine :
+		\chi(V,f) = 
+		\sum^\infty_{n= - \infty} (-1)^n (\dim \ker f_n + \dim \im f_n) = 
+		\sum^\infty_{n=-\infty}  (-1)^n( \dim \ker f_n - \dim \im f_{n+1}) = 
+		\sum^\infty_{n=-\infty} H_n(V,f)
+	}
+	\EndProof
+	\\
+	\DeclareFunc{groupOfGrothendiek}{\TYPE{AbeleanCategory} \to \ABEL}
+	\DefineNamedFunc{groupOfGrothendiek}{k}{ K(\A)}{ \frac{F_{\ABEL}\; \FUNC{Isoclass}(\A)}{\{  [W] - [V] - [U] | 0 \to V \to W  \to U \to 0 : \TYPE{ShortExact}(\A) \}}    }
+	\\
+	\DeclareFunc{characteristicOdEulerGrothendiek}{\prod \A : \TYPE{AbeleanCategory} \. \TYPE{FiniteChain}(\A) \to K(\A)}
+	\DefineNamedFunc{characteristicOdEulerGrothendiek}{V,f}{\chi_K(V,f)}{\sum^\infty_{n=-\infty} (-1) [V_n]}
+	\\
+	\Theorem{EGGroupLemma}{ \forall V,U \in \FDVS{k} \. [V \oplus U] =_{K(\FDVS{k})} [V] + [U] }
+	\Say{[1]}{\THM{SplittingIsExact}(V,U)}{(0 \to V \to V \oplus U \to U \to 0 : \TYPE{ShortExact}(\FDVS(k)))}
+	\Conclude{[*]}{\bd K(\FDVS{k})[1]}{ [V \oplus U]= [V] + [U]}
+	\EndProof
+	\\
+	\Theorem{EGCharHomolog}{\forall k : \Field \. \forall (V,f) : \TYPE{FiniteChain}(\FDVS{k}) \. \chi(V,f) = \sum^\infty_{n=-\infty} (-1)^n \Big[H_n(V,f)\Big]}
+	\Assume{n}{\Int}
+	\Conclude{[n.*]}{\bd K(\FDVS{k})(f_n)\bd \rank}{ [V_n] =  [\ker f_n] + [\im f_n]}
+	\DeriveConclude{[*]}{\bd^{-1} \chi(V,f) \bd \ABEL\Big(K(\FDVS{k})\Big) \bd K(\FDVS{k})\bd^{-1} H(V,f)  }{
+		\NewLine :
+		\chi(V,f) = 
+		\sum^\infty_{n= - \infty} (-1)^n ( [\ker f_n] + [\dim \im f_n]) = 
+		\sum^\infty_{n=-\infty}  (-1)^n( [\dim \ker f_n] - [\dim \im f_{n+1}]) = 
+		\sum^\infty_{n=-\infty} H_n(V,f)
+	}
+	\EndProof
+}
+\Page{
+	\DeclareType{CategoryGroupMapping}{\prod G \in \ABEL \. \prod \A : \TYPE{AbeleanCategory} \. \A \to G}
+	\DefineType{\delta}{CategoryGroupMapping}{
+		\forall A,B \in \A \. 
+		A \cong_\A B \Rightarrow \delta(A) = \delta(B)  \NewLine
+		\And \forall 0 \to A \to B \to C \to 0 : \TYPE{ShortExact}(\A) \. \delta(C) = \delta(B) - \delta(A) 
+	}
+	\\
+	\DeclareFunc{groupCharacteristicOfEuler}{\prod \A : \TYPE{AbeleanCategory} \. \prod G \in \ABEL \. 
+		\NewLine \. \prod \delta : \TYPE{GroupCategoryMapping}(\A,G) \. 
+		\TYPE{FiniteChain}(V) \to G
+	}
+	\DefineNamedFunc{groupCharacteristicOfEuler}{V,f}{\sum^\infty_{n=-\infty} (-1)^n \delta(V_n)}
+	\\
+	\Theorem{GrothendiekGroupIsomorphism}{  
+		\forall G \in \ABEL \.
+		\forall k : \TYPE{Field} \. 
+		\forall \delta : \TYPE{CategoryGroupMapping}(G,\FDVS{k}) \. 
+		\exists ! \varphi : \A \Arrow{\ABEL} G : 
+		\forall (V,f) : \TYPE{FiniteChain} \. 
+		\varphi \chi_K(V,f) =  \chi_\delta(V,f)`
+	}
+	\Assume{[V]}{\chi_K(V,f)}
+	\Conclude{\varphi[V]}{\delta(V)}{G}
+	\Derive{\varphi}{\bd \TYPE{CategoryGroupMapping}(\delta)}{K(\FDVS{k}) \to G }
+	\Say{[1]}{\THM{EGGroupLemma}(\varphi)}{(\varphi : K(\FDVS{k}) \Arrow{\ABEL} G )}
+	\Assume{\psi}{K(\FDVS{k}) \Arrow{\ABEL} G}
+	\Assume{[2]}{\forall (V,f) : \TYPE{FiniteChain}(\FDVS{k}) \. \psi \chi_K = \chi_\delta(V,f)}
+	\Assume{[V]}{ K(\FDVS{k})}
+	\Say{C}{0 \to V \to 0}{\TYPE{FiniteChain}(\FDVS{k})}
+	\Say{[3]}{\bd \chi_K(C)}{ \chi_K(C) = [V]}
+	\Say{[4]}{\bd \chi_\delta(C)}{\chi_\delta(C) = \delta(V)}
+	\Conclude{[\psi.*]}{\bd \phi [2][3][4]}{\psi[V] = \phi[V]}
+	\Derive{[*]}{\bd^{-1}\LOGIC{Unique}}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{GrothendiekGroupOfFDVSIsIntegers}{ \forall k : \Field \. K(\FDVS{k}) \cong_{\ABEL} \Int}
+	\Say{[1]}{\THM{FiniteDimensionalVectorSpacesAreNaturalnambers}(k)}
+	{ \NewLine \. \forall V,W \in \FDVS{k} \. \dim V = \dim W \iff V \cong_{\VS{k}} W }
+	\Say{[2]}{\THM{RankPlusNullityTHM}\bd \TYPE{ShortExact}(\FDVS{k})}
+	{
+		\NewLine \. \forall 0 \to V \to U \to W \to : \TYPE{ShortExact}(\FDVS{k}) \. \dim W = \dim U - \dim V }
+	\Say{[3]}{\bd^{-1}\TYPE{CategoryGroupMapping}}{\Big(\dim : \TYPE{CategoryGroupMapping}(\FDVS{k},\Int)\Big)}
+	\Say{(\varphi,[4])}{\THM{GrothendiekGroupIsomorphism}(\dim)}{\sum \varphi : K{\FDVS{k}} \Arrow{\ABEL} \Int \. \forall V \in \FDVS{k} \. \varphi[V] = \dim V }
+	\Say{[5]}{[4]\bd \dim}{\Int_+ \subset \im \varphi}
+	\Say{[6]}{[5]\bd \ABEL(K(\FDVS{k}),\Int)(\varphi)[5]}{(\varphi : K(\FDVS{k}) \ToSurj \Int)}
+	\Say{[7]}{[1][4]}{(\varphi : K(\FDVS{k}) \ToInj \Int)}
+	\Conclude{[*]}{\bd^{-1} \TYPE{isomorphic}[6][7]}{\Int \cong_{\ABEL} K(\FDVS{k})}
+	\EndProof
+}
+\newpage
+\section{Linear Algebra in Eucledean and Hermitian Spaces}
+\subsection{Real and Complex Structures}
+\Page{	
+	\Theorem{RealDimOfComplex}{\forall V \in \VS{\Complex} \. \dim_{\Reals} V = 2 \dim_{\Complex} V}
+	\Say{e}{\THM{VSIsFree}(V)\;\THM{FreeHasBasis}(V)}{\Basis(\Complex,V)}
+	\Say{[1]}{\bd \TYPE{Basis}(\Complex)\bd^{-1}\Basis(\Reals)\bd \Complex}{(e \sqcup\mathrm{i}e :\Basis(\Reals))}
+	\Say{[2]}{\bd\FUNC{cardinalitySum}(e \sqcup \mathrm{i}e)\bd\VS{\Complex}(V)}{|e \sqcup \mathrm{i}e| = |e| + |\mathrm{i}e| = 2|e|}
+	\Conclude{[*]}{\bd^{-1} \dim V [1][2]}{\dim_{\Reals} V = 2 \dim_{\Complex} V}
+	\EndProof
+	\\
+	\DeclareFunc{ConjugateSpace}{\VS{\Complex} \Arrow{\CAT} \VS{\Complex}}
+	\DefineNamedFunc{ConjugateSpace}{V}{\overline{V}}{(V,+,\Lambda z \in \Complex \. \Lambda v \in V \. \overline{z}v)}
+	\DefineNamedFunc{ConjugateSpace}{V,W,f}{\overline{f}}{f}
+	\\
+	\Theorem{ConjugationPreservesDim}{\forall V \in \VS{\Complex} \. \dim \overline{V} = \dim V}
+	\NoProof
+	\\
+	\DeclareType{ConjugationMorphism}{\prod V \in \VS{\Complex} \. V \Arrow{\VS{\Complex}} \overline{V}}
+	\DefineType{\sigma}{ConjugationMorphism}{\overline{\sigma} \sigma = \id_{V}}
+	\\
+	\DeclareFunc{realStructure}{\prod V \in \VS{\Complex} \. \TYPE{ConjugationMorphism}(V) \to \VS{\Reals}}
+	\DefineNamedFunc{realStructure}{\sigma}{\Re_\sigma V}{\frac{1}{2}(\id + \sigma)V}
+	\\
+	\DeclareFunc{imagenableStructure}{\prod V \in \VS{\Complex} \. \TYPE{ConjugationMorphism}(V) \to \VS{\Reals}}
+	\DefineNamedFunc{imagenableStructure}{\sigma}{\Im_\sigma V}{\frac{1}{2}(\id - \sigma)V}
+	\\
+	\Theorem{ImaginableUnitIsomorphism}{\forall V \in \VS{\Complex} \. \forall \sigma : \TYPE{ConjugationMorphism} \. \Re_\sigma V \cong_{\VS{\Reals}} \Im_\sigma V}
+	\Say{T}{\Lambda v \in \Re_\sigma V \. \mathrm{i}v }{\Re_\sigma V \Arrow{\VS{\Reals}} V }
+	\Say{S}{\Lambda v \in \Im_\sigma V \. -\mathrm{i}v}{\Im_\sigma V \Arrow{\VS{\Reals}} V }
+	\Assume{v}{V}
+	\Say{[v.1.*]}{\bd \FUNC{complexConjugation}\bd\TYPE{ConjugationMorphism}\sigma}{  \mathrm{i}(\id + \sigma)v = \mathrm{i}v + \sigma(-\mathrm{i}v) =(\id - \sigma)(\mathrm{i}v)   }
+	\Say{[v.2.*]}{\bd \FUNC{complexConjugation}\bd\TYPE{ConjugationMorphism}\sigma}{-\mathrm{i}(\id - \sigma)v = -\mathrm{i}v - \sigma(\mathrm{i}v) = \id + \sigma(-\mathrm{i}v)}
+	\Derive{[1]}{\bd^{-1}\Re_\sigma V \bd^{-1}\Im_\sigma V}{ (T : \Re_\sigma V \Arrow{\VS{\Reals}} \Im_\sigma V \And S : \Im_\sigma V \Arrow{\VS{\Reals}} \Re_\sigma V}
+	\Say{[2]}{\bd T \bd S[1]}{ST = \id \And TS = \id}
+	\Conclude{[*]}{\bd^{-1}\TYPE{Isomorphic}[2]}{\Re_\sigma V \cong_{\VS{\Reals}} \Im_\sigma V}
+	\EndProof
+}\Page{
+	\Theorem{RealImaginableVSDecomposition}{ \forall V \in \VS{\Complex} \. \forall \sigma : \TYPE{ConjugationMorphism}(V) \. V = \Re_\sigma V \oplus \Im_\sigma V }
+	\Say{[1]}{\bd \TYPE{ConjugationMorphism}(V)}{\frac{1}{4}(\id +\sigma)(\id + \sigma) = \frac{1}{2}(\id + \sigma)}
+	\Say{[2]}{\bd \TYPE{ConjgationMorphism}(V)}{\frac{1}{4}(\id - \sigma)(\id - \sigma) = \frac{1}{2}(\id - \sigma)}
+	\Say{[3]}{\bd^{-1}\TYPE{Projector}}{\left(\frac{1}{2}(\id + \sigma), \frac{1}{2}(\id - \sigma) : \TYPE{Projector}(\Re_\sigma V,\Im_\sigma V)\right)}
+	\Assume{v}{V}
+	\Say{[v.*]}{\bd \VS{\Complex}(\overline{V})}{ v = \frac{1}{2}(\id + \sigma)v + \frac{1}{2}(\id - \sigma)v  } 
+	\Derive{[4]}{\bd^{-1} \FUNC{subsetSum}\bd^{-1} \Re_\sigma V \bd^{-1} \Im_\sigma V}{V = \Re_\sigma V + \Im_\sigma V}
+	\Assume{v}{V}
+	\Say{[2.*]}{\bd \TYPE{ConjugationMorphism}(V)(\sigma)}{ \frac{1}{4}(\id + \sigma)(\id - \sigma)v = \frac{1}{4}(\id +\sigma - \sigma - \id)v = 0}
+	\Conclude{[3.*]}{\bd \TYPE{ConjugationMorphism}(V)(\sigma)}{ \frac{1}{4}(\id - \sigma)(\id + \sigma)v = \frac{1}{4}(\id - \sigma + \sigma  - \id)v = 0  }
+	\Derive{[5]}{\bd^{-1}\TYPE{OrthogonalProjections}}{\frac{1}{2}(\id + \sigma) \bot \frac{1}{2}(\id - \sigma)}
+	\Conclude{[*]}{\THM{ResolutionOfIdentity}[4][5]}{V = \Re_\sigma V \oplus_\Reals \Im_\sigma V}
+	\EndProof
+\\
+	\Theorem{RealStructureDimension}{
+		\forall V \in \VS{\Complex} \. 
+		\forall \sigma : \TYPE{ConjugationMorphism}(V) \. \NewLine \. 
+		\dim_\Reals \Re_\sigma V = \dim_\Reals \Im_\sigma V = \dim_\Complex V
+	}
+	\Say{[1]}{\THM{RealImagenableVSDecomposition}(V,\sigma)}{V =_{\VS{\Reals}} \Re_\sigma V \oplus \Im_\sigma V }
+	\Say{[2]}{\THM{SumRank}[1]}{\dim_{\Reals} V = \dim_{\Reals} \Re_{\sigma} V + \dim_{\Reals} \Im_\sigma V}
+	\Say{[3]}{\THM{ImaginableUnitDecomposition}(V,\sigma)}{\Im_{\sigma} V \cong_{\VS{\Reals}} \Re_{\sigma} V}
+	\Say{[4]}{\THM{IsoRank}[6]}{\dim_\Reals \Re_\sigma V = \dim_\Reals \Im_\sigma V}
+	\Conclude{[*]}{\THM{RealDimOfComplex}(V)[4][2]}{\dim_{\Complex} V = \dim_{\Reals} \Re_{\sigma} V = \dim_{\Reals}\Im_\sigma V}
+	\EndProof
+\\
+	\DeclareType{ComplexStructure}{\prod V : \VS{\Reals} \. ?\End_{\VS{\Reals}}(\Reals)}
+	\DefineType{J}{ComplexStructure}{J^2 = - \id} 
+\\
+	\DeclareFunc{applyComplexStructure}{\prod V : \VS{\Reals} \. \TYPE{ComplexStructure}(V) \to \VS{\Complex}}
+	\DefineNamedFunc{applyComplexStructure}{J}{V_J}{(V,+,\Lambda v \in V \. \Lambda a + b\mathrm{i} \in \mathbb{C} \. av + bJ(v))}
+\\
+	\Theorem{LinearOperatorWithComplexStructure}
+	{
+		\forall V,W : \VS{\Reals} \. \NewLine \.  
+		\forall J : \TYPE{ComplexStructure}(V) \. 
+		\forall J' : \TYPE{ComplexStructure}(W) \.
+		\forall T : V \Arrow{\VS{\Reals}} W \. \NewLine \. 
+		T : V_J \Arrow{\VS{\Complex}} W_{J'} \iff 
+		TJ' = JT
+	}
+	\NoProof
+}\Page{
+	\Theorem{LinearSubspaceOfComplexStructure}
+	{
+		\forall V : \VS{\Reals} \. \NewLine \.
+		\forall J : \TYPE{ComplexStructure}(V) \.
+		\forall U \subset_{\VS{\Reals}} V \.
+		U \subset_{\VS{\Complex}} V \iff J(U) = U 
+	}
+	\NoProof
+\\
+	\DeclareType{QuaternionicStructure}{\prod V : \VS{\Reals} \. ?\TYPE{ComplexStructure}^2}
+	\DefineType{(J,K)}{QuaternionicStructure}{JK = - KJ} 
+\\
+	\DeclareFunc{applyQuaternionicStructure}{\prod V : \VS{\Reals} \. \TYPE{QuaternionicStructure}(V) \to \RMOD{\Quat}}
+	\DefineNamedFunc{applyQuaternionicStructure}{J,K}{V_{J,K}}{  \NewLine \de 
+		(V,+,\Lambda v \in V \. \Lambda a + b\mathrm{i} + c\mathrm{j} + d\mathrm{k} \in \Quat \. av + bJK(v) + cJ(v) + dK(v))}	
+\\
+	\Theorem{LinearOperatorWithQuaternionicStructure}
+	{
+		\forall V,W : \VS{\Reals} \. \NewLine \.  
+		\forall (J,K) : \TYPE{QuaternionicStructure}(V) \. 
+		\forall (J',K') : \TYPE{QuaternionicStructure}(W) \.
+		\forall T : V \Arrow{\VS{\Reals}} W \. \NewLine \. 
+		T : V_J \Arrow{\RMOD{\Quat}} W_{J'} \iff 
+		TJ' = JT \And TK' = KT
+	}
+	\NoProof
+\\
+	\Theorem{LinearSubspaceOfQuaternionicStructure}
+	{
+		\forall V : \VS{\Reals} \. \NewLine \.
+		\forall (J,K) : \TYPE{QuaternionicStructure}(V) \.
+		\forall U \subset_{\VS{\Reals}} V \.
+		U \subset_{\RMOD{\Quat}} V \iff J(U) = U \And K(U) = U
+	}
+	\NoProof
+\\
+	\DeclareType{AnticonjugationMorphism}{\prod V \in \VS{\Complex} \. \End_{\VS{\Reals}}(\overline{V})}
+	\DefineType{\alpha}{AnticonjugationMorphism}{\alpha \overline{\alpha} = -\id}
+	\\
+	\Theorem{QuaternioniStructureByAnticonjugation}{
+		\forall V \in \VS{\Complex} \. 
+		\forall \alpha : \TYPE{AnticonjugationMorphism}(V) \. \NewLine \. 
+		(\alpha,\mathrm{i}\cdot\id) : \TYPE{QuaternionicStructure}(V) 
+	}
+	\NoProof
+}
+\newpage
+\subsection{Eucledean and Hermitian Products}
+\Page{
+	\DeclareType{InnerProduct}
+	{
+		\prod k :\TYPE{ConjugationField}(R) \.
+		\prod V \in \VS{k} \.
+		V \otimes \overline{V} \Arrow{\VS{k}} k                    
+	}
+	\DefineType{p}{InnerProduct}{\forall v,w \in V \. p(v \otimes w) = \overline{p(w \otimes v)} \And p(v \otimes v) \in R_+ \And (p(v \otimes v) = 0 \Rightarrow v = 0)}
+	\\
+	\Conclude{\IPS}{\prod k : \TYPE{ConjugationField}(R) \. \sum V : \VS{k} \. \TYPE{InnerProduct}(V)}{ 
+		\NewLine : \prod R : \TYPE{OrderedField} \. \TYPE{ConjugationField}(R) \to \Type}
+	\\
+	\DeclareFunc{innerProductSpaceAsVectorSpace}{ \IPS(k) \to \VS{k}}
+	\DefineNamedFunc{innerProductSpaceAsVectorSpace}{V,p}{(V,p)}{\VS{k}} 
+	\\
+	\DeclareFunc{innerProduct}{ \prod (V,p) : \IPS(k) \. \L(V,\overline{V};k)}
+	\DefineNamedFunc{innerProduct}{v,w}{\langle v, w \rangle}{p(v,w)} 
+	\\
+	\Theorem{RealPolarizationId}{\forall V : \IPS(\Reals) \. \forall v,w \in V \. \NewLine \.  
+		\langle v, w \rangle =  \frac{1}{4}\langle v + w, v + w \rangle - \frac{1}{4}\langle v - w, v - w \rangle  
+	} 
+	\NoProof
+	\\
+	\Theorem{ComplexPolarizationId}{ 
+		\forall V : \IPS(\Complex) \. \forall v,w \in V \. \NewLine \.
+		\langle v,w \rangle =
+			\frac{1}{4}\langle v + w, v + w \rangle - \frac{1}{4}\langle v - w, v - w \rangle  + 
+			\frac{\mathrm{i}}{4}\langle v + \mathrm{i}w, v + \mathrm{i}w \rangle - \frac{\mathrm{i}}{4}\langle v - \mathrm{i}w, v - \mathrm{i}w \rangle 	
+	}
+	\Conclude{[*]}{\THM{MultiAdditve}^{12}\Big(\langle \cdot,\cdot\rangle)\bd^4 \L(V,\overline(V);\Complex)(\langle \cdot,\cdot\rangle) 
+		\bd^8 \ABEL(\Complex)\bd^2 \L(V,\overline(V);\Complex)(\langle \cdot,\cdot\rangle) \bd^3 \TYPE{Field}(\Complex)}
+	{
+		\NewLine :
+			\frac{1}{4}\langle v + w, v + w \rangle - \frac{1}{4}\langle v - w, v - w \rangle  + 
+			\frac{\mathrm{i}}{4}\langle v + \mathrm{i}w, v + \mathrm{i}w \rangle - \frac{\mathrm{i}}{4}\langle v - \mathrm{i}w, v - \mathrm{i}w \rangle 	
+		= \NewLine =
+			\frac{1}{4}\Big(   2\langle v, w \rangle + 2\langle w,v \rangle	+ 
+			2\mathrm{i}\langle v, \mathrm{i} w \rangle  + 2\mathrm{i}\langle \mathrm{i}w, v \rangle \Big)
+		=
+			\frac{1}{4}\Big(   2\langle v, w \rangle + 2\langle w,v \rangle	+ 
+			2\langle v,  w \rangle  - 2\langle w, v \rangle \Big)
+		=  \langle v, w \rangle
+	}
+	\EndProof
+	\\
+	\DeclareType{Isometry}{\prod V,W : \IPS(k) \. ? V \Arrow{\VS{k}} W}
+	\DefineType{T}{Isometry}{\forall v \in V \. \langle Tv,Tv \rangle = \langle v, v \rangle}
+	\\
+	\Theorem{RealIsometryProperty}{\forall V,W : \IPS(\Reals) \. \forall T : \TYPE{Isometry}(V,W) \. \NewLine \. \forall v,u \in V \. \langle Tv,Tu \rangle = \langle v, u \rangle }
+	\Conclude{[*]}{\THM{RealPolarizationId}(Tv,Tu)\bd^4 \VS{\Reals}(V,W)(T)[1]^2\THM{RealPolarizationId}(v,w)}
+	{
+		\NewLine :
+		\langle Tu,Tv \rangle = 
+		\frac{1}{4}\langle Tv + Tw, Tv + Tw \rangle - \frac{1}{4}\langle Tv - Tw, Tv - Tw \rangle = \NewLine = 
+		\frac{1}{4}\langle T(v + w), T(v + w) \rangle - \frac{1}{4}\langle T(v - w), T(v - w) \rangle =	 
+		\frac{1}{4}\langle v + w, v + w \rangle - \frac{1}{4}\langle v-w, v-w \rangle =
+		\langle u, v \rangle
+	}	
+	\EndProof
+}\Page{
+	\Theorem{ComplexIsometryProperty}{\forall V,W  : \IPS(\Complex)  \. \forall T : \TYPE{Isometry}(V,W) \. \NewLine \. \forall v,u \in V \. \langle Tv,Tu \rangle = \langle v, u \rangle }
+	\NoProof
+	\\
+	\Theorem{IsometryComp}{\forall V,W,U : \IPS(k) \. \forall T : \TYPE{Isometry}(V,W) \. \forall S : \TYPE{Isometry}(W,U) \. \NewLine \. TS : \TYPE{Isometry}(V,U)}
+	\NoProof
+	\\
+	\Theorem{InnerProductSum}{\forall (V,p),(W,q) : \IPS(k) \. (V \oplus W, p \oplus q) : \IPS(k)}
+	\Assume{(a,b),(x,y)}{V \oplus W}
+	\Say{[1.*]}{\bd p \oplus q \bd \TYPE{InnerProduct}(p,q)\bd^{-1} p \oplus q}
+	{p \oplus q\Big((a,b),(x,y)\Big) = p(a,x) + q(b,y) = \overline{p(x,a)} + \overline{q(y,b)} = \overline{p \oplus q\Big( (x,y),(a,b)\Big) } }
+	\Say{[2.*]}{ \bd p \oplus q \bd \TYPE{InnerProduct}(p,q) \THM{NonNegativeSum}(R)  } 
+	{ p \oplus q \Big((a,b),(a,b)\Big) = p(a,a) + q(b,b) \in R_+   }
+	\Conclude{[3.*]}{\bd p \oplus q \THM{PositiveSum}(R) }
+	{ p \oplus q \Big((a,b),(a,b)\Big) = 0 \iff (a,b) = 0 }
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{InnerProduct}}{(p \oplus q : \TYPE{InnerProduct})}
+	\EndProof
+	\\
+	\Theorem{ParallelagrmaLaw}{\forall V : \IPS(k) \. \forall v,u \in V \. \langle v + u,v + u \rangle  + \langle v - u,v - u\rangle = \langle v,v\rangle + \langle u, u \rangle}
+	\NoProof
+	\\
+	\Theorem{ApolloniusId}{\forall V : \IPS(k) \. \forall v,u,w \in V \. \NewLine \.  
+		\langle v - u, v - u \rangle  + \langle v - w, v - w \rangle  =  \frac{1}{2}\langle u - w, u - w \rangle  + 
+		2 \left\langle w - \frac{1}{2}(u + w), w - \frac{1}{2}(u + w)  \right\rangle
+	}
+	\Conclude{[*]}{}
+	{
+		\NewLine :
+		\langle v - u , v - u \rangle + \langle v - w, v - w \rangle =  
+		2 \langle v, v \rangle  + \langle u , u\rangle + \langle w , w \rangle 
+		- \langle v, u \rangle - \langle u, v \rangle - \langle v, w \rangle - \langle w, v \rangle = \NewLine =
+		\frac{1}{2}\langle u - w, u - w \rangle  + \frac{1}{2}\langle u, v \rangle + \frac{1}{2}\langle v, u \rangle + 
+		\frac{1}{2}\langle v,v \rangle + \frac{1}{2}\langle w,w \rangle
+		- \langle v, u \rangle - \langle u, v \rangle - \langle v, w \rangle - \langle w, v \rangle + 
+		2 \langle v, v \rangle  = \NewLine = 
+		\frac{1}{2}\langle u - w, u - w \rangle  +  2 \left\langle w - \frac{1}{2}(u + w), w - \frac{1}{2}(u + w)  \right\rangle
+	}
+	\EndProof
+}
+\newpage
+\subsection{Orthogonality and Orthogonalization}
+\Page{
+	\DeclareType{OrthogonalVectors}{\prod V : \IPS(k) \. ?V^2}
+	\DefineNamedType{(v,w)}{OrthogonalVectors}{v \bot w}{\langle v, w \rangle = 0}
+	\\
+	\DeclareType{OrthogonalSets}{\prod V : \IPS(k) \. ?(?V)^2}
+	\DefineNamedType{(A,B)}{OrthogonalSets}{A \bot B}{\forall a \in A \. \forall b \in B \. \langle a, b \rangle = 0}
+	\\
+	\DeclareFunc{orthogonalComlement}{\prod V : \IPS(k) \. ?V \to \TYPE{VectorSubspace}(k,V) }
+	\DefineNamedFunc{orthogonalComplement}{X}{X^\bot}{\bigcap_{x \in X} \ker \langle x, \cdot \rangle}
+	\\
+	\Theorem{OrhogonalComplementOfSpan}{\forall V : \IPS(k) \.  \forall X \in ?V \. X^{\bot} = (\Span X)^\bot}
+	\NoProof
+	\\
+	\Theorem{OrthogonalComplementIntersect}{\forall V : \IPS(k) \. \forall X \in ?V \. X \cap X^{\bot} \subset \{0\}}
+	\NoProof
+	\\
+	\DeclareType{OrhtogonalDirectSum}{\prod V : \IPS(k) \. ? \sum n \in \Set \. n \to \TYPE{VectorSubspace}(V)}
+	\DefineNamedType{(n,U)}{OrthogonalDirectSum}{V = \bigbot_{i \in n} U_i}
+	{ V = \bigoplus_{i \in n } U_i \And \forall i,j \in n \. i \neq j \Rightarrow U_i \bot U_j}
+	\\
+	\DeclareType{OrthogonalSet}{\prod V : \IPS(k) \. ??(V \setminus \{0\})}
+	\DefineType{E}{OrthogonalSet}{ \forall v,w \in E \. v \neq w \Rightarrow v \bot w }
+	\\
+	\DeclareType{OrthonormalSet}{\prod V : \IPS(k) \. ?\TYPE{OrthogonalSet}(V)}
+	\DefineType{E}{OrthogonalSet}{ \forall v,w \in E \. \langle v,w \rangle = \delta^v_w}
+	\\
+	\DeclareFunc{sphere}{ \prod V : \IPS(k) \. ?V }
+	\DefineNamedFunc{sphere}{}{\mathbb{S}_V}{\{ v \in V : \langle v, v \rangle = 1\}}
+	\\
+	\Assume{R}{\TYPE{WithSquareRoots}}
+	\\
+	\DeclareFunc{norm}{\prod V : \IPS(k) \. V \to R_+}
+	\DefineNamedFunc{norm}{v}{\|v\|}{\sqrt{\langle v,v \rangle}}
+	\\
+	\DeclareFunc{normalize}{\prod V : \IPS(k) \. V \setminus \{0\} \to \mathbb{S}_V}
+	\DefineFunc{normalize}{v}{\frac{v}{\|v\|}}
+}
+\Page{
+	\Theorem{PythagorusTHM}{\forall V : \IPS(k) \. \forall v,u \in V \. v \bot u \Rightarrow \| v  + u \|^2 = \|v\|^2 + \|u\|^u}
+	\NoProof
+	\\
+	\Theorem{OrhogonalIsLInd}{\forall V : \IPS(k) \. \forall E : \TYPE{Orthogonal}(V) \. E : \LI(V)}
+	\Assume{[1]}{E \IsNot \LI(V)}
+	\Say{(v,\alpha,[2])}{\bd \LI(V)[1]}{ \prod v \in E \. \prod \alpha \in k^{\oplus E} \. \alpha_v = 0 \And v = \alpha E }
+	\Say{(w.[3])}{\bd \TYPE{Orthogonal}(V)(E)\bd \FUNC{linearCombination}[2]}{\sum w \in E \. \alpha_w \neq 0}
+	\Say{[4]}{[3][2]}{w \neq v}
+	\Say{[5]}{\bd \TYPE{Orthogonal}(V)[4]}{ \langle w,v \rangle = 0 }
+	\Say{[6]}{
+		[2]\THM{MultiAdditive}(\langle\cdot,\cdot\rangle)\THM{MultiHomogen}(\langle \cdot,\cdot \rangle)
+		\NewLine \bd \TYPE{Orthogonal}(V)[3]\bd \TYPE{InnerProduct}(V)\bd \ID(k)
+	}{ \langle w,v\rangle = \langle w, \alpha E \rangle = \alpha_w\langle w,w \rangle \neq 0 }
+	\Conclude{[1.*]}{I(\bot)[5][6]}{\bot}
+	\DeriveConclude{[*]}{E(\bot)}{\Big(E : \LI(V)\Big)}
+	\EndProof
+	\\`
+	\DeclareFunc{orthogonalFrames}{ \Nat \to \IPS(k) \to \SET }
+	\DefineNamedFunc{orthogonalFrames}{n,V}{E_n(V)}{ \Big\{ (e : n \to V) : \im e : \TYPE{Orhogonal}(E)   \Big\}  } 
+	\\
+	\Theorem{GrammSchmidtAugementation}{ 
+		\forall V : \IPS(k) \. 
+		\forall n \in \Nat \. 
+		\forall e \in V_n(k) \.  
+		\forall u \not \in \Span(e) \. \NewLine \.  
+		\exists f \in E : e \oplus f \in E_{n+1}(V)
+	}
+	\Say{f}{ u - \sum^n_{i=1} \frac{\langle u,e_i \rangle e_i}{\langle e_i, e_i \rangle}}{V}
+	\Say{[1]}{\bd u \bd \FUNC{span}\ByConstr f}{ f \neq 0}
+	\Assume{i}{n}
+	\Say{[i.1]}{ \ByConstr f \THM{MultiAdditive}^{n+1}(\langle \cdot, \cdot \rangle)\bd E_n(V)\bd \TYPE{Orhogonal} \bd \Field(k)}
+	{
+		\NewLine : 
+		\langle f, e_i \rangle = 
+		\langle u, e_i \rangle - \sum^n_{j=1}  \frac{\langle u, e_i  \rangle\langle e_j, e_j \rangle}{\langle u,e_j \rangle} =
+		\langle u, e_i \rangle - \langle u, e_i \rangle = 
+		0
+	}
+	\Conclude{[i.*]}{\bd^{-1} \TYPE{OrthogonalVectors}[i.1]}{f \bot e_i}
+	\Derive{[2]}{I(\forall)}{\forall i \in n \. f \bot e_i}
+	\Conclude{[*]}{\bd E_{n+1}(V)[1][2]}{ e \oplus f \in E_{n+1}(V)}
+	\EndProof
+}
+\Page{
+	\Theorem{GrammSchmidtOrgogonalization}{
+		\forall V : \IPS(k) \.
+		\forall n \in \Nat \.
+		\forall f : \LI(n,V) \. \NewLine
+		\exists e \in E_n(V) \.
+		\Span(e) = \Span(f) 
+	}
+	\Say{e^1}{1 \mapsto f_1}{E_1(V)}
+	\Say{[1_1]}{\bd \Span \ByConstr e^1}{\Span(e^1) = \Span(f_{|1})}
+	\Assume{i}{n-1}
+	\Say{[2]}{[1_i]\bd \LI(n,V)(f)}{ f_{i+1} \not \in \Span(e^i)}
+	\Say{\big(u,[3]\big)}{\THM{GrammSchmidtAugemtation}(e^i,f_{i,_1}[2])}{ 
+		\sum u \in V \. e^i \oplus u \in E_{i+1}(V) 
+	}
+	\Say{e^{i+1}}{e^i \oplus u}{E_{i+1}(V)}
+	\Say{[4]}{\bd \THM{GrammSchmidtAugemntation}\ByConstr(e^{i+1})}{f_{i+1} \in \Span(e^{i+1})}
+	\Conclude{[1_{i+1}]}{\bd \FUNC{Span}[4][1_i]}{ \Span(e^i) = \Span(f_{|i+1}) }
+	\Derive{e}{I\Act{\prod}}{\prod i \in n \. \sum e^i \in E_i(V) \. \Span(e^i) = \Span(f_{|i}) }
+	\Conclude{e}{e^n}{E_n(V)}
+	\EndProof
+	\\
+	\Conclude{\OBasis}{ \Basis \And \TYPE{Orthonormal} }{\prod k : \TYPE{ConjugationField} \. \IPS(k) \to \Type}
+	\\
+	\Conclude{\FDIPS(k)}{\FDVS{k} \And \IPS(k)}{\Type}
+	\\
+	\Theorem{OrthonormalBasisTheorem}{\forall V : \FDIPS(k) \. \exists \OBasis(V)} 
+	\NoProof
+	\\
+	\DeclareFunc{processOfGrammSchmidt}{\prod V : \IPS(k) \. \prod n \in \Nat \.  \NewLine \. \NewLine \LI(n,V) \to E_n(V)}
+	\DefineNamedFunc{processOfGrammSchmidt}{(f_i)^1_{i=1}}{\GS(f_i)^1_{i=1}}{(f_i)^1_{i=1}}
+	\DefineNamedFunc{processOfGrammSchmidt}{f}{\GS(f)}{ 
+		e \oplus \left(f_n - \sum^{n-1}_{i=1} \frac{\langle f_n, e_i  \rangle e_i}{\langle e_i, e_i \rangle}  \right)
+		\quad \where \quad e = \GS(f_{|n-1}) 
+	}
+	\\
+	\DeclareFunc{orthonormalFrames}{ \Nat \to \IPS(k) \to \SET  }
+	\DefineNamedFunc{orthonormalFrames}{n, U}{V_n(U)}{ \Big\{ (e : n \to U) : \im e : \TYPE{Orthonormal}(U)\Big\}}
+	\\
+	\DeclareFunc{normalizedGrammSchmidtProcess}{\prod U : \IPS(k) \. \prod n \in \Nat \. \NewLine \. \LI(n,U) \to V_n(U)}
+	\DefineNamedFunc{normalizedGrammSchmidtProcess}{f}{\NGS(f)}{\FUNC{Normalize}\Big( \GS(f) \Big)}
+}\Page{
+	\Theorem{InnerProductProduct}{\forall (V,p),(W,q) : \IPS(k) \. (V \otimes W, p \otimes q) : \IPS(k)}
+	\Assume{\sum^n_{i=1} a_i \otimes b_i,\sum^m_{i=1} x_i \otimes y_i}{V \otimes W}
+	\Say{[1.*]}{ \bd p \otimes q \bd \TYPE{InnerProduct} \bd \TYPE{Conjugation}(k) \bd^{-1} }
+	{  
+		\NewLine :
+		p \otimes q\left( \sum^n_{i=1} a_i \otimes b_i , \sum^m_{i=1} x_i \otimes y_i \right)  =
+		\sum^n_{i=1} \sum^m_{j=1} p(a_i,x_j)q(b_i,y_j) =
+		\sum^n_{i=1} \sum^m_{j=1} \overline{p(x_j,a_i)}\overline{q(y_j,b_i)} = \NewLine =
+		\sum^m_{j=1} \sum^n_{i=1} \overline{ p(x_j,a_i)q(y_j,b_i) } = 
+		\overline{p \otimes q\left( \sum^n_{i=1} x_i \otimes y_i,\sum^m_{i=1} a_i \otimes b_i \right)}
+	}
+	\Say{A}{\Span(a)}{\FDIPS(k)}
+	\Say{B}{\Span(b)}{\FDIPS(k)}
+	\Say{e}{\THM{OrthonormalBasisTHM}(A)}{\OBasis(P)}
+	\Say{f}{\THM{OrthonormalBasisTHM}(B)}{\OBasis(Q)}
+	\Say{[2]}{\THM{BasisOfTensorProduct}(A,B,e,f)}{e \otimes f : \TYPE{Basis}(P \otimes Q)}
+	\Say{(\alpha,[3])}{\bd \TYPE{Basis}(e \otimes f )\left( \sum^n_{i=1} a_i \times b_i  \right)}
+	{ \sum \alpha : \dim A \times \dim B \to k : \sum^n_{i=1} a_i \otimes b_i = \sum^{\dim A}_{i=1} \sum^{\dim B}_{j=1} \alpha_{i,j}e_i \otimes f_i  }
+	\Say{[2.*]}{ [3] \bd p \otimes q \THM{MultiAdd}(p)(q)\THM{MultiHomogen}(p)(q)\bd \TYPE{Orhonormal}(A)(e)(B)(f) \NewLine \THM{SumOfSquaresIsNonNegative}(|\alpha|)}
+	{   
+		p \otimes q\left( \sum^n_{i=1} a_i \otimes b_i , \sum^m_{i=1} a_i \otimes b_i \right)  = \NewLine = 
+		p \otimes q\left( \sum^{\dim A}_{i=1} \sum^{\dim B} \alpha_{i,j}(e_i \otimes f_j) , \sum^{\dim A}_{i=1} \sum^{\dim B} \alpha_{i,j}(e_i \otimes f_j)  \right)  =
+		\sum^{\dim A}_{i',i=1} \sum^{\dim B}_{j',j=1} \alpha_{i,i'}\alpha_{j,j'}p(e_i, e_{i'})q(f_j, f_{j'}) = \NewLine =  
+		\sum^{\dim A}_{i',i=1} \sum^{\dim B}_{j=1} |\alpha_{i,j}|^2 \ge 0 	
+	}
+	\Conclude{[3.*]}{ \ldots \bd \THM{ZeroNonnegative}(\alpha^2)\TYPE{Basis}(e \otimes f)[3]  }{
+	   	\NewLine : 
+		p \otimes q\left( \sum^n_{i=1} a_i \otimes b_i , \sum^m_{i=1} a_i \otimes b_i \right) = 		
+	   	\sum^{\dim A}_{i',i=1} \sum^{\dim B}_{j=1} |\alpha_{i,j}|^2 = 0 \iff 	
+	   	\sum^m_{i=1} a_i \otimes b_i = 0
+	}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{InnerProduct}}{ \Big( p \otimes q : \TYPE{InnerProduct}(V \otimes W) \Big) }
+	\EndProof
+	\\
+	\DeclareFunc{dotProduct}{ \prod k : \TYPE{ConjugationField} \. \prod n \in \Nat \. k^n \times k^n \to k }
+	\DefineNamedFunc{dotProduct}{a,b}{a \cdot b}{ a_i\overline{b_i}}
+	\\
+	\Theorem{DotProductIsInner}{\forall k : \TYPE{ConjugationField} \. \forall n \in \Nat \. \big(k^n,(\cdot)\big) : \IPS(k)}
+	\NoProof
+	\\
+	\Theorem{InnerProductAsDotProduct}{\forall V : \FDIPS(k) \. \forall e : \OBasis(V) \. \NewLine \. \forall v,w \in V \. \langle v, w \rangle = v_e \cdot w_e}
+	\NoProof
+}
+\newpage
+\subsection{Orthogonal Matrices and QR-Decomposition}
+\Page{
+	\DeclareType{OrthogonalMatrix}{\prod k : \TYPE{ConjugationField} \. \prod n \in \Nat \. ? k^{n \times n}}
+	\DefineType{A}{OrthogonalMatrix}{\C(A) \in E_n(k^n)}
+	\\
+	\DeclareType{OrthonormalMatrix}{ \prod k : \TYPE{ConjugationField} \. \prod n \in \Nat \.  ?k^{n \times n}}
+	\DefineNamedType{A}{OrthonormalMatrix}{\C(A) \in V_n(k^n)}	
+	\\
+	\DeclareFunc{conjugateTranspose}{ \prod n,m \in \Nat \. k^{n \times m} \to k^{m \times n}}
+	\DefineNamedFunc{conjugateTranspose}{A}{A^{\bar \top}}{\overline{A}^\top}
+	\\
+	\Theorem{OrthogonalMatrixProperty}{ \forall A \in k^{n \times n}  \. A : \TYPE{OrthogonalMatrix}(k,n) \iff A^{\bar \top} A : \TYPE{Diagonal}(k,n)  }
+	\NoProof 
+	\\
+	\Theorem{OrthonormalMatrixProperty}{\forall A \in k^{n \times n} \. A : \TYPE{OrthonormalMatrix}(k,n) \iff A^{\bar \top} A = I}
+	\NoProof
+	\\
+	\Theorem{OrthonormalMatricesFormAGroup}{ \TYPE{OrthonormalAtrix}(k,n) \in \GRP }
+	\Assume{A,B}{\TYPE{OrthonormalMatrix}(k,n)}
+	\Say{[1]}{ \THM{ProductConjugateTranspose}(A,B)\THM{OrthonormalMatrixProperty}^{2}(k,n)(A)(B)}
+	{ \NewLine : (AB)^{\bar \top} AB = B^{\bar \top} A^{\bar \top} A B = B^{\bar \top} B = I}
+	\Say{[A.*.1]}{ \THM{OrthonormalMatrixProperty}[1]}{AB : \TYPE{OrthonormalMatrix}(k,n)}
+	\Say{[2]}{\THM{MatLIIsRI}(k,n)\THM{OrthonormalMatrixProperty}(A)}{A^{-1} = A^{\bar \top}}
+	\Say{[3]}{\bd \TYPE{Inverse}[2]}{  I = A A^\top = A^{-\bar{\top}}A^{-1}  }
+	\Conclude{[A.*.1]}{ \THM{OrthonormalMatrixProperty}[3]}{A^{-1} : \TYPE{OrthonormalMatrix}(k,n)}
+	\Derive{[*]}{\bd^{-1}\GRP}{ \TYPE{OrthonormalMatrix}(k,n) \in \GRP} 
+	\EndProof
+	\\
+	\Conclude{\FUNC{orthogonalGroup} = \O}{\FUNC{orthonormalMatrix}(\Reals)}{\Nat \to \GRP  }
+	\\
+	\Conclude{\FUNC{unitaryGroup} = \U}{\FUNC{orthonormaMatrix}(\Complex)}{\Nat \to \GRP}
+}
+\Page{
+	\Theorem{QRDecomposition}{
+		\forall k : \TYPE{ConjugatioField}(S) \. 
+		\forall n \in \Nat \. 
+		\forall A \in k^{n \times n} 
+		 \. \NewLine \.
+		\exists Q : \TYPE{OrthognanalMatrix}(k,n) 
+		\exists R : \TYPE{RowEchelonForm}(k,n) : 
+		A = QR
+	}
+	\Say{q}{\GS\Big(\C)}{\TYPE{Orthogonal}(n,k^n)}
+	\Say{Q}{\FUNC{fromColumns}(q)}{k^{n\times n}}
+	\Say{[1]}{\bd \TYPE{OrthogonalMatrix}\ByConstr(Q)}{ (Q : \TYPE{OrthogonalMatrix}(k,n))}
+	\Conclude{(R,[*])}{\bd \GS \ByConstr(Q)}{\sum R : \TYPE{RowEchelonForm}(k,n) \. A = QR }
+	\EndProof
+	\\
+	\Theorem{NormalQRDecomposition}{
+		\forall S : \TYPE{WithSquareRoots} \.
+		\forall k : \TYPE{ConjugationField}(S) \.
+		\forall n \in \Nat \. 
+		\forall A \in k^{n \times n} 
+		\. \NewLine \.
+		\exists Q : \TYPE{OrthonormalMatrix}(k,n)  \.
+		\exists R : \UTM(k,n) :
+		A = QR }
+	\Say{r}{\rank A}{\Int_+}
+	\Say{p}{\ByConstr(r)\FUNC{enumerate}\THM{MaxLIExists}(\C(A))}{ \LI(r,k^n)}
+	\Say{q}{\NGS(p)}{ V_r(k^n)}
+	\Say{(q',[1])}{\THM{GrammSmidtAugementation}(k^n)(q)\bd \dim k^n \bd \FUNC{rank}}{\sum q' \in V_n(k^n) \. q'_{|r} = q }
+	\Say{Q}{\FUNC{FromColumns}(q')}{ k^{n \times n}}
+	\Say{[2]}{\bd \TYPE{OrthonormalMatrix}\ByConstr(Q)}{ (Q : \TYPE{OrthonormalMatrix}(k,n))}
+	\Conclude{(R,[*])}{\bd \NGS \ByConstr(Q)}{\sum R : \TYPE{RowEchelonForm}(k,n) \. A = QR }
+	\EndProof
+	\\
+	\DeclareFunc{decomposeQR}{ \prod S : \TYPE{WithSquareRoots} \. \prod k : \TYPE{ConjugationField}(S) \.  \prod n,m \in \Nat \. \NewLine \. 
+		k^{n \times m} \to \TYPE{OrthonormalMatrix}(k,n) \times \UTM(k,n,m)     }
+	\DefineNamedFunc{decomposeQR}{A}{(Q(A),R(A))}{\THM{NormedQRDecomposition}(A)}
+	\\
+	\Theorem{OrthonormalDet}{\forall A : \TYPE{Orthonormal}(k,n) \. |\det A| = 1 }
+	\NoProof
+	\\
+	\Theorem{QRDet}{\forall A \in k^{n \times n} \. |\det R(A)| = |\det A|}
+	\NoProof
+	\\
+	\Theorem{OrthogonalTriangulization}{ 
+		\forall  V : \FDIPS(k) \. 
+		\forall T \in \End_{\VS{k}}(V) \. 
+		\NewLine \. 
+		\exists e : \OBasis(V) \. T^{e,e} : \UTM(k,\dim V,\dim V)   
+	}
+	\NoProof
+	\\
+	\Conclude{\FUNC{specialOrthogonalGroup} = \SO}{\Lambda n \in \Nat \. \{ A \in \O(n) | \det A = 1 \}}{\Nat \to \GRP  }
+	\\
+	\Conclude{\FUNC{specialUnitaryGroup} = \SU}{\Lambda n \in \Nat \. \{ A \in \U(n) | \det A = 1 \}}{\Nat \to \GRP}
+}
+\newpage
+\subsection{Finite-Dimensional Riez Representation Theorem}
+\Page{
+	\DeclareFunc{asFunctional}{\prod V : \IPS(k) \. V \Arrow{\VS{k}} \overline{V^*} }
+	\DefineNamedFunc{asFunctional}{v}{\phi_v}{ \Lambda u \in V \. \langle u,v\rangle}             
+	\\
+	\Theorem{FDRieszRepresentationTheorem}{ \forall S : \TYPE{WithSquareRoots} \. \forall k : \TYPE{ConjugationFiels}(S) \. \forall V : \FDIPS(k) \. \forall f \in V^* \. \NewLine \exists! v \in V : \phi_v = f }
+	\Say{e}{\THM{OrthogonalBasisTHM}}{\OBasis(V)}
+	\Say{(\alpha,[1])}{\bd \TYPE{Basis}(e^*,f)}{\sum \alpha \in k^{\dim V} \. f = \alpha e^*}
+	\Say{v}{\overline{\alpha}e}{V}
+	\Assume{u}{V}
+	\Say{(\beta,[2])}{\bd \TYPE{Basis}(e)(u)}{\sum \beta \in k^{\dim V} \. u = \beta e}
+	\Conclude{[u.*]}{\bd \TYPE{DualBasis}[1][2]\bd^{-1}\FUNC{dotProduct}\THM{InnerProductAsInnerProduct}(V,e)[1][2]\bd^{-1}\phi_v}{
+		\NewLine : f(u) = \beta_i \alpha_i = \beta \cdot \overline{\alpha} = \langle u, v \rangle = \phi_v(u)}
+	\Derive{[2]}{I(=,\to)}{ f = phi_v }
+	\Assume{w}{V}
+	\Assume{[3]}{f = \phi_w}
+	\Say{[4]}{[3][2]}{\phi_v = \phi_w}
+	\Assume{u}{V}
+	\Conclude{[u.*]}{[4]\THM{MultiAdditive}(\langle \cdot,\cdot\rangle)}{  0 = \phi_v(u) - \phi_w(u) = \langle u, v \rangle - \langle u, w\rangle = \langle u, v - w\rangle}
+	\Derive{[5]}{I(\forall)}{\forall u \in V \. \langle u, v - w\rangle = 0 }
+	\Conclude{[w.*]}{\bd \TYPE{Nondegenerate}(\langle \cdot, \cdot \rangle)[5]}{ v - w = 0}
+	\Derive{[*]}{\bd^{-1}\LOGIC{Unique}}{\LOGIC{This}}
+	\NoProof
+	\\
+	\DeclareFunc{VectorOfRiesz}{\prod  S : \TYPE{WithSquareRoots} \. \prod k : \TYPE{ConjugationFiels}(S) \.  \NewLine \.\prod V : \FDIPS(k) \. V^* \Arrow{\VS{k}} \overline{V}}
+	\DefineNamedFunc{VectorOfRiesz}{f}{v_f}{\THM{FDRiezRepresentationTheorem}(f)}
+	\\
+	\Theorem{RieszIsomorphism}{ \forall S : \TYPE{WithSquareRoots} \. \forall k : \TYPE{ConjugationFiels}(S)  \. \NewLine \forall V : \FDIPS(k) \. v : V \ToIso{\VS{k}} \overline{V} }
+	\NoProof
+}
+\newpage
+\subsection{Adjoint Operators}
+\Page{
+	\Assume{S}{\TYPE{WithSquareRoots}}
+	\Assume{k}{\TYPE{ConjugationField}}
+	\Assume{V,W,Y}{\FDVS{k}}
+	\\
+	\DeclareType{Adjoint}{ \Mor_{\VS{k}}(V,W) \to ?\Mor_{\VS{k}}(W,V) }
+	\DefineType{T'}{Adjoint}{ \Lambda T \in \Mor_{\VS{K}}(V,W) \. \forall v\in V \. \forall w \in W \langle Tv, w \rangle = \langle v, T'w\angle}
+	\\
+	\Theorem{AdjointUnique}{ \forall T \in \Mor_{\VS{k}}(V,W) \. \exists! \TYPE{Adjoint}(V)}
+	\Say{e}{\THM{OrthonormalBasisTHM}(V)}{\OBasis(V)}
+	\Say{f}{\THM{OrthonormalBasisTHM}(W)}{\OBasis(W)}
+	\Say{n}{\dim V}{\Nat}
+	\Say{m}{\dim W}{\Nat}
+	\Say{A}{\FUNC{matrixOfOperator}(e,f,T)}{k^{n \times n}}
+	\Say{T'}{\FUNC{FromMatrix}(A^{\bar \top},f,e)}{ \Mor_{\VS{k}}(W,V)  }
+	\Assume{i,j}{m}
+	\Conclude{[(i,j).*]}{ \ByConstr A \bd^4\TYPE{OBasis}(e)^2(f)^2  \ByConstr^{-1} T'   }{ \langle  Te_i, e_j  \rangle  = A_{j,i} =\langle e_i, T'e_j  \rangle} 
+	\Derive{[1]}{\bd \L(V,V;k)\Big( \langle \bot, \bot \rangle \Big) I(\forall)}{ \forall v,u \in V  \. \langle Tv, u \rangle = \langle v, Tu \rangle}
+	\Say{[2]}{\bd^{-1}\TYPE{Adjoint}(T)(T')}{ \Big(T' : \TYPE{Adjoint}(T) \Big) }
+	\Assume{T''}{\TYPE{Adjoint}(T)}
+	\Assume{v}{V}
+	\Assume{u}{V}
+	\Say{[u.*]}{ \bd \TYPE{Adjoint}(A)[1] \THM{MultiAdditive}(\langle \cdot,\cdot\rangle)\bd^{-1}\FUNC{mapAdd}(T',T'')}
+	{ \NewLine :  0 = \langle v , T'u \rangle - \langle v, T''u \rangle = \langle v, T'u - T''u \rangle = \big\langle v, (T' - T'')u \big\rangle }
+	\Derive{[4]}{I(\forall)}{\forall u \in V \. \big\langle u,(T'-T'')v \big\rangle = 0}
+	\Conclude{[v.*]}{\bd \TYPE{Nondegenerate}(\langle \cdot, \cdot \rangle)[4]}{  (T' - T'')v = 0 }
+	\DeriveConclude{[5]}{I(=,\to)}{T' - T'' = 0}
+	\DeriveConclude{[*]}{\bd^{-1}\LOGIC{Unique}(T')}{\exists! \TYPE{Adjoint}(T)}
+	\\
+	\DeclareFunc{adjointOp}{ \End_{\VS{k}} \to \End_{\VS{k}}}
+	\DefineNamedFunc{adjointOp}{T}{T^\star}{\THM{AdjointUnique}(T)}
+	\\
+	\Theorem{AdjointAdditive}{\forall A,B : V \Arrow{\VS{k}} W \. (A + B)^\star = A^\star + B^\star }
+	\NoProof
+	\\
+	\Theorem{AdjointConjugateHomogen}{\forall A : V \Arrow{\VS{k}} \.  \forall \alpha \in k \. (\alpha  A)^\star = \overline{\alpha} A^\star}
+	\NoProof
+}
+\Page{
+	\Theorem{AdjointOfAdjoint}{\forall A : V \Arrow{\VS{k}} W \. A^{\star\star} = A}
+	\Assume{v}{V}
+	\Assume{w}{W}
+	\Conclude{[(v,w).*]}{\bd \TYPE{ConjugateSymmetric}(V)\bd \TYPE{Conjugate}(T)(T^\star)\bd \TYPE{ConjugateSymmetric}(V)}
+	{\NewLine : \langle T^*v, w \rangle = \overline{\langle w, T^*v \rangle} = \overline{\langle Tw, v \rangle} = \langle v, Tw \rangle}
+	\DeriveConclude{[*]}{\THM{AdjointUnique}}{A^{\star\star} = A}
+	\EndProof
+	\\
+	\Theorem{AdjointCompose}{\forall A : V \Arrow{\VS{k}} W \. \forall B : W \Arrow{\VS{k}} \. (AB)^\star = B^\star A^\star}
+	\NoProof
+	\\
+	\Theorem{AdjointInverse}{\forall A : V \ToIso{\VS{k}} W \. \Big(A^{-1}\Big)^\star = \Big(A^\star\Big)^{-1}}
+	\Assume{v,u}{V}
+	\Conclude{[(v,w).*]}{\bd \TYPE{Inverse} \bd \TYPE{Adjoint}}
+	{ \langle u,v \rangle = \langle A^{-1}Au,v \rangle = \bigg\langle u, A^* \Big(A^{-1}\Big)^\star v \bigg\rangle   }
+	\Derive{[1]}{\bd \TYPE{Nondegenerate}\big(\langle\cdot,\cdot\rangle\big)\bd \VS{K}(V,V)}{A^* \Big( A^{-1} \Big)^\star = \id}
+	\Conclude{[*]}{\THM{UniqueInverseInFiniteDimension}[1]}{\Big(A^{-1}\Big)^\star = \Big( A^\star\Big)^{-1}}
+	\EndProof
+	\\
+	\Theorem{AdjointInvariantCondition}{\forall A : \End_{\VS{k}}(V) \. \forall S \subvec{k} V \. S : \IS(V,A) \iff S^\bot : \IS(V,A^\star)}
+	\Assume{L}{\Big(S : \IS(V,A)\Big)}
+	\Assume{v}{S^\bot}
+	\Assume{u}{S}
+	\Conclude{[u.*]}{\bd \IS(V,A)\bd S^\bot \bd^{-1} A^\star}{  0 = \langle Au, v \rangle = \langle u, A^\star v\rangle  }                                               
+	\DeriveConclude{[v.*]}{\bd  S^\bot}{ A^\star v \in  S^\bot }
+	\DeriveConclude{[L.*]}{ \bd^{-1} \IS  }{ \big(S^\bot : \IS(V,A^\star)\big)}
+	\Derive{[1]}{I(\Rightarrow)}{\LOGIC{Left} \Rightarrow \LOGIC{Right}}
+	\Conclude{[*]}{I(\iff)\THM{AdjointOfAdjoint}(A)\THM{OrthogonalOfOrthogonal}(S)[2]}{\LOGIC{This}}
+	\EndProof
+}\Page{
+	\Theorem{AdjointReduction}{\forall A : \End_{\VS{k}} \. \forall S  \subvec{k} \.  \NewLine \. A = S \boxplus S^\bot \iff S : \IS(V)(A)(A^\star) }
+	\Say{[1]}{\bd \TYPE{OrthogonalDirectSum}(A)}{ V = S \bot S^\bot}
+	\Assume{L}{ A = S \boxplus S^\bot}
+	\Conclude{[L.*]}{\bd \TYPE{ReducingSystem}(L)}{\Big(S : \IS(V)(A)(A^\star)\Big)}
+	\Derive{[2]}{I(\Rightarrow)}{\LOGIC{Left} \Rightarrow \LOGIC{Right}}
+	\Assume{R}{\Big( S : \IS(V)(A)(A^\star) \Big) }
+	\Say{[3]}{\THM{AdjointOfAdjoint}(\THM{AdjointInvariantCondition}(R))}{\Big(S^\bot : \IS(V,A)\Big)  }
+	\Conclude{[R.*]}{\bd^{-1}\TYPE{ReducingSystem}\big([1],R,[3]\big)}{A = S \boxplus S^\bot} 
+	\Derive{[*]}{I(\iff)[2]I(\Rightarrow)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{AdjointKernel}{\forall A : V \Arrow{\VS{k}} W \. \ker A^\star = (\im A)^\bot}
+	\Assume{v}{(\im A)^\bot}
+	\Assume{u}{V}
+	\Conclude{[u.*]}{\bd \FUNC{orthogonalCpmplement} \bd \TYPE{Adjoint}(A)}{ 0 = \langle Au  , v  \rangle = \langle u ,  A^\star  v \rangle}
+	\Derive{[1]}{\bd \TYPE{Nondegenerate}\big(\langle \cdot,\cdot\rangle\big)}{A^\star v = 0}
+	\Conclude{[v.*]}{\bd \ker A^\star [0]}{v \in \ker A^\star}
+	\Derive{[1]}{\bd \TYPE{Subset}}{ (\im A)^\bot \subset \ker A^\star  }
+	\Assume{u}{\ker A^\star}
+	\Assume{v}{V}
+	\Conclude{[v.*]}{}{  0 = \langle v , 0 \rangle = \langle v, T^*u \rangle = \langle Tv, u \rangle }
+	\DeriveConclude{[u.*]}{\bd (\im T)^\bot}{ u \in (\im T)^\bot}
+	\DeriveConclude{[*]}{\bd \TYPE{SetEq}\bd \TYPE{Subset}[1]}{ \ker A^\star = (\im A)^\bot   }
+	\EndProof
+	\\
+	\Theorem{AdjointImage}{\forall A : V \Arrow{\VS{k}} W \. \im A^\star = (\ker A)^\bot}
+	\NoProof
+	\\
+	\Theorem{AdjointCompositionKernel}{\forall A : \End_{\VS{k}}(V) \. \ker AA^\star = \ker A}
+	\NoProof
+	\\
+	\Theorem{AdjointCompositionImage}{\forall A : \End_{\VS{k}}(V) \. \im A^\star A = \im A}
+	\NoProof
+}\Page{
+	\Theorem{AdjointAsDual}{\forall A : V \Arrow{\VS{k}} W \.  A^\star = \phi A^* v}
+	\Assume{u}{V}
+	\Assume{w}{W}
+	\Say{[1]}{ \bd A^* \bd v \bd \phi_w     }{  
+		\langle u ,(\phi A^* v) w \rangle =   
+		\langle u, (A^* v) \phi_w \rangle = 
+		\langle u ,  v  (A \phi_w) \rangle = 
+		A \phi_w(u)  = 
+		\langle Au, w\rangle 
+	}
+	\Conclude{[*]}{\THM{AdjointUnique}[1]}{ A^\star = \phi A^* v}
+	\EndProof
+	\\
+	\Theorem{LeftInverseByAdjoint}{ \forall A : V \Arrow{\VS{k}} W \And V \ToSurj W \.   ( A^\star A )^{-1} A^\star  : \TYPE{RightInverse}(A)   }
+	\Say{[1]}{ \THM{AddjointCompositionKernel}(A^\star)\THM{AdjointKernel}(A) \bd \TYPE{Surjective}(A) \bd \FUNC{orthogonalComplement} }
+	{ \NewLine : \ker A^\star A =  \ker A^\star = (\im A)^\bot = \{0\} }
+	\Say{[2]}{ \THM{FiniteDimensionalInvertibility}[1]}{ \Big((A^\star A) : \TYPE{Invertible}(V) \Big)}
+	\Conclude{[*]}{\bd \TYPE{Inverse}}{ (A^\star A)^{-1} A^\star A = \id}
+	\EndProof
+	\\
+	\Theorem{RightInverseByAdjoint}{ \forall A : V \Arrow{\VS{k}} W \And V \ToInj  W \.   A^\star( A^\star A )^{-1}   : \TYPE{LeftInverse}(A) }
+	\NoProof
+}
+\newpage
+\subsection{Orhogonal Projectors}
+\Page{
+	\DeclareType{OrthogonalProjector}{? \TYPE{Projector}(V)}
+	\DefineType{P}{OrthogonalProjector}{\im P \bot \ker P}
+	\\
+	\Theorem{ProjectionIsOrthogonalIffSelfAdjoint}{\forall P : \TYPE{Projector}(V) \.  \NewLine \. P : \TYPE{OrthogonalProjector}(V) \iff P = P^\star}
+	\Assume{L}{\big(P : \TYPE{OrthogonalProjector}(V)  \big)}
+	\Say{[1]}{\bd \TYPE{OrthogonalProjector}(V)}{  \im P \bot \ker P}
+	\Say{[2]}{\THM{OrthogonalDirectSum}(P)}{V = \im P \oplus \ker P}
+	\Assume{u}{\im P}
+	\Assume{v}{\im P}
+	\Say{[3]}{\bd  \TYPE{Projector}(P)\bd \TYPE{Adjoint}(P^\star) }{  \langle v, Pu \rangle  = \langle Pv, u \rangle = \langle v, P^\star u \rangle}
+	\Conclude{[v.*]}{\bd \L(V,V;k)(V)[1]}{\langle v, u - P^\star u \rangle = 0}
+	\Derive{[3]}{I(\forall)}{ \forall v \in \im P \. \langle v, Pu - P^\star u \rangle = 0}
+	\Assume{v}{\ker P}
+	\Say{[4]}{ \bd  \TYPE{Orthogonal}(k) \bd \ker P \bd \TYPE{Adjoint}(P^\star)}{  \langle v, Pu \rangle  = 0 = \langle 0, u \rangle = \langle Pv, u \rangle = \langle v, P^\star u \rangle } 
+	\Conclude{[v.*]}{\bd \L(V,V;k)(V)[2]}{ \langle v, pu - P^\star u \rangle = 0}
+	\Derive{[4]}{I(\forall)}{\forall v \in \ker P \. \langle v, Pu - P^\star u \rangle = 0}
+	\Say{[5]}{[2][3][4] }{ \forall v \in V \. \langle v,Pu - P^\star u \rangle = 0 }
+	\Conclude{[u.*]}{\bd \TYPE{NonDegenerate}(V)[5] }{Pu =  P^\star u}
+	\Derive{[3]}{I(\forall)}{\forall u \in \im P \. Pu = P^\star u}
+	\Assume{u}{\ker P}
+	\Assume{v}{V}
+	\Say{[4]}{\bd  \TYPE{Orthogonal}(k) \bd \ker P \bd \TYPE{Adjoint}(P^\star) }{ \langle v, Pu \rangle = \langle v, 0 \rangle = 0 = \langle Pv, u \rangle = \langle v, P^\star u \rangle}
+	\Conclude{[(u,v).*]}{\TYPE{NonDegenerate}(V)[4] }{ Pu = P^\star u  }
+	\Derive{[4]}{I(\forall)}{\forall u \in \ker P  \. Pu = P^\star u }
+	\Say{[5]}{[2][3][4]}{\forall  u \in V \. Pu = P^\star u}
+	\Conclude{[6]}{((=,\to)[5])}{P = P^\star}
+	\Derive{[1]}{I(\Rightarrow)}{\LOGIC{Left} \Rightarrow \LOGIC{Right}}
+	\Assume{R}{P = P^\star}
+	\Assume{v}{\im P}
+	\Assume{w}{\ker P}
+	\Conclude{[*]}{\bd \TYPE{Projection}(P)(R)\bd \ker P }{ \langle v, w \rangle = \langle Pv, w \rangle = \langle v,Pw \rangle = 0}
+	\Derive{[2]}{I(\forall)\bd \TYPE{OrthogonalVectors}}{\forall v \in \im P \. \forall w \in \ker P \. v \bot w}
+	\Derive{[3]}{\bd^{-1}\TYPE{OrthogonalSet}[2]}{ \im P \bot \ker P   }
+	\Conclude{[R.*]}{\bd^{-1}\TYPE{OrthogonalProjector}}{\Big(P : \TYPE{Orthogonalprojector}(V)\Big)}
+	\DeriveConclude{[*]}{I(\iff)I(\Rightarrow)[1]}{\LOGIC{This}}
+	\EndProof
+}
+\Page{
+	\Conclude{\TYPE{OrthogonalResolutionOfIdentity}}{\TYPE{ResolutionOfIdentity} \And \TYPE{OrthogonalProjector}}
+	{ \NewLine : \prod k : \TYPE{ConhugationField} \.  \SET \to \IPS(k) \to \Type }
+	\\
+	\Theorem{OrthogonalResolutionProperty}{ \forall P : \TYPE{OrthogonalResolutionOfIdentity}(X,V) \. V = \bigbot_{x \in X} \im P_x   }
+	\NoProof
+	\\
+	\Theorem{OrthogonalResolutionCondition}{ 
+		\forall V : \IPS(k) \. 
+		\forall X \in \SET \. \NewLine \.
+		\forall S : X \to \TYPE{VectorSubspace}(V) \. 
+		V = \bigbot_{x \in X} S_x \Rightarrow \NewLine \Rightarrow
+		\exists P : \TYPE{OrthogonaResolutionOfIdentity}(X,V) :
+		\forall x \in X \. \im P_x = S_x		
+		}
+	\NoProof
+}
+\newpage
+\subsection{Normal Operators and Spectral Theorem}
+\Page{
+	\DeclareType{UnitaryDiagonalizable}{ \prod V : \IPS(k) \.  ?\End_{\VS{k}}(V)  }
+	\DefineType{T}{UnitaryDaigonalizable}{\exists e : \OBasis :\Big(T^{e,e} : \Diag\Big)}
+	\\
+	\Theorem{UDByEigenvectors}{\forall V : \IPS(K) \. \forall T \in \End_{\VS{k}}(V) \. 
+	\NewLine T : \TYPE{UnitatyDiagonalizable}(V) \iff \exists E : \OBasis : (\forall e \in E \. e : \TYPE{Eigenvector}(V)) }
+	\\
+	\DeclareType{\NO}{ \prod V : \IPS(k) \. ?\End_{\VS{k}}(V) }
+	\DefineType{T}{  \NO  }{TT^\star = T^\star T}
+	\\
+	\DeclareType{\NM}{ \prod V : \IPS(k) \. ?\End_{\VS{k}}(V) }
+	\DefineType{T}{  \NM  }{TT^{\bar \top} = T^{\bar \top} T}
+	\\
+	\Theorem{OrthonormalBasisNormality}{\forall V :\IPS(k) \. \forall T \in \End_{\VS{k}}(V) \. \NewLine \. \forall e : \OBasis(V) \. T : \NO(V) \iff T^{e,e} : \NM(V) }
+	\NoProof
+	\\
+	\Theorem{NormalRestriction}{\forall V : \IPS(k) \. \forall T : \NO(V) \. \forall S \subvec{k} V \.  \NewLine \. \forall [0] : T = S \boxplus S^\bot \. T_{|S} : \NO(V)}
+	\Say{[1]}{\THM{AdjointInvariantCondition}(T)\THM{AdjointReduction}(T)[0]}{ \NewLine : \Big( S,S^\bot : \IS(V)(T)(T^\star) \Big) }
+	\Conclude{[*]}{[1]\bd \NO(T)[1]}{ T^\star_{|S} T_{|S} = (T^\star T)_{|S} = (TT^\star)_{|S} =T_{|S}T^\star_{|S}}
+	\EndProof
+	\\
+	\Theorem{NormalAdjoint}{\forall V : \IPS(k) \. \forall T : \NO(V) \.  T^\star : \NO(V) }
+	\NoProof
+	\\
+	\Theorem{NormalInverse}{\forall V : \IPS(k) \. \forall T : \NO(V) \And \GL(V) \.  \NewLine \. T^{-1} : \NO(V) }
+	\NoProof
+}\Page{
+	\Theorem{IsometricNormalAdjoint}{\forall V : \IPS(k) \. \forall T : \NO(V) \. \forall v,w \in V \. \langle Tv, Tw \rangle = \langle T^\star v, T^\star w \rangle}
+	\Conclude{[*]}{\bd \TYPE{Adjoint}(T)\bd \NO(V)\THM{AdjointOfAdjoint}(T)}{ 
+		\NewLine :
+		\langle Tv, Tw \rangle = \langle v, T^\star Tw \rangle = \langle v, T T^\star w \rangle =  \langle T^\star v, T^\star w \rangle}
+	\EndProof
+	\\
+	\Theorem{NormalKernel}{\forall V : \IPS(k) \. \forall T : \NO(V) \. \ker T^\star = \ker T}
+	\NoProof
+	\\
+	\Theorem{NormalPowerKernel}{\forall V : \IPS(k) \. \forall T : \NO(V) \. \forall n \in \Nat \. \ker(T^n) = \ker T}
+	\Say{[1]}{\THM{NormalKernel}(T)}{\ker T^\star = \ker T}
+	\Say{[2]}{\THM{AdjointKernel}[1]}{ \ker T = (\im T)^\bot}
+	\Say{[3]}{\THM{OrthogonalIntersect}[2]}{ \ker T \cap \im T = \{0\} }
+	\Conclude{[*]}{ \bd (\ker T)\bd (\im T)[3]}{  \ker T^n = \ker T  }
+	\EndProof
+	\\
+	\Theorem{NormalPolynomial}{\forall V : \IPS(k) \. \forall T : \NO(V) \. \forall p \in k[x] \. \NewLine \. p(T) : \NO(V)}
+	\NoProof
+	\\
+	\Theorem{NormalMinimalPolynomial}{\forall V : \IPS(k) \. \forall T : \NO(V) \. \NewLine \. \exists n \in \Nat \. p(x) : n \to \TYPE{Prime}\Big(k[x]\Big) \. m^T(x) = \prod^n_{i=1} p_i(x)}
+	\Assume{p}{\TYPE{PrimeDivisor}(m^T(X))}
+	\Say{(n,q,[1])}{\THM{PrimeDecomposition}\Big(m^T(x)\Big)}{ \sum n \in \Nat \. \sum q \in k[x] \. \NewLine \. p^n(x)q(x) = m^T(x) \And (p,q) : \TYPE{Coprime}(k[x])  } 
+	\Say{[2]}{\THM{NormalPolynomial}(T,p)}{\Big(T(p) : \NO(V)\Big)}
+	\Say{[3]}{\THM{ProductKernel}(m^T)[1]\THM{NormalPowerKernel}(p(T))[2]}{  \ker p^n(x)q(x) = \ker p(x)q(x) }
+	\Conclude{[p.*]}{\bd \FUNC{minimalPolynomial}[3]}{ n = 1 }
+	\DeriveConclude{[*]}{\bd k[x]}{ m^T(x) = \prod^n_{i=1} p_i(x)   }
+	\EndProof
+}\Page{
+	\Theorem{NormalEigenvalule}{\forall V : \IPS(k) \. \forall T : \NO(V) \. \NewLine \. 
+		\forall \lambda : \TYPE{Eigenvalue}(T) \. \forall v : \TYPE{Eigenvector}(T,\lambda) \. T^\star v = \overline{\lambda} v  }
+	\NoProof
+	\\
+	\Theorem{OrthogonalityByPrimality}{
+		\forall V : \IPS(k) \. \forall T : \NO(V) \. \NewLine \.
+		\forall A,B \submod{k[x]} V_T \. \forall [0] : \Big( (m^{T_{|A}},m^{T_{|B}} ) : \TYPE{Coprime}(k[x]) \Big) \. 
+		A \bot B
+	}
+	\Say{(a,b,[1])}{\bd \TYPE{Coprime}[0] }{ \sum a(x),b(x) \in k[x] \.  1 = a(x)m^{T_{|A}}(x) + b(x)m^{T_{|B}}(x)}
+	\Say{\alpha(x)}{a(x)m^{T_{|A}}(x)}{k[x]}
+	\Say{\beta(x)}{b(x)m^{T_{|A}}(x)}{k[x]}
+	\Assume{v}{A}
+	\Assume{w}{B}
+	\Conclude{[(v,w).*]}{ [1] \bd \alpha(T) \bd \TYPE{Adjoint}\big(\beta(T)\big)\THM{NormalPolynomial}(\beta,T) \THM{NormalKernel}(\beta(T)) [1] }{ 
+		\NewLine :  
+		\langle v,w \rangle = 
+		\Big\langle \big(\alpha(T) + \beta(T)\big) v,w \Big\rangle = 
+		\langle \beta(T) v, w \rangle = 
+		\langle v, \beta^\star(T) w \rangle = 0
+	}
+	\DeriveConclude{[*]}{I(\forall)\bd \TYPE{OrthogonalSet}}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{NormalEigenspaceOrthogonality}{ \forall V : \IPS(k) \. \forall T : \NO(V) \. 
+		\NewLine \forall \lambda,\mu : \TYPE{Eigenvalue}(T) \. \lambda \neq \mu \Rightarrow \mathcal{E}_T(\lambda) \bot \mathcal{E}_T(\mu)
+	}
+	\NoProof
+	\\
+	\Theorem{ComplexSpectralTheorem}{\forall V : \IPS(\Complex) \. \forall T \in \End_{\VS{\Complex}}(V) \.  
+		\NewLine T : \NO(V) \iff T : \TYPE{UnitaryDiaginalizable}(V) }
+	\NoProof
+	\\
+}
+\newpage
+\subsection{Self-Adjoint and Unitary Operators}
+\Page{
+	\DeclareType{\SA}{\prod V : \IPS(k) \. ?\End_V(k)}
+	\DefineType{T}{\SA}{T=T^\star}
+	\\
+	\DeclareType{\SSA}{\prod V : \IPS(k) \. ?\End_V(k)}
+	\DefineType{T}{\SSA}{-T=T^\star}
+	\\
+	\DeclareType{OrthogonalOperator}{ \prod V : \IPS(k) \. ?\End_V(k)}
+	\DefineNamedType{T}{Orthogonal}{\O(V)}{ T T^\star = \id = T^\star T}
+	\\
+	\Theorem{SelfAdjointIsNormal}{\forall V : \IPS(k) \. \forall T : \SA(V) \. T : \NO(V)}
+	\NoProof
+	\\
+	\Theorem{SkewSelfAdjointIsNormal}{\forall V : \IPS(k) \. \forall T : \SSA(V) \. \NewLine \. T : \NO(V)}
+	\NoProof
+	\\
+	\Theorem{OrthogonalIsNormal}{\forall V : \IPS(k) \. \forall T : \O(V) \. T : \NO(V)}
+	\NoProof
+	\\
+	\Theorem{SelfAdjointIsVS}{\forall V : \IPS(k) \. \SA(V) \in \VS{k}}
+	\NoProof
+	\\
+	\Theorem{SkewSelfAdjointIsVS}{\forall V : \IPS(k) \. \SSA(V) \in \VS{k}}
+	\NoProof
+	\\
+	\Theorem{SelAdjointPolynomial}{\forall V : \IPS(k) \. \forall T : \SA(V) \. \NewLine \. \forall p(x) \in k[x] \. p(T) : \SA(V)  }
+	\NoProof
+}
+\Page{
+	\DeclareFunc{associateQuadraticForm}{\forall V : \IPS(k) \. \End_{\VS{k}}(V) \to \TYPE{QuadraticForm}(V)}
+	\DefineNamedFunc{associateQuadraticForm}{T}{\mathbf{Q}_T}{\langle Tv, v \rangle}
+	\\
+	\Theorem{OrderedValuesOfSymmetricForm}{\forall V : \IPS(k) \. \forall T \in \End_{\VS{k}}(V) \. T : \SA(V) \Rightarrow \im \mathbf{Q}_T \subset R }
+	\Assume{L}{T \in \O(V)}
+	\Assume{v}{V}
+	\Say{[1]}{\bd \SA}{  \overline{\langle v, Tv \rangle} = \langle Tv, v \rangle = \langle v, Tv \rangle }
+	\Conclude{[v.*]}{ \bd \TYPE{ConjugationField}(k)}{  \langle Tv, v \rangle \in R   }
+	\DeriveConclude{[1]}{I(\forall)\bd^{-1} \im \mathbf{Q}_T I(\Rightarrow)}{ \LOGIC{Left} \Rightarrow \LOGIC{Right} }
+	\EndProof
+	\\
+	\Theorem{ComplexQuadraticZeroTheorem}{\forall V : \IPS(\Complex) \. \forall T \in \SA(V) \. \mathbf{Q}_T = 0 \Rightarrow T = 0 }
+	\Assume{v}{V}
+	\Assume{w}{W}
+	\Say{[1]}{[0](v+w)\bd \mathbf{Q}_T \THM{MultiAdditive}\Big(  \langle \cdot,\cdot \rangle \Big)[0] 
+		\bd \TYPE{InnerProduct}\Big(\langle \cdot , \cdot \rangle\Big) \NewLine \bd \SA(V)(T)\THM{RealPartExpression} }{   
+		0 =
+		\mathbf{Q}_T(v + w) =
+		\Big\langle  T(v + w), v + w \Big\rangle = \NewLine =  
+		\langle Tv,v \rangle + \langle Tv , w \rangle + \langle Tw, v \rangle + \langle Tw,w \rangle =
+		\langle Tv,w \rangle + \langle Tw,v \rangle = 
+		\langle Tv, w \rangle + \langle w,Tv \rangle = \NewLine = 
+		\langle Tv,w \rangle + \overline{\langle Tv, w\rangle} =
+		2\Re\langle Tv,w \rangle
+	}
+	\Say{[2]}{[0](v+w)\bd \mathbf{Q}_T \THM{MultiAdditive}\Big(  \langle \cdot,\cdot \rangle \Big)[0]\bd \FUNC{commplexConjugation} 
+		\bd \TYPE{InnerProduct}\Big(\langle \cdot , \cdot \rangle\Big)\NewLine\bd \SA(V)(T)\THM{ImaginablePartExpression} }{   
+		0 =
+		\mathbf{Q}_T(v + \mathrm{i}w) =
+		\Big\langle  T(v + \mathrm{i}w), v + \mathrm{i}w \Big\rangle = \NewLine =  
+		\langle Tv,v \rangle + \mathrm{i}\langle Tv , w \rangle  - \mathrm{i} \langle Tw, v \rangle  - \langle Tw,w \rangle =
+		\mathrm{i}\langle Tv,w \rangle - \mathrm{i}\langle Tw,v \rangle = 
+		\mathrm{i}\langle Tv, w \rangle - \mathrm{i}\langle w,Tv \rangle = \NewLine = 
+		\mathrm{i}\langle Tv,w \rangle - \mathrm{i}\overline{\langle Tv. w\rangle} =
+		-2\Im\langle Tv,w \rangle
+	}
+	\Conclude{[*]}{\THM{ZeroComplexNumber}[1][2]}{ \langle Tv, w \rangle = 0  } 
+	\Derive{[*]}{\bd \TYPE{NonDegenerate}I(=,\to)}{ Tv = 0  }
+	\EndProof
+	\\
+	\Theorem{RealQuadraticZeroTheorem}{\forall V : \IPS(\Complex) \. \forall T \in \SA(V) \. \mathbf{Q}_T = 0 \Rightarrow T = 0 }
+	\Assume{v}{V}
+	\Assume{w}{W}
+	\Say{[*]}{[0](v+w)\bd \mathbf{Q}_T \THM{MultiAdditive}\Big(  \langle \cdot,\cdot \rangle \Big)[0] 
+		\bd \TYPE{InnerProduct}\Big(\langle \cdot , \cdot \rangle\Big) \NewLine \bd \SA(V)(T) }{   
+		0 =
+		\mathbf{Q}_T(v + w) =
+		\Big\langle  T(v + w), v + w \Big\rangle = \NewLine =  
+		\langle Tv,v \rangle + \langle Tv , w \rangle + \langle Tw, v \rangle + \langle Tw,w \rangle =
+		\langle Tv,w \rangle + \langle Tw,v \rangle = 
+		\langle Tv, w \rangle + \langle w,Tv \rangle = \NewLine = 
+		\langle Tv,w \rangle + \langle Tv. w\rangle =
+		2\langle Tv,w \rangle
+	}
+	\Derive{[*]}{\bd \TYPE{NonDegenerate}I(=,\to)}{ Tv = 0  }
+	\EndProof
+}\Page{
+	\Theorem{ComplexQuadraticZeroTheorem2}{\forall V : \IPS(\Complex) \. \forall T \in \SSA(V) \. \mathbf{Q}_T = 0 \Rightarrow T = 0 }
+	\Assume{v}{V}
+	\Assume{w}{W}
+	\Say{[1]}{[0](v+w)\bd \mathbf{Q}_T \THM{MultiAdditive}\Big(  \langle \cdot,\cdot \rangle \Big)[0] 
+		\bd \TYPE{InnerProduct}\Big(\langle \cdot , \cdot \rangle\Big) \NewLine \bd \SA(V)(T)\THM{RealPartExpression} }{   
+		0 =
+		\mathbf{Q}_T(v + w) =
+		\Big\langle  T(v + w), v + w \Big\rangle = \NewLine =  
+		\langle Tv,v \rangle + \langle Tv , w \rangle + \langle Tw, v \rangle + \langle Tw,w \rangle =
+		\langle Tv,w \rangle + \langle Tw,v \rangle = 
+		\langle Tv, w \rangle - \langle w,Tv \rangle = \NewLine = 
+		\langle Tv,w \rangle - \overline{\langle Tv, w\rangle} =
+		2\mathbf{i}\Im\langle Tv,w \rangle
+	}
+	\Say{[2]}{[0](v+w)\bd \mathbf{Q}_T \THM{MultiAdditive}\Big(  \langle \cdot,\cdot \rangle \Big)[0]\bd \FUNC{commplexConjugation} 
+		\bd \TYPE{InnerProduct}\Big(\langle \cdot , \cdot \rangle\Big)\NewLine\bd \SA(V)(T)\THM{ImaginablePartExpression} }{   
+		0 =
+		\mathbf{Q}_T(v + \mathrm{i}w) =
+		\Big\langle  T(v + \mathrm{i}w), v + \mathrm{i}w \Big\rangle = \NewLine =  
+		\langle Tv,v \rangle + \mathrm{i}\langle Tv , w \rangle  - \mathrm{i} \langle Tw, v \rangle  - \langle Tw,w \rangle =
+		\mathrm{i}\langle Tv,w \rangle + \mathrm{i}\langle Tw,v \rangle = 
+		\mathrm{i}\langle Tv, w \rangle + \mathrm{i}\langle w,Tv \rangle = \NewLine = 
+		\mathrm{i}\langle Tv,w \rangle + \mathrm{i}\overline{\langle Tv. w\rangle} =
+		2\mathrm{i}\Re\langle Tv,w \rangle
+	}
+	\Conclude{[*]}{\THM{ZeroComplexNumber}[1][2]}{ \langle Tv, w \rangle = 0  } 
+	\Derive{[*]}{\bd \TYPE{NonDegenerate}I(=,\to)}{ Tv = 0  }
+	\EndProof
+	\\
+	\Theorem{SelfAdjointByRealValues}{ 
+			\forall V : \IPS(\Complex) \. 
+			\forall T \in \End_{\VS{\Complex}}(V) \. \NewLine \. 
+			\forall [00] : \im \mathbf{Q}_T \subset \Reals \. 
+			T \in \SA(V) 
+		}
+	\Assume{v}{V}
+	\Conclude{[v.*]}{ \THM{RealConjugate}(\ldots)\bd \TYPE{InnerProduct}\Big( \langle \cdot,\cdot \rangle \Big) \bd \TYPE{Adjoint T} }
+	{ 
+		\langle Tv,v \rangle = 
+		\overline{\langle Tv,v \rangle } = 
+		\langle v, T v \rangle  = 
+		\langle T^\star v, v \rangle 
+	}
+	\Derive{[1]}{\bd^{-1}\mathbf{Q}_T I(=,\to)}{ \mathbf{Q}_T = \mathbf{Q}_{T^\star}}
+	\Say{[2]}{\bd \FUNC{adjoint}}{ \Big(T - T^\star\Big)^\star = T^\star - T}
+	\Say{[3]}{\bd^{-1}\SSA(V)[2]}{ \Big( T - T^\star : \SSA(V)\Big)   }
+	\Say{[4]}{\THM{ComplexQuadraticZeroTheorem2}[1][3]}{  T = T^\star  }
+	\Conclude{[*]}{\bd^{-1} \SA(V)[4]}{\Big( T : \SA(V) \Big)}
+	\EndProof
+	\\
+	\Theorem{SelfAdjointHasRealSpectre}{ \forall V : \FDIPS(\Complex) \.  \NewLine \. \forall T \in \SA(V) \. \supp \sigma_T \subset \Reals }
+	\Assume{\lambda}{\TYPE{Eigenvalue}(T)}
+	\Say{\big(v,[1]\big)}{\bd \TYPE{Eigenvector}(T)}{\sum v \in V \. Tv = \lambda v \And v \neq 0}
+	\Say{[2]}{ \bd^{-1} \| v\|^2[1] \THM{OrderedValuesOfQuadraticForms}(V,T) }{ \lambda \| v \|^2  = \langle \lambda v, v \rangle = \langle Tv,v \rangle \in \Reals}
+	\Conclude{[(\lambda.*)]}{ \bd \|v\|^2[2]}{\lambda \in \Reals}
+	\DeriveConclude{[*]}{\bd \FUNC{spectre}}{\supp \sigma_T \subset \Reals}
+	\EndProof
+}
+\Page{
+	\Theorem{OrthogonalOperatorsAreGroup}{\forall V \in \IPS(k) \. \O(V) \in \GRP} 
+	\NoProof
+	\\
+	\Theorem{OrthogonalIsStabluUnderUnitScalarAction}{\forall V \in \IPS(k) \. \forall T \in \IPS(V) \.  \NewLine \. \forall \sigma \in \mathbb{S} \. \sigma T \in \O(V)}
+	\NoProof
+	\\
+	\Theorem{OrthogonalOperatorsAreIsometries}{\forall V \in \IPS(k) \. \forall T \in \End_{\VS{k}}(V) \. T \in \O(V) \iff \NewLine \iff T : \TYPE{Isometry}(V)}
+	\NoProof
+	\\
+	\Theorem{OrthogonalBasisProperty}{
+		\forall V \in \IPS(k) \. 
+		\forall T \in \End_{\VS{k}}(V) \. 
+		T \in \O(V) \iff \NewLine \iff 
+		\exists e : \OBasis(V) : 
+		\Big( Te : \OBasis(V)  \Big)
+		}
+	\NoProof
+	\\
+	\Theorem{OrthogonalEigenvalues}{\forall V \in \IPS(k) \. \forall T \in \O(V) \. \sigma_T(V) \subset \mathbb{S}(k)}
+	\NoProof
+	\\
+	\DeclareType{UnitaryEquivalent}{\prod n \in \Nat \.? \big(k^{n \times n}\times k^{n \times n}\big) }
+	\DefineType{(A,B)}{UnitaryEquivalent}{\exists U \in \U(k,n) :   B = U A U^\star}
+	\\
+	\Theorem{UnitaryEquivalenceCriterion}{\forall n \in \Nat \. \forall A,B \in k^{n \times n} \. (A,B) : \TYPE{UnitaryEquvalent}(k,n) \iff \NewLine 
+	\iff  \exists e : \OBasis(k^n) : \exists  f : \OBasis(k^n) \.  A_{e,e} = B_{f,f}}
+	\NoProof
+}\Page{
+	\Theorem{SelfAdjointAdditiveDecomposition}{\forall V \in \IPS(k) \. \forall A \in \End_{\VS{k}}(V) \. \NewLine \. \exists! X,Y : \SA(V) \.   A = X + \mathrm{i}Y \And A^\star = X - \mathrm{i}Y } 
+	\Say{X}{\frac{1}{2}\Big(A + A^\star\Big)}{\SA(V)}
+	\Say{Y}{ \frac{\mathrm{i}}{2}\Big(A^\star  - A \Big)}{\SA(V)}
+	\Say{[*.1]}{\ByConstr X \ByConstr Y \mathrm{i}}{ A = X + \mathrm{i}Y   }
+	\Conclude{[*.1]}{\ByConstr X \ByConstr Y \mathrm{i}}{ A^\star = X - \mathrm{i}Y   }
+	\NoProof
+	\\
+	\Theorem{SkewSymmetricEigenvalues}{ \forall V : \FDIPS(\Complex) \. \NewLine \forall T : \SSA(V) \.  \supp \sigma_T \subset  \mathrm{i}\Reals }
+	\Assume{\lambda}{\TYPE{Eigenvalue}(T)}
+	\Say{(v,[1])}{ \bd \TYPE{Eigenvalue}(\lambda)}{\sum v \in V \.  Tv = \lambda v \And v \neq 0}
+	\Say{[2]}{ \bd^{-1} \| v \|^2 \bd \TYPE{InnerProduct}\Big(\langle \cdot, \cdot \rangle \Big) [1] \bd \TYPE{Adjoint} [1] \bd \TYPE{InnerProduct}\Big(\langle \cdot, \cdot \rangle \Big) \bd^{-1} \| v \|^2}{ 
+		\NewLine : 
+		\lambda \| v \|^2 = 
+		\langle \lambda v, v \rangle =  
+		\langle Tv,v \rangle = 
+		\langle v, -T v \rangle = 
+		\langle v, -\langle v \rangle = 
+		-\overline{\langle}\| v \|^2  
+	}
+	\Say{[3]}{[1]\frac{[2]}{\|v\|^2}}{ \lambda = - \overline{\lambda}}
+	\Conclude{[\lambda.*]}{ \THM{ImaginableByConjugation}[3] }{ \lambda \in \mathrm{i}\Reals   }
+	\DeriveConclude{[*]}{ \bd^{-1}\FUNC{spectrum}}{ \supp \sigma_T \subset \mathrm{i}\Reals }
+	\EndProof
+	\\
+	\Theorem{NormalByNorm}{\forall V : \IPS(\Complex) \. \forall T \in \End_{\VS{\Complex}}(V) \. \forall [0] : \| T v \| = \| T^\star v \| \. T : \NO(V)}
+	\Assume{v}{V}
+	\Conclude{[v.*]}{ \bd \TYPE{Adjoint}[0]}{ \langle T^\star T v, v \rangle = \langle Tv,Tv \rangle = \langle T^\star v, T^\star v \rangle = \langle T T^\star v, v \rangle }
+	\Derive{[1]}{\bd^{-1}\mathbf{Q}_T}{\mathbf{Q}_{T^\star T} = \mathbf{Q}_{TT^\star}}
+	\Say{[2]}{\THM{SelfAdjointProduct}(T^\star)}{\Big(T^\star T : \SA(V)\Big)}
+	\Say{[3]}{\THM{SelfAdjointProduct}(T)}{\Big(TT^\star : \SA(V)\Big)}
+	\Say{[4]}{\THM{ComplexquadraticZero}[1][2][3]}{T^\star T = TT^\star}
+	\Conclude{[*]}{\bd^{-1}\NO(V)}{\Big(T : \NO(V)\Big)}
+	\EndProof
+}\Page{
+	\Theorem{NormalIdempotent}{\forall V : \IPS(k) \. \forall T : \NO \And \TYPE{Idempotent}(V) \. \NewLine T : \SA(V)}
+	\Say{[1]}{ \ldots }{ 
+			\NewLine :
+			( \id - T)(\id - T)^\star = 
+			(\id - T)(\id - T^\star) = 
+			\id - T - T^\star - TT^\star = \NewLine =  
+			\id - T - T^\star - T^\star T = 
+			(\id - T)(\id - T^\star) = 
+			(\id - T)(\id - T^\star)  
+		}
+	\Say{[2]}{\bd^{-1}\NO[1]}{\Big( \id - T  : \NO(V)\Big) }
+	\Say{[3]}{\bd \NO(\id -T)\bd^{-1}\|\cdot\|}{ \forall v \in V \. \Big\| (\id - T )^\star v \Big\| = \Big\|(\id -T)v \Big\|   }
+	\Say{[4]}{\bd \TYPE{Idemptent}(T)}{ 0 = T - T = T - T^2 = (\id - T)T}
+	\Say{[5]}{[3][4]}{ 0 =(\id - T)^\star T = T - T^\star T }
+	\Say{[6]}{\bd \NO(T) \bd^{-1}\|\cdot\|}{ \Big\| T^\star v \Big\| = \Big\| T v \Big\|   }
+	\Say{[7]}{\bd \TYPE{Idempotent}}{ T(\id - T) = 0}
+	\Say{[8]}{[7][6]}{ 0 = T (\id - T) = T^\star (\id - T) = T^\star - T^\star T}
+	\Say{[9]}{[5][8]}{T^\star = T} 
+	\Conclude{[*]}{\bd^{-1}\SA}{ \Big(T : \SA(V)\Big) }
+	\EndProof
+	\\
+	\Theorem{NormalNilpotent}{\forall V : \IPS(k) \. \forall T : \NO \And \TYPE{Nilpotent}(V) \. \NewLine \.  T = 0 }
+	\Say{[1]}{\bd \NO(\id -T)\bd^{-1}\|\cdot\|}{ \forall v \in V \. \Big\| T v \Big\| = \Big\| T^\star v \Big\|   }
+	\Say{[2]}{\bd \TYPE{Nilpotent}(T)[1]}{ 0 = T^\star T}
+	\Say{[3]}{\THM{AdjointKer}(T)[2]}{\ker T = \ker T^\star T = V}
+	\Conclude{[*]}{\bd \ker T [3]}{ T = 0}
+	\EndProof
+}
+\newpage
+\subsection{Finite-Dimensional Functional Calculus}
+\Page{
+	\DeclareFunc{complexFunctionalCalculi}{\prod V : \FDIPS(\Complex) \. \NewLine \. (\Complex \to \Complex) \to \NO(V) \to \NO(V)}
+	\DefineNamedFunc{complexFunctionalCalculi}{ f,T}{f(T)}{ f(\lambda_i)e_i \otimes e_i^\star \quad \where \quad (\lambda, e) = \THM{SpectralTHM}(V,T)  }
+	\\
+	\DeclareFunc{realFunctionalCalculi}{\prod V : \FDIPS(\Reals) \.  \NewLine \. (\Reals \to \Reals) \to \SA(V) \to \SA(V)}
+	\DefineNamedFunc{realFunctionalCalculi}{ f,T}{f(T)}{ f(\lambda_i)e_i \otimes e_i^\star \quad \where \quad (\lambda, e) = \THM{SpectralTHM}(\Complex \otimes_{\Reals} V,T)  }
+	\\
+	\Theorem{CommutesByInjectiveFunction}{
+			\forall V : \FDIPS(\Complex) \. \NewLine \.  
+			\forall A,B \in \NO(V) \. 
+			\forall f : \supp (\sigma_A + \sigma_B) \ToInj \Complex \. \NewLine \. 
+			(A,B) : \TYPE{Commutes} \iff \Big(f(A),f(B)\Big) : \TYPE{Commutes} 
+		}
+	\NoProof
+	\\
+	\Theorem{NormalCommutativity}{
+		\forall V : \FDIPS(\Complex) \. \NewLine \.  
+		\forall A,B \in \NO(V) \. 
+		(A,B) : \TYPE{Commutes} \iff 
+		\exists p,q \in \Complex[x] :
+		\exists f \in \Complex[x,y] : \NewLine :
+		A = p\big(f(A,B)\big) \And
+		B = q\big(f(A,B)\big)
+	}
+	\NoProof
+}
+\newpage
+\subsection{Positive Operators and Polar Decomposition}
+\Page{
+	\DeclareType{PositiveDefinite}{  \prod V : \IPS(k) \.  ?\SA(V) }
+	\DefineNamedType{T}{PositiveDefinite}{T \in \S_{++}(V)}{ \forall v \in V \. v \neq 0 \Rightarrow \mathbf{Q}_T(v) > 0 }
+	\\
+	\DeclareType{PositiveSemiDefinite}{  \prod V : \IPS(k) \.  ?\SA(V) }
+	\DefineNamedType{T}{PositiveSemiDefinite}{T \in \S_{+}(V)}{ \forall v \in V \.  \mathbf{Q}_T(v) \ge 0 }
+	\\
+	\Theorem{NonNegativeEigenvalues}{ \forall V : \IPS(k) \. \forall T \in \S_{++}(V) \. \supp \sigma_T \subset R_{++}  }
+	\NoProof
+	\\
+	\Theorem{PositiveEigenvalues}{\forall V : \IPS(k) \. \forall T \in \S_{+}(V) \. \supp \sigma_T(V) \subset R_{+} }
+	\NoProof
+	\\
+	\DeclareFunc{squareRootOfTheOperator}{ \prod R : \TYPE{WithSquareRoots} \. \prod V : \FDIPS(k) \.  \S_{++}(V) \to \S_{++}(V)}
+	\DefineNamedFunc{squareRootOfTheOperator}{T}{\sqrt{T}}{ \sqrt{\lambda_i}e_i \otimes e_i^\star \quad \where \quad (\lambda, e) = \THM{SpectralTHM}( V,T)  }	
+	\\
+	\Theorem{SquareRootSquare}{\forall R : \TYPE{WithSquares} \. \forall V : \FDIPS(V) \. \NewLine  \.  \forall T \in \S_{++}(V) \. \sqrt{T}^2 = T }
+        \NoProof
+	\\
+	\Theorem{PositiveSemidefiniteProduct}{\forall V : \IPS(V) \. \forall T \in \End_{\VS{T}}(V) \. TT^\star \in \S_+(V)}
+	\NoProof
+	\\
+	\Theorem{PositiveDefiniteIffProduct}{\forall V : \FDIPS(V) \. \forall  T \in \GL(V) \.  \NewLine \. T \in \S_{++}(V) \iff \exists A \in \GL(V) : T = AA^\star}
+	\NoProof
+}
+\Page{
+	\Theorem{PositiveDefiniteIffSquareRoot}{\forall V : \IPS(V) \. \forall T \in \End_{\VS{k}}(V) \. \NewLine \. T \in \S_{++} \iff \exists S \in \S_{++}(V) : T = S^2}
+	\NoProof
+	\\
+	\Theorem{PositiveComplexProduct}{\forall V : \FDIPS(\Complex) \.  \forall A,B \in \S_{++} \. \NewLine \. \forall [0] : \Big((A,B) : \TYPE{Commutes}\Big) \. AB \in \S_{++} }
+	\Say{[1]}{\THM{CommutesByInjectiveFuncti on}(A,B,\sqrt{\cdot})}{ \Big( \sqrt{A} , \sqrt{B} \Big) : \TYPE{Commutes}}
+	\Say{[2]}{ [1]\THM{SquareRootSquare}(A)(B)}{\Big(\sqrt{A}\sqrt{B}\Big)^2 = \sqrt{A}\sqrt{B}\sqrt{A}\sqrt{B} = (\sqrt{A})^2(\sqrt{B})^2 = AB}
+	\Say{[3]}{[2][1]\bd \SA(\sqrt{A})\SA(\sqrt(B))}{  AB = \sqrt{A}\sqrt{B}\Big(\sqrt{A}\sqrt{B}\Big)^\star}
+	\Conclude{[*]}{\THM{PositiveDefiniteIffProduct}[3]}{ AB \in \S_{++}(V)  }
+	\EndProof
+	\\
+	\Theorem{PolarDecomposition}{\forall V : \FDIPS(\Complex) \. \forall T \in \End_{\VS{k}} \. \NewLine \. \exists! R \in \S_+(V) \. \exists S \in \O(V) \. T = RS}
+	\Say{R}{\sqrt{T^\star T}}{\S_+(V) }
+	\Assume{v}{V}
+	\Conclude{[v.*]}{\bd \SA(R) \ByConstr R \bd \TYPE{Asjoint}(T)}{\langle Rv, Rv \rangle =  \langle R^2 v, v \rangle = \langle T^\star T v, v \rangle = \langle T v, T v \rangle}
+	\Derive{[1]}{I(\forall)}{\forall v \in V \. \langle Rv, Rv \rangle = \langle Tv, Tv \rangle}
+	\Assume{v,w}{V}
+	\Assume{[2]}{Tv = Tw}
+	\Say{[2.1]}{\bd \VS{k}(V,V)(T)[2]}{ T(v - w) = 0}
+	\Say{[2.2]}{[2.1][1]}{ 0 = \langle 0,0 \rangle = \langle T(v-w), T(v-w) \rangle = \langle R(v-w), R(v-w) \rangle }
+	\Conclude{[2.*]}{\bd \TYPE{Nondegenerate}[2.2]\bd \VS{k}(V,V)(T)}{Rv = Rw}
+	\Derive{[2]}{I(\forall)}{\forall v, w \in V \. Tv = Tw \Rightarrow Rv = Rw}
+	\Assume{v}{\im R}
+	\Say{(w,[1])}{\bd \im R(v)}{\sum w \in V \. v = Rw}
+	\Conclude{S'(v)}{T(w)}{V}
+	\Derive{S'}{I(\to)[2]}{\im R \to V}
+	\Say{(S,[3])}{\THM{GrammSmidtAugamentation}[1]\bd S'}{\sum S \in \S_{++}(V) \.  S_{|\Im R} = S }
+	\Say{[*.1]}{ [3]\ByConstr S'}{ T = RS}
+	\Assume{R'}{\S_+(V)}
+	\Assume{S'}{\O(V)}
+	\Assume{[4]}{T = R'S'}
+	\Say{[4.1]}{[4]\bd \O(V)(S')}{  TT^\star = R'^2   }
+	\Conclude{[4.*]}{\ByConstr R[4.1]}{R = R'}
+	\DeriveConclude{[*]}{\bd^{-1} \LOGIC{Unique}}{\LOGIC{This}}
+	\EndProof
+}
+\Page{
+	\Theorem{PolarDecomposition2}{\forall V : \FDIPS(\Complex) \. \forall T \in \End_{\VS{k}} \. \NewLine \. \exists! R \in \S_+(V) \. \exists S \in \O(V) \. T = SR}
+	\NoProof
+	\\
+	\Theorem{PolarDecompositionTHM}{\forall V : \FDIPS(\Complex) \. \forall T \in \End_{\VS{k}} \. \NewLine \. \exists! R \in \S_+(V) \. \exists A \in \NO(V) \. T = R \exp(\mathrm{i}A)}
+	\NoProof
+	\\
+	\Theorem{PolarNormality}{\forall V : \FDIPS(\Complex) \. \forall T \in \End_{\VS{k}} \. 
+		\NewLine T : \NO(V) \iff  (R,A) : \TYPE{Commutes} \NewLine
+		\quad \where \quad (R,A) = \THM{PolarDecompositionTHM}(V,T)}
+	\NoProof
+}
+\newpage
+\subsection{Moore-Penrose Pseudoinverse and the Singular Decomposition}
+\Page{
+	\Theorem{SingularValueTheorem}
+	{
+		\forall V,W : \FDIPS(\Complex) \. \forall T : V \Arrow{\VS{k}} W \. \NewLine
+		\. \exists \sigma \in \Reals^r : 
+		\exists e : \OBasis(V) :
+		\exists f : \OBasis(V) : \NewLine
+		T^{e,f} = \mathrm{diagonal}(\sigma \oplus 0) 
+		\quad \where \quad
+		r = \rank T
+	}
+	\Say{A}{T^\star T}{\S_+(V)}
+	\Say{(\lambda,e,[1])}{ \THM{SpectralTheorm}(A) }{  \sum \lambda \in \Complex^n \. \sum e : \OBasis(V) \. T = \lambda_i  e_i \otimes e^i }
+	\Say{[2]}{\THM{NonNegativeEigenvalues}(A)\ByConstr \lambda}{ \lambda \in \Reals_+}
+	\Say{\sigma}{\sqrt{\FUNC{sort}(\lambda)_r}}{r \to \Reals_{++}}
+	\Say{f'}{ \frac{1}{\sigma}Te_{|r}}{r \to W}
+	\Assume{i,j}{r}
+	\Conclude{[(i,j).*]}{\ByConstr f' \bd \TYPE{Adjoint}(T) \ByConstr \lambda \THM{MultiHomogen}\Big(\langle \cdot,\cdot \rangle\Big)  }{ 
+		\NewLine :
+		\langle f_i', f_j' \rangle = 
+		\frac{1}{\sigma_i\sigma_j}\langle Te_i, Te_j \rangle = 
+		\frac{1}{\sigma_i \sigma_j} \langle T^\star Te_i, e_j \rangle = 
+		\langle e_i,e_j \rangle
+	}
+	\Derive{[3]}{\bd^{-1}V_r(W)}{ f' \in V_r(W)}
+	\Say{f}{\THM{GrammScmidtAugmentation}(f')}{\OBasis(W)}
+	\Conclude{[*]}{\ByConstr f \ByConstr \sigma \ByConstr e}{T^{e,f} = \mathrm{diagonal}(\sigma \oplus 0)} 
+	\EndProof
+	\\
+	\Theorem{SingularValueDecomposition}{
+			\forall n,m \in \Nat \. 
+			\forall A \in \Complex^{n \times m} \. \NewLine \.  
+			\exists U : \TYPE{OrthogonalMatrix}(\Complex,n) \.
+			\exists V : \TYPE{OrthogonalMatrx}(\Complex,m) \.
+			\exists \Sigma : \TYPE{Diagonal}(\Complex,n,m) : 
+			A = V^{\bar \top} \Sigma U
+		}
+	\NoProof
+	\\
+	\DeclareFunc{singularValues}{ \prod V,W : \FDIPS(\Complex) \. \prod T : V \Arrow{\VS{k}} W \. \NewLine \rank T \to \Complex }
+	\DefineNamedFunc{singularValues}{i}{\sigma_i(T)}{\sigma_i}
+	\DeclareFunc{leftSingularBasis}{ \prod V,W : \FDIPS(\Complex) \. \NewLine \.  V \Arrow{\VS{k}} W \to \OBasis(V) }
+	\DefineNamedFunc{leftSingular}{ }{u(T)}{e}
+	\DeclareFunc{rightSingularBais}{ \prod V,W : \FDIPS(\Complex) \.  \NewLine \. V \Arrow{\VS{k}} W \to \OBasis(V) }
+	\DefineNamedFunc{singularValues}{ }{v(T)}{f \NewLine \quad \where \quad (\sigma,e,f) = \THM{SingularValuesTHM}(T)}
+}
+\Page{
+	\DeclareType{\PI}{\prod V,W : \IPS(k) \.   (V \Arrow{\VS{k}} W) \to ?(W \Arrow{\VS{k}} V)}
+	\DefineType{ B }{\PI}{\Lambda A : V \Arrow{\VS{k}} W \.  ABA = A \And BAB = B \And  \NewLine \And  AB \in \SA(V) \And BA \in \SA(W)}
+	\\
+	\DeclareFunc{pseudoinverseMoorePenrose}{ \prod V,W : \FDIPS(\Complex) \. \NewLine \.(V \Arrow{\VS{k}} W) \to ?(W \Arrow{\VS{k}} V)}
+	\DefineNamedFunc{pseudoinverseMoorePenrose}{A}{A^\dagger}{\Lambda \sum^{\dim W}_{i=1} \alpha_iv_i(T) \in W \. \sum^{\rank T}_{i= 1} \frac{\alpha_i}{\sigma_i(T)}u_i(T)} 
+	\\
+	\Theorem{MoorePenroseTheorem}{\forall V,W : \FDIPS(\Complex) \. \NewLine \. \forall T : V \Arrow{\VS{k}} W \. T^\dagger : \PI(T) \And \forall B : \PI(T) \. B = T^\dagger} 
+	\Say{n}{\dim V}{\Nat}
+	\Say{m}{\dim V}{\Nat}
+	\Say{r}{\rank T}{\Nat}
+	\Assume{\sum^n_{i=1} \alpha_i u_i(T)}{V}
+	\Conclude{[\ldots*]}{ \bd U_i(T)\bd T^\dagger \bd \ker(T)}
+	{
+		TT^\dagger T \sum^n_{i=1} \alpha_i u_i(T) = 
+		TT^\dagger \sum^r_{i=1} \sigma_i \alpha_i v_i(T) = 
+		T \sum^r_{i = 1} \alpha_i u_i(T) = 
+		T \sum^n_{i = 1} \alpha_i u_i(T)
+	}
+	\Derive{[1]}{I(=,\to)}{TT^\dagger T = T }
+	\Assume{\sum^m_{i=1} \alpha_i v_i(T)}{V}
+	\Conclude{[\ldots*]}{ \bd T^\dagger \bd v(T) \bd \ker T^\dagger}
+	{
+		T^\dagger T T^\dagger \sum^m_{i=1} \alpha_i v_i(T) = 
+		T^\dagger T \sum^r_{i=1} \sigma_i^{-1} \alpha_i u_i(T) = 
+		T^\dagger \sum^r_{i = 1} \alpha_i v_i(T) = 
+		T^\dagger \sum^m_{i = 1} \alpha_i v_i(T)
+	}
+	\Derive{[2]}{I(=,\to)}{T^\dagger TT^\dagger   = T^\dagger }
+	\Say{[3]}{\THM{SingularValueTHM}\bd T^\dagger}{  TT^\dagger = \id_r \oplus 0 \And TT^\dagger = \id_r \oplus 0  }
+	\Say{[4]}{\bd^{-1}\SA[3]}{ TT^\dagger \in \SA(V) \And  T^\dagger T \in \SA(W) }
+	\Say{[*.1]}{\bd^{-1} \PI(a)[1][2][4]}{ \Big(T^\dagger : \PI(T)\Big) }
+	\Assume{B}{\PI(T)}
+	\Say{[B.1]}{\bd \PI(T)\Big( T^\dagger, B \Big)}{
+		T^\dagger = 
+		T^\dagger T T^\dagger =
+		\Big( T^\dagger T \Big)^\star T^\dagger =
+		T^\star T^{\dagger \star} T^\dagger = 
+		\Big( T B T  \Big)^\star T^{\dagger \star} T^\dagger = \NewLine =
+		T^\star B^\star T^\star T^{\dagger \star} T^\dagger = 
+		B T T^\star T^{\dagger \star} T^\dagger = 
+		B T T^\dagger T T^\dagger  = 
+		B T T^\dagger
+	} 
+	\Say{[B.2]}{\bd \PI(T)\Big( T^\dagger, B \Big)}{
+		B = 
+		B T B  =
+		B \Big(  T B \Big)^\star  =
+		B B^\star T^{\star}  = 
+		B B^\star \Big( T T^\dagger T  \Big)^\star  = \NewLine = 
+		B B^\star T^\star T^{\dagger \star} T^\star = 
+		B B^\star T^\star  T  T^{\dagger}  = 
+		B T B  T T^\dagger  = 
+		B T T^\dagger
+	}
+	\Conclude{[B.*]}{[B.1][B.2]}{B = T^\dagger}
+	\Derive{[*]}{I(\forall)}{\LOGIC{This}}
+	\EndProof
+}
+\newpage
+\section{Linear Algebra in Vector Metric Spaces}
+\subsection{Quadratic Spaces}
+\Page{
+	\Conclude{\TYPE{QuadraticSpace}}{\prod k : \TYPE{Field} \. \sum V : \VS{k} \. \L(V,V;k)}{ 
+		\TYPE{Field}(R) \to \Type}
+	\\
+	\DeclareFunc{quadraticSpaceAsVectorSpace}{ \TYPE{QuadraticSpace}(k) \to \VS{k}}
+	\DefineNamedFunc{innerProductSpaceAsVectorSpace}{V,p}{(V,p)}{\VS{k}} 
+	\\
+	\DeclareFunc{quadraticStructure}{ \prod (V,p) : \TYPE{QuadraticSpace}(k) \. \L(V,V;k)}
+	\DefineNamedFunc{quadraticStructure}{v,w}{\langle v, w \rangle_V}{p(v,w)}
+	\\
+	\DeclareType{\OVS}{?\TYPE{QuadraticSpace}(k)}
+	\DefineType{V}{\OVS}{\langle \cdot,\cdot \rangle_V : \TYPE{Symmetric}(V,k)}
+	\\
+	\DeclareType{\SVS}{?\TYPE{QuadraticSpace}(k)}
+	\DefineType{V}{\SVS}{\langle \cdot,\cdot \rangle_V : \TYPE{Alternating}(V,k)}
+	\\
+	\Conclude{\MVS}{\prod k : \TYPE{Field} \. \OVS | \SVS(k)}{\NewLine : \TYPE{Field} \to \Type} 
+	\\
+	\DeclareType{CongruentMatrix}{\prod n \in \Nat \. \prod k : \TYPE{Field} \. ?\Big(k^{n \times n} \times k^{n \times n} \Big)}
+	\DefineNamedType{(A,B)}{CongruentMatrix}{ A \cong B }{ \exists C \in \GL(k,n) \. CAC^{\top}  }
+	\\
+	\Theorem{MatrixCongruenceMeaning}{\forall V : \FDVS{k} \. \forall A,B \in k^{(\dim V) \times (\dim V)} \. \NewLine  \Big(\exists e,f : \Basis(V) \. A_e = B_f \Big) \iff  A \cong B  }
+	\NoProof
+	\\
+	\DeclareFunc{Discriminant}{\prod n \in \Nat \. k^{n \times n} \to ?k}
+	\DefineNamedFunc{Discriminant}{A}{\Delta(A)}{ k^2 \det A}
+	\\
+	\DeclareType{OrthogonalVectors}{\prod V : \TYPE{QuadraticSpace}(k) \. ?V^2}
+	\DefineNamedType{(v,w)}{OrthogonalVectors}{v \bot w}{\langle v, w \rangle = 0}
+	\\
+	\DeclareType{OrthogonalSets}{\prod V : \TYPE{QuadraticSpace}(k) \. ?(?V)^2}
+	\DefineNamedType{(A,B)}{OrthogonalSets}{A \bot B}{\forall a \in A \. \forall b \in B \. \langle a, b \rangle = 0}
+}\Page{
+	\DeclareFunc{orthogonalComlement}{\prod V : \TYPE{QuadraticSpace}(k) \. ?V \to \TYPE{VectorSubspace}(k,V) }
+	\DefineNamedFunc{orthogonalComplement}{X}{X^\bot}{\bigcap_{x \in X} \ker \langle x, \cdot \rangle}
+	\\
+	\DeclareType{IsotropicVector}{\prod V : \TYPE{QuadraticSpace}(k) \. ?V }
+	\DefineType{v}{IsotropicVector}{ \langle v,v \rangle = 0 \And v \neq 0}
+	\\
+	\DeclareType{Isotropic}{ ?\TYPE{QuadraticSpace}(k) \. ?V  }
+	\DefineType{V}{Isotropic}{ \exists \TYPE{IsotropicVector}(V) }
+	\\
+	\Conclude{\TYPE{Anisotropic}}{ \IsNot\TYPE{Isotropic} }{ \Field \to \Type} 
+	\\
+	\DeclareType{Cone}{\prod V : \VS{k} \. ?V}
+	\DefineType{C}{Cone}{ kC = C}
+	\\
+	\Theorem{IsotropicCone}{ \forall V : \TYPE{QuadraticSpace}(V) \. \TYPE{Isotropic}(V) : \TYPE{Cone}(V)}
+	\NoProof
+	\\
+	\DeclareType{Degenerate}{\prod V : \TYPE{QuadraticSpace}(k)  \. ?V} 
+	\DefineType{v}{Degenerate}{  \{v\}^\bot = V  }
+	\\
+	\DeclareFunc{radical}{\prod V : \TYPE{QuadraticSpace}(k) \. ?V}
+	\DefineNamedFunc{radical}{V}{\sqrt{V}}{V^\bot}
+	\\
+	\DeclareType{Nonsingular}{?\TYPE{QuadraticSpace}(k) }
+	\DefineType{V}{Nonsingular}{ \sqrt{V} = \{0\} }
+	\\
+	\DeclareType{Singular}{?\TYPE{QuadraticSpace}(k) }
+	\DefineType{V}{Singular}{ \sqrt{V} \neq \{0\} }
+	\\
+	\DeclareType{OrthogonallySymmetric}{ ?\TYPE{QuadraticSpace} }
+	\DefineType{V}{OrthogonallySymmetric}{ \forall v,w \in V \. v \bot w \Rightarrow w \bot v}
+	\\
+	\DeclareType{SymmetrycVector}{\prod V : \TYPE{QuadraticSpace}(k) \. ?V }
+	\DefineType{v}{SymmetryVector}{\forall w \in V \. \langle v,w\rangle = \langle w, v \rangle }
+}
+\Page{
+	\Theorem{OrthogonallySymmetricIsMetric}{\forall V : \TYPE{OrthogonallySymmetric}(k) \. \MVS{k}}
+	\Assume{v,w}{V \setminus \{0\}}
+	\Assume{[1]}{\langle v,w \rangle \neq \langle w,v \rangle}
+	\Assume{u}{V \setminus \{0\}}
+	\Assume{[2]}{\langle v,u \rangle = \langle u, v \rangle}
+	\Say{[u.1]}{[1]\bd^-1\TYPE{OrthogonalVectors}}{ v \bot u \iff \langle v, u \rangle \Big( \langle v,w \rangle - \langle w, v \rangle \Big)  }
+	\Say{[u.2]}{[2]\THM{MultiAdditive}\big(\langle \cdot,\cdot \rangle\big)}
+	{ 
+		\langle v,u \rangle \Big( \langle v,w \rangle - \langle w, v \rangle \Big)  =    
+		\langle v,u \rangle \langle v,w \rangle -  \langle v, u \rangle \langle w, v \rangle = \NewLine  
+		\langle u, v \rangle \langle v, w \rangle   - \langle v, u \rangle \langle w, v \rangle =
+		\Big\langle  v,  \langle u,v \rangle w - \langle w,v \rangle u \Big\rangle 
+	}
+	\Say{[u.3]}{ \THM{MultiAdditive}\big(\langle \cdot, \cdot \rangle\big)\bd \ABEL(k) }{        
+		\Big\langle  \langle u,v \rangle w - \langle w, v \rangle u,   v \Big\rangle = 
+		\langle u, v \rangle \langle w v \rangle - \langle u,v \rangle \langle w, v \rangle = 0
+	} 
+	\Conclude{[u.*]}{\bd \TYPE{OrthogonallySymmetric}(k)(V)[u.3][u.2][u.1]}{v \bot u}
+	\Derive{[v.1]}{I(\forall)I(\Rightarrow)}{\forall u \in V \. \langle v, u \rangle = \langle u,v \rangle \Rightarrow  v \bot  u }
+	\Say{[v.2]}{I(=)\Big(\langle v,v\rangle\Big)}{\langle v,v \rangle = \langle v,v \rangle} 
+	\Conclude{[v.*]}{\bd^{-1} \TYPE{IsotropicVector}[v.1][v.2]}{ \Big( v : \TYPE{IsotropicVector}(V) \Big) }
+	\Derive{[1]}{\bd^{-1}\TYPE{SymmetryVector}(V)}{  \forall v \in V \. v \IsNot \TYPE{SymmetryVector}(V) \Rightarrow v : \TYPE{IsotropicVector}(V)}
+	\Assume{v}{ \IsNot \TYPE{SymmetryVector}(V)}
+	\Say{\Big(u,[2]\Big)}{\bd \TYPE{SymmetryVector}(v)}{\sum u \in V \. \langle u,v \rangle \neq \langle v,u \rangle}
+	\Say{[3]}{[1][2](u,v))}{\Big(u,v : \TYPE{IsotropicVector}(V)\Big)}
+	\Assume{w}{\TYPE{SymmetryVector}(V)}
+	\Say{[4]}{\ldots}{w \bot v \And w \bot u}
+	\Say{[5]}{\THM{MultiAdditive}\Big(\langle \cdot,\cdot\rangle\Big)\bd \TYPE{SymmetryVector}(w)}
+	{\langle w + u,u \rangle = \langle w, u \rangle + \langle u, u \rangle = \NewLine = \langle u, w \rangle + \langle u, u \rangle = \langle u, w + u \rangle}
+	\Say{[6]}{\ldots[5]}{ w + u \bot u }
+	\Say{[7]}{\THM{MultiAdditive}\Big(\langle \cdot,\cdot \rangle)[2]}{ \langle u + w,v \rangle = \langle w, v \rangle \neq  \langle v, w \rangle = \langle v, w + u \rangle  }
+	\Say{[8]}{ [1][7] }{  \Big( u + w : \TYPE{Isotropic}(V) \Big)   }
+	\Say{[9]}{\THM{MultiAdditive}\Big(\langle \cdot,\cdot \rangle\Big)[3][8][6]}
+	{ \langle w, w \rangle = \langle u + w - u, u + w - u \rangle = \langle u, u \rangle + \langle w + u, w + u \rangle = 0  }
+	\Derive{[w.*]}{\bd^{-1} \TYPE{IsotropicVector}}{\Big(w: \TYPE{Isotropic}(V)\Big)}
+	\Derive{[4]}{I(\forall)}{\forall w : \TYPE{SymmetryVector}(v) \. w : \TYPE{IsotropicVector}(v)}
+	\Conclude{[v.*]}{ \bd^{-1} \SVS [1][4]}{\Big( V : \SVS(k)\Big)}
+	\Derive{[2]}{I(\exists)I(\Rightarrow)\bd^{-1}\MVS}{\exists \IsNot \TYPE{SymmetryVector}(V) \Rightarrow V : \MVS(k)}
+	\Say{[3]}{\bd^{-1}\MVS \bd^{-1} \OVS}{ \NewLine :\not \exists \IsNot \TYPE{SymmetryVector}(V) \Rightarrow V : \MVS(k)  } 
+	\Conclude{[*]}{E(\Rightarrow)\LOGIC{LEM}[2][3]}{\Big( V : \MVS(k)\Big)}
+	\EndProof
+	\\
+	\DeclareType{\FDMVS}{\prod k : \TYPE{Field} \. ?\MVS(k)}
+	\DefineType{V}{\FDMVS}{\dim V < \infty}
+}
+\Page{
+	\DeclareFunc{asFunctional}{\prod V : \TYPE{QuadraticSpace}(k) \. V \Arrow{\VS{k}} V^* }
+	\DefineNamedFunc{asFunctional}{v}{\phi_v}{ \Lambda u \in V \. \langle u,v\rangle}             
+	\\
+	\Theorem{FDRieszRepresentationTheorem2}{ \forall k : \TYPE{Field}(V) \. \NewLine \.  \forall V : \FDMVS \And \TYPE{Nonsingular}(k) \. \phi : V \ToIso{\VS{k}} V^\star }
+	\Say{[1]}{\bd \dim \THM{DualBasisTHM}(V)}{ \dim V = \dim V^*  }
+	\Say{[2]}{\bd \phi \bd \TYPE{Nonsingular}(V)}{ \dim \ker \phi = 0}
+	\Conclude{[*]}{\THM{RankPlusNullityTHM}[1][2]}{ \Big( \phi : V \ToIso{\VS{k}} V^\star \Big)  }
+	\NoProof
+	\\
+	\DeclareFunc{VectorOfRiesz}{\prod  k : \Field \.  \NewLine \. \prod V : \FDMVS \And \TYPE{Nonsingular}(k) \. V^* \ToIso{\VS{k}} V}
+	\DefineNamedFunc{VectorOfRiesz}{f}{v_f}{\THM{FDRiezRepresentationTheorem}(f)}
+	\\
+	\Theorem{SubspaceRieszRepresentation}{ 
+		\forall k : \TYPE{Field}  \. \NewLine \.
+		\forall V : \FDMVS \And \TYPE{Nonsingular}(k) \.  
+		\forall U : \subvec{k} V \. \NewLine 
+		\phi_{|U} : V \ToSurj U^\star \And \ker \phi_{|S} = U^\bot
+		}`
+	\NoProof
+	\\
+	\DeclareType{OrthogonalDirectSum}{\prod V : \MVS(k) \. ? \prod X \in \SET \. n \to \TYPE{VectorSubspace}(V)}
+	\DefineNamedType{(X,U)}{OrthogonalDirectSum}{ V = \bigbot_{x \in X} U_x  }{V = \bigoplus_{x \in X} U_x \And \forall x,y \in X \. x \neq y \Rightarrow U_x \bot U_y}
+	\\
+	\Theorem{RadicalDecompositionTHM}{\forall V : \MVS(k) \. \exists U \subvec{k} V \.  \NewLine \. V = \sqrt{V} \bot U \And U : \TYPE{Nonsingular}(V)} 
+	\NoProof
+	\\
+	\Theorem{OrthogonalComplementDimSum}{ \prod V : \FDMVS(k) \. \forall U \subvec{k} V \. \NewLine \. \forall [0] : (U|V) : \TYPE{Nonsingular}(V) \. \dim V = \dim U + \dim U^\bot} 
+	\NoProof
+}\Page{
+	\Theorem{DoubleOrthogonalComplement}{ \prod V : \FDMVS \And \TYPE{Nonsingular}(k) \. \NewLine \. \forall U \subvec{k} V \.  U^{\bot\bot} = U } 
+	\NoProof
+	\\
+	\Theorem{ComplementRadical}{ \prod V : \FDMVS \And \TYPE{Nonsingular}(k) \. \NewLine \. \forall U \subvec{k} V \.  \sqrt{U^\bot} = \sqrt{U} } 
+	\NoProof
+	\\
+	\Theorem{SubspaceNonsingularityCriterion}
+	{
+		\prod V : \FDMVS \And \TYPE{Nonsingular}(k) \. \NewLine \. \forall U \subvec{k} V \.  U : \TYPE{Nonsingular}(k) \iff U^\bot : \TYPE{Nonsingular} 
+	}
+	\NoProof
+}
+\newpage
+\subsection{Isoquadrics and Nonsingualar Completion}
+\Page{
+	\DeclareType{Isoquadric}{\prod V,W : \TYPE{QuadraticSpace}(k) \. ? V \Arrow{\VS{k}} W}
+	\DefineType{T}{Isoquadric}{\forall v,u \in V \. \langle Tu,Tv \rangle = \langle u, v \rangle}
+	\\
+	\Theorem{IsoquadricCompostition}{\prod V,U,W : \TYPE{QuadraticSpace}(k) \. \forall T : \TYPE{Isoquadric}(V,U) \. \NewLine \.  \forall S : \TYPE{Isoquadric}(U,W) \. TS : \TYPE{Isoquadric}(V,W)}
+	\NoProof
+	\\
+	\Theorem{IsoquadricKernel}{\prod V,W : \TYPE{QuadraticSpace}(k) \. \forall T : \TYPE{Isoquadric}(V,W) \. \ker T \subvec{k} \sqrt{V}}
+	\NoProof
+	\\
+	\DeclareFunc{OrthogonalGroup}{\OVS(k) \And \TYPE{Nonsingular}(k) \to \GRP}
+	\DefineNamedFunc{OrthogonalGroup}{V}{\O(V)}{\Big\{ T \in \GL(V) : (T : \TYPE{Isoquadric}(V)\big) \Big\}}
+	\\
+	\DeclareFunc{SymplecticGroup}{\SVS(k) \And \TYPE{Nonsingular}(k) \to \GRP}
+	\DefineNamedFunc{SymplecticGroup}{V}{\Sp(V)}{\Big\{ T \in \GL(V) : (T : \TYPE{Isoquadric}(V)\big) \Big\}}
+	\\
+	\Theorem{IsoquadricByBasis}{\forall V,W : \FDMVS(k) \. \NewLine \. \forall e : \TYPE{Basis}(n,V) \. \forall [0] : \forall i,j \in n \. \langle Te_i, Te_j \rangle  = \langle e_i, e_j \rangle \. T : \TYPE{Isoquadric}(V,W) }
+	\NoProof
+	\\
+	\Theorem{IsoquadricAsQuadraticForm}{ \forall k : \TYPE{NonBinary} \. 
+		\NewLine \. \forall V,W : \FDMVS \And \OVS(k) \. \NewLine \. \forall [0] : \forall v \in V \.  \langle Tv, Tv \rangle = \langle v, v \rangle \. T : \TYPE{Isoquadric}(V,W)  }
+	\NoProof
+}\Page{
+	\Theorem{IsoquadricOrthogonalComplementTranslations}{
+		\forall V,W : \MVS(k) \. \NewLine \.  
+		\forall T : \TYPE{Isoquadric}\And \TYPE{Bijection}(V,W) \.  
+		\forall S \subvec{k} V \.  
+		T\Big(S^\bot\Big) = (TS)^\bot
+	}
+	\Assume{v}{S^\bot}
+	\Assume{w}{TS}
+	\Say{\Big(u,[1]\Big)}{\bd \FUNC{image}(w) }{ \sum u \in S \. w = Tu}
+	\Conclude{[v.*]}{ [1]\bd \TYPE{Isoquadric}(V,W)(T)\bd \FUNC{orthogonalComplement}(S)(v)}{ \langle Tv, w \rangle = \langle v, u \rangle = 0  }
+	\Derive{[1]}{\bd^{-1} \TYPE{Orthogonal}}{ T\Big(S^\bot\Big) \bot TS  }
+	\Say{[2]}{\bd \FUNC{orthogonalComplement}[1]}{T\Big(S^\bot\Big) \subset \Big(TS\Big)^\bot}
+	\Assume{w}{\Big( TS \Big)^\bot}
+	\Say{\Big(v,[3]\Big)}{\bd \TYPE{Bijection}(V,W)(T)}{\sum v \in V \. Tv = w}
+	\Assume{u}{S}
+	\Conclude{[u.*]}{[3]\bd \TYPE{Isoquadric}(V,W)(T)}{ \langle u, v \rangle = \langle Tu, w \rangle = 0 }
+	\Derive{[4]}{\bd \FUNC{orthogonalComplement}}{v \in S^\bot}
+	\Conclude{[w.*]}{[3][4]}{w \in T\big(S\big)^\bot}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{SetEq}[2]}{T\Big(S^\bot\Big) = (TS)^\bot }
+	\EndProof
+	\\
+	\DeclareType{HyperbolicPair}{ \prod V \in \MVS(k) \. ?(V \times V)  }
+	\DefineType{(v,w)}{HyperbolicPair}{ \langle v, w \rangle = 1 \And \langle v,v \rangle = 0 \And \langle w,w \rangle = 0 }
+	\\
+	\DeclareType{HyperbolicPlane}{\prod V \in \MVS(k) \. ?\TYPE{VectorSubspace}(V)}
+	\DefineType{H}{HypervolivPlane}{\exists (v,w) : \TYPE{HyperbolicPair}(V) \. H = \Span\{v,w\}  }  
+	\\
+	\DeclareType{HyperbolicSpace}{?\MVS(k) }
+	\DefineType{V}{HypervolicSpace}{\exists X \in \Set : \exists H : X \to \TYPE{HyperbolicPlane}(V) \. V = \bigbot_{x \in X} H_x  }  
+	\\
+	\DeclareType{NonSingularCompletion}{\prod V : \MVS(k) \. \TYPE{VectorSubspace}(V) \to ?\TYPE{VectorSubspace}(V) }
+	\DefineType{U}{NonSingularCompletion}{ \Lambda S \subvec{k}  \. U \in \min\Big\{ W \subvec{k} V : (W : \TYPE{Nonsingular}(k))   \Big\} }
+	\\
+	\Assume{k}{\TYPE{NonBinaryField}}
+}\Page{
+	\Theorem{HyperbolicPlaneOfIsotropic}{
+		\prod V : \FDMVS \And \TYPE{Nonsingular}(k) \. \NewLine \. 
+		\forall v : \TYPE{IsotropicVector}(V) \. 
+		\forall S \subvec{k} V \.  
+		\forall [0]  : kv \bot S \subvec{k} V \.
+		\exists H : \TYPE{HyperbolicPlane}(V) : \NewLine :
+		kv \bot S \subvec{k} H \bot S
+	}
+	\Say{[1]}{\THM{DoubleOrthogonalComplement}(S)}{S = S^{\bot\bot}}
+	\Say{[2]}{[0][1]}{ v \not \in S^{\bot\bot} }
+	\Say{\Big( u,[3]\Big)}{\bd \FUNC{OrthogonalComplement}[2]}{ \sum u \in S^\bot \. \langle v ,u \rangle \neq 0  }
+	\Say{[4]}{\bd \MVS(k)(V)}{ \Big( V : \OVS(k) | V : \SVS(k)\Big)  }
+	\Assume{[5]}{\Big(V : \SVS(k)\Big)}
+	\Say{[6]}{\bd \SVS(k)(u)}{\Big(u : \TYPE{IsotropicVector}(V)\Big) }
+	\Say{w}{\frac{u}{\langle v, u \rangle}}{S^\bot}
+	\Say{H}{\Span(v,w)}{\TYPE{HyperbolicPlane}(V)}
+	\Conclude{[5.*]}{\bd^{-1}\TYPE{OrthogonalDirectSum}[1]}{\LOGIC{This}}
+	\Derive{[5]}{I(\Rightarrow)}{  V : \SVS(k) \Rightarrow \LOGIC{This}}
+	\Assume{[6]}{\Big(V : \OVS(k)\Big)}
+	\Say'{w}{ \langle u, v \rangle u - \frac{\langle u, u \rangle}{2} v }{ S^\bot  }
+	\Say{[7]}{\ByConstr w' \THM{MultiAdditive}\Big(\langle \cdot,\cdot\Big)\THM{MuliHomogen}\Big(\langle \cdot,\cdot\rangle\Big) \bd \OVS(k)(V)\bd \TYPE{IsotropicVector}(V)(v) \bd \TYPE{Inverse} }{  
+		\NewLine : 
+		\langle w', w'\rangle =  
+		\left\langle \langle u,v\rangle u  - \frac{\langle u,u \rangle}{2} v, \langle u,v\rangle u  - \frac{\langle u,u \rangle}{2} v \right\rangle  = 
+	         \langle u,v \rangle^2 \langle u,u \rangle - \langle u,v \rangle^2 \langle u,u \rangle = 0	
+	}
+	\Say{[8]}{\bd^{-1} \TYPE{IsotropicVector}[7]}{\Big(w : \TYPE{IsotropicVector}(V)\Big)}
+	\Say{w}{\frac{w'}{\langle v, w' \rangle}}{S^\bot}
+	\Say{H}{\Span(v,w)}{\TYPE{HyperbolicPlane}(V)}
+	\Conclude{[9.*]}{\bd^{-1}\TYPE{OrthogonalDirectSum}[1]}{\LOGIC{This}}
+	\Derive{[6]}{I(\Rightarrow)}{  V : \OVS(k) \Rightarrow \LOGIC{This}}
+	\Conclude{[*]}{E(|)[4][5][6]}{\LOGIC{This} }
+	\EndProof
+	\\
+	\Theorem{HyperbolicExtensionTHM}{
+		\prod V : \FDMVS \And \TYPE{Nonsingular}(k) \. \NewLine \.  
+		\forall n \in \Nat \.  
+		\forall v : \LI(n,V) \. 
+		\forall W  : \TYPE{Nonsingular}(k) \And \TYPE{VectorSubspace}(k) \. \NewLine \. 
+		\forall [0]  : \Span\{v_i | i \in n\} \bot W \subvec{k} V \.  
+		\forall [00] : \forall i \in n \. v_i \in \sqrt{\Span\{v_i|i \in \} \oplus W} \. \NewLine \.
+		\exists H : \TYPE{HyperbolicSpace}(k) \And \TYPE{VectorSubspace}(V) : 
+		\Span\{ v_n |n \in \Nat\} \bot W \subvec{k} H \bot W
+	}
+	\NoProof
+	\\
+}\Page{
+	\DeclareFunc{hyperbolicExtension}{\prod V : \FDMVS \And \TYPE{Nonsingular}(k) \. \TYPE{VectorSubspace}(V) \to \TYPE{VectorSubspace}(V)}
+	\DefineNamedFunc{hyperbolicExtension}{ U  }{ \overline{U}}{\THM{HyperbolicExtension}(V,v,W,[1],\ByConstr v[1]) \NewLine 
+		\quad \where \quad (W,[1]) = \THM{SingularDecomposition}(U) \And v = \THM{FreeHasBasis}(\sqrt{U})}
+	\\
+	\Theorem{NonsingularCompletionTHM}{\forall V : \FDMVS \And \TYPE{Nonsingular}(k) \. \NewLine \.  \forall U \subvec{k} V \. \overline{U} : \TYPE{NonsingularCompletion}(V) } 
+	\Say{W,[1]}{\THM{RadicalDecomposition}(U)}{\sum W : \TYPE{Nonsingular}(k) \. U = W \bot \sqrt{U} }
+	\Say{v}{\THM{FreeHasBasis}(\sqrt{U})}{\Basis(\sqrt{U})}
+	\Say{m}{\dim \sqrt{U}}{\Nat}
+	\Say{(u,H,[2])}{\bd \overline{U}}{\sum u : n \to V \. \sum H : \TYPE{HYperbolicSpace}(k) \. H = \Span(v,u) \And  \NewLine \And \forall i \in n \. (v_i,u_i) : \TYPE{HyperbolicPair}(V) \And \overline{U} = H \bot W }
+	\Assume{x}{\overline{U} \setminus 0}
+	\Say{(h,w,[3])}{[2](x)}{\sum h \in H \. \sum w \in W \. x = h + w}
+	\Assume{[4]}{h \neq 0}
+	\Say{(\alpha,\beta,[5])}{ [4][3] }{ \sum \alpha,\beta \in k^m : \alpha \oplus \beta \neq 0 \And h = \alpha v + \beta u }
+	\Assume{[6]}{\alpha \neq 0}
+	\Say{(i,[7])}{\bd k^m[6]}{\sum i \in n \. \alpha_i \neq 0}
+	\Conclude{[6.*]}{\bd \TYPE{HyperbolicPair}(v_i,u_i)[7]}{ \langle u_i,x \rangle =  \alpha_i \neq 0   }
+	\Derive{[6]}{I(\Rightarrow)}{\alpha \neq 0 \Rightarrow x \IsNot \TYPE{Singular}(\overline(U))}
+	\Assume{[7]}{\beta \neq 0}
+	\Say{(i,[8])}{\bd k^m[7]}{\sum i \in n \. \beta_i \neq 0}
+	\Conclude{[7.*]}{\bd \TYPE{HyperbolicPair}(v_i,u_i)[8]}{ \langle v_i,x \rangle =  \beta_i \neq 0   }
+	\Derive{[7]}{I(\Rightarrow)}{\beta \neq 0 \Rightarrow x \IsNot \TYPE{Singular}(\overline{U})}
+	\Conclude{[4.*]}{E(|)[5][6][7]}{x \IsNot \TYPE{Singular}(\overline{U})}
+	\Derive{[4]}{I(\Rightarrow)}{ h \neq 0 \Rightarrow x \IsNot \TYPE{Singular}(\overline{U})  }
+	\Assume{[5]}{w \neq 0}
+	\Derive{(y,[6])}{ \bd \TYPE{Nonsingular}(U)(w) }{ \sum y \in W \. \langle w, y \rangle \neq 0 }
+	\Conclude{[5.*]}{[6][3]}{\langle x,y \rangle \neq 0}
+	\Derive{[5]}{I(\Rightarrow)}{ w \neq 0 \Rightarrow  x \IsNot \TYPE{Singular}(\overline{U}) }
+	\Conclude{[x.*]}{E(|)[3][4][5]}{x \IsNot \TYPE{Singular}(\overline{U})}
+	\Derive{[3]}{\bd^{-1}\TYPE{NonSingular}(k)}{(\overline{U} : \TYPE{Nonsingular}(k))}
+	\Assume{X}{\TYPE{StrictVectorSubspace}(\overline{U})}
+	\Assume{[4]}{U \subvec{k} X}
+	\Conclude{[X.*]}{\THM{DimSumTHM}}{X^\bot \cap \overline{U} \neq \{0\}}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{SingularCompletion}}{\Big( \overline{U} : \TYPE{SingularCompletion} \Big)}
+	\EndProof
+}
+\Page{
+	\Theorem{HyperbolicDimension}{\forall V : \FDMVS \And \TYPE{Nonsingular}(k) \. \NewLine \. \forall U : \TYPE{VectorSubspace}(V) \. \dim \overline{U} = \dim U + \dim \sqrt{U}}
+	\NoProof
+	\\
+	\Theorem{NonsingularExtensionIsHyperbolic}{\forall V  : \FDMVS \And \TYPE{Nonsingular}(k) \. \NewLine \. \forall U \subvec{k} V \. 
+		\forall X : \TYPE{SingularCompletion}(U) \. X \cong \overline{U}  }
+	\\
+	\Theorem{NonsingularExtension}{\forall V,W : \FDMVS \And \TYPE{Nonsinglar}(k) \. \NewLine \. \forall U : \subvec{k} V \.\forall T : \TYPE{Isoquadric}(U,W) \. \exists T' : \TYPE{Isoquadric}(\overline{U},W) : T'_{|U} = T}
+	\NoProof
+	\\
+	\DeclareType{IsoquadricSpaces}{?\TYPE{QuadraticSpace}^2(k)}
+	\DefineNamedType{V,W}{IsoquadricSpaces}{A\approx B}{\exists \TYPE{Isoquadric} \And \TYPE{Bijection}(V,W)}
+}
+\newpage
+\subsection{Witt Theory}
+\Page{
+	\DeclareType{WittExtensionProperty}{?\TYPE{QuadraticSpace}^2(k)}
+	\DefineType{V,W}{WittExtensionProperty}{\forall X \subvec{k} V \. \forall Y \subvec{k} W \. \forall T : \TYPE{Isoquadric} \And \TYPE{Bijection}(X,Y) \.  \NewLine \. \exists T' : \TYPE{Isoqadric} \And \TYPE{Bojection}(V,W) : T'_{|X = T}}
+	\\
+	\DeclareFunc{WittCancelationProperty}{?\TYPE{QuadraticSpace}^2(k)}
+	\DefineType{V,W}{WittCancelationProperty}{\forall X \subvec{k} V \. \forall Y \subvec{k} W \. \NewLine \.  \forall D : V = X \bot X^\bot \And W = Y \bot Y^\bot \. X \approx Y \Rightarrow Y \approx Y^\bot  }
+	\\
+	\Theorem{WittMetatheorem}{\forall V,W : \FDMVS \And  \TYPE{Nonsingular}(k) \NewLine \.  (V,W) : \TYPE{WittExtensionProperty}(k) \iff (V,W) : \TYPE{WittCancelationProperty}(k) }
+	\Assume{L}{\Big((V,W) : \TYPE{WittExtensionProperty}(k)\Big)}
+	\Assume{X}{\TYPE{VectorSubspace}(X)}
+	\Assume{Y}{\TYPE{VectorSubspace}(Y)}
+	\Assume{D}{ V = X \bot X^\bot \And W = Y \bot Y^\bot  }
+	\Assume{[1]}{X \approx Y}
+	\Say{T}{\bd \TYPE{IsoquadricSpaces}[1]}{\TYPE{Isoquadric} \And \TYPE{Bijection}(X,Y)}
+	\Say{(T',[2])}{\bd \TYPE{WittExtensionProperty}(L,T)}{\sum T' : \TYPE{Isoquadric} \And \TYPE{Bijection}(V,W) : T'_{|X} = T}
+	\Say{[3]}{\THM{IsoquadricComplementTranslation}(T')[2]}{T'X^\bot = Y^\bot}
+	\Conclude{[L.*]}{\bd^{-1} \TYPE{IsoquadricSpaces}}{X^\bot \approx Y^\bot}
+	\Derive{L}{I(\Rightarrow)}{\LOGIC{Left} \Rightarrow \LOGIC{Right}}
+	\Assume{R}{\Big( (V,W) : \TYPE{WittCancelationProperty}(k) \Big)} 
+	\Assume{X}{\TYPE{vectorSubspace}(V)}
+	\Assume{Y}{\TYPE{vectorSubspace}(W)}
+	\Assume{T}{\TYPE{Isoquadric} \And \TYPE{Bijection}(X,Y)}
+	\Say{\Big(T'.[1]\Big)}{\THM{NonSingularExtension}(T)}{ \sum T' : \TYPE{Isoaquadric}(\overline{X},\overline(Y)) \. T'_{|X} = X  }
+	\Say{[2]}{\bd \TYPE{Nonsinguler}(\overline{X})\THM{DimSumTHM}}{ V = \overline{X} \bot \overline{X}^\bot }
+	\Say{[3]}{\bd \TYPE{Nonsinguler}(\overline{T})\THM{DimSumTHM}}{ W = \overline{Y} \bot \overline{Y}^\bot }
+	\Say{[4]}{\bd \TYPE{WittCanceleatioProperty}[2][3][1]}{\overline{X}^\bot \approx \overline{Y}^\bot}
+	\Say{S'}{\bd \TYPE{IsoquadreicSpaces}[4]}{\TYPE{Ioquadric} \And \TYPE{Bijection}\Big( \overline{X}^\bot,\overline{Y}^\bot\Big)}
+	\Say{T''}{T' \oplus S'}{V \Arrow{\VS{1}} W}
+	\Say{[5]}{\ByConstr T''[2][3]}{(T'' : \TYPE{Isoquadric}(V) \And \TYPE{Bijection}(V,W))}
+	\Conclude{[R.*]}{\ByConstr T'' [1][2]}{T''|_{X} = T}
+	\Derive{[*]}{I(\iff)I(\Rightarrow)(L)}{\LOGIC{This}}
+	\EndProof
+}
+\newpage
+\subsection{Classification of Symplectic Spaces}
+\Page{
+	\Theorem{NonsingularSymplecticIsHyperbolic}{\forall V : \SVS \And \TYPE{Nonsingular}(k) \. \NewLine \. \forall [0] : \dim V < \infty  \. V : \TYPE{HyperbolicSpace}(k)}
+	\Say{\mathcal{H}}{ \{ H \subvec{k} V : (H : \TYPE{HyperbolicSpace}(V))\} }{?\TYPE{VectorSubspace}(V)}                                   
+	\Say{v}{\bd \SVS(k)(V)}{(v : \TYPE`{IsotropicVector}(V))}
+	\Say{(w,[1])}{\bd \TYPE{Nonsingular}(k)(V)(v) }{\sum w \in V : \langle v,w \rangle \neq 0 }
+	\Say{[2]}{\bd^{-1}\TYPE{HyperbolicPlane}(V)[1][2]}{\Big(\Span\{v,w\} : \TYPE{HyperbolicPlane}(k)\Big)}
+	\Say{[3]}{\ByConstr\mathcal{H}[2]}{\mathcal{H} \neq \emptyset}
+	\Say{[4]}{[3][0]}{\max \mathcal{H} \neq \emptyset}
+	\Assume{H}{\max \mathcal{H}}
+	\Assume{[5]}{V \neq H}
+	\Say{[6]}{\bd \TYPE{Nonsingular}(H)\THM{DimSumTHM}}{ V = H \bot H^\bot }
+	\Say{\big(u,[7]\big)}{[5][6]}{\sum u \in H^\bot \. u \neq 0}
+	\Say{[8]}{[6]\THM{HyperbolicOfIsotropic}(V,u)}{  \exists H' : \TYPE{Hyperbolic}(V) \. H \bot H' \and H \cap H' = \{0\}}
+	\Say{[9]}{ \bd^{-1}\TYPE{HyperbolicSpace}[8] }{H \oplus H' : \TYPE{HyperbolicSpace}(k)}
+	\Conclude{[H.*]}{\bd \max [9]}{\bot}
+	\Derive{[5]}{E(\bot)}{\max \mathcal{H}=\{V\}}
+	\Conclude{[*]}{\ByConstr{\mathcal{H}}[5]}{ \Big(V : \TYPE{HyperbolicSpace}(k)\Big) }
+	\EndProof
+	\\
+	\Theorem{SymplecticClassification}{\forall V : \SVS \And \TYPE{Nonsingular}(k) \. \NewLine \. 
+		\forall [0] : \dim V < \infty \. 
+		\exists H : \TYPE{HyperbolicSpace}(k) :
+		V = \sqrt{V} \bot H
+	}
+	\NoProof
+	\\
+	\Theorem{CanonicalAlternatingMatrix}{\forall V \in \FDVS{k} \. \forall p : \TYPE{Alternating}(V) \. \exists e : \Basis(V) : \NewLine :
+		   p^{e} = \FUNC{blockDiagonal}\left( \Lambda i \in m \. \If i < m  \Then \left[ \begin{array}{cc} 0&1\\-1&0 \end{array} \right] \Else  0 \right) \NewLine \where \quad m = \frac{\rank \phi(p)}{2} + 1 }
+	\NoProof
+}
+$$
+\left[
+	\begin{array}{cccccccc}
+		&1&&&&&& \\
+		-1&&&&&&& \\
+		&&&1&&&&  \\
+		&&-1&&&&& \\
+		&&&&&1&& \\
+		&&&&-1&&& \\
+		&&&&&&& \\
+		&&&&&&& 
+	\end{array}
+\right]
+$$
+\newpage
+\subsection{Witt Theorems for Symplectic Spaces}
+\Page{
+	\Theorem{SVSWittExtensionTheorem}
+	{
+		\forall V,W : \SVS \And \TYPE{Nonsingular}(k) \.
+		\forall [0] : \dim V < \infty \.\NewLine \. 
+		(V,W) : \TYPE{WittExtensionPropertrty}(k) 
+	}
+	\Assume{X}{\TYPE{vectorSubspace}(V)}
+	\Assume{Y}{\TYPE{vectorSubspace}(w)}
+	\Assume{T}{\TYPE{Isoquadric} \And \TYPE{Bijection}(X,Y)}
+	\Say{\Big(T'.[1]\Big)}{\THM{NonSingularExtension}(T)}{ \sum T' : \TYPE{Isoaquadric}(\overline{X},\overline(Y)) \. T'_{|X} = X  }
+	\Say{[2]}{\bd \TYPE{Nonsinguler}(\overline{X})\THM{DimSumTHM}}{ V = \overline{X} \bot \overline{X}^\bot }
+	\Say{[3]}{\bd \TYPE{Nonsinguler}(\overline{Y})\THM{DimSumTHM}}{ W = \overline{Y} \bot \overline{Y}^\bot }
+	\Say{[4]}{\bd \TYPE{Nonsingular} (V,W)[2][3]}{ \Big(\overline{X}^\bot,\overline{Y}^\bot : \TYPE{Nonsingular}(k)\Big)}
+	\Say{[5]}{\THM{NonsingularSymplecticIsHyperbolic}(\overline(X)^\bot,\overline(Y)^\bot\Big)}{\Big(\overline{X}^\bot,\overline{Y}^\bot : \TYPE{HyperbolicSpace}(k)\Big)}	
+	\Say{m}{\frac{\dim \overline{X}^\bot}{2}}{\Nat}
+	\Say{(x,\hat x,[6])}{\bd \TYPE{HyperbolicSpace}(k)\Big(\overline{X}^\bot\Big)[5] }{ \sum (x, \hat x) : m \to \TYPE{HyperbolicPair}(V) \. \NewLine \. \overline{X}^\bot = \bigbot^m_{i=1} \Span\{ x_i,\hat x_i\} }
+	\Say{(y,\hat y,[7])}{\bd \TYPE{HyperbolicSpace}(k)\Big(\overline{Y}^\bot\Big)[5] }{ \sum (y, \hat y) : m \to \TYPE{HyperbolicPair}(V) \. \NewLine \. \overline{Y}^\bot = \bigbot^m_{i=1} \Span\{ y_i,\hat y_i\} }
+	\Say{S'}{\Lambda \alpha x + \beta \hat x \. \alpha y + \beta \hat y}{ \overline{X}^\bot \Arrow{\VS{k}} \overline{Y}^\bot }
+	\Say{T''}{T' \oplus S'}{V \Arrow{\VS{1}} W}
+	\Say{[5]}{\ByConstr T''[2][3]}{(T'' : \TYPE{Isoquadric}(V) \And \TYPE{Bijection}(V,W))}
+	\Conclude{[R.*]}{\ByConstr T'' [1][2]}{T''|_{X} = T}
+	\Derive{[*]}{\bd^{-1}\TYPE{WittExtensionProperty}}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{SVSWittExtensionTheorem}
+	{
+		\forall V,W : \SVS \And \TYPE{Nonsingular}(k) \.
+		\forall [0] : \dim V < \infty \.\NewLine \. 
+		(V,W) : \TYPE{WittCancelationPropertrty}(k) 
+	}
+	\NoProof
+}
+\newpage
+\subsection{Symplectic Group}
+\Page{
+	\DeclareFunc{transvection}{\prod V : \TYPE{QuadraticSpace}(k) \. (V \setminus 0) \to k \to \End_{\VS{k}}(V) }
+	\DefineNamedFunc{transvection}{v,\alpha}{\tau_{v,\alpha}}{\Lambda u \in v \. u + \alpha \langle u,v \rangle v}
+	\\
+	\Theorem{SymplecticTransvection}{\forall V : \SVS(k) \. \forall v \in V \setminus \{0\} \. \forall \alpha \in k \. \tau_{v,\alpha} \in \Sp(V) }
+	\Assume{x,y}{V}
+	\Conclude{[(x,y).*]}{ \bd \FUNC{transvection}(v,\alpha)\THM{MultiAdditive}^3\Big(\langle \cdot,\cdot \rangle)\THM{MultiHomogen}^4\Big(\langle \cdot,\cdot \rangle\Big) \NewLine \bd \SVS(k) \bd \TYPE{Inverse}(k,+)}  
+	{
+		\langle \tau_{v,\alpha}x, \tau_{v,\alpha}y \rangle =
+		\Big\langle x + \alpha \langle x, v \rangle v,  y + \alpha \langle y, v \rangle v \Big \rangle = \NewLine =
+		\langle x, y \rangle + \alpha \langle x,v \rangle \langle v, y \rangle + \alpha \langle y, v \rangle \langle x, v \rangle  + \alpha^2 \langle x, v \rangle \langle y,v \rangle \langle v, v \rangle = 
+		\langle x,y \rangle  + \alpha \langle x,v \rangle \langle v, y \rangle - \alpha \langle x,v \rangle \langle y, v \rangle = 0
+	}
+	\DeriveConclude{[*]}{\bd \Sp(V)}{\tau_{v,\alpha} \in \Sp(V)}
+	\EndProof
+	\\
+	\Theorem{TransvectionIdentity}{\forall V : \SVS \And \TYPE{Nonsingular}(k) \. \forall v \in V \setminus \{0\} \. \forall \alpha \in k \. \tau_{v,\alpha} = \id \iff \alpha = 0 }
+	\NoProof
+	\\
+	\Theorem{OrthogonalTransvection}{\forall V : \SVS \And \TYPE{Nonsingular}(k) \. \forall v \in V \setminus \{0\} \. \NewLine \. \forall \alpha \in k^* \. \forall w \in V \. v \bot w \iff \tau_{v,\alpha}(w) = w  }
+	\NoProof
+	\\
+	\Theorem{TransvectionAddition}{\forall V : \SVS(k)  \. \forall v \in V \setminus \{0\} \. \forall \alpha,\beta \in k \.  \tau_{v,\alpha + \beta} = \tau_{v,\alpha}\tau_{v,\beta} }
+	\NoProof
+	\\
+	\Theorem{TransvectionInverse}{\forall V : \SVS(k)  \. \forall v \in V \setminus \{0\} \. \forall \alpha \in k \.  \tau_{v,\alpha}^{-1} = \tau_{v,-\alpha} }
+	\NoProof
+	\\
+	\Theorem{TransvectionConjugation}{\forall V : \SVS(k) \. \forall v \in V \setminus \{0\} \. \forall \alpha \in k \. \forall \sigma \in \Sp(V) \. 
+		\NewLine \. \sigma \tau_{v,\alpha} \sigma^{-1} = \tau_{\sigma v, \alpha} }
+	\Assume{w}{V}
+	\Conclude{[(w.*)]}{\bd \FUNC{transvection}(v,\alpha) \bd \TYPE{Inverse}\big(\Sp(V)\big) \bd \Sp(V) \bd^{-1}\FUNC{transvection}(\sigma\; v, \alpha) }
+	{
+		\NewLine : \sigma\tau_{v,\alpha} \sigma^{-1}(w) = 
+		\sigma\Big( \sigma^{-1}(w)  + \alpha \langle \sigma^{-1}(w), v \rangle v   \Big) =
+		w    + \alpha \langle w, \sigma v \rangle \sigma v = 
+		\tau_{\sigma \; v, \alpha}(w)
+	}
+	\DeriveConclude{[*]}{I(=,\to)}{ \sigma \tau_{v,\alpha} \sigma^{-1} = \tau_{\sigma v, \alpha}  }
+	\EndProof
+}\Page{
+	\Theorem{TransvectionScalarMult}{\forall V : \SVS(k) \, \forall \alpha \in k \. \forall \beta \in k^* \. \tau_{\beta v,\alpha} = \tau_{v. \alpha^2\beta} }
+	\NoProof
+	\\
+	\DeclareType{Transvection}{\prod V : \TYPE{QuadraticSpace}(k) \. ?\Sp(V)}
+	\DefineType{T}{Transvection}{\exists v \in V \setminus \{0\} : \exists \alpha \in k \. T = \tau_{v,\alpha}}
+	\\
+	\DeclareType{ConnectedHyperbolicPairs}{\prod V : \TYPE{QuadraticSpace}(k) \. ?\TYPE{HyperbolicPair}^2(V)}
+	\DefineType{\Big((v,w),(x,y)\Big)}{ConnectedHyperbolicPairs}{\exists n \in \Nat : \exists T : n \to \TYPE{Transvection}(V) \. 
+		\NewLine \. \prod^n_{i=1} T_iv = x \And \prod^n_{i=1} T_i w  = y}
+	\\
+	\Theorem{SymplecticIsConnected}{\forall V : \SVS \And \TYPE{Nonsingular}(k) \. \forall [0] : \dim V < \infty \. \NewLine \. \forall (v,w),(x,y) : \TYPE{HyperbolicPair}(V) \. \Big((v,w),(x,y)\Big) : \TYPE{ConnectedHyperbolicPairs}(V)}
+	\Assume{(v,w)}{\TYPE{HyperbolicPair}(V)}
+	\Assume{u}{V}
+	\Assume{[1]}{\langle v, u \rangle \neq 0}
+	\Say{\alpha}{\frac{1}{\langle v,u\rangle}}{k^*}
+	\Conclude{[(v,w).*]}{\bd \FUNC{transvection} \bd \SVS(V) \ByConstr \alpha}{ \tau_{u-v,\alpha}(v) = v - \alpha \langle v, u - v \rangle(u - v) = u }
+	\Derive{[1]}{I(\forall)I(\forall)I(\Rightarrow)}
+	{\forall (v,w) : \TYPE{HyperbolicPair}(V) \. \forall u \in V \. \langle v, u \rangle \neq 0 \Rightarrow 
+		\NewLine \Rightarrow \exists x \in V : \Big( (v,w),(u,x)\Big) : \TYPE{ConnectedHyperbolicPair}(V)  }
+	\Assume{v,u,w}{V}
+	\Assume{[2]}{\Big( (v,w),(u,w) : \TYPE{HyperbolicPair}(V) \Big)}
+	\Assume{[3]}{ \langle v, u \rangle \neq 0 }
+	\Say{[4]}{ \THM{MultiAddive}\Big(\langle \cdot, \cdot \rangle\Big) \bd \TYPE{HyperbolicPair}(V)(v,w)(u,w)\bd \TYPE{Inverse}(k,+)(1)}
+	{ \NewLine : \langle u - v, w \rangle  = \langle u, w \rangle - \langle v, w \rangle = 1 - 1 = 0 }
+	\Say{[5]}{\bd^{-1}\TYPE{Orthogonal}[4]}{u - v \bot w}
+	\Say{\alpha}{\frac{1}{\langle v,u\rangle}}{k^*}
+	\Say{[6]}{\THM{orthogonalTransvection}(V,v - u,\alpha)}{\tau_{u-v,\alpha}(w) = w}
+	\Conclude{[(v,u,w).*]}{[1][6]}{\Big(\big( (v,w),(u,w) \big) : \TYPE{ConnectedHyperbolicPair}(V) \Big)}
+	\Derive{[2]}{I(\forall)I(\Rightarrow)}
+	{
+		\forall v,u,w \in V \. (v,w),(u,w) : \TYPE{HyperbolicPair}(V) \And \langle v, u \rangle \neq 0 
+		\Rightarrow \NewLine \Rightarrow
+		\Big( (v,w),(u,w) : \TYPE{ConnectedHyperbolicPair}(V) \Big)
+	}
+}\Page{
+	\Assume{v,u,w}{V}
+	\Assume{[3]}{\Big( (v,w),(u,w) : \TYPE{HyperbolicPair}(V) \Big)}
+	\Say{[4]}{\bd \SVS(k)(V) \bd \TYPE{HyperbolicPair}(v,w)}{\NewLine : \Big(  \{v,w\} : \LIS(V)\Big)}
+	\Assume{[6]}{ u \in \LI(v,w) }
+	\Conclude{[6.*]}{\bd \TYPE{NonBinary}(k)[6]}{\exists f \in V^\star : f(w) = 1 \And f(v) \neq 0 \And f(u) \neq 0 }
+	\Derive{[6]}{I(\Rightarrow)}{ \ldots    }
+	\Assume{[7]}{ u \not\in \LI(v,w) }
+	\Conclude{[7.*]}{\bd \LI(v,w,u)[6]}{\exists f \in V^\star : f(w) = 1 \And f(v) \neq 0 \And f(u) \neq 0 }
+	\Derive{[7]}{I(\Rightarrow)}{ \ldots}
+	\Say{(f,[8])}{E(|)\LOGIC{LEM}[6][7]}{\sum \in V^\star : f(w) = 1 \And f(v) \neq 0 \And f(u) \neq 0 }
+	\Say{(x,[9])}{\THM{ReiszRepresentationTheorem2}(V,[8])}{ \sum x \in V \. \langle x, w \rangle = 1 \And \langle x,v \rangle \neq 0 \And \langle x, u\rangle \neq 0}
+	\Conclude{[(v,u,w).*]}{[2](v,w,x)[9][2](u,w,x)[9]}{\Big(  \big((v,w),(u,w)\big) : \TYPE{ConnectedHyperbolicPair}  \Big)}
+	\Derive{[3]}{I(\forall)I(\Rightarrow)}
+	{
+		\forall v,u,w \in V \. (v,w),(u,w) : \TYPE{HyperbolicPair}(V) 
+		\Rightarrow \NewLine \Rightarrow
+		\Big( (v,w),(u,w) : \TYPE{ConnectedHyperbolicPair}(V) \Big)
+	}
+	\Say{(z,[4])}{[1](v,w,x)}{\sum z \in V \. \big((v,w),(x,z)\big) : \TYPE{ConnectedHyperbolicPair}(V)}
+	\Say{[5]}{[3](x,y,z)}{ \Big( \big( (x,z),(x,y)  \big) : \TYPE{ConnectedHyperbolicPair}(V)\Big)  }
+	\Conclude{[*]}{[4][5]}{ \Big( \big( (v,w),(x,y)\Big) : \TYPE{ConnectedHyperbolicPair}(V) \Big)   }
+	\EndProof
+}\Page{
+	\Theorem{SymplecticTOperatorStructure}{\forall V : \SVS \And \TYPE{Nonsingular}(k) \. \forall [0] : \dim V < \infty \. \NewLine \. 
+		\forall S \in \Sp(V) \. \exists n \in \Nat : \exists T : n \to \TYPE{Transvection}(V) \. S = \prod^n_{i=1} T_i }
+	\Say{\mars}{\Lambda n \in \Nat \. \dim V \le n \Rightarrow \exists n \in \Nat : \exists T : n \to \TYPE{Transvection}(V) \. S = \prod^n_{i=1} T_i}
+	{\Nat \to \Type}
+	\Assume{[1]}{\dim V = 1}
+	\Say{[2]}{\THM{SymplecticClassification}}{(V : \TYPE{HyperbolicPlane}(V))}
+	\Conclude{[1.*]}{\bd \TYPE{ConnectedHyperbolicPair}\THM{SymplecticIsConnected}[2]}{ \NewLine \. \exists n \in \Nat : \exists T : n \to \TYPE{Transcection}(V) \. S = \prod^n_{i=1} T_i}
+	\Derive{[1]}{\ByConstr \mars}{\mars(1)}
+	\Assume{n}{\Nat}
+	\Assume{[3]}{\mars(n)}
+	\Say{(W,H,[4])}{\THM{SymplecticClassification}[3]}{\NewLine \.\sum H : \TYPE{HyperbolicPlane}(k) \. \sum W : \TYPE{SymplecticSpace}(k) \. V = H \bot W}
+	\Assume{[5]}{\dim V = n + 1}
+	\Say{[6]}{\bd \dim [4]}{\dim W = \dim V - 2 \ge n }
+	\Say{[7]}{\bd \Sp(V)\bd \TYPE{OrthofonalDirectSum}[4]}{S = H \boxplus W}
+	\Say{(n,T,[8])}{[1][7]}{\sum n \in \Nat \. \sum  T : n \to \TYPE{Transvection}(H) \. S_{|H} = \prod^n_{i=1} T_i}
+	\Say{(m,T[9])}{[3][7][6]}{\sum m \in \Nat \. \sum T' : m \to \TYPE{Transvection}(W) \. S_{|W} = \prod^m_{i=1} T'_i }
+	\Say{(10)}{\THM{TransvectionOrthogonal}(T)[4]}{\Big( T \oplus \id : n \to \TYPE{Transvection}(V) \Big)}
+	\Say{(11)}{\THM{TransvectionOrthogonal}(T')[4]}{\Big( \id \oplus T' : m \to \TYPE{Transvection}(V)  \Big)}
+	\Conclude{(n.*)}{[8][9]}{T = \prod^n_{i=1} T \oplus \id \prod^m_{i=1} T'}
+	\Derive{[2]}{\bd \TYPE{NaturalSet}(\Nat)}{\forall n \in \Nat \. \mars(n)}
+	\Conclude{[*]}{\mars(\dim V)}{\LOGIC{This}}
+	\EndProof
+	\\
+}
+\newpage
+\subsection{Classification of Orthogonal Spaces}
+\Page{
+	\DeclareType{\OBasis}{\prod V : \TYPE{QuadraicSpace}(k) \. ?\TYPE{Basis}(V)}
+	\DefineType{E}{\OBasis}{\forall e,e' \in E \. \Big(\langle e, e' \rangle = 0 \iff e \neq e'\Big)  }
+	\\
+	\Theorem{OrthogonalSymplectic}{\forall V : \SVS \And \OVS(k) \.  \NewLine \. \forall [0] : (k : \TYPE{MomBinary}) \. \langle \cdot, \cdot \rangle_V = 0}
+	\NoProof
+	\\
+	\Theorem{OrthogonalStructure}{\forall V : \OVS(k) \.  \forall [0] : \dim V < \infty \. \exists U,W \subvec{k} V : \NewLine : \Big( \exists! \OBasis(U) \Big)  \And W : \SVS(k) \And V = U \bot W }
+	\NoProof
+	\\
+	\Theorem{OrthogonalBasisTheorem}{ \forall k : \TYPE{NonBinary} \.  \forall V : \OVS(k) \. \NewLine \. \forall [0] : \dim V < \infty \.  \exists \OBasis(V)  }
+	\NoProof
+	\\
+	\Theorem{OrthogonalForm}{
+		\forall k : \TYPE{NonBinary} \. \forall V : \FDVS{k} \. 
+		\forall p : \TYPE{Symmetric}(V) \.  \NewLine \exists e : \TYPE{Basis}(V) : 
+		\exists \alpha : (\rank p^e) \to k^*:
+		p^e = \diag(\alpha \oplus 0)
+	}
+	\NoProof
+	\\
+	\Theorem{OrthogonalClassificationForACF}{
+		\forall k : \ACF \. 
+		\forall V : \FDVS{k} \. \NewLine \.  
+		\forall p : \TYPE{Symmetric}(V) \. 
+		\exists e : \TYPE{Basis}(V) :  
+		p^e = \diag(1_{\rank p^e} \oplus 0) \.
+	}
+	\NoProof
+	\\
+	\Theorem{SylvesterLawOfInertia}{
+		\forall V : \FDVS{\Reals} \. \NewLine \.  
+		\forall p : \TYPE{Symmetric}(V) \. 
+		\exists e : \TYPE{Basis}(V) : 
+		\exists n \in \Nat \.
+		\exists m \in \Nat \.
+		p^e = \diag(1_{n} \oplus -1_{m} \oplus 0) 
+	}
+	\NoProof
+}
+\Page{
+	\DeclareType{SylvesterMatrix}{\prod n \in \Nat. ?\Reals^{n \times n} }
+	\DefineType{A}{SylvesterMatrix}{\exists n \in \Nat \. \exists m \in \Nat \. A = \diag(1_n \oplus 1_m \oplus 0)}
+	\\
+	\Theorem{SylvesterTHM}{  
+		\forall n \in \Nat \. \forall A : \TYPE{Symmetric}(\Reals, n) \. \exists! S : \TYPE{SylvesterMatrix}(n) :  A \cong S
+	}
+	\NoProof
+	\\
+	\DeclareFunc{signature}{\prod n \in \Nat \. \TYPE{Symmetric}(\Reals,n) \to \Int}
+	\DefineFunc{signature}{A}{\tr S \quad \where \quad S = \TYPE{SylvesterTHM}(n,A)}
+	\\
+	\DeclareFunc{inertia}{\prod n \in \Nat \. \TYPE{Symmetric}(\Reals,n) \to \TYPE{partition}(n)}
+	\DefineFunc{inertia}{A}{ (k,l,n-j-l) \quad \where \quad S = \TYPE{SylvesterTHM}(n,A), (k,l) = \bd \TYPE{SylvesterMatrix}(S)}
+	\\
+	\DeclareType{UniversalForm}{\prod V \in \VS{k} \. ?\L(V,V;k)}
+	\DefineType{p}{UniversalForm}{\forall \alpha \in k \. \exists v \in V : \. p(v,v) = \alpha}
+	\\
+	\Theorem{UniversalFormTHM}{
+		\forall q : \TYPE{PrimePower} \. 
+		\forall V : \OVS{\mathbb{F}_q} \. 
+		\forall U \subvec{\mathbb{F}_q} V \.\NewLine \.  
+		\forall [0] : \dim U \ge 2 \.
+		\forall [00] : ( U : \TYPE{Nonsingular} ) \.
+		\forall [000] : q \neq 2 \.
+		\langle \cdot, \cdot \rangle : \TYPE{Universal}(V)} 
+	\Say{(v,w,\alpha,\beta,[1])}{\THM{OrthogonalForm}(U)}{ \sum v,w \in U \. \sum \alpha,\beta \in \mathbb{F}_q^* \. \langle v,v\rangle = \alpha \And \langle w, w \rangle = \beta \And \langle v, w \rangle = 0  }
+	\Assume{\gamma}{k}
+	\Say{[2]}{\bd \THM{SquaresCardinality}(\ldots)}{ \Big| \{ \alpha \mu^2 | \mu \in k \} \Big| = \frac{q+1}{2}}
+	\Say{[3]}{\bd \THM{SquaresCardinality}(\ldots)}{ \Big| \{ \gamma - \beta \mu^2 | \mu \in k \}\Big| = \frac{q+1}{2} }
+	\Say{(\mu,\nu,[4])}{\bd \THM{FiniteFieldCardinality}[2][3]}{\sum \mu \in k \. \mu^2 \alpha + \nu^2 \beta = \gamma }
+	\Conclude{[\gamma.*]}{\bd \THM{MultiAdditive}(\langle \cdot,\cdot \rangle )\THM{MultiHimogen}(\langle \cdot,\cdot \rangle)[1][4]}{  \langle \alpha v + \nu w, \alpha v + \nu w \rangle = \mu^2 \alpha + \nu^2 \beta = \gamma    }
+	\Derive{[*]}{\bd^{-1}\TYPE{UniversalForms}}{\Big( \langle *,* \rangle : \TYPE{UniversalForm}(V) \Big)}
+	\EndProof
+	\\
+	\Theorem{OrthogonalClassificationForFiniteField}{
+		\forall q : \TYPE{PrimePower} \. 
+		\forall V : \FDVS{\mathbb{F}_q} \. \NewLine \.  
+		\forall p : \TYPE{Symmetric}(V) \. 
+		\exists e : \TYPE{Basis}(V) :  
+		\exists \alpha \in \mathbb{F}_q^* :
+		p^e = \diag(1_{\rank p^e-1} \oplus \alpha \oplus 0) 
+	}
+	\NoProof
+}
+\newpage
+\subsection{Orthogonal Group}
+\Page{
+	\DeclareType{SpecialOrthogonalGroup}{ \prod V : \OVS{k} \.  ?\O(V)  }
+	\DefineNamedType{T}{SpecialOrthogogonalGroup}{T \in \SO(V)}{\det T = 1} 
+	\\
+	\DeclareType{NotIsotropic}{\prod V : \TYPE{QuadraticSpace}(k) \. ?V}
+	\DefineType{v}{NotIsotropic}{ \langle v, v \rangle \neq 0  }
+	\\
+	\DeclareFunc{symmetry}{\prod V : \TYPE{quadraticSpace} \. \TYPE{NotIsotropic}(V) \to \End_{\VS{k}}(V)}
+	\DefineNamedFunc{symmetry}{v}{\sigma_v}{\Lambda x \in V \. x -  \frac{2\langle v,x \rangle}{\langle v,v\rangle}v}
+	\\
+	\Theorem{OrthogonalSymmetry}{\forall V : \OVS{k} \. \forall v : \TYPE{NotIsotropic}(V) \. \sigma_v \in \O(V) }
+	\Say{[1]}{\bd \TYPE{NotIsotropic}(V)(v)\bd^{-1}\TYPE{Nonsingular}}{\Big( kv : \TYPE{Nonsingular}(k)  \Big)}
+	\Say{[2]}{\THM{DimSumTHM}[1]}{ V = kv \bot (kv)^\bot }
+	\Assume{x,y}{V}
+	\Say{\Big(\alpha,\beta,w,u,[3]\Big)}{[2](x,y)}{\sum \alpha,\beta \in k \. w,u \in (kv)^\bot \. x = \alpha v + w \And y = \beta v + u }
+	\Conclude{[\ldots*]}{\bd \sigma_v[3]\THM{MultAdditive}\Big(\langle \cdot,\cdot \rangle\Big)\THM{MultiHomogen}\Big(\langle \cdot,\cdot \rangle\Big) \bd (kv)^\bot\bd \TYPE{Inverse}(k,+)}
+	{
+	     	\NewLine :
+		\langle \sigma_v x, \sigma_v y \rangle = 
+	     	\left\langle  \alpha v + w - 2\frac{\langle v, \alpha v + w \rangle v}{\langle v, v\rangle } v , 
+	     	\beta v + u - 2\frac{\langle v, \alpha v + w \rangle  }{ \langle v, v \rangle } v \right\rangle =  
+		\langle x,  y \rangle   -  2 \alpha\beta - 2 \alpha \beta + 4 \alpha \beta =
+		\langle x, y \rangle 
+	} 
+	\Derive{[*]}{\bd^{-1} \O(V)}{ \sigma_v \in \O(V) }
+	\EndProof
+	\\
+	\DeclareType{Symmetry}{\prod V : \OVS{k} \. ?\End_{\VS{k}}(V) }
+	\DefineType{S}{Symmetry}{\exists v : \TYPE{NotIsotropic}(V) \. S = \sigma_v}
+	\\
+	\Theorem{ReflectionAlongSymmetry}{\forall V : \OVS{k} \. \forall v : \TYPE{NotIsotropic}(V) \.  \sigma_v(v) = -v }
+	\NoProof
+	\\
+	\Theorem{ReflectionAlongSymmetry2}{\forall V : \OVS{k} \. \forall v : \TYPE{NotIsotropic}(V) \.  \NewLine \. \forall u : (kv)^\bot \. \sigma_v(u) = u }
+	\NoProof
+}\Page{	
+	\Theorem{OrthogonalCpnnection}
+	{
+		\forall V : \TYPE{Nonsingular} \And \OVS{k} \. 
+		\forall v,u : \TYPE{nonIsotropic} \.  \NewLine \. 
+		\forall [0] : \langle v, v \rangle = \langle u, u \rangle \.
+		\exists w : \TYPE{NonIsotropic}(V) \. 
+		\sigma_w(v) = u
+	}
+	\Say{[1]}{\bd^{-1}\TYPE{NonIsotropic}[0]}{ v + u : \TYPE{NonIsotropic}(V) | v - u : \TYPE{NonIsotropic}(V)}   
+	\Say{[2]}{\THM{MultiAdditive}[0]\bd^{-1}\TYPE{Orthogonal}}{v + u \bot v - u}
+	\Assume{[3]}{ \Big( v + u : \THM{NonIsotropic}(V) \Big)  }
+	\Say{[4]}{\bd \sigma_{v+u}(v+u)}{\sigma_{v+u}(v+u) = -v - u}
+	\Say{[5]}{\bd \sigma_{v+u}(v-u)[2]}{\sigma_{v+u}(v-u) = v - u}
+	\Conclude{[3.*]}{\bd \VS{k}(V,V)(\sigma_{v+u})[3][4]}{\sigma_{v+u}(v) = u }
+	\Derive{[3]}{I(\Rightarrow)}{v + u : \THM{NonIsotropic}(V) \Rightarrow \LOGIC{This}}
+	\Assume{[4]}{ \Big( v - u : \THM{NonIsotropic}(V) \Big)  }
+	\Say{[5]}{\bd \sigma_{v-u}(v+u)}{\sigma_{v+u}(v+u) = v + u}
+	\Say{[4]}{\bd \sigma_{v+u}(v-u)[4]}{\sigma_{v+u}(v-u) = -v + u}
+	\Conclude{[4.*]}{\bd \VS{k}(V,V)(\sigma_{v+u})[5][6]}{\sigma_{v+u}(v) = u }
+	\Derive{[4]}{I(\Rightarrow)}{v + u : \THM{NonIsotropic}(V) \Rightarrow \LOGIC{This}} 
+	\Conclude{[*]}{E(|)[1][3][4]}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{StructureOfOrthogonalOperator}
+	{
+		\forall V : \TYPE{Nonsingular} \And \OVS(k) \. 
+		\forall [0] : \dim V < \infty \.  \NewLine \. 
+		\forall T \in \O(V) \.  
+		\exists n \in \Nat \.
+		\exists S : n \to \TYPE{Symmetry}(V) \.
+		T = \prod^n_{i=1} S_i
+	}
+	\Assume{[1]}{\dim V = 1}
+	\Say{v}{\THM{OrthogonalSymplectic}(V)}{\TYPE{NonIsotropic}(V)}
+	\Say{\Big(\alpha,[2]\Big)}{\bd \VS{k}(V,V)(k)[1]}{\sum \alpha \in k \. Tv = \alpha v  }
+	\Say{[3]}{ \bd \TYPE{NonIsotropic}(V)(v)\bd \O(V)(T)(v)[1]\THM{MultiHomogen}(V) }{  0 \neq \langle v, v\rangle = \langle Tv, Tv \rangle = \langle \alpha v, \alpha v \rangle = \alpha^2 \langle v, v \rangle   } 
+	\Say{[4]}{\THM{RootsCardinality}(k,)[3]}{\alpha = \pm 1 }
+	\Assume{[5]}{\alpha = 1}
+	\Say{[6]}{[1][2][5]}{T = \id}
+	\Conclude{[5.*]}{\THM{ReflectionAlongSymmetry2}[1][6]}{T = \sigma_v \sigma_v}
+	\Derive{[5]}{I(\Rightarrow)}{ \alpha = 1 \Rightarrow \LOGIC{This} }
+	\Assume{[6]}{\alpha = -1}
+	\Say{[7]}{[1][2][6]}{T = -\id}
+	\Conclude{[5.*]}{\THM{ReflectionAlongSymmetry2}[1][7]}{T = \sigma_v \sigma_v}
+	\Derive{[6]}{I(\Rightarrow)}{\alpha = - 1 \Rightarrow \LOGIC{This}}		
+	\Conclude{[7]}{E(|)[4][5][6]}{\LOGIC{This}}
+	\Derive{[1]}{I(\Rightarrow)}{\dim V = 1 \Rightarrow \LOGIC{This}} 
+	\Say{d}{\dim V}{\Nat}
+}\Page{
+	\Assume{[2]}{
+		\forall W : \TYPE{Nonsingular} \And \OVS(k) \. 
+		\dim W < d \Rightarrow \forall  T \in \O(W) \.\NewLine \. 
+		\exists n \in \Nat \. 
+		\exists S : n \to \TYPE{Symmetry}(V) \.  
+		T = \prod^n_{i=1} S_i
+	} 
+	\Say{v}{\THM{OrthogonalSymplectic}(V)}{\TYPE{NonIsotropic}(V)}
+	\Say{[3]}{\THM{DimSumTHM}(v)}{V = kv \bot (kv)^\bot}
+	\Say{[4]}{\bd \O(V)[3]}{T = kv \boxplus (kv)^\bot}
+	\Say{\big( n, S, [5]\big)}{[2](kv,[3],T_{|kv},) }{\sum n \in \Nat \. \sum S : n \to \TYPE{Symmetry}(kv) \. T_{|kv} =\prod^n_{i=1} S_i  } 
+	\Say{\big( n', S', [6]\big)}{[2]\Big((kv)^\bot,[3],T_{|(kv)^\bot}\Big) }{\sum n' \in \Nat \. \sum S' : n' \to \TYPE{Symmetry}(kv)^\bot \. T_{|(kv)^\bot} =\prod^{n'}_{i=1} S_i'  } 
+	\Conclude{[7]}{\THM{ReflectionAlongSymmetry}[3][5][6]}{ T = \prod^n_{i=1} S_i \prod^{n'}_{i=1} S'_i  }
+	\DeriveConclude{[*]}{\bd \Nat [1]}{\LOGIC{This}}
+	\EndProof
+}
+\newpage
+\subsection{Witt Theorems for Orthogoanl Spaces}
+\Page{	
+	\Theorem{OVSWittCancelationTranslation}{
+		\forall n \in \Nat \. \NewLine \. 
+		\forall [0] :\Big(\forall V : \OVS \And \TYPE{Nonsingular}(k) \. \dim V = n \Rightarrow \NewLine \Rightarrow  (V,V) : \TYPE{WittCancelationProperty}(k)\Big) 
+		\. \NewLine \.
+		\Big(\forall V,U : \OVS \And \TYPE{Nonsingular}(k) \. \forall [00] : \dim V = \dim U = n \And (V,U) : \TYPE{Isometric}(k) \Rightarrow \NewLine \Rightarrow  (V,U) : \TYPE{WittCancelationProperty}(k)\Big) 
+	}	
+	\Say{A}{\bd\TYPE{Isometric}[00]}{\TYPE{Isometry} \And \TYPE{Bijection}(V,W)}
+	\Assume{X}{\TYPE{Vectorsubspace}(V)}
+	\Assume{Y}{\TYPE{Vectorsubspace}(W)}
+	\Assume{T}{\TYPE{Isometry} \And \TYPE{Bijection}(X,Y)}
+	\Say{[1]}{\bd^{-1} \TYPE{Isometric} \THM{IsometryComposition}}{\Big( (X, A^{-1}Y)  : \TYPE{Isometry} \Big)}
+	\Say{[2]}{\bd \TYPE{WittCancelationProperty}[0][1]}{\Big( \big(X^\bot,(A^{-1}Y)^\bot\big) : \TYPE{Isometric}(k)\Big)}
+	\Say{[3]}{\THM{QuadraticOrhogonalTranslation}(A,A^{-1}Y)}{ A(A^{-1}Y)^\bot = Y^\bot}
+	\Conclude{[\ldots*]}{[2][3]}{\Big(  (X^\bot,T^\bot) : \TYPE{Isometric}(k) \Big)}
+	\Derive{[*]}{\bd^{-1} \TYPE{isometric}}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{OVSWittCancelationPreTHM}{\forall V : \OVS \And \TYPE{Nonsingular}(k) \.  \NewLine \. (V,V) : \TYPE{WittCancelationProperty}(k) }
+	\Assume{X,Y}{\TYPE{VectorSubspace}(V)}
+	\Assume{T}{\TYPE{Isometry} \And \TYPE{Bijection}(X,Y)}
+	\Say{[1]}{\THM{DimSumTHM}}{V = X \bot X^\bot}
+	\Say{[2]}{\THM{DimSumTHM}}{W = Y \bot Y^\bot }
+	\Assume{[3]}{\dim X = 1}
+	\Say{(x,[4])}{\bd \dim [1]}{\sum x \in X \. X = kx}
+	\Say{(s,v,[5])}{\THM{OrthogonalConnection}(Tx)}{\sum s = \pm 1 \. \sum v : \TYPE{NonIsotropic}(V) \. s\sigma_v(x ) = Tx}
+	\Conclude{[3.*]}{\THM{QuadraticOrthogonalTranslation}(s\sigma_v(x))}{ s\sigma_v\;X^\bot = Y^\bot }
+	\Derive{[3]}{I(\Rightarrow)I(\exists)}{\dim X = 1 \Rightarrow (X^\bot,Y^\bot) : \TYPE{Isometric}(k)}
+	\Assume{n}{\Nat}
+	\Assume{[4]}{\forall X',Y' \subvec{k} V \.   \dim X' < n \And (X',Y') i: \TYPE{Isometric}(V) \Rightarrow (X'^\bot,Y'^\bot) : \TYPE{Isometric}(V) }
+	\Assume{[5]}{\dim X = n}
+	\Say{x}{\THM{OrthogonalSymplectic}(X)}{\TYPE{NonIsotropic}(X)}
+	\Say{(X',[6])}{\THM{DimSumTHM}(x)}{ X = kx \bot X'  }
+	\Say{(Y',[7])}{\THM{DimSumTHM}(x)}{ Y = kTx \bot Y'  }
+	\Say{[8]}{[3][6][7]}{ \Big((X',Y') : \TYPE{Isometric}(k)\Big) }
+}\Page{
+	\Conclude{[9]}{\THM{OSVCancelationTranslation}[4][8]}{\Big( (X^\bot,Y^\bot) :\TYPE{Isometric}(k)\Big)}
+	\DeriveConclude{[*]}{\bd\Nat}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{OVSWittCancelationTHM}{\forall V,W : \OVS \And \TYPE{Nonsingular}(k)  \. \forall [0] : \dim V = \dim W < \infty  \NewLine \. (V,W) : \TYPE{WittCancelationProperty}(k) }
+	\NoProof	
+	\\
+	\Theorem{OVSWittExtensionTHM}{\forall V,W : \OVS \And \TYPE{Nonsingular}(k) \. \dim V = \dim W < \infty  \NewLine \. (V,W) : \TYPE{WittExtensionProperty}(k) }
+	\NoProof
+}
+\newpage
+\subsection{Maximal Hyperbolic Subspaces}
+\Page{
+	\DeclareType{DegenerateSpace}{ ? \TYPE{QuadraticSpace}(k) }
+	\DefineType{V}{DegenerateSpace}{\forall v,u \in V \. \langle v, u \rangle = 0}
+	\\
+	\DeclareType{MaximalDegenerateSubspace}{ \prod V :  \TYPE{QuadraticSpace}(k) \. ? \TYPE{VectorSubspace}(V) }
+	\DefineType{U}{MaximalDegenerateSubspace}{U : \TYPE{DegenerateSpace}(k) \And \forall W \subvec{k} V \. U \subsetneq W \Imply \NewLine \Imply W \IsNot \TYPE{DegenerateSpace}(k)}
+	\\
+	\Theorem{WittIndexTHM}{\forall V : \OVS \And \TYPE{Nonsingular}(k) \. \forall U,U' : \TYPE{MaximalDegenerateSybspace}(V) \. \dim U = \dim U'}
+	\Assume{[1]}{\dim U < \dim U'}
+	\Say{(W,T)}{\THM{DimensionIsomorphism}(U,U')[1]}{\sum W \subvec{k} U' \. \sum T : U ToIso{\VS(k)} W}
+	\Say{[2]}{\bd \TYPE{DegenerateSpace}(V)(T)}{\Big(T : \TYPE{Isometry}(V,W)\Big)}
+	\Say{(T',[3])}{\THM{OSWWittExtensionTHM}(V)\bd \TYPE{WittExtensionProperty}[2]}{ \sum T' : \TYPE{Isometry}(V,V) \. T_{|U}' = T  }
+	\Say{[4]}{\bd \TYPE{Isometry}}{\Big( {T'}^{-1}U' : \TYPE{DegenerateSpace}(k) \Big)}
+	\Say{[5]}{\bd \TYPE{Preimage}[3][1]}{ U \subset {T'}^{-1}U'}
+	\Conclude{[6]}{\bd \TYPE{MaximalDegenerateSubspace}}{\bot}
+	\DeriveConclude{[*]}{\LOGIC{SymmetricProof}\bd \TYPE{Antisymmetric}}{\dim U = \dim U'}
+	\EndProof
+	\\
+	\Theorem{DegenerateSpacExist}{\forall V : \TYPE{QuadraticSpace}(k) \. \exists U \subvec{k} V : U : \TYPE{DegenerateSpace}(k)}
+	\Conclude{[*]}{\bd^{-1}\TYPE{DegenerateSpace}}{\Big(\{0\} : \TYPE{DegenerateSpace}(k) \Big) }
+	\\
+	\DeclareFunc{indexOfWitt}{ \OVS \And \TYPE{NonSingular} \And \FDVS{k} \to \Nat}
+	\DefineNamedFunc{indexOfWitt}{V}{\WI(V)}{\bd \TYPE{Singleton}\{ \dim U | U : \TYPE{DegenerateSpace}(k)\}}
+	\\
+	\DeclareType{MaximalHyperbolicSubspace}{\prod V : \TYPE{QuadraticSpace}(k) \.  ?\TYPE{VectorsSubspace}(V) }
+	\DefineType{U}{MaximalHyperbolicSubspace}{ U : \TYPE{HypervolicSpace}(k) \And \forall W \subvec{k} V \. U \subsetneq W \Imply W \IsNot \TYPE{HyperbolicSpace}(k) }
+	\\
+	\Theorem{MaximalHyperbolicTHM}{\forall V : \OVS \And \TYPE{Nonsingular}(k) \. \NewLine \forall U : \TYPE{MaximalHyperbolicSubspace}(V) \. \dim U = 2\WI(U)}
+	\NoProof
+	\\
+	\Theorem{AnisotropicDecompositionTHM}{\forall V : \OVS(k) \. \forall [0] : \dim V < \infty \. \NewLine 
+		\exists H : \TYPE{HyperbolicSpace}(k) \.  \exists U : \TYPE{AnIsotropic}(k) \. V = H \bot U \bot \sqrt{V}} 
+	\NoProof
+}
+\end{document}

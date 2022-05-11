@@ -1,0 +1,2124 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{extpfeil}
+\usepackage{graphicx}
+\usepackage{scalerel}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+\newcommand{\Imply}{\Rightarrow} 
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+\newcommand{\Class}{\TYPE{Kind}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\DeclareMathOperator*{\supp}{supp}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cat}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToMono}{\xhookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToEpi}{\xtwoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\ToIso}{\xleftrightarrow}
+\newcommand{\Arrow}{\xrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\} 
+\newcommand{\Assume}[2]{& \LOGIC{Assume} \; #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%CategoryTheorey
+%Types
+\newcommand{\Cov}{\TYPE{Covariant}}
+\newcommand{\Contra}{\TYPE{Contravariant}}
+\newcommand{\NT}{\TYPE{NaturalTransform}}
+\newcommand{\UMP}{\TYPE{UnversalMappingProperty}}
+\newcommand{\CMP}{\TYPE{CouniversalMappingProperty}}
+\newcommand{\paral}{\rightrightarrows}
+%functions
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\obj}{\mathrm{obj}}
+\DeclareMathOperator*{\dom}{dom}
+\DeclareMathOperator*{\codom}{codom}
+\DeclareMathOperator*{\colim}{colim}
+%variable
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\R}{\mathrm{R}}
+%Cats
+\newcommand{\CAT}{\mathsf{CAT}}
+\newcommand{\SET}{\mathsf{SET}}
+\newcommand{\PARALLEL}{\bullet \paral \bullet}
+\newcommand{\WEDGE}{\bullet \to \bullet \leftarrow \bullet}
+\newcommand{\VEE}{\bullet \leftarrow \bullet \to \bullet}
+%Topology
+%General Topology
+%Types
+\newcommand{\TS}{\TYPE{TopologicalSpace}} 
+\newcommand{\LF}{\TYPE{LocallyFinite}}
+\newcommand{\PN}{\TYPE{PerfectlyNormal}}
+%FUNC
+\DeclareMathOperator*{\intx}{int}
+\DeclareMathOperator*{\cl}{cl} 
+\DeclareMathOperator*{\boundary}{\partial} 
+\DeclareMathOperator{\combo}{\triangledown} 
+\DeclareMathOperator{\diag}{\triangle} 
+\DeclareMathOperator{\rem}{rem}
+%CATS
+\newcommand{\TOP}{\mathsf{TOP}}
+\newcommand{\HC}{\mathsf{HC}}
+\newcommand{\CG}{\mathsf{CG}}
+%Symbols
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\U}{\mathcal{U}}
+\renewcommand{\O}{\mathcal{O}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\X}{\mathcal{X}}
+%\newcommand{\d}{\mathrm{d}}
+%Metic Topology
+%FUNC
+\DeclareMathOperator{\diam}{diam}
+%CATS
+\newcommand{\Semiiso}{\mathsf{SMS}_{\circ \to \cdot}}
+\newcommand{\Iso}{\mathsf{MS}_{\circ \to \cdot}}
+\newcommand{\SMS}{\mathsf{SMS}}
+\newcommand{\MS}{\mathsf{MS}}
+\newcommand{\UNI}{\mathsf{UNI}}
+\newcommand{\UNIS}{\mathsf{UNIS}}
+\author{Uncultured Tramp} 
+\title{Metric Topology}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Metric Spaces}
+\subsection{Distance Metric}
+\Page{
+	\DeclareType{Semimetric}{\prod X \in \SET \. \TYPE{Symmetric}(X,X;\Reals_+)}
+	\DefineType{d}{Semimetric}{\forall x,y,z \in X \. d(x,x) = 0 \And d(x,y) \le d(x,z) + d(z,y) }
+	\\
+	\Conclude{\TYPE{SemimetricSpace}}{\sum_{X \in \SET} \TYPE{Semimetric}(X)}{\Type}
+	\\
+	\DeclareType{Metric}{\prod x \in \SET \. \TYPE{Semimetric}(X,X;\Reals_+)}
+	\DefineType{d}{Metric}{\forall x,y \in X \. d(x,y) = 0 \iff x = y }
+	\\
+	\Conclude{\TYPE{MetricSpace}}{\sum_{X \in \SET} \TYPE{Metric}(X)}{\Type}
+	\\
+	\DeclareFunc{semimetric}{ \prod (X,\rho) : \TYPE{SemimetricSpace} \. \TYPE{Semimetrc}(X)  }
+	\DefineNamedFunc{semimetric}{}{d_X}{\rho}
+	\\
+	\DeclareFunc{synecdoche}{\prod (X,\rho) : \TYPE{SemimetricSpace} \. \SET}
+	\DefineNamedFunc{synecdoche}{}{(X,\rho)}{X}
+	\\
+	\Theorem{TriangleInequality}{\forall (X,d) : \TYPE{SemimetricSpace} \. \forall x,y,z \in X \. d(x,y) \le d(x,z) + d(z,y) }
+	\NoProof
+	\\
+	\Theorem{ReversedTriangleInequality}
+	{
+		\forall (X,d) : \TYPE{SemmimetricSpace} \. \forall x,y,z \in X .  \Big|d(x,y) -  d(y,z) \Big| \le d(x,z)
+	}
+	\Say{[1]}{\THM{TriangleInequality}(x,y,z)}{d(x,y) \le d(x,z) + d(z,y)}
+	\Say{[2]}{\bd \TYPE{Semimetric}(d)(z,y)[1]}{d(x,y) \le d(x,z) + d(y,z)}
+	\Say{[3]}{  [2] - d(y,z)    }{d(x,y) - d(y,z) \le d(x,z)}
+	\Say{[4]}{\THM{TriangleInequality}(y,z,x)}{d(y,z) \le d(y,x) + d(x,z)}
+	\Say{[5]}{\bd \TYPE{Semimetric}(d)(x,y)[4]}{d(y,z) \le d(y,x) + d(x,z)}
+	\Say{[6]}{  [5] - d(y,z)    }{d(y,z) - d(x,y) \le d(x,z)}
+	\Conclude{[*]}{\bd^{-1} \FUNC{absValue}[3][6]}{ \Big| d(x,y) - d(y,z) \Big| \le d(x,z)  }
+	\EndProof
+}
+\Page{
+	\DeclareType{Lipschitz}{ \prod X,Y  : \TYPE{SemimetricSpace} \. \Reals_+ \to ?(X \to Y)   }
+	\DefineNamedType{f}{Lipschitz}{f \in L\hyph\mathrm{Lip}}{\Lambda L \in \Reals_+ \. \forall x,y \in X \. d\Big( f(x), f(y)\Big) \le Ld(x,y)}
+	\\
+	\DeclareFunc{SemiisometryCategory}{\CAT}
+	\DefineNamedFunc{SemiisometryCategory}{}{\mathsf{SMS}_{\circ \to \cdot}}{\Big(  \TYPE{SemimetricSpace}, 1\hyph\mathrm{Lip},\circ,\id\Big)}
+	\\
+	\DeclareFunc{IsometryCategory}{\CAT}
+	\DefineNamedFunc{IsometryCategory}{}{\mathsf{MS}_{\circ \to \cdot}}{\Big(  \TYPE{MetricSpace}, 1\hyph\mathrm{Lip},\circ,\id\Big)}
+	\\
+	\DeclareType{Semiisometry}{\prod X,Y : \TYPE{SemimetricSpace} \. ?(X \to Y)}
+	\DefineType{f}{Semiisometry}{\forall a,b \in X \. d\Big( f(a),f(b)\Big) = d(a,b)}
+	\\
+	\DeclareType{Isometry}{\prod X,Y : \TYPE{MetricSpace} \. ?(X \to Y)}
+	\DefineType{f}{Isometry}{\forall a,b \in X \. d\Big( f(a),f(b)\Big) = d(a,b)}
+	\\
+	\DeclareFunc{distance}{\prod X : \TYPE{SemimetricSpace} \. ?X \to X \to \Reals_+}
+	\DefineNamedFunc{distance}{A,x}{d(A,x)}{\inf_{a \in A} d(a,x)}
+	\\
+	\DeclareFunc{distanceBetweenSets}{\prod X : \TYPE{SemimetricSpace} \. ?X \to ?X \to \widehat{\Reals}_+}
+	\DefineNamedFunc{distanceBetweenSets}{A,B}{d(A,B)}{\sup_{b \in B} d(A,b)}
+	\\
+	\DeclareFunc{diameter}{\prod X : \TYPE{SemimetricSpace} \. ?X \to \widehat{\Reals}_+}
+	\DefineNamedFunc{diameter}{A}{\mathrm{diam}\; A}{\sup_{x,y \in A} d(x,y)}
+	\\
+	\DeclareType{Bounded}{\prod X \in \Semiiso \. ?_{\TYPE{Semiiso}}? X}
+	\DefineType{A}{Bounded}{\diam A < \infty}
+	\\
+	\Theorem{BoundedSubset}{\forall X \in \Semiiso \. \forall A : \TYPE{Bounded}(X) \. \forall B \subset A \. B : \TYPE{Bounded}(X) }
+	\Say{[1]}{\bd \TYPE{Bounded}(X)(A)\bd \diam \THM{SubsetSupremum}(A,B)\bd^{-1}\diam}
+	{ \NewLine :  \infty > \diam A = \sup_{x,y \in A} d(x,y) \ge \sup_{x,y \in B} d(x,y) = \diam B  }
+	\Conclude{[2]}{\bd^{-1}\TYPE{Bounded}[1]}{\Big( B : \TYPE{Bounded}(X) \Big)}
+	\EndProof
+}\Page{
+	\DeclareFunc{disk}{\prod X \in \Semiiso \. X \to \Reals_+  \to ?X }
+	\DefineNamedFunc{disk}{x,r}{\mathbb{D}(r,x)}{\Big\{   y \in X : d(x,y) \le r  \Big\}}
+	\\
+	\DeclareFunc{cell}{\prod X \in \Semiiso \. X \to \Reals_+  \to ?X }
+	\DefineNamedFunc{cell}{x,r}{\mathbb{B}(r,x)}{\Big\{   y \in X : d(x,y) <  r  \Big\}}
+	\\
+	\DeclareFunc{sphere}{\prod X \in \Semiiso \. X \to \Reals_+  \to ?X }
+	\DefineNamedFunc{sphere}{x,r}{\mathbb{S}(r,x)}{\Big\{   y \in X : d(x,y) =  r  \Big\}}
+	\\
+	\Theorem{Cellbound}{\forall X \in \Semiiso \. \forall A \subset X \. A : \TYPE{Bounded}(X) \iff \exists x \in X : \exists r \in \Reals_+ : A \subset \mathbb{B}(x,r) }
+	\NoProof
+	\\
+	\Theorem{BoundedMetric1}{ \forall X \in \SET \. \forall d : \TYPE{Semimetric}(X) \.   \frac{d}{1 + d} : \TYPE{Semimetric}  }
+	\Assume{x,y,z}{X}
+	\Conclude{[\ldots*]}{ \THM{PlusUnityRecipricol}(d(x,z))\THM{TrinagleIneq}(X,d)\THM{PlusUnityRecipricol}(d(x,y) + d(y,z))\NewLine\THM{PositiveSumIsGreater}}
+	{
+		\frac{d(x,z)}{1 + d(x,z)}  = 
+		1 -  \frac{1}{1 + d(x,z)} \le     1 -  \frac{1}{1 + d(x,y) + d(y,z)} =
+		\NewLine =
+		\frac{d(x,y) + d(y,z)}{1 + d(x,y) + d(y,z)}  =
+		\frac{d(x,y)}{1 + d(x,y)} + \frac{d(y,z)}{1 + d(y,z)}
+	}
+	\Derive{[*]}{\bd^{-1} \TYPE{Semimetric}}{\left( \frac{d}{1 + d} : \TYPE{Semimetric}(X)\right)}
+	\EndProof
+	\\
+	\Theorem{BoundedMetric2}{ \forall X \in \SET \. \forall d : \TYPE{Semimetric}(X) \.   \min(1,d) : \TYPE{Semimetric}  }
+	\NoProof
+}
+\subsection{Topology}
+\Page{       
+	\DeclareFunc{metricTopology}  
+	{
+		\Semiiso \to \TOP
+	}
+	\DefineNamedFunc{metricTopology}{X}{X}{\Big\langle \big\{  \mathbb{B}(x,r)  \big|  r \in \Reals_{++}, x \in X  \big\}   \Big\rangle_{\TOP}}
+	\\
+	\DeclareFunc{semimetricSpaceCategory}{\Cat}
+	\DefineNamedFunc{semimetricSpaceCategory}{}{\mathsf{SMS}}{ \Big(  \TYPE{SemimetricSpace}, C, \circ, \id \Big)  }
+	\\
+	\DeclareFunc{metricSpaceCategory}{\Cat}
+	\DefineNamedFunc{metricSpaceCategory}{}{\mathsf{MS}}{ \Big(  \TYPE{metricSpace}, C, \circ, \id \Big)  }
+	\\
+	\Theorem{OpenCells}{\forall X \in \SMS \. \forall x \in X \. \forall r \in \Reals_{++} \. \mathbb{B}(x,r) \in \T(X) }
+	\NoProof
+	\\
+	\Theorem{MetricOpennesCriterion}{\forall X \in \SMS \. \forall U \subset X \. U \in \T(X) \iff \forall x \in X \. \exists r \in \Reals_{++} : \mathbb{B}(x,r) \subset U }
+	\NoProof
+	\\
+	\Theorem{ClosureByDistance}{\forall X \in \SMS \. \forall A \subset X \. \overline{A} = \{  x \in X : d(x,A) = 0 \}}
+	\Say{B}{ \{ x \in X : d(x,A) = 0}{\TYPE{Subset}(X)}
+	\Assume{x}{B}
+	\Say{[1]}{\ByConstr B (x)}{d(x,A) = 0}
+	\Assume{U}{\U(x)}
+	\Say{\Big(r,[2] \Big))}{\THM{MetricOpennessCriterion}(U,x)}{\sum r \in \Reals_{++} \. \mathbb{B}(x,r) \subset U}
+	\Conclude{[U.*]}{[1]\bd \FUNC{distanceToSet}[2]}{U \cap A \neq \TYPE{Emptyset}}
+	\DeriveConclude{[x.*]}{\THM{AltClosure}(A)}{ x \in \overline{A}}
+	\Derive{[1]}{bd^{-1} \TYPE{Subset} }{B \subset \overline{A}}
+	\Assume{x}{\overline{A}}
+	\Assume{r}{\Reals_{++}}
+	\Say{[2]}{\THM{OpenCell}(x,r)\THM{AltClosure}(A)}{\mathbb{B}(x,r) \cap A = \emptyset }
+	\Conclude{[r.*]}{\bd^{-1} \Func{distanceToSet}(x,A)[2]}{ d(x,A) < r}
+	\Derive{[2]}{\THM{InfimumInduction}}{ d(x,A) = 0}
+	\Conclude{[x.*]}{\ByConstr B [2]}{x \in B}
+	\DeriveConclude{[*]}{\THM{SetEq}[1]}{A = B}
+	\EndProof
+}
+\Page{
+	\Theorem{DiscIsClosed}
+	{
+		\forall X \in \SMS \. \forall x \in X \, \forall r \in \Reals_{++} \, \mathbb{D}(x,r) : \TYPE{Closed}(X)
+	}
+	\Say{D}{\mathbb{D}(x,r)}{\TYPE{Subset}(X)}
+	\Assume{y}{X}
+	\Assume{[1]}{d(y,D) = 0}
+	\Say{\Big(a,[2] \Big)}{\bd \FUNC{distanceToSet}(y,D)[1]\bd \FUNC{infimum}}{\sum a : \Nat \to D \. \lim_{n \to infty} d(y, a_n) = 0}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{\Big(n,[3]\Big)}{\bd \TYPE{Limit}[2](\varepsilon)}{\sum n \in \Nat \, d(y,a_n) < \varepsilon}
+	\Conclude{[\varepsilon.*]}{\THM{TriangleIneq}\bd \FUNC{disc}(D) [2] \THM{IneqSum}}{d(x,y) \le d(x,a_n) + d(a_n,y) <  r + \varepsilon}
+	\Derive{[3]}{\THM{IneqLim}}{d(x,y) \le r }
+	\Conclude{[y.*]}{\bd \FUNC{disc}(D)}{y \in D }
+	\Derive{[1]}{\THM{ClosureByDistance}}{D = \overline{D}}
+	\Conclude{[*]}{\bd \FUNC{closure}}{\Big( D : \TYPE{Closed}(X) \Big)}
+	\EndProof
+	\\
+	\Theorem{SphereIsClosed}
+	{
+		\forall X \in \SMS \. \forall x \in X \, \forall r \in \Reals_{++} \, \mathbb{S}(x,r) : \TYPE{Closed}(X)
+	}
+	\Say{S}{\mathbb{S}(x,r)}{\TYPE{Subset}(X)}
+	\Say{[1]}{\THM{TrichtomyPrinciple}\bd \FUNC{sphere}(S)}{S^\c = \mathbb{B}(x,r) \cup \mathbb{D}^\c(x,r)}
+	\Say{[2]}{\bd  \TYPE{Closed} \THM{DiscIsClosed}(x,r)}{\mathbb{D}^\c(x,r) \in \T(X)}
+	\Say{[3]}{\THM{OpenCell}(x,r)}{\mathbb{B}(x,r) \in \T(X)}
+	\Say{[4]}{ [1] \THM{OpenUnion}[3] [2]  }{S^\c  \in \T(X)}
+	\Conclude{[*]}{\bd^{-1} \TYPE{Closed}(X)[4]}{\Big(S : \TYPE{Closed}(X) \Big) }
+	\EndProof
+	\\
+	\Theorem{SemimetricBalance}
+	{
+		\forall X \in \SMS \. \forall x,y \in X \. 
+		\forall U \in \U(x) \. y \in U \iff \forall U \in \U(y) \. x \in U  
+	}
+	\NoProof
+	\\
+	\Theorem{BoundedMetricTopology1}{\forall (X,d) \in \SMS \.   (X,d)  \cong_{\SMS} \left(X, \frac{d}{1 + d}\right) }
+	\NoProof
+	\\
+	\Theorem{BoundedMetricTopology2}{\forall (X,d) \in \SMS \. (X,d) \cong_{\SMS} \Big(X,\min(d,1)\Big)}
+	\NoProof
+}
+\Page{
+	\Theorem{MetricSpaceRegularity}{\forall X \in \MS \.  X : \TYPE{T4}  }
+	\Assume{A,B}{\TYPE{Closed}(X)}
+	\Assume{[1]}{A \cap B = \emptyset}
+	\Assume{a}{A}
+	\Say{\Big(r,[2]\Big)}{\THM{ClosureByDistance}[1]}{\sum r \in \Reals_{++} \. d(a,B) >  r}
+	\Conclude{O(a)}{\mathbb{B}\Act{a,\frac{r}{4}}}{\T(X)}
+	\Derive{O}{I(\to)}{A \to \T(X)}
+	\Say{U}{\bigcap_{a \in A} O(a)}{\T(X)}
+	\Say{[1]}{\ByConstr U}{A \subset U}
+	\Say{[2]}{\ByConstr U}{B \cap U = \emptyset}
+	\Assume{b}{ B \cap \overline{U}}
+	\Say{\Big( u, [3] \Big)}{\THM{ClosureByDistance}\bd \FUNC{distanceToSet}}{\sum u : \Nat \to U \. \lim_{n \to \infty} d(b,u_n) = 0}
+	\Assume{n}{\Nat}
+	\Say{\Big( a_n, [4]\Big)}{\ByConstr U [3]}{\sum a_n \in A \. u_n \in O(a_n)}
+	\Say{r}{ d(a_n,B)}{\Reals_{++}}
+	\Say{[5]}{\ByConstr O(a_n) \ByConstr r }{   d(a_n, b) \ge  r}
+	\Say{[6]}{\bd \FUNC{cell}}{d(a_n,u_n) < \frac{r}{2}}
+	\Assume{[7]}{\frac{r}{2} \ge d(u_n,b)}
+	\Say{[8]}{\THM{TriangleIneq}(a_n,b)[7][6]}{   d(a_n,b) \le  d(a_n,u_n) + d(u_n,b) < r  }
+	\Conclude{[7.*]}{\THM{TrichtomyPrinciple}[5][8]}{\bot}
+	\Derive{[7]}{E(\bot)}{\frac{r}{2} < d(u_n,b)}
+	\Conclude{[n.*]}{\THM{ReverseTriangularIneq}(a_n,u_n,b)[6][7] }{\Big| d(a_n,b) - d(u_n,b) \Big| \le d(a_n,u_n) < \frac{r}{2}  <  d(u_n,b) }
+	\Derive{\Big(a,[4]\Big)}{}{\sum a : \Nat \to A \. \lim_{n \to \infty} d(a_n,b) = 0}
+	\Say{[5]}{\THM{ClodureByDistancr}}{b \in A}
+	\Conclude{[b.*]}{\THM{EmptyNonempy}[1][5]}{\bot}
+	\Derive{[3]]}{E(\bot)}{B \cap \overline{U} = \emptyset }
+	\Say{V}{\left( \overline{U} \right)^\c}{\TYPE{Open}(X)}
+	\Conclude{[*]}{\bd^{-1} \TYPE{T4}}{\Big( X : \TYPE{T4} \Big)}
+	\EndProof
+	\\
+	\Theorem{SemimetricSeparability}{\forall X \in \SMS \. X : \TYPE{T0} \Imply X \in \MS}
+	\NoProof
+	\\
+	\Theorem{SemimetricSeparability}{\forall X \in \SMS \. X : \TYPE{T0} \Imply X : \TYPE{T4}}
+	\NoProof
+}
+\Page{
+	\Theorem{SemimetricCountability}
+	{
+		\forall X \in \SMS \. X : \TYPE{FirstCountable}	
+	}
+	\NoProof
+	\\
+	\Theorem{SemimetricCountability}
+	{
+		\forall X \in \SMS \. X : \TYPE{Separable} \Imply  X : \TYPE{SecondCountable} 	
+	}
+	\NoProof
+	\\
+	\Theorem{DeltaEpsilonFormalism}
+	{
+		\forall X,Y \in \SMS \. \forall f : X \to Y \. 
+		f \in C(X,Y) \iff \forall \epsilon \in \Reals_+ \.  \forall x \in X \.
+		\NewLine  \.
+		 \exists \delta \in \Reals_+ :
+		\forall a,b \in \mathbb{B}(x,\delta)  \. d(f(a),f(b)) < \epsilon
+	}
+	\Assume{[1]}{f \in C(X,Y)}
+	\Assume{x}{X}
+	\Assume{\epsilon}{\Reals_+}
+	\Say{y}{f(x)}{\TYPE{Element}(Y)}
+	\Say{B}{\mathbb{B}(y,\epsilon)}{\TYPE{Open}(Y)}
+	\Say{U}{f^{-1}(B)}{\TYPE{Open}(X)}
+	\Say{[1]}{ \ByConstr U}{x \in U}
+	\Say{\Big( \delta, [2] \Big)}{\THM{MetricOpennesCriterion}[1]}{\sum \delta \in \Reals_+ \.   \mathbb{B}(x,\delta) \subset U }
+	\Conclude{[1.*]}{ \ByConstr U [2]}{ f\mathbb{B}(x,\delta) \subset \mathbb{B}(y,\epsilon)}
+	\Derive{[1]}{\bd \TYPE{Cell}I(\Imply)}{\TYPE{Left} \Imply \TYPE{Right}}
+	\Assume{[2]}{\TYPE{Right}}
+	\Assume{U}{\TYPE{Open}(Y)}
+	\Conclude{[U.*]}{\THM{MetricOpennesCriterion}\bd \TYPE{Right}[2](U)}{f^{-1}(U) \in \T(X) }
+	\DeriveConclude{[2.*]}{\bd^{-1} C(X,Y)}{f \in C(X,Y)}
+	\DeriveConclude{[*]}{I(\iff)}{\LOGIC{THIS}}
+	\EndProof
+	\\
+	\Theorem{LipschitzIsContinuous}{\forall X,Y \in \SMS \. \forall L \in \Reals_{++} \. \forall f \in \TYPE{L}\hyph\mathrm{Lip}(X,Y) \. f \in C(X,Y) }
+	\NoProof
+	\\
+	\Theorem{IsometricBijectionIsHomeo}{\forall X,Y \in \SMS \. \forall f : \TYPE{Isometry} \and \TYPE{Bijection}(X,Y) \. f  : \TYPE{Home}(X,Y)}
+	\NoProof
+	\\
+	\Theorem{SemiisometryFullEmbedding}{\Semiiso : \TYPE{FullEmbedding}(\TYPE{SMS}) }
+	\NoProof
+}\Page{
+	\Theorem{IsometryFullEmbedding}{\Iso : \TYPE{FullEmbedding}(\TYPE{MS})}
+	\NoProof
+}
+\newpage
+\subsection{Calculus of Convergence}
+\Page{
+	\Theorem{NEpsilonFormalism}
+	{
+		\forall X \in \SMS \. \forall D : \TYPE{DirectedSet} \. \forall  x : \TYPE{Net}(D,x) \. \forall L \in X  \.
+		\lim_{n \in D} x_n = L \iff \NewLine \iff \forall \epsilon \in \Reals_{++} \. \exists N \in D : \forall n \in D \. 
+		n \ge N \Imply  x_n \in \mathbb{B}(L,\epsilon)
+	}
+	\NoProof
+	\\
+	\Theorem{SemimetricConvergence}
+	{
+		\forall X \in \SMS \. \forall D : \TYPE{DirectedSet} \. \forall x : \TYPE{Net}(D,x) \. \forall L \in X \.
+		\lim_{n \in D} x_n = L  \iff \NewLine \iff \lim_{n \in D} d(x_n,L) = 0 
+	}
+	\NoProof
+	\\
+	\Theorem{FrechetCombination}
+	{
+	  	\forall  D : \TYPE{DirectedSet} \. \forall x : \Nat \to \TYPE{Net}(D,\Reals_+) \. 
+		\lim_{\delta \in D} \sum^\infty_{n=1} \frac{x_{n.\delta}}{2^n(1 + x_{n,\delta})} = 0 \iff \NewLine \iff \forall  n \in \Nat \. \lim_{\delta \in D} \. x_{n,\delta} = 0		  	
+	}
+	\NoProof
+	\\
+	\Theorem{FrechetWeakSemimetric}
+	{
+		\forall X \in \Set \. \forall d : \Nat \to \TYPE{Semimetric}(X) \. \forall D : \TYPE{DirectedSet} \.  \NewLine \. \forall x : \TYPE{Net}(X,D) \.
+		x : \TYPE{Convergent}\left(D,\left(X, \sum^n_{i=1} \frac{d}{2^n(1 + d)}\right)\right) \iff \forall n \in \Nat \. x : \TYPE{Convergent}(D,(X,d_n))
+	}
+	\NoProof
+	\\
+	\Theorem{ConvergenceByDenceSubset}
+	{
+		\forall X \in \SMS \. \forall A : \TYPE{Dense}(X) \. \forall L \in X \.  \forall D : \TYPE{DirectedSet} \. 
+		\forall x  : \TYPE{Net}(D,X) \. \NewLine \. \lim_{n \in D} x_n = L \iff \forall a \in A \. \lim_{n \in D} d(x_n,a) = d(L,a)
+	}
+	\NoProof
+}
+\newpage
+\subsection{Compacta}
+\Page{
+	\DeclareType{TotallyBounded}{?\TYPE{SMS}}
+	\DefineType{X}{TotallyBounded}{\forall \epsilon \in \Reals \. \exists n \in \Nat : \exists x : n \to X : X \subset \bigcup^n_{i=1} \mathbb{B}(x_n,\epsilon)}
+	\\
+	\Theorem{EmptySpaceIsTotallyBounded}{\emptyset : \TYPE{TotallyBounded}}
+	\NoProof
+	\\
+	\Theorem{CountablyCompactIsTotallyBounded}{\forall X \in \TYPE{SMS} \. X : \TYPE{CountablyCompact} \Imply X : \TYPE{TotallyBounded}  }
+	\Assume{[1]}{X \IsNot \TYPE{TotallyBounded}}
+	\Say{\Big(\epsilon,[2]\Big)}{\bd \TYPE{TotallyBounded}}{\sum \epsilon \in \Reals_{++} \. \forall n \in \Nat \. \forall x : n \to X \.  \bigcup^n_{i=1} \mathbb{B}(x_i;\epsilon) \neq X}
+	\Say{\Act{x_0,[3]}}{\bd\TYPE{NonEmpty}\THM{TotallyBounded}}{\sum x_0 : \FUNC{type}(X) \. x_0 \in X}
+	\Assume{n}{\Nat}
+	\Conclude{\Act{x_n,[4_n]}}{}{\sum x_n \in X : \forall i \in_{\Int_+} n-1 \. d(x_i,x_n) > \epsilon }
+	\Derive{\Act{x, [4] }}{ I\Act{\sum} }{ \sum x : \Nat \to X \. \forall m,n \in \Int_+ \. n \neq m \Imply d(x_n,x_m) \ge \epsilon }
+	\Say{c}{\THM{CountablyCompactHasClusters}(X,x) }{\TYPE{Cluster}(X,x)}
+	\Say{\Act{n,m,[6,7,8]}}{\bd \TYPE{Cluster}(X,x,c)}{\sum n,m \in \Int_+ \. n \neq m \And d(x_n,c) < \frac{\epsilon}{2} \And   d(x_m,c) < \frac{\epsilon}{2}}
+	\Say{[9]}{\THM{TriangleIneq}(x_n,x_m,c)\THM{IneqSum}[7][9]}{d(x_n,x_m) \le d(x_n,c) + d(c,x_m) < \epsilon}
+	\Conclude{[1.*]}{[4](n,m)[6][9]\THM{TrichtomyPrinciple}(\Reals_{+})}{\bot}
+	\DeriveConclude{[*]}{E(\bot)}{\Big( X : \TYPE{TotallyBounded}  \Big)}
+	\EndProof
+}\Page{
+	\Theorem{TotallyBoundedIsSecondCountable}{\forall X \in \TYPE{SMS} \.  X : \TYPE{TotallyBounded} \Imply X : \TYPE{SecondCountable} }
+	\Assume{q}{\Rats \cap (0,1)}
+	\Say{\Act{n,x,[1]}}{\bd \TYPE{TotallyBounded}(q)}{\sum n \in \Nat \. \sum x : n \to X \. X = \bigcup^n_{i=1} \mathbb{B}(x_i,q) }
+	\Conclude{\beta_q}{\Big\{ \mathbb{B}(x_i,q)  | i \in n      \Big\}}{\TYPE{Finite} \; \T(X)}
+	\Derive{\beta}{I(\to)}{ \Rats \cap (0,1) \to \TYPE{Finite} \T(X)}
+	\Say{\mathcal{B}}{\bigcup_{q \in \Rats \cap (0,1)} \beta_q}{?\T(X)}
+	\Say{[1]}{\THM{CountableFiniteUnion}(\mathcal{B},\Rats \cap (0,1),\beta,\ByConstr \mathcal{B})}{ |\mathcal{B}| \le \aleph_0}
+	\Assume{U}{\TYPE{Open}(X)}
+	\Assume{u}{U}
+	\Say{\Act{r,[2]}}{\THM{MetricOpennesCriterion}(U,x)}{\sum r \in \Reals_{++} \. \mathbb{B}(u,r) \subset U  }
+	\Say{\Act{q,[3]}}{\THM{ArchimedianLimit}(r)}{ \sum q \in (0,1) \cap \Rats  \. q < \frac{r}{2} }
+	\Say{\Act{x,[4]}}{\ByConstr beta_q (u)}{\sum x \in X \.   u \in \mathbb{B}(x,q)}
+	\Assume{y}{\mathbb{B}(x,q)}
+	\Say{[5]}{\THM{TriangleInequality}(u,y,x)[4]\bd \FUNC{cell}(X,x,q)[3]}{d(u,y)  \le d(u,x) + d(x,y) < 2q < r }
+	\Conclude{[y.*]}{\bd \FUNC{cell}(X,u,r)[2]}{y \in U}
+	\Derive{[5]}{\bd^{-1} \TYPE{Subset}}{\mathbb{B}(x,q) \subset U}
+	\Conclude{[u.*]}{I(\exists)(\mathcal{B})[5][4]}{ \exists B \in \mathcal{B} :  u \in  B \subset U }
+	\Derive{[2]}{I(\forall)}{ \forall u \in U \. \exists B \in \mathcal{B} : u \in B \subset U}
+	\Conclude{[U.*]}{\THM{InnerCover}[2]}{\exists \mathcal{A} \subset \mathcal{B} \.  \bigcup \mathcal{A} = U }
+	\Derive{[2]}{\bd^{-1} \TYPE{Base}}{\Big( \mathcal{B} : \TYPE{Base}(X) \Big) }
+	\Conclude{[*]}{\bd^{-1}\TYPE{SecondCountable}(\mathcal{B})[1][2]}{ \Big( X : \TYPE{SecondCountable}  \Big)  }
+	\EndProof
+	\\
+	\Theorem{CountablyCompactIsCompact}{\forall X : \TYPE{SMS} \. X : \TYPE{CountablyCompact} \Imply X : \TYPE{Compact}}
+	\Say{[1]}{\THM{CountablyCompactIsTotallyBounded}(X)}{\Big( X : \TYPE{TotallyBounded}  \Big)}
+	\Say{[2]}{\THM{TotallyBoundedIsSecondCountable}(X)}{\Big(X : \TYPE{SecondCountable}\Big)}
+	\Say{[3]}{\THM{SecondCountableIsLindelof}(X)}{\Big( X : \TYPE{Lindelof} \Big)}
+	\Conclude{[*]}{\THM{LindelofAndCountablyCompactIsCompact}}{\Big( X : \TYPE{Compact} \Big)}
+	\EndProof
+	\\
+	\Theorem{SequantiallyCompactIffCompact}{\forall X : \TYPE{SMS} \. X : \TYPE{SequentiallyCompact} \iff X : \TYPE{Compact} }
+	\NoProof 
+}\Page{
+	\Theorem{TotallyBoundedByDenseSubset}
+	{
+		\forall X \in \SMS \.
+		\forall A : \TYPE{Dense}(X) \.
+		A : \TYPE{TotallyBounded}
+		\Imply
+		X : \TYPE{TotallyBounded}
+	}
+	\Assume{[1]}{X \IsNot \TYPE{TotallyBounded}}
+	\Say{\Big(\epsilon,[2]\Big)}{\bd \TYPE{TotallyBounded}}{\sum \epsilon \in \Reals_{++} \. \forall n \in \Nat \. \forall x : n \to X \.  \bigcup^n_{i=1} \mathbb{B}(x_i;\epsilon) \neq X}
+	\Say{\Act{x_0,[3]}}{\bd\TYPE{NonEmpty}\THM{TotallyBounded}}{\sum x_0 : \FUNC{type}(X) \. x_0 \in X}
+	\Assume{n}{\Nat}
+	\Conclude{\Act{x_n,[4_n]}}{}{\sum x_n \in X : \forall i \in_{\Int_+} n-1 \. d(x_i,x_n) > \epsilon }
+	\Derive{\Act{x, [4] }}{ I\Act{\sum} }{ \sum x : \Nat \to X \. \forall m,n \in \Int_+ \. n \neq m \Imply d(x_n,x_m) \ge \epsilon }
+	\Say{\Act{a,[5]}}{\bd \TYPE{Dense}(A)\left(x, \frac{\epsilon}{3} \right)}{ \sum a : \Int_+ \to A \. \forall n \in \Int_+ \. d(a_n,x_n) < \frac{\epsilon}{3} }
+	\Say{\Big(n,[6,7]\Big)}{\bd \TYPE{TotallyBounded}(A)\left(q, \frac{\epsilon}{3}\right)}{\sum n \in \Nat \. d(a_n,a_0)  < \frac{\epsilon}{3} \And n \neq 0}
+	\Say{[8]}{\THM{TriangleIneq}[6][5]\THM{SumIneq}}{d(x_n,x_0) \le d(x_n,a_n) + d(a_n,a_0) + d(a_0,x_0) < \epsilon}
+	\Conclude{[1.*]}{[8][4](0,n)[7]\THM{TrichtomyPrinciple}(\Reals_{++})}{\bot}
+	\DeriveConclude{[*]}{E(\bot))}{\Big( X : \TYPE{TotallyBounded} \Big)}
+	\EndProof
+	\\
+	\DeclareType{Equicontinuous}{\prod X,Y \in \SMS \.  ??C(X,Y) }
+	\DefineNamedType{\Phi}{Equicontinuous}{\Phi \in \mathcal{EC}(X,Y)}{\forall x \in X \. \forall \varepsilon \in \Reals_{++} \. \exists  U \in \U(x) : \forall f \in \Phi \. \diam f(U) < \varepsilon}
+	\\
+	\DeclareType{EquicontinuousAtAPoint}{\prod X,Y \in \SMS \. X \to  ??C(X,Y) }
+	\DefineNamedType{\Phi}{Equicontinuous}{\Phi \in \mathcal{EC}_x(X,Y)}{\Lambda x \in X \. \forall \varepsilon \in \Reals_{++} \. \exists  U \in \U(x) : \forall f \in \Phi \. \diam f(U) < \varepsilon}
+	\\
+	\Theorem{FiniteContinuousIsEquicontinuous}{\forall X,Y \in \SMS \. \forall  \Phi : \TYPE{Finite}\; C(X,Y) \. \Phi  \in \mathcal{EC}(X,Y)}
+	\NoProof
+	\\
+	\Theorem{FiniteEquicontinuousUnion}{\forall X,Y \in \SMS \. \forall n \in \Nat \. \forall  \Phi : n \to \mathcal{EC}(X,Y) \. \bigcup\Phi  \in \mathcal{EC}(X,Y)}
+	\NoProof
+	\\
+	\Theorem{EquicontinuityIsLocal}{\forall X,Y \in \SMS \. \forall \Phi : ??C(X,Y) \. \Big( \forall x \in X \. \Phi \in \mathcal{EC}_x(X,Y)\Big) \Imply \Phi \in \mathcal{EC}(X,Y) }
+	\NoProof
+}\Page{
+	\Theorem{EquicontinuityByMonotonicConvergence}{\forall X \in \SMS \. f : \Nat \to  C(X) \. \forall \varphi \in C(X) \. \NewLine  f \downarrow \varphi \Imply \{ f_n | n \in \Nat\} \in \mathcal{EC}(X,Y)}
+	\Assume{x}{\TYPE{In}(X)}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(N,[1])}{\bd \TYPE{Limit}(f(x),\varphi(x),\varepsilon/10)}{\sum N \in \Nat \. \forall n \in \Nat \. n \ge N \Imply  | f_n(x) - \varphi(x)| < \frac{\varepsilon}{10}   }
+	\Say{\Big(\delta_1,[2]\Big)}{\bd C(X)(\varphi,\varepsilon/10,x)}{\sum \delta_1 \in \Reals_{++} \. \varphi\Big(\mathbb{B}(x,\delta_1)\Big) \subset \left( \varphi(x) - \frac{\varepsilon}{10}, \varphi(x) + \frac{\varepsilon}{10}\right)}
+	\Say{\Big(\delta_2,[3]\Big)}{\bd C(X)(f_N,\varepsilon/10,x)}{\sum \delta_2 \in \Reals_{++} \. f_N\Big(\mathbb{B}(x,\delta_2)\Big) \subset \Big( f_N(x) - \frac{\varepsilon}{10}, f_N(x) + \frac{\varepsilon}{10}\Big)}
+	\Say{\delta}{\min(\delta_1,\delta_2)}{\Reals_{++}}
+	\Assume{n}{\Nat}
+	\Assume{[4]}{n \ge N}
+	\Assume{y}{\mathbb{B}(x,\delta)}
+	\Say{[5]}{\bd \TYPE{MonotonicConvergence}(f,\varphi,y)[4]}{|f_N(y) - \varphi(y)|  > |f_n(y) - \varphi(x)| }
+	\Conclude{[n.*]}{\THM{TriangleIneq}^4 [1,2,3,4,5]}{   
+				| f_n(y) - f_n(x)| \le 
+				|f_n(y) - \varphi(y)|  +   |\varphi(y) - \varphi(x)| + |\varphi(x) - f_n(x)| < \NewLine
+				|f_N(y) - \varphi(y)|  + \frac{2\varepsilon}{10} \le
+				|f_N(y) - f_N(x)|   + |f_N(x) - \varphi(x)| +  |\varphi(x) - \varphi(y)|  + \frac{2\varepsilon}{10} <
+				\frac{\varepsilon}{2}
+	}
+	\Derive{[4]}{\bd^{-1}\mathcal{EC}_x}{ \{ f_n | n \ge N \} \in \mathcal{EC}_x(X,\mathbb{R})  }
+	\Conclude{[x.*]}{\THM{FiniteContinuousIsEquiContinuous}\{ f_n | n < N \}\THM{FiniteEqyiContinuousUnion}[4]}{ \NewLine : \{ f_n | n \in \Nat \} \in \mathcal{EC}_x(X,\Reals)  }
+	\DeriveConclude{[*]}{\bd^{-1} \mathcal{EC}_x}{\{ f_n | n \in \Nat \} \in \mathcal{EC}(X,\Reals)}
+	\EndProof
+	\\
+	\DeclareFunc{maricFunction}{\prod X \in \SMS \.  \TYPE{Pointwise}(X) \to \Reals_{++} \to X \to \Reals}
+	\DefineNamedFunc{maricFunction}{f,\varepsilon}{M_{f,\varepsilon}}{ \Lambda x \in X \.  \sum^\infty_{n=1}  \min\Big( 0,  |f_m(x) - \lim_{m \to \infty} f_n(x)| - \varepsilon   )}
+	\\
+	\Theorem{MaricFunctionContinuity}{\forall X \in \SMS \. \forall \varphi \in C(X) \. f : \TYPE{Pointwise}(X,\varphi) \.  \{ f_n | n \in \Nat\} \in \mathcal{EC}(X,Y)}
+	\Say{\varphi}{\lim_{n \to \Nat} f_n}{X \to \Reals}
+	\Assume{x}{X}
+	\Say{\Big( N, [1] \Big)}{\bd \TYPE{Pointwise}(X)}{\sum N \in \Nat \. \forall n \in \Nat \. n \ge N \Rightarrow  | f_n(x) - \varphi(x) | < \frac{\varepsilon}{3} \And n < N \Rightarrow |f_n(x) - \varphi(y)| > \varepsilon }
+	\Say{\varepsilon'}{\min(|f_{N-1}(x) - \varphi(x)| - \varepsilon,\varepsilon)}{\Reals_{++}}
+	\Say{\Big(\delta_1, [2] \Big)}{\bd \mathcal{EC}}{\prod \delta \in \Reals_{++} \. \forall n \in \Nat \.  f_n\mathbb{B}(x,\delta) \subset \mathbb{B}\left( f(x), \frac{\varepsilon'}{3} \right)   }
+	\Say{\Big(\delta_2, [3] \Big)}{\bd  C(X)}{\prod \delta \in \Reals_{++} \. \varphi\mathbb{B}(x,\delta) \subset \mathbb{B}\left( \varphi(x), \frac{\varepsilon'}{3} \right)   }
+	\Say{\delta}{\min(\delta_1,\delta_2,\delta_3)}{\Reals_+}
+	\Assume{y}{\mathbb{B}(x,\delta)}
+	\Assume{n}{\Nat}
+	\Assume{[4]}{n \ge N}
+	\Conclude{[y.*]}{\THM{TriangleIneq}[1][2][3]}{   |\varphi(y) - f_n(y)| \le |\varphi(y)-\varphi(x)| + |\varphi(x) - f_n(x)| + |f_n(x)-f_n(y)|< \varepsilon}
+	\Derive{[4]}{I(\forall)}{\forall n \ge N \.  \forall y \in \mathbb{B}(x,\delta) \. |\varphi(y) - f_n(x)| < \varepsilon  }
+	\Assume{y}{\mathbb{B}(x,\delta)}
+}\Page{
+	\Assume{n}{\Nat}
+	\Assume{[5]}{n < N}
+	\Conclude{[y.*]}{[1][2][3][5]}{    |\varphi(y) - f_n(y)|  > |\varphi(x) -  f_n(x)| - \varepsilon' > \varepsilon  }
+	\Derive{[5]}{I(\forall)}{\forall y \in \mathbb{B}(x,\delta) \. \forall n \in \Nat \.  n < N  \Rightarrow  | \varphi(x) - f_n(x)| < \varepsilon}
+	\Say{[6]}{[4][5]\bd^{-1}\FUNC{maricFunction}}{\forall y \in \mathbb{B}(x,\delta) \. M_{f,\varepsilon}(y) = \sum^{N-1}_{n=1} |f_n(y) - \varphi(y) | - \varepsilon }
+	\Conclude{[y.*]}{\THM{ContinuousSum}}{M_{f,\varepsilon | \mathbb{B}(x,\delta)} \in C\Big( \mathbb{B}(x,\delta) \Big)}
+	\DeriveConclude{[*]}{\THM{ContinuityIsLocal}}{M_{f,\varepsilon} \in C(X)}
+	\EndProof
+	\\
+	\Theorem{DiniLemma}{\forall X : \TYPE{Pseudocompact} \And \SMS \. \forall f : \Nat \to C(X) \. \forall \varphi \in C(X) \.  \NewLine \. f \downarrow \varphi \Imply \varphi : \TYPE{Limit}\bigg( \Big( C(X),  \| \cdot \|_\infty\Big),\varphi \bigg)}
+	\Say{[1]}{\THM{EquicontinuityByMonotonicConvergence}}{\{ f_n| n \in \Nat\} \in  \mathcal{EC}(X,\Reals)}
+	\Say{[2]}{\THM{MaricFunctionContinuity}}{\forall \varepsilon \in \Reals_{++} \. M_{f,\varepsilon} \in C(X) }
+	\Say{[a,3]}{\bd \TYPE{Paracompact}(M_f)}{ \sum \Reals_{++} \to \Reals_{+} \. \forall \varepsilon \in \Reals_{++} \. \max_{x \in X} M_{f,\varepsilon}(x) = a_{\varepsilon} }
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Assume{n}{\Nat}
+	\Assume{[4]}{n > \left\lceil\frac{a_{\varepsilon}}{\varepsilon}\right\rceil}
+	\Assume{[5]}{  \| f_n - \varphi\|_{\infty} \ge \varepsilon}
+	\Say{\Big( x, [6]\Big)}{\bd \FUNC{uniformNorm} [5] \bd \TYPE{Paracompact}(X)}{\sum x \in X :    | f_n(x) -\varphi(x) | \ge \varepsilon}
+	\Say{[7]}{\bd \TYPE{MonotonicConvergence}[5]}{\forall m \in \Nat \.  m \le n \Imply |f_m(x) - \varphi(x)| \ge \varepsilon}
+	\Say{[8]}{ \bd \FUNC{maricFunction}[4][7] }{  M_{f,\varepsilon}(x) \ge \sum^n_{i=1} \|f(x) - \varphi(x)\| > a_{\varepsilon}    }
+	\Conclude{[n.*]}{\bd \TYPE{Maximum}(a_n, M_{\varepsilon,x}) [8]}{\bot}
+	\DeriveConclude{[\varepsilon.*]}{E(\bot)}{\forall n \in \Nat \. n >  \left\lceil\frac{a_{\varepsilon}}{\varepsilon}\right\rceil \Imply  \| f_n - \varphi\|_{\infty} < \varepsilon }
+	\DeriveConclude{[*]}{\THM{MetricLimit}}{ \TYPE{Limit}\bigg( \Big( C(X),\|\cdot\|_\infty \Big),f,\varphi\bigg)}
+	\EndProof
+	\\
+	\DeclareType{DiniSpace}{?\TOP}
+	\DefineType{X}{DiniSpace}{\forall f : \Nat \to C(X) \. \forall \varphi \in C(X) \.  \NewLine \. f \downarrow \varphi \Imply \varphi : \TYPE{Limit}\bigg( \Big( C(X),  \| \cdot \|_\infty\Big),\varphi \bigg)}
+	\\
+	\Theorem{InverseDiniLemma}{\forall  X : \TYPE{DiniSpace}  \. X : \TYPE{Paracompact}}
+	\NoProof
+}
+\Page{
+	\DeclareType{EquicontinuousNet}{\prod X ,Y \in \SMS \. ?\TYPE{Net}\;\TYPE{Pointwise}(X,Y)}
+	\DefineType{(D,f)}{EquicontinuousNet}{   \{  f_\delta | \delta \in D \} \in \mathcal{EC}(X,Y)}
+	\\
+	\Theorem{EquicontinuousLimitIsContinuous}{\forall X,Y \in \SMS \. \forall (D,f) : \TYPE{EquicontinuousNet}(X) \. \forall F : \TYPE{Limit}(D,f)  \. F \in C(X,Y) }
+	\Assume{x}{X}
+	\Assume{\varepsilon}{\Reals_+}
+	\Say{(\delta,[1])}{\bd \TYPE{EquicontinuousNet}(D,f)\left(x,\frac{\varepsilon}{y}\right)}{ \sum \delta' \in \Reals_{++} \. \forall n \in D \.  \diam f_n \mathbb{B}(x,\delta) < \frac{\varepsilon}{3}}
+	\Assume{y}{Y}
+	\Say{(N,[2])}{ \bd \TYPE{Limit}(f,d)(F) }{\sum N \in \Nat \. \forall  n  \in \Nat \. n \ge N \Imply   d(f_n(x), F(x)) <  \frac{\varepsilon}{3} }
+	\Say{(M,[3])}{ \bd \TYPE{Limit}(f,d)(F) }{\sum N \in \Nat \. \forall  n  \in \Nat \. n \ge N \Imply   d(f_n(y), F(y)) <  \frac{\varepsilon}{3} }
+	\Say{K}{\max(N,M)}{D}
+	\Conclude{[y.*]}{\THM{TriangleIneq}[1][2][3]}{ d(F(x),F(y))  \le   d(F(x),f_K(x)) + d(f_K(x),f_K(y)) + f(f_K(y),F(y)) < \varepsilon }
+	\DeriveConclude{[x.*]}{I(\forall)}{\forall  y \in \mathbb{B}(x,\delta) \.  d(F(x),F(y)) < \varepsilon}
+	\DeriveConclude{[*]}{\bd^{-1} C(X,Y)}{F \in C(X,Y)}
+	\EndProof
+	\\
+	\DeclareType{ConvergentContinuously}{\prod X,Y \in \TOP \. ?\TYPE{PointwiseNet}(X,Y)}
+	\DefineType{(D,f)}{ConvergentContinuously}{\forall x : \TYPE{ConvergentNet}(D,X) \. \lim_{n \in D} f_n(x_n) = 
+		\left(\lim_{n \in D} f\right)\left(\lim_{n \in D} x_n\right)}
+	\\
+	\Theorem{UniformIsConvergentContinuously}{\forall X,Y \in \SMS \. \forall (D,f) : \TYPE{UniformNet}(X,Y) \. (D,f) : \TYPE{ConvergentContinuously}}
+	\NoProof
+	\\
+	\Theorem{UniformIsConvergentContinuously}{\forall X,Y \in \SMS \. \forall (D,f) : \TYPE{EquicontinuousNet}(X,Y) \. (D,f) : \TYPE{ConvergentContinuously}}
+	\NoProof
+}\Page{
+	\Theorem{UniformConvergenceOnCompact}{
+		\forall Y \in \SMS \. 
+		\forall X : \TYPE{Compact} \And \SMS \. 
+		\forall (D,f) : \TYPE{Net} \; C(X,Y) \.  \NewLine \.
+		\forall F \in C(X,Y)  \.
+		\forall [1] : \TYPE{PointwiseLimit}(D,f,F) \. 
+		\TYPE{UniformLimit}(D,f,F) 
+	}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Assume{x}{X}
+	\Say{\Big(r',[1] \Big)}{\bd \TYPE{EquicontinuosNet}(D,f)\left( x, \frac{\varepsilon}{3} \right)}{\sum r' \in \Reals_{++} \. \forall n \in D \. \diam f_n \mathbb{B}(x,r') < \frac{\varepsilon}{3}  }
+	\Say{\Big( r'',[2] \Big)}{ \bd C(X,Y)(F)\Act{x,\frac{\varepsilon}{3}}  }{\sum r'' \in \Reals_{++} \. \diam F\mathbb{B}(x,r') < \frac{\varepsilon}{3} }
+	\Say{r(x)}{\min(r',r'')}{\TYPE{In}\;\Reals_{++}}
+	\Say{\Big( N(x) ,[3]\Big)}{\bd \TYPE{PointwisLimit}(D,f,F)\Act{x,\frac{\varepsilon}{3}}}{\sum N(x) \in D : \forall n \in D \. n \ge N \Imply d(f_n(x),F(x)) < \frac{\varepsilon}{3}}
+	\Assume{y}{\TYPE{In} \; \mathbb{B}\Big(x,r(x)\Big)}
+	\Assume{n}{\TYPE{In}(D)}
+	\Assume{[4]}{n \ge N(x)}
+	\Conclude{[y.*]}{\THM{TriangleIneq}[1,2,3]}{d\Big(f_n(y),F(y)\Big) \le  d(f_n(y),f_n(x)) + d(f_n(x),F(x)) + d(F(x),F(y)) < \varepsilon }
+	\DeriveConclude{[x.*]}{I(\forall)}{\forall y \in \mathbb{B}\Big(x,r(x)\Big) \. d\Big(f_n(y),F(y)\Big) < \varepsilon}
+	\Derive{\Big(r,N,[1]\Big)]}{I\Act{\prod}}{\prod_{x \in X} \Big(r(x),N(x)\Big)  : \Reals_{++} \times D \. \forall y \in \mathbb{B}\Big(x,r(x)\Big) \. \forall n \in D \. \NewLine \. n \ge N(x) \Imply d\Big(f_n(y),F(y)\Big) < \varepsilon }
+	\Say{[2]}{\THM{FullCover}\mathbb{B}(\cdot,r)}{X = \bigcup_{x \in X} \mathbb{B}\Big(x,r(x)\Big)}
+	\Say{\Big(n, x, [3]\Big)}{\bd \TYPE{Compact}(X)}{\sum n \in \Nat \. \sum x : n \to X \. X = \bigcup^n_{i=1} \mathbb{B}\Big(x_i, r(x_i)\Big)}
+	\Conclude{\Delta}{\max_{i \in n} N(x_i)}{D}
+	\Assume{y}{X}
+	\Assume{\delta}{\TYPE{In}\;D}
+	\Assume{[4]}{\delta \ge \Delta}
+	\Say{\Big(i,[5]\Big)}{[2](y)}{\sum i \in n \. y \in \mathbb{B}\Big(x_i,r(x_i)\Big)}
+	\Say{[6]}{[4]\ByConstr \Delta (i)}{ \delta \ge N(x_i)}
+	\Conclude{[\varepsilon.*]}{[1][5][6]}{d\Big( f_{\delta}(y), F(y) \Big) < \varepsilon}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{UniformLimit}}{\TYPE{UniformLImit}(D,f,F)}
+	\EndProof
+}
+\newpage
+\subsection{Completeness and Completion}
+\Page{
+	\DeclareType{CauchyFilterBase}{\prod X \in \SMS \. ?\TYPE{FilterBase}(X)}
+	\DefineType{\F}{CauchyFilterBase}{\inf_{F \in \F} \diam F = 0 }
+	\\
+	\Conclude{\TYPE{CauchyFilter}}{\prod X \in \SMS \. \TYPE{Filter} \And \TYPE{CouchyFilterBase}(X) }{\SMS \to \Type}
+	\\
+	\Theorem{ConvergentFilterBaseIsCauchy}{\forall X \in \SMS \. \forall \F : \TYPE{ConvergentFilterBase}(X) \.  \NewLine \. \F : \TYPE{CauchyFilterBase}(X) }
+	\NoProof
+	\\
+	\DeclareType{CauchyNet}{ \prod X \in \SMS \. \prod D : \TYPE{DirectedSet} \. ?\TYPE{Net}(D,x)}
+	\DefineType{x}{CauchyNet}{
+		\forall \varepsilon \in \Reals \. 
+		\exists \Delta \in D : \forall \delta,\delta' \in D  \.             
+		d(x_{\delta},x_{\delta'}) < \varepsilon 
+	}
+	\\
+	\Conclude{\TYPE{CauchySequence}}{\prod X \in \SMS \. \TYPE{CauchyNet}(\Nat,X)}{\prod_{X \in \SMS} ?(\Nat \to X)  }
+	\\
+	\Theorem{CauchyFilterAndNetEquivalence}{
+		\forall X \in \SMS \. 
+		\forall (D,x) : \TYPE{Net}(X) \.   \NewLine \.
+		x : \TYPE{CauchyNet}(D,X) \iff \F(D,x) : \TYPE{CauchyFilter}(X)  
+	}
+	\NoProof
+	\\
+	\DeclareType{Complete}{?\SMS}
+	\DefineType{X}{Complete}{\forall \F : \TYPE{CauchyFilterBase}(X) \. \F : \TYPE{ConvergentFilterBase}(X)}
+	\\
+	\Theorem{CompleteAltDef}{
+		\forall X \in \SMS \. X : \TYPE{Complete} \
+		\iff 
+		\forall x : \TYPE{CauchySequence}(X) \. 
+		x : \TYPE{Convergent}(X)	
+	}
+	\Assume{R}{\forall x : \TYPE{CauchySequence}(X) \. x : \TYPE{Convergent}}
+	\Assume{\F}{\TYPE{CauchyFilterbase}}
+	\Say{\Big(F,[1]\Big)}{\Lambda n \in \Nat \. \bd \TYPE{CauchyFilter}(X,\F)\Act{\frac{1}{n}}}
+	{ \prod_{n \in \Nat}  \sum_{F_n \in \F}  \diam F_n  < \frac{1}{n} }
+	\Say{x}{\bd \TYPE{CauchyFilterbase}(\F)(F)}{\prod_{n \in \Nat} \bigcap^n_{i=1} F_{i}}
+	\Say{[2]}{\bd^{-1}\TYPE{CauchySequnce}(X)[1]}{\TYPE{CauchySequence}(X,x)}
+	\Say{[3]}{R[2]}{\TYPE{Convergent}(X,x)}
+	\Say{L}{\lim_{n \to \infty} x_n}{X}
+	}\Page{
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{\Big(N,[4]\Big)}{\bd \TYPE{Limit}(X,x,L)\Big( \frac{\varepsilon}{2} \Big)}
+	{\sum_{N \in \Nat} : \forall n \in \Nat \.  d(L,x_n) < \frac{\varepsilon}{2}}
+	\Say{\Big(M,[5] \Big)}{\THM{InverseArchimedeanLimit}}
+	{
+		\sum M \in \Nat \.   \frac{1}{M} < \frac{\varepsilon}{2}
+	}
+	\Say{k}{\max(M,N)}{\Nat}
+	\Assume{y}{F_k}
+	\Conclude{[\varepsilon.*]}{\THM{TriangleIneq}(X,L,y,x_k)[1,4,5]}{d(L,y) \le d(L,x_k) + d(x_k,y) <\varepsilon}
+	\Derive{[4]}{\bd^{-1}\TYPE{FilterbaseLimit}}{L = \lim \F}
+	\Conclude{[\F.*]}{\bd^{-1} \TYPE{ConvergentFilterBase}[4]}{\TYPE{ConvergentFilterBase}(X,\F)}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Complete}}{\TYPE{Complete}(X)}
+	\EndProof 
+	\\
+	\Theorem{CauchyFilterbaseClustersAreLimits}
+	{
+		\forall  X : \SMS \.
+		\forall \F : \TYPE{CauchyFilterBase}(X) \.  \NewLine \. 
+		\forall  c : \TYPE{Cluster}(\F) \.
+		c : \TYPE{Limit}(\F) 
+	}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(F,[1])}{\bd^{-1}\TYPE{CauchyFilterBase}(\F)\Act{\frac{\varepsilon}{2}}}
+	{
+		\sum_{F \in \F}  \diam F <  \frac{\varepsilon}{2}
+	}
+	\Say{(x,[2])}{\bd \TYPE{Cluster}(\F,c)\Act{F,\mathbb{B}\Act{\frac{\varepsilon}{2}}}}
+	{
+		\sum_{x \in F} d(x,c) < \frac{\varepsilon}{2}
+	}
+	\Assume{y}{F}
+	\Say{[3]}{\THM{TriangleIneq}(X)(c,y,x)}{d(c,y) \le d(c,x)  + d(x,y) < \varepsilon  }
+	\Conclude{[y.*]}{\bd^{-1} \FUNC{cell}[3]}{ y \in \mathbb{B}(c,\varepsilon )}
+	\DeriveConclude{[F.*]}{\bd^{-1}\TYPE{Subset}}{F \subset \mathbb{B}(c,\varepsilon)}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Limit}}{\TYPE{Limit}(X,\F,c)}
+	\EndProof
+	\\
+	\Theorem{CauchyPartialLimitTHM}
+	{
+		\forall X \in \SMS \.
+		\forall x : \TYPE{CauchySequance}(X) \.
+		\forall L : \TYPE{PartialLimit}(X,x) \.
+		\lim_{n \to \infty}  x_n = L
+	}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{\Big(N,[1]\Big)}{\bd \TYPE{CauchySequance}(X,x)\left(\frac{\varepsilon}{2}\right)}
+	{
+		\sum_{N \in \Nat} \forall n,m \in \Nat \. n,m \ge N  \Imply  d(x_n,x_m) 
+		< \frac{\varepsilon}{2}
+	}
+	\Say{\Big(M,[2]\Big)}{\bd \TYPE{PartialLimit}(X,x,p)\Act{p, \frac{\varepsilon}{2}  }}
+	{
+		\sum_{M \in \Nat}  M \ge N \And d(x_M,L) < \frac{\varepsilon}{2}    
+	}
+	\Assume{n}{\Nat}
+	\Assume{[3]}{n \ge N}
+	\Conclude{[4]}{\THM{TriangleIneq}[1][2]}{d(x_n,L) < d(x_n,x_M) + d(x_M,L) < \varepsilon}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Limit}}{\lim_{n \to \infty} x_n = L}
+	\EndProof
+}\Page{
+	\Theorem{CompactIffCompleteAndTotallyBounded}
+	{
+		\forall X \in \SMS \.
+		\TYPE{Compact}(X) \iff \TYPE{Complete} \And \TYPE{TotallyBounded}(X)
+	}
+	\Assume{L}{\TYPE{Compact}(X)}
+	\Say{[1]}{\THM{CountablyCompactIsTottalyBounded}(X,L)}{\TYPE{TotallyBounded}(X)}
+	\Say{[2]}{\THM{SequantiallyCompactIffCompact}(X,L)}{\TYPE{SequantiallyCompact}(X)}
+	\Assume{x}{\TYPE{CauchySequence}(X)}
+	\Say{p}{\bd \TYPE{SequantiallyCompact}(X)(x)}{\TYPE{PartialLimit}(X,x)}
+	\Conclude{[x.*]}{\THM{CauchyPartialLimitTHM}(X,x,p)}{\lim_{n \to \infty} x_n =  p}
+	\DeriveConclude{[x.*]}{\THM{CompleteAltDef}}{\TYPE{Complete}(X)}
+	\Derive{[1]}{I(\Imply)}{\TYPE{Left} \Imply \TYPE{Right}}
+	\Assume{R}{\TYPE{Complete}\And \TYPE{TotallyBounded}(X)}
+	\Assume{x}{\Nat \to X}
+	\Say{u^1}{x}{\Nat \to X}
+	\Assume{n}{\Nat}
+	\Say{\Big[m,c,[2] \Big]}{\bd \TYPE{TotallyBounded}(X)\Act{\frac{1}{n}}}
+	{
+		\sum_{m \in \Nat} \sum_{c : m \to X}  X = \bigcup^m_{i=1} \mathbb{B}\Act{c_i,\frac{1}{n}}
+	}
+	\Say{\Big[i,[3]\Big]}{\THM{PigionholePrinciple}[2]}{\sum_{i \in m}  \left| \left\{ k \in \Nat : u_k^n \in \mathbb{B}\Act{c_i,\frac{1}{n}} \right\}\right| = \aleph_0}
+	\Conclude{\Big(u^{n+1},[n.*]\Big)}{\FUNC{subsequance}[3]}{\sum u^{n+1} : \TYPE{Subsequance}(X, u^{n+1}) \. \im u^{n+1} \subset \mathbb{B}\Act{c_i,\frac{1}{n}}}
+	\Derive{\Big(u,[2]\Big)}{I\Act{\prod}}{\prod_{ u : \Nat \to \Nat \to X} \. \forall n \in \Nat \. u^{n + 1} : \TYPE{Subsequance}(X,u^n) \And \exists c \in X : \im u^{n+1} \mathbb{B}\Act{c,\frac{1}{n}}  }
+	\Say{\Delta}{\Lambda n \in \Nat \.  u^n_n}{\TYPE{Subsequance}(X,x)}
+	\Say{[3]}{\ByConstr \Delta [2]}{ \forall N \in \Nat \. \forall n,m \in \Nat \. n,m  > N \rightarrow d(x_n,x_m) < \frac{2}{N} }
+	\Say{[4]}{\bd^{-1} \TYPE{CauchySequance}[3]}{\TYPE{CauchySequance}(X,\Delta)}
+	\Say{[5]}{\THM{CompleteAltDef}(X)[4]}{\TYPE{Convergent}(X,\Delta) }
+	\Say{\delta}{\lim_{n \to \infty} \Delta_n}{X}
+	\Conclude{[x.*]}{\bd^{-1}\TYPE{PartialLimit}(x)}{\TYPE{PartialLimit}(X,x,\delta)}
+	\DeriveConclude{[*.R]}{\THM{SequentiallyCompactIffCompact}}{\TYPE{Compact}(X)}
+	\DeriveConclude{[*]}{I(\iff)}{\LOGIC{Left} \iff \LOGIC{Right}}
+	\EndProof
+	\\
+	\Theorem{ConvergentByCompleteSubset}{\forall X \in \SMS \. \forall \F : \TYPE{CauchyFilter}(X) \. \Big( \exists F \in \F : F : \TYPE{Complete} \Big) \Imply \NewLine \Imply \TYPE{Convergent}(X,\F)}
+	\NoProof
+}\Page{
+	\Theorem{ConvergentByCompactSubset}{\forall X \in \SMS \. \forall \F : \TYPE{CauchyFilter}(X) \. \Big( \exists F \in \F : F : \TYPE{Compact} \Big) \Imply \NewLine \Imply\TYPE{Convergent}(X,\F)}
+	\NoProof
+	\\
+	\DeclareFunc{CompletionCategory}{\SMS \to \CAT}
+	\DefineNamedFunc{CompletionCategory}{X}{\mathsf{COMP}(X)}
+	{
+		\bigg(
+			\sum Y : \TYPE{Complete} \. f : \TYPE{Isometry}(X,Y), \NewLine,
+			\Big((Y,f),(Z,g)\Big) \mapsto  \Big\{ \varphi : \TYPE{Isometry}(Y,Z) \Big|  f\varphi = g   \Big\},
+			\circ,
+			\id
+		\bigg)	
+	}
+	\\
+	\Conclude{\TYPE{Completion}}{\Lambda X \in \SMS \.  \TYPE{Initial}\; \mathsf{COMP}(X) }{\SMS \to \Type}
+	\\
+	\Theorem{CompleteByDenseSubset}
+	{
+		\forall X \in \SMS \. 
+		\forall A : \TYPE{Dense}(X) \.
+		\Big(
+			\forall a : \TYPE{CauchySequance}(A) \.
+			a : \TYPE{Convergent}(X)
+		\Big) \Imply \NewLine \Imply X : \TYPE{Complete}(X)
+	}
+	\Assume{x}{\TYPE{CauchySequance}(X)}
+	\Say{\Big(a,[1]\Big)}{\Lambda n \in \Nat \. \bd \TYPE{Dense}(X)(x_n)}
+	{
+		\sum a : \Nat \to A \.  \forall n \in \Nat \. d(a_n,x_n) < \frac{1}{n} 
+	}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{\Big(K,[2]\Big)}{\bd \TYPE{CauchySequance}(X,x)\Act{\frac{\varepsilon}{3}}}
+	{
+		\sum K \in \Nat \. \forall n,m \in \Nat \. n,m \ge K \Imply d(x_n,x_m) < \frac{\varepsilon}{3}
+	}
+	\Say{\Big(L,[3]\Big)}{\THM{ReducioInfinuma}\Act{\frac{\varepsilon}{3}}}
+	{
+		\sum L \in \Nat \. \frac{1}{L} < \frac{\varepsilon}{3}
+	}
+	\Say{N}{\max(K,L)}{\Nat}
+	\Assume{n,m}{\Nat}
+	\Assume{[4]}{n,m \ge N}
+	\Conclude{\Big[\varepsilon.*\Big]}{\THM{TriangleIneq}^2(\ldots)[1,2,3,4]}
+	{ 
+		d(a_n,a_m) \le d(a_n,x_n) + d(x_n,x_m) + d(a_m,x_m) < \varepsilon
+	}
+	\Derive{[4]}{\bd^{-1}\TYPE{CauchySequance}}{\TYPE{CauchySequance}(A,a)}
+	\Say{L}{\lim_{n \to \infty} a_n}{\TYPE{In}\;X}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{\Big(K,[5]\Big)}{\bd \TYPE{Limit}(X,a,L)\Act{\frac{\varepsilon}{2}}}
+	{
+		\sum K \in \Nat \. \forall n,m \in \Nat \. n \ge K \Imply d(a_n,L) < \frac{\varepsilon}{2}
+	}
+	\Say{\Big(M,[6]\Big)}{\THM{ReducioInfinuma}\Act{\frac{\varepsilon}{2}}}
+	{
+		\sum M \in \Nat \. \frac{1}{M} < \frac{\varepsilon}{2}
+	}
+	\Say{N}{\max(K,M)}{\Nat}
+	\Assume{n}{\Nat}
+	\Assume{[7]}{n > N}
+	\Conclude{[\varepsilon.*]}{\THM{TrianglIneq}[1,5,6,7]}{d(x_n,L) \le d(x_n,a_n) + d(a_n,L) < \varepsilon}
+	\DeriveConclude{[x.*]}{\bd^{-1}\TYPE{Limit}}{\lim_{n \to \infty} x_n = L}
+	\DeriveConclude{[*]}{\THM{CompleteAltDef}}{\TYPE{Complete}(X)}
+	\EndProof
+}\Page{
+	\Theorem{CompletionIsUnique}
+	{
+		\forall X \in \SMS \. \forall (A,a),(B,b) : \TYPE{Completion}(X) \. (A,B) : \TYPE{Semiisometric}
+	}
+	\NoProof
+	\\
+	\Theorem{RealsAreComplete}{\Reals : \TYPE{Complete}}
+	\NoProof
+	\\
+	\Theorem{CauchySequanceDistanceExists}
+	{
+		\forall X \in \SMS \. 
+		\forall x,y : \TYPE{CauchySequance}(X) \.
+		d(x,y) : \TYPE{Convergent}(\Reals_{+})
+	}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{\Big(L,[1]\Big)}{\bd \TYPE{CauchySequance}(X,x)\Act{\frac{\varepsilon}{2}}}{\sum L \in \Nat \. \forall n,m \in \Nat \. n,m > L \Imply d(x_n,x_n) < \frac{\varepsilon}{2}}
+	\Say{\Big(M,[2]\Big)}{\bd \TYPE{CauchySequance}(X,y)\Act{\frac{\varepsilon}{2}}}{\sum M \in \Nat \. \forall n,m \in \Nat \. n,m > M \Imply d(y_n,y_m) < \frac{\varepsilon}{2}}
+	\Say{N}{\max(L,M)}{\Nat}
+	\Assume{n,m}{\Nat}
+	\Assume{[3]}{n,m \ge N}
+	\Conclude{[\varepsilon.*]}{\THM{TriangleIneq}\Big( d(x_n,y_n),d(x_m,y_m),d(x_n,y_m)\Big) \NewLine \THM{ReversedTriangleIneq}(x_n,y_n,y_m)\THM{ReversedTriangleIneq}(x_n,x_m,y_m)[1,2,3]}
+	{
+		\NewLine :
+		\Big| d(x_n,y_n) -  d(x_m,y_m) \Big| \le
+		\Big| d(x_n,y_n) - d(x_n,y_m) \Big|    + 
+		\Big| d(x_n,y_m) - d(x_m,y_m) \Big| \le
+		d(x_n,x_m) + d(y_n,y_m) < \varepsilon
+	}
+	\Derive{[4]}{\bd^{-1}\TYPE{CauchySequance}}{\TYPE{CauchySequance}(\Reals,d(x,y))}
+	\Conclude{[*]}{\THM{RealsAreComplete}\;\THM{CompleteAltDef}(\Reals)}{\TYPE{Convergent}(\Reals,d(x,y))}
+	\EndProof
+	\\
+	\Theorem{CauchyMetric}
+	{
+		\forall X \in \SMS \.
+		\lim d : \TYPE{Semimetric} \; \TYPE{CauchySequance}(X)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{completion}{\SMS \to \MS }
+	\DefineNamedFunc{completion}{X,d}{(\hat X,\hat d)}{\frac{\Big(\TYPE{CauchySequance}(X),\lim d \Big)}{\lim d}}
+}\Page{
+	\Theorem{CompletionTHM}{\forall X \in \SMS \. \Big( \hat X,  \Lambda x \in X \. \Lambda n \in \Nat \. x\Big) : \TYPE{Completion}(X)}
+	\Assume{p}{\hat X}
+	\Say{\Big( x, [1] \Big)}{\bd \hat X(p)}{\sum x : \TYPE{CauchySequance}(X) \. p = [x]}
+	\Say{A}{\Lambda n \in \Nat \. \Lambda m \in \Nat \. \If m < n \Then x_m \Else x_n}{\Nat \to \TYPE{Convergent}(X)}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{\Big(N,[2]\Big)}{\bd \TYPE{CauchySequance}(X,x)(\varepsilon)}{ \sum N \in \Nat \. \forall n,m \in \Nat \, n,m \ge \Nat \Imply  d(x_n,x_m) < \varepsilon}
+	\Assume{n}{\Nat}
+	\Assume{[3]}{n \ge N}
+	\Conclude{[p.*]}{\bd \FUNC{completion}[1]\ByConstr A[2,3]}
+	{  
+		\hat d(p,[A_n]) = 
+		\lim_{m \to \infty}   d(x_m, A_{n,m}) = 
+		\lim_{m \to \infty} d(x_m,x_n) < \varepsilon  
+	 }
+	 \Derive{[1]}{ \bd^{-1}\TYPE{Dense}   }{\TYPE{Dense}(\hat X, X)}
+	 \Say{[2]}{\THM{CompleteByDenseSubset}(\hat X, X)}{\TYPE{Complete}(\hat X)}
+	 \Say{\phi}{\Lambda x \in X \. \Big[ \Lambda n \in \Nat \. x \Big] }{\TYPE{Isometry}(X,\hat X)}
+	 \Assume{(Y,f)}{\TYPE{In}\;\mathsf{COMP}(X)}
+	 \Say{\psi}{\Lambda [x] \in \hat X \. \lim_{n \to \infty} f(x_n) }{\TYPE{Isometry}(\hat X, Y)}
+	 \Assume{x}{X}
+	 \Conclude{[x.*]}{ \ByConstr \phi \ByConstr \psi \THM{ConstantSeq}}{ x\phi\psi = [n \mapsto x]\psi = \lim_{n \to \infty} f(x) = f(x)  }
+	 \Derive{[3]}{\bd^{-1}\mathsf{COMP}(X)}{\Big( \psi : \hat X \Arrow{\mathsf{COMP}(X)} Y  \Big)}
+	 \Assume{\psi'}{\hat X \Arrow{\mathsf{COMP}(X)} Y}
+	 \Assume{p}{\hat X}
+	 \Say{\Big( x, [4] \Big)}{\bd \hat X(p)}{\sum x : \TYPE{CauchySequance}(X) \. p = [x]}
+	 \Say{A}{\Lambda n \in \Nat \. \Lambda m \in \Nat \. \If m < n \Then x_m \Else x_n}{\Nat \to \TYPE{Convergent}(X)}
+	 \Conclude{\Big[(Y,f)\Big]}{[4]\ByConstr^{-1}A\THM{ContinuousLimit}\ByConstr^{-1}\phi \bd \mathsf{COMP}(X)}{
+	 	\psi'(p) = 
+	 	\psi'[x] =
+	 	\psi' \lim_{n \to \infty} [A_n] =
+	 	\lim_{n \to \infty} \psi' [A_n] =  \NewLine =
+	 	\lim_{n \to \infty} \psi' \phi(x_n) = 
+	 	\lim_{n \to \infty} f(x_n)
+	 	\lim_{n \to \infty} \psi \phi(x_n) =
+	 	\psi(p)
+	 }
+	 \DeriveConclude{[*]}{\bd^{-1}\TYPE{Completion}}{\TYPE{Completion}\Big(X,(\hat X,\varphi)\Big)}
+	 \EndProof
+	 \\
+	 \Conclude{\TYPE{Contraction}}{\Lambda X \in \MS \. \sum \alpha \in (0,1) \.  \alpha\hyph\mathrm{Lip}(X)}{\MS \to \Type}
+}\Page{
+	 \Theorem{BanachFixedPointTHM}{\forall X \in \MS \And \TYPE{Complete} \And \TYPE{NonEmpty} \.\forall f : \TYPE{Contraction}(X) \. \exists! x \in X : f(x) = x}
+	 \Say{\Big(\alpha, [1] \Big)}{\bd \TYPE{Contraction}(f)}{\sum_{\alpha \in (0,1)} \forall x ,y\in X \.  d(f(x),f(y)) \le alpha*d(f(x),f(y)) }
+	 \Say{x}{\bd \TYPE{NonEmpty}(X)}{\TYPE{In}(X)}
+	 \Say{\delta}{d(x,f(x))}{\Reals_+}
+	 \Assume{\varepsilon}{\Reals_{++}}
+	 \Say{\Big(N, [2] \Big)}{\THM{PowerReduction}}{\sum_{N \in \Nat}  \alpha^N < \frac{(1 - \alpha)\varepsilon}{\delta}}
+	 \Assume{n,m}{\Nat}	
+	 \Assume{[3]}{n,m \ge N}
+	 \Assume{[4]}{n \ge m}
+	 \Conclude{[\varepsilon.*]}{\THM{TriangleInequality}[4]\THM{NonNegSum}[3][1]\THM{PowerSum}[2][3]}
+	 {
+	 	\NewLine :
+	 	d\Big(f^n (x),f^m(x)\Big) \le  
+	 	\sum^{n-m}_{i=0}   d\Big(f^{m+i}(x),f^{m + i + 1}(x)\Big)  \le 
+	 	\sum^{\infty}_{i=0}  d\Big(f^{N+i}(x), f^{N+i+1}(x)  \Big)      \le
+	 	\sum^{\infty}_{i=0}  \delta\alpha^{N+i} =
+	 	\frac{\delta \alpha^N}{1 - \alpha}  < \varepsilon 
+	 }
+	 \Derive{[2]}{\bd^{-1}\TYPE{CauchySequance}}{\TYPE{CauchySequance}\Big(X,\Lambda n \in \Nat \. f^{n}(x)\Big)}
+	 \Say{[3]}{\THM{AltCompleteDef}[2]}{\TYPE{Convergent}\Big(X,\Lambda n \in \Nat \. f^{n}(x)\Big)}
+	 \Say{p}{\lim_{n \to \infty} f^{n}(x)}{\TYPE{In} X}
+	 \Assume{\varepsilon}{\Reals_{++}}
+	 \Say{\Big(M,[4]\Big)}{\bd \TYPE{Limit}(X,\Lambda n \in \Nat \. f^n(x),L)}{\sum N \in \Nat \. \forall n \in \Nat \. n \ge N \Imply d(f^n(x),p) < \frac{\varepsilon}{3} }
+	 \Say{\Big(K,[5]\Big)}{\bd \TYPE{CauchySequance}(X,\Lambda n \in \Nat \. f^n(x))}{\sum K \in \Nat \. \forall n,m \in \Nat \. n,m \ge N \Imply d(f^n(x),f^m(x) < \frac{\varepsilon}{3}}
+	 \Say{N}{\max(M,K)}{\Nat}
+	 \Assume{n}{\Nat}
+	 \Assume{[6]}{n \ge N}
+	 \Conclude{[\varepsilon.*]}{\THM{TriangleIneq}[1](f^n\;x,p)[4,5,6]}{ 
+	 	d(p,f\;x) \le  
+	 	d(p, f^n\;x) + d(f^n\;x, f^{n+1}\;x) + d(f^{n+1}(x),f\;p) < \NewLine <
+	 	2d(p,f^n\;x)  + d(f^n\;x,f^{n+1}\;x) < \varepsilon  
+	 }
+	\Derive{[4]}{\THM{ZeroBound}}{d(L,f\;p)  = 0}
+	\Conclude{[5]}{\bd \MS [4]}{p = f\;p}
+	\Assume{q}{\Type{In} X}
+	\Assume{[6]}{q = f\;q}
+	\Say{[7]}{[1](p,q)[5][6]}{d(p,q) \le  \alpha d(f\;,f\;q) = \alpha d(p,q)}
+	\Say{[8]}{\THM{FixedMultiolicationIsZero}[7]}{d(p,q) = 0}
+	\Conclude{[q.*]}{\bd^{-1}\MS[8]}{p = q}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{Unique}}{\exists! x \in X : f(x) = x}
+	\EndProof
+}
+\newpage
+\subsection{Baire Category}
+\Page{
+	\Theorem{CantorIntersectionTheorem}
+	{
+		\forall X \in \SMS \And \TYPE{Complete} \.
+		\forall A : \TYPE{Decreasing} \; \Big(\TYPE{Closed}(X) \And \TYPE{NonEmpty}\Big) \. \NewLine \.
+		\forall [0] : \lim_{n \to \infty} \diam A_n = 0 \. 
+		\bigcap^\infty_{n=1} A_n \neq\emptyset
+	}
+	\Say{a}{\bd \TYPE{NonEmpty}(A)}{\prod_{n \in \Nat} A_n}
+	\Say{[1]}{\bd^{-1} \TYPE{CauchySequance}[0]\ByConstr a}{ \TYPE{CauchySequance}(X,a)}
+	\Say{[2]}{\THM{AltCompleteDef}}{\THM{Convergent}(X,a)}
+	\Say{K}{\lim_{n \to \infty} a_n}{\TYPE{NonEmpty}(X)}
+	\Assume{x}{K}
+	\Say{[3]}{\Lambda n \in \Nat \. \THM{ClosedLimit}(X,A_n,a_{+n},x)}{\forall n \in \Nat \. x \in A_n}
+	\Conclude{[x.*]}{\bd\TYPE{Intersection}}{x \in \bigcap^\infty_{n=1} A_n}
+	\Derive{[3]}{\bd^{-1}\TYPE{Subset}}{K \subset \bigcap^\infty_{n=1} A_n}
+	\Conclude{[*]}{\bd \TYPE{NonEmpty}[3]}{  \bigcap^\infty_{n=1} A_n \neq \emptyset }
+	\EndProof
+	\\
+	\Theorem{MetricBaireCategoryTheorem}
+	{
+		\forall X \in \SMS \And \TYPE{Complete} \. X : \TYPE{Baire}
+	}
+	\Assume{U}{\Nat \to \TYPE{Dense} \And \TYPE{Open}(X)}
+	\Assume{x}{\TYPE{In} \; X}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{u_1}{x}{\TYPE{In}\;X}
+	\Say{r_1}{\varepsilon}{\Reals_{++}}
+	\Say{\delta_1}{1}{\Reals_{++}}
+	\Assume{n}{\Nat}
+	\Say{[1]}{\THM{OpenDenseIntersection}}{\bigcap^n_{i=1} U_i : \TYPE{Open} \And \TYPE{Dense}(X)}
+	\Say{V}{\mathbb{B}(x_n,r_n)\cap\bigcap^n_{i=1} U_i}{\TYPE{Open} \And \TYPE{NonEmpty}(X)}
+	\Say{v}{\bd \TYPE{NonEmpty}(X,V}{\TYPE{In}(V)}
+	\Say{\Delta}{d(v,\partial V)}{\Reals_{++}}
+	\Say{\delta_{n+1}}{\frac{\min(\Delta,\delta_n)}{2}}{\Reals_{++}}
+	\Say{K_n}{\{  v \in V :  d(v,\partial V) \le \delta_{n+1}   \}}{\TYPE{NonEmpty}(V)}
+	\Say{[2]}{\THM{ContinuousDistance}(\overline{V},\partial V)\THM{ClosedPreimage}\ByConstr K_n}{\TYPE{Closed}(X,K_n)}
+	\Say{u_{n+1}}{\bd \TYPE{NonEmpty}}{K_n}
+	\Conclude{r_{n+1}}{\min\left(\frac{r_n}{2}\, \delta_{n+1} \right)}{\Reals_{++}}
+}\Page{
+	\Derive{\Big( K,[1]\Big)}{I\Act{\sum}}{  \sum  K : \TYPE{Decreasing}\;\TYPE{CLosed}(X) \.   \lim_{n \to \infty}\diam  K_n = 0 \And \forall n \in \Nat  \. K_n \subset \bigcap^n_{i=1} U_n \cap \mathbb{B}(x,\varepsilon)  }
+	\Say{[2]}{\THM{CantorIntersectionTheorem}(X,K,[1])}{\bigcap^\infty_{n=1} K_n \neq \emptyset}
+	\Conclude{[x.*]}{\THM{IntersectionSubset}(X,K,[1],[2])}{\bigcap^\infty_{n=1} K_n \subset \mathbb{B}(x,\varepsilon) \cap \bigcap^\infty_{n=1} U_n}
+	\DeriveConclude{[U.*]}{\bd^{-1}\TYPE{Dense}}{\TYPE{Dense}\left( X, \bigcup^\infty_{n=1} U_n \right)}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Baire}}{\TYPE{Baire}(X)}
+	\EndProof
+	\\
+	\DeclareType{FirstCategory}{\prod X \in \TOP \. ??X}
+	\DefineType{A}{FirstCategory}{A \neq \emptyset \And \exists P : \Nat \to \TYPE{NowhereDense}(X) \. \bigcup^\infty_{n=1} P_n = A}
+	\\
+	\Theorem{FirstCategoryTheorem1}
+	{
+		\forall X  : \TYPE{Baire} \. \forall U \in \T(X) \. U \IsNot \TYPE{FirstCategory}
+	}
+	\Assume{[1]}{\TYPE{FirstCategory}(X,U)}
+	\Say{[2]}{\bd_1 \TYPE{FirstCategory}(X,U)[1]}{U \neq \emptyset}
+	\Say{\Big(A,[3] \Big)}{\bd_2 \TYPE{FirstCategory}(X,U)[1]}{\sum A : \Nat \to \TYPE{NowhereDense}(X) \. U = \bigcap^\infty_{n=1} A_n}
+	\Say{[3]}{\THM{DualBaireProperty}[3]}{\TYPE{Codense}(U)}
+	\Say{[4]}{\bd \TYPE{Codense}(X,U)}{\TYPE{Dense}(X,U^\c)}
+	\Say{[5]}{\THM{DenseOpenIntersection}[4][2]}{U \cap U^\c \neq \emptyset}
+	\Conclude{[1.*]}{\THM{ComplementIntersection}(U)\THM{EmptyIsNonEmpty}}{\bot}
+	\DeriveConclude{[*]}{E(\bot)}{!\TYPE{FirstCategory}(X,U)}
+	\EndProof
+	\\
+	\Theorem{FirstCategoryTheorem2}
+	{
+		\forall X  \in \TOP \. \forall [0] : \forall U \in \T(X) \. U \IsNot \TYPE{FirstCategory}  \.  X : \TYPE{Baire}
+	}
+	\Assume{U}{\Nat \to \TYPE{Open} \And \TYPE{Dense}(X)}
+	\Assume{[1]}{\bigcap^\infty_{n=1} U_n \IsNot  \TYPE{Dense}(X)}
+	\Say{\Big(V,[2] \Big)}{\bd \TYPE{Dense}[1]}{\sum V \in T(X) \. V \cap \bigcap^\infty_{n=1} U_n = \emptyset}
+	\Say{A}{V \cap U^\c}{\Nat \to \TYPE{Codense}(X)}
+	\Say{[3]}{\ByConstr A [2]}{V = \bigcup^\infty_{i=1} A_i}
+	\Conclude{[1.*]}{[0](V)\bd^{-1}\TYPE{FirstCategory}[3]}{\bot}
+	\DeriveConclude{[U.*]}{E(\bot)}{\bigcap^\infty_{n=1} U_n = \TYPE{Dense}(X)}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Baire}}{\TYPE{Baire}(X)}
+	\EndProof
+}
+\newpage
+\subsection{Hausdorff Metric}
+\Page{
+	\DeclareFunc{metricOfHausdorff}{\MS \to \MS}
+	\DefineNamedFunc{metricOfHausdorff}{X}{\mathcal{H}(X) = \Big(\mathcal{H}(X),d_H \Big)}{\Big(\TYPE{Closed} \And \TYPE{Bounded} \And \TYPE{Nonempty}(X), A,B \mapsto \max(\sup_{x\in A} d(x,B ), \sup_{x \in B } d(x,A) \Big)}
+	\Assume{A,B,C}{\TYPE{NonEmpty}\And \TYPE{Compact}(X)}
+	\Assume{[1]}{d(A,B)    = \sup_{x \in A} d(x,B)}
+	\Say{\Big(a,[2]\Big)}{\bd \FUNC{supremum}}{\sum a : \Nat \to A  \.  d(A,B) = \lim_{n \to \infty} d(a_n,B)}
+	\Assume{n}{\Nat}
+	\Assume{c}{C}
+	\Conclude{[c.*]}{[1]\bd \FUNC{setDistance}(B) \forall x \in A \. \forall y \in B \THM{TriangleIneq}(x,y,c)
+		 \THM{InfReduction}(B)  \THM{SupReduction}(B) \NewLine \THM{SumIneq}(\Reals,\ldots)\THM{SupremumIntroduction}(C)
+		  \bd^{-1} \FUNC{metricOfHausforff}
+	}
+	{
+		\NewLine :
+		d(a_n, B) =
+		\inf_{b \in B} d(a_n,b) =
+		\le   d(a_n,c) + \inf_{b \in B} d(c,b) \le
+		d(a_n,c)  + \sup_z \inf_b  d(z,b) \le
+		d(a_n,c)  +  d(C,B)                              
+ 	}
+ 	\Derive{[1.*]}{\THM{UniversalIneq}}{   d(a_n,B)  \le   \inf_{z \in C} d(a_n,z) + d(C,B) \le d(A,C) + d(C,B)  }
+ 	\Conclude{[1]}{I(\Rightarrow) }{  d(A,B) = \sup_{x \in A} d(x,B) \Rightarrow d(A,B) \le \sup_{x \in A} d(x,B) + d(C,B) }
+ 	\EndProof
+ 	\\
+ 	\DeclareFunc{blowUp}{\prod X \in \SMS \. \Reals_{++} \to (?X) \to (?X)}
+ 	\DefineNamedFunc{blowUp}{\varepsilon,A}{A_{\varepsilon}}{\bigcup_{a \in A} \mathbb{B}(a,\varepsilon)}
+ 	\\
+ 	\Theorem{HausdorffMetricAltDef}{\forall X \in \MS \. \forall A,B : \TYPE{Compact}(X) \. d(A,B) = \inf\Big\{ \varepsilon \in \Reals_{++} \Big|   B \subset A_{\varepsilon} \And A \subset B_{\varepsilon} \Big\}}
+ 	\NoProof
+ 	\\
+ 	\DeclareFunc{HausdorffFunctor}{\Iso \Arrow{\CAT} \Iso}
+ 	\DefineNamedFunc{HausdorffFunctor}{X}{\mathcal{H}(X)}{\mathcal{H}(X)}
+ 	\DefineNamedFunc{HausdorffFunctor}{X,Y,f}{\mathcal{H}(f)}{\Lambda A \in \mathcal{H}(X) \.  \cl f(A)  }
+ 	\\
+ 	\Theorem{CauchyDiamConverge}{\forall X \in \MS \. \forall A : \TYPE{Cauchy}(X) \. \diam A : \TYPE{Convergent}(\Reals)}
+ 	\NoProof
+}\Page{
+	\Theorem{HausdorffMetrizationANdCompletionCommute}{\forall X \in \MS . \mathcal{H}(\widehat{X}) \cong_{\Iso} \widehat{\mathcal{H}(X)}}
+ 	\Assume{A}{\mathcal{H}(\widehat{X})}
+ 	\Assume{a}{A}
+ 	\Conclude{ \Big(x^a, [1]\Big)}{\bd \widehat(X)(a)}{\sum x : \TYPE{Cauchy}(X) \. a = [x^a] \And \forall N \in \Nat \. \forall n,m \in \Nat \. n,m \ge N \Imply d(x_m^a,x_m^a) \le N^{-1}}
+ 	\Derive{(x,[1])}{I\Act{A}}{\prod_{a \in A} \sum x : \TYPE{Cauchy}(X) \. a  = [x^a] \And   \forall N \in \Nat \. \forall n,m \in \Nat \. n,m \ge N \Imply d(x_m^a,x_m^a) \le N^{-1}  }
+ 	\Say{B}{\Lambda n \in \Nat  \. \cl_X \{  x_n^a | a \in A  \}}{\Nat \to \TYPE{Closed}(X)}
+ 	\Assume{n}{\Nat}
+ 	\Assume{b,b'}{\TYPE{In}(B_n)}
+ 	\Assume{\varepsilon}{\Reals_{++}}
+ 	\Say{\Big(a',a,[2]\Big)}{\bd \FUNC{closure}\ByConstr B_n (b,b')}{\sum a', a : \in A \. d(b,x^a_n) < \varepsilon \And d(b',x^{a'}_n) < \varepsilon }
+ 	\Conclude{[n.*]}{\THM{TriangleIneq}^{4}[2][1]}{d(b',b) \le d(b,x^a_n) + d(x^a_n,a) + d(a,a') + d(a',x^{a'}_n) + d(x^{a'}_n,b')  <    \diam A + \frac{2}{n}  +   2\varepsilon}
+ 	\Derive{[2]}{I(\forall)}{\forall n \in \Nat \. \diam B_n \le \diam A + \frac{2}{n}}
+ 	\Assume{\varepsilon}{\Reals}
+ 	\Say{\Big(N,[3]\Big)}{\THM{ReductionInfinuma}(\varepsilon)}{\prod N \in \Nat \. \varepsilon < \frac{1}{\Nat}}
+ 	\Assume{n,m}{\Nat}
+ 	\Assume{[4]}{n,m \ge N}
+ 	\Conclude{[\varepsilon.*]}{ \bd \mathcal{H}(X) \bd \FUNC{supremum} [1][3][4] }
+ 	{
+ 		d(B_n,B_m)  = 
+ 		\max\Big(  \sup_{a \in A} d(x^a_n,B_m), \sup_{a \in A} d(x^a_m,B_n)  \Big) \le 
+ 		\sup_{a \in A} d(x^a_n,x_m^a) \le \frac{1}{N} < \varepsilon
+ 	}
+ 	\Derive{[3]}{\bd^{-1} \TYPE{CauchySequance}}{\TYPE{CauchySequance}\Big( \mathcal{H}(X), B \Big)}
+ 	\Conclude{\varphi(X)}{\lim_{n \to \infty} X_n}{\widehat{\mathcal{H}(X)}}
+ 	\Derive{\varphi}{I(\to)}{\mathcal{H}(\widehat{X}) \to \widehat{\mathcal{H}(X)}}
+ 	\Assume{A,B}{\mathcal{H}(\widehat{X})}
+ 	\Say{\Big( \alpha, [4] \Big)}{\ByConstr \varphi(A)}{\sum \alpha : \TYPE{Cauchy}\Big( \mathcal{H}( X) \Big) \varphi(A) = [\alpha] \And \lim_{n \to \infty} \cl_{\widehat{X}} \alpha_n = A  }
+ 	\Say{\Big( \beta, [5]\Big)}{\ByConstr \varphi(B)}{\sum \beta : \TYPE{Cauchy}\Big( \mathcal{H}( X) \Big) \phi(B) = [\beta] \And \lim_{n \to \infty} \cl_{\widehat{X}} \beta_n = B  }
+ 	\Conclude{\Big[A,B,[*]\Big]}{[\bd \TYPE{Complement}4][5]}{d\Big(\varphi(A),\varphi(B)\Big) = \lim_{n \to \infty} d\Big(\alpha_n,\beta_n) = d(A,B)   \Big) }
+ 	\Derive{[4]}{\bd^{-1} \TYPE{Isometry}}{\TYPE{Isometry}\Big(\mathcal{H}(\widehat{X}),\widehat{\mathcal{H}(X)}\Big)}
+ 	\Assume{A}{\widehat{\mathcal{H}(X)}}
+ 	\Say{\Big(K,[1])}{\bd \TYPE{Completion}(\mathcal{H}(X))}{\prod K : \TYPE{CachySequance}\Big(\mathcal{H}(X)\Big) \. A = [K]}
+ 	\Say{C}{\Big\{ x : \TYPE{CauchySequence}(X) |  \forall n,m \in \Nat \. x_n \in K_n \And   d(x_n,x_m) \le d(K_n,K_m)   \Big\}}{?\TYPE{Cauchy}(X)}
+ 	\Say{\psi(A)}{\cl\{ \lim_{n \to \infty} x_n  | x \in C \}}{\TYPE{Closed}(\widehat{X})}
+ 	\Conclude{[A.*]}{\THM{CauchyDiamConverge}}{\TYPE{Bounded}(\widehat{X}.\psi(A))}
+ 	\Derive{\psi}{I(\to)}{\widehat{\mathcal{H}(X)} \to \mathcal{H}(\widehat{X})}
+}\Page{
+	\Assume{A,B}{\widehat{\mathcal{H}(X)}}
+	\Say{\Big( \alpha, [4] \Big)}{\ByConstr \varphi(A)}{\sum \alpha : \TYPE{Cauchy}\Big( \mathcal{H}( X) \Big) \.  A = [\alpha]  }
+ 	\Say{\Big( \beta, [5]\Big)}{\ByConstr \varphi(B)}{\sum \beta : \TYPE{Cauchy}\Big( \mathcal{H}( X) \Big) \. B = [\beta] }
+ 	\Say{C_A}{\Big\{ x : \TYPE{CauchySequence}(X) |  \forall n,m \in \Nat \. x_n \in \alpha_n \And   d(x_n,x_m) \le d(\alpha_n,\alpha_m)   \Big\}}{?\TYPE{Cauchy}(X)}
+ 	\Say{C_B}{\Big\{ x : \TYPE{CauchySequence}(X) |  \forall n,m \in \Nat \. x_n \in \beta_n \And   d(x_n,x_m) \le d(\beta_n,\beta_m)   \Big\}}{?\TYPE{Cauchy}(X)}
+ 	\Conclude{[(A,B).*]}{\bd \FUNC{hausdorffMetric}\bd \FUNC{completion} \THM{UniformCauchyExchange}[4][5]\bd^{-1} \FUNC{completion}}
+ 	{
+ 		 : \NewLine
+ 		  d(\psi(A),\psi(B)) =  
+ 		  \max\Big(  \sup_{a \in \psi(A)} \inf_{b \in \psi(B)} d(a,b), \sup_{b \in B} \inf_{a \in A} d(a,b)   \Big) = \NewLine = 
+ 		  \max\Big( \lim_{n \to \Nat} \lim_{m \to \Nat} \sup_{x \in C_A} \inf_{y \in C_B} d(x_n,y_m),  \lim_{n \to \Nat} \lim_{m \to \Nat} \sup_{x \in C_A} \inf_{y \in C_B} d(x_n,y_m)  \Big)     =
+ 		  \lim_{n \in \Nat} \lim_{m \in \Nat}   d(\alpha_n,\beta_m)   = d(A,B)       
+ 	}
+ 	\Derive{[5]}{\bd^{-1} \TYPE{Isometry}}{\TYPE{Isometry}\Big(\widehat{\mathcal{H}(X)}, \mathcal{H}(\widehat{X})\Big)}
+ 	\Assume{A}{\mathcal{H}(\widehat{X})}
+ 	\Say{\Big( \alpha, [6] \Big)}{\ByConstr \varphi(A)}{\sum \alpha : \TYPE{Cauchy}\Big( \mathcal{H}( X) \Big) \varphi(A) = [\alpha] \And \lim_{n \to \infty} \cl_{\widehat{X}}  \alpha_n = A  }
+ 	\Say{[7]}{[6] \THM{ContinuousLimitCommute}\ByConstr \psi}
+ 	{
+ 		d(\psi\varphi A, A) =  
+ 		d(\psi \lim_{n \to \infty} \alpha_n, A) =  
+ 		\lim_{n \to \infty}   d(\psi \alpha_n, A) =  
+ 		\lim_{n \to \infty}   d(\cl_{\widehat{X}} \alpha_n,A)   =   
+ 		d(A,A) = 0
+ 	}
+ 	\Conclude{[A.*]}{\bd^{-1} \MS [7][8]}{\psi\varphi A = A}
+ 	\Derive{[6]}{I(\to,=)}{\psi\varphi = \id}
+ 	\Conclude{[*]}{\THM{IsometricSurjectionIsBijection}(\psi)\THM{RightInverseIsBijective}[6]}{\psi = \varphi^{-1}}
+ 	\EndProof
+ 	\\
+ 	\Theorem{HausdorffCompleteIffComplete}{\forall X \in \MS \. \TYPE{Complete}(X) \iff  \TYPE{Complete}\;\mathcal{H}(X)}
+ 	\NoProof
+ 	\\
+ 	\Theorem{CompactHausdorffConvergence}{\forall X : \TYPE{Complete} \. \forall K : \TYPE{CauchySequance}(\mathcal{H}(X)) \. \NewLine \. \forall [0] : \forall n \in \Nat \.  \TYPE{Compact}(K_n) \. \lim_{n \to \infty} \Big(\TYPE{Compact}\Big) }
+ 	\Say{A}{\cl \bigcup^\infty_{n=1} K_n}{\TYPE{Closed}(X)}
+ 	\Say{[1]}{\THM{ClosedSubsetOfComplete}(X,A)}{\TYPE{Complete}(A)}
+ 	\Assume{\varepsilon}{\Reals_{++}}
+ 	\Say{\Big(N,[2]\Big)}{\bd \TYPE{CauchySequance}(\mathcal{H}(X),K)\left(\frac{\varepsilon}{8}\right) }{\sum_{N \in \Nat} \forall n,m \in \Nat \. n,m \ge N \Imply d(K_n,K_m) < \frac{\varepsilon}{8}}
+ 	\Say{\Big(k,E,[3] \Big)}{\THM{CompactIsTotallyBounded}\Big( (K_n)^N_{n=1}\Big)\bd \TYPE{TotallyBounded}}{ \NewLine : \prod_{n=1}^N \sum_{k \in \Nat} \sum_{E : k\to ?K_n}  
+ 		\forall i \in k_n \. \diam E < \frac{\varepsilon}{2} \And \bigcup^{k_n}_{i=1} E_i = K_n}
+	\Say{F}{\Lambda n \in N \. \Lambda i \in k_n \. \left\{ x \in A  \. d(x,E_i) \le \frac{\varepsilon}{4}  \right\}}{ \prod^N_{n=1} k_n \to ?A}
+	\Say{[\varepsilon.1.*]}{\ByConstr F \bd^{-1} \diam}{\forall n \in N \. \forall i \in k_n \. \diam F_{n,i} \le \varepsilon}
+}\Page{
+	\Assume{a}{A}
+	\Say{\Big(x,[5] \Big)}{\THM{MetricCLosure}\ByConstr A}{\sum x \in \bigcup^\infty_{n=1} K_n \. d(x,a) < \frac{\varepsilon}{8}}
+	\Say{\Big(n,[6] \Big)}{\bd \TYPE{Union}(K,x)}{\sum n \in \Nat \. x \in K_n}
+	\Say{\Big(m,[7]\Big)}{\THM{DirechletPrinciple}[2]}{\sum m \in N \. d(K_m,K_n) < \frac{\varepsilon}{8}}
+	\Say{\Big(y,[8]\Big)}{\bd^{-1}\TYPE{distanceOfHausdorff}[7]}{\sum y \in K_m \.  d(y,x) < \frac{\varepsilon}{8}}
+	\Say{[9]}{\THM{TriangleIneq}[5][8]}{d(a,y) \le d(a,x) + d(x,y) < \frac{\varepsilon}{4}}
+	\Say{\Big(i,[10]\Big)}{[3](y)}{\sum i \in k_i \. y \in E_i}
+	\Conclude{[a.*]}{\ByConstr[10][9]}{a \in F_{n,i}}
+	\DeriveConclude{[\varepsilon.2.*]}{\bd^{-1}\TYPE{Union}}{\bigcup^{N}_{n=1}\bigcup^{k_n}_{i=1} F_i = A}
+	\Derive{[2]}{\bd^{-1}\TYPE{TotallyBounded}}{\TYPE{TotallyBounded}(A)}
+	\Say{[3]}{\THM{CompleteAndTotallyBoundedIsCompact}[2]}{\TYPE{Comcpact}(A)}
+	\Say{[4]}{\bd \mathcal{H}(X)}{\lim_{n \to \infty} K_n \subset A}
+	\Conclude{[*]}{\THM{ClosedSubsetCompact}[3,4]}{\TYPE{Compact}(\lim_{n \to \infty} K_n)}
+	\EndProof
+	\\
+	\Theorem{SingletonHausdorffLimit}{\forall X \in \MS \. \forall  p : \TYPE{Converging}\Big(\mathcal{X}\Big) \. \forall n \in \Nat \. |p_n| = 1 \Imply \Big|\lim_{n\to \infty} x_n\Big|   }
+	\NoProof
+	\\
+	\Theorem{CompactHausdorffMetrIffCompact}
+	{
+		\forall X \in \MS \.   \TYPE{Compact}(X) \iff \TYPE{Compact}(\mathcal{H}(X))
+	}
+	\Assume{[0]}{\TYPE{Compact(X)}}
+	\Say{[1]}{\THM{HausdorffMetrizationAndCompletionCommute}(X)}{\TYPE{Complete}\Big(\mathcal{X}\Big)}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{\Big(n,A,[2]\Big)}{\THM{CompactTotallyBounded}(X)\bd \TYPE{TotallyBounded}}{ \sum_{n=1}^\infty  \sum_{A : n \to ?X} \bigcup^n_{i=1} A_i = X \And \forall i \in n \. \diam A \le \varepsilon}
+	\Say{B}{\Lambda b \in 2^n \.  \{  K \in \mathcal{H}(X) :  \forall i \in \. b_i = 1 \iff A_i \cap K \neq \emptyset \}}{2^n \to ?\mathcal{H}(X)}
+	\Assume{b}{2^n}
+	\Assume{K,K'}{B_b}
+	\Conclude{[b.*]}{\ByConstr B \bd \FUNC{distanceOfHaussdorff}[2]}{d(K,K') \le \max_{i \in b} d(K \cap A_i, K \cap A_i) \le \varepsilon}
+	\Derive{[\varepsilon.*.1]}{I(\forall)}{ \forall b \in 2^n \. \diam B_b \le \varepsilon}
+	\Conclude{[\varepsilon.*.2]}{\ByConstr B[2]}{\bigcup_{b \in 2^n}  = \mathcal{H}(X)}
+	\Derive{[2]}{\bd^{-1} \TYPE{TotallyBounded}}{\TYPE{TotallyBounded}\Big(\mathcal{H}(X)\Big)}
+	\Conclude{[0.*]}{\THM{CompactIfCompleteAndTotallyBounded}(\mathcal{H}(X))}{\TYPE{Compact}(\mathcal{H}(X))}
+	\Derive{LR}{I(\Imply)}{\TYPE{Compact}(X) \Imply \TYPE{Compact}(\mathcal{H}(X))}
+}\Page{
+	\Assume{R}{ \TYPE{Compact}(\mathcal{H}(X)}
+	\Assume{x}{\Nat \to X}
+	\Say{[P',]}{\THM{SequanceCompactIffCompact}(\mathcal{H}(X))\bd \TYPE{SequanceCompact}}{\sum P' : \TYPE{Subsequence}\{x\} \. P' : \TYPE{Converging}}
+	\Say{P}{\lim_{n \to \infty} p'}{\TYPE{In} \mathcal{H}(X)}
+	\Say{(p,[1])}{\THM{SingletonHausdorffLimit}(P)}{\sum p \in X \. P = \{p\}}
+	\Conclude{(x',[x.*]])}{[1]\ByConstr p \bd \FUNC{distanceOfHaussdorff}}{\sum x' : \TYPE{Subsequence}(X) \. p = \lim_{n \to \infty} x_n}
+	\DeriveConclude{[R.*]}{\THM{SequanceCompactIffCompact}(X)}{\TYPE{Compact}(X)}
+	\DeriveConclude{[R.*]}{I(\iff)}{ \TYPE{Compact}(X) \iff \TYPE{Compact}(\mathcal{H}(X))}
+	\EndProof          
+}
+\newpage
+\subsection{Geodesic Paths and Hopf-Rinow Theorem}
+\Page{
+	\DeclareType{RectifiablePath}{\prod X \in \MS \. \prod x,y \in X \. ?\Omega(x,y)  }
+	\DefineNamedType{\gamma}{RectifiablePath}{\gamma \in R(x,y) }
+	{ \NewLine \iff \TYPE{ConvergingNet}\left( \Reals_+, M(\gamma) , \Lambda (n,\omega) \in M(\gamma) \. \sum^n_{i=1} d_X\big(\omega_i(0),\omega_i(1)\big) \right)}
+	\\
+	\DeclareType{LengthSpace}{?\MS}
+	\DefineNamedType{X}{LengthSpace}{\forall x,y \in X \. R(x,y) \neq \emptyset }
+	\\
+	\DeclareFunc{arclength}{\prod X \in \MS \. \prod x,y \in X \. R(x,y) \to \Reals_{+}}
+	\DefineNamedFunc{arclength}{\gamma}{|\gamma|}{\lim_{(n,\omega)\in M(\gamma)} \sum^n_{i=1} d_X\big(\omega_i(0),\omega_i(1)\big)}
+	\\
+	\Theorem{ArclengthSum}{\forall X \in \MS \. \forall x,y,z \in X \. \forall \alpha \in R(x,y) \. \forall \beta \in R(y,z) \. |\alpha\beta| = |\alpha| + |\beta| )}
+	\NoProof
+	\\
+	\Theorem{ArclengthInversion}{\forall X \in \MS \. \forall x,y \in X \.  \forall \gamma \in R(x,y) \. \big|\gamma^\curvearrowright \big| = \gamma}
+	\NoProof
+	\\
+	\Theorem{ConstantArclength}{\forall X \in \MS \. \forall x \in X \. \Big| \FUNC{constant}\big([0,1],X,  x \big)  \Big| = 0}
+	\\
+	\DeclareFunc{IntrinsicMetric}{\prod X : \TYPE{LengthSpace} \. \TYPE{Metric}(X)}
+	\DefineNamedFunc{IntrinsicMetric}{x,y}{d_I(x,y)}{\inf_{\gamma \in R(x,y)} |\gamma|}
+	\\
+	\DeclareType{Geodesic}{\prod X \in \MS \. ?R(X,Y)}
+	\DefineType{\gamma}{Geodesic}{ |\gamma| = \inf_{\gamma \in R(x,y)} |\gamma|}
+	\\
+	\DeclareType{GeodesicSpace}{ ?\TYPE{LengthSpace}(X) }
+	\DefineType{X}{GeodesicSpace}{\forall x,y \in X \. \exists \gamma : \TYPE{Geodesic}(x,y)}
+}
+\newpage
+\Page{
+	\Theorem{GeodesicSpaceIsPathConnected}{\forall X : \TYPE{Geodesic} \.  X : \TYPE{PathConnected}}
+	\NoProof
+	\\
+	\DeclareType{HopfRinow}{?\MS}
+	\DefineType{X}{HopfRinow}{\forall x,y \in X \. \forall a,b \in \Reals_{+} \. a + b < d(x,y) \Imply d\Big( \mathbb{B}(x,a),\mathbb{B}(y,b) \Big) = d(x,y) - a - b}
+	\\
+	\Theorem{HopfRinowLemma}
+	{
+		\forall  X  : \TYPE{Complete}  \And  \TYPE{HopRinow} \.
+		\forall x \in X \. 
+		\forall r \in \Reals_{++}
+		\bigg( \forall r' \in \Reals_{++}  \.     \TYPE{Compact}\Big(\mathbb{D}(x,r') ,\varepsilon\bigg)
+		\Imply 
+		\TYPE{Compact}\Big(\mathbb{D}(x,r') ,\varepsilon  
+	}
+	\Assume{y}{X}
+	\Assume{[1]}{d(x,y) = r}
+	\Assume{t}{(0,r)}
+	\Assume{s}{(0,r-t)}
+	\Say{\Big( u,v [2]\Big)}{\bd \TYPE{HopfRinov}(X,x,y,t,s)}{\forall  t \in (0,r) \. \forall s \in (0,r-t) \. \exists u,v \in X : d(x,u) = t \And d(y,v) =  s \And d(u,v) = r - s -t }
+	\Conclude{[y.3]}{\THM{TriangleIneq}}{ d(y,u ) \le d(y,v) + d(u,v) = r - t}
+	\Derive{[1]}{\bd^{-1} \FUNC{metricSpace}}{\forall t \in (0,r) \. d\Big( \mathbb{D}(x,t),\mathbb{D}(x,r) \le r-t}
+	\Conclude{[2]}{\THM{CompactHausdorffConvergence}(X)[1]}{\TYPE{Compact}\Big(X,\mathbb{D}(x,r)\Big)}
+	\EndProof
+	\\
+	\Theorem{CompactBlowUp}{\forall X \in \MS \And \TYPE{LocallyComapct} \. \forall K : \TYPE{Compact}(X) \.  \exists U \in \mathcal{U}(K) :  \TYPE{Compact}(\overline{U})}
+	\NoProof
+	\\
+	\Theorem{HopfRinowTHM1}{\forall  X : \TYPE{LocallyCompact} \And \TYPE{HopfRinow} \And \TYPE{Complete} \. \forall x \in X \. \forall r \in \Reals_{++} \. \TYPE{Compact}\Big(\mathbb{D}(x,r)\Big) }
+	\Say{R}{ \Big\{ r \in \Reals_{++} \Big|  \TYPE{Compact}\big( X,\mathbb{D}(x,r) \big)   \Big\}}{?\Reals_{++}}
+	\Say{[1]}{\bd \TYPE{LocallyCompact}(X) \ByConstr R}{R \neq \emptyset}
+	\Assume{t}{\sup R}
+	\Say{[2]}{\THM{HopfRinowLemma}(X,x,t)\bd \TYPE{Supremum}(R) \ByConstr R}{t \in R}
+	\Say{K}{\mathbb{D}(x,t)}{\TYPE{Compact}}
+	\Say{\Big( U,[3]\Big)]}{\THM{CompactBlowUp}\ByConstr R [2] \bd \TYPE{Supremum}(R) }{ \sum U \in \U(K) \. \overline{U} : \TYPE{Compact}}
+	\Say{A}{X \setminus U}{\TYPE{Closed}(X)}
+	\Say{\Big( s, [4] \Big)}{\THM{DishointClosedDistance}\ByConstr A [3]}{ \sum s \in \Reals_{++} \.  d(K,A) > s  }
+	\Say{[5]}{[4]\ByConstr K [3]}{\mathbb{D}(x,t + s) \subset \overline{U}}
+	\Say{[6]}{\THM{CompactClosedSubset}[5]}{\TYPE{Compact}\Big( X, \mathbb{D}(x,t + s) \Big)}
+	\Conclude{[4]}{\bd t \ByConstr R  [6]}{\bot}
+	\DeriveConclude{[2]}{\THM{CompactSubset}E(\bot)}{  R = \Reals_{++} }
+	\EndProof
+}
+\Page{
+	\Theorem{CompleteByCompactDiscs}
+	{
+		\forall X \in \MS \.
+		\forall [0] : \Big(     
+			\forall  x \in X \.
+			\forall  r \in \Reals_{++} \. 
+			\forall  \TYPE{Compact}\Big( X ,\mathbb{D}(x,r) \Big) \.	
+		\Big) \.
+		\TYPE{Complete}(X)		
+	}
+	\Assume{\F}{\TYPE{CauchyFilterBase}(X)}
+	\Assume{F}{\F}
+	\Assume{[1]}{\diam F < \infty}
+	\Say{\delta}{\diam F}{\Reals_{++}}
+	\Say{\mathcal{G}}{\{ G \in \F  | G \subset  \}}{\TYPE{CauchyFilterBase}(X)}
+	\Say{x}{\bd \TYPE{NonEmpty}(F)}{F}
+	\Say{[2]}{[0](x,\delta)}{\THM{Compact}\Big(X,\mathbb{D}(x,r)\Big)}
+	\Say{[3]}{\THM{CompactIsComplete}[2]}{\THM{Complete}\Big(X,\mathbb{D}(x,r)\Big)}
+	\Conclude{[F.*]}{\bd \TYPE{Complete}[3](\mathcal{G})}{\TYPE{ConvergingFilterBase}\Big(X,\mathcal{G}\Big)}
+	\DeriveConclude{[\F.*]}{\bd\TYPE{CauchyFilterBase}\bd^{-1}\TYPE{ConcvergingFilterBase}}
+	{
+		\TYPE{ConvergingFilterBase}(X,\F)
+	}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{Complete}}{\TYPE{Complete}(X)}
+	\EndProof
+	\\
+	\Theorem{MidpointTHM}{
+		\forall X : \TYPE{Complete} \And \TYPE{LocallyCompat} \And \TYPE{HopfRinow} \. 
+		\forall x,y \in X \.
+		\exists z \in X : \NewLine
+		d(x,z) = d(z,y) = \frac{1}{2} d(x,y)
+	}
+	\Assume{[1]}{x \neq y}
+	\Say{\delta}{d(x,y)}{\Reals_{++}}
+	\Assume{t}{(0,\delta)}
+	\Say{\Big(a,b,[2]\Big)}{\bd \TYPE{HopfRinow}\bd \FUNC{HausdorffDistance}  }
+	{
+		\NewLine
+		\sum a : \Nat \to \mathbb{D}\left(x,  \frac{\delta-t}{2} \right) \. 
+		\sum b : \Nat \to \mathbb{D}\left(x,  \frac{\delta-t}{2} \right) \. \NewLine \.
+		\lim_{n \to \infty} d(a_n,b_n) = t \And
+		\lim_{n \to \infty} d(a_n,x) = \frac{\delta - t}{2} \And
+		\lim_{n \to \infty} d(b_n,y) = \frac{\delta - t}{2} 
+	}
+	\Say{[3]}{\THM{HopfRinowTHM1}(X)\THM{CompactIsSequanceCompact}}
+	{
+	 	\TYPE{PartiallyConverging}(X,(a,b))
+	}
+	\Say{\alpha_t}{\FUNC{partial}\;\lim_{n \to \infty} a_n}{ \mathbb{D}\left(x,  \frac{\delta-t}{2} \right)}
+	\Say{\beta_t}{\FUNC{partial}\;\lim_{n \to \infty} b_n}{ \mathbb{D}\left(y,  \frac{\delta-t}{2} \right)}
+	\Conclude{[t.*]}{[2]\ByConstr (\alpha,\beta)}
+	{ 
+		d(x,\alpha_t) =   \frac{\delta - t}{2} \And
+		d(\alpha_t,\beta_t) = t \And
+		d(y,\beta_t) =   \frac{\delta - t}{2}
+	}
+	\Derive{(\alpha,\beta,[2])}{I\Act{\prod}I\Act{\sum}}
+	{
+		\prod t \in (0,\delta) \.
+		\sum \alpha_t \in  \mathbb{D}\left(x,  \delta \right) \.
+		\sum \beta_t \in  \mathbb{D}\left(y,  \delta \right) \. 
+		d(x,\alpha_t) =   \frac{\delta - t}{2} \And
+		d(\alpha_t,\beta_t) = t \And
+		d(y,\beta_t) =   \frac{\delta - t}{2}
+	}
+	\Say{a}{\Lambda n \in \Nat \. \alpha_{\frac{1}{n}}}{\Nat \to \mathbb{D}\left(x,  \delta \right) }
+	\Say{b}{\Lambda n \in \Nat \. \beta_{\frac{1}{n}}}{\Nat \to \mathbb{D}\left(y,  \delta \right) }
+	\Say{[3]}{\THM{HopfRinowTHM1}(X)\THM{CompactIsSequanceCompact}}
+	{
+	 	\TYPE{PartialyConverging}(X,(a,b))
+	}
+	\Say{\alpha_t}{\FUNC{partial}\;\lim_{n \to \infty} a_n}{ X }
+	\Say{\beta_t}{\FUNC{partial}\;\lim_{n \to \infty} b_n}{ X }
+	\Say{[4]}{[2]\ByConstr (\alpha,\beta)}
+	{ 
+		d(x,\alpha) =   \frac{\delta}{2} \And
+		d(\alpha,\beta) = 0 \And
+		d(y,\beta) =   \frac{\delta}{2}
+	}
+	\Conclude{[*]}{\bd^{-1} \MS [4] }{ \alpha = \beta}
+	\EndProof
+}\Page{
+	\Theorem{GeneralizedMidpointTHM}
+	{
+		\forall X : \TYPE{Complete} \And \TYPE{LocallyCompat} \And \TYPE{HopfRinow} \. 
+		\NewLine \. 
+		\forall x,y \in X \.
+		\exists \xi : \Rats_2 \cap [0,1] \to X :
+		\NewLine :
+		\forall a,b \in \Rats_2 \cap [0,1]  \.
+		d\Big(\xi(a),\xi(b)\Big) = |a - b|d(x,y) \And
+		\xi(0) = x \And
+		\xi(1) = y
+	}
+	\NoProof
+	\\
+	\Theorem{HopfRinowTHM2}
+	{
+		\forall X : \TYPE{Complete} \And \TYPE{LocallyCompat} \And \TYPE{HopfRinow} \. 
+		\NewLine \. 
+		\forall x,y \in X \.
+		\exists \gamma : \Omega( x,y\Big) :
+		\NewLine :
+		\forall a,b \in   [0,1]  \.
+		d\Big(\gamma(a),\gamma(b)\Big) = |a - b|d(x,y)
+	}
+	\Say{\delta}{d(x,y)}{\Reals_{++}}
+	\Say{\Big(\xi,[1]\Big)}{\THM{GeneralizedMidpointTHM}(X,x,y)}{ \sum \xi : \Rats_2 \cap [0,1] \to X \.
+		\forall a,b \in \Rats_2 \cap [0,1]  \. \NewLine \.
+		d\Big(\xi(a),\xi(b)\Big) = |a - b|d(x,y) \And
+		\xi(0) = x \And
+		\xi(1) = y}
+	\Say{[2]}{\THM{LipschitzIsUC} }{\TYPE{UniformltContinuous}(\Rats_2,X,\xi)}
+	\Conclude{\Big(\gamma,[3]\Big)}{\THM{UniformlyContinuousExtension}[1,2]}
+	{
+		\sum \gamma : \Omega( x,y\Big) :
+		\NewLine :
+		\forall a,b \in   [0,1]  \.
+		d\Big(\gamma(a),\gamma(b)\Big) = |a - b|d(x,y)
+	}
+	\EndProof
+	\\
+	\Theorem{HopfRinowGeodesic}
+	{
+		\forall X  : \TYPE{Complete} \And \TYPE{LocallyCompat} \And \TYPE{HopfRinow} \. 
+		X : \TYPE{GeodesicSpace}
+	}
+	\NoProof
+}
+\newpage
+\subsection{Lipschitz Connected Spaces}
+\Page{
+	\DeclareType{LipschitzConnected}{ \Reals_{++} \to ?\MS}
+	\DefineNamedType{X}{LipschitzConnected}{\Lambda C \in \Reals_{++} \. 1\hyph\mathrm{Lip}(X) }{
+		\NewLine  \iff
+		\forall x,y \in X \. 
+		\forall \varepsilon \in \Reals_{++} \.  
+		\exists n \in \Nat : \exists q : n \to X \. \NewLine \.
+		q_1 = x \And q_n = y \And  \And
+		\forall i \in (n-1) \. d(q_i,q_j) < \varepsilon \And \sum^n_{i=1} \le Cd(x,y) 
+	}
+	\\
+	\Theorem{OneLipschitzConnectedIsGeodesic}{\forall X : 1\hyph\mathrm{Lip}(X) \. \TYPE{GeodesicSpace}(X)}
+	\NoProof
+	\\
+	\Theorem{GeodesicIsOneLipschitz}
+	{
+		\forall X : \TYPE{GeodesicSpace}(X) \.  1\hyph\mathrm{Lip}(X)
+	}
+	\NoProof 
+	\\
+}
+\newpage
+\section{Metrization}
+\Page{
+	\DeclareType{Metrizable}{?\TOP}
+	\DefineType{X}{Metrizable}{\exists d : \TYPE{Metric}(X) \. (X,d) \cong_{\TOP} X}
+	\\
+	\Theorem{UrysohnMetrization}{\forall X : \TYPE{SecondCountabe} \And \TYPE{T3} \. \TYPE{Metrizable}(X)}
+	\Say{\mathcal{B}}{\bd \TYPE{SecondCountable}(X)}{\TYPE{Countable} \And \TYPE{Base}(X)}
+	\Assume{V,W}{\B}
+	\Assume{[1]}{\overline{V} \subset W}
+	\Conclude{\Big(f_{V,W},[2]\Big)}{\THM{UrysohnLemma}\big(\overline{V},W^\c,[1]\big)}{\sum f_{V,W} : C\Big(X,[0,1]\Big) \. W^\c =f^{-1}\{0\}  \And \overline{V} = f^{-1}\{1\}}
+	\Derive{\Big(f,[1]\Big)}{I\Act{\prod}}{\prod_{V,W \in \B : \overline{V} \subset W} \sum_{f : X \Arrow{\TOP} [0,1]} W^\c = f^{=1}\{0\} \And  \overline{V} = f^{-1}\{1\}  }
+	\Say{\Phi}{\im f}{?C\Big(X,[0,1]\Big)}
+	\Say{[2]}{\ByConstr \Phi \bd \B}{|\Phi| \le \aleph_0}
+	\Say{\phi}{\FUNC{enumerate}(\Phi)}{\Nat \ToBij \Phi}
+	\Say{d}{\Lambda x,y \in X \. \sum^\infty_{n=1} \frac{|\phi_n(x) - \phi_n(y)|}{n!}}{\TYPE{Semimetric}(X)}
+	\Say{[3]}{\ByConstr d [1] \bd \TYPE{T1}(X)}{\TYPE{Metric}(X,d)}
+	\Say{[4]}{\THM{WeakTopologyMetrization}[3]}{ \T(X,d) \subset \T(X) }
+	\Conclude{[*]}{\bd \TYPE{T3}}{\T(X) = \T(X,d)}
+	\EndProof
+	\\
+	\Theorem{SeparableMetrization}{\forall X : \TYPE{Separable} \.  \TYPE{Metrizable}(X) \iff \TYPE{SecondCountable} \And \TYPE{T3}(X)   }
+	\NoProof
+}\Page{
+	\Theorem{ContinuousByLocallyFinite}{
+		\forall X,Y \in \TOP \. 
+		\forall f : X \to Y \. 
+		\forall \A : \TYPE{LocallyFinite} \And \TYPE{Cover}(X) \. \NewLine \.
+		\Big( \forall A \in \A \. f_{|\overline{A}} \in C(\overline{A},X) \Big) \Imply
+		f \in C(X,Y)
+	}
+	\Assume{x}{X}
+	\Say{\A'}{\Big\{ A \in \A |  x \in A  \Big\}}{?\A}
+	\Say{[2]}{\ByConstr \A' \bd  \TYPE{LocallyFinite}(X,\A)}{|\A'| < \infty}
+	\Say{\Big(U,[3]\Big)}{\bd \TYPE{LocallyFinite}(X)}{\sum U \in \U(x) . \forall  A \in \A \. A \cap U \neq \emptyset \Imply A \in \A'  }
+	\Say{[4]}{\bd^{-1} \TYPE{Cover}(X)(\A')}{\A' \neq \emptyset}
+	\Assume{V}{\U\Big(f(x)\Big)}
+	\Assume{A}{\A'}
+	\Say{W}{f_{|A}^{-1}(V)}{?A}
+	\Say{[5]}{\bd \TOP}{W_A  \in \T(A) }
+	\Conclude{\Big(O_A,[A.*] \Big)}{\bd \FUNC{subsetTopology}[5]}{ \sum O_A \in \U_X(x) \. W = O_A \cap A }
+	\Derive{\Big(O, [5] \Big)}{I\Act{\sum} I\Act{\to}}{\sum O : \A \to \U_X(x) \. \forall A \in \A' \. O_A \cap A = f^{-1}_{|A}(V)}
+	\Say{\theta}{\bigcap_{A \in \A'}  O_A \cap U}{\U(x)}
+	\Conclude{[*.1]}{\ByConstr \theta [3][5]}{f(\theta) \subset  U}
+	\DeriveConclude{[*]}{\THM{ContinuityLocalProof}(X,Y,f)}{f \in C(X,Y)}
+	\EndProof
+	\\
+	\DeclareType{CountableSupport}{\prod X \in \SET \. ?(X \to \Reals)}
+	\DefineType{f}{CountableSupport}{\Big|\big\{ x \in X : f(x) \neq 0    \big\}\Big| \le \aleph_0}
+	\\
+	\DeclareType{CountableSupport}{\prod X \in \SET \. ?\TYPE{CountableSupport}(X)}
+	\DefineNamedType{f}{CountableSupport}{f \in L_1(X,\#)}{ \sum_{x \in x} |f(x)| < \infty}
+	\\
+	\DeclareType{ContinuousIndicators}{\prod X \in \TOP \. \prod S :  ??X \. ?\Big(S \to C(X)\Big)}
+	\DefineType{f}{ContinuousIndicators}{\forall A \in S \. f_A(A^\c) = \{0\}}
+	\\
+	\DeclareFunc{NagataSmirnovFunc}{\prod X \in \TOP \. \prod S : ??X \. \TYPE{ContinuousIndicators}(X) \to S \to X \to \Reals}
+	\DefineNamedFunc{NagataSmirnovFunc}{f,A}{\mathrm{NS}_{f,x}(A)}{f_A(x)}
+}\Page{
+	\Theorem{SemimetricBaseTheorem}
+	{
+		\forall X \in \SMS \.
+		\exists \sigma\hyph\TYPE{LocallyFinite} \And \TYPE{Base}(X)
+	}
+	\Say{(\le)}{\THM{WellOrderingTHM}}{\TYPE{WellOrder}(X)}
+	\Say{U}
+	{
+		\Lambda x \in X \. 
+		\Lambda k \in \Nat \. 
+		\Lambda n \in \FUNC{after}(k) \. 
+		\mathbb{B}\left(x, \frac{1}{k} - \frac{1}{n}\right) \setminus \overline{\bigcap_{y < x} \mathbb{D}\Act{y,\frac{1}{k}-\frac{1}{n+1}}}
+         }
+         {
+         	\NewLine :
+         	 X \to \prod_{k=1}^\infty \Big(\FUNC{after}(k) \to \T(X)\Big)
+         }
+         \Say{\A}{\Lambda k \in \Nat \. \Big\{  U(x,k,n) | x \in X,n \in \FUNC{after}(k)   \Big\}}{\Nat \to ?\T(X)}
+         \Assume{k}{\Nat}
+         \Assume{z}{X}
+         \Say{R}{\left\{ x \in X :  z \in \mathbb{B}\Act{x,\frac{1}{k} }  \right\}}{?X}
+         \Say{[1]}{\bd \FUNC{cell} \ByConstr R}{z \in R}
+         \Say{x}{\min R}{R}
+         \Say{\Big( n,[2]\Big)}{\ByConstr R \ByConstr x}{\sum^\infty_{n=k+1} \frac{1}{n} \le \frac{1}{k} - d(x,z) }
+         \Conclude{[k.*]}{\ByConstr x \ByConstr R \ByConstr U [2]}{z \in U(z,k,n)}
+         \Derive{[1]}{I(1)}{\forall k \in \Nat \. \TYPE{Cover}\Big(X, \mathcal{A}_k \Big) }
+         \Say{[2]}{\bd^{-1} \TYPE{Base} \ByConstr \A}{ \TYPE{Base}\left( X, \bigcup^\infty_{1=k}\mathcal{A}_k\right)}
+         \Assume{k}{\Nat}
+         \Assume{n}{\FUNC{after}(k)}
+         \Assume{x,y}{X}
+         \Assume{[3]}{x \neq y}
+         \Conclude{[*]}{\ByConstr U}{d\Big( U(x,k,n),U(z,k,n) \Big) \ge \frac{1}{n(n+1)}}
+         \Derive{[3]}{I(\forall)}{\forall x \in X \. \forall k \in \Nat \. \forall n  : \FUNC{after}(k) \. d\Big( U(x,k,n),U(z,k,n) \Big) \ge \frac{1}{n(n+1)}  }
+         \Say{[4]}{\bd^{-1}\TYPE{LocallyFinite}[3]}{\forall k \in \Nat \. \TYPE{LocallyFinite}(X,\mathcal{k})}
+         \Conclude{[*]}{\bd^{-1}\sigma\hyph\TYPE{LocallyFinite}(X)[4]}{\sigma\hyph\TYPE{LocallyFinite}(X)\left(X, \bigcap^\infty_{k=1} \A_k  \right)}
+         \EndProof
+}\Page{
+	\Theorem{NagataSmirnovLemma}{
+		\forall X \in \TOP \. 
+		\forall S : \TYPE{LocallyFinite}(X) \. 
+		\forall f : \TYPE{ContinuousIndicators}(X,S) \. \NewLine \.
+		\mathrm{NS}_{f} \in C\Big(X, L_1(X,\#) \Big) 
+	}
+	\Assume{(D,x)}{\TYPE{ConvergingNet}(X)}
+	\Say{L}{\lim_{n \to \infty} x_n}{X}
+	\Say{\Big(U,[1]\Big)}{\bd \TYPE{LocallyFinite}(X,S,L)}{\sum U \in \U(L) \.  \Big|\big\{ s \in S : s \cap U \neq \emptyset \big\}\Big| < \infty}
+	\Say{\Big( \delta, [2] \Big)}{\bd \TYPE{ConvergingNet}(X,D,x,U)}{\sum \delta' \in D \. \forall \delta' \in D \. \delta'' \ge \delta \Imply x_{\delta'} \in U }
+	\Say{S'}{\big\{ s \in S : s \cap U \neq \emptyset \big\}}{\TYPE{Finite}(S)}
+	\Say{[3]}{\bd L_1 [1][2]\bd \TYPE{ContinuousIndicators}(X,S,f)\THM{ContinuousSum}(X,S',\ldots) \NewLine \THM{ContinuousConvergence}(X,f_s,D,x)}{
+		\NewLine :
+		\lim_{n \in D}  \Big\| \mathrm{NS}_{f,x_n} - \mathrm{NS}_{f,L} \Big\|_1 =  
+		\lim_{n \in D} \sum_{ s \in S}  \Big| f_s(x_n) - f_s(L)\Big| = 
+		\lim_{n \in D} \sum _{s \in S'}  \Big| f_s(x_n) - f_s(L)\Big| = \NewLine =
+		\sum_{s \in S'} \lim_{n \in D}   \Big| f_s(x_n) - f_s(L)  \Big|  =
+		0
+	}
+	\Conclude{*\ldots]}{\THM{NormConvergence}}{\lim_{n \in D} \mathrm{NS}_{f,x_n} = \mathrm{NS}_{f,L}}
+	\DeriveConclude{[*]}{\THM{ContinuousConvergence}}{\mathrm{NS}_{f} \in C\Big(X, L_1(X,\#) \Big) }
+	\EndProof
+	\\
+	\Theorem{SmirnoffNagataMetrizationTHM}{\forall X : \TYPE{T4} \. \forall \B : \TYPE{Base} \And \sigma\hyph\TYPE{LocallyFinite}(X) \. X : \TYPE{Metrizable}(X)}
+	\Say{\Big(\B',[1]\Big)}{\bd \sigma\hyph\TYPE{LocallyCompact}(X)}{\sum \B' : \Nat \to \TYPE{LocallyFinite}(X) \. \B = \bigcup^\infty_{n=1} \B'}
+	\Assume{m,n}{\Nat}
+	\Assume{V}{\B_n}
+	\Say{A}{\bigcup \{ W \in \B_m : \overline{W} \subset V  \}}{\T(X)}
+	\Say{[2]}{\THM{LocallyFiniteClosure}}{\overline{A} \subset V}
+	\Conclude{\Big(f_V, [3] \Big)}{\THM{UrysohnLemma}(X,\overline{A},V^\c)}{\sum f \in C(X) \. f^{-1}\{1\} = \overline{A} \And f^{-1}\{0\} = V^\c }
+	\Derive{\Big(f_{n,m},[4]\Big)}{I\Act{\sum}}{\sum f_{n,m} : \B_n \to C(X) \. \forall V \in \B_n \. f^{-1}_{n,m,V}\{1\} = \overline{A} \And f^{-1}_{n,m,V}\{0\} = V^\c }
+	\Say{[2]}{\bd^{-1} \TYPE{ContinuousIndicators}}{\TYPE{ContinuousIndicators}(X,\B_n,f_{n,m})}
+	\Conclude{h_{n,m}}{\mathrm{NS}_{f_{n,m}}}{X \Arrow{\TOP} L_1(\B_n,\#)}
+	\Derive{h}{I(\to)}{\Nat \times \Nat \to X \Arrow{\TOP} L_1(\B_n,\#)}
+	\Say{H}{\im h}{?C\Big(X,L_1(\B_n,\#)\Big)}
+	\Say{[2]}{\THM{ImageCardinality}}{|H| \le \aleph_0}
+	\Conclude{f}{\FUNC{enumerate}(H)}{\Nat \to C\Big(X,L_1(\B_n,\#)\ }
+	\Say{[4]}{\THM{WeakTopologyMetrization}[3]}{ \T(X,d) \subset \T(X) }
+	\Say{d}{\Lambda x,y \in X \.  \sum^\infty_{n=1} \frac{\|  f_n(x) - f_n(y) \|_1}{n!}}{\TYPE{Metric}(X)}
+	\NoProof
+}
+\newpage
+\section{Uniform Spaces}
+\subsection{Uniform Topology}
+\Page{
+	\DeclareType{Connector}{\prod_{ X \in \SET} ?(X \to 2^X)}
+	\DefineType{U}{Connector}{\forall x \in X \. x \in U_x }
+	\\
+	\DeclareFunc{connectorSet}{\prod_{X \in \SET}  \TYPE{Connector}(X) \to ?(X \times X)}
+	\DefineNamedFunc{connectorSet}{U}{U}{\{  (x,y)  | x \in X, y \in U(x)  \}}
+	\\
+	\DeclareFunc{swap}{\prod_{X \in \SET}   ?(X \times X) \to ?(X \times X)}
+	\DefineNamedFunc{swap}{U}{U^{-1}}{\{  (y,x)  | (x,y) \in U  \}}
+	\\
+	\DeclareFunc{connectorComposition}{\prod X \in \SET \. \TYPE{Connector}(X) \times \TYPE{Connector}(X)}
+	\DefineNamedFunc{connectorComposition}{A,B}{AB = B \circ A}{\Lambda x \in X \. \bigcup_{a \in A(x)} B(a)}
+	\\
+	\DeclareType{Uniformity}{\prod X \in \SET \. \TYPE{Filter}(X \times X)}
+	\DefineType{\U}{Uniformity}{ \forall U \in \U \. \Delta \; X \subset U \And U^{-1} \in \U \And \exists V \in \U : VV \subset U }
+	\\
+	\Conclude{\TYPE{UniformSpace}}{\sum_{ X \in \SET}   \TYPE{Unifomity}(X) }{\Type}
+	\\
+	\DeclareType{BaseOfUniformity}{\prod X \in \SET \. \TYPE{FilterBase}(X \times X)}
+	\DefineType{\B}{BaseOfUniformity}{ \forall U \in \B \. \Delta \; X \subset U \And \exists V \in \U : U^{-1} \subset V \And \exists V \in \U :VV \subset U }
+	\\
+	\Theorem{UniformityGeneration}{\forall X \in \SET \. \forall \B : \TYPE{BaseOfUniformity}(X) \. \TYPE{Uniformity}(X,\F\;\B)}
+	\NoProof
+	\\
+	\DeclareType{ConnectorOfSpace}{\prod (X,\U) : \TYPE{UniformSpace} \. ?(X \to 2^X)}
+	\DefineNamedType{U}{ConnectorOfSpace}{\TYPE{Connector}\Big((X,\U),U\Big)}{U \in \U}
+	\\
+	\DeclareFunc{metricUniformity}{\prod_{X \in \SET} (\TYPE{Metric} \to \TYPE{Uniformity})(X)}
+	\DefineNamedFunc{metricUniformity}{d}{\U_d}{\Big\{  \big\{  (x,y) \in X \times X :  d(x,y) < r  \big\} \Big| r \in \Reals_{++} \Big\}}
+	\\
+	\DeclareFunc{metricAsUniform}{\SMS \to \TYPE{UniformSpace}}
+	\DefineNamedFunc{metricAsUniform}{X,d}{(X,d)}{ (X,\U_d)}
+}\Page{
+	\DeclareFunc{uniformTopology}{\prod_{X \in \SET}(\TYPE{Uniformity} \to \TYPE{Topology})(X)}
+	\DefineNamedFunc{uniformTopology}{\U}{\T_\U}{\Big\langle \big\{  U(x) \big| U : \TYPE{SpaceConnector}(X,\U)    \big\} \big\rangle_{\TOP}}
+	\\
+	\DeclareFunc{uniformAsTopology}{\SMS \to \TYPE{UniformSpace}}
+	\DefineNamedFunc{uniformAsTopology}{X,\U}{(X,\U)}{ (X,\T_\U)}
+	\\
+	\DeclareFunc{uniformity}{\prod (X,\U) : \TYPE{UniformSpace} \. \TYPE{Uniformity}(X)}
+	\DefineNamedFunc{uniformity}{}{\U_{(X,\U)}}{\U}
+	\\
+	\DeclareType{Symmetric}{\prod_{X \in \SET} ??(X \times X)}
+	\DefineNamedType{A}{Symmetric}{A = A^{-1}}
+	\\
+	\DeclareType{UniformityGeneratingBase}{\prod_{X \in \SET} \TYPE{Uniformity}(X) \to ?\TYPE{BaseOfUniformity}(X)}
+	\DefineNamedType{\B}{UniformityGeneratingBase}{\Lambda \U : \TYPE{Uniformity}(X) \. \F \B = \U}
+	\\
+	\Theorem{SymmetricConnectorsBase}{\forall X : \TYPE{UniformSpace} \. \exists \B : \TYPE{UniformityGeneratingBase}(X) : \NewLine : \forall U \in \B \. \TYPE{Symmetric}(X,U)}
+	\NoProof
+	\\
+	\DeclareFunc{uniformityElementAsConnector}{\prod X : \TYPE{UniformSpace} \. \U_X \to \TYPE{Connector}(X)}
+	\DefineNamedFunc{uniformityElementAsConnector}{U}{U}{\Lambda x \in X \.   \{  y \in X : (x,y) \in U \}}
+	\\
+	\Theorem{UniformSpaceClosure}{\forall X : \TYPE{UniformSpace} \. \forall A \subset X \. \overline{A} = \bigcap_{U \in \U_X} \bigcup_{a \in A} U(a)}
+	\NoProof
+}\Page{
+	\Theorem{UniformSpaceIsRegular}{\forall X : \TYPE{UniformSpace} \. \TYPE{Regular}(X)}
+	\Assume{A}{\TYPE{Closed}(X)}
+	\Assume{x}{X}
+	\Assume{[1]}{x \not \in X}
+	\Say{\Big( U, [2] \Big)}{\bd \FUNC{closure}(X)\THM{UniformSpaceClosure}(X,A) \bd \TYPE{intersection}(X)}{\sum U \in \U \. x \not \in \bigcup_{a \in A} U(a)}
+	\Say{\Big(V,[3]\Big)}{\bd \TYPE{Uniformity}(\U)(U)}{ \sum V \in \U \. V \circ V \subset U \And }
+	\Say{[5]}{\THM{UniformSpaceClosure}\left(X, \bigcup_{a \in A} V(a) \right)}{   \overline{\bigcup_{a \in A} V(a)} = \bigcap_{U \in \U} \bigcup_{v \in \bigcup_{a \in A} V(a)}  U(v) }
+	\Assume{[6]}{x \in  \overline{\bigcup_{a \in A} V(a)} }
+	\Say{[7]}{\bd \TYPE{Intersection}[6][5]}{  x \in \bigcup_{v \in \bigcup_{a \in A} V(a)}  V(v)   }
+	\Say{\Big(v,[8]\Big)}{\bd \TYPE{Connector}[7]}{ \sum v \in \bigcup_{a \in A} V(a) \. (v,x) \in  V}
+	\Say{\Big(a,[9])}{\bd \TYPE{Connector}[8]}{\sum a \in A \. (a,v) \in V}
+	\Say{[10]}{[3,8,9]}{(a,x) \in U}
+	\Say{[11]}{\bd \TYPE{Union}(U)\bd \TYPE{Connector}[10]}{  x \in \bigcup_{a \in A} U(a)}
+	\Conclude{[6.*]}{[11][2]}{\bot}
+	\Derive{[6]}{\bd \TOP(X) \bd \FUNC{uniformAsTopological}[2]}{ x \not \in \overline{\bigcup_{a \in A} V(a)}}                  
+	\Conclude{[A.*]}{\bd \FUNC{uniformAsTopological}(X)}{\bigcup_{a \in A} V(a) \in \T(X)}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{Regular}}{}
+	\EndProof
+	\\
+	\Theorem{UniformSpaceT3Criterion}{\forall X : \TYPE{UniformSpace} \. \bigcap \U_X = \Delta \; X \iff \TYPE{T3}(X) }
+	\NoProof
+}\Page{
+	\Theorem{ClosedConnectorTHM}{\forall X : \TYPE{UniformSpace} \.  \forall U \in \U_X \.  VUV =  \bigcap \Big\{ VUV \Big| V : \TYPE{Symmetric}(\U)    \Big\} }
+	\Assume{(x,y)}{\TYPE{In}\;\overline{U}^\c}
+	\Say{\Big( O, [1] \Big)}{\THM{ClosureAltDef}(U)(x,y)}{O \in \U(x,y) \. O \cap U = \emptyset}
+	\Say{\Big(V,[2] \Big)}{\THM{UniformSymmetricBase}(X)\THM{ProductTopologyByBase}}{\sum V : \TYPE{Symmetric}(\U_X) \.  V(x) \times V(y)  \subset  O }
+	\Assume{[3]}{(x,y) \in   VUV }
+	\Say{\Big(a,b,[4] \Big)}{\bd \FUNC{connectorComposition}(V,U,V)[3]}{\sum (a,b) \in U \. (x,a),(b,y) \in V }
+	\Say{[5]}{\bd \TYPE{Symmetric}(V)[4][2]}{(a,b) \in U \cap O}
+	\Conclude{[3.*]}{[6][1]}{\bot}
+	\DeriveConclude{[1.*]}{E(\bot)}{(x,y) \in (VUV)^\c}
+	\Derive{[1]}{\bd^{-1}\TYPE{Subset}}{ \overline{U}^\c \subset \bigcap_{V} (VUV)^\c }
+	\Say{[2]}{\THM{ComplementSubset}}{ \bigcap_{V} VUV \subset \overline{U} }
+	\Assume{(x,y)}{\TYPE{In}(\overline{U})}
+	\Say{[3]}{\THM{ClosureAltDef}\Big(U,(x,y)\Big)}{\forall V \in \U(x,y) \.  V \cap U \neq \emptyset}
+	\Assume{V}{\TYPE{Symmetric}(\U_X)}
+	\Say{[4]}{\bd \FUNC{productTopology}(X,X)[1](V(x) \times V(y))}{V(x) \times V(y) \cap U \neq \emptyset}
+	\Say{\Big( (a,b), [5]  \Big)}{\bd \TYPE{Connector}[4]}{\sum (a,b) \in U \. (x,a) \in V(x) \And (y,b) \in V(y) }
+	\Conclude{[V.*]}{[1]\bd \FUNC{connectorComposition}\bd \TYPE{Symmetric}(\U_X)}{(x,y) \in VUV}
+	\DeriveConclude{[(x,y).*]}{\bd^{-1} \TYPE{Intersection}}{(x,y) \in \bigcap_V VUV}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{SetEq}}{\overline{U} =\bigcap_V VUV}
+	\EndProof
+	\\
+	\Theorem{ClosedConnectorBase}{\forall X : \TYPE{UniformSpace} \. \exists \B : \TYPE{BaseOfUniformity}(X) : \forall V \in \B \. \NewLine \. \Big(\TYPE{Symmetric}(X) \And \TYPE{Closed}(X \times X)\Big)(V)  }
+	\NoProof
+}
+\newpage
+\subsection{Uniform Category} 
+\Page{
+	\DeclareType{UniformContinuity}{\prod X,Y \in \TOP \.  ?(X \Arrow{\TOP} Y)}
+	\DefineNamedType{f}{UniformContinuity}{f \in \mathrm{UC}(X)}{\forall V \in \U_Y \. \exists U \in \U_X :  (f\times f)(U) \subset V}
+	\\
+	\DeclareFunc{uniformCategory}{\CAT}
+	\DefineNamedFunc{uniformCategory}{}{\UNI}{\Big( \TYPE{UniformSpace} , \mathrm{UC}, \circ, \id  \Big)}
+	\\
+	\DeclareFunc{uniformSeparatedCategory}{\CAT}
+	\DefineNamedFunc{uniformCategory}{}{\UNIS}{\Big( \TYPE{UniformSpace} \And \TYPE{T3} , \mathrm{UC}, \circ, \id  \Big)}
+	\\
+	\DeclareType{UniformCover}{\prod_{X \in \UNI} ?\TYPE{Cover}(X)}
+	\DefineType{\A}{UniformCover}{\exists U \in \U_X : \forall  x \in X \. \exists A \in \A  : U(x) \subset A }
+	\\
+	\Theorem{UniformContinuityByUniformCover}{
+		\forall X,Y \in \UNI \. 
+		\forall f : X \Arrow{\TOP} Y \. 
+		f : X \Arrow{\UNI} Y \iff \NewLine \iff \forall V \in \U_Y \. 
+		\TYPE{UniformCover}\Big( X, \big\{ f^{-1}\; V(x)  \big| x \in X \big\} \Big) 
+	}
+	\NoProof
+	\\
+	\Theorem{EveryOpenCoverIsUniformForACompactSpace}{
+		\forall X \in \UNI \. 
+		\TYPE{Compact}(X) \Imply \NewLine \Imply
+		\forall \mathcal{O} : \TYPE{OpenCover}(X) \.
+		\TYPE{UniformCover}(X,\mathcal{O})
+	}
+	\Assume{x}{\TYPE{In}\;X}
+	\Say{\Big( O_x, [1] \Big)}{\bd \TYPE{Cover}(O,X)(x)}{\sum O_x \in \mathcal{O} \. x \in O_x}
+	\Say{\Big(U_x,[2]\Big)}{\bd \FUNC{connectorTopology}(X)(O_x)}{U_x \in \U_X\.  U_x(x) \subset O_x}
+	\Conclude{\Big( V_x,[x.*] \Big)}{\THM{UniformSymmetricBase}}{\sum V : \TYPE{Symmetric}(\U_X) \. V_x \circ V_x \subset U_x}
+	\Derive{\Big(O,U,V,[1]\Big)}{I\Act{\prod}}{ \sum  (O,U,V) : X \to \mathcal{O}\times \U_X \times \TYPE{Symmetric}(\U_X) \. \forall x \in X \.   U_x(x) \subset O_x \And VV \subset U }
+	\Say{\Big(n ,x,[2] \Big)}{\bd \TYPE{Compact}(X)\big(V_{\bullet}(\bullet)\big)}{\sum_{n=1}^\infty\. \sum_{x : n \to X} \TYPE{OpenCover}(X,V_x(x))  }
+	\Say{V'}{\bigcup^n_{i=1} V_{x_i}}{\U_X }
+	\Assume{y}{X}
+	\Say{\Big(i,[3]\Big)}{\bd \TYPE{OpenCover}(X,U_x(x))}{\sum_{i=1}^n y \in  V_{x_i}(x_i)}
+	\Conclude{[y.*]}{[3]\bd^{-1}\TYPE{connectorComposition}(V,V')\THM{IntersectionSubset}(V)}{V'(y) \subset V_{x_i}V'(x_i) \subset V_{x_i}V_{x_i}(x_i) \subset U_{x_i}(x_i) \subset O_{x_i}}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{UniformCover}}{\TYPE{UniformCover}(X,O)}
+	\EndProof
+}
+\Page{
+\Theorem{UniforlmyContinuousByCompact}{\forall X,Y \in \UNI \. \forall f : X \Arrow{\TOP} Y \.  \TYPE{Comcpact}(X) \Imply X \Arrow{\UNI} Y}
+\NoProof
+\\
+\Theorem{CompactsUniformlyIsomorphic}{\forall X \in \SET \. \forall \U,\mathcal{V} : \TYPE{Uniformity}(X) \. \TYPE{Compact}(X,\U) \And \TYPE{Compact}(X,\mathcal{V}) \Imply \NewLine \Imply (X,\U) \cong_{\UNI} (X,\mathcal{V})}
+\NoProof
+}
+\newpage
+\subsection{Complete Uniform Spaces}
+\Page{
+	\DeclareType{CauchyFilterbase}{\prod_{X \in \UNI} \. ?\TYPE{Filterbase} }
+	\DefineType{\F}{CauchyFilterbase}{\forall U \in \U_X \. \exists A \in \F : \exists x \in X : A \times A \subset U  }
+	\\
+	\Theorem{ConvergingFilterbaseIsCaouchy}{\forall X \in \UNI \. \forall \F : \TYPE{ConvergingFilterbase}(X) \. \NewLine \. \TYPE{CauchyFilterbase}(X,\F)}
+	\NoProof
+	\\
+	\Theorem{UCPreservesCauchyFilterbase}{\forall X,Y \in \UNI \. \forall  \F : \TYPE{CauchyFilterbase}(X) \. \forall f : X \Arrow{\UNI} Y \. \NewLine f\; \F : \TYPE{CauchyFilterbas}(Y)  }
+	\NoProof
+	\\
+	\DeclareType{Complete}{  ?\UNI}
+	\DefineType{X}{Complete}{ \forall \F : \TYPE{CauchyFilterbase}(X) \.  \TYPE{ConvergingFilterbase}(X,\F)    }
+	\\
+	\DeclareType{CauchySequance}{  \prod_{X \in \UNI} ?(\Nat \to X)}
+	\DefineType{x}{CauchySequance}{ \TYPE{CauchyFilterbase}\bigg( X,\Big\{  \big\{  x_{n+m} \big| n \in \Nat  \big\} \Big| m \in \Nat   \Big\} \bigg)    }
+	\\
+	\DeclareType{SequentiallyComplete}{  ?\UNI}
+	\DefineType{X}{SequentiallyComplete}{ \forall x : \TYPE{CauchySequence}(X) \.  \TYPE{Convergent}(X,x)    }
+	\\
+	\DeclareType{UniformEmbedding}{\prod_{X,Y \in \UNI} ?(X \Arrow{\UNI} Y)}
+	\DefineType{f}{UnifrormEmbedding}{f_{|f(X) :} X \ToIso{\UNI} Y}
+	\\
+	\Theorem{UniformImagePreservesCompletenes}{
+		\forall X,Y \in \UNI \. 
+		\forall f : X \Arrow{\UNI} Y \. \NewLine \.
+		\TYPE{Complete}(X) \And \TYPE{UniformEmbedding}(X,Y,f)  
+	}
+	\NoProof
+}\Page{
+	\Theorem{WeakerIsComplete}{\forall X \in \SET \. \forall \U,\mathcal{V} : \TYPE{Uniformity}(X) \. \U \subset \mathcal{V}  \And (X,\U) \cong_{\TOP} (X,\mathcal{V}) \Imply \NewLine 
+		\Imply \Big( \TYPE{Complete}(X,\U) \Imply \TYPE{Complete}(X,\mathcal{V}) \Big) }
+	\NoProof
+	\\
+	\Theorem{WeakerIsSequentiallyComplete}{\forall X \in \SET \. \forall \U,\mathcal{V} : \TYPE{Uniformity}(X) \. \U \subset \mathcal{V} \And (X,\U) \cong_{\TOP} (X,\mathcal{V}) \Imply 
+		\NewLine \Imply \Big( \TYPE{SequantiallyComplete}(X,\U) \Imply \TYPE{SequentiallyComplete}(X,\mathcal{V}) \Big) }
+	\NoProof
+	\\
+	\Theorem{CauchyCluster}{\forall X \in \UNI \. \forall \F : \TYPE{CauchyClasterbase} \. \forall x : \TYPE{Cluster}(X,\mathcal{F}) \.  x = \lim \mathcal{F}}
+	\NoProof
+	\\
+	\Theorem{UniformExtension}{\forall X,Y \in \UNIS \. \forall A : \TYPE{Dense}(X) \. \forall f : A \Arrow{\UNI} Y \. \TYPE{Complete}(Y) \Imply \NewLine \Imply \exists F : X \Arrow{\UNI} Y \. F_{|A} = f }
+	\Assume{x}{X}
+	\Say{\Big((D,u),[1]\Big)}{\THM{DenseLimit}(X,A,x)}{\sum (D,u) : \TYPE{Net}(A) \. \lim_{n \in D} u_n = X }
+	\Say{[2]}{\THM{ConvengNetIsConvergingFilterbase}}{\TYPE{ConvergingFilterBase}\Big(A ,  \F(D,u)  \Big)}
+	\Say{[3]}{\THM{ConvergingIsCauchy}[2]}{\TYPE{CauchyFilterBase}\Big(A, \F(D,u) \Big)}
+	\Say{[4]}{\THM{UCPreservesCauchy}(A,Y,f)[3]}{\TYPE{CauchyFilterBase}\Big(Y, f \; \F(D,U)\Big)}
+	\Say{[5]}{\bd^{-1}\TYPE{Complete}(Y)[4]}{\TYPE{ConvergingFilterBase}\Big(Y, f \; \F(D,U) \Big)}
+	\Conclude{F(x)}{\lim f \; \F(D,U)}{Y}
+	\Derive{F}{I(\to)}{X \to Y}
+	\Say{[*.1]}{\THM{ContinuousPreserveLimits}(A,Y,f)\ByConstr F}{F_{|A} = f}
+	\Assume{V}{\U_Y}
+	\Say{\Big(V',[2])  }{\THM{ClosedSymmetricUniformityBase}}{\sum V' \in \U_Y \. \TYPE{Closed}(V',Y \times T) \And V' \subset V}
+	\Say{\Big(U', [3] \Big)}{\bd \mathrm{UC}(A,Y)(f)}{\sum U' \in \U_A \. (f \times f)(U') \subset V' }
+	\Say{\Big(U,[4]\Big)}{\bd \TYPE{UniformSubset}(X,A)(U')}{\sum  U \in \U_X \. U' = (A \times A) \cap U}
+	\Conclude{[V.*]}{ \THM{ClosedContainsLimits}(Y,V') F [4][3][2]}{ (F \times F)( U) \subset \overline{(f \times f) (U')} \subset V' \subset V  }
+	\DeriveConclude{[*.2]}{\bd^{-1} \mathrm{UC}}{F \in \mathrm{UC}(X,Y)}
+	\EndProof
+}
+\Page{
+	\DeclareType{TotallyBounded}{\prod_{X \in \UNI} ??X}
+	\DefineType{A}{TotallyBounded}{\forall U \in \mathcal{U} \. \exists  F : \TYPE{FiniteCover}(X,A) : \forall S \in F \. \exists x \in X : S \subset U(x)}
+	\\
+	\DeclareType{TotallyBoundedAltDef1}{\forall {X \in \UNI}  \. \forall A \subset X \. \TYPE{TotallyBounded}(X) \iff \NewLine \iff  \forall U \in \mathcal{U} \. \exists n \in \Nat : \exists x : n \to X : A \subset \bigcup^n_{i=1} U(x_i)}
+	\NoProof
+	\\
+	\DeclareType{TotallyBoundedAltDef2}{\forall {X \in \UNI}  \. \forall A \subset X \. \TYPE{TotallyBounded}(X) \iff \NewLine \iff  \forall U \in \mathcal{U} \. \exists n \in \Nat : \exists a : n \to A : A \subset \bigcup^n_{i=1} U(a_i)}
+	\NoProof
+	\\
+	\Theorem{TotallyBoundedByUltrafilters}{\forall {X \in \UNI} \. \TYPE{TotallyBounded}(X) \iff \NewLine \iff \forall \F : \TYPE{Ultrafilter}(X) \. \TYPE{CauchyFilter}(X)}
+	\NoProof
+	\\
+	\Theorem{CompactIffCompleteAndTotallyBounded}{\forall X \in \UNI \. \TYPE{Compact}(X) \iff \TYPE{Complete}\And\TYPE{TotallyBounded}(X) }
+	\NoProof
+}
+\newpage
+\subsection{Uniformization}
+\subsection{Metrization of a Uniform Space}
+\subsection{Completion of a Uniform Space}
+\newpage
+\section{Metric Dimension}
+\subsection{Covering Dimension}
+\Page{
+	\DeclareType{CoveringDimensionLE}{\prod_{X \in \MS} ?\Big(\TYPE{Compact}(X) \times \Int_{+} \Big)}
+	\DefineNamedType{(A,n)}{CoveringDimensionLE}{\dim A \le  n }{
+		\forall r \in \Reals_{++} \. 
+		\exists k \in \Nat : \exists x : k \to X : \NewLine : 
+		A \subset \bigcup^k_{i=1}  \mathbb{B}(x_i,r) \And  
+		\forall a \in A  \. \Big|   \big\{ i \in K :  a \in \mathbb{B}(x_i,r)  \big\} \Big| \le n + 1                                                                                      
+	}
+	\\
+	\DeclareType{CoveringDimensionGreater}{\prod_{X \in \MS} ?\Big(\TYPE{Compact}(X) \times \Int_+ \Big)}
+	\DefineNamedType{(A,n)}{CoveringDimensionGreater}{\dim A >  n }{!(\dim A \le n)}
+	\\
+	\DeclareType{FiniteDimensionalCompact}{\prod_{X \in \MS} ?\TYPE{Compact}(X)}
+	\DefineType{K}{FiniteDimensionalCompact}{\exists n \in \Int_+ \. \dim X \le n }
+	\\
+	\DeclareFunc{coveringDimension}{\prod_{X \in \MS} \TYPE{FiniteDimensionalCompact} \to \Int_+}
+	\DefineNamedFunc{coveringDimension}{K}{\dim K}{\min \{ n \in \Int_{+} : \dim X \le n  \}}
+}\Page{
+	\Theorem{IntervalDimension}{ \dim [0,1] = 1}
+	\Assume{[1]}{\dim [0,1] \le 1}
+	\Say{\Big(k,x,[2],[3]\Big)}{\bd \TYPE{CoveringDimensionLE}[1]\Act{\frac{1}{3}}}{
+		\sum k \in \Nat \. 
+		\sum x : k \to [0,1] \. \NewLine \.
+		[0,1] \subset \bigcup^k_{i=1} \mathbb{B}\Act{x_i,\frac{1}{3}} \And
+		\forall a \in [0,1] \.  \Big|   \big\{ i \in k :  a \in \mathbb{B}(x_i,r)  \big\} \Big| \le 1 
+	}
+	\Say{[4]}{\bd^{-1} \TYPE{DisjointUnion}}{[0,1] = \bigsqcup^k_{i=1}\mathbb{B}\Act{x_i,\frac{1}{3}} }
+	\Assume{[5]}{k=1}
+	\Say{[6]}{\bd \diam [0,1] \THM{BallDiam}\Act{x_i,\frac{1}{3}} }{1 = \diam [0,1] = \diam \mathbb{B}\Act{x_i,\frac{1}{3}} < \frac{2}{3} }
+	\Conclude{[5.*]}{\THM{OneIsNotZero}[6]}{\bot}
+	\Derive{[5]}{E(\bot) \THM{UnitIsMinimal}(\Nat)}{k > 1}
+	\Say{[6]}{\THM{DisjointOpenUnionDisconnected}}{\TYPE{Disconnected}[0,1]}
+	\Conclude{[1.*]}{\THM{IntervalIsConnected}[6]}{\bot}
+	\Derive{[1]}{E(\bot)}{\dim [0,1] > 0}
+	\Assume{r}{\Reals_{++}}
+	\Say{[2]}{\bd \TYPE{Archimedean}(\Reals)}{  \{  N \in \Nat : Nr > 1 \} \neq \emptyset   }
+	\Say{k}{\min  \{  N \in \Nat : Nr > 1 \}  }{  \Nat }
+	\Say{x}{\Lambda i \in k \. (i-1)r }{k \to [0,1]}
+	\Assume{t}{[0,1]}
+	\Say{[2]}{\bd \TYPE{Archimedean}(\Reals)}{  \{  N \in \Nat : Nr > t \} \neq \emptyset   }
+	\Say{i}{\min\{  N \in \Nat : Nr > t \} \neq \emptyset}{\Nat}
+	\Say{[3]}{\ByConstr i \bd t}{i \le k}
+	\Say{[t.*.1]}{  \ByConstr i \ByConstr x }{     t \in [ (i-1)r, ir) \subset \mathbb{B}(x_i,r) }
+	\Assume{j,l}{k}
+	\Assume{[4]}{t  \in \mathbb{B}(x_j,r) \cap \mathbb{B}(x_l,r)}
+	\Say{[5]}{\ByConstr^{-1} x}{  r|l - j| \THM{TriangleIneq}\Big([0,1],x_j,x_l,t\Big) \le | x_j - x_l| \le  | x_l - t| + |t - x_i| < 2r  }
+	\Conclude{[(j,l).*]}{\frac{[5]}{r}}{|l-j| \le 1}
+	\Derive{[4]}{I(\forall)}{\forall j,l \in k \.t  \in \mathbb{B}(x_j,r) \cap \mathbb{B}(x_l,r) \Imply |l-j| \le 1 }
+	\Conclude{[t.*.2]}{\bd \Nat [2]}{\Big|   \big\{ t \in k :  a \in \mathbb{B}(x_i,r)  \big\} \Big| \le 2}
+	\Derive{[2]}{\bd^{-1} \TYPE{CoveringDimensionLE}}{\dim [0,1] \le 1}
+	\Conclude{[*]}{\bd \Nat [1][2]}{\dim [0,1] = 1}
+	\EndProof	
+}
+\newpage
+\subsection{Embedding Theorem}
+\Page{
+	\DeclareType{MengerMap}{\prod X, Y \in \MS \. \Reals \to ?C(X,Y)}
+	\DefineType{f}{MengerMap}{\Lambda \varepsilon \in \Reals_{++} \.  \forall a,b \in X \. f(a) = f(b) \Imply d(a,b) < \varepsilon}
+	\\
+	\Theorem{MengerMapsIsOpen}{\forall K : \MS \And \TYPE{Compact} \. \forall n \in \Nat \.   \forall \varepsilon \in \Reals_{++} \. \TYPE{MengerMap}(X,\Reals^n,\varepsilon) \in \T\Big( C( X,\Reals^n) \Big)}
+	\Say{[1]}{\THM{CompactProduct}(K,K)}{\TYPE{Compact}(K \times K)}
+	\Assume{f}{\TYPE{MengerMap}(X,\Reals^n,\varepsilon)}
+	\Say{A}{ \Big(d\Big)^{-1}[\varepsilon,+\infty) }{\TYPE{Closed}(K \times K)}
+	\Say{[2]}{\THM{ClosedCompactSubset}}{\TYPE{Compact}(K \times K, A)}
+	\Say{\delta}{\inf_{(a,b) \in A} \| f(a) - f(b) \| }{\Reals_{++}}
+	\Assume{g}{\mathbb{B}\Act{f,\frac{\delta}{2}}}
+	\Assume{x,y}{K}
+	\Assume{[4]}{g(x) = g(y)}
+	\Say{[5]}{\THM{TriangleIneq}(f(x),g(x),g(y),g(y))[4]\bd g }{ \NewLine :|f(x) - f(y)| \le |f(x) -g(x)| + |g(x) - g(y)|  + | g(y) - f(y) | < \frac{\delta}{2} + \frac{\delta}{2} = \delta }
+	\Conclude{[(x,y).*]}{\ByConstr \delta  \ByConstr A [5]}{ d(x,y) < \varepsilon }
+	\DeriveConclude{[g.*]}{\bd^{-1} \TYPE{MengerMap}}{\TYPE{MengerMap}(X,\Reals^n, \varepsilon, g )}
+	\DeriveConclude{[f.*]}{I(\exists)\bd^{-1}\TYPE{Subset}}{\exists U \in \U(f) \. U \subset \TYPE{MengerMap}(X,\Reals^n, \varepsilon) }
+	\DeriveConclude{[*]}{\THM{OpenByCover}}{\TYPE{Open} \; C(X,\Reals^n) \;   \TYPE{MengerMap}(X,\Reals^n, \varepsilon) }
+	\EndProof
+	\\
+	\DeclareType{CoveringSequance}{\prod K : \TYPE{FiniteDimensionalCompact}(X) \. \Reals_{++} \to ?\sum^\infty_{n=1} n \to X  }
+	\DefineType{x}{CoveringSequance}
+	{
+		\Lambda r \in \Reals_{++} \. 
+		X \subset \bigcup^k_{i=1}  \mathbb{B}(x_i,r) \And  
+		\forall X \in A  \. \Big|   \big\{ i \in K :  a \in \mathbb{B}(x_i,r)  \big\} \Big| \le n + 1   
+	}
+	\\
+	\DeclareType{PontryaginTwinSequance}{
+		\prod X : \TYPE{Compact} \And \MS \.  
+		\prod r \in \Reals_{++} \.  
+		\prod  (n,x) : \TYPE{CoveringSequance}(X,r) \. \NewLine \.
+		(X \Arrow{\TOP} \Reals^{2*\dim K + 1}) \to \Reals \to  ? \Big(n \to \Reals^{2\dim X + 1} \Big)  }
+	\DefineType{y}{PontryaginTwinSequance}
+	{
+		\Lambda f : (X \Arrow{\TOP} \Reals^{2*\dim K + 1}) \.
+		\Lambda s \in \Reals_{++} \.
+		\forall i \in n \.    d\Big( f \; \mathbb{B}(x_i, r), y_i \Big) < s \And \NewLine \And
+		\forall   V : \TYPE{ProperAffineSubspace}(\Reals^{2 \dim K}) \. 
+		| \im y \cap V| \le \dim V + 2    
+	}
+}
+\Page{
+	\Theorem{PontryaginTwinSequanceExists}{
+		\forall X : \TYPE{FiniteDimensionalCompact}  \.
+		\forall f \in  C(X,\Reals^{1 + 2\dim X}) \.
+		\forall r,s \in \Reals_{++} \. \NewLine \.
+		\forall (n,x) : \TYPE{CoveringSequance}(X,r) \.
+		\exists \TYPE{PontryaginTwinSequance}(X,f,x,s)
+	}
+	\Say{\Big( y^0,[1]\Big)}{\THM{RealOpenIsInfinite}(\ldots)}{ \sum y^0 : n \ToInj X \.  \forall i \in   \| y^0_i - f(x_i) \| < \frac{s}{1 + 2^n}  }
+	\Say{\A^0}{ \Big\{  A : \TYPE{ProperAffineSubspace}(\Reals^{1 + 2\dim X})  : |     | A \cap \Im y^0 | > \dim A +  1      \Big\}}{\NewLine : \TYPE{Finite}\;\TYPE{ProperAffineSubspace}(\Reals^{1 + 2\dim X})}
+	\Say{w}{\Lambda \A : \TYPE{Finite}\;\TYPE{ProperAffineSubspace}(\Reals^{1 + 2\dim X}) \. \sum_{A \in \A}   | A \cap \Im y^0 | - \dim A - 1  }
+	{\NewLine : \TYPE{Finite}\;\TYPE{ProperAffineSubspace}(\Reals^{1 + 2\dim X}) \to \Int_+}
+	\Say{M}{w(\A^0)}{\Int_+}
+	\Say{[0]}{\ByConstr M \ByConstr \A_0 }{M \le 2^n}
+	\Assume{m}{(M - 1)_+}
+	\Assume{[2]}{\A^{m} \neq \emptyset}
+	\Say{(k,A)}{\FUNC{enumerate}(\A^n)}{\sum k \in \Nat \. A : k \ToBij \A^m}
+	\Say{i}{\max \{ i \in n : x_i^m \in A_1 \}}{n}
+	\Say{\delta}{\min \Big\{  d(y_i^n,A)  \Big| A : \TYPE{ProperAffineSubspace}(\Reals^{1 + 2\dim X}) \And \im y^n \cap A \neq \emptyset \And  y^n_i \not \in A  \}}{\Reals_{++}}
+	\Say{\Big(u,[3]\Big)}{\THM{RealOpenIsInfinite}(\ldots)}{\sum u \in \Reals^{1 + 2\dim X} \. d( y^n_{i},u) = \min\left( \delta, \frac{s}{1 + 2^n} \right) }
+	\Say{y^{m+1}}{\Lambda j \in n \. \If i == j \Then u \Else y^n_i}{n \to \Reals^{1 + 2\dim X}}
+	\Say{\A^{m+1}}{ \Big\{  A : \TYPE{ProperAffineSubspace}(\Reals^{1 + 2\dim X})  : |     | A \cap \Im y^{m+1} | > \dim A +  1      \Big\}}
+	{\NewLine : \TYPE{Finite}\;\TYPE{ProperAffineSubspace}(\Reals^{1 + 2\dim X})}
+	\Conclude{[2.*]}{\ByConstr W \ByConstr \delta \ByConstr u \ByConstr y^{m+1} \ByConstr \A^0}{ w(\A^{m+1}) < w(\A^m)}
+	\Derive{[2]}{I(\Imply)}{\A^{m} \neq \emptyset \Imply w(\A^{m+1}) < w(\A^m)  }
+	\Assume{[2]}{\A^{m} = \emptyset}
+	\Say{y^{m+1}}{y^m}{n \to \Reals^{1  + 2*\dim X}}
+	\Conclude{\A^{m+1}}{\A^m}{\TYPE{Finite}\;\TYPE{ProperAffineSubspace}(\Reals^{1 + 2\dim X})}
+	\Derive{y,\A,[2]}{I\Act{\prod}}
+	{
+		\prod^M_{m=0}  \sum y^m : n \to \Reals^{1 + 2\dim X} \. 
+		\sum \A^m :  \TYPE{Finite}\;\TYPE{ProperAffineSubspace}(\Reals^{1 + 2\dim X}) \. \NewLine \.
+		\A^m =  \Big\{  A : \TYPE{ProperAffineSubspace}(\Reals^{1 + 2\dim X})  : |     | A \cap \Im y^{m} | > \dim A +  1      \Big\} \And \NewLine
+		\forall m \in  (M -1) \. \A^m \neq \emptyset w(\A^m) < w(\A^{m+1})
+	}
+	\Say{[3]}{[2]\ByConstr w \THM{InverseFiniteInduction}}{\A^M = \emptyset}
+	\Say{[4]}{\ByConstr y^M}{\forall i \in n \. d(f(x_i),y_i^M) \le  \|f(x_i) - y_i^1 \| + \sum^M_{j=1} \|y^j_i - y^{j+1}_i \| <  s}
+	\Conclude{[*]}{\bd^{-1} \TYPE{PontryaginTwinSequance}}{\TYPE{PontryaginTwinSequance}(X,f,x,s,y^M)}
+	\EndProof
+}
+\Page{
+	\DeclareFunc{functionOfNebeling}
+	{
+		\prod X : \TYPE{FiniteDimensionalCompact}  \.
+		\prod f \in  C(X,\Reals^{1 + 2\dim X}) \.
+		\prod r,s \in \Reals_{++} \. \NewLine \.
+		\prod (n,x) : \TYPE{CoveringSequance}(X,r) \.
+		\prod p : \TYPE{PontryaginTwinSequance}(X,f,x,s) \.
+		X \Arrow{\TOP} \Reals^{1 + 2 \dim X}
+	}
+	\DefineNamedFunc{functionOfNebeling}{u}{N_p(u)}{ \frac{\sum^n_{i=1} d\Big(u, \mathbb{B}^\c(x_i,r), rBig)p_i}{ \sum^n_{i=1} d\Big(u, \mathbb{B}^\c(x_i), r \Big) }   }
+	\\
+	\Theorem{FunctionOfNebelingIsClose}
+	{
+		\forall X : \TYPE{FiniteDimensionalCompact}  \.
+		\forall f \in  C(X,\Reals^{1 + 2\dim X}) \.
+		\forall r,s \in \Reals_{++} \. \NewLine \.
+		\forall (n,x) : \TYPE{CoveringSequance}(X,r) \.
+		\forall p : \TYPE{PontryaginTwinSequance}(X,f,x,s) \.\NewLine [0] \.
+		\forall [0] : \forall i \in \.  \omega_f(x_i,2r) < s \.
+		\| N_p -  f  \|  < 2s
+	}
+	\Assume{u}{X}
+	\Say{\Big(n',k,[1]\Big)}{\bd \TYPE{CoveringSequance}(x)}
+	{
+		\sum n' \in 1 + \dim X \. 
+		\sum k : n' \to n \.  
+		\forall i \in n \. \NewLine \.
+		u \in \mathbb{B}(x_i,r) \iff 
+		\exists j \in n' : i = k_i
+	}
+	\Say{y}{N_p(u)}{\TYPE{In} \; \Reals^{1 + 2*\dim X}}
+	\Say{[2]}{\ByConstr y \ByConstr N_p [1] }{y \in  \mathrm{conv} \im p_k}
+	\Say{\Big(v,[3] \Big)}{\bd \TYPE{PontryaginTwinSequance}(p)}{\prod^{n'}_{i=1} \mathbb{B}(x_{k_i},r) \. \forall i \in n' \. d(f(v_i),p_{k_i}) < s}
+	\Say{y'}{ \frac{\sum^{n'}_{i=1} d\Big(u, \mathbb{B}^\c(x_i,r), r\Big)f(v_i)}{\sum^n_{i=1} \sum^{n'}_{i=1} d\Big(u, \mathbb{B}^\c(x_i), r \Big) }}{\TYPE{In} \; \Reals^{1 + 2\dim X}}	
+	\Say{[4]}{ [3][2]\ByConstr y \ByConstr N_p \ByConstr y'}{ \| y - y'\| < s}
+	\Say{[5]}{[0] \ByConstr y'}{\|f(u) - y'\|<s}
+	\Conclude{[u.*]}{\THM{TriangleIneq}[4][5] }{d\Big( f(u), N_p(u) \Big) < 2s}
+	\DeriveConclude{[*]}{\bd^{-1} \FUNC{uniformNorm}}{ \| f - N_P \| < 2s}
+	\EndProof
+}\Page{
+	\Theorem{NebelingsAreMenger}
+	{
+		\forall X : \TYPE{FiniteDimensionalCompact}  \.
+		\forall f \in  C(X,\Reals^{1 + 2\dim X}) \.
+		\forall r,s \in \Reals_{++} \. \NewLine \.
+		\forall (n,x) : \TYPE{CoveringSequance}(X,r) \.
+		\forall p : \TYPE{PontryaginTwinSequance}(X,f,x,s) \.\NewLine [0] \.
+		N_p : \TYPE{MengerMap}(X,\Reals^{2*dim(X) + 1},2r)
+	}
+	\Assume{u,v}{X}
+	\Assume{[1]}{N_p(u) = N_p(v)}
+	\Say{y}{N_p(u)}{\TYPE{In} \; \Reals^{1 + 2*\dim X}}
+	\Say{\Big(m,k,[1]\Big)}{\bd \TYPE{CoveringSequance}(X,n,x,u)}{\NewLine \sum m \in 1 + \dim X \. \sum k : m \ToInj n \. \forall i \in n \. u \in \mathbb{B}(x_i,r) \iff \exists j \in m : i = k_i }
+	\Say{\Big(m',k',[1']\Big)}{\bd \TYPE{CoveringSequance}(X,n,x,v)}{\NewLine \sum m' \in 1 + \dim X \. \sum k' : m' \ToInj n \. \forall i \in n \. v \in \mathbb{B}(x_i,r) \iff \exists j \in m' : i = k'_i }
+	\Say{[2]}{\ByConstr y \ByConstr N_p [1] }{y \in  \mathrm{conv} \im p_k}
+	\Say{[2']}{\ByConstr y \ByConstr N_p [1'] }{y \in  \mathrm{conv} \im p_{k'}}
+	\Say{\Big( \alpha, [3],[4] \Big)}{\bd \mathrm{conv} [2]}{\sum \alpha : m \to \Reals \.  \sum^m_{i=1} \alpha_i = 1 \And \sum^m_{i=1} \alpha_i p_{k_i} = y }
+	\Say{\Big( \alpha', [3'],[4'] \Big)}{\bd \mathrm{conv} [2']}{\sum \alpha : m' \to \Reals \.  \sum^{m'}_{i=1} \alpha'_i = 1 \And \sum^{m'}_{i=1} \alpha'_i p_{k'_i} = y }
+	\Say{[5]}{[4][4']}{\sum^m_{i=1} \alpha_i p_{k_i} = y = \sum^{m'}_{i=1} \alpha_i p_{k'_i} }
+	\Say{\Big( i, [6] \Big)}{[3]\THM{ZeroSumIsZero}}{\sum i \in m \. \alpha_i \neq 0}
+	\Say{m''}{m-1}{\Int_+}
+	\Say{k''}{\hat k_i}{m'' \to n}
+	\Say{\alpha''}{\hat \alpha_i}{ m'' \to \Reals}
+	\Say{[7]}{[6][5]\ldots}{p_{k_i} =  \sum^{m'}_{j=1} \frac{\alpha'_j}{\alpha_i} p_{k'_j} -  \sum^{m''}_{j=1} \frac{\alpha''_j}{\alpha_i} p_{k''_j}}
+	\Say{[8]}{[3][3'][6]\ByConstr \alpha'' \bd \TYPE{Field}(\Reals)}{\sum^{m'}_{j=1} \frac{\alpha'_j}{\alpha_i} -  \sum^{m''}_{j=1} \frac{\alpha''_j}{\alpha_i}  = \frac{1}{\alpha_i} +\frac{\alpha_i  - 1}{\alpha_i} = \frac{\alpha_i}{\alpha_i} = 1 }
+	\Say{[9]}{\bd^{-1} \mathrm{conv}[7][8]}{p_{k_i} \in \mathrm{conv}{p_{k'' \oplus k'}}}
+	\Say{[10]}{\THM{AffineCombinationDim}(p_{k'' \oplus k'}) \bd m' \bd m \ByConstr m''}{\NewLine  : \dim \mathrm{conv}{p_{k \oplus k'}} \le m' + m'' - 1 \le 1 + \dim X + \dim X - 1 =  2 \dim X  }
+	\Say{\Big( j, [11]\Big)}{\bd \TYPE{PontryaginTwinSequance}(p)[9][10]}{ \sum j \in m' + m'' \. (k' \otimes k'')_j = k_i}
+	\Say{[12]}{[11] \bd j \ByConstr k'' \TYPE{injective}(k)}{k'_j = k_i}
+	\Say{l}{k'_j}{n}
+	\Say{[13]}{\ByConstr  [12][1][1']}{u,v \in \mathbb{B}(x_l,r)}
+	\Conclude{\Big[(u,v).*\Big]}{[13]\bd \FUNC{cell}(X) \THM{TriangleIneq}(X) }{ d(u,v) < 2r}
+	\Derive{[*]}{\bd^{-1} \TYPE{MengerMap}}{\TYPE{MengerMap}(X,\Reals^{2*dim(X) + 1},2r)}
+	\EndProof
+}
+\Page{
+	\Theorem{AllMengerIsInjective}{\forall X,Y \in \MS \. \forall f : X \Arrow{\MS} Y \. \Big( \forall q \in \Rats_{++} \. f : \TYPE{MengerMap}(X,Y,q)\Big) \.  \NewLine \. \TYPE{Injective}(X,Y,f) }
+	\NoProof
+	\\
+	\Theorem{MengerIsDense}{\forall X :  \TYPE{FinteDimensionalCompact} \.    \forall \varepsilon \in \Reals_{++} \. \NewLine \. \TYPE{Dense}\Big( C(X,\Reals^{1 + 2\dim X}) \; \TYPE{MengerMap}(X,\Reals^{1 + 2\dim X},\varepsilon)   \Big)}
+	\Assume{f}{C(X,\Reals^n)}
+	\Assume{s}{\Reals_{++}}
+	\Say{[1]}{\THM{UCByCompact}(X,f)}{f \in \mathrm{UC}\Big(X, \Reals^{1 + 2\dim X}\Big)}
+	\Say{\Big( \delta, [2] \Big)}{\bd  \mathrm{UC}\Big(X, \Reals^{1 + 2\dim X}\Big)(f)\Act{\frac{s}{2}}}
+	{
+		\sum \delta \in \Reals_{++} \. \forall x \in X \. \diam f\mathbb{B}(x,\delta) < \frac{s}{2}
+	}
+	\Say{r}{\min\Act{\delta, \frac{\varepsilon}{2}}}{\Reals_{++}}
+	\Say{(n,x)}{\bd \TYPE{FiniteDimensionalCompact}(X)\Act{r}}{\TYPE{CoveringSequance}\Act{X,r}}
+	\Say{[2]}{\ByConstr r \bd \TYPE{CoveringSequance}\Act{X,r,n,x} }{\forall i \in n \.  \omega_f(x_i, r) < \frac{s}{2} }
+	\Say{p}{\THM{PontryaginDualSequanceExists}\Act{X,f,x,\frac{s}{2}}}{\TYPE{PontryaginDualSequance}\Act{X,f,x,\frac{s}{2}}}
+	\Conclude{[f.*]}{\THM{FunctionOfNebelingIsClose}(X,p,[2])}{ d(N_p,f) < s }
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{Dense}}{   \TYPE{Dense}\Big( C(X,\Reals^{1 + 2\dim X}) \; \TYPE{MengerMap}(X,\Reals^{1 + 2\dim X},\varepsilon)   }
+	\NoProof
+	\\
+	\Theorem{MengerNebelingPontryaginEmbeddingTHM}{\forall X :  \TYPE{FinteDimensionalCompact} \. \NewLine  \exists \TYPE{HomeomorphicEmbedding}(X,\Reals^{1 + 2\dim X} ) }
+	\Say{[1]}{\THM{DualBaireProperty}\Big(  C(X,\Reals^{1 + 2\dim X}), \Lambda q \in \Rats_{++} \. \TYPE{MengerMap}(X,\Reals^{1 + 2\dim X},q)  \Big) \NewLine \THM{AllMengerIsInjective}(X,\Reals^{1 + 2\dim X})}
+	{
+		\TYPE{Dense}\Big(  C(X,\Reals^{1 + 2\dim X})  ,\TYPE{Injective}(X,\Reals^{1 + 2\dim X}) \Big)
+	}
+	\Say{[2]}{\THM{ConstantIsContinuous}(X,\Reals^{1 + 2\dim X},0)}{0 \in  C(X,\Reals^{1 + 2\dim X}) }
+	\Say{[3]}{\bd^{-1} \TYPE{NonEmpty}}{C(X,\Reals^{1 + 2\dim X}) \neq \emptyset}
+	\Say{f}{[3][1]}{\TYPE{Injective}(X,\Reals^{1 + 2\dim X})}
+	\Conclude{[*]}{\THM{CompactHausdorffIsClosed}\bd^{-1} \TYPE{HomeomorphicEmbedding}}{\TYPE{HomeomorphicEmbedding}(X,\Reals^{1 + 2\dim X},f )}
+	\EndProof 
+}
+\end{document}
+\newpage 

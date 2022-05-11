@@ -1,0 +1,1369 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{\begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cate}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\}
+\newcommand{\A}{\LOGIC{Assume} \;} 
+\newcommand{\Assume}[2]{& \A #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%MetricGeometry
+\newcommand{\Ball}{ \mathbb{B} }
+\newcommand{\ClBall}[3]{ \overline{ \mathbb{B}}^{#1}\left(#2,#3\right) }
+\newcommand{\Sphere}{\mathbb{S}}
+\newcommand{\ToP}{\overset{p}{\to}}
+\newcommand{\ToU}{\rightrightarrows}
+%LinearAlgebra
+%TYPES
+\newcommand{\VS}[1]{\TYPE{VectorSpace}\left( #1 \right)}
+\newcommand{\Lin}[1]{\mathcal{L}\left( #1 \right)}
+\newcommand{\vs}[1]{\mathsf{VS}\left( #1 \right)}
+\DeclareMathOperator*{\rank}{rank}
+%FUNK
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\rk}{rank}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\codim}{codim}
+%Simbpls
+\renewcommand{\L}{\mathcal{L}}
+%Topology
+%TYPES
+\newcommand{\TS}{\TYPE{TopologicalSpace}}
+\newcommand{\UC}{\rightrightarrows}
+\newcommand{\MS}{\TYPE{MetricSpace}}
+\newcommand{\Sep}{\TYPE{Separable}}
+\newcommand{\LC}{\TYPE{LocallyComapact}}
+\newcommand{\Compact}{\TYPE{Compact}}
+\newcommand{\Dense}{\TYPE{Dense}}
+\newcommand{\Complete}{\TYPE{Complete}}
+\newcommand{\SB}{\TYPE{Superbounded}}
+%CATS
+\newcommand{\TOP}{\mathsf{TOP}}
+%FUNC
+\newcommand{\supp}{ \mathrm{supp} \, } % Support (may be overloaded)
+%Functional Analysis
+%TYPES
+\newcommand{\PLF}{\TYPE{PositiveLinearFunctional}} % functional mappin positive w.r.t to some cone elements to positive numbers
+\newcommand{\NS}{\TYPE{NormedSpace}} % Vector Space with Topology defined by a norm
+\newcommand{\SNS}{\TYPE{SeminormedSpace}} % Vector space with topology defined by a seminorm
+\newcommand{\Banach}{\TYPE{Banach}} % A Complete Normed Space
+\newcommand{\IPS}{\TYPE{InnerProductSpace}} %  Vector Space with  topology defined by an inner product
+\newcommand{\TVS}{\TYPE{TopologicalVectorSpace}} % Most General type of spaces admitting differential calculus
+\newcommand{\PNS}{\TYPE{PolynormedSpace}} % Topological vector space equiped with polynorm
+\newcommand{\SA}{\mathfrak{SA}} % Self-Adjoint Operators on a Hilbert Space
+\newcommand{\HP}{\mathcal{HP}} % Homegeneous Polynomials
+\renewcommand{\P}{\mathcal{P}} % Preanalytic  Polynomials
+\newcommand{\AP}{\mathcal{AP}} % Analytic Polynomials
+%FUNC
+\DeclareMathOperator{\ind}{ind}
+\newcommand{\spec}{\sigma}
+%CATS
+\newcommand{\PRE}{\mathsf{PRE}} % Category of seminormed spaces with bounded operators as morphisms
+\newcommand{\PREI}{\mathsf{PRE}_{\circ \to \cdot}} % Category of seminormed spaces with nonexpanding operators as morphisms 
+\newcommand{\NORM}{\mathsf{NORM}} % Category of normed spaces with bounded operators as morphisms
+\newcommand{\NORMI}{\mathsf{NORM}_{\circ \to \cdot}} % Category of normed spaces with bounded operators as morphism
+\newcommand{\DIFF}{\mathsf{DIFF}}
+\newcommand{\BAN}{\mathsf{BAN}} % Category of Banach Spaces with bounded operators as morphisms
+\newcommand{\HIL}{\mathsf{HIL}} % Category of Hilbert spaces with bounded operators as morphisms
+\newcommand{\HILI}{\mathsf{HIL}_{\circ \to \cdot}}
+%Symbol
+\newcommand{\vertiii}[1]{{\left\vert\kern-0.25ex\left\vert\kern-0.25ex\left\vert #1 \right\vert\kern-0.25ex\right\vert\kern-0.25ex\right\vert}} % notation for norm
+\newcommand{\K}{\mathcal{K}} % Compact Operators
+\newcommand{\s}{\mathbf{s}}
+\renewcommand{\S}{\mathcal{S}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\D}{\mathrm{D}}
+%MeasureTheory
+%TYPES
+%\newcommand{\SA}[1]{\TYPE{\sigma \hyph  Algebra}\left( #1 \right) }  % s
+\newcommand{\SF}[1]{\TYPE{\sigma \hyph  Finite}\left( #1 \right) }
+\newcommand{\CA}[1]{\TYPE{CountablyAdditive}\left( #1 \right) }
+\newcommand{\FA}[1]{\TYPE{Charge}\left( #1 \right) }
+\newcommand{\LS}{\TYPE{Lebesgue \hyph Stieltjes}}
+\newcommand{\DF}{\TYPE{DistributionFunction}}
+\renewcommand{\AE}[1]{\mathrm{a\. e\.} \left[#1\right]}
+\newcommand{\SI}[1]{\TYPE{\sigma \hyph  Ideal}\left( #1 \right) }
+\newcommand{\DRP}{\TYPE{DiscreteRandomProcess}}
+\newcommand{\CRP}{\TYPE{ContinuousRandomProcess}}
+%Category
+\newcommand{\BOR}{\mathsf{BOR}}
+\newcommand{\BORN}{\mathsf{BOR}^0}
+\newcommand{\MEAS}{\mathsf{MEAS}}
+%Simbols
+\newcommand{\F}{\mathcal{F}}
+\renewcommand{\O}{\Omega}
+\newcommand{\B}{\mathcal{B}}
+\renewcommand{\l}{\lambda}
+%\renewcommand{\P}{\mathbb{P}}
+\author{Uncultured Tramp} 
+\title{Differential Analysis}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Differentiable Maps}
+\subsection{Tangent Maps}
+\Page{
+\DeclareFunc{localDivergence }{ \prod V,W : \BAN(K) \. \prod U : \TYPE{OPEN}(W) \. (U \to W)^2 \to U \to \Reals_{++} \to \Reals_{+}  }
+\DefineFunc{localDivergence}{ f,g,p,r }{    \sup \{ \| f(x) - g(x) \| | x \in \Ball_V (p,r) \cap U   \}  }
+\\
+\DeclareType{TangentAt}{\prod V,W : \BAN(K) \. \prod U : \TYPE{OPEN}(W) \. U \to ?(U \to W)}
+\DefineType{(p,f,g)}{TangentAt}{\lim_{ r \to 0}  \frac{ \FUNC{localDivergence}(f,g,p,r) }{r} = 0}
+\\
+\Theorem{TangentAtIsEqRelation}{\forall V,W : \BAN(K) \. \forall U : \TYPE{Open}(W) \. 
+\NewLine \.
+\TYPE{TangentAt}(V,W,U)(p) : \TYPE{Equavalence}(U \to W)}
+}
+1) For Reflexivity use that  $\| f(x) - f(x) \| = 0$ as Constant. \\
+2) For Symmetry use that addition in vector spaces is commutative. \\
+3) For Transitivity use that
+\begin{multline*}
+\sup_{x \in \mathbb{B}(p,r)} \frac{\| f(x) - h(x) \|}{r} \le \sup_{x \in \Ball_U(p,r)} \frac{\| f(x) -g(x)\| + \| g(x) - h(x)\| }{r} \le
+\\
+\le \sup_{x \in \Ball_U(p,r)} \frac{ \| f(x) - g(x) \| }{r} + \sup_{x \in \Ball_U(p,r)} \frac{\| g(x) - h(x) \|}{r}
+\end{multline*}
+and that both summands converges to $0$ with $r$.
+$\QED$
+\newpage
+\subsection{Differential}
+\Page{
+	\DeclareType{Differential}{ \prod V,W : \BAN(K) \. \prod U : \TYPE{Open}(V) \. U \to ( U \to W) \to ? \Lin{V,W} }
+	& A : \TYPE{Differential}(p,f) \iff \Big( \big(\Lambda x \in U \. f(p) - f(x), \Lambda x \in U \. A(p - x) \big) : \TYPE{TangentAt}(V,W,U)(p)  \Big) \\
+	\\
+	\DeclareType{DifferentiableAt}{\prod V,W : \BAN(K) \. \prod U : \TYPE{Open}(V) \. U \to ?(U \to W)}
+	& f : \TYPE{DifferentiableAt}(p) \iff \exists \TYPE{Differential}(p,f) \\
+	\\
+	\DeclareType{Differentiable}{\prod V,W : \BAN(K) \. \prod U : \TYPE{Open}(V) \. ?(U \to W)}
+	\DefineType{f}{Differentiable}{ \forall p \in U \. f : \TYPE{DifferentiableAt}(p) }
+	\\
+	\Theorem{DifferentialUnique}{\forall f : \TYPE{DifferentiableAt}(V,W,U)(p) \. \exists ! A : \TYPE{Differential}(V,W,U)(p,f)}
+	\Say{A}{\bd \TYPE{DifferentiableAt}(V,W,U)(p)(f)}{\TYPE{Differential}(V,W,U)(p,f)}
+	\Assume{B}{\TYPE{Differential}(V,W,U)(p,f)}
+	\Say{(1)}{\bd \TYPE{Differential}(V,W,U)(p,f)(A)}{  
+	\NewLine :
+	\Big( \big(\Lambda x \in U \. f(p) - f(x), \Lambda x \in U \. A(p - x) \big) : \TYPE{TangentAt}(V,W,U)(p) \Big) }
+	\Say{(2)}{\bd \TYPE{Differential}(V,W,U)(p,f)(B)}{  
+	\NewLine :
+	\Big( \big(\Lambda x \in U \. f(p) - f(x), \Lambda x \in U \. B(p - x) \big) : \TYPE{TangentAt}(V,W,U)(p) \Big) }
+	\Say{(3)}{ \bd \TYPE{Transitive} \Big( \TYPE{TangentAt}(V,W,U)(p) \Big)(1)(2) }{ \Big( A(p) - A, B(p) - B  \Big) : \TYPE{TangentAt}(V,W,U)(p)   }
+	\Say{(4)}{ \ldots  \bd^{-1} \FUNC{operatorNorm}  }{\forall r \in \Reals_{++} \. \sup_{x \in \Ball_U(p,r)} \| (A - B)(p - x) \| = r \| A - B \|     }
+	\Say{(5)}{\bd \TYPE{TangentAt}(V,W,U)(p)(3)(4)}{ \| A - B \| = 0    }
+	\Conclude{(6)}{ \bd \TYPE{Hypernorm}(5)}{A = B}
+	\Derive{(*)}{\forall(I)}{\forall B : \TYPE{Differential}(V,W,U)(p,f)}
+	\EndProof
+	\\
+	\DeclareFunc{differential}{ \prod V,W : \BAN(K) \. \prod U : \TYPE{Open}(K) \. \prod f :  \TYPE{Differentiable}(V,W,U) \.
+	\NewLine \.
+	\prod p \in U \. \TYPE{Differential}(V,W,U)(p,f)}
+	\DefineNamedFunc{differential}{}{\D f |_p}{\THM{DifferentialUnique}(f,p)}
+	\\
+	\DeclareFunc{differentialAt}{ \prod V,W \in \BAN(K) \. \prod U : \TYPE{Open}(K) \. \prod p  \in U \.
+	\NewLine \.
+	\prod f : \TYPE{DifferentiableAt}(V,W,U)(p)  \. \TYPE{Differential}(V,W,U)(p,f)}
+	\DefineNamedFunc{differential}{}{\D f |_p}{\THM{DifferentialUnique}(f,p)}
+	\\
+	\DeclareType{ContinuoslyDifferentiable}{\prod V,W : \BAN(K) \. \prod U : \TYPE{Open}(V) \. ? \TYPE{Differentiable}(V,W,U)}
+	\DefineNamedType{f}{ContinuouslyDifferentiable}{ f \in C^1(U,W) }{  
+	\NewLine \iff
+	\forall p \in U \. \D f |_p \in \B(V,W) \And \D f : C(U,\B(V,W)) }
+}
+\newpage
+\Page{
+	\Theorem{LinearDifferentiation}{ \forall V,W \in \BAN(K) \. \forall U : \TYPE{Open}(W) \.   
+	\forall p \in U.
+	\D |_p  \in \Lin{ \TYPE{DifferentiableAt}(V,W,U)(p) , U \to W }		
+        }
+}
+Use the fact that
+\begin{multline*}
+	\sup_{x \in \Ball(p,r)} \frac{ \| f(x) + g(x) - f(p) - f(g) - \D f |_p ( x - p) - \D g |_p (x - p) \| }{r}
+	\le \\ \le
+	\sup_{x \in \Ball(p,r)} \frac{   \| f(x)  - f(p) - \D f |_p (x - p) \| }{r} 
+	+
+	\sup_{x \in \Ball(p,r)} \frac{  \| g(x) - g(p) - \D g |_p (x - p) \| }{r}
+	\to
+	0
+\end{multline*}
+To Prove additivity.
+Use absolute homogenity of the norm to prove homogenity. \\
+$\QED$
+\Page{
+	\Theorem{DerivativeOfLinearMap}{\forall V,W \in \BAN(K) \. \forall T \in \B(V,W) \.  \D T = T  }
+	&  \textrm{Use zero operator norm argument.}  \\
+	\EndProof
+	\\
+	\Theorem{DerivativeOfMultilinear}{ \forall n \in \Nat \. \forall V : n \to \BAN(K) \. \forall W \in \BAN(K)   
+	 \. \forall T : \B\Big( (V_i)^n_{i=1} ; W \Big)  \. \NewLine \. \forall p,v \in \prod^n_{i=1} V_i \. 
+	 \D T |_p v =  \sum^n_{i = 1} T\Big( ( p_j )^{i - 1}_{j = 1} \oplus  v_i \oplus ( p_j )^n_{j = i + 1}     \Big)
+	}
+	&  \textrm{rewrite} \\
+	& T(x) - T(p) - \sum^n_{i = 1} T\Big( ( p_j )^{i - 1}_{j = 1} \oplus  v_i \oplus ( p_j )^n_{j = i + 1}     \Big) \\
+	& \textrm{as} \\
+	&  \sum^n_{i = 1}  \Big(   T\big( (p_j)^{i - 1}_{j = 1} \oplus v_i \oplus (p_j)^n_{j = i + 1} \big)
+		- T(v) - T\big( (p_j)^{i - 1}_{j = 1} \oplus v_i - p_i  \oplus (p_j)^n_{j = i + 1} \big)
+		\Big)
+	    + \phi,  \\
+	& \textrm{where $\phi = O(r^2)$, hence the derivative is defined correctly.} \\
+	\EndProof
+	\\
+	\Theorem{DerivativeOfTheInverse}{ \forall V : \TYPE{BanachAlgebra}(K) \. \forall u : \TYPE{Invertible}(V) \. \forall h \in V \. 
+	\NewLine \.
+	\D \, 
+	\FUNC{inv} |_u(h)  = -u^{-1}h u^{-1}}
+	\Say{(1)}{\bd \FUNC{inv}}
+	{  (u + h)^{-1} - u^{-1} = (u - h)^{-1}\big( u  -  (u -h) \big)u^{-1}  = 
+	  - (u - h)^{-1}h u^{-1}
+	}
+	\Say{(2)}{ \bd \FUNC{operatorNorm}(\ldots)  }
+	{
+	  \Big\|  (u - h)^{-1}h u^{-1}   - u^{-1}h u^{-1}     \Big\| =
+	  \Big\| \big( (u -h)^{-1} - u^{-1}\big) h u^{-1} \Big\| \le \NewLine \le
+	  \big\|  (u - h)^{-1} - u^{-1}  \big\|\big\| h \big\|\big\| u^{-1} \|
+	}
+	\Say{(3)}{ \bd \TYPE{Continuous}(\FUNC{inv}) }{  \lim_{h \to 0} \big\| (u - h)^{-1} - u^{-1} \big\| = 0 }
+	\Conclude{(*)}{\bd \TYPE{Differential}(1)(2)(3)}{ \D \FUNC{inv} |_{u} h = - u^{-1}h u^{-1} }
+	\EndProof
+}
+\newpage
+\Page{
+	\Theorem{DifferentialOfComposition}{\forall F,G,H : \BAN(K) \. \forall U : \TYPE{Open}(F) \. \forall V : \TYPE{Open}(G) \.
+	\NewLine \.
+	\forall f : \TYPE{Differentiable}(F,G,U) \. \forall g : \TYPE{Differentiable}(G,H,V) \. \forall s : f(F) \subset V \.
+	\NewLine \.
+	\forall p \in U \. \D g \circ f |_p =  \D g |_{f(p)} \D f |_p
+	}
+	\Say{ (\phi,1) }{ \bd^{-1} \TYPE{AsymptoticalyBounded} \bd \TYPE{DifferentiableAt}(G,H,V)(p)(f)  }
+	{ 
+	\NewLine :
+	\sum \phi : U \to V \.  \phi(x) = O_0( x  )  \And \forall x \in U \. f(x) = f(p)  + \D f |_p (x - p) + \phi(x - p)     }
+	\Say{ (\psi,2)}{ \bd^{-1} \TYPE{AsymptoticalyBounded} \bd \TYPE{DiffereniableAt(G,H,V)}(f(p))(g)}
+	{ 
+	\NewLine :
+	\sum \psi : V \to H \. \psi(x) = O_0(x  ) \And  \forall x \in V \. g(x) = 
+		g\big(f(p)\big) + \D g |_{f(p)}  \big(x - f(p)\big) + \psi(x - f(p))     }
+	\Say{(3)}{\THM{AsymptoticalyBoundedComposition}(\psi,\phi)}{ \psi \circ \phi = O_0(x) }
+	\Say{(4)}{\THM{AsymptoticalyBoundedComposition}(\D g |_{f(p)} \circ \phi)}{ \D g |_{f(p)} \circ \phi = O_0(x) }
+	\Say{(5)}{  (1)(2)(g \circ f)   }{ g \circ f = g\big( f(p) \big)  +  \D g |_{f(p)} \D f |_{x}(x - p) + \D g |_{f(p)} \phi(p - x) + \psi\big( \phi(p - x) \big)  }
+	\Conclude{(*)}{ \bd^{-1} \TYPE{Differential}(F,H,U)(p) (5) \bd \TYPE{AsymptoticalyBounded}(3)(4)  }
+	{ \D g \circ f |_p = \D g |_{f(p)} \D f_p  }
+	\EndProof
+	\\
+	\Theorem{DifferentialOfCompositionAtAPoint}{ 
+		\forall F,G,H : \BAN(K) \. \forall U : \TYPE{Open}(F) \. \forall V : \TYPE{Open}(H) \. \forall p \in U \. 
+		\NewLine \.
+		\forall f : \TYPE{DifferentiableAt}(F,G,U)(p) \.  \forall s : f(p) \in U
+		\forall g : \TYPE{DifferentiableAt}(G,H,V)(f(p))  \.
+		\NewLine
+		\. \D g \circ f |_p = \D g |_{f(p)} \D f |_{p} 
+	}
+	\NoProof
+}
+\newpage
+\subsection{Partial and Coordinate Derivatives}
+\Page{
+	\DeclareFunc{coordinateDerivative}{\prod n \in \Nat \. \prod V \in \BAN(K) \. \prod W : n \to \BAN(K) \. \prod U : \TYPE{Open}(V) \.
+	\NewLine \.
+	\prod f : \prod i \in n \. \TYPE{Differentiable}(V,W_i,U) \. \prod i \in n \. \prod p \in U \. \TYPE{Differential}(V,W_i,U)(p,f_i)
+	}
+	\DefineNamedFunc{coordinateDerivative}{ }{ \D f_i |_p }{f'_i(p)}
+	\\
+	\DeclareType{PartiallyDifferentiable}
+	{ \prod n \in \Nat \. \prod V : n \to \BAN(K) \. \prod W \in \BAN(K) \. 
+	\NewLine \.
+	\prod U
+	\prod i \in n \. \TYPE{Open}(V_i)  \. ?\left( \prod^n_{i = 1} V_i \to W \right)  }
+	\DefineType{f}{PartiallyDifferentiable}
+	{  \forall p \in \prod^n_{i = 1} U_i \. \forall i \in n \.
+		\Lambda v \in U_i \. f\Big( (p_j)^{i-1}_{j = 1} \oplus w \oplus (p_j)_{j = i + 1}^n \Big) :
+                \NewLine 
+		: \TYPE{Differentiable}(V_i,v,U_i)  }
+	\\
+	\Theorem{CoordinatewiseDifferentiability}
+	{
+		\forall n \in \Nat \. \forall V \in \BAN(K) \. \forall W : n \to \BAN(K) \.
+		\forall U  : \TYPE{Open}(V) \. \NewLine \.
+		\forall f : \prod i \in n \. \TYPE{Differentiable}(V,W_i,U) \.  
+		\NewLine \.
+		(f) : \TYPE{Differentiable}\left(V, \prod^n_{i = 1} W_i, U \right) \And 
+		\forall p \in U \. \D (f) |_p = \sum^n_{i = 1} \iota_W^i f'_i(p) 
+	}
+	& \textrm{Use representation}  \\
+	&  f = \sum^n_{i = 1} \iota_W^i f'_i(p)  \\
+	& \textrm{ as $\iota_W^i$ is linear by composition and linearity theorems results follow} \\
+	\EndProof
+	\\
+	\DeclareFunc{partialDerivative}{
+		\forall n \in \Nat \. \forall V : n \to \BAN(K) \.
+		\forall f : \TYPE{PartiallyDifferentiable}(V,W,U)
+		\. \NewLine \.
+		\prod p \in \prod^n_{i = 1} U_i \. \prod i \in n \.
+		\TYPE{Differential}(V_i,W,U_i)\bigg(p_i, \Lambda w \in U_i \. f \Big( (p_j)_{j = 1}^{i -1} \oplus v \oplus (p_j)_{j = i + 1}^n  \Big) \bigg)
+	}
+	\DefineNamedFunc{partialDerivative}{}{ \D_i f |_p }{ \D \Lambda v \in U_i \. f \Big( (p_j)_{j = 1}^{i -1} \oplus v \oplus (p_j)_{j = i + 1}^n  \Big) |_{p_i} } 
+}
+\Page{
+	\Theorem{DifferentiableIsAlwaysPartial}{
+		\forall n \in \Nat \.
+		\forall V : n \to \BAN(K) \.
+		\NewLine \.
+		\forall U : \prod i \in n \. \TYPE{Open}(V_i)
+		\forall f : \TYPE{Differentiable}\left( \prod^n_{i = 1} V_i,W, \prod^n_{i = 1} U_i  \right) \.
+		f : \TYPE{PartiallyDifferentiable}(V,W,U) 
+	}
+	& \textrm{Partial derivatives are exactly }  \\
+	&  \D f \iota^{i,p}_V |_{p_i}  = \D f |_p \D \iota^i_V |_{p_i}, \\
+	& \textrm{So partial derivatives exist.} \\
+	\EndProof
+	\\
+	\Theorem{SmoothnessByPartialDerivatives}{ \forall f : \TYPE{Differentiable}\left( \prod^n_{i=1} V_i,W,\prod^n_{i=1} U_i  \right)
+		 \ . \NewLine 
+		\.  f \in  C^1 \iff \forall i \in n \. \D_i f : C\Big(U_i,\B(V_i,W)\Big)
+	}
+	& \textrm{use representation:} \\
+	&  \D f |p = \D f \sum^n_{i = 1} \iota^{i,p}_V |p = \sum^n_{i = 1} \D_i f |_{p_i} \\
+	& \textrm{result follows from the continuoity of sum.} \\
+	\EndProof
+}
+\newpage
+\subsection{Mean Value Theorem}
+\Page{
+	\DeclareType{RightDifferentiable}{ \prod F : \BAN(K) \. \forall [a,b] : \TYPE{Interval}(\Reals) \. ?[a,b] \to F }
+	\DefineType{f}{RightDifferentiable}
+	{ \forall r \in [a,b) \. \exists v \in F \. \lim_{t \downarrow r}  \frac{  f(t) - f(r) }{  t - r   } = v   }
+	\\
+	\DeclareFunc{rightDerivative}{ \TYPE{RightDifferentiable}(F,[a,b]) \to [a, b) \to  K \to F    }
+	\DefineNamedFunc{rightDerivative}{ f,r,h  }{f'_{\mathrm{right}}(r)}{ h \lim_{t \downarrow r} \frac{ f(t) - f(r)}{  t - r }  
+	}
+	\\
+	\DeclareType{LeftDifferentiable}{ \prod F : \BAN(K) \. ?[a,b] \to F }
+	\DefineType{f}{LeftDifferentiable}
+	{ \forall r \in (a,b] \. \exists v \in F \. \lim_{t \uparrow r}  \frac{  f(t) - f(r) }{ r -t  } = v   }
+	\\
+	\DeclareFunc{leftDerivative}{ \TYPE{LeftDifferentiable}(F,[a,b]) \to [a, b) \to  K \to F    }
+	\DefineNamedFunc{rightDerivative}{ f,r,h  }{f'_{\mathrm{left}}(r)}{ \forall r \in (a,b] \.  h \lim_{t \uparrow r} \frac{ f(t) - f(r)}{  r - t   }
+	}
+	\\
+	\Theorem{MeanValueTheorem}
+	{
+		\forall F : \BAN(\Reals) \.
+		\forall f : \TYPE{RightDifferentiable}(F,[a,b]) \. 
+		\NewLine \.
+		\forall g : \TYPE{RightDifferentiable}(\Reals,[a,b]) \.
+		\forall I : \forall r \in (a,b) \. \| f'_{\mathrm{right}}(r) \| \le g'_{\mathrm{right}}(r) \.  
+		\| f(a) - f(b) \| \le g(a) - g(b)
+	}
+        \Assume{\varepsilon}{\Reals_{++}}
+	\Say{U}{ \Big\{ x \in [a,b] : \| f(x) - f(a) \| > g(x) - g(a) + \varepsilon(x - a)  + \varepsilon \Big\}     }
+	{ \TYPE{Set}\Big( [a,b] \Big)   }
+	\Say{\varphi}{  \Lambda x \in [a,b]. \|f(x) - f(a)\| - g(x) + g(a) + \varepsilon(x - a)   }{ C([a,b],\Reals) }
+	\Say{(1)}{\bd U \bd^{-1} \varphi }{ U = \varphi^{-1}(\varepsilon, + \infty)}
+	\Say{(2)}{\bd C([a,b],\Reals)(\varphi)(1)}{\Big(U : \TYPE{Open}(x) \Big)  }
+	\Say{(3)}{ \bd U(a)}{ a \not \in U }
+	\Assume{A}{U \neq \emptyset}
+	\Say{c}{  \inf U  }{[a,b]}
+	\Say{(4)}{\bd c (2)(3)}{c < U}
+	\Say{(5)}{ \bd \varphi(a)  }{a \in \varphi^{-1}[0,\varepsilon)  }
+	\Say{(6)}{\THM{OpenByNeighbourhoods}\Big(a, \varphi^{-1}[0,\varepsilon)\Big)\bd U\bd c}{ a < c }
+	\Say{(7)}{ \bd \TYPE{LowerBound}([a,b])(U)(c) }{ c  < b  }
+	\Say{(8)}{I(c)(6,7) \bd \FUNC{rightDifferential}}
+	{ \lim_{ t \downarrow c  } \frac{ \| f(t) - f(c) \|  }{t - c} \le   \lim_{t \downarrow c} \frac{  g(t) - g(c)  }{ t - c}}
+	\Say{(u,9)}{ \bd \TYPE{LimitIneq}(\varepsilon)(8) \bd c \bd(U) }{ \sum u \in U \.  \| f(u) - f(c) \| \le  g(u)  - g(c) + \varepsilon(u - c) }
+	\Say{(10}{\THM{AddNoneg}(  \varepsilon)(9)\bd U}{ u \not \in U }
+	\Conclude{11}{\THM{NotInAndIn}(\bd u,(10))}{\bot}
+	\Derive{4}{ \LOGIC{Contradiction}}{ U = \emptyset }
+	\Conclude{(5)}{\THM{Antiset}(U)(4)}{  \forall x \in [a,b] \. \| f(x) - f(a) \| \le g(x) - g(a)  + \varepsilon(x - a) + \varepsilon  }
+	\Derive{(1)}{ I(\forall)(\varepsilon)}{ \forall \varepsilon \in \Reals_{++}  \.  \forall x \in [a,b] \.  \| f(x) - f(a) \| \le g(x) - g(a) + \varepsilon(x - a) + \varepsilon}
+	\Conclude{(*)}{ \lim_{\varepsilon \downarrow 0} \lim_{x \uparrow b} (1)(\varepsilon,x) }{ \| f(b) - f(a) \| \le g(b) - g(a) }
+	\EndProof
+}
+\Page{ 
+	\Theorem{ BanachMeanValueTheorem  }
+	{
+		\forall V,W \in \BAN(K) \.
+		\forall U : \TYPE{Open}(V) \.
+		\forall f : \TYPE{Differentiable}(V,W,U) \. 
+		\NewLine \.
+		\forall  [a,b] : \TYPE{Interval}(U) \.
+		\| f(b) - f(a) \| \le  \sup_{v \in [a,b]} \| \D f |_v (b - a) \|
+	}
+	& \textrm{Apply mean value theorem to the contracted function} \\
+	& \varphi(t) = f( (1 -t)a + tb  ) : [a,b] \to W \\
+	& \textrm{having} \\
+	&  \| \varphi'(t)  \| =  \left\| \D f |_{tb + (1-t)a} (b - a) \right\| 
+	 \le \sup_{v \in [a,b]} \left\| \D f |_{v} (b - a) \right\| \\
+	& \textrm{with the last function treated as constant.} \\
+	& \textrm{This provides} \\
+	&  	\| f(1) - f(0) \| = 
+		\| \varphi(b) - \varphi(a) \| \le
+		 (1 - 0)\sup_{v \in [a,b]} \left\| \D f |_v (b-a)  \right\|  		 
+	\\
+	\EndProof
+	\\
+	\DeclareType{Lipschitz}{ \prod V,W : \BAN(K) \. \forall U : \TYPE{Open}(V) \. \Reals_{+} \to ?( U \to W )}
+	& f : \TYPE{Lipschitz}(k) \iff  \forall a,b \in U \. \| f(b) - f(a) \| \le k\| b - a \| \\
+	\\
+	\Theorem{LipschitzByDerivatives}{
+		\forall V,W : \BAN(K) \. \forall U : \TYPE{Open} \And \TYPE{Convex}(V) \. 
+		\NewLine \.
+		\forall f : \TYPE{Differentiable}(V,W,U) \.
+		\forall k \in \Reals_+ \.
+		\forall \mathbf{I} : \sup_{v \in U} \| \D f |_v \| < k \.
+		f : \TYPE{Lipschitz}(k)
+	}
+	& \textrm{ As $U$ is convex for each two distinct points $a,b \in U$ the inerval $[a,b] \subset U$.} \\
+	& \textrm{ Apply previous theorem and $\mathbf{I}$. Result follows  } \\
+	\EndProof
+	\\
+	\Theorem{ZeroDerivativeConstant}{
+		\forall V,W : \BAN(K) \. \forall U : \TYPE{Open} \And \TYPE{Convex}(V) \. 
+		\NewLine \.
+		\forall f : \TYPE{Differentiable}(V,W,U) \.
+		\forall \mathbf{I} : \sup_{v \in U} \| \D f |_v \|  = 0 \.
+		f : \TYPE{Constant}(U,W)
+	}
+	& \textrm{ By previous theorem function is} \\
+	& \textrm{ Apply previous theorem and $\mathbf{I}$. Result follows  } \\
+	\EndProof
+	\\
+	\Theorem{ZeroDerivativeConstanII}{
+		\forall V,W : \BAN(K) \. \forall U : \TYPE{Open} \And \TYPE{Connected}(V) \. 
+		\NewLine \.
+		\forall f : \TYPE{Differentiable}(V,W,U) \.
+		\forall \mathbf{I} : \sup_{v \in U} \| \D f |_v \|  = 0 \.
+		f : \TYPE{Constant}(U,W)
+	}
+	& \textrm{ By building balls around each point and the privious theorem the function is locally constand} \\
+	& \textrm{And as the set is connected is a constant.}
+	\EndProof
+}
+\Page{
+	\DeclareType{PolygonalLine}{ \prod V : \BAN(K) \. V \to V \to?\Big([0,1] \to V \Big)} 
+	& \gamma : \TYPE{PolygonalLine}(x,y) \iff  \exists n \in \Nat \. \exists \Big([a,b], (1) \Big) : 
+	\sum [a,b] : n \to \TYPE{Interval}(V)  \.
+	\. \forall i \in n - 1  \. b_n = a_{n + 1} \. 
+	\NewLine \.
+	\gamma = \FUNC{join}( n, \Lambda i \in n \. \Lambda t \in [0,1] \. tb_n + (1 - t)a_n  ) 
+	\And x = a_1 \And y = b_n \\
+	\\
+	\DeclareType{PolygonalLineConnected}{ \prod V : \BAN(K) \. ??V }
+	\DefineType{U}{PolygonalLineConnected}{ \forall U : \BAN(K) \. \forall x,y \in U \. \exists \gamma : \TYPE{PolygonalLine}(x,y) :  \Im \gamma \subset U }
+	\\
+	\Theorem{PolygonalLineConnected}{ \forall V : \BAN(K) \. \forall U : ??V \. U : \TYPE{PolygonalLineConnected}(V) \iff
+	\NewLine
+	\iff U : \TYPE{Connected}(V)  }
+	\NoProof
+	\\
+	\DeclareFunc{length}{ \prod V : \BAN(K) \. \TYPE{PolygonalLine}(\_,\_) \to \Reals_{++} }
+	\DefineNamedFunc{length}{\gamma}{|\gamma|}{ \sum^n_{i = 1} \| b_i - a_i \| }
+	& \LOGIC{where} \NewLine  ([a,b],n) = \bd \TYPE{PolygonalLine}(\gamma) \\
+	\EndProof
+	\\
+	\DeclareFunc{innerDistance}{ \prod V : \BAN(K) \. \prod U : \TYPE{Connected}(V) \. \TYPE{Distance}(U)  }
+	\DefineNamedFunc{innerDistance}{x,y}{ d_U(x,y) }{ \inf \{ |\gamma| | \gamma : \TYPE{PolygonalLine}(x,y) \}  }
+	\\
+	\Theorem{InnerMeanValueTheorem}{  
+	\forall V,W \in \BAN(K) \. \forall U \in \TYPE{Open} \And \TYPE{Connected}(V) \. 
+	\NewLine
+	\forall f : \TYPE{Differentiable}(V,W,U) \. 
+	\forall k \in \Reals_{++} \.
+	\forall \mathbf{I}  : \sup_{v \in U} \|  \D f |_v  \| \le k \.
+	\forall x,y \in U \. \| f(x) - f(y) \| \le k d_U(x,y)
+	}
+	& \textrm{Firstly, by the generalized mean value theorem (see Cartan)  for polygonal line $\gamma$ connecting $x$ and $y$ define } \\
+	& \varphi(t) = f\Big(\gamma(t)\Big) : [0,1] \to W    \\
+	& \textrm{with} \\
+	& \| \D \varphi |_t \| = \left\| \D f |_{\gamma(t)} \sum^n_{i = 1} ( b_i - a_i ) \right\| 
+		\le
+		k \sum^n_{i = 1} \| b_i - a_i \| = k  | \gamma | .
+	\\
+	&  \textrm{taking infimum over all such $\gamma$ provides} \\
+	&  \| f(x) - f(y) \| \le k d_U(x,y)\\
+	\EndProof
+}
+\Page{
+	\Theorem{ConstantDerivative}
+	{
+		\forall V, W \in \BAN(K) \. 
+		\forall U : \TYPE{Open}(V) \.
+		\forall f : \TYPE{Differentiable}(V,W,U) \. \NewLine
+		\forall C \in \Lin{V,W} \. \forall E : \D f = C \.
+		\exists A : \TYPE{Affine}(V,W) : f = A_{|U} 
+	}
+	& \textrm{By $E$ it holds that $\D f - C = 0$, but } \\
+	& 0 = \D f - C = \D ( f -  C_{|U}). \\
+	& \textrm{Hence, $f - C_{|U} = w$ is a constant, but this means that $f = C_{|U} + w$.} \\
+	\EndProof
+	\\
+	\Theorem{ConvexIsRightDifferentiabile}
+	{
+		\forall [a,b] : \TYPE{Interval}(\Reals) \. 
+		\forall f : \TYPE{Convex}\Big([a,b]\Big) \.
+		\NewLine \. f : \TYPE{RightDifferentiable}\Big([a,b],(a,b), \Reals\Big)
+	}
+	\Assume{t}{\TYPE{In}\Big(a,b)\Big)}
+	\Assume{y,x}{ \sum y,x : \TYPE{In}\Big([0,b - t) \. y > x }
+	\Conclude{(1)}{ \THM{EpigrafTHM}(f)(t,x,h)}{ \frac{f(t + x) - f(t) }{x} \le \frac{f(t + y) - f(t) }{y} }
+	\Derive{(1)}{\bd^{-1} \TYPE{NonDecreasing}}{ \Big( \Lambda h \in (0,b - t) \. \frac{f(t + h) - f(t)}{h} : \TYPE{Monotonic}\big( [0,b - t), \Reals \big)  \Big)}
+	\Say{(2)}{ \THM{MonotoneLimAsInf}(1) }{ \lim_{h \downarrow 0} \frac{f(t + h) - f(t)}{h} = \inf \left\{ \frac{f(t + h) - f(t)}{h} | h \in (0, b - t) \right\}  }
+	\Say{v}{\bd \TYPE{OpenInterval}(a,b)(t)}{\TYPE{In}(a,t )}
+	\Assume{h^+}{ \TYPE{In}\Big([0,b -t) \Big)  }
+	\Say{ h^-}{ v - t   }{\Reals_{--}}
+	\Conclude{(3)}{\THM{EpigrafTHM}(f)(t,h^-,h^+)}{ \frac{f(t) - f(t + h^-)}{h^-} \le \frac{f(t) - f(t + h^+)}{h^+} }
+	\Derive{(3)}{\bd \TYPE{BoundedFromBelow}}{ \Big( \Lambda h \in (0,b -t) \. f(t + h) - f(t) \Big) : \TYPE{BpundedFromBelow}\big( [0,b - t] \big) \Big)   }
+	\Conclude{(u,4)}{ (1)\THM{BoundedMonotonicConvergence}(2,3) }{\sum u \in \Reals \. \lim_{h \downarrow 0} \frac{f(t + h) - f(t)}{t} = 0}
+	\Derive{(5)}{\bd \TYPE{RightDifferentiable}\Big([a,b],(a,b),\Reals \Big)}
+	\EndProof
+}
+\Page{
+	\Theorem{NormDifferentiability}{
+		\forall W \in \BAN(\Reals) \. \forall [a,b] \in \TYPE{Interval}(V)  \.
+		\forall f : [a,b] \to V \. \NewLine
+		\forall g : [a,b] \to \Reals_{+} \. 
+		\forall E : g = \| f \|  \.
+		\forall (p,1) : \sum p \in  (a,b] \. f : \TYPE{RightDifferentiableAt}([a,b],W)(p) \.
+		\NewLine
+		g : \TYPE{RightDifferentiableAt}([a,b],W)(p)
+	}
+	& \textrm{Assume $t \in  [a,b)$, then $G(h) = \| f(t) + \D_r f |_t h \|$ is a convex function on any interval around $0$.} \\
+	& \textrm{Byi the previous theorem $G$ is right-differentiable at $0$.  } \\
+        & \textrm{ We know that $f$ admits representatation for $s \in (t,b)$:}\\
+	& f(s) = f(t) + \D_r f |_t(s - t) + O\big( s -t \big), \\
+	& \textrm{Thus,as norm is Lipschitz} \\
+	&  O(s - t)  = - \Big\| O(s-t) \Big\| \le  g(s) - G(s - t)  \le \Big\| O(s - t) \Big\| = O(s - t)  \\
+	&    g(s)  = G(s - t) + O(s - t)  \\
+	& \textrm{where first summand is right-differentiable at $t$ and last summand is neglegible.}   \\
+	\EndProof
+	\\
+	\Theorem{DifferentialTarget}{ \forall f : \TYPE{RightDifferentiableAt} \And C  \Big([a,b],W \Big) \.
+	       \forall K : \TYPE{Closed} \And \TYPE{Convex}(W) \. 
+	       \NewLine \.
+	       \forall T : \forall t \in (a,b) \. \D_r f |_t \in K \.
+	       \frac{ f(b) - f(a) }{b - a} \in K
+	}
+	\Assume{(x,y,1)}
+	{
+	  \sum x,y \in  (a,b) \.  x < y	
+	}
+	\Say{g}{\Lambda t \in (x,y) \. \frac{f(t) - f(x)}{t - x}}{C \Big( (x,y),W \Big)}
+	\Assume{\varepsilon}{\Reals_{++}} 
+	\Say{U}{ g^{-1} \Big(  \FUNC{inflate}( K, \epsilon   )^\c \cap (x,y)  \Big) }{\TYPE{Open}(x,y)}
+	\Assume{A}{U \neq \emptyset}
+	\Say{u}{ \inf U }{ [x,y) }
+	\Say{(2)}{ \bd K(x)}{ \lim_{t \downarrow x} g(t) \in K }
+	\Say{(3)}{\bd C\Big((x,y),W\Big )(g) \bd U \bd u(2) }{ x < u }
+	\Say{(4)}{ \THM{OpenLowerBound}(U,u) }{u < U}
+	\Say{(v,5)}{\bd \TYPE{LowerBound}(u)}{\sum v : \Nat \to U \. \lim_{n \to \infty} v_n = u}
+	\Say{(6)}{\THM{ContConvergent}(g)(v,5)(4)}{\lim_{ n \to \infty} g(v_n) \in \FUNC{inflate}(K,\epsilon)}
+	\Say{(n,7)}{ \bd \TYPE{RightDifferential}(f)(u)(\bd v)C(\varepsilon)}{ \sum n \in \Nat \. d\left(\frac{f(v_n) - f(u)}{v_n - u},K \right) < \epsilon    }
+	\Say{(8)}{\bd g(v_n) \THM{FracSumIntro}(u)}{   g(v_n) =   \frac{f(v_n) - f(x)}{v_n - x}  = 
+		=  \frac{v_n - u}{ v_n - x}\frac{f(v_n - f(u)}{v_n - u} + \frac{u - x}{v_n - x}g(u)
+	}
+	\Say{(9)}{\bd U \bd \TYPE{Convex}(E)\Big( \FUNC{inflate}(K, \epsilon)  \Big)(8)(7)}{v_n \not \in U}
+	\Conclude{(10)}{\THM{InAndNotIn}(\bd v,9)}{\bot }
+	\Derive{(2)}{\LOGIC{Contradiction}}{ U = \emptyset }
+	\Conclude{(3)}{ \TYPE{AntiSet}(\bd U ) (2) }{ \forall t \in (x,y) \. d(g(t),K) < \epsilon }
+	\Derive{ (2)  }{\lim_{\epsilon \to 0} I(\forall)(\epsilon)}{ \forall x \in (a,b) \, \forall t \in (x,b) \. \frac{f(t) - f(x)}{t - x} \in K }
+	\Conclude{(4)}{ \lim( x \to a) \lim_{t \to b} (2) }{ \frac{f(b) - f(a) }{b - a} \in K }
+	\EndProof
+}
+\Page{
+	\Theorem{ConvergenceByDerivatives}
+	{  
+		\forall V,W : \BAN(K) \. \forall U : \TYPE{Open} \And \TYPE{InnerBounded} \And \TYPE{Connected}(V) \.
+		\NewLine \.
+		\forall f : \Nat \to \TYPE{Differentiable}{V,W,U} \.
+		\forall a \in U \. \forall A_1 : \Big( f(a) : \TYPE{Convergent}(W)  \Big) \.
+		\forall g : U  \to \B(V,W) \.  
+		\NewLine \.
+		\forall A_2 : \D f \ToU g \.
+		\exists \varphi : \TYPE{Differentiable}(V,W,U) \. f \ToU \varphi \And  \D \varphi = g
+	}
+	\Say{(1)}{\THM{ConvergentIsCauchy}(\D f)}{\Big( \D f : \TYPE{Cauchy}\big( U \to \B(V,W),\FUNC{supmetric} \big) \Big)}
+	\Say{R}{\TYPE{diam}(U)}{\Reals_{++}}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(N,2)}{\bd \TYPE{Cauchy}\big(U \to \B(V,W),\FUNC{supmetric}\big)(\D f)\left( \frac{\varepsilon}{R} \right)}
+	{
+		N \in \Nat \. 
+		\forall (n,m,B) : 
+		\NewLine :
+		\sum n,m \in \Nat \. n \ge N \And m \ge n \. \| \D_f - g \| \le \frac{\varepsilon}{R} 
+	}
+	\Assume{(n,m,3)}{ \sum n,m \in \Nat \. n \ge N \And m \ge N}
+	\Say{h}{\Lambda u \in U \. f_n(u) - f_m(u)}{\TYPE{Differentiable}(V,W,U)} 
+	\Conclude{(4)}{ \sup_{x \in U} \THM{InnerMeanValueTHM}(h,x,a)}
+	{
+		\sup_{x \in U}	\| f_n(x) - f_m( x) - f_n(a) + f_m(a) \| \le 
+		\NewLine \le:w
+		\sup_{x \in U }\sup_{y  \in  U}\| \D f_n|_y  - \D f_m|_y  \| d_U(x,a)  =
+		= R\| \D f_n - \D f_m \| \le \varepsilon
+	}
+	\Derive{(2)}{ \bd^{-1} \TYPE{Cauchy}\big(C_\infty(U)\big)  }{ \Big( f - f(a) : \TYPE{Cauchy}\big( C_\infty(U,W) \big)  \Big) }
+	\Say{(3)}{ \bd \TYPE{Complete}(C_\infty)(2) - \lim_{n \to \infty} f(a) }{ \Big( f : \TYPE{Convergent}\big( C_\infty(U) \big) \Big)}
+	\Say{\varphi}{ \lim_{n \to \infty} f_n }{ C_\infty}
+	\Assume{u}{U}
+	\Say{(4)}{\THM{ConverginSum}}{ f_n - f_n(u) - \D f_n |_u \, \FUNC{minus}(u) : \TYPE{Convergent}\big( C_\infty(U) \big)}
+	\Say{(5)}{ \THM{SublineaByConvergence}(4)}
+	{        
+	   \varphi(x) - \varphi(u) - g(u)(x -u) = O\big( \|x - u\|  \Big)
+	}
+	\Conclude{(6)}{\bd^{-1} \TYPE{Differential}(6)}{ \D \varphi |_u = g(u)   }
+	\Derive{(*)}{ I(\forall)  }{ \D \varphi = g }
+	\EndProof
+	\\
+	\Theorem{ConvergenceByDerivativeUnbounded}
+	{  
+		\forall V,W : \BAN(K) \. \forall U : \TYPE{Open}  \And \TYPE{Connected}(V) \.
+		\NewLine \.
+		\forall f : \Nat \to \TYPE{Differentiable}{V,W,U} \.
+		\forall a \in U \. \forall A_1 : \Big( f(a) : \TYPE{Convergent}(W)  \Big) \.
+		\forall g : U  \to \B(V,W) \.  
+		\NewLine \.
+		\forall A_2 : \D f \ToU g \.
+		\exists \varphi : \TYPE{Differentiable}(V,W,U) \. f  \D \varphi = g
+	}
+	& \textrm{Every point $u \in U$ will have bounded Neighbourhood to which  we can apply previous theorem. Gluing provides resulti.} \\
+	\EndProof
+}\Page{
+	\Theorem{COnebyPartialDerivatives}
+	{
+		\forall n \in \Nat \. 
+		\forall W \in \BAN(K) \.
+		\forall V : n \to \BAN(K) \.
+		\NewLine \.
+		\forall U : \TYPE{Open}\left( \prod^n_{i=1} V_i \right) \.
+		\forall f : \TYPE{PartiallyDifferentiable}(V,W,U) \.
+		\NewLine \.
+		\forall A : \forall i \in n \. \D_i f : C\left(  U, \B(V_i,W)  \right) \.
+		f : C^1\left( U, W \right)
+	}
+	\Say{T}{\Lambda p \in U \. \Lambda h \in \prod^n_{i = 1} \. \sum^n_{i = 1} \D_i f|_p h_i }{ \prod^n_{i = 1} U_i \to \B\left( \prod^n_{i = 1} V_i, W \right)  }
+	\Assume{p}{ U }
+	\Say{I}{ \Big\{ \{ 1,\ldots,i  \}  | i \in \Nat : i < n \Big\} }{??n}
+	\Say{\eta}{\Lambda i \in I \.  i \cap \max(i) + 1}{I \to ??n}
+	\Say{\varphi}{\Lambda i \in I \. \Lambda x \in \prod^n_{i = 1} U \. f\big( \hat p^{\eta(i)}_x \big) - f\big( \hat p^i_x \big) - T(p)(x - p) }{I \to U \to V}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Assume{i}{n}
+	\Conclude{(\delta_i,1_i) }{A(p,\varepsilon)}{\sum \delta \in \Reals_{++} \. \forall v \in \Ball(p,\delta) \.  \| \D_i f |_p - \D_i f |_v \| < \varepsilon}
+	\Derive{(\delta,1)}{I(\prod)}{\prod i \in n \. \sum \delta \in \Reals_{++} \. \forall v \in \Ball(p,\delta) \. \| \D_i f |_p - \D_i f |_v \| < \varepsilon}
+	\Say{\Delta}{\max(\delta)}{\Reals_{++}}
+	\Assume{x }{ \Ball(p,\Delta)}
+	\Assume{i}{n}
+	\Say{h}{\Lambda \xi \in \pi_i \Ball(p,\Delta) \. f\Big( \hat p^{\{1, \ldots, i \}}_{\hat x^{\{i\}}_{\xi}} \Big) - \D_i f|_p(x - p)}
+	{ \pi_i \Ball(p,\Delta) \to W   }
+	\Say{(2)}{\THM{BanachMeanValueTHM}(h)(p,x)}
+	{
+		\frac{ \| h(x) - h(p)\| }{ \|x - p\|} \le \sup_{v \in [x,p]} \Big\|\big( \D_i f |_v - \D_i f |_p \big)(x - p) |    \Big\| \le
+		\| x - p \| \varepsilon
+	}
+	\Derive{(2)}{ \forall i \in I \. \bd^{-1} \TYPE{Convergent}(W)  }
+	{
+	  \forall i \in I \. \lim_{x \to p} \frac{\|\varphi_i(x)\|}{\|x - p\|}	 = 0	
+	}
+	\Say{(2)}{ \lim_{ x \to p}  \bd^{-1}\varphi \omega(f)(2)}{ \lim_{x \to p} \frac{\| f(x) - f(p) - T(p)(x -p) \|}{\|x - p \|} 
+	  = 0
+	}
+	\Conclude{(1)}{\bd^{-1} \TYPE{DifferentialAt}\left( \prod^n_{i = 1}V, W,U\right)}
+	{
+		\D f |_p = T(p) 
+	}
+	\Derive{(1)}{ \bd^{-1} \TYPE{Differentiable}\left( \prod^n_{i = 1} V_i,U ,W \right) }
+	{ \left(  f : \TYPE{Differentiable}\left(\prod^n_{i = 1} V_i,U,W \right) \right) }
+	\Conclude{(*)}{\THM{SmoothByPartialDerivatives}(f)}{f \in C^1(U,W)}
+	\EndProof
+} \Page{
+	\DeclareType{StronglyTangentToZeroAt}{\prod V,W \in \BAN(K) \. \prod U : \TYPE{Open}(V) \. ?(U \times U \to V)}
+	\DefineType{(a,f)}{StronglyTangenToZeroAt}{ f(a) = 0 \And \forall \varepsilon \in \Reals_{++} \. 
+		\exists r \in \Reals_{++} \.  f_{|\Ball(a.r)} : \TYPE{Lipschitz}(U,W,\varepsilon)  
+	}
+	\\
+	\DeclareType{StronglyDifferentiable}{ ?\TYPE{Differentiable}(V,W,U) }
+	\DefineType{f}{StronglyDifferentiable}{\forall p \in U \. \Big(p,f(p) - f - \D f |_p \, \FUNC{minus}(p) \Big) 
+	 : \NewLine : \TYPE{StronglyTangentToZeroAt}(V,W,U)
+	}
+	\\
+	\Theorem{ContinuouslyDifferentiableAreStrong}{ 
+		\forall f \in C^1(U,W) \. : \TYPE{StronglyDifferentiable}(V,W,U)  }
+	\NoProof
+}
+\newpage
+\subsection{Inverse function theorem}
+ \Page{
+ 	\DeclareFunc{CategoryOfSmoothMaps}{\Cate}
+	\DefineNamedFunc{CategoryOfSmoothMaps}{}{\mathsf{DIFF}(1)}
+	{
+	\NewLine 
+	  = \left( \sum H  \in \BAN(K) \. \TYPE{Open}(H) , \big( (H,U),(G,V) \big) \mapsto C^1(U,V) , \circ   \right)	
+	}
+	\\
+\Theorem{DiffeomorphismByInvertibility}{\forall (H,U),(G,V) \in \mathsf{SMH}(1) \. \forall f : (H,U) \to_\DIFF (G,V) \And  U \ToBij_\TOP V \. \NewLine \.
+  \forall u \in U  \iff \D f |_u : \TYPE{Invertible}(H,G) \. f : (H,U) \ToBij (V,U)
+}
+\Assume{R}{\forall u \in U \. \D f |_u : \TYPE{Inverible}(H,G)}
+\Assume{y}{V}
+\Say{(x,1)}{\bd \TYPE{Bijective}(f)(y)}{ \sum x \in U \. f(x) = y  }
+\Say{(O,\phi,2)}{\bd \TYPE{DifferntiableAt}(H,G,V)(f,x)}{\sum W \in \mathcal{U}(x) \. \sim \phi : W \to G \.\phi(w) = O(\|w - x \|) 
+ 	\And 
+	\NewLine \And
+	\forall w \in W \. f(w) = f(x) + \D f |_x(o - x) + \phi(w) }
+\Say{(A,3)}{ \THM{SmoothIsStronglyDifferentiable}\left(\frac{\big\|(D f|_x)^{-1}\|^{-1}}{2}\right)}
+{\sum A \in \dot{\mathcal{U}}(x) \. \forall a \in A \. 
+\NewLine \.
+\|\phi(a)\|  \le \frac{\Big\|(\D f |_x )^{-1}\Big\|^{-1}\|a - x \|}{2}
+}
+\Assume{a}{A}
+\Say{(4)}{ \|(\D f|_x)^{-1}(2)(a)\| }{  \Big \| (\D f^{-1} |_x)^{-1}(f(a) - f(x)) \big \| \ge \Big| \| a - x\|  - \big\| (\D f |_x)^{-1}\phi(a) \big\| \Big|   }
+\Say{(5)}{ \bd \FUNC{operatorNorm}(\D f|_x)^{-1} (4)(3)}{\Big\| (\D f |_x)^{-1} \Big\| \| f(a) - f(x) \| \ge \|a - x\|\left|1 
+	- \frac{\Big\|(\D f|_x)^{-1}\phi(a) \Big\|}{\|a - x\|} \right|  }
+\Conclude{(6)}{ (5)\left(  \frac{\Big\| (\D f |_x)^{-1} \phi(a) \Big\|}{\|a - x\| 
+\left| 1 - \frac{\Big\|(\D f |_x)^{-1} \phi(a)  \Big\|}{\|a - x\|}  \right|  }  \right)}
+{  \Big\| (\D f |_x)^{-1}\phi(a) \Big\|   \le   \frac{\Big\| (\D f |_x)^{-1} \phi(a) \Big\|\Big\| (\D f |_x)^{-1}\Big\|\| f(a) - f(x)\| }{\|a - x\| 
+\left| 1 - \frac{\Big\|(\D f |_x)^{-1} \phi(a)  \Big\|}{\|a - x\|} \right| }                          }
+\Derive{(3)}{\bd^{-1} \TYPE{AsymptoticAtZero}(2)}{ \Big\| (\D f |_x)^{-1} \phi(a) \| = O(\|f(a) - f(x) \|)}
+\Say{(4)}{ \FUNC{diffirintiate}\Big(f^{-1},y, (\D f |_x)^{-1} \Big)\bd^{-1} x (2)(3)   }
+ { 
+	\lim_{v \to y} \frac{\|f^{-1}{v} -  f^{-1}{y} - (\D f |_u )^{-1}(y - v) \| }{\|y - v\|} = \NewLine =  
+	\lim_{v \to y} \frac{ \bigg\| f^{-1}{v}   - x  - (\D f |_x )^{-1}\Big( x + \D f |_x\big(f^{-1}(v) - x\big) + \phi\big(f^{-1}(v)\big)\Big) \bigg\| }{\| y - v \|}
+	= 
+	\lim_{v \to y} \frac{ \Big\| \big( \D f |_x \big)^{-1} \phi(f^{-1}(v))\Big\|  }{\| y - v \|} = 0
+}
+\Conclude{(5)}{\bd^{-1} \TYPE{Differential}(G,H,V)(f^{-1},y)(4)}{\D f^{-1}|_y = (\D f|_x)^{-1}}
+\Derive{(1)}{I(\forall)}{\forall y \in V \. \D f|_y = (\D f|_{f^{-1}(y)})^{-1}}
+\Say{(2)}{\bd^{-1} \TYPE{Differntiable}(G,H,V)(1)}{\Big( f^{-1} : \TYPE{Differentiable}(G,H,V)  \Big)}
+\Say{(3)}{\bd^{-1}C^1(V,U)\THM{ContinuousComposition}(1)}{f^{-1} \in C^1(V,U)}
+\Conclude{(4) }{\bd \DIFF(3)}{\Big( f : (H,U) \ToBij_\DIFF (G,V) \Big)}
+\Derive{(1)}{I(\Rightarrow)}{\Big(\forall u \in U \. \D f |_u  : \TYPE{Invertible}(\B(H,G)) \Big) \Rightarrow f : (H,U) \ToBij_\DIFF (G,V) }
+}
+\Page{
+	\Assume{R}{\Big( f : (H,U) \ToBij_\DIFF (G,V)  \Big) }
+	\Assume{u}{U}
+	\Say{(2)}{\bd \TYPE{Inverse}(f)}{f^{-1} f  = I}
+	\Say{(3)}{ \THM{DerivativeOfLinear}(2)}{\D f^{-1} f |_u = I}
+	\Say{(4)}{ \THM{ChainRule}(f^{-1},f)(3)  }{ I = \D f^{-1} f|_u = \D f^{-1} |_{f(u)} \D f |_u  }
+	\Say{(5)}{ \bd^{-1} \TYPE{LeftInverse}(4)  }{\Big( \D f^{-1} |_u : \TYPE{LeftInvers}(\D f |_u) \Big)   }
+	\Say{(6)}{\bd \TYPE{Inverse}(f^{-1})}{f f^{-1}  = I}
+	\Say{(7)}{ \THM{DerivativeOfLinear}(6)}{\D f f^{-1} |_{f(u)} = I}
+	\Say{(8)}{ \THM{ChainRule}(f^{-1},f)(7)  }{ I = \D f f^{-1}|_{f(u)} = \D f |_{u} \D f^{-1} |_{f(u)}  }
+	\Say{(9)}{ \bd^{-1} \TYPE{RightInverse}(8)  }{\Big( \D f^{-1} |_u : \TYPE{RightInverse}(\D f |_u) \Big)   }
+	\Conclude{(10)}{\bd \TYPE{Invertible}(H,G)(5,9)}{\Big( \D f |_u : \TYPE{Invertible}(H,G)  \Big)}
+	\DeriveConclude{(*)}{I(\forall)(1)I(\Rightarrow)I(\forall)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{HomeoByContraction}{ 
+		\forall E : \BAN(K) \.  \forall (p,r,f,1) : \sum (p,r) : E \times \Reals_{++} \. \sum f : \Ball(p,r) \to E \. 
+		\NewLine
+		\Lambda x \in \Ball(p,r) \. x - f(x) : \TYPE{Contraction}\Big( \Ball(p,r),E \Big)  \.   
+		\exists U : \TYPE{Open}(E) \. f : \Ball(p,r) \ToBij_\TOP U 
+	}
+	\Say{\varphi}{\Lambda x \in \Ball(p,r) \. x - f(x)}{ \Ball(p,r) \to E }
+	\Say{(k,2)}{\bd \TYPE{Contraction}(1)}{\sum k \in (0,1) \.  \forall x, y \in \Ball(p,r) \. \| \varphi(x) - \varphi(y) \| \le k\| x - y  \|   }
+	\Assume{x,y}{\Ball(p,r)}
+	\Conclude{(3)}{ \bd^{-1} \varphi \Big( \| f(x) - f(y) \Big) \bd \TYPE{Seminorm}(E)(\varphi(x) - \varphi(y),x - y)(2)   }
+	{
+		\NewLine :
+		\| f(x) - f(y) \| \le \| \varphi(x) - \varphi(y) \| + \| x - y \| \le (1 + k)\| x - y \| }
+	\Derive{(3)}{ \bd^{-1} \TYPE{Lipschitz}   }{ \Big( f : \TYPE{Lipschitz}\big(\Ball(p,r),E,1 + k\big)  \Big) }
+	\Assume{x,y}{\Ball(p,r)}
+	\Conclude{(4)}{ \bd^{-1} \varphi  \THM{InverseTriabgleIneq}( x - y, \varphi(x) - \varphi(y)  )\THM{AbsValIneq}(2)  }
+	{
+	 	\NewLine :
+		\| f(x) - f(y) \| \ge  \big| \| x - y \| - \| \varphi(x) - \varphi(y) \big| \ge  (1 - k) \| x - y\| 
+	}
+	\Derive{(4)}{I(\forall)}{ \forall x,y \in  \Ball(p,r)  \. \| f(x) - f(y) \| \ge (1 - k)\| x - y \|}
+	\Assume{z}{ \Im f}
+	\Assume{(x,y,5)}{\sum x,y \in \Ball(p,r) \. f(x) = z \And f(y) = z}
+	\Say{(6)}{(4)(x,y)}{  0 \ge (1 - k)\| x - y \| }
+	\Conclude{(7)}{\THM{NonnegativeNonpositive}(4)\THM{ZeroNorm}(E)}{x = y}
+	\Derive{(5)}{\bd \TYPE{Injective}}{ \Big( f : \Ball(p,r) \ToInj E  \Big)}
+	\Assume{y}{\Ball\left(f(p),\frac{r}{(1 - k)}\right)}
+	\Say{x_0}{p}{\Ball(f(p),r)}
+	\Assume{n}{\Nat}
+	\Say{x_n}{ y + \varphi(x_{n-1})}{E}
+	\Assume{Q}{ n = 1}
+	\Conclude{A_1}{\bd x_1}{ \| x_1 - x_0 \| = \| y + p - f(p) - p \| = \| y - f(p) \|  }
+	\Derive{A^1}{I(\Rightarrow)}{ n = 1 \Rightarrow \| x_n - a\| = \frac{1 - k^n}{1 - k} \| y - f(p) \|   }
+}
+\Page{
+	\Assume{Q}{n > 1 \And A_{n - 1} \And B_{n - 1}}
+	\Conclude{A_n}{ \THM{TriangleIneq}(x_n,x_{n - 1},p)  \bd x (2)A[n] \bd y  }
+	{
+		\NewLine :
+		\| x_n - p \| \le  \| x_n - x_{n-1} \| + \| x_{n -1}  - p \| \le
+		\| \varphi(x_{n-1}) - \varphi(x_{n-2}) \| + \frac{1 - k^{n-1}}{1 - k}\| y - f(p) \| \le
+		\NewLine \le
+		k^{n-1}\| y - f(p) \| - \frac{1 -k^{n -1}}{1 - k}\| y - f(p) \| = \frac{1 - k^n}{1 - k}\| y - f(p) \| < r
+	}
+	\Derive{x}{I(\to)\LOGIC{Induction}(A)}{\Nat \to \Ball(p,r)}
+	\Say{(6)}{ \THM{SeriaCauchy}(2)(\bd x)}{ \Big( x : \TYPE{Cauchy}\big( \Ball(p,r) \big)  \Big) }
+	\Say{ X  }{\lim_{n \to \infty} x_n}{\Ball(p,r)}
+	\Say{(7)}{\THM{ContinuousLimit}(X,\bd x)}{ X = y + \varphi(X)}
+	\Conclude{(8)}{ \bd \varphi (7)  }{y = \varphi(x)}
+	\Derive{(6)}{\bd^{-1} \TYPE{Bijection}(5)}{\left(  f : \Ball(p,r) \ToBij  \Ball\left(f(p), \frac{(1-k)}{r}\right) \right)}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Homeomorphism}(6)(2)(3)}{ \left( f : \Ball(p,r) \ToBij_\TOP \Ball\left(f(p), \frac{(1-k)}{r}\right) \right)    }
+	\EndProof
+	\\
+	\Theorem{LocalInversionTheorem}{
+		\forall E,F : \BAN(K) \. \forall U : \TYPE{Open}(E) \. \forall f : C^1(U,F) \. 
+		\NewLine \.
+		\forall (p,1) : \sum p \in U \. \D f |_p : \TYPE{Invertible}\Big(  \B(E,F)   \Big) \.
+		\exists V \in \mathcal{U}(p) : \exists W \in \mathcal{U}(f(p)) : 
+		\NewLine :
+		\Big( f : (E,V) \ToBij_{\DIFF(1)} (F,W)  \Big)
+	}
+	\Say{\varphi}{\Lambda x \in U \.  x - (\D f |_p )^{-1}f(x) }{U \to E}
+	\Say{(1)}{\THM{SmoothIsStronglyDifferentiable}(\D f |_p)^{-1}f}{\Big( (\D f |_p)^{-1}f : \TYPE{StronglyDifferentiableAt}(E,F,U,p)  \Big)}
+	\Say{(r,2)}{\bd \TYPE{StronglyDifferentiable}(E,F,U,p)(1/2) (\D f |_p)^{-1}f}{ \sum r \in \Reals_{++} \. \varphi_{|\Ball(p,r)} : \TYPE{Contraction}  }
+	\Say{(V',W',3)}{\D f |_p \THM{HomeoByContraction}}{\sum (V',W') \in \mathcal{U}(p) \times \mathcal{U}(f(p)) \.  f : V' \ToBij_\TOP W'  }
+	\Say{(V,4)}{V' \cap \THM{OpenInvertible}\Big( \B(E,F) \Big)}{ \sum V \in \mathcal{U}(p) \. V \subset V' \And \forall v \in V \. \D f |_v : \TYPE{Invertible}\Big( \B(E,F) \Big)}
+	\Say{W}{f(V)}{\mathcal{U}(f(p))}
+	\Conclude{(*)}{\THM{DiffeoByInvertibility}(3,4)}{ \Big( f : (V,E) \ToBij_{\DIFF(1)} (W,F)  \Big)  }
+	\EndProof
+	\\
+	\Theorem{LocalInversionCollorarly}{
+		\forall E,F : \BAN(K) \. \forall U : \TYPE{Open}(E) \. \forall f : C^1{U,F} \.
+		\NewLine \.
+		\forall q : \forall u \in U \. \D f |_u : \TYPE{Inverible}\Big( \B(E,F) \Big) \. 
+		\Big( f : (E,U) \ToBij_{\DIFF(1)} (F,f(U))  \Big)
+	}
+}
+\newpage
+\subsection{ImplicitFunctionTheorem}
+\Page{
+	\Theorem{ImplicitFunctionTHM}{ 
+		\forall E,F,G : \BAN(K) \.  \forall  U : \TYPE{Open}(V \oplus F) \. \forall f : C^1(U,G) \.
+		\NewLine \.
+		\forall (a,b,1) : \sum (a,b) \in U \. f(a,b) = 0 \And \D_2 f |_{(a,b)} : \TYPE{Invertible}\Big( \B(F,G) \Big)
+		\. \NewLine \. 
+		\exists (V,W,g,2) : \sum  (V,W) \in \mathcal{U}(a,b) \times  \mathcal{U}(a) \. \sum  g \in C^1(W,F) \. 
+		\NewLine \.
+		\forall (x,y) \in V \. f(x,y) = 0 \iff x \in W \And y = g(x)  
+	}
+	\Say{\varphi}{\Lambda (x,y) \in U \. \big(x,f(x,y)\big)}{  C(U,  E \oplus G )  }
+	\Say{(2)}{\D \bd  \varphi |_{(a,b)}}{ \D \varphi |_{(a,b)} = 
+		\left[ \begin{array}{cc}
+			 I & 0 \\
+			 \D_1 f |_{(a,b)} & \D_2 f |_{(a,b)} 
+		       \end{array}
+		\right]  }
+       \Say{(3)}{\THM{LTOperatorInvertible}(2 )}{\bigg(\D \varphi |_{(a,b)} ; \TYPE{Invertible}\Big( \B( E \oplus F, E \oplus G ) \Big)\bigg)}
+       \Say{(4)}{\THM{LTOperatorInversion}(2,3) }{ ( \D \varphi |_{(a,b)}    )^{-1} =   
+		\left[ \begin{array}{cc}
+				I & 0 \\
+				-(\D_2 f |_{(a,b)})^{-1}\D_1 f |_{(a,b)} & (\D_2 f |_{(a,b)})^{-1} \\
+		\end{array} \right]
+       }
+       \Say{(V,W',5)}{\THM{LocalInversionTHM}(3)}{ 
+       		\NewLine :
+       		\sum (V,W') \in \mathcal{U}(a,b) \times  \mathcal{U}(a,0)  \. \varphi : (E \oplus F, V) \ToBij_{\DIFF(1)} (E \oplus G,W') 
+       }
+       	\Say{(W,6)}{\FUNC{horisontalSliceAt}(W',0)}{\sum W \in \mathcal{U}(a) \. \forall (w,0) \in W' \. w \in W}
+       	\Say{ g}{ \Lambda w \in W \.  \pi_2 \phi^{-1}(w,0)  }{ C^1(W,F)}
+       	\Assume{(x,y)}{ V }
+       	\Assume{(7)}{f(x,y) = 0}
+       	\Say{(8)}{\bd \varphi(7)}{\varphi(x,y) = (x,0)}
+       	\Say{(9)}{ (5)\bd(x,y)  }{(x,0) \in W'}
+       	\Say{(10)}{ (6)(9,8)  }{x \in W}
+       	\Conclude{(11)}{ \bd g(8)  }{ g(x) = y }
+	\Derive{(7)}{I(\Rightarrow)}{ f(x,y) = 0 \Rightarrow x \in W \And g(x) = y }
+	\Assume{(8)}{x \in W \And g(x) = y}
+	\Conclude{(10)}{\bd g \bd \varphi (8)}{f(x,y) = 0}
+	\DeriveConclude{(*)}{ I(\forall)I(\iff)(7) }{\forall (x,y) \in V \. f(x,y) = 0 \iff x \in W \And g(x) = y}
+	\EndProof
+	\\
+	\DeclareType{LocalImpilcitFunction}{\prod E,F,G : \BAN(K) \. \prod U : \TYPE{Open}(V) \. C^1(U,G) \to U \to 
+	\NewLine \to
+	\sum (V,W) : \TYPE{Open}(U) \times \TYPE{Open}(E) \. C^1(W,F) }
+	& (V,W,g) : \TYPE{LocalImplicitFunction}\big(f,(a,b)\big) \iff  \NewLine \iff (a,b) \in U \And a \in W \And \forall (x,y) \in U \. f(x,y) = f(a,b) \iff x \in W \And g(x) = y \\
+}
+\Page{
+	\Theorem{ImplicitFunctionUnique}{ 
+		\forall E,F,G : \BAN(K) \. \forall U : \TYPE{Open}(E \oplus F) \. \forall f : C^1(U,G) \. \forall (a,b) \in U \. 
+		\NewLine \.
+		\forall (V,W,g), (V',W',h) : \TYPE{loclaImplicitFunction}(E,F,G,U)(f,(a,b)) \.
+		\NewLine \.
+		\forall (X,1) : \sum X \in \mathcal{U}(a) \And \TYPE{Connecected}(E) \. X \subset W \cap W' \.
+		h_{|X} = g_{|X}
+	}
+	\Say{A}{\{ x \in X : h(x) = g(x)    \} }{\Set(X)}
+	\Assume{x}{\TYPE{Convergent}(A)}
+	\Say{a}{\lim_{n \to \infty} x_n}{X}
+	\Say{(2)}{\THM{ContinuousLimit}(g,h,x)\bd A}{ f(a) = h(a)}
+	\Conclude{(3)}{\bd^{-1}A(2)}{a \in A}
+	\Derive{(2)}{\THM{ClosedByConvergence}}{\Big( A : \TYPE{Closed}(X) \Big)}
+	\Say{(3)}{\bd X \bd \TYPE{LocalImplicitFunction}(E,F,G,U)(f,(a,b))(g,h)}{a \in A}
+	\Say{(4)}{\bd^{-1} \emptyset (3)}{A \neq \emptyset}
+	\Assume{a}{\TYPE{LimitPoint}(A)}
+	\Say{(x,5)}{\bd A \bd \TYPE{LimitPoint}(A)(a) }{ \sum x : \Nat \to A^\c \. \lim_{n \to \infty} x_n = a   }
+	\Say{(6)}{ \THM{ContinuousLimit} \bd A(a) }{ \lim_{n \to \infty} \varphi(x_n,g(x_n)) = \varphi(a,g(a)) = \varphi(a,h(a)) = \lim_{n \to \infty} \varphi(x_n,h(x_n))  }
+	\Say{(n,7)}{ (6)(V)}{\sum n \in \Nat \, (x_n,h(x_n)) \in V }
+	\Say{(8)}{\bd \TYPE{LocalImplicitFunction}(E,F,G,U)(f,(a,b))(g,h)}{ (x_n,g_n(x_n)) = \varphi^{-1}(x_n,f(x_n,g(x_n))) = \varphi^{-1}(x_n,f(a,b)) = \varphi^{-1}(x_n,f(x_n,h(x_n))) = (x_n,h_n(x_n))  }
+	\Say{(9)}{E(=,\times)(8)}{h(x_n) = g(x_n)}
+	\Conclude{(10)}{\bd x (9)}{\bot}
+	\Derive{(5)}{\THM{LimitlessIsOpen}}{\Big( A : \TYPE{Open}(X) \Big)}
+	\Say{(6)}{\bd \TYPE{Connected}(X)(5)(4)}{A = X}
+	\Conclude{(*)}{ \bd A(6)  }{ g_{X} = h_{|X}  }
+	\EndProof
+}
+\subsection{Higher Order Derivative}
+\Page{
+	\DeclareType{NDifferentiable}{ \prod E,F : \BAN(K) \.  \prod U : \TYPE{Open}(E) \. \Nat \to ?(U \to F) }
+	&  f : \TYPE{NDifferentiable}(1) \iff f : \TYPE{Differentiable}(E,F,U)    \\
+	&  f : \TYPE{NDifferentiable}(n) \iff  f : \TYPE{Differentiable}(E,F,U)  \And \NewLine \And \D f : \TYPE{NDiffernetiable}\Big(E, \B(E,F),U\Big)(n -1) \\ 
+	\\
+	\DeclareFunc{nDerivative}{
+		\prod E,F : \BAN(K) \. \prod U : \TYPE{Open}(E) \. \prod n \in \Nat \. 
+		\NewLine \.
+		U \to \TYPE{NDifferentiable}(E,F,U) \to \B\Big( (E)^n_{i = 1}    ; G\Big) 
+	}
+	\DefineNamedFunc{nDerivatve}{u,f,h}{ \D^n f |_u h  }{  \D \D^{n-1} f |_u |_u h    }
+	\\
+	\DeclareType{NPartiallyDifferentiable}{
+		\prod m \in \Nat \. \prod E : m \to \BAN(K) \.  \prod F \in \BAN(K) \.
+		\NewLine \.
+		\prod U : \TYPE{Open}\left( \prod^n_{i = 1} E \right)   \.
+		\Nat \to ?(U \to F)
+		}
+	&  f : \TYPE{NPartiallyDifferentiable}(1) \iff f : \TYPE{PartiallyDifferentiable}(E,F,U) \\
+	&  f : \TYPE{NPartiallyDifferentiable}(n) \iff f : \TYPE{PartiallyDifferentiable}(E,F,U) \And \NewLine \And
+	\forall i \in m \.  \D_i f : \TYPE{NPartialyDifferentiable}(E,F,U)(n - 1) \\
+	\\
+	\DeclareFunc{nPartialDerivative}{
+		\prod m \in \Nat \. \prod E : m \to \BAN(K) \.  \prod F \in \BAN(K) \.
+		\NewLine \.
+		\prod U : \TYPE{Open}\left( \prod^n_{i = 1} E \right)   \.
+		\prod n \in \Nat \. \prod J : (n \to m) \.
+		\NewLine \.
+		U  \to  \TYPE{NPartiallyDiffentiable}(E,U,F)(n) \to \B\Big( (E_{J_i})^n_{i = 1} ; F \Big) }
+	\DefineNamedFunc{nPartialDerivative}{ u,f,h}{ \D_{J} f |_u h }{ \D_{J_n}\D_{J_{|n-1}}  f |_u |_u h 
+		\NewLine \LOGIC{Having} \quad  \D_{ [i]} = \D_i
+	}
+	\\
+	\DeclareType{NSmooth}{ \Nat \to ?\Big( (E,U)  \to_\DIFF (F,V)  \Big)   }
+	&  f : \TYPE{NSmooth}(1) \iff \LOGIC{True}  \\
+	&  f : \TYPE{NSmooth}(n) \iff f \in C^n(U,V) \iff \D f \in C^{n -1}(U,\B(E,F)) 
+	\\ \\
+	\DeclareType{InfitlySmooth}{ ?\Big( (E,U) \to_\DIFF (F,V) \Big) }
+	\DefineNamedType{f}{InfinitlySmooth}{ f \in C^\infty(U,V) }{ \forall n \in \Nat \. f \in C^n(U,V)  }
+	\\
+	\DeclareFunc{categoryOfNSmoothMaps}{\prod K : \TYPE{AbsValField} \And \TYPE{Complete} \. \overset{\infty}{\Nat} \to \Cate }
+	\DefineNamedFunc{categoryOfNSmoothMaps}{n}{\DIFF(n)}{ \NewLine   =
+		\bigg( \sum  E : \BAN(K) \. \TYPE{Open}(E) ,  \big( (E,U),(F,V) \big) \mapsto C^n(U,V), \circ    \bigg)
+	}
+}
+\Page{
+	\Theorem{NDifferentiabilityByLimit}{
+		\forall E,F : \BAN(K) \. \forall U : \TYPE{Open}(E) \. \forall n \in \Nat \.
+		\NewLine \.
+		\forall f : \TYPE{NDiffernriable}(E,F,U)(n) \.
+		\forall u \in U \. \forall A \in \B\Big( (E )^n_{i = 1} , F \Big) \.
+		\NewLine \.
+		A = \D^n f |_u \iff 
+		\lim_{h \to 0} \frac{\left\| \sum^n_{i=0} (-1)^{n-i} \sum_{S \in 2^n : |S| = i}f\left( u + \sum_{j \in S}h_j \right) - A(h)     \right\|}{\|h\|^n} = 0
+	}
+	\NoProof
+	\\
+	\Theorem{SymmetricDifferentials}{ 
+		\forall E,F : \BAN(K) \. \forall U : \TYPE{Open}(E) \. \forall n \in \Nat \.
+		\NewLine \.
+		 \forall f : \TYPE{NDifferentiable}(E,F,U)(n) \.
+		\forall u \in U \. \D^n f |_u : \TYPE{Symmetric}\Big( (E)^n_{i=1}  ; F\Big)
+		}
+	\Say{(r,1)}{\bd \TYPE{Open}(E)(U)(u)}{\sum r \in \Reals_{++} \. \Ball(u,r) \subset U}
+	\Say{\varphi}{ \Lambda h \in \Ball_{E^n}(0,r) \. \sum^n_{i = 0}(-1)^{n - i} \sum_{S \in 2^n : |S| = i}f\left( u + \sum_{j \in S} h_j \right)   }{ \Ball_E(0,r) \to F }
+	\Say{(2)}{\bd^{-1} \TYPE{Symmetric} \bd \varphi}{\Big( \varphi : \TYPE{Symmetric}\big( (E)^n_{i=1} ; F \big)  \Big)}
+	\Assume{\sigma}{S_n}
+	\Say{(3)}{\THM{NDifferentiabilityByLimit}(n,f)}{ \lim_{h \to 0 } \frac{\big\| \varphi(h) - \D^n f |_u h \big\|}{\|h\|^n} = 0   }
+	\Say{(4)}{\THM{PermutationIsometry}(3)(\sigma)(4)}{ 
+		0 = 
+		\lim_{\sigma h \to 0} \frac{ \big\|\varphi(\sigma h) - \D^n f |_u \sigma h \big\|}{\|\sigma h\|^n} = 
+		\lim_{h \to 0} \frac{\big\|\varphi(h) - \D^n f |_u \sigma h \big\|}{\| h \|^n}
+	}
+	\Conclude{(5)}{\THM{NDifferentiabilityByLimit}(4)}{\D^n f |_u = \D^n f |_u \circ \sigma}
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Symmetric}}{\Big( \D^n f |_u : \TYPE{Symmetric}\big((E)^n_{i=1},F\big) \Big)}
+	\EndProof
+	\\
+	\Theorem{SchwarzTheorem}{ \forall F \in \BAN(K) \. \forall m,n \in \Nat \. \forall E : m \to \BAN(K) \. \NewLine \.  
+		\forall f : \TYPE{NDifferentiable}\left(\prod^m_{i = 1}E,F,U\right)(n) \. 
+		\forall I \in n \to m \. \forall \sigma \in S_n \. \forall u \in U  \D_{ I} f|_u = \D_{ \sigma I } f |_u \cdot \sigma            
+	}
+	& \textrm{Use the fact that} \\
+	&  \D_{I} f |_u  h = \D^n f |_u    ( \iota_{E,I_j} h_j)^n_{j = 1} \\
+	& \textrm{But $\D^n f |_u$ is symmetric, so the result follows } \\
+	\EndProof
+	\\
+	\Theorem{NSmoothByPartial}{ 
+		\forall n,m \in \Nat \. \forall E : m \to \BAN(K) \. \forall F : \BAN(K) \. \forall U : \TYPE{Open}(U) \.
+		\NewLine \.
+		\forall f : \TYPE{PartiallyDifferentiable}(E,F,U) \.  
+		f \in C^n(U,F) \iff \forall i \in m \. \D_i f \in C^{n-1}(U,F)
+		}
+	\NoProof
+}
+\Page{
+	\Theorem{MultilinearDifferentiation}{
+		\forall n \in \Nat \. 
+		\forall E : n \to \BAN(K) \.
+		\forall F : \BAN(K) \.
+		\forall T : \B\left( E , F  \right) \.
+		\NewLine
+		T \in C^\infty\left(E, F \right) 
+		\And \forall (m,1) : \sum m \in \Nat \. m > n \.
+		\D^m T = 0 \And \forall m \in n \. \forall p,h \in E \.
+		\NewLine
+		\.
+		\D^m T |_p h = 
+		m! \sum_{ S \in 2^n : |S| = m }  T\Big( (h_i)_{i \in S} \oplus (p_i )_{i \in S^\c}    \Big) 
+	}       
+	\NoProof
+		\\
+	\Theorem{InverseDifferentiation}{
+			\forall B : \TYPE{BanachAlgebra}(K) \.
+			\FUNC{inv} \in C^\infty\Big( \TYPE{Invertible}(B), \TYPE{Invertible}(B) \Big) \.
+			\NewLine \.
+			\forall n \in \Nat \. \forall h \in B^n \. \forall p : \TYPE{Invertible}(B) \.
+			\D^n \FUNC{inv} |_p h  = (-1)^n p^{-1}\sum_{\sigma \in S_n} \prod^n_{i = 1} \big(h_{\sigma(i)} p^{-1} \big) 
+		}
+	\NoProof
+	\\
+	\Theorem{NDifferentiableComposition}{ 
+		\forall E,F,G : \BAN(K) \. \forall U : \TYPE{Open}(E) \. \forall V : \TYPE{Open}(F) \. 
+		\forall  n \in \Nat \.
+		\NewLine \.
+		\forall f : \TYPE{NDifferentiable}(E,F,U)(n) \. \forall g : \TYPE{NDifferentiable}(F,G,V)(n) \. 
+		\forall (1) : \im f \subset V \.
+		\NewLine \.
+		g \circ f : \TYPE{NDifferentiable}(E,G,U)(n) 
+	}
+	\NoProof
+	\\
+	\Theorem{NSmoothCompsition}{
+		\forall E,F,G : \BAN(K) \. \forall U : \TYPE{Open}(E) \. \forall V : \TYPE{Open}(F) \. 
+		\forall  n \in \Nat \.
+		\NewLine \.
+		\forall f \in   C^n(U,V)\. \forall g \in C^n(V,G) \. 
+		g \circ f \in C^n(U,G)
+	}
+	\NoProof
+	\\
+	\Theorem{NSmoothDiffeomorphism}{
+		\forall (E,U), (F,V) \in \DIFF(n) \. \forall f : (E,U) \to_{\DIFF(n)} (F,V) \And 
+		\NewLine \And
+		(E,U) \ToBij_{\DIFF(1)} (F,V) \.
+		f : (E,U) \ToBij_{\DIFF(n)} (F,V)
+	}
+	\NoProof
+}
+\newpage
+\subsection{Taylor Expansion}
+\Page{
+	\Theorem{TaylorFormulaWithTheIntegralReminder}{ \forall E,F \in \BAN(K) \. \forall U : \TYPE{Open}(E) \. \NewLine   \. 
+		\forall n \in \Nat \. \forall f \in C^{n + 1}(U,F) \. \forall (a,h,1) : \sum (a,h) \in U \times E \. [a,a + h] \subset U \.
+		\NewLine
+		f(a + h) = \sum^n_{k = 0} \frac{ \D^k f |_a (h)^k_{i = 1}  }{k!}  + \int^1_0 \frac{(1 - t)^n}{n!} \D^{n + 1} f |_{a + th} (h)^{n + 1}_{i = 1}   \,  \mathrm{d}t
+	}
+	\NoProof
+        \\
+	\Theorem{TaylorFormulaWithLagrangeReminder}{ \forall E,F \in \BAN(K) \. \forall U : \TYPE{Open}(E) \. \NewLine   \. 
+		\forall n \in \Nat \. \forall f \in C^{n + 1}(U,F) \. \forall (a,h,1) : \sum (a,h) \in U \times E \. [a,a + h] \subset U \.
+		\NewLine
+		\forall (M,2) : \sum M \in \Reals_{++} \. \forall t \in [0,1] \.  \Big\| \D^n f |_{a + th}   \Big\| \le M  \. \NewLine \.
+		\left\| f(a + h) - \sum^n_{k = 0} \frac{\D^k f |_a (h)^k_{i = 1}}{k!}   \right\| \le M \frac{ \| h \|^{n + 1} }{(n + 1)!}
+	}
+	\NoProof
+	\\
+}
+\newpage
+\subsection{Analytic Polynomials}
+\Page{
+& (K.0) : \sum K : \TYPE{Field} \. \FUNC{char} \, K = 0  \\
+\\
+\DeclareType{HomogeneusPolynomial}{ \prod V,W \in \mathsf{VS}(K) \. \NNInt \to  ? (V \to W)   }
+& p \in \TYPE{HomogeneusPolynomials}(n) \iff p \in \HP(V,W,n) \iff  
+\NewLine 
+\iff \exists A \in \mathcal{L}\Big( (V)^n_{i = 1}, W  \Big) \. \forall v \in V \. p(v) = A(v)^n_{i = 1} \\
+\\
+\Theorem{HomgeneusPolynomialIsNHomogeneus}{ \forall p \in \HP(V,W,n) \. \forall a \in K \. \forall v \in V \. p(av) = a^n p(v)  }
+\NoProof
+\\
+\Theorem{HomogeneusPolynomialsAreVectorSpace}{ \HP(V,W,n) \in \mathsf{VS}(K) }
+\NoProof
+\\
+\DeclareFunc{prodHP}{\prod V,W,E,F \in \mathsf{VS}(K) \. \prod m,n \in \Nat \. \mathcal{L}\big([V,W],F\big) \to \HP(E,V,n) \to \HP(E,W,m) \to \HP(E,F,n + m)}
+\DefineNamedFunc{ prodHP    }{\Phi,p,q}{ p *_\Phi q  }{ \Lambda h \in E \. \Phi\Big( p(h),q(h) \Big) }
+\NoProof
+\\
+\DeclareType{PreanalyticPolynomial}{\prod V,W  \in \mathsf{VS}(K) \. ?(V \to W)}
+\DefineNamedType{p}{PreanalyticPolynomial}{p \in \P(V,W)}{ p = 0 | \exists n \in \NNInt  \. \exists q \in \prod i \in n \. \HP(V,W,i) \. p = \sum^n_{i=1} q_i \And q_n \neq 0}
+\\
+\DeclareFunc{degree}{ \P(V,W) \to \NNInt \cup \{ - \infty \}  }
+\DefineNamedFunc{degree}{0}{\deg 0}{- \infty}
+\DefineNamedFunc{degree}{p}{\deg p}{\Big(\bd \P(V,W)(p) \Big)_1}
+\\
+\DeclareFunc{degreewisePolynomialVS}{ \Big( \mathsf{VS}(K)  \Big)^2  \to \Nat \to \mathsf{VS}(K) }
+\DefineNamedFunc{degreewisePolynomialVS}{V,W,n}{\P^n(V,W)}{ \{ p \in \P(V,W) : \deg p \le n \}  }
+\\
+} \Page{
+\DeclareFunc{prodP}{\prod V,W,E,F \in \mathsf{VS}(K) \. \prod m,n \in \Nat \. \mathcal{L}\big([V,W],F\big) \to \P^n(E,V) \to \P^m(E,W) \to \P^{n +m}(E,F)}
+\DefineNamedFunc{ prodP    }{\Phi,p,q}{ p *_\Phi q  }{ \Lambda h \in E \. \sum^{n',m'}_{i,j = 1}\Phi\Big( f_i(h),g_j(h) \Big) 
+\NewLine
+\LOGIC{where}
+\NewLine
+ (n',f,1) = \bd \P^n(E,V)(p) : \sum n' \in n \. \sum f : \prod i \in n' \. \HP(E,V,i) \. p = \sum^{n'}_{i = 1} f_i \NewLine
+ (m',g,2) = \bd \P^m(E,W)(q) : \sum m' \in n \. \sum g : \prod j \in m' \. \HP(E,W,i) \. q = \sum^{m'}_{j = 1} g_j 
+} 
+\\
+\DeclareFunc{difference}{\prod V,W  \in \mathsf{VS}(K) \. V \to (V \to W) \to (V \to W)}
+\DefineNamedFunc{difference}{ h, f}{\Delta_h f}{ \Lambda v \in V \. f(v + h) - f(v)}
+\\
+\DeclareFunc{nDifference}{\prod V,W \in \mathsf{VS}(K) \. \prod n \in \Nat \. (n \to V) \to (V \to W)}
+\DefineNamedFunc{nDifference}{[h],f}{\Delta^1_{[h]} f}{\Delta_h f}
+\DefineNamedFunc{nDifference}{h,f}{\Delta^n_h f}{\Delta_{h_n} \Delta^{n-1}_{h_{|n-1}} f}
+\\
+\Theorem{DifferenceOfPolynomials}{\forall V,W \in \mathsf{VS}(k) \. \forall p \in \P(V,W) \. \forall h \in V \. \Delta_h p \in \P(V,W)}
+\NoProof
+\\
+\Theorem{DifferenceDegree}{\forall V,W \in \mathsf{VS}(K) \. \forall (p,1) : \sum p \in \P(V,W) \. \deg p > 0 \. \forall n \in \deg p \. \forall h : n \to V \.
+\NewLine
+ \deg \Delta^n_{h} p = (\deg p) - n
+}
+\NoProof
+\\ 
+	\Theorem{DifferenceDegreeII}{
+		\forall V,W \in \mathsf{vs}(K) \. \forall p : \sum p \in \P(V,K) \. \forall (n,1) : \sum n \in \Nat \. n > \deg p \.
+		\forall h : n \to V \. \NewLine \.
+		\Delta^n_h p  =  0
+	}
+	\NoProof
+\\
+	\Theorem{PolynomialRepresentationIsUnique}{ \forall (p,1)  : \sum p \in  \P(V,W) \. p \neq 0 \. 
+	\NewLine \.
+	\exists! q : \prod n \in \deg p \. \HP(V,W,n) \. p = \sum^{\deg p}_{n = 1}  q_n}
+	\NoProof
+}
+\Page{
+	\DeclareType{AnalyticPolynomial}{\prod V,W : \mathsf{TOPVS}(K) \. ?\P(V,W) }
+	\DefineNamedType{p}{AnalyticPolynomial}{ p \in \AP(V,W) }{ p \in C(V,W)}
+	\\
+	\DeclareFunc{AnalyticPolynomialOfDegree}{\prod V,W : \mathsf{TOPVS}(K) \. \Nat \to ?\AP(V,W)}
+	\DefineNamedFunc{AnalyticPolynomialsOfDegree}{n}{\AP^n(V,W)}{ \P^n(V,W) \cap C(V,W) }
+	\\
+	& \textrm{Theorems about continuity of polynomials go here but not stated explicitely in this printing.}
+}
+\newpage
+\subsection{Finite Expansion}
+\Page{ 
+	\DeclareType{NTangentToZero }{ \prod E,F : \BAN(K) \. \prod U \in \mathcal{U}(0) \. \Nat \to ?(U \to F)   }
+	& f : \TYPE{NTangentToZero}(n) \iff f(x) = O(\|x\|^n) \iff \lim_{x \to 0} \frac{\| f(x) \|}{\|x\|} = 0 \\
+	\\
+	\Theorem{NTangentDifference}{
+		\forall E,F : \BAN(K) \. \prod U \in \mathcal{U}(0) \. \forall n \in \Nat \. 
+		\NewLine \.
+		\forall (f,1) : \sum f : U \to F \. f(x) = O\Big(\| x \|^n\Big)\.
+		\Delta^n_x f(0) = O\Big(\|x\|^n\Big)
+	}
+	\NoProof
+	\\
+	\DeclareType{FiniteExpansion}{ \prod E,F : \BAN(K) \. \prod U : \TYPE{Open}(E) \. \prod n \in \Nat \. (U \to F) \to U \to ?\AP^n(E,F)  }
+	& p : \TYPE{FiniteExpansion}(f,u) \iff f(u + x) - p(x) = O(\|x\|^n) \\
+	\\
+	\Theorem{FiniteExpansionIsUnique}{ \forall p,q : \TYPE{FiniteExpansion}(E,F,U,n)(f,u) \. p = q }
+	\NoProof
+	\\
+	\Theorem{NthDifferenceFinitExpansion}{ 
+		\forall p : \TYPE{FiniteExpansion}(E,F,U,n)(f,u) \. \Delta^n_x f(u) - n!T(x) = O\big(\| x  \|^n \big)
+		\NewLine
+		\LOGIC{where}
+		\NewLine
+ 		(n',f,1) = \bd \P^n(E,F)(p) : \sum n' \in n \. \sum f : \prod i \in n' \. \HP(E,V,i) \. p = \sum^{n'}_{i = 1} f_i \NewLine
+		q = \LOGIC{if} \quad n' < n \quad \LOGIC{then} \quad 0 \quad \LOGIC{else} \quad f_n : \HP(E,U,n) \NewLine 
+		(T,2) = \bd \HP(E,U,n)(f_n) : \sum T \in \B\Big( (E)^n_{i = 1}, F \Big) \. \forall x \in E \. q(x) = T(x)^n_{i=1}
+	}
+	\NoProof
+} \Page{
+	\DeclareFunc{truncation}{ \prod E,F : \BAN(K) \. \prod n \in \Nat \. \prod m \in n \. \AP^n(E,F) \to \AP^{m}(E,F) }
+	\DefineNamedFunc{truncation}{ p  }{  \mathrm{trunc}(p,m) }{  
+		\sum^{\min(m,n')}_{i = 1} f_i 
+		\NewLine \LOGIC{where} \NewLine
+ 		(n',f,1) = \bd \P^n(E,V)(p) : \sum n' \in n \. \sum f : \prod i \in n' \. \HP(E,V,i) \. p = \sum^{n'}_{i = 1} f_i \NewLine
+	}
+	\\
+	\Theorem{FiniteExpansionTruncation}{\forall p : \TYPE{FiniteExpansion}(E,F,U,n)(f,u) \. \forall m \in n \. 
+	\NewLine \.
+	\mathrm{trunc}(p,m) : \TYPE{FiniteExpansion}(E,F,U,m)(f,u)}
+	\NoProof
+	\\
+	\Theorem{TaylorCollorarly}{ \forall f \in C^{n + 1}(U,V) \. \forall u \in U \. \sum^n_{k = 0} \frac{\D^k f |_u}{k!} : \TYPE{FiniteExpansion}(\ldots,U,n)(f,u)  }
+	\NoProof
+	\\
+	\Theorem{FiniteExpansionAddition}{
+		\forall p : \TYPE{FiniteExpansion}(E,F,U,n)(f,u) \.  
+		\NewLine
+		\forall q : \TYPE{FiniteExpansion}(E,F,U,n)(g,u) \. p + q : \TYPE{FiniteExpansion}(E,F,U,n)(g +f,u)
+	}
+	\NoProof
+	\\
+	\Theorem{FiniteExpansionMultiplication}{ 
+		\forall \Phi : \B\Big([V,W],F\Big) \. \forall p : \TYPE{FiniteExpansion}(E,V,U,n)(f,u) \.
+		\NewLine \.
+		\forall q : \TYPE{FiniteExpansion}(E,W,U,n)(g,u) \.
+		\mathrm{trunc}(p *_\Phi q,n) : \TYPE{FiniteExpansion}(E,F,U,n)(f *_\Phi q, u )
+	}
+	\NoProof
+}\Page{
+	\Theorem{FiniteExpansionComposition}{
+		\forall p : \TYPE{FiniteExpansion}(E,F,U,n)(f,u) \. 
+		\NewLine \.
+		\forall q : \TYPE{FiniteExpansion}{(F,G,V,n)(g,v)} \. \forall (1) : \im f \subset V \And f(u) = v \.
+		\NewLine \.
+		g(f(u)) + \sum^n_{i = 1} \sum_{J : i \to n : |J| \le n } T_i(a_{J_j})^i_{j = 1} : \TYPE{FiniteExpansion}(E,G,U,n)(g \circ f,u)
+		\NewLine \LOGIC{Where} \NewLine
+		(a,1) = \bd \AP^n(E,F)(p) : \sum a : \prod i \in n \. \HP(E,F,i) \cup C(E,F) \. p = \sum^n_{i = 0} a_i \NewLine
+		(b,2) = \bd \AP^n(F,G)(q) : \sum b : \prod i \in n \. \HP(F,G,I) \cup C(F,E) \. q = \sum^n_{i = 0} q_i \NewLine
+		(T,3) = \forall i \in n \. \bd \HP^n(F,G)(b) : \sum T  : \prod i \in n \. \B\Big( (F)^i_{j=1}, G \Big) \. \forall x \in F \. \forall i \in n \. b_i(x) = T_i(x)^i_{j=1}
+	}
+	\NoProof
+}
+\newpage
+\subsection{Extremal Points Theorems}
+\Page{
+	\DeclareType{LocalMinimum}{ \prod X \in \TOP \. \prod Y : \TYPE{Ordered} \. (X \to Y) \to ?X   }
+	& x : \TYPE{LocalMinimum}(f) \iff \exists U \in \mathcal{U}(x) \. \forall u \in U \. f(x) \le f(u) \\
+	\\
+	\DeclareType{LocalMaximum}{ \prod X \in \TOP \. \prod Y \in \TYPE{Ordered} \. (X \to Y) \to ?X   }
+	& x : \TYPE{LocalMaximum}(f) \iff \exists U \in \mathcal{U}(x) \. \forall u \in U \. f(x) \ge f(u) \\
+	\\
+	\DeclareType{StrictLocalMinimum}{ \prod X \in \TOP \. \prod Y \in \TYPE{Ordered} \. (X \to Y) \to ?X   }
+	& x : \TYPE{StrictLocalMinimum}(f) \iff \exists U \in \mathcal{U}(x) \. \forall u \in U \. f(x) < f(u) \\
+	\\
+	\DeclareType{StrictLocalMaximum}{ \prod X \in \TOP \. \prod Y : \TYPE{Ordered} \. (X \to Y) \to ?X   }
+	& x : \TYPE{StrictLocalMaximum}(f) \iff \exists U \in \mathcal{U}(x) \. \forall u \in U \. f(x) > f(u) \\
+	\\
+	&\TYPE{LocalExtremum} = \TYPE{LocalMinimum} | \TYPE{LocalaMaximum} \\
+	\\
+	&\TYPE{StrictLocalExremum} = \TYPE{StrictLocalMinimum} | \TYPE{StrictLocalMaximum} \\
+	\\
+	\Theorem{FirstOrderExtrmalPointTheorem}{ \forall E : \BAN(\Reals) \. \forall U : \TYPE{Open}(E) \.  \forall f : U \to \Reals \.
+		\NewLine
+		\. \forall p : \TYPE{LocalExtrmum}(U,\Reals)(f) \. 
+		f : \TYPE{DifferentiableAt}(E,\Reals,U)(p) \Rightarrow \D f |_p = 0
+	}
+	\NoProof
+	\\
+	\Theorem{LocalMininimumCriterion}{   
+		\forall E : \BAN(\Reals) \. \forall U : \TYPE{Open}(E) \. \forall f : U \to \Reals \.
+		\NewLine
+		\.
+		\forall p : \TYPE{LocalMinimum}(U,\Reals)(f) \.
+		f : \TYPE{NDifferentiable}(R,\Reals,U)(2) \Rightarrow \D^2 f |_p \ge 0
+	}
+	\NoProof
+	\\
+	\Theorem{LocalMaximumCriterion}{   
+		\forall E : \BAN(\Reals) \. \forall U : \TYPE{Open}(E) \. \forall f : U \to \Reals \.
+		\NewLine
+		\.
+		\forall p : \TYPE{LocalMaximum}(U,\Reals)(f) \.
+		f : \TYPE{NDifferentiable}(R,\Reals,U)(2) \Rightarrow \D^2 f |_p \le 0
+	}
+	\NoProof
+	\\
+	\Theorem{StrictLocalMinimumCriterion}{   
+		\forall E : \BAN(\Reals) \. \forall U : \TYPE{Open}(E) \. \forall f : U \to \Reals \.
+		\NewLine
+		\.
+		\forall p : \TYPE{StrictLocalMinimum}(U,\Reals)(f) \.
+		f : \TYPE{NDifferentiable}(R,\Reals,U)(2) \Rightarrow \D^2 f |_p > 0
+	}
+	\NoProof
+} \Page{
+	\Theorem{StrictLocalMaximumCriterion}{   
+		\forall E : \BAN(\Reals) \. \forall U : \TYPE{Open}(E) \. \forall f : U \to \Reals \.
+		\NewLine
+		\.
+		\forall p : \TYPE{StrictLocalMaximum}(U,\Reals)(f) \.
+		f : \TYPE{NDifferentiable}(R,\Reals,U)(2) \Rightarrow \D^2 f |_p < 0
+	}
+	\NoProof	
+}
+\end{document}

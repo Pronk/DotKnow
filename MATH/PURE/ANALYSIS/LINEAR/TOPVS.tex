@@ -1,0 +1,2970 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{ marvosym }
+\usepackage[dvipsnames]{xcolor}
+\usepackage[top=10mm, bottom=10mm, left=5mm, right=5mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{\begin{align*} #1 \end{align*} \newpage   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cate}{\TYPE{Category}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+\newcommand{\auto}{\TYPE{Automorphism}}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\}
+\newcommand{\A}{\LOGIC{Assume} \;} 
+\newcommand{\Assume}[2]{& \A #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\E}{ \; \LOGIC{Extract} } 
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+\newcommand{\Mor}{\mathcal{M}}
+%MetricGeometry
+\newcommand{\Ball}[3]{ \mathbb{B}^{#1}\left(#2,#3\right) }
+\newcommand{\ClBall}[3]{ \overline{ \mathbb{B}}^{#1}\left(#2,#3\right) }
+\newcommand{\ToP}{\overset{p}{\to}}
+\newcommand{\ToU}{\rightrightarrows}
+%Algebra
+%TYPES
+\newcommand{\avfield}{\TYPE{AVField}}
+%LinearAlgebra
+%TYPES
+\newcommand{\VS}[1]{\TYPE{VectorSpace}\left( #1 \right)}
+\newcommand{\Lin}[1]{\mathcal{L}\left( #1 \right)}
+\newcommand{\vs}[1]{\mathsf{VS}\left( #1 \right)}
+\newcommand{\LInd}{\TYPE{LinearlyIndependend}}
+\DeclareMathOperator*{\rank}{rank}
+%FUNK
+\DeclareMathOperator{\rk}{rank}
+\DeclareMathOperator{\Span}{span}
+%Simbpls
+\renewcommand{\L}{\mathcal{L}}
+%Topology
+%TYPES
+\newcommand{\TS}{\TYPE{TopologicalSpace}}
+\newcommand{\UC}{\rightrightarrows}
+\newcommand{\MS}{\TYPE{MetricSpace}}
+\newcommand{\Sep}{\TYPE{Separable}}
+\newcommand{\LC}{\TYPE{LocallyComapact}}
+\newcommand{\Compact}{\TYPE{Compact}}
+\newcommand{\Dense}{\TYPE{Dense}}
+\newcommand{\Complete}{\TYPE{Complete}}
+\newcommand{\TOP}{ \mathsf{TOP}  }
+\newcommand{\Closed}{\TYPE{Closed}}
+%FUNC
+\newcommand{\supp}{ \mathrm{supp} \, }
+%Functional Analysis
+%TYPES
+\newcommand{\PLF}{\TYPE{PositiveLinearFunctional}}
+\newcommand{\NS}{\TYPE{NormedSpace}}
+\newcommand{\SNS}{\TYPE{SeminormedSpace}}
+\newcommand{\Banach}{\TYPE{Banach}}
+\newcommand{\IPS}{\TYPE{InnerProductSpace}}
+\newcommand{\Hilbert}{\TYPE{Hilbert}}
+\newcommand{\TopC}{\TYPE{TopologicalyCompletable}}
+\newcommand{\AbsC}{\TYPE{AbsolutelyConvergent}}
+\newcommand{\PNS}{\TYPE{PolynormedSpace}}
+\newcommand{\CNS}{\TYPE{CountablyNormedSpace}}
+\newcommand{\TVS}{\TYPE{TopologicalVectorSpace}}
+%CATS
+\newcommand{\NORM}{\textsf{NORM}}
+\newcommand{\NORMI}{{\textsf{NORM}_{\circ \to \cdot}}}
+\newcommand{\BAN}{\textsf{BAN}}
+\newcommand{\BANI}{{\textsf{BAN}_{\circ \to \cdot}}}
+\newcommand{\HIL}{\textsf{HIL}}
+\newcommand{\HILI}{{\textsf{HIL}_{\circ \to \cdot}}}
+%Simbols
+\newcommand{\w}{\mathbf{w}}
+%Measure Theory
+%TYPES
+\newcommand{\SA}[1]{\TYPE{\sigma \hyph  Algebra}\left( #1 \right) }
+\newcommand{\SF}[1]{\TYPE{\sigma \hyph  Finite}\left( #1 \right) }
+\newcommand{\CA}[1]{\TYPE{CountablyAdditive}\left( #1 \right) }
+\newcommand{\FA}[1]{\TYPE{Charge}\left( #1 \right) }
+\newcommand{\LS}{\TYPE{Lebesgue \hyph Stieltjes}}
+\newcommand{\DF}{\TYPE{DistributionFunction}}
+\renewcommand{\AE}[1]{\mathrm{a\. e\.} \left[#1\right]}
+\newcommand{\SI}[1]{\TYPE{\sigma \hyph  Ideal}\left( #1 \right) }
+\newcommand{\DRP}{\TYPE{DiscreteRandomProcess}}
+\newcommand{\CRP}{\TYPE{ContinuousRandomProcess}}
+%Category
+\newcommand{\BOR}{\mathsf{BOR}}
+\newcommand{\BORN}{\mathsf{BOR}^0}
+\newcommand{\MEAS}{\mathsf{MEAS}}
+%Simbols
+\newcommand{\F}{\mathcal{F}}
+\renewcommand{\O}{\Omega}
+\newcommand{\B}{\mathcal{B}}
+\renewcommand{\l}{\lambda}
+\renewcommand{\P}{\mathbb{P}}
+
+\author{Uncultured Tramp} 
+\title{Topological Vector Spaces}
+\begin{document}
+\maketitle
+\begin{center}
+\end{center}
+\newpage
+\tableofcontents
+\newpage
+\section{Normed Spaces}
+\subsection{Norms and Seminorms}
+\Page{
+\DeclareType{Seminorm}{ \prod K : \TYPE{ValuationField} \. \prod V : \VS{K} \. ? (V \to \Reals_+ }
+\DefineType{N}{ Seminorm  }{ \forall v,w \in V \. \forall a \in K \. N(av) = |a|N(v) \And N(a + v) \le N(w) + N(v) }
+\\
+& \SNS = \sum V : \VS{K} \. \TYPE{Seminorm}(V)
+\\ \\
+\DeclareFunc{seminorm}{ \prod (V,N) : \SNS  \. \TYPE{Seminorm}(V)}
+\DefineNamedFunc{seminorm}{(V,N)}{ \| \cdot \|_{(V,N)} }{ N  }
+\\
+\DeclareType{Norm}{ ? \TYPE{Seminorm}(V)  }
+\DefineType{N}{Norm}{ \forall v \in V : v \neq 0 \. N(v) \neq 0 }
+\\
+& \TYPE{NormedSpace} = \sum V : \VS{K} \. \TYPE{Norm}(K)
+\\ \\
+\DeclareFunc{norm}{ \prod (V,N) : \TYPE{NormedSpace} \. \TYPE{Norm}(V)}
+\DefineNamedFunc{norm}{(V,N)}{ \| \cdot \|_{(V,N)} }{ N  }
+\\
+\Theorem{ NormAsDistance  }{ \forall V : \TYPE{NormedSpace} \. \Lambda (x, y) \in V \times V \. \| x - y  \| : \TYPE{Distance}}
+\Say{d}{ \Lambda  (x,y) \in V \times V \. \| x -  y \|  }{ V \times V \to \Reals_+ }
+\Assume{x}{V}
+\Conclude{(1)}{ \ByDef(d)(x,x)\ByDef{ -_V }\ByDef\TYPE{Seminorm}(\| \cdot \|)     }{ d(x,x) = \| x - x \| = \| 0 \| = 0 }
+\Derive{(1)}{ \cdot }{\forall x \in V \. d(x,x) = 0}
+\Say{(2)}{\ByDef\TYPE{Norm}(\| \cdot \|)}{\forall (x,y) \in V \times V : d(x,y) = \| x - y \| = 0 \. x = y}
+\Say{(3)}{\ByDef\TYPE{Seminorm}(\| \cdot \|)}{ \forall x,y,z \in V \. d(x,y) = \| x - y \| \le \| x - z \| + \| z - y \| \le d(x,z) + d(z,y)  }
+\Say{(4)}{\ByDef\TYPE{Seminorm}(\| \cdot \|)}{\forall x,y \in V \. d(x,y) = \| x - y \| = \| (-1)(y - x) \| = | -1 | \| y - x \| = \| y - x \| = d(y,x) }
+\Conclude{(*)}{\ByDef^{-1}\TYPE{ Distance }(V)(d) }{ (d : \TYPE{Distance}(V))  }
+\EndProof
+\\
+\DeclareFunc{ normedAsMetric   }{ \NS \to \MS   }
+\DefineNamedFunc{ normedAsMetric  }{X}{ \LOGIC{implicit} \, X }{ (X, \Lambda (x,y) \in X \times X \. \| x - y \| )  }
+\\
+\DeclareType{ Stronger }{ \prod V : \VS{K} \. ?(\TYPE{Norm}(V) \times \TYPE{Norm}(V))  }
+\DefineType{(N,M)}{ Stronger }{ \exists c \in \Reals_{++} \. \forall v \in V \. cN(v) \ge M(v)  }
+\\
+\DeclareType{Equavalent}{\prod V : \VS{K} \. ?(\TYPE{Norm}(V) \times \TYPE{Norm}(V))}
+\DefineNamedType{(N,M)}{Equavalent}{N \cong M}{ ((N,M) : \TYPE{Stronger}(V) ) \And ((M,N) : \TYPE{Stronger}(V))} 
+}
+
+\Page{
+\DeclareFunc{seminormTopology}{ \TYPE{Seminorm}(V) \to \TYPE{Topology}(V) }
+\DefineFunc{seminormTopology}{ \| \cdot \| }{ \FUNC{fromBase}\{ \{ y \in V | \| x - y \| < r \}     | x \in V, r \in \Reals_{++} \}  }
+\\
+\DeclareFunc{ seminormedAsTopologic }{ \SNS(K) \to \TOP }
+\DefineNamedFunc{ seminormedAsTopological}{ V, \| \cdot \|   }{ \LOGIC{implicit}(V, \| \cdot \| ) }{ (V,\FUNC{seminormTopology}(\|\cdot\|) ) }
+\\
+\Theorem{ NormDistanceCharacteristic  }{ \forall V : \VS{K} \. \forall d : \TYPE{Distance}(V) \. \NewLine \. 
+( \forall v,w,x \in V \. d(v + x,w + x) = d(v,w) \And \forall a \in K \. d(av,0) = |a| d(v,0)  ) \iff \NewLine \iff
+  \exists \| \cdot \| : \TYPE{Norm}(V) \. d = \THM{NormAsDistance}(\| \cdot \|)
+    }
+\Assume{ L  }{\LOGIC{Left}}
+\Say{ \| \cdot \|  }{ \Lambda  v \in V \. d(v,0)    }{V \to \Reals_+}
+\Say{(1)}{ \FUNC{eval}{\| \cdot \|, 0} }{ \| 0 \| = 0 }
+\Assume{v}{V : \| v \| = 0}
+\Conclude{ (2)  }{ \ByDef)3 \TYPE{Distance}(d)(\ByDef\| \cdot \| \ByDef x)   }{x = 0}
+\Derive{ (2) }{ \cdot }{\forall x \in V : \|x\| = 0 \. x = 0 }
+\Assume{ x,y }{ V  } 
+\Conclude{ (3)  }{ \bd \| \cdot \|( x + y) \bd_1 d(x +y,0, -y) \bd_3\TYPE{Distance}(d)(x,-y) 
+\bd_2 \TYPE{Distance}(0, -y)  \bd_2 d( y, -1 )\NewLine\bd^{-1}\| \cdot \|(x) \bd^{-1} \| \cdot \| (y) 
+}{
+ \| x + y \| = d(x + y, 0) = d(x, - y) \le d(x, 0) + d(0, -y) = d(x,0) + d(y,0) = \NewLine = \|x \| + \| y \| }
+\Derive{ (3) }{ \cdot}{ \forall x,y \in V \. \| x + y \| \le \| x \| + \| y \|}
+\Assume{ (x,a) }{V \times K}
+\Conclude{(4)}{  \ByDef \|  ax \| \ByDef_2  d (x, a) \ByDef^{-1} \| \cdot \|(x)    }{ \| ax \| = d(ax,0) = |a| d(x,0) = |a|\| x \| }
+\Derive{(4)}{\cdot}{\forall x \in V \. \forall a \in K \. \| ax \| = |a| \| x \| }
+\Say{(5)}{\ByDef^{-1}\TYPE{Norm}(V)(1,3,4,2)}{(\| \cdot \| : \TYPE{Norm}(V))}
+\Assume{ x,y}{V}
+\Conclude{ (6) }{ \bd_1 d(x,y,-y) \bd^{-1} \| \cdot \| ( x - y)   }{ d(x,y) = d(x - y,0) = \| x - y \| }
+\DeriveConclude{(6)}{  \THM{NormAsMetric}^{-1}(\cdot)  }{ d = \THM{NormAsMetric}(\| \cdot \| }
+\Derive{ (\Rightarrow)  }{\cdot}{ \LOGIC{Left} \Rightarrow \LOGIC{Right} }
+\Assume{ R }{\LOGIC{Right}}
+\Assume{v,w,x}{V}
+\Conclude{(1)}{ R(v + x, w + x)\ByDef\TYPE{Inverse}(x) R^{-1}(v,w)  }{ d(v + x,w + x) = \| v + x - w - x \| = \| v  - w  \| = d(v,w)}
+\Derive{(1)}{ \LOGIC{UniversalIntroduction}  }{ \forall x,y,z \in V \. d(v + x,w + x) = d(v,w)  }
+\Assume{v}{V}
+\Assume{a}{K}
+\Conclude{(2)}{ R(av,0) \ByDef\TYPE{Zero}(0) \ByDef_2 \TYPE{Norm} R^{-1} ( v, 0  )    }{ d(av,0) = \| av - 0 \| = \| av \| = |a| \|v\| = |a|d(v,0)  }
+\Derive{(2)}{\LOGIC{UniversalIntroduction}  }{ \forall v \in V \. \forall a \in A \. d(av,0) = |a|d(v,0)  }
+\Conclude{(3)}{(1,2)}{\LOGIC{Left}}
+\Derive{(*)}{ \LOGIC{IffIntroduction} }{ \LOGIC{Left} \iff \LOGIC{Right} }
+\EndProof
+}
+
+\subsection{Geometric Construction}
+
+\Page{
+& K = \Reals | \mathbb{C}
+\\ \\
+\DeclareFunc{interval}{ \prod  V : \VS{K} : \Reals \subset K \. V \times V \to \Set(V)  }
+\DefineNamedFunc{interval}{ a, b   }{[a,b]}{ \{ ta + (1 - t)b | t \in [0,1]   \} }
+\\
+\DeclareType{ Convex  }{ \prod V : \VS{K} : \Reals \subset K \. ?\Set(V) }
+\DefineType{A}{ Convex  }{ \forall a,b \in A \. [a,b] \subset A     }
+\\
+& V = \VS{K} 
+\\ \\
+\Theorem{TriangularEquelity}{ \forall a, b \in V \. \forall z \in [a,b] \. \| a - b \| = \| a - z \| + \| z - b \|    }
+\Say{t}{\ByDef\FUNC{interval}(a,b)(z)}{[0,1] : z = ta + (1 -t)b }
+\Conclude{(*)}{ \ByDef(t)  }{ \| a - z \| + \| z - b \| = \| (1 -t) a  -(1 - t)b \| + \|  ta - tb  \| = (1 - t)\| a - b \| + t \|a - b \| = \|a - b \|  }
+\EndProof
+\\
+\Theorem{ConvexIntersection}{ \forall A : \Nat \to \TYPE{Convex}(V) \. \bigcap^\infty_{n = 1} A_n : \TYPE{Convex}(V)  }
+\Assume{a,b }{ \bigcap^\infty_{n = 1} A_n }
+\Assume{t}{ [0,1] }
+\Assume{ n  }{ \Nat }
+\Say{ (1)  }{ \ByDef\FUNC{intersection}(a,b) }{ a,b : A_n }
+\Conclude{  (2) }{ \ByDef \TYPE{Convex}  }{ ta + (1 - t)b \in A_n}
+\DeriveConclude{ (3)  }{ (\cdot) }{  ta + (1 -t)b \in \bigcap^\infty_{n = 1} A_n }
+\DeriveConclude{ (4)  }{ \ByDef^{-1}\TYPE{Convex}\left( \bigcup^\infty_{n = 1} A_n \right) }{ \left( \bigcup^\infty_{n = 1} A_n : \TYPE{Convex}(V)  \right) }
+\EndProof
+\\
+\Theorem{BallIsConvex}{ \mathbb{B}_V (0,1)  : \TYPE{Convex}}
+&  \| a \|, \| b \| \le   1        \\
+&  \| ta + (1 - t)b \| = t\| a \| + (1 - t)\| b \|  \le t  + (1 - t) = 1 \\ 
+\EndProof
+}
+
+\Page{ 
+ \DeclareType{Balanced}{ ?? V}
+ \DefineType{A}{Balanced}{ \forall u \in K : |u| = 1 \. \forall v \in A \. uv \in A }
+\\
+\DeclareType{Disclike}{?\TYPE{Convex} \And \TYPE{Balanced}(V) }
+\DefineType{A}{Disclike}{ \forall v \in V : v \neq 0 \. \exists a \in K : a \neq 0 \. av \in A }
+\\ 
+\DeclareFunc{minkowskiFunctional}{ \TYPE{Disclike} \to V \to \Reals_+  }
+\DefineNamedFunc{minkowskyFunctional}{D,v}{ M(D)(v)  }{  \inf \{ t \in \Reals_{++} \. t^{-1}v \in D   \}  }  
+\\
+\Theorem{MinkowskiNorm}{ \forall D : \TYPE{Disclike}(V) \. M(D) : \TYPE{Seminorm}(V) }
+\NoProof
+\\
+\Theorem{MinkowskiCharacterisation}{ \forall V : \TYPE{VectorSpace}(K) \And \TS \. 
+ \NewLine \. V : \NS 
+\iff \exists D : \TYPE{Disclike}(V) : \mathcal{T}_V = \FUNC{fromBase}\{ aD + v : a \in K : a \neq 0 , v \in V \} }
+\NoProof
+\\
+\Theorem{LineOfCircleCriterion}
+{\forall V  : \NS \. \exists x,y \in V : x \neq y : [x,y] \subset \mathbb{S}_V(0,1) 
+\iff \NewLine \iff
+\exists x,y \in V : \{x,y\} : \TYPE{LinearlyIndependant}(V) : \| x + y \| = \| x \| + \| y \| 
+}
+\NoProof
+\\
+& \text{ characterize intersection of two circles in } \, V \, \text{centred in} \, v \, \text{ and }
+\, -v \, \text{of radius} \, \| v \| . \\
+\\
+\Theorem{NormedSpaceIsHopfRinov}{ \forall x,y \in V \. \forall r,s \in \Reals_{++} \.
+\mathbb{B}_V(x,r) \cap \mathbb{B}_V(y,s) = \emptyset \iff  \| x - y \| > r + s
+}
+\NoProof
+}
+\subsection{Topological Properties}
+\Page{
+\DeclareFunc{normedQuetient}{\prod X : \NS \. \TYPE{Closed} \And \TYPE{Subspace}(X) \to \NS   }
+\DefineNamedFunc{ normedQuetient  }{ K  }{ \left(\frac{X}{K} \right)_{\mathsf{NVS}}  }
+{ \Bigg( \left( \frac{X}{K} \right)_{\mathsf{VS}(K)}, \Lambda [x] \in \left( \frac{X}{K} \right)_{\mathsf{VS}(K)}    \inf_{y \in K } \|  x - y  \| \Bigg)}
+\\
+\DeclareType{Isometry}{ ?\Mor_{\mathsf{VS}(K)}(V,W) }
+\DefineType{T}{Isometry}{ \forall v \in V \. \| Tv \| = \| v \| }
+\\ 
+\Theorem{NormedCompletion}{ \forall V : \NS \. \exists \hat V : \NS \And \TYPE{Complete} : 
+\NewLine :
+\exists T : \TYPE{Isometry}(V, \hat V ) : T(V) : \Dense(\hat V)  }
+& \ldots \\
+\EndProof
+\\
+& \Banach = \NS \And \Complete 
+\\ \\
+\Theorem{ContAddition}{ \forall V : \NS \. (+) : \TYPE{UniformlyCont}(V \times V, V)}
+& \ldots \\
+\EndProof
+\\
+\Theorem{IntersecrionQuatientDimension}{ 
+ \forall V : \NS \. \forall n \in \Nat \. \NewLine
+ \. \forall J : n \to \TYPE{Subspace} \And \TYPE{Closed}(V) : \forall i \in n \.  
+ \dim \left(  \frac{V}{J_i}  \right) = 1 \.   
+ \dim \left(  \frac{V}{\bigcap ^n_{i = 1}J_i}  \right)  \le n 
+}
+\NoProof
+\\
+\Theorem{FiniteDimensionIsClosed}{ \forall M :\TYPE{Subspace} \And \TYPE{Closed}(V)
+\. \forall N : \TYPE{Subspace}(V) : \dim N < \infty \. 
+\NewLine \.v
+M + N : \TYPE{Closed}(V) }
+\NoProof
+\\ 
+\Theorem{BanachQuatient}{\forall V : \TYPE{Banach} \. 
+\forall W : \TYPE{Subspace} \And \TYPE{Closed}(V) \.
+\frac{V}{W} : \TYPE{Banach}
+ }
+\NoProof
+}
+\section{Inner Product spaces}
+\subsection{Preinnner and Inner Product}
+\Page{
+ & K : \TYPE{ConjugationField} : \Reals \subset K  \\
+ \\
+ &  V : \VS{K} \\
+  \\
+ \DeclareType{PreinnerProduct}{?V \otimes \overline{V} \to_{\mathsf{VS}(K)} K }
+ \DefineType{ I  }{PreinnerProduct}{ \left(\forall x \in V \. I(v \otimes v) \in \Reals_+ 
+  \right) \And \forall x,y \in V \. I(x \otimes y) = \overline{I(y \otimes x)}} 
+  \\
+  \DeclareType{InnerProduct}{? \TYPE{PreinnerProduct}(V)}
+  \DefineType{I}{InnerProduct}{ \forall x \in V \. I(x \otimes x) = 0 \iff x = 0 }
+  \\
+  & \TYPE{PrehilbertSpace} \de \sum H  : \mathsf{VS}(K) \. \TYPE{PreinnerProduct}(H) 
+  \\ \\
+  \DeclareFunc{ preinnerProduct }{ \prod  (H,I) :\TYPE{PrehilbertSpace}(K) \. H \times H \to K }
+  \DefineNamedFunc{ preinnerProduct }{ v,w  }{ \langle v, w \rangle }{ I(v \otimes w)}
+  \\
+  & \TYPE{InnerProductSpace} \de \sum H : \mathsf{VS}(K) \. \TYPE{InnerProduct}(H) \\
+  \\
+  \DeclareFunc{quadraticForm}{ (V \otimes \overline{ V} \to_{\mathsf{VS}(K)} K) \to V \to K }
+  \DefineNamedFunc{quadraticForm}{I,v}{Q_I(v)}{ I(v \otimes v)}
+  \\
+  \Theorem{PolarDecomposition}{ \forall I : V \otimes \overline V \to_{\mathsf{VS}(K)}  K 
+   \. \forall v,w \in V \. I(v \otimes w) = \sum^4_{i = 1} \frac{i^4}{4}Q_I(v + i^k w) }
+  \NoProof
+  \\
+  \Theorem{PreinnerProductIsSeminorm}{ \forall H : \TYPE{PrehilbertSpace}(K)
+  \.  ( \Lambda x \in H \. \sqrt{ \langle x, x \rangle } ) : \TYPE{Seminorm}(X)}
+  \NoProof   
+  \\
+  \Theorem{InnerProductIsNorm}{ \forall H : \TYPE{InnerProductSpace}(K)
+  \.  ( \Lambda x \in H \. \sqrt{ \langle x, x \rangle } ) : \TYPE{Norm}(X)}
+  \NoProof   
+}
+\Page{
+ \DeclareFunc{ asSeminormed }{ \TYPE{PrehilbertSpace}(K) \to \SNS(K) }
+  \DefineNamedFunc{ asSeminormed }{ H,I }{ \LOGIC{implicit}(H,I) }{  (H, \THM{PreinnerProductIsSeminorm}(H,I) )  }
+  \\
+ \DeclareFunc{ asNormed }{ \TYPE{InnerProductSpace}(K) \to \NS(K) }
+  \DefineNamedFunc{ asNormed }{ H,I }{ \LOGIC{implicit}(H,I) }{  (H, \THM{InnerProductIsNorm}(H,I) )  }
+  \\
+\Theorem{InnerProductIsCont}{\forall H : \TYPE{PrehilbertSpace}(K) \.
+(\Lambda (x,y) \in H \times H \. \langle x,y \rangle ) : H \times H \to_{\mathsf{TOP}} K 
+}
+\NoProof
+\\
+\Theorem{PrehilbertCharacterisation}{ \forall V : \TYPE{PrehilbertSpace}(K) 
+\. \NewLine
+\. \forall x, y \in V \.  \| x + y \| = \| x \| + \| y \| \Rightarrow 
+\{ x, y \} : \TYPE{LinearlyIndependant}(V)
+}
+\NoProof
+\\
+\DeclareType{ParallelagramLaw}{ ? \SNS(K)}
+\DefineType{ V }{ ParallelagramLaw }{ \forall x, y \in V \. \| x + y \| + \| x - y \| = 2\|x\| + 2\|y \|}
+\\
+\Theorem{ParallelagramTHM}{ \forall H : \SNS(K) \. H : \TYPE{ParallelagramLaw} \iff 
+H : \TYPE{PrehilbertSpace}}
+\NoProof
+}
+\subsection{Geometric Properties: Orthogonality and Projections}
+\Page{
+   & H : \IPS(\mathbb{C}) \\
+   \\
+  \DeclareType{Orthogonal}{? H \times H}
+  \DefineNamedType{ (v,w) }{Orthogonal}{v \bot w}{ \langle v, w \rangle}
+  \\
+  \DeclareType{OrthogonalSystem}{ ??H }
+  \DefineNamedType{S}{OrthogonalSystem}{\bot(S)}{ \forall v,w \in S : v \neq w \. v \bot w}
+  \\
+  \DeclareType{Orthonormal}{?\TYPE{OrthogonalSystem}(H)}
+  \DefineType{S}{Orthonormal}{ \forall v \in S \. \| v \| = 1 }
+  \\
+  \Theorem{OrthogonalIsLInd}{\forall \bot(S) \. S : \TYPE{LinearlyIndependant}(H) }
+  \NoProof
+  \\
+  \Theorem{Pythagorus}{\forall n \in \Nat \. \forall e : n \to  H : \bot( \mathrm{Im} \,  e)
+  \.  \left\| \sum^n_{i = 1} e_i \right\|^2 = \sum^n_{i = 1} \| e_i \|^2  
+  }
+  \NoProof
+  \\
+  \Theorem{OrthogonalBound}{ H : \TYPE{Separable} \Rightarrow \forall \bot(S) \. |S| \le \aleph_0 }
+  \NoProof
+  \\
+  \Theorem{GramSchmidtProcess}{ \forall S : \TYPE{LinearlyIndependant}(H) 
+     \. \exists E : \TYPE{Orthonormal}(H)  \.  \FUNC{span} \, S = \FUNC{span} \, E   
+   }
+   \NoProof
+  \\
+  \DeclareFunc{furieCoifficients}{ \prod E : \TYPE{Orthonormal}(H) \. H \to E \to K    }
+  \DefineNamedFunc{furieCoifficients}{v,e}{ c_e(v)}{ \langle v, e \rangle }
+  \\
+  \DeclareFunc{furieSerias}{ \TYPE{Orthonormal}(H) \to H \to H }
+  \DefineFunc{furieSerias}{ E, v }{ \sum_{e \in E} c_{e}(v)  } 
+  }
+\Page{
+  \Theorem{ProjectionTHM}{ \forall n \in \Nat \. \forall e : n \to H : \bot(\mathrm{Im} \, e) 
+  \. \forall v \in H \.  d\left(v, \FUNC{FurieSerias}(e,v) \right) = 
+  \inf_{w \in \FUNC{span}(e)} d(v,w) }  
+  \NoProof
+  \\
+  \Theorem{BesselIneq}{ \forall x \in H \. \forall E : \TYPE{Orthonormal}(H)
+  \. \sum_{e \in E} | \langle v, e \rangle |^2 \le \| v \|^2
+  }
+  \NoProof  
+  \\
+  \DeclareType{Total}{ \prod V : \SNS \. ??V}
+  \DefineType{E}{Total}{ \FUNC{span}(E) : \TYPE{Dense}(V)}
+  \\
+  \Theorem{TotalExists}{ \forall H : \IPS(K) \And \TYPE{Separable} \. 
+   \exists  \TYPE{Orthonormal} \And \TYPE{Total}(V)  
+  }
+  \NoProof
+  \\
+  \Theorem{FurieSpaceTheorem}{\forall E : \TYPE{Orthonormal} \And \TYPE{Total}(V)
+  \.   \forall v \in  V \. \FUNC{furieSerias}(E,v) = v  
+  }
+  \NoProof
+  \\
+  \DeclareType{Shauder}{ \prod E : \SNS(K) \.? \Nat \to H}
+  \DefineType{e}{Shauder}{ \forall x \in E \. \exists! a : \Nat \to K \. \sum^\infty_{n = 1} 
+  a_n e_n = v  
+   }
+  \\ 
+  \Theorem{ShauderExists}{ \forall H : \IPS \And \Sep \. \exists \TYPE{Shauder}(H)}
+  \NoProof
+}
+\newpage
+\section{Banach and Hilbert Spaces}
+\subsection{Definition}
+\Page{
+& \TYPE{Banach} \de \NS  \And  \TYPE{Complete}
+\\ \\
+& \TYPE{Hilbert} \de \IPS \And \TYPE{Complete}
+\\ \\
+\Theorem{IsoBanach}{ 
+\forall V : \Banach \. \forall W : \NS : W \cong_{\NORM} V \. W : \Banach
+}
+\Say{T}{\bd W \cong_{\NORM} V }{ W \ToBij_{\NORM} V }
+\Say{C}{\THM{TopIsoChar}(T)}{ \Reals_+ : \forall x \in W \. \|T x \| \le C x}
+\Assume{x}{\TYPE{Cauchy}(W)}
+\Assume{k}{\Nat}
+\Conclude{()}{ \ByDef_1 \B(W,V)(T)(\lim_{n \to \infty} \| T(x_n) -  T(x_{n + k}) \|)
+ \ByDef C \ByDef \TYPE{Couchy}(W) (x)
+ }{ \NewLine : \lim_{n \to \infty} \| T(x_n) -  T(x_{n + k}) \|  = 
+ \lim_{n \to \infty} \| T(x_n - x_{n + k}) \| \le 
+ \lim_{n \to \infty}  C\| x_n - x_{n + k} \| =  0
+}
+\Derive{()}{\LOGIC{UniIntro}}{\forall k \in \Nat \. \lim_{n \to \infty} \| T(x_n) -  T(x_{n + k}) = 0 \|) } 
+\Say{()}{\bd^{-1}\TYPE{Cauchy}(V)}{(T\, x : \TYPE{Cauchy}(V))}
+\Say{Y}{\lim_{n \to \infty} T \, x_n}{V}
+\Say{X}{T^{-1} \, Y}{W}
+\Say{(2)}{\THM{MultUnity}(\lim_{n \to \infty} x_n ,\lim_{n \to infty} T^{-1} T x_n)(\ByDef T)
+\THM{ContLimit}(T^{-1}) \ByDef Y \ByDef X
+: \NewLine}
+{\lim_{n \to \infty} x_n = \lim_{n \to \infty} T^{-1} T x_n 
+= T^{-1} \lim_{n \to \infty} T x_n = T^{-1} Y = X
+}
+\Conclude{()}{\bd^{-1}\TYPE{Convergent}(W)(x)(2)}{(x : \TYPE{Convergrnt}(x))}
+\Derive{(*)}{\bd \TYPE{Complete}(W)}{(W : \Banach)}
+\EndProof
+\\
+\Theorem{BanachSubspaceIsClosed}{\forall V : \NS \. \forall S \subset_{\NORM} V : \Banach \. 
+S : \TYPE{Closed}(V)
+}
+\NoProof
+\\
+\Theorem{BanachSubspaceIsClosed}{\forall V : \Banach \. \forall S \subset_{\NORM} V : \TYPE{Closed}(V) \. 
+S : \Banach
+}
+\NoProof
+}
+\subsection{Finite-Dimensional Spaces}
+\Page{
+\Theorem{FiniteDimensionalClassification}
+{ \forall K : \TYPE{AVField} \And \TYPE{Complete}  \.
+ \forall n \in \Nat \. \forall V : \NS(K) 
+ : \NewLine  
+ : \dim V = n \. V \cong_\NORM K_1^n
+ }
+\Assume{n}{\Nat}
+\Conclude{\ddag(n)}{\forall m \in \Nat : m  \le n \. \forall V : \NS(K) 
+ : \dim V = m \. V \cong_\NORM K_1^m}{\TYPE{Type}}
+ \Derive{\ddag}{\LOGIC{FuncIntro}}{\Nat \to \TYPE{Type}} 
+\Assume{V }{ \NS(K) : \dim v = 1 }
+\Say{v}{ \ByDef \dim \ByDef V }{\TYPE{In}(V) : V = Kv}
+\Assume{k}{K}
+\Conclude{T k}{kv}{ \TYPE{In}(V) }
+\Conclude{ () }{ \ByDef  T \ByDef \TYPE{Norm} }{  \| T k \| = \| k T 1 \| = | k | \| 1 \|}
+\Derive{T}{\LOGIC{FuncIntro}}{ \B(K, V)}
+\Say{(1)}{\bd v \bd T}{ (T : K \ToBij_\NORM V) }
+\Conclude{()}{ \bd \cong_\NORM(1)}{ K_1 \cong_\NORM V }
+\Derive{(1)}{\bd \ddag}{\ddag(1)}
+\Assume{m}{\Nat}
+\Assume{H}{\ddag(m)}
+\Assume{V}{\NS(K) : \dim V = m + 1}
+\Say{v}{\bd \dim \bd V}{ m + 1 \to V : V = \sum^{m + 1}_{i = 1} Kv_i = V : \LInd(V) }
+\Assume{i}{m + 1}
+\Say{S}{ \Span \{ v_j | j \in  m + 1 : j \neq i \} }{\TYPE{Subspace}(V)}
+\Say{T}{H(S)}{S \ToBij K^m_1}
+\Say{(2)}{\THM{IsoBanach}(S, K^m_1,T)}{(S : \TYPE{Banach})}
+\Say{(3)}{\THM{BanachSubspaceIsClosed}(V,(S,2))}{(S : \TYPE{Closed}(V))}
+\Conclude{C_i}{ \THM{ClosedSubspaceIsGeometric}(V,(S,3))}{\Reals_+ : \forall 
+\sum^{m + 1}_{j = 1} x_j v_j \in V \. |x_i| \le C_i \left\|  \sum^{m + 1}_{j = 1} x_j v_j  \right\| }
+\Derive{C}{\LOGIC{FuncIntro}}{m + 1 \to \Reals_+ : \forall i \in m + 1 \. \forall \sum^{m + 1}_{j = 1} x_j v_j  \in V
+ \. |x_i| \le C_i  \left\|  \sum^{m + 1}_{j = 1} x_j v_j  \right\|
+}
+\Say{c}{ \sum^{m + 1}_{i = 1}{C_i}}{\Reals_+}
+\Say{T}{\Lambda \sum^{m + 1}_{j = 1} x_j v_j  \in V \. (x_i)^n_{i = 1}  }{V \to K^{m + 1}_}
+\Assume{ \sum^n_{j = 1} x_j v_j }{ \TYPE{In}(V)}
+}
+\Page{
+ \Conclude{()}{ \bd T \bd c }{ \left\| T  \sum^{m + 1}_{j = 1} x_j v_j  \right\|  = \sum^{m + 1}_{i = 1} | x_i|
+ \le  c\left\|  \sum^{m + 1}_{j = 1} x_j v_j  \right\|
+}
+ \Derive{(2)}{\bd^{-1}\B(V,K^{m + 1}_1)}{(T : \B(B,K^{m + 1}))}
+ \Say{b}{ \sum^{m + 1}_{i = 1} \| v_i \| }{\Reals_+}
+ \Assume{x}{K^{m + 1}_1}
+ \Conclude{()}{\bd T \bd \TYPE{Norm} \, \THM{Majorize}(\|v_i\|, b) \bd \| \cdot \|_1}{ \| T^{-1} x \| = \left \| \sum^{m + 1}_{i = 1} x_i v_i \right \|
+ \le \sum^{m + 1}_{i = 1} |x_i|\| v_i  \| \le  \sum^{m + 1}_{i = 1} |x_i| \sum^{m + 1}_{j = 1} \| v_j \| = b \| x \|
+ }
+ \Derive{(4)}{\bd^{-1}V \ToBij_{\NORM} K^{m + 1}_{1}(2)}{(T : V \ToBij_{\NORM} K^{m + 1}_{1})}
+ \Conclude{()}{\bd^{-1} \cong_\NORM(4)}{ V \cong_{\NORM} K^{m + 1}_1}
+ \Derive{(2)}{\LOGIC{UniIntro}}{\forall V : \NS(K) : \dim V = m + 1 \. V \cong_\NORM K^{m + 1}_1}
+ \Conclude{H^+}{\LOGIC{UniUpdate}(H,2)}{ \ddag(m + 1) }
+ \Derive{(*)}{\LOGIC{Induction}(m + 1)}{\forall n \in \Nat \.  \ddag(n) }
+ \EndProof
+ \\
+ & K :: \avfield \And \Complete \\
+ \\
+ \Theorem{FinDimIsBanach}{\forall V : \NS(K) : \dim V < \infty \. V : \Banach}
+ \Say{n}{\dim V}{\Nat}
+ \Say{(1)}{\THM{FiniteDimensionalClassification}(V,n)}{V \cong_{\NORM} K_1^n}
+ \Conclude{()}{\THM{IsoBanach}(1)}{(V : \Banach)}
+ \EndProof
+ \\
+ \Theorem{FinDimMajorization}{\forall V  : \NS(K) : \dim V < \infty \. 
+          \forall s : \TYPE{seminorm}(V) \.  s < \|  \cdot \|_V
+  }
+  \Say{n}{\dim V}{\Nat}
+  \Say{(1)}{\THM{FiniteDimensionalClassification}(V,n)}{V \cong_{\NORM} K_1^n}
+  \Say{(c,C)}{\bd V \cong_{\NORM} K_1^n }{\Reals_+ \times \Reals_+ :
+     \forall x \in V \. c\| x \|_1 \le \| x \| \le C\| x \|_1  
+  }
+  \Say{v}{\bd \dim(V,n)(1)}{ n \to V : V = \Span(v) : \forall i \in n \. \| v_i \|_1 = 1}
+  \Say{H}{\max_{1 \le i \le n} s(v_i)}{\Reals_+}
+  \Assume{x}{V}
+  \Say{ a }{ \bd(v,x)}{ K^n : x = \sum^n_{i = 1} a_i v }
+  \Conclude{()}{\bd \TYPE{Seminorm}(V)(s)(x,\bd a) \bd H \bd \| \cdot \|_1
+  \bd  C 
+  }{ s(x)\le \sum^n_{i = 1} |a_i|s(v_i) \le H \| x  \|_1 \le CH \| x \|}
+  \DeriveConclude{()}{\bd^{-1} s \le \| \cdot \|_V }{ (s \le \| \cdot \|_V)}
+  \EndProof
+}
+\Page{
+\Theorem{FinDimOperator}{\forall  V : \NS(K) : \dim V < \infty \.
+ \forall W : \NS(K) \. 
+ \NewLine 
+ \. \forall T : \L(V,W) \. T : \B(V,W)
+ }
+  \Say{n}{\dim V}{\Nat}
+  \Say{(1)}{\THM{FiniteDimensionalClassification}(V,n)}{V \cong_{\NORM} K_1^n}
+  \Say{(c,C)}{\bd V \cong_{\NORM} K_1^n }{\Reals_+ \times \Reals_+ :
+     \forall x \in V \. c\| x \|_1 \le \| x \| \le C\| x \|_1  
+  }
+  \Say{v}{\bd \dim(V,n)(1)}{ n \to V : V = \Span(v) : \forall i \in n \. \| v_i \|_1 = 1}
+  \Say{H}{\max_{1 \le i \le n} \|  T v_i \|}{\Reals_+}
+  \Assume{x}{V}
+   \Say{ a }{ \bd(v,x)}{ K^n : x = \sum^n_{i = 1} a_i v }
+  \Conclude{()}{\bd \L(T)(x,\bd a) \TYPE{Seminorm}(W) \bd H \bd \| \cdot \|_1
+  \bd  C 
+  }{ \| Tx \| \le \sum^n_{i = 1} |a_i |\| T v_i  \| \le  H \| v \|_1  \le HC \| v \| }
+  \DeriveConclude{()}{\bd^{-1} s \le \| \cdot \|_V }{ (s \le \| \cdot \|_V)}
+  \EndProof
+  \\
+  \Theorem{FinDimTopCompletable}{ \forall V : \NS(K) \. \NewLine
+  \. \forall S : \TYPE{Sub}(\NORM(K),V) : \dim S < \infty \. S : 
+   \TopC(V)
+    }
+    \Say{n}{\dim S}{\Nat}
+    \Say{R}{\THM{FinDimComplement}(V,S)}{ \TYPE{Sub}(\NORM(K),V) : V \cong_{\vs{K}} S \oplus R : (R : \TYPE{Closed}(V)) }
+    \Say{W}{\left( \frac{V}{R} \right)_\NORM}{\NS(K)}
+    \Say{(1)}{\THM{QuetientDim}(\bd W, \bd R)}{\dim W = n}
+    \Say{T}{ \pi_{R|S}}{\B(S,R)}
+    \Say{(2)}{\THM{EqDimIso}(S,W,T,1,\bd T) }{(T : S \ToBij_{\vs{K}} W)}
+    \Say{(3)}{\THM{FinDimOperator}^2(S, W,T)(2)(W,S,T^{-1})}{(T : S \ToBij_{\NORM(K)} W)}
+    \Say{P}{ T^{-1} \circ \pi_R}{ V \to_\NORM S}
+    \Assume{x}{S}
+    \Conclude{()}{ \bd P \THM{AdHocContraction}(S,x) \bd T (x)}{ T \, x = \pi^{-1}_{R|S} \pi_{R|S} \, x = x}
+   \Derive{(4)}{\LOGIC{UniIntro}}{\forall x \in S \. P \, x = x}
+   \Assume{x}{R}
+   \Say{()}{ \bd P \bd \FUNC{quatProjection}(R,S) }{  P \, x  =  \pi^{-1}_{R|S} \pi_{R} \, x = 
+    \pi^{-1}_{R|S} 0 = 0  
+   }
+   \Derive{(5)}{\LOGIC{UniIntro}}{\forall x \in R \. P \, x = 0}
+   \Say{()}{\bd^{-1}\TYPE{ProjectionOnAlong}(S,R)(4,5)}{(P : \TYPE{ProjectionOnAlong}(S,R))}
+   \Say{(7)}{\THM{ProjectionTopComplement}(P)}{V =_{\NORM(K)} S \oplus R}
+   \Conclude{()}{\bd^{-1} \TopC(V)(7)}{ (S : \TopC(V)) }
+   \EndProof
+ }
+\subsection{Banach Space of Bounded Operators}
+\Page{
+  \Theorem{BanachOperators}{ \forall V : \Banach(K) \. \forall W : \SNS(K) \. \B(W,V) : \Banach(K)}\
+  \Assume{T}{\TYPE{Cauchy}\, \B(W,V)}
+  \Assume{x}{W}
+  \Say{(1)}{\bd^{-1} \TYPE{Cauchy} \bd \FUNC{OperatorNorm} \bd \TYPE{Cauchy}(T)}{(Tx : \TYPE{Cauchy} \, V)}
+  \Say{(2)}{\bd \Banach (V)(Tx)}{Tx : \TYPE{Convergent}(V)}
+  \Conclude{Ax}{\lim_{n \to \infty} T_n x}{V}
+  \Derive{A}{\LOGIC{FuncIntro}}{\L(W,V)}  
+  \Say{N}{\bd \TYPE{Cauchy}(T)(1)}{\Nat : \forall n,m \in \Nat : (n,m) \ge (N,N) \. \| T_n - T_m  \| \le 1 }
+  \Say{C}{\| T_N \|}{\Reals^+}
+  \Assume{x}{W : \| x \| = 1}
+  \Conclude{()}{\bd \TYPE{Norm}(V)((A - T_N)x,T_N x) \bd N \bd C}{ \| A \, x \| \le  \| (A - T_N) x  \| + \| T_N x  \| \le 1  + C  
+        }
+  \Derive{(1)}{\bd^{-1} \B(W,V)}{(T : \B(W,V))}
+   \Assume{\varepsilon}{\Reals_+}
+   \Say{N}{\bd \TYPE{Cauchy}(T)(
+   \varepsilon / 4)}{\Nat : \forall n,m \in \Nat : (n,m) \ge (N,N) \. \| T_n - T_m  \| \le \frac{\varepsilon}{4} }
+   \Assume{n}{\Nat : n \ge N}
+   \Assume{x}{W : \| x \| = 1}
+   \Say{m}{\max(\bd T(x), N)}{ \Nat : \forall k \in \Nat : k \ge m \. \| T_m x - T x \| \le \frac{\varepsilon}{4}}
+   \Conclude{()}{
+   \bd \TYPE{Norm}(T x - T_m x, T_m x - T_n x)   
+   \bd n \bd m \bd N  \THM{PositiveUpperBound}\left(\frac{\varepsilon}{4},2 \right)}
+   { \NewLine : \|Tx - T_n x \|
+    \le  \| Tx - T_m x \|  + \| T_m x - T_n x \|   
+    \le \frac{\varepsilon}{2} < {\varepsilon}   }
+  \DeriveConclude { ()}{ 
+  \bd \FUNC{operatorNorm}  
+  \bd \sup ( \Lambda x \in \mathbb{S}_W \. \| Tx - T_n x \|)}{\| T -  T_n\| \le \varepsilon};
+  \DeriveConclude{()}{\bd^{-1} \lim (\B(W,B))}{\lim_{n \to \infty} T_n = T}
+  \DeriveConclude{(*)}{\bd^{-1} \Banach}{\B(W,V) : \Banach}
+  \EndProof
+  \\
+  \Theorem{ReflexiveIsBanach}{\forall V : \TYPE{Reflexive} \And \NS(K)   \.  V : \Banach (K) }
+  \Say{(1)}{\THM{BanachOperators}(K,V^*)}{V^{**} : \Banach}
+  \Say{(2)}{\bd \TYPE{Reflexive}(V)}{ V \cong_{\NORM} V^{**}}
+  \Conclude{(*)}{ \THM{IsoBanach}(1,2)}{ V : \Banach}
+  \EndProof
+ }
+
+\subsection{Absolutely Convergent Series}
+\Page{
+ \DeclareType{AbsolutelyConvergent}{ \prod V : \Banach(K) \. ? \Nat \to V }
+ \DefineType{v}{AbsolutelyConvergent}{\sum^\infty_{n = 1} \| v_n \| < \infty}
+ \\
+ \Theorem{AbsoluteConvergenceTHM}{\forall V : \Banach(K) \. \forall v : \AbsC(V) \. v : \TYPE{ConvergentSeria}(V) }
+\Assume{\varepsilon}{\Reals_+}
+\Say{N}{ \bd \TYPE{ConvergentSeria}( \bd \AbsC(V)v)(\varepsilon) }{ \Nat : \forall n \in \Nat : n \ge N \. \sum^\infty_{k = n } \| v_k  \| \le \varepsilon}
+\Assume{n}{\Nat : n \ge N}
+\Conclude{()}{\bd_1 \TYPE{Norm}( \{ v_n \}^\infty_{k = n}) \bd (N,n)}{
+\left \|  \sum^\infty_{ k = n} v_k  \right \| \le \sum^\infty_{ k = n} \| v_k \|  \le \varepsilon
+}
+\DeriveConclude{(*)}{\bd^{-1} \TYPE{ConvergentSeria}(V)}{(v : \TYPE{ConvergentSeria}(V)) }
+\EndProof
+\\
+\Theorem{AbsCIsBanach}{\forall V : \NS(K) : \forall v  : \AbsC(V) \.  v : \TYPE{ConvergentSeria}(V)
+\.  \NewLine \. V : \Banach(K) }
+\Assume{v}{\TYPE{Cauchy}(V)}
+\Assume{n}{\Nat}
+\Say{N}{\bd \TYPE{Cauchy}(V)(v)\left( \frac{1}{2^n} \right)}{\Nat : \forall k,l \in \Nat : (k,l)
+\ge (N,N) \. \| v_k - v_l  \| \le \frac{1}{2_n}
+}
+\Conclude{u_n}{v_N}{V}
+\Derive{u}{\LOGIC{FuncIntro}}{\Nat \to V : \forall n \in \Nat \. \| u_n - u_{n - 1} \| \le \frac{1}{2^n} }
+\Say{x}{\Lambda n \in \Nat \. \If \, n == 1 \, \Then \, u_1 \, \Else \, u_n - u_{n - 1}}{\Nat \to V}
+\Say{(1)}{ \bd V(\bd x \bd u) }{(x : \TYPE{ConvergentSeria}(V))}
+\Say{(2)}{\bd x(1)}{ \sum^\infty_{n = 1} x_n = \lim_{n \to \infty} u_n}
+\Conclude{()}{\THM{CauchySubseq}(2)}{\lim_{n \to \infty} v_n = \sum^\infty_{n = 1} x_n}
+\DeriveConclude{(*)}{\bd^{-1} \Banach}{(V : \Banach(K))}
+\EndProof
+}
+\Page{
+   \Theorem{BanachQuetientBanach}{\forall V : \Banach(K) \. \forall S : \TYPE{Closed}(V) : S \subset_\NORM V \.  \left(\frac{V}{S} \right)_\NORM : \TYPE{Banach}(K)}
+\Assume{[x]}{\AbsC \left( \frac{V}{S} \right)_\NORM}
+\Say{x}{\bd \FUNC{normedQuetient}(V)(S)([x])(2)}{\Nat \to V : \forall n \in \Nat \. \| x_n \| \le 2 
+\big\| [x] \big\|}
+\Say{(1)}{ \bd x \bd \AbsC( [x] )}{ \sum^\infty_{n = 1} \| x_i \| \le 2 \sum^\infty_{n = 1} \| [x_i] \| < \infty}
+\Say{(2)}{\bd^{-1} \AbsC(1)}{(x : \AbsC(V))}
+\Say{(3)}{\THM{AbsoluteConvergenceTHM}(V)}{(x : \TYPE{ConvergentSeria}(V))}
+\Say{X}{\sum^\infty_{n = 1} x_n}{V}
+\Say{(4)}{\bd \FUNC{quetientNorm}}{ \left\| \sum^\infty_{n = 1} [x]  - [X] \right\| \le \left\| \sum^\infty_{n = 1} x  - X \right\| = 0 }
+\Conclude{()}{\bd^{-1} \TYPE{ConvergentSeria}(4)}{\left([x] : \TYPE{ConvergentSeria} \left(\frac{V}{S} \right)_\NORM  \right)}
+\Derive{(1)}{\LOGIC{UniIntro}}{\forall [x] : \AbsC \. [x] : \TYPE{ConvergentSeria}}
+\Conclude{()}{\THM{AbsIsBanach}(1)}{ \left(\frac{V}{S} \right)_\NORM : \Banach(K) }
+\EndProof
+}
+\subsection{Continuous Extension of Operators}
+\Page{
+\Theorem{ContinuousExtension}{ \forall V : \SNS(K) \. \forall S : \Dense(V) : S \subset_\NORM V \. \forall W : \Banach(K) \. \NewLine
+\.
+\forall T : \B(S,W) \. \exists ! A : \B(V,W) : A_{|S} = T}
+\Assume{x}{v}
+\Say{v}{\bd \Dense(V)(S)}{\Nat \to S : \lim_{n \to \infty} v_n = x}
+\Say{()}{\THM{ConvergentIsCauchy}(v)}{(v : \TYPE{Cauchy}(V))}
+\Assume{\varepsilon}{\Reals_+}
+\Say{N}{\bd \TYPE{Cauchy}(V)(v)(\varepsilon)}{\Nat : \forall n,m \in \Nat : (n,m) \ge (N,N) 
+\.  \| v_n - v_m  \| \le \varepsilon /  \| T \|
+}
+\Assume{n,m}{\Nat : (n,m) \ge (N,N)}
+\Conclude{ () }{ \bd \B(S,W)(T)(v_n - v_m) \bd N (\bd(n,m))}{ \| T v_n - T v_m \| \le \| T \| \| v_n - v_m \|  \le \varepsilon} 
+\Derive{()}{\bd^{-1} \TYPE{Cauchy}}{ (Tv : \TYPE{Cauchy}(W))}
+\Say{()}{\bd \Banach(W)(Tv)}{(Tv : \TYPE{Convergent})}
+\Say{Ax}{\lim_{n \to \infty} Tv_n}{W}
+\Assume{w}{\Nat \to S : \lim_{n \to \infty} w_n = x}
+\Assume{\varepsilon}{\Reals_+}
+\Say{N}{\bd \lim (v)\left(\frac{\varepsilon}{2\|T\|}\right)}
+{\Nat : \forall n \in \Nat : n \ge N \. \| v_n - x  \| \le  \frac{\varepsilon}{2\|T\|}}
+\Say{N'}{\bd \lim (w)\left(\frac{\varepsilon}{2\|T\|}\right)}
+{\Nat : \forall n \in \Nat : n \ge N' \. \| w_n - Ax  \| \le  \frac{\varepsilon}{2\|T\|}}
+\Say{M}{\max(N,N')}{\Nat}
+\Assume{n}{\Nat : n \ge M}
+\Conclude{()}{\ldots}{ \| Tv_n - Tw_n \| \le \|T\|\| v_n - w_n \| \le T\|v_n - x\| + T\| x - w_n \| \le \varepsilon }
+\DeriveConclude{()}{\THM{LimitsAgree}}{ \lim_{n \to \infty} Tw_n = Ax ;}
+\Derive{A}{\LOGIC{FuncClassIntro}}{\B(V,W) : A_{|S} = T}
+\Assume{B}{\B(V,W) : B_{|S} = T}
+\Conclude{()}{\THM{DenceContEq}(A,B)}{A = B}
+\Derive{(*)}{\LOGIC{UniqueIntro}}{(\Lambda A : \B(V,W) \. A_{|S} = T,A) : \TYPE{Unique}}
+\EndProof
+\\
+\DeclareFunc{denseExtension}{ \prod V : \SNS(K) \. \prod S : \Dense(V) : S \subset_\NORM V \. \prod W : \Banach(K) \. \NewLine
+\.
+ \B(S,W)  \to  \B(V,W) }
+\DefineFunc{denseExtension}{T}{\THM{ContinuousExtension}(T)}  
+}
+\Page{
+\\
+\Theorem{IsometryExtension}{ \forall V : \SNS(K) \. \forall S : \Dense(V) : S \subset_\NORM V \. \forall W : \Banach(K) \. \NewLine
+\.
+\forall T : \TYPE{NonExpanding}(S,W) \. \FUNC{denseExtension}(T) : \TYPE{NonExpanding}(V,W) }
+&
+ \| A x  \| = \lim_{n \to \infty} \| T v_n \| \le  \lim_{n \to \infty} \| T  \| \| v_n \|
+ = \| T \| \| x \| \le \| x \|  
+ \\
+ \EndProof
+ \\
+ \Theorem{TopInjExtension}{ \forall V : \SNS(K) \. \forall S : \Dense(V) : S \subset_\NORM V \. \forall W : \Banach(K) \. \NewLine
+\.
+\forall T : \TYPE{TopologicalInjection}(S,W) \. \FUNC{denseExtension}(T) : \TYPE{TopologicalInjection}(V,W) }
+&
+ \| A x  \| = \lim_{n \to \infty} \| T v_n \| \ge  \lim_{n \to \infty} c \| v_n \|
+ =  c \| x \|  
+ \\
+ \EndProof
+ \\
+ \Theorem{SepRealHahnBanach}
+    {\forall V : \Banach(\Reals) \And \TYPE{Separable} \. \forall A : \TYPE{Subspace}(V) \.
+     \NewLine           \.     
+     \forall f \in A^*  \. \exists F \in V^* :  F_{|A} = f \And \| F \| = \| f \|    
+     }
+    \Assume{(1)}{f = 0}
+    \Say{F}{0}{\TYPE{In}(V^*)}
+    \Conclude{(2)}{ \bd F_{|A} (1) }{ F_{|A} = 0 = f }
+    \Conclude{(3)}{ \bd F \bd f }{ \| F \| = \| 0 \| = \| f \| }
+    \Derive{(1)}{ \LOGIC{ImplicationInto} }{ f = 0 \Rightarrow \LOGIC{RealHahnBanach}}
+    \Assume{(2)}{ f \neq 0}
+    \Say{g}{\frac{f}{\| f \|}}{ A^* : \|g\| = 1}
+    \Theorem{HahnBanachLemma}{ \mathrm{codim}_V  A = 1 \Rightarrow  
+     \LOGIC{RealHahnBanach} }
+    \Say{()}{ \bd \mathrm{codim}_V  A =  1}{A^\c : \TYPE{NonEmpty}}
+    \Say{x}{ \bd \TYPE{NonEmpty}(A^\c) }{A^\c}
+    \Assume{a,b}{A}
+    \Say{(3)}{ \bd \FUNC{abs}(g(a - b))\bd \FUNC{operatorNorm}(g)(a-b)\THM{AddSubstract}(a-b,x)
+          \bd_2 \| \cdot \|((x + a), (x - a))     
+      }{ \NewLine : g(a - b) \le |g(a - b)| \le  \| a - b \| \le \| (x + a) - (x -b) \| 
+        \le  \| x + a  \| + \| x + b \| 
+    }
+   \Say{(4)}{\THM{SumIneq}(3,g(a), -g(b), \|x + a \|, \|x + b \|   )}{ -g(b) - \|x + b \| \le 
+   \| x + a \| - g(a)}
+   \Conclude{X_b}{ -g(b) - \|x + b \|   }{ \Reals }
+   \Conclude{Y_a}{ \|x + a \| - g(a)}{\Reals}
+   \Derive{(X,Y))}{\LOGIC{FuncIntro}}{A \times A \to \Reals \times \Reals : 
+   \forall (a,b) \in A \times A \. X_b \le Y_a}
+   \Say{C_x}{ \inf_{a \in A} Y_a}{\Reals}
+   \Say{c_x}{ \sup_{a \in A} X_a}{\Reals}
+   \Say{(3)}{ \bd(X,Y)}{c_x \le C_x}
+   \Say{r}{ \THM{IntermidiateReal}(c_x,C_x)}{\Reals : c_x \le r \le C_x }
+   \Say{(4)}{ \bd (X,Y,r)}{\forall a \in A \. |r + g(a)| \le \| x + a \|}
+      }
+   \Page
+   {
+   \Assume{v}{V}
+   \Say{(a,s)}{ \bd \mathrm{codim}_V  A = 1 (v, x) }{  A  \times \Reals : sx + a
+      v = sx + a    
+   }
+   \Conclude{G(v)}{g(a) + sr}{\Reals}
+   \Assume{O}{v \in A}
+   \Say{(5)}{\bd (s,a)O }{ v = a}
+   \Conclude{(6)}{ \LOGIC{EqEl}(|G(v)|, \bd F, (5))\bd_2 g \bd a }{| G(v)| = |g(a)| \le \| a \| = \| v \|}
+   \Derive{(5)}{\LOGIC{ImplyIntro}}{ v \in A \Rightarrow |G(v)| \le \| v \| }
+   \Assume{O}{ v \not \in A }
+   \Say{(5)}{ \bd (s,a)O }{ s \neq 0 }
+   \Conclude{(6)}{ \LOGIC{EqEl}(|G(v)|, \bd F, )\bd\TYPE{AbsVal}(\Reals)(sc + g(a),s)
+     \bd_2 \mathcal{L}(A,K)(g)(s^{-1}, a)(4)\left( \frac{a}{s}  \right)
+     \NewLine     
+     \bd^{-1}_2 \TYPE{Norm}(V)(|s|,x + s^{-1}a)\bd^{-1} (a,s)   
+     }{
+    \NewLine :   
+    | G(v) | = |sr  +  g(a)  | =  |s|\left|r + \frac{g(a)}{s} \right| 
+   =  |s|\left|r + g \left( \frac{a}{s} \right) \right| \le  |s|\left\|  x   + \frac{a}{s}  \right\|
+   = \left\| sx  + a \right\| = \| v \|
+   }
+   \Derive{(6)}{\LOGIC{ImplyIntro}}{ v \not \in A \Rightarrow |G(v)| \le \| v \| }
+   \Conclude{(7)}{\LOGIC{OrEl}(v \in A | v \not \in A)(5,6)}{|G(v)| \le \| v \|}
+   \Derive{G}{ \LOGIC{FuncIntro}}{  V^*  : \| G \| \le 1 \And G_{|A} = g }
+   \Say{(5)}{\bd_2 G \bd g}{ \| G \| \ge \| g \| = 1 }
+   \Say{(6)}{ \THM{TwofoldIneq}\bd_1 G  (5) }{ \| g \| = 1 }
+   \Say{F}{\| f \|G}{ V^* : \| F \| = \| f \| \And  F_{|A} = f  }
+   \Conclude{(*)}{\bd \LOGIC{RealHahnBanach}(F)}{\LOGIC{RealHahnBanach}}
+   \Say{D}{\bd \TYPE{Separable}(V)}{\TYPE{Dense}(V)}
+   \Say{W}{\Span(D)}{\TYPE{Sub}(\NORM,V)}
+   \Say{(n,e)}{\bd W \bd S}{ \big(\TYPE{Cardinal} : n \le \aleph_0\big) \times \big(  n \to W 
+    : \TYPE{Basis}(W)   
+    \big)  }
+   \Say{h_0}{g}{\B(S,K)}
+   \Say{U_0}{S}{\TYPE{Sub}(\NORM,V)}
+   \Assume{n}{\Nat}
+   \Assume{A}{e_n \in U_{n - 1}}
+   \Say{U_n}{U_{n - 1}}{\TYPE{Sub}(\NORM,V)}   
+   \Say{h_n}{h_{n - 1}}{\B(U_n,K)}
+   \Assume{A}{e_n \not \in U_{n - 1}}
+   \Say{U_n}{U_{n -1} +  \Span{e_n}}{\TYPE{Sub}(\NORM,V)}
+   \Conclude{h_n}{\THM{HahnBanachLemma}(U_n,U_{n-1},h_{n-1})}{\B(U_n,K)}
+   \Derive{(U,h)}{ \LOGIC{RecursiveFunc}}{\forall n \in \Nat \. \sum U_n :
+   \TYPE{Sub}(\NORM,V) \. \B(U_n,K)}
+   \Assume{v}{W}
+   \Say{(m,k)}{\bd \TYPE{Basis}(W)(e)(v)}{n \times m \to n : \exists a : m \to K \. v = \sum^m_{i = 1} a_i e_{k_i}}
+   \Conclude{Hv)}{h_m(v)}{K}
+   \Derive{H}{\LOGIC{FuncIntro}}{\B(W,K)}
+   }
+   \Page{ 
+   \Say{G}{\THM{ContinuousExtension}(W,H)}{\B(V,K)}
+   \Say{F}{\|f\| G}{\B(V,K) : \| F \| = \| f \| : F_{|S} = f}  
+   \EndProof
+   \\
+   \Theorem{ContinuousIsoExtension}{ \forall  V,W : \Banach \. \forall S : 
+   \TYPE{Sub}(\NORM, V) \. \forall R : \TYPE{Sub}(\NORM,W) 
+   \.  
+   \NewLine   
+   \.\forall  T : S \ToBij_\NORM T \.  \exists ! A : V \ToBij_\NORM W    : A_{|S} = T
+   }
+   \NoProof
+   \\ 
+   \DeclareFunc{denseIsoExtension}{ \prod V : \Banach(K) \. \prod S : \Dense(V) : S \subset_\NORM V \. \prod W : \Banach(K) \.  \NewLine \prod R : \Dense(V) : R \subset_\NORM V 
+\.
+ \B(S,W)  \to  \B(V,W) }
+\DefineFunc{denseIsoExtension}{T}{\THM{ContinuousIsoExtension}(T)}  
+\\
+ \Theorem{ContinuousIsometryExtension}{ \forall  V,W : \Banach \. \forall S : 
+   \TYPE{Sub}(\NORM, V) \. \forall R : \TYPE{Sub}(\NORM,W) 
+   \.  
+   \NewLine   
+   \.\forall  T : S \ToBij_\NORMI T \.  \exists ! A : V \ToBij_\NORMI W    : A_{|S} = T
+   }
+   \NoProof
+   \\ 
+ \Theorem{ContinuousUnitaryExtension}{ \forall  V,W : \Banach \. \forall S : 
+   \TYPE{Sub}(\NORM, V) \. \forall R : \TYPE{Sub}(\NORM,W) 
+   \.  
+   \NewLine   
+   \.\forall  T : \TYPE{Unitary}(S, T) \.  \exists ! A : \TYPE{Unitary}(V,  W)    : A_{|S} = T
+   }
+   \NoProof
+}
+\subsection{Orthogonal Complements}
+\Page{
+& x = \left( \frac{1}{n} \right)^\infty_{n = 1} : l_2 \\
+& e = \left(  (\delta_{i,n} )^\infty_{i = 1}  \right)^\infty_{n = 1} : \TYPE{Schauder}(l_2) \\
+& Y = \Span( e_2 )^\infty_{n = 2}  \subset_\NORM l_2 \\
+& y = \arg \min_{y \in l_2} \| x - y \| = (0) \oplus \left(  \frac{1}{n} \right)_{n = 2}^\infty : l_2  \\
+& y \not \in Y \\
+& \exists v : \Nat \to Y : \lim_{n \to \infty} v_n  = y 
+\Rightarrow 
+\not \exists y \in Y : y = \arg \min_{y \in Y} \| x - y \|
+\\ 
+\\
+\Theorem{NearestVector}{\forall H : \Hilbert(K) \. \forall v \in H \. \forall X \subset_{\NORM} 
+H \. \exists! x \in X : x = \arg \min_{x \in X}  \| x - v \|
+}
+\Say{d}{\inf_{x \in X} \| x - v \| }{\Reals_+}
+\Say{x}{\bd \inf(\bd d) }{ \Nat \to X : \lim_{n \to \infty} \| x_n - v \| = d }
+\Assume{m,n}{\Nat}
+\Conclude{()}{\THM{ParalellogramLaw}(v - x_n,v - x_m)}{ \NewLine :
+\| (x - y_n) + (x - y_m)   \|^2 + \| (x - y_n) - (x - y_m)   \|^2 =
+2\| x - y_m \|^2 + 2\| x - y_n \|^2 
+}
+\Derive{(1)}{\LOGIC{UniIntro}}{\forall n, m \in \Nat \.
+\NewLine \.
+ \| (x - y_n) + (x - y_m)   \|^2 + \|  y_n -  y_m   \|^2 =
+2\| x - y_m \|^2 + 2\| x - y_n \|^2}
+\Say{(2)}{\THM{Lim}(\bd d, \THM{RearangeI}(1,\| (x - y_n) + (x - y_m)   \|^2))}{\lim_{n,m \to \infty} \| y_n - y_m \|^2 = 4d - 4d = 0 }
+\Say{()}{\bd^{-1} \TYPE{Cauchy}}{(x : \TYPE{Cauchy}(X))}
+\Say{()}{\THM{ClosedSubspaceIsBanach}(H,X)}{(X : \HIL(K))}
+\Say{y}{\bd \Hilbert(X)(x)}{(X : \lim_{n \to \infty} y = x)}
+\Conclude{(*)}{\bd y \bd d}{ y = \arg \min_{x \in X}  \| x - v \| }
+\Assume{z}{\TYPE{In}(X) : z = \arg \min_{x \in X}  \| x - v \| }
+\Say{(3)}{\THM{ParalellogramLaw}( v - y,v - z)(*,\bd d)(\bd z, \bd d)}{
+\NewLine :
+4\left\|  v - \frac{y - z}{2} \right\|^2 + \| y - z \|^2 = 2\| v - y\|^2 + 2\| v - z \|^2 = 4d^2
+}
+\Say{(4)}{(*)\bd d\left(  4\left\|  v - \frac{y - z}{2} \right\|^2  \right)}{
+4\left\|  v - \frac{y - z}{2} \right\|^2  \le 4d^2}
+\Conclude{()}{\bd \TYPE{Norm}(H)(3)(4)}{ y = z}
+\DeriveConclude{(**)}{\bd^{-1} \TYPE{Unique}}{(y : \TYPE{Unique}(\Lambda x \in X \.  x = \arg \min_{x \in X}  \| x - v \|))}
+\EndProof
+\\
+&  f \in H^* \\
+&  x  \in H \setminus \ker f             \\
+& \|  f \| = \sup_{y \in H} \frac{\| f y \|}{\| y \|} = 
+\sup_{y \in \ker f} \frac{\| f(x + y) \|}{\| x + y\|} =
+\sup_{y \in \ker f} \frac{ \| fx \|}{\| x + y\|} = \frac{\| fx \|}{\inf_{y \in \ker f } \| x + y \|}
+}
+\Page{
+\DeclareFunc{orthogonalComplement}{\prod H : \IPS(K) \. H \to ?H}
+\DefineNamedFunc{orthogonalComplement}{x}{x^\bot}{ \{ v \in H :  v \bot x \}}
+\\
+\DeclareFunc{setOrthogonalComplement}{\prod H : \IPS(K) \. ?H \to ?H}
+\DefineNamedFunc{setOrthogonalComplement}{A}{A^\bot}{ \bigcap_{a \in A} a^\bot  }
+\\
+\Theorem{OrthCIsCS}{\forall H : \IPS(K) \. \forall A \subset H \. A^\bot \subset_{\NORM} H }
+\Assume{a}{A}
+\Say{f}{\Lambda x \in H \. \langle x, a \rangle}{\TYPE{In}(H^*)}
+\Say{(1)}{\bd \FUNC{orthogonalComplement}(a,f, \bd \TYPE{Orthogonal})}{a^\bot = \ker f}
+\Conclude{()}{(1)\THM{ClosedKernel}}{a^\bot \subset_\NORM H}
+\Derive{(1)}{\LOGIC{UniIntro}}{\forall a \in A \. a^\bot \subset_\NORM H }
+\Conclude{(*)}{(1)\bd\TYPE{Closed}(H)\THM{SubspaceIntersection}}{A^\bot \subset_{\NORM} H }
+\EndProof
+\\
+\Theorem{DoubleOrthCI}{\forall H : \IPS(K) \. \forall A \subset H \. A \subset A^{\bot\bot}  }
+\NoProof
+\\
+\Theorem{OrthogonalDistanceLemma}{\forall H : \IPS(K) \. \forall A \subset_\NORM H \. \forall x \in H \. x \in A^\bot 
+\iff \NewLine
+\iff d(x,A) = \| x \|}
+\Assume{x }{ A^\bot}
+\Assume{a }{ A}
+\Conclude{()}{\ldots}{\| x - a \|^2 = \langle x - a, x - a \rangle = \| x \|^2 + \| a \|^2 \ge \|x\|^2}
+\Derive{(1)}{\LOGIC{UniIntro}}{\forall a \in A \. \| x - a \| \ge \|x\|}
+\Say{(2)}{\bd \TYPE{Subspace}(H)(A)}{0 \in A}
+\Conclude{()}{(1)(2)}{d(x,A) = \| x \|}
+\Derive{(\Rightarrow)}{\LOGIC{ImplicationIntro}}{ x \in A^\bot \Rightarrow d(x,A) = \| x \| }
+\Assume{E}{d(x,A) = \| x \|}
+\Assume{a}{\TYPE{In}(A) : \langle x, a \rangle \neq 0}
+\Assume{c}{\Reals}
+\Say{\beta}{c\overline{\langle x, a \rangle}}{K}
+\Conclude{()}{\bd \beta}{ \| x - \beta a \|^2 = \| x \|^2 - 2 c  | \langle x, a \rangle |^2 + 
+c^2  | \langle x, a \rangle |^2 \| a \|^2
+}
+\Derive{(1)}{\LOGIC{UniIntro}}{ \forall t \in \Reals  \. \exists v \in A : \| x - v \|^2 = \|x\|^2 - 2t | \langle x, a \rangle | +t^2 \| a \|^2}
+\Say{v}{(1)\left( \frac{| \langle x, a \rangle |}{\|a \|^2} \right)}{\TYPE{In}(A) : \| x - v \| = \|x \|^2 - \frac{|\langle x, a \rangle|^2}{\|a\|^2} }
+}
+\Page{
+\Say{(2)}{\bd v \bd a E}{\| x - v \| = \|x \|^2 - \frac{|\langle x, a \rangle|^2}{\|a\|^2}  < \| x \|^2 = d(x,A) } 
+\Conclude{()}{\bd v (2)}{\bot}
+\Derive{(1)}{\LOGIC{Contradiction}}{\forall a \in A \. a \bot x}
+\Conclude{()}{\bd \FUNC{setOrthogonalComplement}}{z \in A^\bot}
+\Derive{(\Leftarrow)}{\LOGIC{ImplicationIntro}}{x \in A^\bot \Leftarrow d(x,A) = \| x \|}
+\Conclude{(*)}{\LOGIC{IffIntro}(\Rightarrow,\Leftarrow)}{x \in A^\bot \iff d(x,A) = \| x \|}
+\EndProof
+\\
+\Theorem{OrthCTHM}{\forall H : \Hilbert(K) \. \forall A \subset_{\NORM} H \. H =_\NORM A \oplus A^\bot}
+\Assume{x}{\TYPE{In}(H)}
+\Say{y}{\THM{NearestVector}(H,A,x)}{\TYPE{In}(A) : d(x,A) = \| x - y \|}
+\Say{z}{x - y}{\TYPE{In}(H)}
+\Say{(1)}{\bd \FUNC{setDistance}(z,A) \THM{AutoInf}(A,\Lambda a \in A \. a - y)
+\bd^{-1} z  \bd^{-1} \FUNC{SetDistance}(z,A) \bd y \bd z
+ }{
+\NewLine : 
+ d(z,A) = \inf_{a \in A} \| z - a \| = \inf_{a \in A} \| z + y - a \|
+=  \inf_{a \in A} \| x - a \| = d(x,A) = \| x - y \| = \| z \|
+}
+\Say{(2)}{\THM{OrthogonalDistanceLemma}(1)}{z \in H^\bot}
+\Say{(3)}{\bd^{-1} z (2)}{x \in A + A^\bot}
+\Assume{y'}{\TYPE{In}(A)}
+\Assume{z'}{\TYPE{In}(A^\bot) : x = y' + z'}
+\Say{(4)}{\bd z \bd z'}{y - y' = z - z'}
+\Say{(5)}{\bd \FUNC{setOrthogonalComplement}(H)(A)(y - y',z - z')}{\langle y - y', z - z' \rangle = 0}
+\Conclude{()}{ \THM{SelfOrthogonal}(4,5)}{y = y' \And z = z' ;}
+\DeriveConclude{()}{\bd\TYPE{Unique}}{((y,z) : \TYPE{Unique}(A \times A^\bot, \Lambda (a,b) \in A \times A^\bot \. x = a + b ))}
+\DeriveConclude{(*)}{\LOGIC{UniIntro} \, \THM{Pythogorus}}{H =_\NORM A \oplus A^\bot }
+\EndProof
+\\
+\Theorem{DoubleHilbertOrthC}{\forall H : \Hilbert(K) \. \forall A \subset_{\mathsf{VS} } H \.
+A^{\bot \bot} = \overline{A} 
+}
+\Say{(1)}{\THM{OrthCIsCS}(H,A^\bot)}{A^{\bot\bot} \subset_\NORM H }
+\Say{(2)}{\THM{DoubleOrthC}(H,A)}{A \subset A^{\bot \bot}}
+\Say{(3)}{ \bd \FUNC{closure}(H,A,1,2)}{  \overline{A} \subset A^{\bot \bot}}
+\Say{(4)}{\THM{OrthCTHM}(H,\overline{A})}{H = \overline{A} \oplus \overline{A}^\bot}
+\Say{(5)}{\bd \FUNC{setOrthogonalComplement}(A)}{ \overline{A}^\bot \subset A^\bot }
+\Assume{x}{A^{\bot\bot} : d(x,A) > 0 }
+\Say{(y,z)}{(4)(x)}{\overline{A} \times \overline{A}^{\bot}: x = y + z}
+\Say{(6)}{\bd(y,z)(3)}{z \in A^{\bot \bot}}
+\Say{(7)}{\THM{Selforthogonal}(5,6)}{ z = 0}
+\Conclude{()}{\bd(y,z)(7)}{x \in \overline{A}}
+}
+\Page{
+\Derive{(7)}{\bd \TYPE{Subset}}{A^{\bot \bot} \subset \overline{A}}
+\Conclude{(*)}{\THM{SetEq}(3,7)}{ A^{\bot \bot} = \overline{A}}
+\EndProof
+\\
+\Theorem{TotalCriterion}{\forall H : \Hilbert(K) \. \forall A \subset H : A^\bot = \{0\} \. A : \TYPE{Total}(H)}
+\Say{(1)}{\bd A}{A^{\top\top} = H}
+\Say{(2)}{(1)\THM{DoubleHilbertOrthC}(H,A)}{\overline{A} = H}
+\Conclude{(*)}{\bd^{-1}\TYPE{Total}(H)}{A : \TYPE{Total}(H)}
+\EndProof
+\\
+\Theorem{OrthogonalQuetient}{\forall H : \Hilbert(K) \. A \subset_\NORM H \. \frac{H}{A} \cong_{\NORMI} A^\bot }
+\Assume{[x]}{\frac{H}{A}}
+\Say{(y,z)}{\THM{OrthCTHM}(H,A)(x)}{A \times A^\bot : x = y + z}
+\Say{T[x]}{z}{A^\bot}
+\Conclude{()}{ \bd \FUNC{normedQuetient}(H,A)([x])\bd(y,z)\THM{Pythagorus}(y + a,z) \THM{NonNegativeInf}(\bd \TYPE{Norm} ) \bd^{-1} T[x] 
+}{
+\NewLine :
+ \big\| [x]  \big\| = \min_{a \in A} \| x + a \| =
+\min_{a \in A} \| y + z + a  \| = \min_{a \in A} \| y + a \| + \| z \| = \| z \| = \| T[x] \| }
+\Derive{T}{\LOGIC{FuncIntro}}{\TYPE{Isometry}\left(  \frac{H}{A}, A^\bot \right)}
+\Assume{x}{A^\bot}
+\Conclude{()}{\bd T}{T[x]_A = x}
+\Derive{(1)}{\bd \TYPE{Iomorphism}(\NORMI)}{\left( T : \frac{H}{A} \ToBij_{\NORMI} A^\bot \right)}
+\Conclude{(*)}{\bd \TYPE{Isomorphic}(\NORMI)(1)}{\frac{H}{A} \cong_{\NORMI} A^\bot}
+\\
+\DeclareType{HilbertNormed}{ ? \NORM(K)}
+\DefineType{V}{HilbertNormed}{\exists H : \Hilbert(K) : V \cong_{\NORMI} H }
+\\
+\Theorem{HilbertQuetient}{\forall H : \Hilbert(K) \. \forall A \subset_{\NORM} H \. 
+\frac{H}{A} : \TYPE{HilbertNormed}(K)}
+\NoProof
+\\
+\DeclareType{Orthoprojector}{\prod H: \Hilbert(K) \. \prod A \subset_{\NORM} H \. ?\TYPE{Projector}(H,A)}
+\DefineType{P}{Orthoprojector}{\forall x \in A^\bot \. Px = 0}
+}
+\Page{
+\Theorem{OrthoprojectorExists}{\forall H : \HIL(K) \. \forall A \subset_{\NORM} H 
+\.
+\exists! \,  \TYPE{Orthoprojector}(H,A)
+}
+\NoProof
+\\
+\Theorem{TopologicalyCompletableCriterion}{\forall V : \SNS(K) \. \NewLine \. \forall S : \TYPE{Subspace}(V) \.
+S : \TYPE{TopologicalyCompletable} \iff \forall W : \SNS(K) \. \forall T : \B(S,W) \.
+\NewLine \.
+\exists A : \B(V,W) :  A_{|S} = T
+}
+&  \Rightarrow    \\
+&   P : \TYPE{Projector}(H,S)     \\
+  \Say{A}{TP}{\B(V,W)}
+& \Leftarrow \\
+& A = \mathrm{Right}(I_S)           \\ 
+& H = \im A \oplus \ker A =  S \oplus \ker A ; \\
+\EndProof
+\\
+\Theorem{HilbertExtension}{\forall H : \HIL(K) \. \forall S : \TYPE{Subspace}(H) \. \forall W : \BAN(K) \. \forall T : \B(S,W) \. 
+ \NewLine \.
+ \exists A : \B(H,V) : \| A \| = \| T \| : A_{|S} = T
+} 
+\Say{P}{\THM{OrthoprojectorExists}(H,\overline{S})}{P : \TYPE{Orthoprojector}(H.\overline{S})}
+\Say{B}{\THM{ContinousExtension}(T)}{\B(\overline{S},V) : \| B \| = \| T \| : B_{|S} = T }
+\Say{A}{BP}{\B(H,V)}
+\Say{(1)}{ \bd A \THM{OperatorProductNorm}(B,P)\bd \TYPE{Orthoprojector}(P) \bd B }
+{
+\NewLine :
+\| A \| = \| B P \| \le \| B \| \| P \| = \| B \| = \| T \|}                                      
+\Assume{v}{S}
+\Conclude{()}{\bd A \bd \TYPE{Projector}(H,\overline{S})(P)(v)\bd B}{Av = BPv = Bv = Tv }
+\DeriveConclude{(*)}{ \bd \FUNC{constrict} \LOGIC{UniIntro}}{ A_{|S} = T}
+\EndProof
+\\
+\Theorem{LindenschtrausCafrari}{\forall V : \BAN(K) \. \big( \forall S \subset_{\BAN} V \. V : \TYPE{TopologicalyCompletable} \big) \iff \NewLine
+\iff  V : \TYPE{HilbertNormed} }
+\NoProof
+}
+\subsection{Category Structure}
+\Page{
+  & \BAN :  \Cate  \\
+  & \BAN = ( \Banach, \Lambda A,B : \Banach \. \B(A,B), \circ) \\
+  \\
+  & \BANI :  \Cate  \\
+  & \BANI = ( \Banach, \Lambda A,B :  \.  \TYPE{NonExpanding}(A,B), \circ) \\
+  \\
+  & \HIL : \Cate \\
+  & \HIL = (\Hilbert, \Lambda A, B : \. \B(A,B), \circ) \\
+  \\
+  & \HILI : \Cate \\
+  & \HILI = (\Hilbert, \Lambda A, B : \. \TYPE{NonExpanding}(A,B), \circ) \\
+  \\
+  \DeclareFunc{BanSum}{\BAN \to \BAN \to \BAN}
+  \DefineNamedFunc{BanSum}{A,B}{A \oplus B}{(A \times B, \Lambda (a,b) \. \| a \|  + \| b \| )}
+  \\
+  \DeclareFunc{BanProduct}{\BAN \to \BAN \to \BAN}
+  \DefineNamedFunc{BanProduct}{A,B}{A \otimes B}{\big(A \times B, \Lambda (a,b) \. \max(\| a \|, \| b\|)\big)}
+  \\
+  \DeclareFunc{HilbertSum}{\HIL \to \HIL \to \HIL}
+  \DefineNamedFunc{HilbertSum}{A,B}{ A \dot \oplus B}{
+  \Big(A \times B, \Lambda (a,b),(c,d) \. \langle a, c \rangle + \langle b, d \rangle   \Big)}
+}
+\subsection{ Isomorphisms of Hilberts Spaces}
+\Page{
+ \Theorem{FischerRiesz}{ \forall H, L : \HIL \.
+ \forall e : \Nat \to H : \TYPE{Schauder}(H) \.
+ \forall f : \Nat \to L : \TYPE{Schauder}(L) \. 
+ \NewLine
+ \exists ! U : H \ToBij_\HILI L  : \forall n \in \Nat \. U(e_n) = f_n 
+ }
+ \Assume{v}{H}
+ \Say{a}{ \bd \TYPE{Schauder}(H)(e)(v)}{ \Nat \to K : v = \sum^\infty_{n = 1} a_i e_i }
+ \Say{U(v)}{\sum^\infty_{n = 1} a_i f_i}{\TYPE{FormalSeria}(L)}
+ \Say{(1)}{\bd H \bd a }{(a^2 : \TYPE{ConvergingSeria})(K)}
+ \Conclude{()}{ \bd^{-1} L (1)  }{ (U(v) \in L)}
+ \Derive{U}{\bd \TYPE{Unique}( \bd \TYPE{Schauder}\TYPE{FuncIntro}}{H \ToInj_\NORM L}
+  \Assume{v}{L}
+ \Say{a}{ \bd \TYPE{Schauder}(L)(f)(v)}{ \Nat \to K : v = \sum^\infty_{n = 1} a_i f_i }
+ \Say{w}{\sum^\infty_{n = 1} a_i e_i}{\TYPE{FormalSeria}(L)}
+ \Say{(1)}{\bd L \bd a }{(a^2 : \TYPE{ConvergingSeria})(K)}
+ \Say{(2)}{ \bd^{-1} H (1)  }{ (w \in H)}
+ \Conclude{()}{\bd U (2) (w) }{U(w) = u}
+ \Derive{U}{\bd^{-1} \TYPE{Bijection}}{H \ToBij_\NORM L}
+ \Assume{a,w}{H}
+ \Say{a}{ \bd \TYPE{Schauder}(H)(e)(v)}{ \Nat \to K : v = \sum^\infty_{n = 1} a_i e_i }
+ \Say{b}{ \bd \TYPE{Schauder}(H)(e)(w)}{ \Nat \to K : w = \sum^\infty_{n = 1} b_i e_i }
+ \Conclude{()}{\ldots}{\langle U(v) , U(w) \rangle = \left\langle \sum^\infty_{n=1} a_i f_i, \sum^\infty_{n=1} b_i f_i \right\rangle = \sum^\infty_{n = 1} a_n b_n   = 
+ \left\langle \sum^\infty_{n=1} a_i e_i, \sum^\infty_{n=1} b_i e_i \right\rangle
+ = \langle v, w \rangle
+ }
+ \Derive{(*)}{ \bd^{-1} \TYPE{Unitary}}{ ( U : H \ToBij_{\HILI} L)}
+ \EndProof
+}
+\Page{
+ \Theorem{HilbertBasisExists}{\forall H : \HIL \. \exists e : \TYPE{Total} \And \TYPE{Orthonormal}(H)}
+ \Say{O}{\{ A \subset H : \TYPE{Orthonormal}(H) \}}{??H}
+ \Say{(0)}{\bd O}{\emptyset \in O}
+ \Say{(00)}{\bd \TYPE{NonEmpty}}{O \neq \emptyset}
+ \Assume{C}{\TYPE{Chain}(O,\subset)}
+ \Say{B}{\bigcup_{A \in C} A}{?H}
+ \Assume{x,y}{B : x \neq y}
+ \Say{A}{\bd \TYPE{Chain}(H,\subset) \bd B(x)}{ \TYPE{In}(C) : x,y \in A}
+ \Conclude{()}{\bd \TYPE{Orthonormal}(H)(A)(x,y)}{x \bot y \And \| x \| = 1 \And \| y \| = 1}
+ \Derive{(1)}{\bd^{-1} \TYPE{Orthonormal}(H)}{(B : \TYPE{Orthonormal}(H))}
+ \Conclude{()}{\THM{UnionIsMaximal}(C,B)}{(B : \TYPE{Maximal}(C,\subset) )}
+ \Derive{A}{\THM{ZornLemma}(00)}{\TYPE{Maximal}(O,\subset)}
+ \Say{(1)}{\bd O \bd \TYPE{Maximal}(O, \subset)(A)}{A^\bot = \{0\}}
+ \Conclude{(*)}{\THM{TotalCriterion}(1)}{A : \TYPE{Total}}
+ \EndProof
+ \\
+ \Theorem{HilbertBasisDim}{\forall H : \HIL \. \forall E, F : \TYPE{Total} \And 
+ \TYPE{Orthonormal}(H) \. \# E = \# F }
+ \Theorem{HilbertDimLemma}{ \forall E, F : \TYPE{Total} \And 
+ \TYPE{Orthonormal}(H) \. \# E \le \# F }
+ \Assume{f}{F}
+ \Say{\Big(N, e,a,(1)\Big)}{\bd \FUNC{furieSeria} \,\THM{FurieSpaceTheorem}(H,E,f)}{ 
+ \NewLine : 
+ \sum N : \TYPE{Countable}
+ \. \sum e : N \to E \. \sum a : N \to K \setminus \{0\} \. f = \sum_{n \in N } a_n e_n }
+ \Conclude{\mathcal{E}(f)}{ \{ e_n | n \in \Nat  \} }{ \TYPE{Subset}(H) }    
+ \Derive{\mathcal{E}}{\LOGIC{FuncIntro}}{F \to \TYPE{Subset}(H)}
+ \Say{\mathfrak{E}}{\bigcup_{f \in F} \mathcal{E}(f)}{\TYPE{Subset}(H)}
+ \Say{(1)}{ \bd \TYPE{Total}(F)\bd \mathfrak{E}}{ ( \mathfrak{E} : \TYPE{Total}) }
+ \Assume{\left(e,(2)\right)}{\sum e \in E \. e \not \in \mathfrak{E}}
+ \Say{\left(N,e',(3)\right)}{\bd \FUNC{furieSeria} \,\THM{FurieSpaceTheorem}(H,\mathfrak{E},f)}
+ {\NewLine : \sum N : \TYPE{Countable} \. \sum e' : N \to \mathfrak{E} \. 
+ e = \sum_{n \in \Nat}  \langle e, e'_n \rangle e'_n 
+ }
+ \Say{(4)}{(3)\bd \TYPE{Orthonormal}(E)\bd \mathfrak{E}}{e = 0}
+ \Say{(5)}{\bd \TYPE{Orthonormal}(E)(e)}{ e \neq 0}
+ \Conclude{()}{\LOGIC{Absurd}}{\bot}
+ \Derive{(3)}{\bd \mathfrak{E}\LOGIC{FromContradiction}}{E = \mathfrak{E}}
+ \Conclude{()}{\ldots}{\# E = \# \mathfrak{E} = \# \bigcup_{f \in D } \mathcal{E}(f) \le (\# F) \cdot \aleph_0 = \# F }
+ \EndProof}
+ \Page{
+ \Say{(1)}{\THM{HilbertDimLemma}(F,E)}{\# F \le \# E}
+ \Say{(2)}{\THM{HilbertDimLemma}(E,F)}{\# E \le \# F}
+ \Conclude{(*)}{\THM{EqChoice}(1,2))}{\# E = \# F}
+ \\ 
+ \DeclareFunc{HilbertDim}{\HIL \to \TYPE{Cardinal} }
+ \DefineNamedFunc{HilbertDim}{H}{\dim_\HIL H}{\# \THM{HibertBasisExists}(H)}
+ \\
+  \Theorem{FischerRieszII}{ \forall H, L : \HIL  : \dim_\HIL H = \dim_\HIL L \. 
+  \NewLine
+  \. \forall E : \TYPE{Total} \And 
+ \TYPE{Orthonormal}(H) \. \forall  F : \TYPE{Total} \And 
+ \TYPE{Orthonormal}(L) \. \NewLine \. 
+  \forall \varphi : E \ToBij_\mathsf{SET} F \. \exists! U : H \ToBij_\mathsf{HILI} L :
+  \forall e \in E \. U(e) = \varphi(E) }
+  \Assume{v}{H}
+ \Say{(N,e,a)}{ \bd \TYPE{Total}(H)(E)(v)}{  \sum N : ?\Nat \. \sum e : N \to E \. \sum a : N \to  K  \. v = \sum^\infty_{n = 1} a_i e_i }
+ \Say{U(v)}{\sum^\infty_{n = 1} a_i \varphi(e_i)}{\TYPE{FormalSeria}(L)}
+ \Say{(1)}{\bd H \bd a }{(a^2 : \TYPE{ConvergingSeria})(K)}
+ \Conclude{()}{ \bd^{-1} L (1)  }{ (U(v) \in L)}
+ \Derive{U}{\bd \TYPE{Unique}( \bd \TYPE{Orthonormal})\TYPE{FuncIntro}}{H \ToInj_\NORM L}
+  \Assume{v}{L}
+ \Say{(N,f,a)}{ \bd \TYPE{Total}(L)(f)(v)}{ \sum N : ?\Nat \. \sum f : N \to F \. \sum a : N \to  K  \. v = \sum^\infty_{n = 1} a_i f_i  }
+ \Say{w}{\sum^\infty_{n = 1} a_i \varphi^{-1}(f_i)}{\TYPE{FormalSeria}(L)}
+ \Say{(1)}{\bd L \bd a }{(a^2 : \TYPE{ConvergingSeria})(K)}
+ \Say{(2)}{ \bd^{-1} H (1)  }{ (w \in H)}
+ \Conclude{()}{\bd U (2) (w) }{U(w) = u}
+ \Derive{U}{\bd^{-1} \TYPE{Bijection}}{H \ToBij_\NORM L}
+ \Assume{a,w}{H}
+ \Say{[!]a}{ \bd \TYPE{Schauder}(H)(e)(v)}{ \Nat \to K : v = \sum^\infty_{n = 1} a_i e_i }
+ \Say{[!]b}{ \bd \TYPE{Schauder}(H)(e)(w)}{ \Nat \to K : w = \sum^\infty_{n = 1} b_i e_i }
+ \Conclude{[!]()}{\ldots}{\langle U(v) , U(w) \rangle = \left\langle \sum^\infty_{n=1} a_i f_i, \sum^\infty_{n=1} b_i f_i \right\rangle = \sum^\infty_{n = 1} a_n b_n   = 
+ \left\langle \sum^\infty_{n=1} a_i e_i, \sum^\infty_{n=1} b_i e_i \right\rangle
+ = \langle v, w \rangle
+ }
+ \Derive{(*)}{ \bd^{-1} \TYPE{Unitary}}{ ( U : H \ToBij_{\HILI} L)}
+ \EndProof
+}
+\Page{
+\DeclareFunc{hilbertMatrix}{\prod H, L : \HIL(K) \.
+ \B(H,L) \to \NewLine \to
+ \TYPE{Total} \And 
+ \TYPE{Orthonormal}(H) \to
+  \TYPE{Total} \And 
+ \TYPE{Orthonormal}(L) \to
+ \dim_{\HIL} H \to \dim_{\HIL} L  \to K 
+ }
+\DefineNamedFunc{hilbertMatrix}{T,e,f,i,j}{ \FUNC{mat}(T,e,f)_{i,j} }{ \langle  f_j , Te_i \rangle}
+\\
+\DeclareType{HilbertMatrix}{\prod H, L : \HIL(K) \. ?  \dim_{\HIL} H \to \dim_{\HIL} L  \to K }
+\DefineType{A}{HilberMatrix}{\exists e : \TYPE{Total} \And  \TYPE{Orthonormal}(H) : \exists f :
+  \TYPE{Total} \And 
+ \TYPE{Orthonormal}(L) : \NewLine 
+ : \exists T : \B(H,L)
+ : A = \FUNC{mat}(T,e,f)}
+\\
+\DeclareFunc{asOperator}{\prod H, L : \HIL(K) \.
+ \TYPE{HilbertMatrix}(H,L) \to \NewLine \to
+ \TYPE{Total} \And 
+ \TYPE{Orthonormal}(H) \to
+  \TYPE{Total} \And 
+ \TYPE{Orthonormal}(L) \to
+ \B(L,K)
+ }
+\DefineNamedFunc{hilbertMatrix}{A,e,f, v }{ (e,f) \, A v }{ 
+ \sum_{j \in \dim_{\HIL} L} f_j \sum_{i \in \dim_{\HIL} } A_{i,j} \langle e_i, v \rangle}
+\\
+\Theorem{HilbertMatrixBounded}{\forall H, L : \HIL(K) \. \forall A : \TYPE{HilbertMatrix}(H,L)
+\.  \NewLine
+ \. \forall n \in \dim_{\HIL} H  \. \forall m \in \dim_{\HIL} L \.  \sum_{i \in \dim_{\HIL} L} | A_{n,i} |^2  + \sum_{i \in \dim_{\HIL} H} | A_{i,m}|^2  < \infty }
+\Say{(T,f,e)}{\bd \TYPE{HilbertMatrixBounded}}{\B(H,L) \times 
+\TYPE{Total} \And  \TYPE{Orthonormal}(H) \times
+\TYPE{Total} \And  \TYPE{Orthonormal}(L)}
+\Assume{n}{\dim_{\HIL} H}
+\Assume{m}{\dim_{\HIL} L}
+\Say{(1)}{\bd T}
+{ \sum_{i \in \dim_{\HIL} L} | A_{n,i} |^2 = \| T \, e_n \|^2 < \infty }
+\Say{(2)}{\bd T}
+{ \sum_{i \in \dim_{\HIL} H} | A_{i,m} |^2 = \| T^* f_m   \|^2 < \infty
+}
+\Conclude{()}{(1) + (2)}{ \sum_{i \in \dim_{\HIL} L} | A_{n,i} |^2  + \sum_{i \in \dim_{\HIL} H} | A_{i,m}|^2  < \infty  }
+\Derive{(*)}{\LOGIC{UniIntro}}{
+ \forall n \in \dim_{\HIL} H  \. \forall m \in \dim_{\HIL} L \.  \sum_{i \in \dim_{\HIL} L} | A_{n,i} |^2  + \sum_{i \in \dim_{\HIL} H} | A_{i,m}|^2  < \infty 
+}
+\EndProof
+\\ 
+\Theorem{HilbertMatrixCriterion}{\forall H, L : \HIL(K) \. \forall A \in K^{\dim_{\HIL} H \times \dim_{\HIL} L} 
+: \NewLine
+: \sum_{(i,j) \in  \dim_{\HIL} H \times \dim_{\HIL} L} |A_{i,j} |^2 < \infty \.
+A : \TYPE{HilbertMatrix}(H,L)
+}
+\Say{e}{\THM{HilbertBasisExists}(H)}{ \TYPE{Total} \And  \TYPE{Orthonormal}(H) }
+\Say{f}{\THM{HilbertBasisExists}(L)}{ \TYPE{Total} \And  \TYPE{Orthonormal}(L) }
+\Assume{V}{H}
+\Say{T\,v}{\sum_{i \in \dim_{\HIL} H} \langle v, e_i  \rangle \sum_{j \in \dim_{\HIL} L} A_{i,j}f_j }
+{\TYPE{FormalSeria}(L)}
+}
+\Page{
+\Say{(1)}{\bd \TYPE{Norm}(L) \ldots}{ \| Tv \|^2
+ = \sum \sum | \langle v, e_i \rangle A_{i,j}  |^2 \le 
+ \sum  | \langle v, e_i \rangle | \sum \sum \big| A_{j,l} \big|^2 = \| v \|^2 \sum \sum \big| A_{j,l} \big|^2
+}
+\Conclude{()}{\bd \TYPE{Hilert}(L)}{ T v \in V}
+\Derive{T}{\bd^{-1}\TYPE{FuncIntro}}{\B(H,L)}
+\Say{(1)}{\bd \FUNC{mat}}{\FUNC{mat}(e,f,T) = A}
+\Say{(*)}{ \bd^{-1} \TYPE{HilbertMatrix}(H,L)(1)}{(A : \TYPE{HilbertMatrix}(H,L)(1))}
+\EndProof
+\\
+\DeclareType{EquivalentMorphism}{ \prod V,W : \BAN(K) \. ? \big( V \to_\BAN W \times V \to_\BAN W
+\big)
+}
+\DefineNamedType{(A,B)}{EquivalentMorphisms}{A \sim_\BAN B}{
+\NewLine \iff
+\exists T : \auto(\BAN(K),V) :
+\exists S : \auto(\BAN(K),W) : SAT = B
+ }
+ \\
+\DeclareType{IsometricMorphisms}{ \prod V,W : \BAN(K) \. ? \big( V \to_\BAN W \times V \to_\BAN W
+\big)
+}
+\DefineNamedType{(A,B)}{IsometricMorphism}{A \sim_{\BANI} B}{
+\NewLine \iff
+\exists T : \auto(\BANI(K),V) :
+\exists S : \auto(\BANI(K),W) : SAT = B
+ }
+\\
+\Theorem{MatrixEquivalent}{\forall H,L : \HIL(K) \, \forall A,B : H \to_\HIL L \. A \sim_{\BANI} B
+ \iff 
+ \NewLine
+ \iff
+ \exists e,e' : \TYPE{Total} \And  \TYPE{Orthonormal}(H) : 
+ \exists f,f' : \TYPE{Total} \And  \TYPE{Orthonormal}(L) : \FUNC{mat}(A,e,f) = \FUNC{mat}(B,e',f')
+}
+\Assume{(\Rightarrow)}{ A \sim_{\BANI} B}
+\Say{(T,S)}{\bd \TYPE{IsometricMorphism}(\Rightarrow)}{
+\NewLine
+:\auto(\HILI(K),H) \times \auto(\HILI(K),L) : TAS = B}
+\Say{e}{\THM{HilbertBasisExists}(H)}{\TYPE{Total} \And  \TYPE{Orthonormal}(H) }
+\Say{f}{\THM{HilbertBasisExists}(L)}{\TYPE{Total} \And  \TYPE{Orthonormal}(L) }
+\Say{e'}{Te}{\TYPE{Total} \And  \TYPE{Orthonormal}(H)}
+\Say{f'}{Sf}{\TYPE{Total} \And  \TYPE{Orthonormal}(L)}
+\Conclude{()}{\bd{e',f'}\bd\FUNC{mat}\bd B}{ \FUNC{mat}(A,e',f') = \FUNC{mat}(A,Te,Sf) = \FUNC{mat}(SAT,e,f) = \FUNC{mat}(B,e,f)}
+\Derive{(\Rightarrow)}{\ldots}{\ldots}
+\Assume{e,e'}{\TYPE{Total} \And  \TYPE{Orthonormal}(H)}
+\Assume{f,f'}{\TYPE{Total} \And  \TYPE{Orthonormal}(L) :
+\FUNC{mat}(A,e,f)  = \FUNC{mat}(B,e',f')
+ }
+\Say{T}{\THM{FischerRieszII}(H)(e,e')}{\TYPE{Unitary}(H) : e' = Te}
+\Say{S}{\THM{FischerRieszII}(L)(f,f')}{\TYPE{Unitary}(L) : f' = Sf}
+\Conclude{()}{\ldots}{ B = (e',f') \, \FUNC{mat}(B,e',f')
+ = (Te,Sf) \, \FUNC{mat}(A,e,f) = SAT
+ }
+\Derive{(\Leftarrow)}{\ldots}{\ldots}
+\Conclude{(*)}{\LOGIC{IffIntro}(\Rightarrow,\Leftarrow)}
+{A \sim_{\BANI} B
+ \iff 
+ \NewLine
+ \iff
+ \exists e,e' : \TYPE{Total} \And  \TYPE{Orthonormal}(H) : 
+ \exists f,f' : \TYPE{Total} \And  \TYPE{Orthonormal}(L) : \FUNC{mat}(A,e,f) = \FUNC{mat}(B,e',f')}
+\EndProof
+} 
+\subsection{Hilbert Adjoints}
+\Page{
+\DeclareFunc{adjointForm}{\prod H : \HIL(K) \. H \to H^*}
+\DefineNamedFunc{adjointForm}{v}{v^*}{ \Lambda w \in H \. \langle w, v \rangle}
+\\
+\Theorem{RieszTHM}{\forall H : \HIL(K) \. H^* \cong_\BANI H^{\mathrm{i}}}
+\Say{E}{\THM{HilbertBasisExists}(H)}{\TYPE{Total} \And  \TYPE{Orthonormal}(H)}
+\Assume{(v,w,1)}{\sum v,w \in H \. v^* = w^*}
+\Assume{e}{E}
+\Conclude{()}{\bd^{-1} \FUNC{adjointForm}(v)(e)(1)\bd \FUNC{adjointForm}(w)(e)}{\langle e , v \rangle = v^*e = w^*e \langle e, w \rangle}
+\DeriveConclude{()}{\THM{FurieSpaceTHM}(H,E,v)\LOGIC{UniIntro}\THM{FurieSpaceTHM}(H,E,w)}{v = w}
+\Derive{(1)}{\bd \TYPE{Injective}}{\FUNC{adjointForm} : H \ToInj H^*}
+\Assume{f}{H^*}
+\Assume{v}{ (\ker f)^\bot : \| v \| = 1}
+\Say{w}{\overline{f(v)}v}{ (\ker f)^\bot }
+\Say{(2)}{\bd\TYPE{Unity}(\bd v, f(v))\bd w \bd\FUNC{adjointForm}(w)(v) }{f(v) = f(v)\langle v, v \rangle = \langle v, w \rangle = w^*v}
+\Assume{u}{\ker f}
+\Say{(3)}{\bd \ker(f)(u)}{f(u) = 0}
+\Conclude{(4)}{\bd \FUNC{adjointForm}(w,u)\bd \FUNC{orthogonalComplement}()}
+{w^ u = \langle v, u \rangle = 0}
+\Derive{(3)}{\bd \FUNC{constric} \, \LOGIC{UniIntro}}{f_{|\ker f} = w^*_{|\ker f}}
+\Conclude{()}{\bd \TYPE{Linear}(f,w^*m\THM{OrthCTHM}(\ker f))}{f = w^*}
+\Derive{(2)}{\bd^{-1}\TYPE{Bijection}(1,\bd^{-1}\TYPE{Surjection})}{\FUNC{adjointForm}: H \ToBij_\mathsf{SET} H^*}
+& [!]\ldots \\
+\EndProof
+\\
+\DeclareFunc{dualOfHilbertSpace}{\HIL(K) \to \HIL(K)}
+\DefineNamedFunc{dualOfHilbertSpace}{H}{H^*}{(\FUNC{dual}(H), \Lambda (x*,y*) \in H^* \times H^* 
+\. \langle y,  x \rangle
+)}
+\\
+\Theorem{HilbertIsReflexive}{\forall H : \HIL(K) \. H : \TYPE{Reflexive}}
+\Assume{x}{H^{**}}
+\Say{\big(g,(1)\big)}{\THM{ReiszTHM}(H^*,x)}{\sum g \in H^* \. x = g^*}
+\Say{\big(v,(2)\big)}{\THM{ReiszTHM}(H,x)}{\sum v \in H^* \. g = v^*}
+\Assume{f}{H^*}
+\Say{\big(w,(3)\big)}{\THM{ReiszTHM}(H,x)}{\sum w \in H^* \. f = w^*}
+\Conclude{(4)}{(1)(x(f))\bd \FUNC{conjugateForm}(g,f)\bd\FUNC{dualOfHilbertSpace}(2,3)(H) \bd^{-1}
+\FUNC{cunjugateForm}(w,v)(3)^{-1} \NewLine \bd \FUNC{natural}}{ x(f) = g^* f = \langle f, g \rangle = \langle w^*, v^* \rangle =
+ \langle v, w \rangle =  w^* v = f(v) = \alpha_v f ; }
+\DeriveConclude{(*)}{\bd^{-1} \TYPE{Reflexive}}{(H : \TYPE{Reflexive})}
+}
+\Page{
+\EndProof
+\\
+\DeclareType{BoundedConjugateBillinearForm}{\prod H : \HIL(K) \. \mathcal{L}(H,H^\mathrm{i} ; K)}
+\DefineNamedType{J}{BoundedConjugateBillinearForm}
+{ J \in \B_2(H) }{ 
+\NewLine \iff
+\sup\{ |J(x,y)| | x \in H, y \in H^\mathrm{i} : \|x\| = \|y\| = 1  \} < \infty }
+\\
+\DeclareFunc{bilinearConjugateNorm}{\B_2(H) \to \Reals_+}
+\DefineNamedFunc{bilinearConjugateNorm}{J}{\| J \|}{ \sup\{ |J(x,y)| | x \in H, y \in H^\mathrm{i} : \|x\| = \|y\| = 1  \} }
+\\
+\DeclareFunc{associate}{\B(H,H) \to \B_2(H)}
+\DefineFunc{associate}{T}{\Lambda x \in H \. \Lambda y \in H^{\mathrm{i}} \. \langle Tx, y \rangle}
+& | \FUNC{associate}(T)(x,y) | = |\langle Tx, y \rangle| \le \| Tx \| \| y \| \le \| T \| \| x \| \| y \| \\
+&  | \langle Tx , Tx \rangle | =  \| Tx \| \Rightarrow \|\FUNC{associate}(T) \| = \| T \|  \\
+\\
+\Theorem{BijectiveAssociation}{ \forall H \in \HIL(K) \. \FUNC{associate}  : \B(H,H) \ToBij_{\mathsf{SET}} \B_2(H)}
+\Assume{\big(A,B,(1)\big)}{\sum (A,B) \in (\B(H,H))^2 \. A \neq B}
+\Say{(2)}{\bd(-)(1)}{ A - B \neq 0}
+\Conclude{()}{\bd \FUNC{associate}(2)(A,B)}{\FUNC{associate}(A) - \FUNC{associate}(B) = \FUNC{associate}(A - B) \neq 0}
+\Derive{(0)}{\bd \TYPE{Injective}}{\FUNC{associate}  : \B(H,H) \ToInj_{\mathsf{SET}} \B_2(H)}
+\Assume{J}{\B_2(H,H)}
+\Assume{x}{H}
+\Say{f}{\Lambda y \in H \.  J( y, x)}{H^*}
+\Say{\big(v,(1)\big)}{\THM{ReiszTHM}}{\sum v \in H \. f = v^*}
+\Say{T(x)}{v}{H}
+\Assume{y}{H}
+\Conclude{(*)}{\ldots}{J(x,y) = \overline{J(y,x)} = \overline{f(y)}  
+ = \overline{v^*y} = \overline{\langle y , v \rangle} = \langle v, y \rangle = \langle  Tx, y \rangle
+}
+\Derive{(2)}{\LOGIC{UniIntro}}{\forall y \in H \. J(x,y) = \langle Tx, y \rangle}
+\Conclude{()}{\ldots}{ \| Tx \| = \sup\{ |\langle Tx, y \rangle| : y \in H : \|y\| = 1 \} =
+= \sup\{ |J(x,y)| : y \in H : \|y\| =1 \} \le \| J \| \| x \|
+}
+\DeriveConclude{T}{\bd^{-1} \B}{\B(H,H) : J = \FUNC{associate}(T)  }
+\DeriveConclude{(*)}{\bd^{-1} \TYPE{Bijective}((0), \bd^{-1}\TYPE{Surjective})}{ \FUNC{associate}  : \B(H,H) \ToBij_{\mathsf{SET}} \B_2(H) }
+\EndProof
+\\
+\Theorem{RealHilbertDual}{\forall H \in \HIL(\Reals) \. H^* = H}
+\NoProof
+}
+\subsection{Inverse Operator Theorem}
+\Page{
+ \Theorem{OpenMappingLemma}{\forall V : \BAN(K) \.  \forall W : \NORM(K) \. \forall T : \B(V,W) \. \forall  (\theta, Q) : \sum \theta \in [0,1] \. \NewLine \.  
+ T \mathbb{B}_V(0,1) : \TYPE{Dense}(\mathbb{B}_W(0,\theta))
+ \.  \mathbb{B}_W(0,\theta) \subset   T \mathbb{B}_V(0,1)
+ }
+ \Assume{y}{\mathbb{B}_W(0,\theta)}
+ \Say{\big(t,(1) \big)}{\THM{OpenBallMultiplication}(W,\theta,y)}{ \sum t \in (1, \infty) \. ty \in \mathbb{B}_W(0,\theta)}
+ \Say{d}{t^{-1}}{(0,1)} 
+ \Say{Y_0}{ty}{\mathbb{B}_W(0,\theta)}
+ \Assume{n}{\Nat}
+ \Say{(x_n,(2))}{\bd \TYPE{Dense}(\mathbb{B}_W(0, (1 - d)^{n - 1}\theta)(T\mathbb{B}_V(0,(1 -d)^{n - 1}),Y_{n - 1})}{
+ \sum x \in \mathbb{B}_V(0,1) \. \| Y_{n - 1} - Tx_n \| \le (1 -d)^n \theta }
+ \Say{Y_n}{Y_{n - 1} - Tx_n}{W}
+ \Say{()}{\bd \TYPE{Linear}(T)\bd\TYPE{Dense}(\mathbb{B}_W(0,(1 - d)^{n-1}\theta)(T\mathbb{B}_V(0,(1 - d)^{n - 1}))}
+ { T\mathbb{B}_V(0,(1 - d)^{n}) : \TYPE{Dense}(\mathbb{B}_W(0,(1 -d)^{n}\theta)) }
+ \Conclude{()}{\bd Y_n(2)}{(Y_n \in \mathbb{B}_W(0,\theta))}
+ \Derive{\big(x,(2) \big)}{\LOGIC{RecursiveFuncIntro}}{  \sum x : \prod n \in \Nat \.  \mathbb{B}_V(0, (1 - d)^{n - 1})
+ \.  \NewLine
+ \. \forall n \in  \Nat \.  
+  \left\| ty - \sum^n_{i = 1} Tx_n \right\| \le (1 - d)^n \theta
+ }
+ \Say{(3)}{\THM{IneqIntro}\left( \sum^{\infty}_{n = 0} \| x_n \|, \bd \FUNC{ball}(\bd x)
+  \right)
+ \THM{SimplePowerSeria}(d)\bd \FUNC{infinity} 
+ }{ 
+ \NewLine : 
+ \sum^{\infty}_{n = 1} \| x_n \| \le  \sum^{\infty}_{n = 0} (1 - d)^n = \frac{1}{d} < \infty}
+\Say{()}{\bd^{-1}\TYPE{AbsolutelyConvergent}(3)}{(x : \TYPE{AbsolutelyConvergent})}
+\Say{X}{ \sum^{\infty}_{n = 1} x_n}{W}
+\Say{(4)}{\bd\TYPE{ConvergentSeria}(2)}{TX = ty}
+\Say{(5)}{d(4)}{TdX = y}  
+\Say{(6)}{\bd \FUNC{ball}(3,dX)}{dX \in \mathbb{B}_W(0,1)}
+\Conclude{()}{(5)(6)}{y \in T\mathbb{B}_W(0,1)}
+\DeriveConclude{(*)}{\bd^{-1} \TYPE{Subset}}{\mathbb{B}_W(0,\theta) \subset   T \mathbb{B}_V(0,1)} 
+\EndProof
+\\
+\DeclareType{OpenMappingII}{\prod V,W : \BAN(K) \. ?\B(V,W)}
+\DefineType{T}{OpenMappingII}{\exists  (\theta, Q) : \sum \theta \in [0,1] \.  
+ T \mathbb{B}_V(0,1) : \TYPE{Dense}(\mathbb{B}_W(0,\theta))}
+ \\
+ \Theorem{OpenMappingInterpretion}{\forall V,W : \B(V,W) \.  \forall T : \TYPE{OpenMapping}(V,W) \.
+ \NewLine \.
+  T : \TYPE{TopologicalSurjection}(V,W)}
+ }  \Page{
+ \NoProof
+\Theorem{OpenMappingTHM}{\forall V,W : \BAN(K) \. \forall T : \mathcal{B} \And \TYPE{Surjective}(V,W) \. T : \TYPE{OpenMappingII}(V,W)}
+& [!] (\text{Baire Category}) \\
+\NoProof
+\\
+\Theorem{BoundedInverseTHM}{\forall V,W : \BAN(K) \. \forall T : \B \And \TYPE{Bijective}(V,W)
+ \. T^{-1} : \B(V,W)
+}
+\NoProof
+\\
+\Theorem{ClosedMappingTHM}{\forall V,W : \BAN(K) \. \forall T : \B(V,W) \.
+ \NewLine
+ T : \TYPE{TopologicalyInjective}(V,W) \iff T : \TYPE{Injective}\And \TYPE{ClosedMapping}(V,W)
+}
+\NoProof
+\\
+\Theorem{OpenMappingByInverseTHM}{\THM{BoundedInverseTHM} \Rightarrow \THM{OpenMappingTHM}}
+\Say{V'}{ \frac{V}{\ker T}}{\BAN(K)}
+\Say{T'}{\Lambda [x] \in V' \.  Tx}{ \B \And \TYPE{Bijective}(V',W)}
+\Say{(1)}{\THM{BoundedInverseTHM}(T')}{(T' : V' \ToBij_{\BAN} W)}
+\Say{(2)}{\THM{KnownTHM}(1)}{(T :  \TYPE{TopologicalySurjective}(V,W) ) }
+\Conclude{(*)}{\THM{OpenMappingInterpretion}}{(T : \TYPE{OpenMappingII}(V,W))}
+\EndProof
+\\
+\Theorem{ClosedGraphTheorem}{\forall V,W : \BAN(K) \. \forall T : \L(V,W) \. \forall \Gamma : \TYPE{Graph}(T) : \TYPE{Closed}(V \oplus W)  \. \NewLine 
+  \. T : \B(V,W) }
+\Say{()}{\THM{ClosedSubspaceIsBanach}(\Gamma)}{\TYPE{Graph}(T) : \BAN(K) }
+\Say{P}{ \Lambda (x,T(X)) : \TYPE{Graph}(T) \. x}{ \B(\TYPE{Graph}(T),V) }
+\Say{(1)}{\THM{BoundedInverseTHM}\bd \TYPE{Graph}(T)\bd P}{ \Big(P^{-1} : \B\big(V,\TYPE{Graph}(T)\big) \Big) }
+\Assume{x}{V}
+\Say{(2)}{\bd^{-1} \TYPE{Norm}(V \oplus W)(x,Tx) (1)}{ \| x \| + \big\| T(x) \big\| =  \Big\| \big(x,T(x)\big) \Big\| \le \big \| P^{-1} \big\| \| x \|}
+\Conclude{()}{ (2) - \|x \|}{ \|T(x)\| \le (\|P^{-1}\| - 1)\| x \|}
+\DeriveConclude{(*)}{\bd \B}{T : \B(V,W)}
+\EndProof
+}
+\Page{
+\Theorem{MajorizedNormsAreSameIfBan}{\forall V : \mathsf{VS}(K) \. \forall (N,M,1) : 
+ \NewLine :
+\sum N,M : \TYPE{Norm}(V) \. (V,N),(V,M) : \BAN(K) \. \forall (2) : N \le M \. N \cong M}
+\Say{(3)}{\bd\TYPE{Stronger}(2)}{I_{M,N} : \B((V,M),(V,N)) }
+\Say{(4)}{\THM{BoundedInverseTHM}(I_{M,N},3)}{ I_{N,M} : \B((V,N),(V,M))}
+\Conclude{(*)}{\bd^{-1}\TYPE{EqNorm}(\bd^{-1}\TYPE{Stronger}(4),2)}{N \cong M}
+\EndProof
+\\
+\Theorem{BanachTopologicalCompliment}{ \forall V :\BAN(K) \. \forall (A,B,1) : \sum A,B \subset_{\BAN} V  \. \NewLine \.
+V \cong_{\mathsf{VS}} A \oplus B \.  V \cong_{\BAN} A \oplus B
+ }
+\Say{T}{\Lambda (a,b) \in A \oplus B \. a + b}{\L(A \oplus B,V)}
+\Say{(2)}{\bd\TYPE{DirectSum}(1)}{T : \TYPE{Bijection}(A \oplus B,V)}
+\Assume{(a,b) }{ A \oplus B}
+\Conclude{()}{ \LOGIC{EqEl}(\|T(a,b)\|,\bd T(a,b))\THM{TriangleIneq}(V,a,b)\bd \FUNC{directProduct}(A,B)}{ \NewLine :\| T(a,b)\| = \| a +  b\| \le \| a \| + \| b \| = \| (a,b) \|}
+\Derive{(3)}{\bd^{-1} \B}{ (T : \B(A \oplus B, V))}
+\Say{(4)}{\bd \TYPE{Isomorphism}(\BAN)\THM{BoundedInverseTHM}(2,3)}{ (T : A \oplus B \ToBij_{\BAN} B)}
+\Conclude{(5)}{\bd \TYPE{Isomorphic}(\BAN)}{V \cong A \oplus B}
+\EndProof
+\\
+\Theorem{BanachProjector}{\forall V : \BAN(K) \. \forall A \subset_{\BAN} V \. \forall P : \TYPE{Projector}(V,A) \. P : \B(V,V) }
+\NoProof
+}
+\subsection{Retractions of Banach Spaces}
+\Page{
+\Theorem{CoretractionInHIL}{\forall V,W \in \HIL(K) \. \forall T  
+ : V \to_{\HIL} W \. \NewLine \.
+ T : \TYPE{Coretraction}(\HIL,V,W) \iff T : \TYPE{Injective} \And \TYPE{ClosedMapping}(V,W)
+}
+\Assume{ \THM{Right} }{ (T \TYPE{Coretraction}(\HIL,V,W))}
+\Say{\big(A,(1) \big)}{\bd \TYPE{Coretraction}(\HIL,V,W)(T)}{ \sum A : W \to_\HIL V \. TA  = {\id}_V}
+\Say{(2)}{\THM{ForgettingCoretraction}(T,\mathsf{SET})}{T : \TYPE{Injective}(V,W)}
+\Say{(3)}{\THM{IdentityNorm}(V)(2)\THM{OperatorProductNorm}(A,T)}{ 1 = \| I \|  = \| AT \| \le \| A \| \| T \|}
+\Assume{x}{V}
+\Say{(4)}{ \LOGIC{EqEl}( \|x\|, (1) )\bd \FUNC{operatorNorm}(A)}{ \| x \| = \| A T x \| \le \| A \| \| Tx \|}
+\Conclude{()}{\|A\|^{-1}(4)}{\| T x \| \ge \| A \|^{-1} \| x \| }
+\Derive{(4)}{\THM{TopologicalInjectionCriterion}}{(T : \TYPE{TopolocalyInjectitive}(V,W))}
+\Conclude{()}{\THM{ClosedMappingTheorem}(V,W,T,4)}{(T : \TYPE{ClosedMapping}(V,W))}
+\Derive{(\Rightarrow)}{\LOGIC{ImplicationIntro}}{T : \TYPE{Coretraction} \Rightarrow  T : \TYPE{Injective} \And \TYPE{ClosedMapping}(V,W)}
+\Assume{\THM{Left}}{ (T : \TYPE{Injective} \And \TYPE{ClosedMapping}(V,W)) }
+\Say{(1)}{\bd \FUNC{constrictImage}(\im T) \THM{Left}}{(T^{|\im T}) : \TYPE{Bijective}(V,W)}
+\Say{(2)}{ \THM{BoundedInverseTHM}(T^{| \im T})}{\Big(T^{|\im T}\Big)^{-1} : \B(\im T, V)}
+\Say{(3)}{ \THM{Left}\bd\TYPE{ClosedMapping}(V,W)(T,V)}{\im T \subset_{\HIL} W }
+\Say{ P }{ \THM{OrthoprojectorExists}(W, \im T)}{\TYPE{Orthoprojector}(W, \im T)}
+\Say{A}{ \Big( T^{| \im T} \Big)^{-1} P}{\B(W,V)}
+\Assume{x}{V}
+\Conclude{()}{\bd A (Tx)\bd \TYPE{Orthoprojector}(W,\im T)(T x) \bd 
+\FUNC{constrictImage}(T)\TYPE{Inverse}(T)\bd}{ 
+\NewLine :
+ATx = \Big( T^{| \im T} \Big)^{-1} P Tx =  \Big( T^{| \im T} \Big)^{-1} T x  = x}
+\Derive{(4)}{\bd^{-1} {\id}_V }{ TA = {\id} _V}
+\Conclude{()}{\bd^{-1} \TYPE{Retraction}(\HIL,V,W)}{(T : \TYPE{Retraction}(\HIL,V,W))}
+\DeriveConclude{(*)}{\LOGIC{IffIntro}\big((\Rightarrow),\LOGIC{ImplicationIntro}\big)}
+{ \NewLine :
+  T : \TYPE{Coretraction}(\HIL,V,W) \iff T : \TYPE{Injective} \And \TYPE{ClosedMapping}(V,W)
+}
+\EndProof
+\\
+\Theorem{CoretractionInHILI}{\forall V,W \in \HILI(K) \. \forall T  
+ : V \to_{\HILI} W \. \NewLine \.
+ T : \TYPE{Coretraction}(\HILI,V,W) \iff T : \TYPE{Isometry}(V,W)
+}
+\Assume{ \THM{Right} }{ (T \TYPE{Coretraction}(\HILI,V,W))}
+\Say{\big(A,(1) \big)}{\bd \TYPE{Coretraction}(\HILI,V,W)(T)}{ \sum A : W \to_\HILI V \. TA  = {\id}_V} 
+\Assume{x}{V}
+\Say{(2)}{ \bd \HILI (x,Tx,ATx)}{\| AT x \| \le \| Tx \| \le \| x \|}
+\Say{(3)}{\bd(1)(x)}{\| AT x \|  =  \|x \|}
+}
+\Page{
+\Conclude{()}{  \THM{DoubleIneq}(2,3)}{ \| Tx \| = \| x \|}
+\DeriveConclude{(4)}{\bd^{-1}\TYPE{Isometry}}{(T : \TYPE{Isometry}(V,W))}
+\Derive{(\Rightarrow)}{\LOGIC{ImplicationIntro}}{T : \TYPE{Coretraction}(\HILI,V,W) \Rightarrow  T : \TYPE{Isometry}(V,W)}
+\Assume{\THM{Left}}{ (T : \TYPE{Isometry}(V,W)) }
+\Say{(1)}{\bd \FUNC{constrictImage}(\im T) \THM{Left}}{(T^{|\im T}) : \TYPE{Bijective}(V,W)}
+\Say{(2)}{ \THM{Left}\bd\TYPE{ClosedMapping}(V,W)(T,V)}{\im T \subset_{\BAN} W }
+\Say{ P }{ \THM{OrthoprojectoExists}(W, \im T)}{\TYPE{Orthoprojector}(W, \im T)}
+\Say{A}{ \Big( T^{| \im T} \Big)^{-1} P}{\B(W,V)}
+\Assume{y}{W}
+\Say{(x,v,3)}{\THM{OrthCTHM}(W,\Im T,v)}{ \sum (x,v) \in V \times (\im T)^\bot \. y = Tx + v )}
+\Conclude{()}
+{
+  \bd A \bd(x,v) \bd A (Tx)\bd \TYPE{Orthoprojector}(W,\im T)(T x)  \bd 
+\FUNC{constrictImage}(T) \bd \TYPE{Inverse}(T)
+ \NewLine
+ \THM{Left} \bd^{-1}\TYPE{Isometry}(V,W)(T,x)\THM{PosetiveIneq}(\| v \|)\THM{Pythagorus}(W, \Im T, Tx, v)
+}
+{ \NewLine :  
+ \| Ay \| = \bigg\| \Big( T^{| \im T} \Big)^{-1} P (Tx + v)  \bigg\| = \| x \| = \| Tx \| \le \| Tx \| + \| v \| = \| y \|}
+\Derive{(4)}{\bd^{-1} \TYPE{Nonexpanding}(W,V)}{ \big(A : W \to_{\HILI} V \big)}
+\Assume{x}{V}
+\Conclude{()}{\bd A (Tx)\bd \TYPE{Orthoprojector}(W,\im T)(T x)  \bd 
+\FUNC{constrictImage}(T) \bd \TYPE{Inverse}(T)}{ 
+\NewLine :
+ATx = \Big( T^{| \im T} \Big)^{-1} P Tx =  \Big( T^{| \im T} \Big)^{-1} T x  = x}
+\Derive{(5)}{\bd^{-1} {\id}_V }{ TA = {\id} _V}
+\Conclude{()}{\bd^{-1} \TYPE{Retraction}(\BAN,V,W)(4,5)}{(T : \TYPE{Retraction}(\BAN,V,W))}
+\DeriveConclude{(*)}{\LOGIC{IffIntro}\big((\Rightarrow),\LOGIC{ImplicationIntro}\big)}
+{ \NewLine :
+  T : \TYPE{Coretraction}(\HILI,V,W) \iff T : \TYPE{Isometry}(V,W)
+}
+\EndProof
+\\
+\Theorem{RetractionInHIL}{\forall V,W \in \HIL(K) \. \forall T  
+ : V \to_{\HILI} W \. \NewLine \.
+ T : \TYPE{Retraction}(\HIL,V,W) \iff T : \TYPE{Surjective}(V,W)
+}
+\Assume{ \THM{Right} }{ (T \TYPE{Retraction}(\HIL,V,W))}
+\Say{\big(A,(1) \big)}{\bd \TYPE{Retraction}(\HIL,V,W)(T)}{ \sum A : W \to_\HIL V \. AT  = {\id}_W}
+\Conclude{()}{\THM{RetractionInSET}\bd^{-1} \TYPE{Retraction}(\mathsf{SET},V,W)(1)}
+{\big( T : \TYPE{Surjective}(V,W) \big)}
+\Derive{(\Rightarrow)}{\LOGIC{ImplicationIntro}}{T : \TYPE{Retraction}(\HIL,V,W) \Rightarrow  T : \TYPE{Surjective}(V,W)}
+\Assume{\THM{Left}}{(T : \TYPE{Surjective}(V,W))}
+\Say{S}{(\ker T)^\bot}{\TYPE{Subobject}(\BAN,V)}
+\Say{()}{\THM{BoundedInverseTHM}(S,W,T^{|S})}{\Big( \Big(T^{| S}\Big)^{-1} : \B(W,S) \Big)}
+\Say{A}{\Big(T^{| S}\Big)^{-1}}{\B(W,S)}
+\Say{(2)}{\bd A\bd\FUNC{constrictImage}(T,S)\bd\FUNC{Inverse}(T^{|S})}{AT = {\id}_W}
+}
+\Page{
+\Conclude{()}{\bd^{-1} \TYPE{Retraction}(\HIL,V,W)(2)}{\big(T : \TYPE{Retraction}(\HIL,V,W) \big)}
+\DeriveConclude{(*)}{\LOGIC{IffIntro}\big((\Rightarrow),\LOGIC{ImplicationIntro}\big)}
+{ \NewLine :
+  T : \TYPE{Retraction}(\HIL,V,W) \iff T : \TYPE{Bijection}(V,W)
+}
+\EndProof
+\\
+\Theorem{RetractionInHILI}{
+\forall V,W \in \HILI(K) \. \forall T  
+ : V \to_{\HILI} W \. \NewLine \.
+ T : \TYPE{Retraction}(\HILI,V,W) \iff T : \TYPE{Coisometry}(V,W)
+}
+\Assume{ \THM{Right} }{ (T : \TYPE{Retraction}(\HILI,V,W))}
+\Say{\big(A,(1) \big)}{\bd \TYPE{Retraction}(\HIL,V,W)(T)}{ \sum A : W \to_\HILI V \. AT  = {\id}_W}
+\Assume{x}{\mathbb{B}_W}
+\Say{(2)}{\bd \HILI(A)(x) \bd \mathbb{B}_W}{ \| A x \| \le \| x \| = 1}
+\Say{(3)}{ (1)(x)}{ TA x = x}
+\Say{(4)}{ \bd^{-1} \mathbb{B}_V(2)  }{Ax \in \mathbb{B}_V}
+\Conclude{()}{\bd \TYPE{Image}(3,4)}{x \in T \mathbb{B}_V}
+\Derive{(2)}{\bd \TYPE{Subset}}{  \mathbb{B}_W \subset  T \mathbb{B}_V} 
+\Conclude{()}{\bd^{-1} \TYPE{Coretraction}(V,W)(2)}{\big( T : \TYPE{Corectraction} \big)}
+\Derive{(\Rightarrow)}{\LOGIC{ImplicationIntro}}{T : \TYPE{Retraction}(\HILI,V,W) \Rightarrow  T : \TYPE{Coisometry}(V,W)}
+\Assume{\THM{Left}}{(T : \TYPE{Coisometry}(V,W))}
+\Say{S}{(\ker T)^\bot}{\TYPE{Subobject}(\BAN,V)}
+\Say{()}{ \bd \TYPE{Coisometry }(S,W,T^{|S})}{\Big( \Big(T^{| S}\Big)^{-1} : W \to_\HILI S \Big)}
+\Say{A}{\Big(T^{| S}\Big)^{-1}}{W \to_\HILI S3}
+\Say{(2)}{\bd A\bd\FUNC{constrictImage}(T,S)\bd\FUNC{Inverse}(T^{|S})}{AT = {\id}_W}
+\Conclude{()}{\bd^{-1} \TYPE{Retraction}(\HILI,V,W)(2)}{\big(T : \TYPE{Retraction}(\HILI,V,W) \big)}
+\DeriveConclude{(*)}{\LOGIC{IffIntro}\big((\Rightarrow),\LOGIC{ImplicationIntro}\big)}
+{ \NewLine :
+  T : \TYPE{Retraction}(\HILI,V,W) \iff T : \TYPE{Coisometry}(V,W)
+}
+\EndProof
+\\
+\Theorem{CoretractionInBAN}{ 
+\forall V,W \in \BAN(K) \. \forall T : V \to_{\BAN} W \. 
+T : \TYPE{Coretraction}(\BAN,V,W) \iff
+ \NewLine \iff
+ T : \TYPE{ClosedMapping} \And \TYPE{Injective}(V,W) : 
+\exists S  : \sum S \subset_{\BAN}  W \. W \cong_{\BAN} \im T \oplus S 
+}
+\NoProof
+\\
+\Theorem{RetractionInBANI}{ 
+\forall V,W \in \BAN(K) \. \forall T : V \to_{\BAN} W \. 
+T : \TYPE{Retraction}(\BAN,V,W) \iff
+ \NewLine \iff
+ T : \TYPE{Surjective}(V,W) \And
+\exists S  : \sum S \subset_{\BAN}  V \. V \cong_{\BAN} \ker T \oplus S 
+}
+\NoProof
+}
+\subsection{Banach-Steinhaus Theorem}
+\Page{
+\DeclareType{PointwiselyBoundedOperatorFamily}{\prod X : \Set \. \prod V,W : \NORM(K) \. ?(X \to \B(V,W))}
+\DefineType{T}{PointwiselyBoundedOperatorFamily}{
+\forall v \in V  \. \exists C \in \Reals_{+} : \forall x \in X \. \| T_x v \| \le C  }
+\\
+\DeclareType{UniformlyBoundedOperatorFamily}{\prod X : \Set \. \prod V,W : \NORM(K) \. ?(X \to \B(V,W))}
+\DefineType{T}{UniformlyBoundedOperatorFamily}{
+\exists C \in \Reals_{+} :  \forall x \in X \.  \| T_x  \| \le C  
+}
+\\
+\Theorem{BanachSteinhaus}{\forall V : \BAN(K) \. \forall X : \Set \. \forall W : \NORM(K) 
+\. \NewLine
+\. \forall   T : \TYPE{PointwiselyBoundedOperatorFamily}(X,V,W) \.
+\NewLine \.
+T : \TYPE{UniformlyBoundedOperatorFamily}(X,V,W)
+}
+\Theorem{BanachSteinhausLemma}{\forall x \in V \. \forall r \in \Reals_{++} \. \forall T : \B(V,W)
+\. r\| T \| \le \sup \big\{  \| T v \| \big|  v \in \mathbb{B}_V(x,r)   \big\}
+}
+\Assume{z}{V}
+\Say{(1)}{\LOGIC{EqEl}\left(\|Tz\|,\bd^{-1}_1 \L(T)\left( 
+\frac{1}{2} T(x + z), \frac{1}{2}T(x - z)
+\right)\right) \NewLine \THM{TriangleIneq}\left(
+\frac{1}{2} T(x + z), \frac{1}{2}T(x - z)
+\right)
+\THM{SumMaxIneq}\left( \| T(x + z)  \|, \| T(x - z ) \| \right)
+}{ \NewLine : \| Tz \| = \left\| \frac{1}{2} T(x + z) - \frac{1}{2}T(x - z)\right\| \le
+\frac{1}{2}\| T(x + z)  \| + \frac{1}{2}\| T(x - z) \| \le \max\big( 
+ \| T(x + z)  \|, \| T(x - z ) \| 
+\big)
+  }
+\Assume{B}{\| z \| \le r}
+\Say{(2)}{\bd^{-1} \mathbb{B}_V(x,r)}{ x + z \in \mathbb{B}_V(x,r)}
+\Say{(3)}{\bd^{-1} \mathbb{B}_V(x,r)}{x - z  \in \mathbb{B}_V(x,r) }
+\Conclude{()}{(1)\bd^{-1} \bd^{-1}{sup}(2,3)}{ \| Tz \| \le \sup \big\{  \| Tv \|  \big|  v \in \mathbb{B}_V(x,r)   \big\} ; }
+\Derive{(1)}{\LOGIC{UniIntro}}{ \forall z \in \B(0,r) \. \| Tz \| \le \sup \big\{  \| Tv \|  \big|  v \in \mathbb{B}_V(x,r)   \big\} }
+\Conclude{(*)}{ \bd \FUNC{operatorNorm}(1)}{  r\| T \| \le \sup \big\{  \| T v \| \big|  v \in \mathbb{B}_V(x,r) \big \} }
+\EndProof
+\Assume{\O}{\sup_{x \in X} \| T_x \| = \infty}
+\Say{(x,1)}{\bd \sup (\O, \Lambda n \in \Nat \. 4^n )}{
+ \sum x : \Nat \to W \.   \forall n \in \Nat \. \big\| T_{x_n} \big\| \ge  4^n
+}
+\Say{(v_1,p_1)}{ \frac{1}{3}\bd \TYPE{OperatorNorm}\left((1),1, \frac{2}{3} \right)}
+{ \sum v_1 \in \mathbb{B}_V\left(0, \frac{1}{3} \right) \. 
+ \| T_1 v_1 \| \ge  \frac{2}{9} \| T_1 \|
+  }
+\Assume{(n,2)}{ \sum n \in \Nat \. n > 1}
+\Conclude{(v_n,p_n)}{ \THM{BanachSteinhausLemma}(v_{n - 1}, (1/3)^n,T_n)}
+{\sum  v_n \in W  \. \| v_{n} - v_{n - 1} \| \le 3^{-n}
+ \And  
+ \NewLine \And  
+  \| T_n v_n \| \ge  \frac{2}{3} \frac{1}{3^n} \| T_n \| 
+}
+\Derive{(v,p)}{\LOGIC{RecursiveFuncIntro}}{\sum \Nat \to V \. 
+ \forall n \in \Nat \. \| v_n - v_{n + 1} \| \le 3^{-n} \And \| T_n x_n \| \ge \frac{2}{3}
+ \frac{1}{3^n} \| T_n \|
+}
+}
+\Page{
+\Assume{\varepsilon}{\Reals_{++}}
+\Say{\big(N,(2)\big)}{}{ \sum N \in \Nat \. \frac{2}{3^N} \le \varepsilon }
+\Assume{(n,m,3)}{\sum n,m \in \Nat \. n \ge N \And m \ge N}
+\Conclude{()}{ \THM{IteratedTriangleIneq}(v,n,m) p(3) \THM{NonNegativeAddIneq} \, \THM{SimplePowerSeria}(2)}
+{ \NewLine : 
+\| v_n - v_n\| \le \sum^{\max{n,m} - 1}_{i = \min{n,m}} \| v_i - v_{i + 1} \| \le 
+ \frac{1}{3^{N + 1}}\sum^{|n - m|}_{i = 0} \frac{1}{3^i} \le 
+ \frac{1}{3^N}\sum^{\infty}_{i = 0} \frac{1}{3^i} =  \frac{2}{3^N} \le \varepsilon ;
+}
+\Derive{(2)}{\bd^{-1} \TYPE{Cauchy}}{\big(v : \TYPE{Cauchy}(V) \big)}
+\Say{w}{\lim_{n \to \infty} v_n}{V}
+\Assume{n}{\Nat}
+\Conclude{()}{ \LOGIC{EqEl}\big(\| T_{x_n} w \|,\bd_1^{-1} \L(T_{x_n}, v_n, w - v_n) \big) \THM{InverseTriangleIneq}(v_n, w - v_n)(2,p_2)(1)}
+{ 
+ \NewLine :
+\| T_{x_n} w \| = \| T_{x_n} v_n  - T_{x_n}(w - v_n) \| \ge \|  T_{x_n} v_n \| -  \|T_{x_n}(w - v_n) \| \ge  \frac{2}{3}\frac{1}{3^n}\| T_{x_n} \| - \frac{1}{3}\frac{1}{3^n} \| T_{x_n} \| \ge 
+\frac{1}{6} \left( \frac{4}{3} \right)^n
+ }
+\Derive{(3)}{\bd \TYPE{Limit}}{ \lim_{n \to \infty} \| T_{x_n} w \| = \infty}
+\Conclude{()}{(3)\bd \TYPE{PointwiselyBoundedOperatorFamily}}{\bot}
+\Derive{(1)}{\LOGIC{FromContradiction}}{\sup_{x \in X} \| T_x \| < \infty}
+\Conclude{(**)}{\bd^{-1}\TYPE{UniformlyBoundedOperatorFamily}(1)}
+{(T : \TYPE{UniformlyBoundedOperatorFamily}(X,V,W))}
+\EndProof
+\\
+\Theorem{DualBoundednessTHM}{\forall V : \NORM(K) \.
+\forall A \subset V \. \forall (0) : \forall f \in V^* \. \{ f(v) | v \in A  \}  : \TYPE{Bounded}(K) \.
+\NewLine  A : \TYPE{Bounded}(V)
+ }
+\Say{F}{\Lambda v \in A \. \Lambda f \in V^* \. f(v)}{ A \to \B(V^*,K)}
+\Say{(1)}{(0)(\bd F)}{\big( F : \TYPE{PointwiselyBoundedOperatorFamily}(A,V^*,K)  \big)}
+\Say{(2)}{\THM{BanachSteinhaus}(F)}{\big( F : \TYPE{UniformlyBoundedOperatorFamily}(A,V^*,K) \big)}
+\Say{C}{ \bd \TYPE{UniformlyBoundedOperatorFamily}(F)}{ \sum C \in  \Reals_{++} \forall v \in A \. 
+ \| F_v \| \le C
+}
+\Conclude{(*)}{\bd F (\bd C)}{ \big(A : \TYPE{Bounded}(V) \big)}
+\EndProof
+\\
+\Theorem{BilinearBanachBoundedness}
+{\forall V : \BAN(K) \. \forall W, U : \NORM{K} \. \forall B : \TYPE{DisjointlyBounded}(V,W,U)
+\. \NewLine \.  B : \TYPE{JointlyBounded}(V,W,U)
+}
+\Say{\beta}{\Lambda w \in \mathbb{B}_W \. \Lambda v \in V  \. B(v,w)}{W \to \B(V,U)}
+\Say{(1)}{\bd \TYPE{DisjointlyBounded}(B)}{\big(\beta : \TYPE{PointwiselyBoundedOperatorFamily}(\mathbb{B}_W,V,U)\big)}
+\Say{(2)}{\THM{BanachStenhaus}(\beta)}{\big(\beta : \TYPE{UniformlyBoundedOperatorFamily}(\mathbb{B}_W,V,U)\big)}
+\Conclude{}{\bd^{-1} \TYPE{JointlyBounded}(\bd \TYPE{UniformlyBoundedOperatorFamily}(\beta))}{
+ \big ( B : \TYPE{DisjointlyBounded}(V,W,U) \big)
+}
+\EndProof
+}
+\subsection{Functor of Banach Conjugacy}
+\Page{
+\DeclareFunc{BanachMorphFunctor}{ \BAN(K) \to \TYPE{ContravariantFunctor}(\BAN(K),\BAN(K))}
+\DefineNamedFunc{BanachMorphFunctor}{V}{\B(V,?)}
+{ (\Lambda W \in \BAN(K) \. \B(V,W),
+ \NewLine ,
+ \Lambda T : W \to_{\BAN} U \. 
+\Lambda A \in \B(V,W) \. TA) }
+\\
+\DeclareFunc{BanachMorphContraFunctor}{ \BAN(K) \to  \TYPE{CovariantFunctor}\Func(\BAN(K),\BAN(K))}
+\DefineNamedFunc{BanachMorphContraFunctor}{V}{\B(?,V)}
+{ (\Lambda W \in \BAN(K) \. \B(W,V),
+ \NewLine ,
+ \Lambda T : U \to_{\BAN} V \. 
+\Lambda A \in \B(W,V) \. AT) }
+\\
+\DeclareFunc{BanachConjugacyFunctor}{ \TYPE{ContravariantFunctor}(\BAN(K),\BAN(K))}
+\DefineNamedFunc{BanachConjugacyFunctor}{V,T}{(V^*,T^*)}{\big(\B(V,K), \B(T,K) \big)}
+\\
+\DeclareFunc{DoubleBanachConjugacyFunctor}{ \TYPE{CovariantFunctor}(\BAN(K),\BAN(K))}
+\DefineNamedFunc{DoubleBanachConjugacyFunctor}{V,T}{(V^{**},T^{**})}{\big(\B(V^*,K), \B(T^*,K) \big)}
+\\
+\Theorem{ScalarId}{ \B(K, ?) \cong {  \id }_{\BAN(K)} }
+\Say{N}{ \Lambda V \in \BAN(K) \. \Lambda f \in \B(K,V)  \. f(1) }{ \prod V \in \BAN(K) \. \L(\B(K,V),V)}
+\Assume{V}{\BAN(K)}
+\Assume{(f,1)}{\sum f \in \B(K,V) \. \| f \| = 1 }
+\Say{(2)}{ \bd \FUNC{operatorNorm} (f)(1) }{ 1 = \| f(1) \|}
+\Conclude{()}{\bd N_V(2)}{ \| N_V f \| = \| f(1) \| = 1 }
+\Derive{(1)}{\bd \TYPE{BoundedOperator} \bd \FUNC{operatorNorm} }{(N_V \in \B(\B(K,V))) \And \| N_V \| = 1}
+\Assume{v}{V}
+\Say{f}{\Lambda c \in K \. cv}{\B(K,V)}
+\Conclude{()}{\bd N_V}{N_Vf = f(1) = v}
+\Derive{(2)}{ \bd^{-1} \TYPE{Bijective}}{(N_V : \B(K,V) \ToBij V)}
+\Assume{(f,3)}{\sum f \in \B(K,V) \. N_Vf = 0  }
+\Say{(4)}{ \bd N_V (3) }{ f(1) = 0}
+\Conclude{()}{ \bd_2 \L (4)}{f = 0}
+\Derive{(3)}{ \THM{LinearInjectivityProperty}}{ (N_V : \B(K,V) \ToInj V)}
+\Say{(4)}{\bd \TYPE{Isomorphism}(\BAN(K)(1,2,3)}{(N_V : \B(K,V) \ToBij_{\BAN(K)} V)}
+\Derive{(1)}{\LOGIC{UniIntro}}{ \forall V \in \BAN(K) \. N_V : \B(K,V) \ToBij_{\BAN(K)} V}
+\Assume{V,W}{\BAN(K)}
+\Assume{T}{\B(V,W)}
+\Assume{v}{V}
+\Conclude{()}{ \bd N^{-1}_V \bd T^* \bd N_W}{ N_WT^*N_V^{-1}v = N_WT^*(\Lambda c \in K \. cv) =  N_W (\Lambda c \in K \. cTv) = Tv}
+\DeriveConclude{()}{\bd^{-1} \TYPE{SimmilarMorphism}(\BAN(K))}{(N_V,N_W) \,T \cong_{\BAN(K)} T^*}
+\Derive{(*)}{\bd^{-1} \TYPE{IsoFunctor}(N_V,N_W))}{ \B(K, ?) \cong {  \id }_{\BAN(K)}}
+} 
+\Page{
+\Theorem{ConjugacyAdditive}{\forall V,W \in \BAN \. \forall A,B : \B(V,W) \.  (A + B)^* = A^* + B^*}
+\NoProof
+\\
+\Theorem{ConjugacyHomogen}
+{\forall V,W \in \BAN(K) \. \forall A : \B(V,W) \. \forall c \in K \. (cA)^* = c A^*}
+\NoProof
+\\
+\Theorem{ConjugacyPreserveNorm}{
+\forall V,W \in \BAN(K) \. \forall T : \B(V,W) \. \| T^* \| = \| T \|}
+\Assume{(f,1)}{ \sum f \in W^* \. \| f \| = 1 }
+\Conclude{()}{\bd^{-1} \FUNC{operatorNorm}\big(T^*f\big)\bd T^* \bd \FUNC{operatorNorm}(T)(1)}{
+ \NewLine :
+\| T^* f \| = \sup \Big\{  \big\| ( T^* f ) v \big\|  \Big| v \in \mathbb{B}_V \Big\} 
+ = \sup \Big\{  \big\| f (Tv) \big\| \Big|   v \in \mathbb{B}_V  \Big\} \le \sup \Big\{  \| f w \|  :  w \in \mathbb{B}_W\big(0,\|T\|\big)   
+ \Big\} = \| T \|
+}
+\Derive{(1)}{\LOGIC{UniIntro}}{\forall f \in W^* \. \big\| T^* f \big\| \le \| T \|}
+\Say{\big(v, (2) \big)}{ \bd \TYPE{operatorNorm}(T) }{ \sum v : \Nat \to V  \. \lim_{n \to \infty} \| T v_n \| = \| T \| \And \forall n \in \Nat \. \| v_n \| = 1}
+\Assume{n}{\Nat}
+\Say{f'}{\Lambda cTv_n \in \Span(Tv_n) \. c\| T v_n \|}{\B \big(\Span(v_n),K \big)}
+\Say{(3)}{\bd f'}{\| f' \| = 1}
+\Conclude{f_n}{\THM{HahnBanach}(f,W)}{ \sum f_n \in W^* \.  \| f_n \| = 1 \And f_n Tv_n = \| Tv_n \|}
+\Derive{\big(f,(3)\big)}{\LOGIC{FuncIntro}}{\sum f : \Nat \to W^* \. \forall n \in \Nat \. \| f_n \| = 1 \And f_n T v_n = \| T v_n \|}
+\Say{(4)}{\bd \FUNC{operatorNorm}(T^* f_n)\bd T^* \THM{SupRelax}(\mathbb{B}_V,v_n)((3)(n)_2(2) }{
+ \NewLine
+ \lim_{n \to \infty} \big\| T^* f_n \big\|
+= \lim_{n \to \infty} \sup \Big\{  \big\| (T^* f_n ) \big\| v | v \in V : \| v \| = 1    \Big\} =
+\lim_{n \to \infty} \sup \Big\{ \big\| f_n(T v) \big\| | v \in V : \| v \| = 1  \Big\} 
+\ge \NewLine
+\ge \lim_{n \to \infty} \| f_n T v_n \| = \lim_{n \to \infty} \| T v_n \| =  \| T \|
+}
+\Say{(5)}{\lim_{n \to \infty} (1)(f_n)\THM{ConstantLimit}(\| T \|)}{\lim_{n \to \infty} \big\| T^* f_n \big\| \le \lim_{n \to \infty} \|  T \| = \|T\|}
+\Say{(6)}{\THM{DoubleIneq}(4,5)}{\lim_{n \to \infty} \| T^* f_n \|  =  \| T \|}
+\Conclude{(*)}{\bd^{-1} \FUNC{operatorNorm}(1,6)}{\| T^* \| = \| T \|}
+\EndProof
+\\
+\Theorem{ConjugacyReverseComposition}{\forall V,W,U \in \BAN(K) \. \forall A : \B(V,W) \. \forall
+B : \B(W,U) \. (AB)^* = B^*A^*}
+\NoProof
+\\
+\Theorem{ConjugacyPreservesIdentity}{\forall V \in  \BAN(K) \. \mathrm{id}_V^* = \mathrm{id}_{V^*}}
+\NoProof
+}
+\Page{
+ \Theorem{DoubleConjugacyTHM}{\alpha : \TYPE{Natural}\Big(\BAN(K),{\id}, (\cdot)^{**} \Big)}
+ \Assume{V,W}{\BAN(K)}
+ \Assume{T}{\B(V,W)}
+ \Assume{v}{V}
+ \Say{(1)}{\bd \alpha_W(T v)}{\alpha_W T v = \Lambda f \in W^* \. f T v}
+ \Say{(2)}{\bd \alpha_V(v) \bd T^{**}}{ T^{**} \alpha_V v = T^{**} \Lambda f \in V^* \. f(v) = \Lambda f \in W^* \. T^* f v =  \Lambda f \in W^* \.  f Tv }
+ \Conclude{()}{(2)(1)}{\alpha_W T v =  T^{**} \alpha_V v}
+ \DeriveConclude{()}{\bd \TYPE{FuncEq}}{ \alpha_W T = T^{**} \alpha_V}
+ \Conclude{(*)}{\bd^{-1}\TYPE{Natural}}{\bigg(\alpha : \TYPE{Natural}\Big(\BAN(K),{\id}, (\cdot)^{**} \Big)\bigg)}
+ \EndProof
+ \\
+ \Theorem{IsometryConjugation}{\forall V,W : \BAN(K) \.
+  \forall T : \B(V,W) \. 
+  \NewLine \.   
+  T : \TYPE{Isometry}(V,W) \iff T^* : \TYPE{Coisometry}(W,V) }
+ \NoProof
+ \\
+  \Theorem{CoisometryConjugation}{\forall V,W : \BAN(K) \. \forall T : \B(V,W) \. 
+   \NewLine \.   
+  T : \TYPE{Coisometry}(V,W) \iff T^* : \TYPE{Isometry}(W,V) }
+ \NoProof
+ \\
+  \Theorem{TopologicalInjectionConjugation}{\forall V,W : \BAN(K) \. \forall T : \B(V,W) \.  \NewLine \. 
+   T : \TYPE{TopologicalInjection}(V,W) \iff T^* : \TYPE{TopologicalSurjection}(W,V) }
+ \NoProof
+ \\
+  \Theorem{TopologicalSurjectionConjugation}{\forall V,W : \BAN(K) \. \forall T : \B(V,W) \. 
+   \NewLine \. 
+  T : \TYPE{TopologicalSurjection}(V,W) \iff T^* : \TYPE{TopologicalInjection}(W,V) }
+ \NoProof
+}
+\subsection{Homology of Banach Spaces}
+\Page{
+\DeclareFunc{conjugateSeq}{\prod N : \TYPE{TOIndex} \. \TYPE{Sequance}\big(\BAN(K),N \big) \to \TYPE{Sequance}\big(\BAN(K), \FUNC{reverse}(N)\big)}
+\DefineNamedFunc{conjugatelSeq}{V_\bullet,T_\bullet}{(V_\bullet,T_\bullet)^*}{(V^*_\bullet, T^*_\bullet)}
+\\
+\Theorem{ConjugateExactSeq}{ \forall (V_{\bullet},T_{\bullet}) : \TYPE{Sequance}(\BAN(K),N) \.
+ \NewLine \.
+  (V_{\bullet},T_{\bullet}) : \TYPE{Exact}(\BAN(K),N) \iff (V_{\bullet},T_{\bullet})^* : \TYPE{Exact}(\BAN(K),\FUNC{reverse}(N))}
+\Assume{\THM{Right}}{\Big(   (V_{\bullet},T_{\bullet}) : \TYPE{Exact}(\BAN(K),N)  \Big)}
+\Assume{n}{\TYPE{Inner}(N)}
+\Say{(1)}{\bd \ker \bd T^*_n}{\ker T^*_n = \{ f \in V^*_{n  } : \im T_n \subset \ker f  \}}
+\Say{(2)}{\bd \im \bd T^*_{n-}}{\im T^*_{n - } = \{  g \circ T_{n-}  | g \in V^*_{n - }    \}}
+\Assume{f}{\TYPE{In}(\im T^*_{n-})}
+\Say{(g,3)}{(2)(f)}{\sum g \in V^*_{n-} \. f = g \circ T_{n-}}
+\Assume{v}{\TYPE{In}(\im T_n)}
+\Say{(w,4)}{\bd \im (T_n)(v)}{\sum w \in V_{n+} \. v = T_n(w)}
+\Conclude{()}{ (3)(4)(fv) \bd \TYPE{Exact}(V,T)(n-,n)}{fv = g T_{n-}T_n w = 0 }
+\DeriveConclude{}{(2)}{f \in \ker T^*_n}
+\Derive{(3)}{\bd \TYPE{Subset}}{ \im T^*_{n-} \subset \ker T^*_n  }
+\Assume{f}{\TYPE{In}(\ker  T^*_{n})}
+\Say{(4)}{\bd f}{\im T_n \subset \ker f }
+\Assume{A}{f = 0}
+\Conclude{()}{AT^*_{n-}}{f = T^*_{n-}0}
+\Derive{(5)}{\LOGIC{ImplicationIntro}}{f = 0 \Rightarrow f \in \im T^*_{n-}}
+\Assume{A}{f \neq 0}
+\Say{(v,6)}{\bd \TYPE{NonZero}(f,A)}{\sum v \in V_n \. f v \neq 0}
+\Say{(7)}{\bd \TYPE{Exact}(V,T)(n) (4) }{ \ker T_{n-} \subset \ker f }
+\Say{(8)}{\bd \ker (6,7)}{ T_{n-}v \neq 0}
+\Assume{R}{T_{n-}v \in T_{n-} \ker f}
+\Say{(x,9)}{\bd \TYPE{Subset}(T_{n-}, \ker f)}{\sum x \in \ker f \.  T_{n-}x = T_{n-}v}
+\Say{(10}{ \bd \TYPE{Inverse}(V_n,x,v,9)\bd_1 \L(T_{n-1}(v,x))}{0 = T_{n-}v - T_{n-}x = T_{n-}(v-x)}
+\Say{(11)}{\bd \ker 10}{ v - x \in \ker T_{n-}}
+\Say{(12}{\bd_1 \L(f)(v,x)(9)(6)}{ f(v - x) = f(v) - f(x) = f(v) \neq 0 }
+\Say{(13)}{\bd \ker (12)}{v -x \not \in \ker f}
+\Conclude{()}{\LOGIC{Contradiction}(7)(11,13)}{\bot}
+\Derive{(0)}{\LOGIC{Negation}}{T_{n-}v \not \in T_{n-} \ker f}
+\Say{g'}{\Lambda cT_{n-} v + x \in \Span(T_{n-} v) \oplus T_{n-}\ker f \. c f(v)}{ \B(\Span(T_{n-} v) \oplus T_{n-}\ker f,K)}
+\Say{(g,9)}{\THM{HahnBanach}(g',V_{n-})}{\sum g \in V_{n-}^* \. g T_{n-} v = f(v)
+ \And \forall x \in \ker f \. g T_{n-} x  = 0
+}
+}
+\Page{
+\Assume{x}{V_n}
+\Say{\big(a,b,y,(10)\big)}{\THM{FunctionalTopComplement}(f,v,6)}{\sum (a,b,y) \in K \times K \times \ker f \. x = av + by}
+\Conclude{()}{(10)(9)\bd \ker(f)(y)}{ T^*_{n-}g(x) = T^*_{n-}g(av + by) = agT_{n-}v  + bgT_{n-}x = a f(v) = f(x) }
+\Derive{(10)}{\LOGIC{FuncEqIntro}}{f = T_{n-}^* g}
+\Conclude{()}{\bd^{-1} \im (10)}{f \in \im T^*_{n-}}
+\Derive{(4)}{\bd^{-1} \TYPE{Subset}}{ \ker T^*_{n} \subset \im T^*_{n-} }
+\Conclude{(5)}{\bd^{-1} \TYPE{SetEq}}{ \ker T^*_{n} = \im T^*_{n-}}
+\DeriveConclude{()}{\bd^{-1}\TYPE{Exact}}{(V_{\bullet},T_{\bullet})^* : \TYPE{Exact}(\BAN(K),\FUNC{reverse}(N))}
+\Derive{(\Rightarrow)}{\LOGIC{ImplicationIntro}}{
+(V_{\bullet},T_{\bullet}) : \TYPE{Exact}(\BAN(K),N)
+\Rightarrow
+(V_{\bullet},T_{\bullet})^* : \TYPE{Exact}(\BAN(K),\FUNC{reverse}(N))}
+\Assume{\THM{Left}}{\Big( (V_{\bullet},T_{\bullet})^* : \TYPE{Exact}\big(\BAN(K),\FUNC{reverse}(N)\big) \Big)}
+\Assume{n}{\TYPE{Inner}(N)}
+\Assume{A}{ \im T_n \subsetneq \ker T_{n-} }
+\Say{(v,1)}{\bd \im \bd \ker (A) }{\sum v \in \im T_n \. T_{n-}(v) \neq 0 }
+\Say{(x,2)}{ \bd \im (v) }{ \sum x \in V_{n+} \. T_{n} x = v  }
+\Say{f'}{ \Lambda cT_{n-}v \in \Span(T_{n-}v) = 1  }{\B(\Span{T_{n-}}v,K)}
+\Say{(f,3)}{\THM{HahnBanach}(f,V_{n-})}{\sum f \in V_{n-}^* \. f T_{n-}v = 1}
+\Say{(4)}{ \THM{ConjugacyPreservesComposition}(T^*_{n} T^*_{n-})\bd (T_{n-}T_n)^*(2)(3)\THM{FieldNontriviality}(K) }
+{ 
+\NewLine :
+\big( T^*_{n} T^*_{n-} f \big) (x) = f T_{n-} T_{n} x = f T_{n-} v = 1 \neq 0}
+\Say{(5)}{\bd^{-1}\TYPE{NonZero}(V^*_{n+})(4)}{  T^*_{n} T^*_{n-} f \neq 0  }
+\Say{(6)}{\bd^{-1}\TYPE{NonZero}(\B(V^*_{n-},V^*_{n+})}{ T^*_{n} T^*_{n-} \neq 0}
+\Conclude{()}{\LOGIC{Contradiction}(\bd \TYPE{Exact}(V^*_{\bullet},T^*_{\bullet})(N),6)}{\bot}
+\Derive{(1)}{\LOGIC{Negation}}{\im T_n \subset \ker T_{n-} }
+\Assume{A}{\ker T_{n-} \subsetneq \im T_n}
+\Say{(v,2)}{\bd \ker \bd \im A}{\sum v \in  V_n \. T_{n-}v =0 \And \forall w \in V_{n+} \. 
+ T_n w \neq v
+ }
+\Say{f'}{ \Lambda cv + x \in \Span(v) \oplus T_{n} V_{n+} =  c }{ \B(\Span(v) \oplus T_{n} V_{n+},K)}
+\Say{(f,3)}{\THM{HahnBanach}(f',V_n)}{\sum f \in V^*_{n} \.  f(v) = 1 \And \forall w \in V_{n+} \. 
+  fT_{n}w = 0 
+   }
+\Say{(4)}{ (3)_2}{ f \in \ker T^*_n}
+\Say{(5)}{(3)_1}{f \not \in \im T^*_{n-}}
+\Say{(6)}{\bd \TYPE{NotASubset} (4,5)}{ \ker T^*_n \subsetneq \im T^*_n  }
+\Conclude{()}{\LOGIC{Contradiction}(\bd \TYPE{Exact}(V^*_{\bullet},T^*_{\bullet})(N),6)}{\bot}
+\DeriveConclude{()}{ \bd \TYPE{SetEq}(1, \LOGIC{Negation})}{\im T_n = \ker T_{n-}}
+\DeriveConclude{()}{\bd^{-1} \TYPE{Exact}}{\Big(  (V_{\bullet},T_{\bullet}) : \TYPE{Exact}\big(\BAN(K),N \big)   \Big)}
+\DeriveConclude{(*)}{\ldots}{ (V_{\bullet},T_{\bullet}) : \TYPE{Exact}(\BAN(K),N) \iff (V_{\bullet},T_{\bullet})^* : \TYPE{Exact}(\BAN(K),\FUNC{reverse}(N))}
+\EndProof
+}
+\Page{
+\Theorem{ConjugacyPreservesIsomorphisms}{ \forall V,W \in \BAN(K) \. 
+ \forall T : \B(V,W) \. 
+ \NewLine \. 
+ T : V \ToBij_{\BAN} W \iff T^* : W^* \ToBij_{\BAN} V^* 
+}
+\Assume{\THM{Right}}{ \big( T : V \ToBij_{\BAN} W \big) }
+\Say{ (1)}{\THM{MinimalExactIso}(T,\THM{Right})}{\Big( 0 \to_0 V \to_T W \to_0 0 : \TYPE{Exact}\big(\BAN(K)\big) \Big)}
+\Say{(2)}{\THM{ConjugateExactSeq}(1)}{ \Big( 0 \to_0 W^* \to_{T^*} V^* \to_0 0 : \TYPE{Exact}\big(\BAN(K)\big) \Big)  }
+\Conclude{()}{\THM{BoundedInverseTHM} \, \THM{MinimalExactIso}^{-1}(2)}{ \big( T^* :  W^* \ToBij_{\BAN} V^* \big) }
+& \ldots \\
+\Assume{\THM{Left}}{\big( T^* :  W^* \ToBij_{\BAN} V^* \big) }
+\Say{ (1)}{\THM{MinimalExactIso}(T,\THM{Left})}{\Big( 0 \to_0 W^* \to_{T^*} V^* \to_0 0 : \TYPE{Exact}\big(\BAN(K)\big) \Big)}
+\Say{(2)}{\THM{ConjugateExactSeq}^{-1}(1)}{  \Big( 0 \to_0 V \to_T W \to_0 0 : \TYPE{Exact}\big(\BAN(K)\big) \Big) }
+\Conclude{()}{\THM{BoundedInverseTHM} \, \THM{MinimalExactIso}^{-1}(2)}{ \big( T : V \ToBij_{\BAN} W \big)}
+& \ldots \\
+\EndProof
+}
+\subsection{Products and Coproducts of Banach Spaces}
+\Page{}
+\subsection{Completion as a Universal Property}
+\subsection{Tensor Products of Banach Spaces }
+\subsection{Tensor Products of Hilbert Spaces}
+\Page{}
+\section{Weak Topologogy of a Banach Space}
+\subsection{Definition of the Weak Topology}
+\Page{
+\DeclareFunc{weakTopologyBase}{\prod  V : \NORM(K) \. \TYPE{TopologyBase}(V)}
+\DefineFunc{weakTopologyBase}{}{  \bigg\{ v + \Big\{  x \in V : \forall i \in n \. \big| f_i(x) \big| < a_i \Big\}  \bigg|  n \in \Nat, f \in n \to V^*, a \in n \to \Reals_{++}, v \in V  \bigg\} }
+\\
+\DeclareFunc{weakTopology}{\prod V : \NORM(K) \. \TYPE{Hausdorff}(V)}
+\DefineNamedFunc{weakTopology}{}{\mathbf{w}(V)}{ \FUNC{fromBase} \, \FUNC{weakTopologyBase}(V)}
+\\
+\DeclareFunc{weakStarTopologyBase}{\prod  V : \NORM(K) \. \TYPE{TopologyBase}(V^*)}
+\DefineFunc{weakTopologyBase}{}{ \bigg\{  g +  \Big\{  f \in V^* : \forall i \in n \. \big| f(v_i) \big| < a_i \Big\}  \bigg|  n \in \Nat, v \in n \to V, a \in n \to \Reals_{++}, g \in V^*  \bigg\} }
+\\
+\DeclareFunc{weakStarTopology}{\prod V : \NORM(K) \. \TYPE{Hausdorff}(V^*)}
+\DefineNamedFunc{weakStarTopology}{}{\mathbf{w}^*(V)}{ \FUNC{fromBase} \, \FUNC{weakStarTopologyBase}(V)}
+\\
+\Theorem{WeakIsWeak}{\forall V : \NORM(K) \. \mathbf{w}(V) \le \mathcal{T}(V) }
+\Assume{U}{\TYPE{In}\big(\FUNC{weakTopologyBase}(V)\big)}
+\Say{(N,f,a,1)}{\bd \FUNC{weakTopologyBase}(V)(U) }{ \sum n \in \Nat \. \sum f : n \to V^* \. \sum a : n \to \Reals \.
+ \NewLine \.
+ U = \bigcap^n_{i = 1} f^{-1}_i(-a_i,a_i)}
+\Conclude{()}{(1)\bd \TYPE{Continuous}(V,K,(-a_i,a_i))\THM{BoundedFunctionalIsContinuous}(f)}
+{U \in \mathcal{T}(V)}
+\DeriveConclude{(*)}{ \bd \TYPE{Coarser}\big( \bd \mathbf{w}(V)\THM{BaseDefinesTopology}\big)}{\mathbf{w}(V) \le \mathcal{T}(V)}
+\EndProof
+\\
+\Theorem{WeakStarIsWeak}{\forall V : \NORM(K) \. \mathbf{w}^*(V) \le \mathcal{T}(V^*)}
+\Assume{U}{\TYPE{In}\big(\FUNC{weakStarTopologyBase}(V)\big)}
+\Say{(N,f,a,1)}{\bd \FUNC{weakStarTopologyBase}(V)(U) }{ \sum n \in \Nat \. \sum x : n \to V \. \sum a : n \to \Reals \.
+ \NewLine \.
+ U = \bigcap^n_{i = 1} \alpha_{x_i}^{-1}(-a_i,a_i)}
+\Conclude{()}{(1)\bd \TYPE{Continuous}(V^*,K,(-a_i,a_i))\THM{BoundedFunctionalIsContinuous}(\alpha_x)}
+{U \in \mathcal{T}(V^*)}
+\DeriveConclude{(*)}{ \bd \TYPE{Coarser}\big( \bd \mathbf{w}^*(V)\THM{BaseDefinesTopology}\big)}{\mathbf{w}^*(V) \le \mathcal{T}(V^*)}
+\EndProof
+\\
+}
+\Page{
+ \Theorem{WeakStarIsWeaker}{\forall V : \NORM(K) \. \mathbf{w}^*(V) \le \mathbf{w}(V^*)}
+ \Assume{U}{\TYPE{In}\big(\FUNC{weakStarTopologyBase}(V)\big)}
+\Say{(N,f,a,1)}{\bd \FUNC{weakStarTopologyBase}(V)(U) }{ \sum n \in \Nat \. \sum x : n \to V \. \sum a : n \to \Reals \.
+ \NewLine \.
+ U = \bigcap^n_{i = 1} \alpha_{x_i}^{-1}(-a_i,a_i)}
+\Conclude{()}{\THM{CanonicalIsometry}(x)\bd \mathbf{w}(V^*)}
+{U \in \mathbf{w}(V^*)}
+\DeriveConclude{(*)}{ \bd \TYPE{Coarser}\big( \bd \mathbf{w}^*(V)\THM{BaseDefinesTopology}\big)}{\mathbf{w}^*(V) \le \mathbf{w}(V^*)}
+\EndProof
+\\
+\DeclareType{WeakConvergent}{\prod V : \NORM(K) \. ?(\Nat \to V)}
+\DefineType{v}{WeakConvergent}{\Big(v : \TYPE{Convergent}\big(V,\mathbf{w}(V)\big)\Big)}
+\\
+\DeclareFunc{weakLimit}{\prod V : \NORM(K) \. \TYPE{WeakConvergent}(V) \to V }
+\DefineNamedFunc{weakLimit}{v}{\mathbf{w} \- \lim_{n \to \infty} v_n}{ \FUNC{limit}(V,\mathbf{w}(V),v) }
+\\
+\DeclareType{WeakStarConvergent}{\prod V : \NORM(K) \. ?(\Nat \to V^*)}
+\DefineType{v}{WeakStarConvergent}{\Big(v : \TYPE{Convergent}\big(V^*,\mathbf{w}^*(V)\big)\Big)}
+\\
+\DeclareFunc{weakStarLimit}{\prod V : \NORM(K) \. \TYPE{WeakStarConvergent}(V) \to V^* }
+\DefineNamedFunc{weakStarLimit}{f}{\mathbf{w}^* \- \lim_{n \to \infty} f_n}{ \FUNC{limit}(V^*,\mathbf{w}^*(V),v) }
+}
+\Page{
+\Theorem{WeakLimitCharacteristic}{\forall V : \NORM(K) \. \forall x : \Nat \to V \. \forall X \in V
+ \. \NewLine \.
+ \mathbf{w} \- \lim_{n \to \infty} x_n = X \iff  \forall f \in V^* \. \lim_{n \to \infty} f(x_n) = f(X)}
+\Assume{L}{\mathbf{w} \- \lim_{n \to \infty} x_n = X }
+\Assume{f}{\TYPE{In}(V^*)}
+\Assume{\epsilon}{\Reals_{++}}
+\Conclude{(N,1)}{\bd \FUNC{WeakLimit}(L)\big(x,X,f^{-1}\mathbb{B}_K(f(X),\epsilon)\big)}{ \sum N \in \Nat \. \forall (n,*) : \sum n \in \Nat \. n \ge N \.  \NewLine \. |f(x_n) - f(X)| < \epsilon   }
+\DeriveConclude{()}{\bd \FUNC{Limit}(K)}{\lim_{n \to \infty} f(x_n) = f(X)}
+\DeriveConclude{()}{\LOGIC{UniIntro}}{\forall f \in V^* \. 
+\lim_{n \to \infty} f(x_n) = f(X) }
+\Derive{\LOGIC{Left}}{\LOGIC{ImplicationIntro}}{ \mathbf{w} \- \lim_{n \to \infty} x_n = X \Longrightarrow \forall f \in V^* \. \lim_{n \to \infty} f(x_n) = f(X)}
+\Assume{R}{\forall f \in V^* \. \lim_{n \to \infty} f(x_n) = f(X)}
+\Assume{U}{ \mathcal{U}_{\mathbf{w}(V)}(X)}
+\Say{(m,f,a,1)}{\THM{NeighbourhoodInBase}\big(\bd \mathbf{w}(V)\big)(U)}{\sum m \in \Nat \.  \sum (f,a) : m \to V^* \times \Reals_{++} \. 
+\NewLine
+\. \bigcap^m_{i = 1}\{ v \in V : |f_i(v) - f_i(X)| < a_i \} \subset U
+  }
+\Assume{(i,2)}{\sum i \in \Nat \. i \le n }
+\Say{(3)}{R(f_i)}{\lim_{n \to \infty} f_i(x_n) = f_i(X)}
+\Conclude{(N_i,o_i)}{\bd \TYPE{Convergent}(f_i(x), a_i,3)}{\sum N_i \in \Nat \.  \forall (n,*) : \sum n \in \Nat \. n \ge N_i \. | f_i(x_n) - f_i(X) | \le a_i }
+\Derive{(N,o)}{\LOGIC{FuncIntro}}{ \prod i \in n \. \sum N_i \in \Nat \.  \forall n \in \sum (n,*) : \Nat \. n \ge N_i \. | f_i(x_n) - f_i(X) | \le a_i}
+\Say{M}{ \max_{i \in n} N_i  }{\Nat}
+\Conclude{()}{ \bd \TYPE{Subset} \bd \TYPE{Intersection}\THM{IncreasingTipologicalSumPropogation}(M, o) }{ 
+ \NewLine : \forall (n,*) \in \sum n \in \Nat \. n \ge M \. x_n \in U}
+\DeriveConclude{()}{\bd^{-1}\FUNC{WeakLimit}\bd^{-1} \TYPE{TopologicalLimit}(\mathbf{w}(V))}{ \mathbf{w}\-\lim_{n \to \infty} x_n = X }
+\DeriveConclude{(*)}{\LOGIC{IffIntro}(\LOGIC{Left}, \LOGIC{ImplicationIntro})}
+{\mathbf{w} \- \lim_{n \to \infty} x_n = X \iff  \forall f \in V^* \. \lim_{n \to \infty} f(x_n) = f(X)}
+\EndProof
+}
+\Page{
+\Theorem{WeakStarLimitCharacteristic}{\forall V : \NORM(K) \. \forall f : \Nat \to V^* \. \forall F \in V^*
+\NewLine
+ \mathbf{w}^* \- \lim_{n \to \infty} f_n = F \iff  \forall v \in V \. \lim_{n \to \infty} f_n(v) = F(v)
+}
+\Assume{L}{\mathbf{w}^* \- \lim_{n \to \infty} f_n = F }
+\Assume{v}{\TYPE{In}(V)}
+\Assume{\epsilon}{\Reals_{++}}
+\Conclude{(N,1)}{\bd \FUNC{WeakStarLimit}(L)\big(f,F,\alpha_v^{-1}\mathbb{B}_K(F(v),\epsilon)\big)}{ \sum N \in \Nat \. \forall (n,*) : \sum n \in \Nat \. n \ge N \. \NewLine \. |f_n(v) - F(v)| < \epsilon   }
+\DeriveConclude{()}{\bd \FUNC{Limit}(K)}{\lim_{n \to \infty} f_n(v) = F(v)}
+\DeriveConclude{()}{\LOGIC{UniIntro}}{\forall v \in V \. 
+\lim_{n \to \infty} f_n(v) = F(v) }
+\Derive{\LOGIC{Left}}{\LOGIC{ImplicationIntro}}{ \mathbf{w}^*\-\lim_{n \to \infty} f_n = F \Longrightarrow \forall v \in V \. \lim_{n \to \infty} f_n(v) = F(v)}
+\Assume{R}{\forall v \in V \. \lim_{n \to \infty} f_n(v) = F(v)}
+\Assume{U}{ \mathcal{U}_{\mathbf{w}^*(V)}(F)}
+\Say{(m,v,a,1)}{\THM{NeighbourhoodInBase}\big(\bd \mathbf{w}^*(V)\big)(U)}{\sum m \in \Nat \.  \sum (f,a) : m \to V \times \Reals_{++} \. 
+\NewLine
+\. \bigcap^m_{i = 1}\{ g \in V^* : |g(v_i) - F(v_i)| < a_i \} \subset U
+  }
+ \Assume{(i,2)}{\sum i \in \Nat \. i \le n }
+\Say{(3)}{R(v_i)}{\lim_{n \to \infty} f_n(v_i) = F(v_i)}
+\Conclude{(N_i,o_i)}{\bd \TYPE{Convergent}(f(v_i), a_i,3)}{\sum N_i \in \Nat \.  \forall (n,*) : \sum n \in \Nat \. n \ge N_i \. | f_n(v_i) - F(v_i) | \le a_i }
+\Derive{(N,o)}{\LOGIC{FuncIntro}}{ \prod i \in n \. \sum N_i \in \Nat \.  \forall n \in \sum (n,*) : \Nat \. n \ge N_i \. | f_n(v_i) - F(v_i) | \le a_i}
+\Say{M}{ \max_{i \in n} N_i  }{\Nat}
+\Conclude{()}{ \bd \TYPE{Subset} \bd \TYPE{Intersection}\THM{IncreasingTipologicalSumPropogation}(M, o) }{ 
+ \NewLine : \forall (n,*) \in \sum n \in \Nat \. n \ge M \. f_n \in U}
+\DeriveConclude{()}{\bd^{-1}\FUNC{WeakStarLimit}\bd^{-1} \TYPE{TopologicalLimit}(\mathbf{w}^*(V))}{ \mathbf{w}^*\-\lim_{n \to \infty} f_n = F }
+\DeriveConclude{(*)}{\LOGIC{IffIntro}(\LOGIC{Left}, \LOGIC{ImplicationIntro})}
+{\mathbf{w}^* \- \lim_{n \to \infty} f_n = F \iff  \forall v \in V \. \lim_{n \to \infty} f_n(v) = F(v)}
+\EndProof
+  }
+\Page{
+\Theorem{FiniteDimWeakIsNormal}{\forall (V,d) : \sum V : \NORM(K) \. \dim V < \infty \.  \mathbf{w}(V) = \mathcal{T}(V) }
+\Say{(n,1)}{\bd \FUNC{Infinity}(d)}{\sum n \in \Nat \. \dim V = n}
+\Say{(2)}{\THM{FiniteDimClasification}(1,V,K^n_\infty)}{V \cong_{\NORM} K^n_\infty}
+\Assume{v}{K^n_\infty}
+\Assume{r}{\Reals_{++}}
+\Say{(3)}{\bd \FUNC{ball}(K^n_\infty)(v,r) \bd \FUNC{maxnorm} \bd^{-1} \FUNC{intersection} \bd^{-1} \FUNC{orth}((K^n)^*)  }{
+\NewLine :
+ \mathbb{B}_\infty^n(v,r) = \big\{ x \in V : \| x - v \|_\infty < r  \big\} = \left\{ x \in V : \forall i \in n \. | x_i - v_i| < r  \right\} = \NewLine = 
+  \bigcap^n_{i = 1} \big\{ x \in V : | x_i - v_i | < r \big\} 
+ = \bigcap^n_{i = 1} \big\{ x \in V : |  e_i^* ( x - v)  | < r \big\} }
+\Conclude{()}{\bd \mathbf{w}\big(K^n_\infty \big) \bd \FUNC{weakTopologyBase}(n,e^*,r) \mathbb{B}_\infty^n(v,r)}{ \mathbb{B}_\infty^n(v,r) \in \mathbf{w}(K^n_\infty)}
+\Derive{(3)}{\bd^{-1}\TYPE{SetEq}\Big( \bd \mathcal{T}\big( K^n_{\infty} \big)\THM{BaseDefinesTopology}(\cdot), \THM{WeakIsWeak}\big( K^n_\infty \big)\Big)}{\mathcal{T}\big(K^n_{\infty}\big) = \mathbf{w}\big( K^n_\infty \big)}
+\Conclude{(*)}{(3)(2)}{\mathcal{T}(V) = \mathbf{w}(V)}
+\EndProof 
+}
+\subsection{Weak Boundedness}
+\Page{ 
+\Theorem{WeaklyOpenIsUnbounded}{\forall (V,d) : \sum V : \NORM(K) \. \dim V = \infty \. \forall U \in \mathbf{w} \And \TYPE{Nonempty}(V) \. 
+\NewLine
+ \. U : \TYPE{Unbounded}(V)}
+\Say{(m,f,a,x,1)}{\bd \mathbf{w}(V)(U)}{\sum m \in \Nat \.  \sum (f,a) : m \to V^* \times \Reals_{++} \. 
+\NewLine
+\. \sum x \in V \. \bigcap^m_{i = 1}\{ v \in V : |f_i(v) - f_i(x)| < a_i \} \subset U
+  }
+\Say{(2)}{ \THM{CodimOfIntersction} \, \THM{KerCodimIsDimOfIm}(f)}{ \mathrm{codim} \, \bigcap^m_{i = 1} \ker f_i \le m}
+\Say{(3)}{ \bd \FUNC{codim}( d(2) )}{ \bigcap^m_{i = 1} \ker f_i \neq \{  0 \} }
+\Say{(v,4)}{\bd \TYPE{NontrivialSubspace}(V)(3)}{ \sum v \in \bigcap^m_{i = 1} \ker f_i \. v \neq 0 }
+\Say{(5)}{\THM{LineIsUnbounded}(V, 4, Kv + x)}{\big(Kv + x : \TYPE{Unbounded}(V)\big)}
+\Say{(6)}{ \bd\TYPE{Subset} (1, \bd \ker(f)(v))}{Kv + x \subset U}
+\Conclude{(*)}{\THM{UnboundednessPropogation}(5,6)}{ \big(U : \TYPE{Unbounded}(V)\big) }
+\EndProof
+}
+\Page{
+\Theorem{BoundedSteinhausConvergence}{\forall V : \BAN(K) \. \forall W : \NORM(K) \. \forall T : \Nat \to \B(V,W) \. 
+\NewLine
+\forall (A,c) : \sum A \in V \to W \. \forall x \in V \.  \lim_{n \to \infty} T_n(x) = A(x) \. A \in \B(V,W) \And \| A \| \le \lim_{n \to \infty} \inf \| T_n \|
+}
+\Say{(1)}{\THM{ContAddition}(W)(\Lambda x,y \in V \. T(x + y)) \, \THM{ContScalarMult}\big(\Lambda a in K \. 
+\Lambda x \in V \. T(ax) \big)}{(A : \mathcal{L}(V,W))}
+\Say{(2)}{\bd^{-1} \TYPE{PoinwiselyBoundedOperatorFamily}(c)}{\big( T :  \TYPE{PoinwiselyBoundedOperatorFamily}(\Nat,V,W)  \big)}
+\Say{(3)}{\THM{BanachSteinhaus}(T,2)}{\big( T :  \TYPE{UniformlyoundedOperatorFamily}(\Nat,V,W)  \big)}
+\Say{(C,4)}{\bd \TYPE{UniformlyBoundedOperatorFamily}(T) }{ \sum C \in \Reals_{++} \. \forall n \in \Nat \. \| T_n \| \le C}
+\Assume{x}{V}
+\Conclude{()}{\LOGIC{EqEl}(\| Ax \|, c)\THM{ContNorm}(T_n x)(4)\THM{ConstantLimit}}{ 
+ \NewLine :
+ \| A x \| = \Big\| \lim_{n \to \infty} T_n x  \Big\| =\lim_{n \to \infty} \| T_n x \| \le \lim_{n \to \infty} C\| x \| = C\| x \| }
+\Derive{(5)}{\bd^{-1} \B(V,W)}{\big( A : \B(V,W) \big)}
+\Assume{x}{V}
+\Say{(6)}{\bd \FUNC{operatorNorm} }{ \forall n \in \Nat \. \| T_n x \| \le \| T_n \| \| x \|}
+\Conclude{(1)}{ \LOGIC{EqEl}(\| Ax \|, c)\THM{ContNorm}(T_n x) \THM{MajorizedConvergence}(6)}{ 
+\NewLine :
+ \| A x \| = \Big\| \lim_{n \to \infty} T_n x  \Big\|= \lim_{n \to \infty} \| T_n x \| \le 
+\Big( \liminf_{n \to \infty} \| T_n \| \Big) \| x \| }
+\DeriveConclude{(*)}{\bd \FUNC{operatorNorm}(A)}{ \| A \| \le \liminf_{n \to \infty} \| T_n \| }
+\EndProof
+\\
+\DeclareType{WeaklyBounded}{\prod V : \NORM(K) \. ?? V}
+\DefineType{A}{WeaklyBounded}{ \forall f \in V^* \. f(A) : \TYPE{Bounded}(K)}
+\\
+\DeclareType{WeaklyStarBounded}{\prod V : \NORM(K) \. ?? V^*}
+\DefineType{A}{WeaklyStarBounded}{ \forall x \in V \. \alpha_x(A) : \TYPE{Bounded}(K)}
+\\
+\Theorem{BanachSteinhausII}{\forall A : \TYPE{WeaklyBounded}(V) \. A : \TYPE{Bounded}(V)}
+& \textrm{Apply} \, \THM{BoundedFunctionalsTHM} \\
+\\
+\Theorem{BanachSteinhausStar}{\forall A : \TYPE{WeaklyStarBounded}(V) \. A : \TYPE{Bounded}(V^*)}
+& \textrm{Apply} \, \THM{BoundedFunctionalsTHM} \\
+}
+\Page{
+\Theorem{WeakStarContinuousFunctionalsAreApplicants}{ \forall V \in \NORM(K) \.
+ \NewLine \. F \in V^{**} \And \TYPE{Continuous}(V^*, \mathbf{w}^*(V)) \.
+ \exists x \in V  : F = \alpha_x 
+ }
+ \Assume{d}{\dim V < \infty}
+ \Conclude{()}{\THM{HilbertIsReflexive} \, \THM{FiniteDimensionalClassification}(V,d)}{ \exists x \in V : F = \alpha_x}
+ \Derive{(1)}{\LOGIC{ImplicationIntro}}{ \dim V < \infty \Rightarrow \exists x \in V : F = \alpha_x } 
+ \Assume{d}{\dim V = \infty}
+ \Say{(U,2)}{ F^{-1} \mathbb{B}_K }{ \sum U \in \mathcal{U}_{\mathbf{w}^*(V)}(0) \. \forall f \in U \. | F(f) | < 1}
+ \Say{(m,v,a,3)}{\bd \mathbf{w}^*(V)(U)}{\sum m \in \Nat \.  \sum (v,a) : m \to V \times \Reals_{++} \. 
+  \bigcap^m_{i = 1}\{ f \in V^* : |f(v_i)| < a_i \} \subset U
+  }
+ \Say{(\mathcal{F},4)}{\THM{KernelExtension}\big(d,  \{ v_i | i \in m \}\big)}{\sum \mathcal{F} : \TYPE{NontrivialSubspace}(V^*) \.
+ \NewLine \. 
+  \forall f \in \mathcal{F} \.  \{ v_i | i \in m \} \subset \ker f }
+  \Assume{f}{ \TYPE{In}(\mathcal{F})}
+  \Assume{c}{\TYPE{In}(K)}
+  \Assume{i}{\TYPE{In}(m)}
+  \Conclude{()}{ \LOGIC{EqEl}(| cf(v_i) |, \bd \ker (4) )\THM{ZeroAbsValue}\THM{PositiveRealsLB}(a_i)}{ | cf(v_i) |  = | 0 | = 0 < a_i }
+  \Derive{(5)}{(3)}{cf \in U}
+  \Conclude{()}{\bd_2 \mathcal{L}(F)(c,f) \bd_2 \TYPE{Norm}(c,F(f))(2)(5)}{|c|\| F(f) \| = \| cF(f) \| < 1  }
+  \DeriveConclude{()}{\bd^{-1}_3 \TYPE{Norm} \, \THM{MultiplicativelyNonIncreasingObject}}{F(f) = 0}
+  \Derive{(5)}{\bd^{-1} \ker}{ \mathcal{F} \subset \ker F} 
+  \Say{(6)}{\bd \ker \bd \alpha(v)(5)}{ \bigcap^m_{i = 1} \ker \alpha_{v_i} \subset \mathcal{F}  \subset \ker F}
+  \Say{(b,7)}{\THM{KernelIntersectionLinearCombination}(6)}{\sum b : m \to K \. F = \sum^m_{i = 1} b_i \alpha_{v_i} }
+  \Say{x}{\sum^m_{i = 1} b_i{v_i}}{V}
+  \Conclude{()}{\bd \alpha \bd x (7)}{F = \alpha_x}
+  \DeriveConclude{(*)}{\LOGIC{OrElimination}(\dim V < \infty | \dim V = \infty,1,\cdot)}{ \exists x \in V  : F = \alpha_x }
+  \EndProof
+ }
+ \subsection{Separation Theorems}
+ \Page{
+ \Theorem{HahnBanachSeparation}{ \forall V : \BAN(\Reals) \. \forall (A,B,o) : \sum A, B  : \TYPE{Convex} \And \TYPE{Closed}(V) \.    A \cap B = \emptyset \. \NewLine  
+  A : \TYPE{Compact}(V,\mathbf{w}(V)) \Longrightarrow \exists f \in V^* : \sup_{a \in A} f(a) <  \inf_{b \in B} f(b)
+ }
+ \Assume{x}{A}
+ \Say{(f,c,2)}{\THM{SeparatingHyperplaneExists}(x,B)}{\sum (f,c) \in V^* \times \Reals \. f(x) = 0 \And  \forall b \in B \. f(b) \ge c}
+ \Say{U(x)}{ \{ x \in  V : f(x) < c   \}}{\TYPE{In}\Big(\mathcal{U}_{(V,\mathbf{w}(V))}(0)\Big)}
+ \Conclude{(3)}{\bd U(x)(2) }{ x + U(x) \cap B = \emptyset }
+ \Derive{U}{\LOGIC{DepFuncIntro} }{ \prod x \in A \. \sum U(x) \. \mathcal{U}_{(V,\mathbf{w}(V))}(0) \. x + U(x) \cap B = \emptyset }
+\Say{\mathcal{O}}{  \Big\{  x + U(x) : x \in X \Big\}}{ ?\mathbf{w}(U)}
+\Say{(2)}{\bd \FUNC{union}\bd \mathcal{O} \bd U}{ A \subset \bigcup \mathcal{O}}
+\Say{(n,a,3)}{\bd \TYPE{Compact}(V,\mathbf{w}(V))  }{ \sum n \in \Nat \. \sum  a : n \to A \. A \subset \bigcup^n_{i = 1} a_i + U(a_i)  }
+\Say{Y}{\bigcap^n_{i = 1} U(a_i)}{\mathcal{U}_{(V,\mathbf{w}(V))}(0)}
+\Say{(4)}{\THM{ConvexIntersection}\big(Y,U(a)\big)}{\big(Y : \TYPE{Convex}(V)\big)}
+\Say{O}{ A + Y}{\TYPE{Open} \And \TYPE{Convex}(V)}
+\Say{(5)}{\bd \TYPE{NonIntersecting} \bd O \bd U}{ O \cap B = \emptyset }
+\Say{X}{O - B}{\TYPE{Open} \And \TYPE{Convex}(V)}
+\Say{(6)}{\bd(X)(5)(0)}{0 \not \in X}
+\Say{(f,c,7)}{\THM{SeparatingHyperplaneExists}(0,X,6)}{\sum (f,c) \in V^* \times \Reals_{++} \. f(0) = c \And  \forall x \in X  \. f(x) < -c}
+\Say{(8)}{(7)\THM{MorphismOfZero}(f)}{c = f(0) = 0}
+\Say{(y,9)}{\bd \mathcal{L}(f)\bd \mathcal{U}_{(V,\mathbf{w}(V))}(0) }{ \sum y \in Y \. f(y) > 0}
+\Assume{a}{A}
+\Assume{b}{B}
+\Say{ (10)}{\bd(X)(a -b)}{ a - b \in X}
+\Conclude{()}{(7)(a - b)}{ f(a) \le f(b);}
+\Derive{(11)}{\LOGIC{UniIntro}}{\forall a \in A \. \forall b \in B \. f(a) + f(y) < f(b)}
+\Say{(12)}{\THM{LimitIneq}(10)}{\sup_{a \in A} f(a) + f(y) \le   \inf_{b \in B} f(b)}
+\Conclude{(*)}{ \THM{NonNegSubstractIneq}(12,9,f(y))}{ \sup_{a \in A} f(a) < \inf_{b \in B} f(b)   }
+\EndProof
+}
+\Page{
+  \Theorem{WeakStarSeparation}{ \forall V : \BAN(\Reals) \. \forall A  : \TYPE{Convex} \And \TYPE{NonZero}(V^*) \And \TYPE{Closed}(V^*,\mathbf{w}^*(V)) \.   \NewLine  
+  . \forall f \in A^\c \. \exists x \in V \.  \sup_{a \in A} a(x) <  f(x)
+  }
+\Say{\big(U,(1)\big)}{  A^\c}{\TYPE{Open}\big(\mathbf{w}^*(V)\big)}
+\Say{(n,v,a,1)}{ \bd \THM{NeighbourhoodInBase}( \bd \mathbf{w}^*(V), U, f)}{ \sum n \in \Nat \. 
+\NewLine 
+\.
+\sum (v,a) : n \to V \times \Reals_{++} \.  \bigcap^n_{i = 1} \{  g \in V^* : |g(v_i) - f(v_i) | < a_i \} \subset U }
+\Say{O}{\bigcap^n_{i = 1} \{  g \in V^* : |g(v_i) - f(v_i) | < a_i \}}{\mathcal{U}_{\mathbf{w}^*(V)}(f)}
+\Say{(2)}{\bd O}{ O : \TYPE{Convex}(V^*)}
+\Say{(3)}{\bd O(1)}{ O \cap A = \emptyset}
+\Say{X}{O - A}{\mathbf{w}^*(V) \And \TYPE{Convex}(V)}
+\Say{X}{\bd X (3)}{0 \not \in X}
+\Say{(F,c,4)}{\THM{SeparatingHyperplaneExists}(0,X,6)}{\sum (F,c) \in V^{**} \times \Reals_{++} \. 
+\NewLine
+\. F(0) = c \And  \forall x \in X  \. F(x) > c}
+\Say{(5)}{(4)\THM{MorphismOfZero}(F)}{c = F(0) = 0}
+\Say{a}{\bd \TYPE{NonEmpty}(A)}{\TYPE{In}(A)}
+\Assume{u}{\TYPE{In}(O - \{f\}) }
+\Conclude{()}{(4)( f + u - a)}{  -F(u) <  -F(a) + F(f) }
+\Derive{(6)}{\LOGIC{UniIntro}}{\forall u \in O - \{ f \} \.  -F(u) < -F(a) + F(f)  }
+\Say{(7)}{\THM{IneqLimit}(6)}{ \sup_{u \in O - \{ f \}}  -F(u) \le -F(a) + F(f)}
+\Assume{g}{ \bigcap^n_{i = 1} \ker \alpha_{v_i}}
+\Say{(8)}{ \bd O(g)}{g \in O - \{f\} }
+\Assume{r}{\Reals}
+\Conclude{()}{\bd_2 \mathcal{L}(F)(r,g)\bd \FUNC{supremum}(7)(8,rg}{ -rF(g) = -F(rg) \le -F(a) + F(f) }
+\Derive{(9)}{ \LOGIC{UniIntro}}{ \forall r \in \Reals \. -rF(g) \le -F(a)  + F(f) }
+\Say{(10)}{\THM{MulticativelyBoundedObject}(\Reals)(9)}{F(g) = 0}
+\Conclude{()}{\bd \ker (10)}{ g \in \ker F}
+\Derive{(8)}{\bd^{-1} \TYPE{Subset}}{\bigcap^n_{i = 1} \ker \alpha_{v_i} \subset \ker F}
+\Say{(b,9)}{\THM{KernelIntersectionLinearCombination}(8)}{\sum b : n \to \Reals \. F = \sum^n_{i = 1} b_i \alpha_{v_i} }
+\Say{x}{\sum^n_{i = 1} b_i{v_i}}{V}
+\Say{(10)}{\bd \alpha \bd x (7)}{F = \alpha_x}
+}
+\Page{
+\Assume{a}{A}
+\Assume{u}{O - \{ f\} }
+\Conclude{()}{(10)(7)(f + u - A)}{ f(x) + u(x) > a(x)}
+\Derive{(11)}{\THM{LimitIneq}\,\LOGIC{UniIntro}^2}{f(x) + \inf_{u \in O - \{f\}} u(x) \ge \sup_{a \in A} a(x) }
+\Say{(12)}{\bd \mathcal{U}_{\mathbf{w}^*(V)}(o)(O - \{f\})}{\inf_{u \in O - \{f\}} u(x) < 0}
+\Conclude{(*)}{\THM{PositiveAddIneq}\bigg(12,11,\inf_{u \in O - \{f\}}\bigg)}{ f(x) >  \sup_{a \in A} a(x)}
+\EndProof
+\\
+\Theorem{Mazur}{\forall V : \BAN(\Reals) \. \forall A : \TYPE{Convex} \And \TYPE{Closed}(V) \.
+      A : \TYPE{Closed}(V,\mathbf{w}(V))
+ }
+\Assume{x}{A^\c}
+\Say{(f,c,1)}{\THM{SeparatingHyperplaneExists}(x,X,6)}{\sum (f,c) \in V^* \times \Reals_{++} \. f(x) > c \And \forall a \in A \. f(a) < c 
+}
+\Say{U(x)}{\{ v \in V : f(v) > c  \}}{\mathbf{w}(V)}
+\Say{()}{\bd U(x)(1)(A)}{A \cap U(x) = \emptyset}
+\Conclude{()}{\bd U(x)}{ x \in U(x)}
+\Derive{U}{\LOGIC{DepFuncIntro}}{\prod x \in A^\c \. \sum U(x) \in \mathbf{w}(U) \. x \in U(x) \And U(x) \cap A = \emptyset}
+\Say{(O)}{\bigcup_{x \in A^\c} U(x)}{\mathbf{w}(V)}
+\Say{(2)}{\bd O \bd_1 U}{A^\c \subset U(x)}
+\Say{(3)}{\bd O \bd_2 U}{ U(x) \cap A = \emptyset}
+\Say{(4)}{\THM{ComlempletionSubset}(2,3)}{O = A^\c}
+\Conclude{(*)}{\bd^{-1} \TYPE{Closed}(O,4)}{\Big(A : \TYPE{Closed}\big(\mathbf{w}(V)\big) \Big) }
+\EndProof
+\\
+\Theorem{ConvexConvergence}{ \forall V : \BAN(K) \. \forall x : \TYPE{WeaklyConvergent}(V) \.
+\NewLine
+ \exists y \in \Nat \to \mathrm{conv}( x(\Nat)) : \TYPE{Convergent}(V) : \lim_{n \to \infty} y_n = \mathbf{w}\- \lim_{n \to \infty} x_n  
+}
+\Say{A}{\mathrm{cl}\, \mathrm{conv}\{  x_n \}^\infty_{n = 1}}{\TYPE{Convex} \And \TYPE{Closed}(V) }
+\Say{(1)}{\THM{Mazur}(A)}{\Big(A : \TYPE{Closed}\big(\mathbf{w}(V)\big) \Big)}
+\Say{(2)}{\THM{ClosedConvergence}(1,x)}{\mathbf{w}\- \lim_{n \to \infty} x_n \in A}
+\Conclude{(y,1)}{\THM{AllPointsAreLimits}\bigg(\mathrm{conv} \, A, \mathbf{w}\- \lim_{n \to \infty} x_n\bigg)}
+{ \sum y : \Nat \to \mathrm{conv}(A) \. \lim_{n \to \infty} y_n = \mathbf{w}\- \lim_{n \to \infty} x_n }
+\EndProof
+}
+\subsection{Metrization and Separability }
+\Page{
+\Theorem{Alaoglu}{\forall V : \BAN(K) \. \overline{\mathbb{B}}_{V^*} : \TYPE{Compact}(V^*, \mathbf{w}^*(V)) }
+\Say{(1)}{\bd \FUNC{constrictTopology} (\bd \FUNC{productTopology}(K),\bd \mathbf{w}^*(V))}{
+\mathbf{w}^*(V) =  \FUNC{constrictTopology}\Big(\mathcal{T}(K^V),V^*\Big) 
+}
+\Assume{x}{V}
+\Say{ A_x}{ \{ a \in K  : | a | \le \| x \|    \}}{ \TYPE{Set}(K)}
+\Conclude{()}{\TYPE{LocallyCompactField}(K,A_x)}{(A_x : \TYPE{Compact}(K))}
+\Derive{A}{\LOGIC{FuncIntro}}{V \to \TYPE{Compact}({K})}
+\Say{B}{\prod_{x \in V} A_x}{\TYPE{Set}\Big(K^V \Big)}
+\Say{(2)}{\mathrm{GTOP.}\THM{Tychonoff}\Big( K^V,B,\bd B \Big)}{\bigg(B : \TYPE{Compact}\Big(K^V \Big) \bigg)}
+\Say{(3)}{\bd A \bd B \bd \FUNC{ClosedBall}(V^*)}{  \overline{\mathbb{B}}_{V^*}  \subset B }
+\Say{(4)}{\THM{CompacConstriction}(1,B)}{ \Big( B \cap V^* : \TYPE{Compact}\big(\mathbf{w}^*(V)\big) \Big)}
+\Assume{(\mathcal{A},f)}{\TYPE{ConverginNet}( \overline{\mathbb{B}}_{V^*}, \mathbf{w}^*(V))}
+\Say{F}{\lim_{ a \in \mathcal{A}}}{V^*}
+\Assume{x}{V}
+\Assume{a}{\mathcal{A}}
+\Conclude{()}{ \bd \overline{\mathbb{B}}_{V^*}  }{ |f_a(x)| \le \| x \| }
+\Derive{(5)}{\LOGIC{UniIntro}}{ \forall a \in \mathcal{A} \. |f_a(x)| \le \| x \| }
+\Say{(6)}{ \THM{LimIneq}(5)  }{\lim_{a \in \mathcal{A}} f_a(x) \le \| x \|}
+\Say{(7)}{ \bd F(x)}{ \lim_{a \in \mathcal{A}} f_a(x) = F(x)}
+\Conclude{()}{(5)(6)}{ F(x) \le \| x \|}
+\DeriveConclude{(5)}{\bd^{-1}  \overline{\mathbb{B}}_{V^*} }{ F \in  \overline{\mathbb{B}}_{V^*}}
+\Derive{(5)}{\mathrm{GTOP.}\THM{ClosedByNets}}{\Big(\overline{\mathbb{B}}_{V^*} : \TYPE{Closed}\big(\mathbf{w}^*(V)\big) \Big)}
+\Conclude{(*)}{\mathrm{GTOP.}\THM{ClosedSubsetOfCompact}(4,5)}{\Big( \overline{\mathbb{B}}_{V^*} : \TYPE{Compact}(V^*, \mathbf{w}^*(V)) \Big)}
+\EndProof
+}
+\Page{ 
+\Theorem{WeakStarMetrization}{ \forall V : \BAN(K) \. (\mathbb{B}_V^*,\mathbf{w}^*(V)) : \TYPE{Metrizable} \iff V : \TYPE{Separable}}
+\Assume{\LOGIC{Right}}{(V : \TYPE{Separable})}
+\Say{(Q,1)}{\bd \TYPE{Separable}(V)}{ \sum Q : \TYPE{Dense}(V) \. \# Q = \aleph_0}
+\Say{(q,2)}{\FUNC{enumerate}(Q \cap \mathbb{S}_V,1)}{ \sum q : \Nat \to Q \cap \mathbb{S}_V \. Q \cap \mathbb{S}_V = \{ q_n | n \in \Nat \}  }
+\Say{\rho}{ \Lambda f,g \in V^* \. \sum^\infty_{n = 1} \frac{| f(q_n) - g(q_n)|}{2^n}}{V^* \times V^* \to \Reals_+}
+\Assume{f}{V^*}
+\Conclude{()}{ \bd \rho(f,f) \bd^{-1} \TYPE{Zero}(K) \THM{ZeroSum} }{\rho(f,f) = \sum^\infty_{n = 1} \frac{| f(q_n) - f(q_n)|}{2^n} = \sum^\infty_{n = 1} 0 = 0  }
+\Derive{(3)}{\LOGIC{UniIntro}}{ \forall f \in V^* \. \rho(f,f) = 0 }
+\Assume{f,g}{V^*}
+\Conclude{()}{\bd \rho (f,g) \THM{AbsValSubtractCommute}(f(q),g(q)) \bd^{-1} \rho (f,g)}
+{ 
+ \NewLine :
+\rho(f,g) = \sum^\infty_{n = 1} \frac{| f(q_n) - g(q_n)|}{2^n} = 
+\sum^\infty_{n = 1} \frac{| g(q_n) - f(q_n)|}{2^n} = \rho(g,f)
+}
+\Derive{(4)}{\LOGIC{UniIntro}}{ \forall f,g \in V^* \. \rho(f,g) = \rho(g,f) }
+\Assume{f,g,h}{V^*}
+\Conclude{()}{\bd \rho (f,g) \THM{TriangleIneq}(f(q),g(q),h(q)) \THM{SumIsLinear} \bd^{-1} \rho (f,g)}
+{
+\rho(f,g) = \sum^\infty_{n = 1} \frac{| f(q_n) - g(q_n)|}{2^n}  \le  
+ \NewLine \le 
+\sum^\infty_{n = 1} \frac{| f(q_n) - h(q_n)|}{2^n} +  \frac{| h(q_n) - g(q_n)|}{2^n}   = 
+\sum^\infty_{n = 1} \frac{| f(q_n) - h(q_n)|}{2^n} +  \sum^\infty_{n = 1} \frac{| h(q_n) - g(q_n)|}{2^n} 
+= \rho(f,h) + \rho(h,g)
+}
+\Derive{(5)}{\LOGIC{UniIntro}}{ \forall f,g,h \in V^* \. \rho(f,g) \le \rho(f,h) + \rho(h,g) }
+\Say{(6)}{\bd^{-1} \TYPE{Distance}(3,4,5)}{ \big(\rho : \TYPE{Distance}(V^*) \big)}
+\Assume{U}{\mathcal{T}_{\mathbb{B}_{V^*}, \rho}}
+\Assume{f}{\TYPE{In}(U)}
+\Say{(\varepsilon,7)}{\THM{MetricNeighbourhood}(\rho)(f, U)}{\prod \varepsilon \in \Reals_+ \. \mathbb{B}_{\mathbb{B}_{V^*},\rho}( f, \varepsilon )  \subset U }
+\Say{B}{ \mathbb{B}_{\mathbb{B}_{V^*}}(f, \varepsilon)}{\mathcal{T}(\rho)}
+\Say{(n,8)}{\THM{ArchemedeanProperty}\, \THM{Assymptot}(\Lambda x \in \Reals. 2^{-x},\frac{\varepsilon}{2})}{\NewLine  \prod n \in \Nat \. 2^{-n} < \frac{\varepsilon}{4} }
+\Say{A_f}{ \bigcap^n_{i = 1}\left\{ g \in \mathbb{B}_{V^*} : | g(q_i) - f(q_i)  | < \frac{\varepsilon}{2n}  \right\}}{ \mathbf{w}^*  }
+\Assume{g}{\TYPE{In}(A_f)}
+\Say{(9) }{ \bd\rho(f,g)\bd A_f(g) \THM{TriangleIneq}( f(q_i),g(q_i)) \bd \FUNC{OperarorNorm}(f) \bd \FUNC{OperatorNorm}(g) 
+\THM{PowerSeria}(2^{-1}) \bd n   }
+{ \NewLine \rho(f,g) = \sum^\infty_{i = 1} \frac{|f(q_i) - g(q_i)  |}{2^i} < \frac{\varepsilon}{2} + \sum^\infty_{i = n + 1}  \frac{|f(q_i) - g(q_i)  |}{2^i}  
+ \le  \frac{\varepsilon}{2}   +  2\sum^\infty_{i = n + 1} 2^{-i} = \frac{\varepsilon}{2}   + 2^{-n + 1}  < \varepsilon  
+}
+\Conclude{()}{ \bd^{-1} B(g,9)  }{ g \in B}
+\Derive{(9)}{ \bd^{-1} \TYPE{Subset}  }{ A_f \subset U }
+\Say{ 10_f}{ (9)(7) }{A_f \subset U}
+\Conclude{()}{\bd^{-1} A_f(f)}{f \in A_f}
+}
+\Page{
+\Derive{(A,7)}{ I\left(\prod \right)}{ \prod f \in U \. \sum A_f \in \mathbf{w}^*_{\mathbb{B}_{V^*}}(V) \.  f \in A_f \And  A_f \subset U }
+\Say{(8)}{ \bd \FUNC{Union}(A)(7)}{U = \bigcup_{f \in U} A_f}
+\Conclude{()}{ (8)\bd A }{U \in \mathbf{w}^*}
+\Derive{(7)}{\bd \TYPE{Continuous}}{ \Big( \mathrm{id} : (\mathbf{B}_{V^*}, \mathbf{w}^*) \to_{\mathsf{TOP}} (\mathbf{B}_{V}, \rho) \Big) }
+\Say{8}{ \mathrm{GTOP.}\THM{HausdorfToCompactBijection}(\mathrm{id},\mathrm{w}^*,\rho) }{ \Big(  \mathrm{id} : (\mathbf{B}_{V^*}, \mathbf{w}^*) \ToBij_{\mathsf{TOP}} (\mathbf{B}_{V}, \rho) \Big)}
+\Conclude{()}{\bd^{-1} \TYPE{Metrizable}(8)}{(\mathbf{w}^* : \TYPE{Metrizable})}
+\Derive{R}{I(\Rightarrow)}{ \LOGIC{Rightarrow} \Rightarrow  \LOGIC{Left}}
+\Theorem{MetrizationWithCF }{\forall X : \TYPE{Hausdorff} \And \TYPE{Compact} \. C(X) : \TYPE{Separable} \iff X : \TYPE{Metrizable}}
+\Assume{L}{\big( C(X) : \TYPE{Separable}\big)}
+\Say{(1)}{\textrm{../}R\big(C(X),L\big)}{\bigg(\Big(\mathbb{B}_{C^*(X)}, \mathbf{w}^*\big(C(X)\big) \Big) : \TYPE{Metrizable} \bigg)}
+\Say{ \big( (X,d),\varphi \big)  }{ \bd^{-1} \TYPE{Metrizable}(1) }
+{ \sum (X,d) : \mathsf{MS} \.  (X,d) \ToBij_{\mathsf{TOP}}  \Big(\mathbb{B}_{C^*(X)}, \mathbf{w}^*\big(C(X)\big) \Big)  }
+\Assume{x,y}{\TYPE{In}(X)}
+\Say{\alpha}{\Lambda f \in C(X) \.  f(x)}{\mathbb{B}_{C^*(X)}}
+\Say{\beta}{\Lambda f \in C(X) \.  f(y)}{\mathbb{B}_{C^*(X)}}
+\Conclude{\rho(x,y)}{d\big(\varphi^{-1}(x),\varphi^{-1}(y)\big)}{\mathbb{Reals}_+}
+\Derive{\rho}{I(\to)}{ \rho : X \times X \to \Reals_+}
+\Say{(2)}{ \bd \rho (\bd \varphi, \bd d)}{ \big(\rho : \TYPE{Distance}(X) \big) }
+\Assume{U}{ \mathcal{T}_{U}}
+\Say{K}{U^\c}{ \TYPE{Closed}(X) }
+\Say{K}{\bd  X (\bd K)}{(K : \TYPE{Compact})}
+\Assume{x}{U}
+\Say{\Delta}{ \Lambda y \in K \. \rho(y,x)}{(\big( K \to \Reals_{++}\big)}
+\Say{(3)}{\THM{ContinuousComp}( \Delta)}{ \big( \Delta : K \to_\mathsf{TOP} \Reals_{++} \big)}
+\Say{(y,4)}{ \THM{ExtremeValue}(K,\Delta,\min) }{ \sum y \in K \. \Delta(y) = \min_{y \in K} \Delta(y)  }
+\Say{A_x}{ \mathbb{B}_\rho(x, \Delta(y)) }{\mathcal{T}_\rho}
+\Say{5_x}{\bd A_x}{ x \in A_x}
+\Conclude{()}{\bd y \bd \Delta \bd A_x}{ A_x \subset U}
+\Derive{(A,3)}{I\left( \prod \right)}{ \prod x \in U \.  \sum A_x \in \mathcal{T}_\rho \. x \in A_x \And A_x \subset U  }
+\Say{(4)}{\bd \FUNC{Unioin}(A,3)}{ U = \bigcup_{x \in U} A_x}
+\Conclude{()}{\bd^{-1} \mathcal{T}_\rho}{U \in \mathcal{T}_\rho}
+\Derive{(3)}{ \bd \TYPE{Continuous}(\mathrm{id},\rho,\mathcal{T}_X) }{ \mathrm{id} : (X,\rho) \to_\TOP X}
+\Say{(4)}{ \bd \rho }{(X,\rho) \cong_\TOP (\delta(X), \mathbf{w}^* )}
+\Say{(5)}{\THM{Alaoglu}\mathrm{GTOP.}\THM{SubspaceCompactness}(\big \delta(X) \big)(4)}{\big((X,\rho) : \TYPE{Compact} \big) }
+\Say{(6)}{\mathrm{GTOP.}\THM{HausdorffToCompactBijection}(\mathrm{id},\rho,\mathcal{T}_X)}{  \mathrm{id} : (X,\rho) \ToBij_\TOP X }
+\Conclude{()}{\bd^{-1} \TYPE{Metrizable}(6)}{X : \TYPE{Metrizable}}
+\Derive{L}{I(\Rightarrow)}{ C(X) : \TYPE{Separable} \Rightarrow X : \TYPE{Metrizable} }
+}
+\Page{
+\Assume{R}{X : \TYPE{Metrizable}}
+\Say{(d,1)}{\bd \TYPE{Metrizable}(X)}{\sum d  \TYPE{Distance}(X) \. (X,d) \cong_\TOP X}
+\Say{(2)}{\THM{MetricCompactIsSeparable}}{ \big( (X,d) : \TYPE{Separable} \big)  }
+\Say{(x,3)}{\FUNC{denseSeq}(X,d)}{\sum x : \Nat \to X \. \{ x_n :  n \in \Nat  \} : \TYPE{Dense}(X) }
+\Assume{n}{\Nat}
+\Assume{q}{\Rats_{++}}
+\Conclude{f_{n,q}}{ \THM{CutOff}\big(x_n,\mathbb{B}(x_n,q)\big)}{ C(X); }
+\Derive{f}{I(\to)}{ \Nat \to \Rats_{++} \to C(X)}
+\Say{A}{\FUNC{algebra}(\{f\} \cup \{1\})}{ \TYPE{Subalgebra}\big( C(X), \Rats \big) }
+\Assume{(a,b,4)}{ \sum x,y \in  X \. x \neq y}
+\Say{(n,5)}{ \bd \FUNC{denseSeq}(x,y)}{ \sum n \in \Nat \. d(x_n,x) < d(x_n,y)  }
+\Say{(q,6)}{ \bd \TYPE{Dense}(x,y) }{ \sum q \in \Rats \. d(x_n,x) < q < d(x_n,y) }
+\Say{(7)}{ \bd f_{n,q}(x)(6) }{ f_{n,q}(x) > 0 }
+\Say{(8)}{\bd f_{n,q}(x)(6)}{ f_{n,q}(y) = 0}
+\Conclude{()}{(7)(8)}{f_{n,q}(x) \neq f_{n,q}(y)}
+\Derive{(5)}{\bd^{-1}\TYPE{SeparatesPoints}(X)}{ A : \TYPE{SeparatesPoints}(X)}
+\Say{(6)}{ \THM{StoneWeierstrass}(C(X),A)}{ \Big(A : \TYPE{Dense}\big( C(X) \big)\Big)}
+\Conclude{()}{\bd^{-1} \TYPE{Separable}(A,6) }{\big( C(X) : \TYPE{Separable} \big)}
+\Derive{(*)}{I(\iff)(L)}{C(X) : \TYPE{Separable} \iff X : \TYPE{Metrizable}}
+\EndProof
+\Assume{L}{ \Big( \big(\mathbb{B}_{V^*}, \mathbf{w}^*(V)\big) : \TYPE{Metrizable}\Big) }
+\Say{(1)}{\THM{MetrizationsWithCF}(\mathbb{B}_{V^*}, \mathbf{w}^*(V))}{ \Big( C(\mathbb{B}_{V^*}, \mathbf{w}^*(V)) : \TYPE{Separable} \Big)   }
+\Say{(2)}{\bd \FUNC{supNorm} \bd \FUNC{unitBall} \bd \alpha }{\alpha : V \to_\mathsf{MS} C(\mathbb{B}_{V^*}, \mathbf{w}^*(V))}
+\Conclude{()}{ \THM{TopologicalEmbeddingSep}(1,2)}{\big(V : \TYPE{Separable} \big)}
+\DeriveConclude{(*)}{I(\iff)(R)}{(\mathbb{B}_V^*,\mathbf{w}^*(V)) : \TYPE{Metrizable} \iff V : \TYPE{Separable}}
+\EndProof
+}
+\Page{
+\Theorem{WeakStarSeparability}{\forall V : \BAN(K) \And \Sep \. (V^*,\mathbf{w}^*(V)) : \Sep }
+\Say{ (1) }{ \THM{WeakStarMetrization}(V)}{ \Big( \big( \mathbb{B}_{V^*}, \mathbf{w^*} \big) : \TYPE{Metrizable}   \Big)}
+\Say{ (2) }{ \textrm{GTOP.}\THM{MetricCompactIsSeparable}}{ \Big( \big( \mathbb{B}_{V^*}, \mathbf{w^*} \big) : \TYPE{Separable}   \Big)}
+\Say{(A,3)}{ \bd \TYPE{Separable}\big( \mathbb{B}_{V^*}, \mathbf{w^*} \big)  }{ \sum A : \TYPE{Countable}(\mathbf{B}_{V^^*}) \. 
+\mathrm{cl}_{\mathbf{w}^*(V)}(A) = \mathbb{B}_{V^*}  }
+\Say{(4)}{ \bd \FUNC{zero}(\Rats) \bd A }{0 \in \Rats A }
+\Assume{ (f,5) }{\sum f \in V^* \. f \neq 0}
+\Assume{U}{ \mathcal{U}_{\mathbf{w}^*(V)}(f) }
+\Say{(n,f,a,6)}{ \bd\FUNC{weakStarTopology}(U) }{ \sum n \in \Nat \.  \sum (x,a) : \Nat \to V \times \Reals_++ \. \bigcap^n_{i = 1} \{ g \in V^* : | f(x_i) -g(x_i) | < a_i    \} \subset U }
+\Say{(h,7)}{ (3)\left( \frac{f}{2\|f\|}, x, \frac{a}{2\|f\|}, \right) }{ \sum h \in A \. h \in \bigcap^n_{i = 1} \left\{ g \in V^* : \left| \frac{f(x_i)}{2\|f\|} - g(x_i) \right| < \frac{a_i}{2\|f\|} \right\}}
+\Say{(q,8)}{\THM{RationalApproximation}(1/(2\|f\|),6,7)}{\sum q \in \Rats \. qh \in U}
+\Conclude{()}{ \bd^{-1} \FUNC{SetProduct}(\Rats,A)( q,h )  }{qh \in \Rats A}
+\Derive{(5) }{ \bd^{-1} \TYPE{Dense}(V^*) }{ \big(\Rats A : \TYPE{Dense}(V) \big)}
+\Conclude{(*)}{ \bd^{-1} \TYPE{Separable} }{ \big( V : \TYPE{Separable} \big) }
+\EndProof
+\\
+\Theorem{WeakSeparability}{\forall V : \BAN(K) \. (V,\mathbf{w}(V)) : \Sep \Longrightarrow V : \Sep }
+\Say{S}{ \bd \Sep (V,\mathbf{w}(V))  }{ \Big( S : \TYPE{Dense} \And \TYPE{Countable}\big(V,\mathbf{w}(V)\big) \Big) }
+\Say{D}{\Span(S)}{ \TYPE{Subspace}(V)}
+\Say{C}{\Span(\Rats,S)}{\TYPE{Countable}(V)}
+\Say{(1)}{\bd D \bd C }{ \Big(  C : \TYPE{Dense}(D,\mathcal{T}_V) \big)}
+\Say{(2)}{ \bd^{-1} \TYPE{ConvexSet} \bd \Span  \bd D }{\big(D : \TYPE{ConvexSet}\big) }
+\Say{(3)}{\THM{Mazur}(D,2)}{ \overline{D} = \overline{D}^{\mathbf{w}}  }
+\Say{(4)}{ \bd S \bd D }{ \overline{D}^{\mathbf{w}} = V }
+\Say{(5)}{ \bd \FUNC{closure}(1) \bd D  }{\overline{C} = \overline{D}}
+\Say{(6)}{(5)(3)(4)}{\overline{C} = V}
+\Conclude{(*)}{\bd^{-1} \Sep (6)}{\big(V : \Sep \big)}
+\EndProof
+}
+\Page{
+\Theorem{Goldstine}{\forall V : \BAN(K) \. \FUNC{closure}\Big(\big(V^{**},\mathbf{w}^*(V^*)\big),\mathbb{B}_V\Big) = \mathbb{B}_{V^{**}} }
+\Say{(1)}{ \THM{Alaoglu}(V^*)  }{\big(\mathbb{B}_{V^{**}} : \TYPE{Compact}(\mathbf{w}^*(V^*)) \big) }
+\Say{(2)}{\bd \FUNC{unitBall}(V) \bd \FUNC{unitBall}(V^{**})}{ \mathbb{B}_V \subset \mathbb{B}_{V^{**}}}
+\Say{(3)}{ \bd \FUNC{closure}\big( \mathbf{w}^*(V^* ), \mathbb{B}_V \big)(1,2  }{ \overline{\mathbb{B}}^{\mathbf{w}^*}_V \subset \mathbb{B}_{V^{**}} }
+\Say{D}{\overline{\mathbb{B}}^{\mathbf{w}^*}_V}{\TYPE{Compact}(\mathbf{w}^*(v^*))}
+\Assume{(x,4)}{ \sum x \in \mathbb{B}_{V^{**}} \. x \not \in D }
+\Say{(f,5)}{\THM{WeakStarSeparation}(x,D,4)}{ \sum f \in \mathbb{S}_{V^*} \. x(f) > \sup_{y \in D} y(f) }
+\Say{(6)}{ \bd^{-1} \TYPE{Subset}(V^**)\bd D( \mathbb{B}_V) }{  \mathbb{B}_V \subset D }
+\Say{(7)}{ \THM{GrowingSup}(6) \big( \sup_{y \in D} y(f) \big) \bd \FUNC{naturalInjection} \bd^{-1} \FUNC{operatorNorm}(f) \bd f \bd \FUNC{unitSphere}(V^*) }
+{ \NewLine \sup_{y \in D} y(f) \ge \sup_{y \in \mathbb{B}_V} y(f) =\sup_{y \in \mathbb{B}_V} f(y) = \| f \| = 1 }
+\Say{(8)}{ \bd \FUNC{operatorNorm}(x)(f) \bd \FUNC{unitSphere}(V^*) \bd \FUNC{unitBall}(V^*) }{ x(f) \le \| x \| \| f \| \le 1 }
+\Conclude{()}{I(\bot)\bd\TYPE{Ineq}(7)(5)(8)}{\bot}
+\Derive{(4)}{ \bd \TYPE{SetEq}(3)}{ \overline{\mathbb{B}}_V^{\mathbf{w}^*} = \mathbb{B}_{V^{**} } }
+\EndProof
+\\
+\Theorem{WeakMetrization}{ \forall V : \BAN(K) \. (\mathbb{B}_V,\mathbf{w}(V)) : \TYPE{Metrizable} \iff V^* : \TYPE{Separable}}
+\NoProof
+}
+\subsection{Extreme Constructs}
+\Page{
+\DeclareType{ExtremePoints}{\prod V : \mathsf{VS}(K) \. \prod A : \TYPE{ConvexSet}(V) \. ? A}
+\DefineNamedType{v}{ExtremePoints}{ v \in \mathrm{Ext}(A)}{ \forall x,y \in A : x \neq y \. v \not \in (x,y)_V}
+\\
+\DeclareType{SupportingManifold}{\prod V : \mathsf{VS}(K) \. \prod A : \TYPE{ConvexSet}(V) \. ?\TYPE{Affine}(V) }
+\DefineType{H}{SupportingManifold}{H \cap A \neq \emptyset \And \forall x,y \in A : x \neq y : \exists a \in (x,y)_V : a \in A  \. [x,y] \subset H   }
+}
+\section{Polynormed Spaces}
+\subsection{Polynorms}
+\Page{
+	\DeclareType{Polynorm}{ \prod V : \mathsf{VS}(K) \. \sum A : \TYPE{NonEmpty} \. A \to \TYPE{Seminorm}(V)} \\
+ \DeclareType{PolynormedSpace}{ \sum V : \mathsf{VS}(K) \. \TYPE{Polynorm}(V)  } \\
+ \DeclareType{RelatedSeminorm}{ \prod V : \mathsf \. \TYPE{Polynorm}(V) \to ?\TYPE{Seminorm}(V) }
+ \DefineType{M}{RelatedSeminorm}{ \exists \alpha : \TYPE{Finite}(A) \. \forall v \in V \.  M(v) = \max\{ N_a(v) | a \in \alpha  \} }
+ \DeclareType{RelatedSeminormedSpace}{ \prod \big(V,(A,N)\big) : \TYPE{PolynormedSpace}(K) \. ?\SNS(K)}
+ \DefineType{(V,M)}{RelatedSeminormedSpace}{ M : \TYPE{RelatedSeminorm}(A,N)} \\
+ \DeclareType{ CountablyNormedSpace }{ ?\TYPE{PolynormedSpace}(K) }
+ \DefineType{(V,(A,N))}{CountablyNormedSpace}{A \cong_{\mathsf{SET}} \Nat} \\
+ \DeclareType{PolynormedSubspace}{ \prod (V,(A,N)) : \PNS(K) \. ? \PNS(K)}
+ \DefineType{(S,(B,M))}{PolymormedSubspace}{ S : \TYPE{Subspace}(V) \And A = B \And \forall a \in A \. M_a = N_{a|S} }
+ \\
+ \DeclareFunc{strongestPolynorm}{ \prod V  : \mathsf{VS}(K) \. \TYPE{Polynorm}(V) }
+ \DefineFunc{strongestPolynorm}{ V }{ ( \TYPE{Seminorm}(V), \id  )} \\
+ \DeclareFunc{strongOperatorSpace}{ \SNS(K) \to \SNS(K) \to \PNS(K)}
+ \DefineNamedFunc{strongOperatorSpace}{V,w}{so(V,W)}{\Big(\B(V,W), \big(V, \Lambda v \in V \. \Lambda T \in \B(V,W) \. \|T(v) \| \big) \Big)}\\ 
+ \DeclareFunc{weakOperatorSpace}{ \SNS(K) \to \SNS(K) \to \PNS(K)}
+ \DefineNamedFunc{weakOperatorSpace}{V,w}{so(V,W)}{\Big(\B(V,W), \big(V \times W^*, \Lambda (v,f) \in V \times W^* \. \Lambda T \in \B(V,W) \. |f \, T(v)| \big) \Big)}\\
+ \DeclareFunc{polyball}{ \prod \big( V, (A,N) \big) \. \TYPE{Finite}(A) \to \Reals_{++} \to ?V }
+ \DefineFunc{polyball}{\alpha,r}{ \{  v \in V : \forall a \in \alpha \.  N_a(v) < r \} } \\
+ \DeclareType{Polyinterior}{ \prod \big(V, (A,N) \big) \. \prod U : ?V \. ?U}
+ \DefineType{V}{Polyinterior}{ \exists \alpha : \TYPE{Finitie}(A) \. \exists r \in \Reals_{++} \. \FUNC{polyball}(\alpha,r) + v \subset U  } \\
+ \DeclareType{PolynormOpen}{\prod \big(V, (A,N) \big) \.  ?? V }
+ \DefineType{U}{PolynormOpen}{ \forall v \in U \. v : \TYPE{Polyinterior}\Big( \big(V,(A,N),\big),U \Big) } \\
+}
+\Page{
+ \Theorem{PolynormTopology}{ \forall \big(V, (A,N) \big) : \PNS(K) \.  \TYPE{PolynormOpen}\big(V, (A,N ) \big)  : \TYPE{Topology}(V)  }
+ \Say{(1)}{\bd^{-1} \TYPE{PolynormOpen}\big(V,(A,N)\big)(\emptyset)}{ \Big(  \emptyset : \TYPE{PolynormOpen}\big(V, (A,N ) \big) \Big)}
+ \Assume{v}{\TYPE{In}(V)}
+ \Say{a}{\bd \TYPE{NonEmpty}(A)}{\TYPE{In}(a)}
+ \Say{(2)}{ \bd \FUNC{polyball}\big(\{a\},1 \big) \bd_+ \TYPE{VectorSpace}(v) \bd \TYPE{Subset}(V)}{ \FUNC{polyball}\big(\{a\},1 \big) + v \subset V }
+ \Conclude{()}{\bd^{-1} \TYPE{Polyinterior}}{ \bigg( v : \TYPE{Polyinterior}\Big(  \big(V, (A,N ) \big),V \Big) \bigg) }
+ \Derive{(2)}{ \bd^{-1} \TYPE{PolynormOpen}\big(V,(A,N)\big)}{\big(  V : \TYPE{PolynormOpen}\big(V, (A,N ) \big) \big)}
+ \Assume{X}{\Set}
+ \Assume{U}{X \to \TYPE{PolynormOpen}\big(V,(A,N) \big)}
+ \Assume{v}{ \TYPE{In} \left( \bigcup_{x \in X} U_x \right)}
+ \Say{(x,3)}{\bd \FUNC{union}(v)}{ \sum x \in X \. v \in U_x }
+ \Say{ (\alpha,r,4) }{ \bd\TYPE{PolynormOpen}\big(V,(A,N) \big)(U_x)(v)  }{ \sum (\alpha,r) : \TYPE{Finite}(A) \times \Reals_{++} \. \FUNC{polyball}(\alpha,r) + v \subset U_x }
+ \Say{(5)}{\THM{UnionSubset}(4)}{\FUNC{polyball}(\alpha,r) + v \subset \bigcup_{x \in X} U_x}
+ \Conclude{()}{\bd^{-1} \TYPE{Polyinterior}(5)}{ \left( v : \TYPE{Polyinterior}\left(  \big(V, (A,N ) \big), \bigcup_{x \in X} U_x\right) \right) }
+ \DeriveConclude{()}{ \bd^{-1} \TYPE{PolyormOpen}\big(V,(A,N)\big)}{\left(  \bigcup_{x \in X} U_x : \TYPE{PolynormOpen}\big(V, (A,N ) \big) \right)}
+ \Derive{(3)}{I(\forall)}{ \forall X : \Set \. \forall U : X \to\TYPE{PolynormOpen}\big(V,(A,N)\big)\. \bigcup_{x \in X} U_x :\TYPE{PolynormOpen}\big(V,(A,N)\big)}
+ \Assume{n}{\Nat}
+ \Assume{U}{n \to \TYPE{PolynormOpen}\big(V,(A,N)\big)}
+ \Assume{v}{\TYPE{In}\left( \bigcap^n_{i = 1} U_i \right)}
+ \Assume{ i }{\TYPE{Range}(n)}
+ \Say{(4)}{\bd \FUNC{intersection} \bd v (i)}{v \in U_i }
+ \Conclude{ (\alpha_i,r_i,5_i) }{ \bd \TYPE{PolynormOpen}\big(V,(A,N)\big)(U_i)  }{ \sum (\alpha_i,r_i) : \TYPE{Finite}(A) \times \Reals_{++} \. \FUNC{polyball}(\alpha_i,r_i) + v \subset U_i  }
+ \Derive{(\alpha,r,4)}{ I\left( \prod \right)  }{ \prod i \in n \.  \sum (\alpha_i,r_i) : \TYPE{Finite}(A) \times \Reals_{++} \. \FUNC{polyball}(\alpha_i,r_i) + v \subset U_i}
+ \Say{O}{ \FUNC{polyball}\left( \bigcup^n_{i = 1} \alpha_i, \min_{i \in n} r_i   \right) + v }{?? V}
+ \Say{(5)}{ \bd \FUNC{polyball} \bd O \bd \FUNC{intersection} }{ O \subset \bigcap^n_{i = 1} \FUNC{polyball}(\alpha_i,r_i) + v }
+ \Say{(6)}{ \THM{SubsetIntersection}(U,O,4,5) }{O \subset \bigcap^n_{i = 1} U_i}
+ \Conclude{()}{\bd^{-} \TYPE{Polyinterior}(6)}{ \left( v : \TYPE{Polyinterior}\left(  \big(V, (A,N ) \big), \bigcap_{i = 1}^n U_i\right) \right) }
+ }\Page{
+ \DeriveConclude{()}{ \bd^{-1} \TYPE{PolyormOpen}\big(V,(A,N)\big)}{\left(  \bigcap_{i = 1}^n U_i : \TYPE{PolynormOpen}\big(V, (A,N ) \big) \right)}
+ \Derive{(4)}{I(\forall)}{ \forall n : \Nat \. \forall U : n \to\TYPE{PolynormOpen}\big(V,(A,N)\big)\. \bigcap_{i = 1}^n U_i :\TYPE{PolynormOpen}\big(V,(A,N)\big)}
+ \Conclude{(*)}{\bd^{-1} \TYPE{Topology}(V)(1,2,3,4)}{ \Big( \TYPE{PolynormOpen}\big(V,(A,N)\big) : \TYPE{Topology}(V)  \Big) }
+ \EndProof \\
+ \DeclareFunc{implicit}{ \PNS(K) \to \TOP  }
+ \DefineFunc{implicit}{ X }{ (X_1, \TYPE{PolynormOpen}(X))} \\
+ \DeclareFunc{polynorm}{ \prod  \big(V, (A,N) \big) : \PNS(K) \. \TYPE{Polynorm}(V)}
+ \DefineNamedFunc{polynorm}{}{  (A_V, \| \cdot  \|_V)  }{ (A,N) } \\
+ \Theorem{ SumIsContnuousInPNS}{ \forall V : \PNS(K) \. \Lambda x,y \in V \. x + y \in C(V \times V, V) }
+ \NoProof \\
+ \Theorem{ScalarMultIsContInPNS}{ \forall V : \PNS(K) \. \Lambda x \in V \. \Lambda a \in K \. ax \in C(V \times K,V  }
+ \NoProof \\
+ \Theorem{SetAdditionInPNS}{ \forall V : \PNS(K) \. \forall U \in \mathcal{T}_V \. \forall X : ?V \. U + X \in \mathcal{T}_V}
+ \NoProof \\
+ \Theorem{SetMultInPNS}{ \forall V : \PNS(K) \. \forall U \in \mathcal{T}_V \. \forall a \in K \setminus \{ 0 \} \. aU \in \mathcal{T}_V} 
+ \NoProof \\
+} \Page{
+	\Theorem{PolynormedConvergence}{ \forall V : \PNS(K) \. \forall  x : \Nat \to V \. \forall X \in V \. 
+	\NewLine \.
+	\lim_{n \to \infty} x_n = X \iff \forall a \in A_V \. \lim_{n \to \infty} \|x_n - X \|_{V,a} = 0  }
+ \Assume{R}{ \lim_{n \to \infty} x_n = X}
+ \Assume{a}{A_V}
+ \Assume{r}{\Reals_+}
+ \Conclude{()}{ \bd \TYPE{Limit}(V,x,X)( \FUNC{polyball}(\{a\},r) + X ) }{\exists N \in \Nat \. \forall n \in \Nat :  n \ge N \. x_n \in \FUNC{polyball}(\{a\},r) + X }
+ \DeriveConclude{()}{\bd^{-1} \TYPE{Limit}(\Reals,\|x_n - X\|_{V,a}, 0 )}{ \lim_{n \to \infty} \| x_n - X \|_{V,a} = 0}
+ \DeriveConclude{(1)}{T(\Rightarrow)I(\forall)}{ \lim_{n \to \infty} x_n = X \Rightarrow \forall a \in A_V \. \lim_{n \to \infty} \| x_n - X \|_{V,a} = 0}
+ \Assume{L}{ \forall a \in A_V \. \lim_{n \to \infty} \| x_n - X   \|_{V,a} = 0}
+ \Assume{U}{\mathcal{U}_V(X)}
+ \Say{(\alpha,r,2))}{ \bd \TYPE{PolynormOpen}(U)}{ \sum (\alpha,r) \in \TYPE{Finite}(A) \times \Reals_{++} \. X + \TYPE{polyball}(\alpha,r) \subset U }
+ \Assume{a}{\TYPE{In}(\alpha)}
+ \Conclude{(N_a,3_a)}{ \bd \TYPE{Limit}\big(L(a)\big)( \mathbb{B}(0,r) )}{ \sum N_a \in \Nat \. \forall n \in \Nat : n \ge N_a \. \| x_n - X \|_{V,a} < r }
+ \Derive{ (N,3)  }{ I\left( \prod \right) }{ \forall a \in \alpha \.   \sum N_a \in \Nat \. \forall n \in \Nat : n \ge N_a \. \| x_n - X \|_{V,a} < r }
+ \Say{(4)}{ \bd \FUNC{polyball} (\alpha,r)  }{ \FUNC{polyball}(\alpha,r) = \bigcap_{a \in \alpha} \FUNC{polyball}(\{a\},r)}
+ \Say{M}{\max_{a \in \alpha}(N_a)}{\Nat}
+ \Conclude{()}{(2)(3)(4)\bd M}{\forall n \in \Nat \. n \ge M \. x_n \in U}
+ \DeriveConclude{()}{ \bd^{-1} \TYPE{Limit}(V,x,X)}{ \lim_{n \to \infty} x_n = X}
+ \Conclude{(*)}{I(\Rightarrow) I(\iff)(1)}{ \lim_{n \to \infty} x_n = X \iff \forall a \in A \. \lim_{n \to \infty} \| x_n - X \|_{V,a} < r  }
+ \EndProof \\
+ \DeclareType{ SeparatingPolynorm  }{ ?\TYPE{Polynorm}(V)  }
+ \DefineType{(A,N)}{ SeparatingPolynorm}{ \forall v \in V : v \neq 0 \. \exists a \in  A \. N_a(v) > 0 } \\
+ \Theorem{ PolynormedSpaceIsHausdorff  }{ \forall V : \PNS(K) \. V : \TYPE{Hausdorff} \iff (A_V,\| \cdot \|) : \TYPE{SeparatingPolynorm}}
+ \Assume{L}{(V : \TYPE{Hausdorff})}
+ \Assume{(v,1) }{ \sum v \in V \. v \neq 0  }
+ \Say{(U,2)}{ \bd \TYPE{Hausdorff}(V)(0,x,1)}{ \sum U \in \mathcal{U}_V(0) \. v \not \in U  }
+ \Say{(\alpha,r,3)}{ \bd \TYPE{PolynormOpen}(V)(U)(0) }{ \sum (\alpha,r) : \TYPE{Finite}(A_V) \times \Reals_{++} \. \FUNC{polyball}(\alpha,r) \subset U   }
+ \Say{(a,4)}{\bd \TYPE{In}(2,3)}{\sum a \in \alpha \. \| v \|_a \ge r}
+ \Conclude{()}{ \textrm{RealLine.}\THM{BoundedBelowByPositive}(4)}{\| v \|_a \neq 0 ;}
+ \Derive{(1)}{ \bd^{-1} \TYPE{SeparatingPolynorm} \, I(\Rightarrow) }{ \Big( V : \TYPE{Hausdorff} \Rightarrow (A_V, \| \cdot \|) : \TYPE{SeparatingPolyn      orm} \Big) }
+ } \Page{
+ \Assume{R}{\Big( (A_V,\| \cdot \|) \Big) : \TYPE{SeparatingPolynorm} }
+ \Assume{(x,y,2)}{\sum x,y \in V \. x \neq y}
+ \Say{(a,3)}{ \bd \TYPE{SeparatingPolynorm}(A_V, \| \cdot \|)( x - y )}{ \sum a \in A_V \. \| x - y \|_a \neq 0} 
+ \Say{O}{\FUNC{polyball}(\{a\},\| x - y\|_a/2) + x}{\mathcal{U}_V(x)}
+ \Say{O'}{ \FUNC{polyball}(\{a\},\| x - y\|_a/2) + y }{\mathcal{U}_V(x)}
+ \Assume{ u}{\TYPE{In}( O \cap O' )}
+ \Say{(4)}{ \textrm{Algebra.}\THM{AddSubstract}(\|x - y \|_a, x -y,u)\bd_2 \TYPE{Seminorm}(x -u, u - y) \bd O \b O'  }
+ { \NewLine : \| x - y\|_a = \|x - u + u - y \|_a \le \| x - u \| + \| u - y \| < \|x - y \|   }
+ \Conclude{()}{ I(\bot) \bd \TYPE{Ineq} (4) }{\bot}
+ \DeriveConclude{()}{\bd \TYPE{Disjoint} \bd \FUNC{empty}}{ (O,O') : \TYPE{Disjoint}  }
+ \Conclude{*}{I(\iff)(1)I(\Rightarrow) \bd \TYPE{Hausdorff}}{  \Big( V : \TYPE{Hausdorff}) \iff (A_V,\| \cdot \|) : \TYPE{SeparatingPolynorm} \Big) }
+ \EndProof \\
+ \Theorem{ContinuousOperotorOfPNS }{ \forall V,W : \PNS(K) \. \forall T : \mathcal{L}(V,W) \. T : C(V,W) \iff  
+  \NewLine \iff
+ \forall a \in A_W \.  \exists N : \TYPE{RelatedSeminorm}(V)  
+ : \exists c \in \Reals_{++} \. \| T(\cdot) \|_a \le cN  }
+ \Assume{L}{\big( T : C(V,W) \big)}
+ \Assume{a}{A_W}
+ \Say{(2)}{\bd C(V,W) \, \FUNC{polyball}(a,-1)   }{\big( T^{-1} \, \FUNC{polyball}(a,1) : \mathcal{U}_V(0) \big)}
+ \Say{(\alpha,r,3)}{  \bd \TYPE{PolynormOpen}\Big( T^{-1} \, \FUNC{polyball}(a,1), 0   \Big) }
+ { \sum (\alpha,r) : \TYPE{Finite}(A) \times \Reals_{++} \. \FUNC{polyball}(\alpha,r) \subset T^{-1} \, \FUNC{polyball}(a,1)}
+ \Derive{(4)}{T(3) \bd \FUNC{polyball}}{  \| T(\cdot) \|_a \le r^{-1}\| \cdot \|_\alpha ;  }
+ \Conclude{(1)}{ I(\Rightarrow) I(\forall)(\| \cdot \|_\alpha = N, c = r^{-1})}{\LOGIC{Left} \rightarrow \LOGIC{Right}}
+ \Assume{R}{\LOGIC{Right}}
+ \Assume{U}{\TYPE{Open}(W)}
+ \Assume{y}{\TYPE{In}(U)}
+ \Say{(\alpha,r,2)}{  \bd \TYPE{PolynormOpen}\Big( U,x   \Big) } 
+ { \sum (\alpha,r) : \TYPE{Finite}(A) \times \Reals_{++} \. \FUNC{polyball}(x,\alpha,r) \subset U}
+ \Assume{a}{\TYPE{In}(\alpha)}
+ \Conclude{(c_a,N_a)}{ R(a)  }{\LOGIC{Right}(a)}
+ \Derive{ (c,N) }{ I\left( \prod \right) }{ \prod a \in \alpha \. (c_a,N_a) : \LOGIC{Right}(a)}
+ \Say{ h }{ \max_{a \in \alpha} c_a}{\Reals_+}
+ \Say{ M }{ \Lambda v \in V \. \max_{ a \in \alpha} N_a(v)}{\TYPE{RelatedSeminorm}(V)}
+ \Say{(3)}{ \bd \LOGIC{Right} \bd h \bd M }{ \forall v \in V \. \| T \, v\|_\alpha \le hM(v)  }
+ \Say{(4)}{ \mathrm{Operator.}\THM{BoundedIffContinuous}(3)}{ \Big(T : C\big( (V,M),(W,\|\cdot\|_\alpha) \big)\Big) }
+ \Say{(5)}{\bd C\big( (V,M),(W,\|\cdot\|_\alpha) \big)(\FUNC{polyball}(x,\alpha,r))}{ T^{-1}  \FUNC{polyball}(x,\alpha,r)  \in  \mathcal{T}(V,M) }
+ \Say{(6)}{ \bd  \TYPE{PolynormOpen}(5) } { T^{-1}  \FUNC{polyball}(x,\alpha,r)  \in  \mathcal{T}(V) }
+ \Conclude{()}{ \mathrm{SET.}\THM{SubsetPreimage}(T,U. \FUNC{polyball}(x, \alpha,r),2)}{ T^{-1}\FUNC{polyball}(x,\alpha,r) \subset T^{-1}U}
+ \DeriveConclude{()}{\mathrm{GTOP.}\THM{OpenCharacteristic}(V)}{ T^{-1}U  \in \mathcal{T}_V}
+ \DeriveConclude{(*)}{  I(\iff)(1)I(\Rightarrow)\bd^{-1} C(V,W) }{ \LOGIC{Left} \iff \LOGIC{Right} }
+ \EndProof
+ }\Page{
+ \DeclareType{SeminormDominatedByPolynorm}{\prod V : \mathsf{VS}(K) \. \TYPE{Polynorm}(V) \to ? \TYPE{Seminorm}(V) }
+ &  M : \TYPE{SeminormDominatedByPolynorm}(A,N) \iff M \le (A,N) \iff \NewLine \iff \exists \alpha : \TYPE{Finite}(A) \. 
+  M \le \Lambda v \in V \. \max_{a \in \alpha}  N_a(v)   \\
+ \\
+ \DeclareType{PolynormDominatedByPolynorm}{\prod V : \mathsf{VS}(K) \. \TYPE{Polynorm}(V) \to ? \TYPE{Plynorm}(V)}
+ & (B,M) : \TYPE{PolynormDominatedByPolynorm}(A,N) \iff (B,M) \le (A,N) \iff \forall b \in B \. M_b \le (A,N) \\
+ \\
+ \DeclareType{EquevalentPolynorms}{ \prod V : \mathsf{VS}(K) \. ? \Big(\TYPE{Polynorm}(V) \times \TYPE{Polynorm} \Big)  } 
+ \DefineNamedType{ \big((A,N),(B,M)\big)  }{ EquevalentPolynorms  }{(A,N) \cong (B,M)}{ (A,N) \le (B,M) \And (B,M) \le (A,N)  }
+ \\
+ \DeclareType{StrictlyDominatedByPolynorm}{\prod V : \mathsf{VS}(K) \. \TYPE{Polynorm}(V) \to ? \TYPE{Plynorm}(V)}
+ & (B,M) : \TYPE{StrictluDominatedByPolynorm}(A,N)\iff (B,M) < (A,N)  \iff \NewLine \iff (B,M) \le (A,N)  \And (B,M) \not \cong (A,N) \\
+ \\
+ \Theorem{PolynormTopologyRelation}{ \forall V : \mathsf{VS}(K) \. \forall (A,N),(B,M) : \TYPE{Polynorm}(V) \. \NewLine \. (A,N) \le (B,M) \iff 
+ \mathcal{T}\Big(V, (A,N) \Big) \le \mathcal{T}\Big(V,(A,N)\Big)  }
+ \Assume{L }{ (A,N) \le (B,M)  }
+ \Assume{U}{\TYPE{Open}(V,(A,N))}
+ \Assume{x}{\TYPE{In}(x)} 
+ \Say{(\alpha,r,1)}{ \bd \TYPE{PolynormOpen}\Big(V,(A,N)\Big)(U)(x) }{ \sum (\alpha, r) : \TYPE{Finite}(A) \times \Reals_{++} \. \FUNC{polyball}(\alpha,r) + a \subset U }
+ \Assume{a }{\TYPE{In}(\alpha)}
+ \Say{(2)}{\bd \TYPE{PolynormDomintedByPolynorm}( L )(a)}{ N_a \le (B,M)  }
+ \Conclude{ (\beta_a,3_a)  }{\bd \TYPE{SeminormDominatedByPolynorm}(2)}{ \sum \beta : \TYPE{Finite}(B) \.  N_a \le \max_{b \in \beta_a} M_b  }
+ \Derive{(\beta,2)}{I(\Pi)}{ \prod  a \in \alpha \. \sum \beta : \TYPE{Finite}(B) \. N_a \le \max_{b \in \beta_a} M_b  }
+ \Say{(3)}{ \max_{a \in \alpha}(2)_a  }{ \max_{a \in \alpha} N_a \le \max_{a \in \alpha} \max_{b \in \beta_a} M_b  }
+ \Say{(4)}{ \bd \FUNC{polyball}(3)(1)  }{  \FUNC{polyball}\left( \bigcup_{a \in \alpha} \beta_a,r  \right)   \subset  \FUNC{polyball}(\alpha,r) + x \subset U }
+ \Say{(5)}{ \textrm{SET.}\THM{FiniteIntersection}(\alpha,\beta) }{ \bigcup_{a \in \alpha} \beta_a : \TYPE{Finite}(B) }
+ \Conclude{()}{\bd^{-1}\TYPE{Polyinteror}(4,5)}{\Big( x : \TYPE{Polyitnerior}\big(V, (B,M) \big)(U) \Big)}
+ \DeriveConclude{()}{\bd^{-1} \TYPE{PolynormOpen} }{U \in \mathcal{T}\big(V,(B,M)\big)}
+ \Derive{(1)}{I(\Rightarrow) \bd^{-1} \TYPE{Coarser}}{ \big( A,N \big) \le \big(B, M \big) \Rightarrow \mathcal{T}\big(V, (A,N) \big) \le \mathcal{T}\big(V, (B,M) \big)  }
+ } \Page{
+ \Assume{R}{ \mathcal{T}\big(V, (A,N) \big) \le \mathcal{T}\big(V, (B,M) \big) }
+ \Assume{a}{\TYPE{In}(A)}
+ \Say{(1)}{R\Big( \FUNC{polyball}\big(\{a\} ,1 \big) \Big)}{ \FUNC{polyball}\big(\{a\},1 \big) \in \mathcal{T}\big(V, (B,M) \big)  }
+ \Say{(\beta,r,2) }{ \bd \TYPE{PolynormOpen}\Big(V, (B,M) \Big)\Big( \FUNC{polyball}\big( \{a\},1 \big)  \Big)(0)  }{ 
+ \NewLine :
+ \sum (\beta,r) : \TYPE{Finite}(B)\times \Reals_{++} \. 
+ \FUNC{polyball}(\beta,r) \subset \FUNC{polyball}\big( \{a\}  ,r \big)
+ }
+ \Conclude{(3)}{  \bd^{-1} \TYPE{SeminormDominatedByPolynorm}  \bd \FUNC{polyball}(2)}{  N_a \le \max_{b \in \beta} M_b }
+ \DeriveConclude{()}{ I(\iff)(1) I(\Rightarrow)  \bd \TYPE{PolynormDominatedByPolynorm}  I(\forall)  }{  \NewLine \. (A,N) \le (B,M) \iff 
+ \mathcal{T}\Big(V, (A,N) \Big) \le \mathcal{T}\Big(V,(A,N)\Big)}
+ \EndProof
+ \\
+ \Theorem{SeminormablePolynorm}{ \forall V : \mathsf{VS}(K) \. \forall (A,N) : \TYPE{Polynorm}(V) \. 
+ \exists M : \TYPE{Seminorm}(V) : \NewLine : (V,M) \cong_{\TOP} \big(V,(A,N) \big) \iff
+ \exists \alpha : \TYPE{Finite}(A)  : (A,N) \cong (\alpha,N_{|\alpha})
+ } 
+ & (\Rightarrow) \\
+ & \forall a \in A \.   N_a \le M \le N_\alpha  \\
+ & (\Leftarrow) \\
+ &  M = \max_{a \in \alpha} N_a \\
+ \EndProof \\
+ \Theorem{MetrizablePolynorm}{ \forall V : \mathsf{VS}(K) \. \forall (A,N) : \TYPE{Polynorm}(V) \.
+  \big(V,(A,N)\big) : \TYPE{Metrizable} \iff \NewLine \iff \exists \alpha : \TYPE{Countable}(A) \. (A,N) \cong (\alpha,N_{|\alpha} )  ) 
+ }
+ \Assume{R}{ \Big( (V,(A,N)) : \TYPE{Metrizable}  \Big)  }
+ \Say{(d,1)}{ \bd \TYPE{Metrizable}\Big(V,(A,N) \Big) }{ \sum d : \TYPE{Distance}(V) \. (V,d) \cong_\TOP \Big( V, (A,N) \Big) }
+ \Assume{n}{\Nat}
+ \Conclude{(\alpha_n,r_n,2)n))}{\bd \TYPE{PolynormOpen}\Big(V (A,N) \Big)\Big( \mathbb{B}_d(0,1/n), 1 \Big)(0)}
+  {\sum (\alpha_n,r_n) : \TYPE{Finite}(A) \times \Reals_{++} \. \FUNC{polyball}(\alpha_n,r_n) \subset \mathbb{B}_d(0,1/n) }
+ \Derive{(\alpha,r,2)}{I(\Pi)}
+  { \prod n \in \Nat \. \sum (\alpha_n,r_n) : \TYPE{Finite}(A) \times \Reals_{++} \. \FUNC{polyball}(\alpha_n,r_n) \subset \mathbb{B}_d(0,1/n)  }
+ \Say{\mathcal{A}}{ \bigcup_{n \in \Nat} \alpha_n }{?A}
+ \Say{ (3)  }{ textrm{SET.}{\THM{CountableUnionOfFinites}}(\Nat,\alpha) }{ \big( \mathcal{A} : \TYPE{Countable}(A) \big)  }
+ \Assume{ a }{\TYPE{In}(A)}
+ \Say{(n,4)}{\THM{MetricLocalBase}\Big((V,d),\FUNC{polyball}\big(\{a\},1\big),(1)\Big)}{ \sum n \in \Nat \. \mathbb{B}_d(0,1/n) \subset \FUNC{polyball}\big(\{a\},1)}
+ \Say{(5)}{(4)(2)_n }{ \FUNC{polyball}\big(\alpha_n,r_n) \subset  \FUNC{polyball}\big( \{a\},1) }
+ \Conclude{()}{ \bd \FUNC{polyball}(5) }{ N_a \le r_n^{-1} \max_{x \in \alpha_n} N_{x} }
+ \Derive{(4)}{\bd^{-1} \TYPE{PolynormDominatedByPolynorm}}{ (A,N) \le (\mathcal{A},N_{|\mathcal{A}})}
+ \Say{(5)}{ \bd^{-1} \TYPE{PolynormDominatedByPlynorm} \bd\TYPE{Subset}(\mathcal{A})  }{(\mathcal{A}),N_{|\mathcal{A}} \le (A,N) }
+ \Conclude{()}{\bd^{-1}\TYPE{EuevalentPolynorms}(4,5)}{ (A,N) \cong (\mathcal{A},N_{|\mathcal{A}}) }
+ \Derive{(1)}{I(\Rightarrow)}{ \LOGIC{Left} \Rightarrow \LOGIC{Right}   }
+ } \Page{
+ \Assume{(\alpha,R)}{ \sum \alpha : \TYPE{Countable}(A) \.  (A,N) \cong (\alpha, N_{|\alpha}) }
+ \Say{a}{\FUNC{enumerate}(\alpha)}{\Nat \ToSurj_{\mathsf{SET}} A}
+ \Say{d}{ \Lambda v,w \in V \. \sum^\infty_{n = 1} \frac{\| v - w \|_{a_n}}{2^n (1 + \| v - w \|)}  }{\TYPE{Distance}(V)}
+ \NoProof
+}
+
+\subsection{Abstract Topological Vector Spaces}
+\Page{
+ \DeclareType{TopologicalVectorSpace}{ ?\sum V : \mathsf{VS}(K) \. \TYPE{Topology}(V)  }
+ \DefineType{(V,T)}{TopologicalVectorSpace}{ (+)_V : C((V,T) \times (V,T),(V,T)) \And (\cdot)_V : C(K \times (V,T),(V,T))  }
+ \\
+ \DeclareFunc{implicit}{\TVS(K) \to \mathsf{VS}(K) }
+ \DefineFunc{implicit}{V,T}{V}
+ \\
+ \DeclareFunc{continuousOperators}{ \TVS(K) \times \TVS(K) \to \mathsf{VS}(K)  }
+ \DefineNamedFunc{continuousOPerators}{V,W}{ \mathcal{B}(V,W) }{ \mathcal{L}(V,W) \cap C(V,W)  }
+ \\
+ \Theorem{TopologyIsDefinedAtZero}{  \forall V : \TYPE{VS}(K) \. \forall T,S : \TYPE{Topology}(V) : 
+ \NewLine :
+ \Big( (V,T),(V,S) : \TVS(K) \Big)\.  T = S \iff \mathcal{U}_T(0) = \mathcal{U}_S(0)
+ }
+ & (\Rightarrow) \\
+ & \textrm{Obvious.} \\
+ & (\Leftarrow) \\
+ &  \textrm{Use that for open set $U$ such  that $x \in U$ maps $f(v) = v - x$ and $g(v) = v + x$ are continuous } \\
+ & \textrm{in both topologies.}  \\
+ \EndProof \\
+ \\
+ \Theorem{TVSSeparatesPoints}{ \forall V : \TVS(K) \. \forall A : \Closed(V) \. \forall v \in V \. 
+ \NewLine \.  
+ \forall \Delta : v \not \in A \. \exists U \in \mathcal{U}(v) : \exists O \in \mathcal{U}(A) \. U \cap O = \emptyset }
+ &  \textrm{every topological group is regular}
+ \EndProof
+}
+\subsection{Locally Convex Vector Spaces}
+\Page{
+ \DeclareType{LocallyConvexSpace}{ ? \TVS(K)  }
+ \DefineType{V}{LocallyConvexSpace}{ \exists N : \TYPE{NeighborhoodBase}(0) \. \forall U \in N \. N : \TYPE{ConvexSet}(V)  }
+ \\
+ \Theorem{PolynormedAreLocallyConvex}{ \forall V : \TVS(K) \. V : \TYPE{LocallyConvex}(K) \iff \NewLine \iff  \exists (A,N) : \TYPE{Polynorm}(V) \. V \cong_\TOP \big(V,(A,n)\big) }
+ & \textrm{Use Minkowski constructions} . \\
+ \EndProof
+ \\
+}
+\subsection{Abstract Duality}
+\Page{
+ \DeclareFunc{dualSpace}{ \TVS(K) \to \mathsf{VS}(K)  }
+ \DefineNamedFunc{dualSpace}{V}{V^*}{\B(V,K)}
+ \\
+ \Theorem{HausdorffByFunctionals}{\forall V : \PNS(K) \. \NewLine \. \Big( V : \TYPE{Hausdorff} \iff V^* : \TYPE{SeparatesPoints}(V) \Big) }
+ \Assume{L}{  \big( V : \TYPE{Hausdorff} \big) }
+ \Assume{(v,1)}{ \sum v \in V \. v \neq 0 }
+ \Say{(a,2)}{\THM{PolynormedSpaceIsHausdorff}(V,L)(x)}{ \sum a \in A_V \. \| v \|_a > 0 }
+ \Say{f}{ \Lambda zv \in Kv \. z\| v \|_a }{\mathcal{B}\big((Kv,\|\cdot\|_a),K\big)}
+ \Say{(F,3)}{\THM{HahnBanach}(V, \|\cdot\|_a )(f)}{ \sum F : \B\big( (V, \|\cdot \|_a ),K \big) \. \| F \|_a = 1  }
+ \Say{(4)_v}{\bd F(v)(2) }{ F(v) > 0   }
+ \Conclude{()}{\THM{ContinuousOperatorsOfPNS}(F,3)}{ F \in V^* }
+ \Derive{(1)}{I(\Rightarrow)\bd^{-1} \TYPE{SeparatesPoints}}{\Big( V : \TYPE{Hausdorff}  V^* : \TYPE{SeparatesPoints}(V)\Big) }
+ \Assume{R}{ \big( V^* : \TYPE{SeparatesPoints}(V) \big)  }
+ \Assume{(v,2)}{ \sum v \in V \.  v \neq 0}
+ \Say{(f,3)}{\bd \TYPE{SeparatesPoints}(V)(V^*)(v,1)}{ \sim f \in V^* \. f(v) \neq 0  }
+ \Say{(a,4)}{ \THM{ContinuousOperatorsOfPNS} \Big(\bd V^*(f)\Big)}{ \sum a \in A_V \.  f \in \B\big( (V,\| \cdot \|_a), K \big) }
+ \Say{(5)}{ \bd \B\big( (V,\| \cdot \|_a), K \big)(f)}{\exists c \in \Reals_{++} \. \forall v \in V \. |f(v)| \le c\| v \|_a}
+ \Conclude{(6)}{ \bd \THM{PositiveIneqMult}\big( (5),(3)(v) \big)}{ \| v \| a \neq 0  }
+ \Derive{(*)}{I(\iff)(1)I(\Rightarrow)\THM{PolynormedSpaceIsHausforff}}{ \Big( V : \TYPE{Hausdorff} \iff V^* : \TYPE{SeparatesPoints}(V) \Big)}
+ \EndProof \\
+ \DeclareType{Enough}{\prod V : \mathcal{VS}(K) \. \TYPE{Subspace}(V^\#) }
+ \DefineType{E}{Enough}{ E : \TYPE{SeparatesPoints}(V) }
+ \\
+ \DeclareFunc{specialWeakTopology}{ \prod V : \mathsf{VS}(K) \. ?V^\# \to \TYPE{Topology}(V)}
+ \DefineNamedFunc{specialWeakTopology}{A}{ \mathbf{w}(V,A)  }{ \mathcal{T}\Big( V, (A, \Lambda f \in A \. \Lambda v \in V \. |f(v)|) \Big)  }
+ } \Page{
+ \Theorem{SpecialWeakTopologyAsFromSpan}{ \forall V : \mathsf{VS}(K) \. \forall A : ?V^\# \. \mathbf{w}(V,A) = \mathbf{w}\big(V, \Span(A) \big) }
+ \Assume{ g }{ \TYPE{ \Span{A} } }
+ \Say{ (n,f, a , 1)  }{ \bd \FUNC{Span}(A)  }{ \sum n \in \Nat \. \sum (f,a) : n \to A \times K \. g = \sum^n_{i = 1} a_i f_i }
+ \Assume{v}{\TYPE{V}}
+ \Conclude{()}{  (1)\THM{TriangleIneq}\bd_2 \TYPE{AbsaluteValueField}( a , f(v) ) \THM{SumDominatedByMax}(n, \|a\|\|f(v)\| ) }
+ {  \NewLine \.  |g(v)| \le \sum^n_{i = 1} |a_i||f_i(v)| \le  n\Big( \max_{i \in n} | a_i| \Big)\Big( \max_{i \in n} |f_i(v)| \Big)    }
+ \DeriveConclude{()}{ \bd^{-1} \TYPE{SeminormDominatedByPolynorm}}{ |g(\cdot)| \le (A,\Lambda f \in A \. |f(\cdot)|)  }
+ \Derive{(1)}{\bd^{-1} \TYPE{PolynormDominatedByPolynorm}}{ (\Span(A), \Lambda f \in \Span(A) \. |f(\cdot) |) \le  (A,\Lambda f \in A \. |f(\cdot)|) }
+ \Say{(2)}{\bd^{-1} \TYPE{PolynormDominatedByPolynorm} \bd \TYPE{Subset}(\Span(A))(A)}{ \NewLine :(A,\Lambda f \in A \. |f(\cdot)|) \le   (\Span(A),\Lambda f \in \Span(A) \. |f(\cdot)|)}
+ \Say{(3)}{ \THM{PolynormTopologyRelation}(2,3)  }{ \mathcal{T}\big(V,(A,\ldots)\big) = \mathcal{T}\big(V, (\Span(A),\ldots) \big)   }
+ \Conclude{(*)}{ \bd \TYPE{SpecialWeakTopology}(3) }{ \mathbf{w}(V,A) = \mathbf{w}\big(V, \Span(A) \big) }
+ \\
+\DeclareFunc{weakTopology}{\prod V : \TVS(K) \. \TYPE{Topology }(V)}
+\DefineNamedFunc{weakTopology}{ V  }{\w(V)}{\w(V,V^*)} 
+\\
+\Theorem{WeakTopologyCoarser}{ \forall V : \PNS(K) \. \w(V) \le \mathcal{T}(V) }
+\NoProof \\
+\DeclareFunc{weakStarTopology}{\prod V : \TVS(K) \. \TYPE{Topology}(V^*)}
+\DefineNamedFunc{weakStarTopology}{ V }{ \w^*(V)}{ \w(V^*,\alpha_V) } \\
+\Theorem{InfiniteDimWeakStructure}{ \forall  V : \TVS(K) \. \forall d : \dim V = \infty \. \forall A \subset V^* \. 
+\NewLine \.
+\forall U \in \mathcal{U}\big(\w(V,A)\big)(0) \. \exists S : \TYPE{Subspace}(\mathcal{VS},V) : S \subset U   }
+\NoProof
+\\
+\Theorem{SpecialWeakContinuity}{ \forall V : \TVS(K) \. \forall A \subset V^\# \. \forall f \in V^\# \. 
+\NewLine \.
+f : C\Big(\big(V,\w(V,A) \big),K \Big) \iff f \in \Span(A)}
+\NoProof
+\\
+}
+\Page{
+ \Theorem{EnoughIsDenseInWeakStar}{ \forall V : \TVS(K) \. \NewLine \. \forall A : \TYPE{Enough}(V) \And C(V,K) \. A : \Dense\Big( V^*, \w^*(V)  \Big) }
+ \Assume{f }{\TYPE{In}(V^*)}
+ \Assume{U}{ \TYPE{In}\Big(\mathcal{U}\big(V^*, \w^*(V) \big)(f) \Big) }
+ \Say{ (X,r,1) }{ \bd \TYPE{Polyinterior}\bd \FUNC{weakTopology}(V^*)(U,f)  }{ \sum (X,r) : \TYPE{Finite}(V) \times \Reals_{++} \. \bigcap_{x \in X}\{ g \in V^* :  | f(x) - g(x) | < r   \} \subset U  }
+ \Say{(Y,2)}{\FUNC{biggestIndependant}(X)}{\sum Y : \LInd(V) \. X \subset \Span(Y) }
+ \Say{ (g,3)  }{\THM{GeneralFunctional}(V,A,(Y,2),f )}{\sum g \in A \. \forall y \in Y \. g(y) = f(y)}
+ \Say{ (4)  }{ (2)(3) }{ \forall x \in X \. g(x) = f(x) }
+ \Conclude{()}{ (1)(4) }{ g \in U  }
+ \Derive{(*)}{ \bd^{-1} \Dense\Big( V^*, \w^*(V) \Big)}{A : \Dense\Big( V^*, \w^*(V) \Big)}
+ \EndProof
+}
+\subsection{ Dual Operators }
+\Page{
+ \DeclareFunc{dualOperator}{ \prod V,W : \TVS(K) \. \B(V,W) \to \mathcal{L}(W^*,V^*)}
+ \DefineNamedFunc{dualOperator}{  T }{ T^* }{\Lambda f \in W^* \. \Lambda x \in V \. f \, T \, x}
+ \\
+ \Theorem{DualOperatorIsWeakStarContinuous}{ \forall V,W : \TVS(K) \. \forall T : \B(V,W) \.  
+ \NewLine \.
+ T^* : C\Big( (W^*,\w^*(W)),(V^*,\w^*(V)) \Big)}
+ \Assume{v}{\TYPE{In}(V)}
+ \Assume{f}{\TYPE{In}(W^*)}
+ \Say{(1)}{\bd \FUNC{dualOperator}(T)( | T\, f(v) |)}{ | T^* \, f(v) | = | f \, T(v) |  }
+ \Conclude{(2)}{\bd^{-1} \TYPE{LessEq} (1)}{ | T^* \,f(v) | \le | f \, T(v) | }
+ \DeriveConclude{(3)}{ \THM{ContinuousOperatorsOfPNS}}{ \bigg( T^* : C\Big( \big(W^*,\w^*(W)\big),\big(V^*,\w^*(V)\big)  \Big) \bigg)}
+ \EndProof
+ \\
+ \Theorem{StructureOfWeaklyContinuousOperators}{\forall V,W : \NORM(K) \. \forall T : \B\Big( \big(W^*,\w^*(W)\big),\big( V^*,\w^*(V) \big) \Big)
+  \.  \NewLine \exists  S \in \B(W,V) \. T = S^* }
+  \Assume{v}{ \TYPE{In}(V)}
+  \Say{(1)}{\THM{ContinuousComposition} \bd \FUNC{dualOperator}(T)(\alpha v) }{  T^* \alpha_v = \alpha_v \circ T : \B\Big( \big(V^*,\w^*(W)\big), \big(W^*,\w^*(W)\big)   \Big)  }
+  \Conclude{\big(Sv,2\big)}{\bd \Span \THM{SpecialWeakContinuity}\Big( T^* \alpha_v, \bd \FUNC{weakStarTopology}(W) \Big) }{ \sum Sv \in W \. \alpha_{Sv} = T^* \alpha_v }
+  \Derive{(S,2)}{I(\to)I(\forall)}{ \sum S : \mathcal{L}(V,W) \. \forall v \in V \. \alpha_{Sv} = T^* \alpha_v }
+  \Assume{v}{\TYPE{In}(\mathbb{B}_V)}
+  \Assume{f}{\TYPE{In}(W^*)}
+  \Conclude{()}{ \bd \alpha(Sv)\Big(\big| \alpha_{Sv}(f) \big|\Big)\bd S \bd^{-1} \FUNC{operatorNorm} \bd v }{ \NewLine :
+  |\alpha_{Sv}(f)  | = | f(Sv ) | = | Tf(v)  | \le \|T f \|\|v\| \le  \| T f \|}
+  \Derive{(2)}{I(\forall)}{ \forall v \in \B_V \, \forall f \in W^* \. |\alpha_{Sv} f | \le \| T f \|}
+  \Say{(3)}{\THM{BanachOperators}(W,K)}{\Big( W^* : \BAN (K) \Big)}
+  \Say{(c,4)}{\THM{BanachSteinkhaus}(2,3)}{\sum c \in \Reals_{++} \. \forall v \in \B_V \. \forall f \in W^* \.  |\alpha_{Sv} f| \le c}
+  \Say{(5)}{\bd \TYPE{Norm} \bd \alpha(4)}{ \forall v \in V \. \| Sv \| \le c \| v \| }
+  \Conclude{(*)}{\bd^{-1} \B (5)}{ \Big(  S : \B(V,W) \Big) }
+  \EndProof
+}
+\subsection{Bipolar Theorem}
+\Page{}
+\section{Ordered Vector Spaces}
+\Page{}
+\end{document}
+

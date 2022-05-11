@@ -1,0 +1,2774 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\DeclareMathOperator*{\supp}{supp}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cat}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\}
+\newcommand{\Assume}[2]{& \LOGIC{Assume} \; #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;}
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%SET
+%CAT
+\newcommand{\Arrow}[1]{\xrightarrow{#1}}
+\newcommand{\ToIso}[1]{\xleftrightarrow{#1}}
+%CategoryTheorey
+%Types
+\newcommand{\Cov}{\TYPE{Covariant}}
+\newcommand{\Contra}{\TYPE{Contravariant}}
+\newcommand{\NT}{\TYPE{NaturalTransform}}
+\newcommand{\UMP}{\TYPE{UnversalMappingProperty}}
+\newcommand{\CMP}{\TYPE{CouniversalMappingProperty}}
+\newcommand{\paral}{\rightrightarrows}
+%functions
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\obj}{\mathrm{obj}}
+\DeclareMathOperator*{\dom}{dom}
+\DeclareMathOperator*{\codom}{codom}
+\DeclareMathOperator*{\colim}{colim}
+%variable
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\R}{\mathrm{R}}
+\newcommand{\G}{\mathsf{G}}
+%Cats
+\newcommand{\CAT}{\mathsf{CAT}}
+\newcommand{\SET}{\mathsf{SET}}
+\newcommand{\PARALLEL}{\bullet \paral \bullet}
+\newcommand{\WEDGE}{\bullet \to \bullet \leftarrow \bullet}
+\newcommand{\VEE}{\bullet \leftarrow \bullet \to \bullet}
+%Algebra
+%Groups
+%Types
+\newcommand{\Group}{\TYPE{Group}}
+\newcommand{\Abel}{\TYPE{Abelean}}
+\newcommand{\Sgrp}{\subset_{\mathsf{GRP}}}
+\newcommand{\Nrml}{\vartriangleleft}
+\newcommand{\FG}{\TYPE{FiniteGroup}}
+\newcommand{\Stab}{\mathrm{Stab}}
+\newcommand{\FGA}{\TYPE{FinitelyGeneratedAbelean}}
+\newcommand{\DN}{\TYPE{DirectedNormality}}
+%Func
+\DeclareMathOperator{\tor}{tor}
+\DeclareMathOperator{\bool}{bool}
+\DeclareMathOperator{\rank}{rank}
+%Cats
+\newcommand{\GRP}{\mathsf{GRP}}
+\newcommand{\ABEL}{\mathsf{ABEL}}
+%Ops
+\newcommand{\SDP}{\rightthreetimes}
+%LINEAR
+%Types
+\newcommand{\Basis}{\TYPE{Basis}}
+%CatsG
+\newcommand{\VS}{\mathsf{VS}}
+%FIELDS
+\newcommand{\Field}{\mathbb{F}}
+\author{Uncultured Tramp} 
+\title{Group Theory}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Group Structure}
+\subsection{Definitions And Examples}
+\Page{
+	\DeclareType{Group}{?\TYPE{Monoid}}
+	\DefineType{(G,\cdot)}{Group}{\forall g \in G \. g : \TYPE{Invertible}(G,\cdot)}
+	\\
+	\DeclareType{Abelean}{?\TYPE{Group}}
+	\DefineType{(G,+)}{Abelean}{ (+) : \TYPE{Commutative}}
+	\\
+	\Theorem{AutomorphismsIsGroup}{
+		\forall \mathcal{C} : \Cat \. \forall O \in \mathcal{C} \. \Big(\mathrm{AUT}(O),\circ \Big) : \Group }
+	\Say{(1)}{\bd \Cat(\mathcal{C})}{\Big( (\circ) : \TYPE{Associative}\big(\mathrm{AUT}(O),\mathrm{AUT}(O)\big) \Big)}
+	\Say{(2)}{\bd \mathcal{M}_{\mathcal{C}}(O,O) \bd \mathrm{AUT}(O)}{\id_O \in \mathrm{AUT}(O)}
+	\Say{(3)}{\bd \id_O}{\Big( \id_O : \TYPE{Identity}(\mathrm{AUT}(O),\circ) \Big)}
+	\Say{(4)}{\bd \mathrm{AUT}(O)}{ \forall f \in \mathrm{AUT}(O) \. f : \TYPE{Invertible}\Big(\mathrm{AUT}(O),\circ\Big)}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Group}(1-4)}{\Big( \big(\mathrm{AUT}(O),\circ\big) : \TYPE{Group} \Big)}
+	\EndProof
+	\\
+	\Theorem{IntegerIsAbelean}{(\Int,+) : \Abel}
+	\NoProof
+	\\
+	\DeclareFunc{directProduct}{ \TYPE{Group} \to \TYPE{Group} \to \TYPE{Group}}
+	\DefineNamedFunc{directProduct}{G,H}{G \times H}{\Big( G \times H, 
+		\Lambda \big((a,b),(s,r)\big) \in (G \times H) \times (G \times H) \. (as,br) \Big)}
+	\\
+	\DeclareFunc{directFuncProduct}{\prod X : \TYPE{Set} \. (X \to \Group) \to \Group}
+	\DefineNamedFunc{directFuncProduct}{G}{\prod_{x \in X} G_x}{  
+		\left( \prod x \. G_x , \Lambda f,g : \prod x \. G_x \. \lambda x \in X \. f(x)g(x) \right)  }
+	\\
+	\DeclareType{Subgroup}{\prod G : \Group \. ??G}
+	\DefineNamedType{H}{Subgroup}{H \Sgrp G}{(H,\cdot_G) : \Group}
+        \\
+	\Theorem{TrivialSubgroups}{\forall G : \Group \. \{e_G\},G : \TYPE{Subgroup}(G)}
+	\NoProof
+}\Page{
+	\DeclareType{ProperSubgroup}{\prod G : \Group \. ?\TYPE{Subgroup}(G)}
+	\DefineNamedType{H}{ProperSubgroup}{H \Sgrp' G}{H \neq G}
+	\\
+	\DeclareType{Nontrivial}{\prod G : \Group \. ?\TYPE{Subgroup}(G)}
+	\DefineNamedType{H}{Nontrivial}{H \Sgrp^* G}{H \neq \{e_G\}}
+	\\
+	\Theorem{SubgroupInrsect}{\forall X : \Set \. \forall G : \Group \. \forall H : X \to \TYPE{Subgroup}(G)
+		\. \bigcap_{x \in X} H_x \Sgrp G
+	}
+	\Say{(1)}{\bd H \bd \TYPE{Subgroup}(G)}{ \forall x \in X \. e_G \in H_x}
+	\Say{(2)}{\bd \FUNC{intersect}(1)}{e_G \in \bigcap_{x \in X} H_x}
+	\Assume{a,b}{\TYPE{In} \; \bigcap_{x \in X} H_x}
+	\Say{(3)}{\bd \FUNC{intersect}(H)\bd(a,b)}{\forall x \in X \. a,b \in H_x}
+	\Say{(4)}{\bd H \bd \TYPE{Subgroup}(G)}{ \forall x \in X \. ab \in H_x}
+	\Conclude{(5)}{\bd \FUNC{Intersect}(G)(4)}{ab \in \bigcap_{x \in X} H_x}
+	\Derive{(3)}{I(\forall)}{ \forall a,b \in \bigcap_{x \in X} H_x \. ab \in \bigcap_{x \in X} H_x}
+	\Assume{a}{  \TYPE{In} \; \bigcap_{x \in X} H_x}
+	\Say{(4)}{\bd \FUNC{intersect}(H)\bd(a)}{\forall x \in X \. a \in H_x}
+	\Say{(5)}{\bd H \bd \TYPE{Subgroup}(G)}{ \forall x \in X \. a^{-1} \in H_x}
+	\Conclude{(6)}{\bd \FUNC{Intersect}(G)}{a^{-1} \in \bigcap_{x \in X} H_x}
+	\Derive{(4)}{I(\forall)}{ \forall a \in \bigcap_{x \in X} H_x \. a^{-1} \in \bigcap_{x \in X} H_x}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Subgroup}(G)(2-4)}{\bigcap_{x \in X} H_x \Sgrp G}
+	\EndProof
+	\\
+	\DeclareType{Generates}{\prod G : \TYPE{Group} \. ??G}
+	\DefineType{S}{Generates}{\forall a \in G \. \exists n \in \Nat : \exists s : n \to S \cup S^{-1}
+		\. a = \prod^n_{i=1} s_i
+	}
+	\\
+	\DeclareType{Cyclic}{?\Group}
+	\DefineType{G}{Cyclic}{\exists S : \TYPE{Generates}(G) : |S| = 1}
+	\\
+	\DeclareFunc{generate}{\prod G : \Group \. ?G \to \TYPE{Subgroup}(G)}
+	\DefineNamedFunc{generate}{S}{\langle S \rangle}{\bigcap \{ H \Sgrp G : S \subset H \} }
+}
+\Page{
+	\DeclareFunc{genCycle}{\prod G : \Group \. G \to \TYPE{Subgroup}(G)}
+	\DefineNamedFunc{genCycle}{g}{\langle g \rangle}{ \Big( \{ g^n : n \in \Int \}, \cdot_G \Big)}
+	\\
+	\Theorem{CyclicAbelean}{\forall G : \TYPE{Cyclic} \. G : \TYPE{Abelean}}
+	\Say{(g,1)}{\bd \TYPE{Cyclic}(G) }{ \sum g \in G \. G = \langle g \rangle}
+	\Assume{a,b}{G}
+	\Say{(n,m,2)}{(1)(a,b)}{\sum n,m \in \Int \. a = g^n \And b = g^m}
+	\Conclude{(*)}{(2)(ab)\THM{PowerProduct}\bd \TYPE{Coomutative}{\FUNC{add}(\Int)}(2)(a)(2)(b)}
+	{ ab = g^ng^m = g^{n + m} = g^{m + n} = g^m g^n = ba  }
+	\Derive{(2)}{\bd^{-1}\TYPE{Commutative}}{ \Big((\cdot) : \TYPE{Commutative}\Big) }
+	\Conclude{(*)}{\bd^{-1}\TYPE{Abelean}}{(G : \TYPE{Abelean})}
+	\EndProof
+	\\
+	\DeclareType{Homomorphism}{\prod G,H : \Group \. ?(G \to H) }
+	\DefineType{f}{Homomorphism}{\forall a,b \in G \, f(ab) = f(a)f(b)}
+	\\
+	\Theorem{HomoComposition}{\forall A,B,C : \Group \. \forall f : \TYPE{Homomorphism}(A,B) \. 
+	    \forall g : \TYPE{Homomorphism}(B,C) \. \NewLine g \circ f : \TYPE{Homomorphism}(A,C)}
+	\Assume{x,y}{A}
+	\Conclude{()}{ \bd \FUNC{compose}(g,f)(xy)\bd \TYPE{Homomrphism}(f) \bd \TYPE{Homorphism}(g) \bd^{-1} \FUNC{compose}}
+	{
+		\NewLine :
+		g \circ f(xy) = g( f(xy) )= g( f(x)f(y)) = g(f(x))g(f(y)) = g \circ f(x) g \circ f(y) }
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{Homomorphism}}{\Big(g \circ f : \TYPE{Homomorphism}(A,C)\Big)}
+	\EndProof
+	\\
+	\Theorem{HomoId}{\forall G : \Group \. \id_G : \TYPE{Homomotphism}(G,G)}
+	\Assume{a,b}{G}
+	\Conclude{()}{\bd \id ab \bd^{-1} \id a \bd^{-1} \id b}{ \id ab = ab =\id a \id b }
+	\Derive{(*)}{\bd^{-1} \TYPE{Homorphism}}{\Big(\id : \TYPE{Homomorphism}(G,G) \Big) }
+	\EndProof
+	\\
+	\DeclareFunc{GroupsCat}{\Cat}
+	\DefineNamedFunc{GroupsCat}{}{\mathsf{GRP}}{ \Big(\NewLine 
+		  \mathcal{O}(\mathsf{GRP}) = \Group,  \NewLine
+		  \mathcal{M}_{\mathsf{GRP}}(A,B) = \TYPE{Homomorphism}(A,B), \NewLine
+		  fg = g \circ f\Big)
+	}
+}
+\Page{
+	\Theorem{HomoOnId}{\forall G,H : \Group \. \forall f : G \xrightarrow{\mathsf{GRP}} H 
+		\. f(e_G) = e_H  
+	}
+	\Assume{a}{G}
+	\Conclude{()}{  \bd f \bd e_G }{ f(e_G)f(a) = f(e_Ga) = f(a) }
+	\DeriveConclude{()}{\bd^{-1} \TYPE{Identity}(H)\THM{UniqueId}(H)}{f(e_G) = e_H}
+	\EndProof
+	\\
+	\Theorem{HomoOnInv}{\forall G,H : \Group \. \forall f : G \xrightarrow{\mathsf{GRP}} H 
+		\. \forall a \in G \. f(a^{-1}) = (f(a))^{-1} }
+	\Say{(1)}{  \bd f \bd \FUNC{inv}(a) \THM{HomoOnId}    }{f(a)f(a^{-1})  = f(aa^{-1}) = f(e_G) = e_H }
+	\Conclude{(*)}{\bd \TYPE{Inverse}(1)  }{ (f(a))^{-1} = f(a^{-1})   }
+	\EndProof
+	\\
+	\DeclareFunc{kernel}{\prod G,H : \Group  \. \mathcal{M}_{\mathsf{GRP}}(G,H) \to ?G }
+	\DefineNamedFunc{kernel}{f}{\ker f}{ f^{-1}(e_H) }
+	\\
+	\Theorem{KernelIsGroup}{\forall G,H : \Group \. \forall f : G \xrightarrow{\mathsf{GRP}} H \. \ker f \Sgrp G}
+	\Say{(1)}{\THM{HomOId}(f)\bd \ker f}{e_G \in \ker f }
+	\Assume{a,b}{\ker f}
+	\Conclude{()}{ \bd f(a,b) \bd (a,b) \bd e_H  }{f(ab) = f(a)f(b) = e_He_H = e_H}
+	\Derive{(2)}{I(\forall)}{\forall a,b \in  \ker f \. ab \in \ker f}
+	\Assume{a}{\ker f}
+	\Conclude{()}{
+		\bd \TYPE{Inverse}(f(a^{-1}))\THM{HomoOnInv}(a^{-1})
+		\THM{InvInv} \bd a \bd e_H
+		}{ \NewLine :
+			e_H = f(a^{-1})(f(a^{-1}))^{-1} = f(a^{-1})f(a) = f(a^{-1})e_H = f(a^{-1})}
+	\Derive{(3)}{I(\forall)}{\forall a \in \ker f \. a^{-1} \in \ker f}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Subgroup}(1,2,3)}{ \ker f  \Sgrp G}
+	\EndProof
+	\\
+	\Theorem{ImageIsGroup}{\prod G,H : \Group \. \forall f : G \xrightarrow{\mathsf{GRP}} H \. \im f \Sgrp H}
+	\Say{(1)}{ \THM{HomoOnId}  }{f(e_G) = e_H \in \im f}
+	\Assume{y,b}{\im f}
+	\Say{(x,a,2)}{\bd \im f \bd (y,b)}{ \sum x,a \in G \. y =f(x) \And b = f(a)  }
+	\Conclude{()}{ (2) \bd f \bd^{-1} \im f}{  yb = f(x)f(a) = f(xa) \in \im f}
+	\Derive{(2)}{I(\forall)}{ \forall a,b \in \im f \. ab \in \im f}
+	\Assume{y}{\im f}
+	\Say{(x,3)}{\bd \im f}{\sum x \in G \. f(x) = y}
+	\Conclude{()}{\THM{HomoOnInv}(x)}{ y^{-1} = f(x^{-1}) \in \im f}
+	\Derive{(3)}{I(\forall)}{\forall x \in \im f \. x^{-1} \in \im f }
+	\Conclude{(*)}{\bd^{-1} \TYPE{Subgroup}(1,2,3}{\im f \Sgrp H}
+	\EndProof
+} \Page{
+	\Theorem{TrivialKernelTHM}{\forall G,H : \TYPE{Group} \.  \forall f : G \xrightarrow{\GRP} H \.  
+		\forall (0) :  \ker f = \{e_G\}   \.  f : G \ToInj H
+	}
+	\Assume{a,b}{G}
+	\Assume{(1)}{f(a) = f(b)}
+	\Say{(2)}{\bd \FUNC{inv}(f(a))(1) \THM{HomoInInv}\bd \TYPE{Homomorphism}(f)}
+	{  e_H  =  f(a)\Big( f(b) \Big)^{-1} = f(a)f(b^{-1}) = f(ab^{-1})    } 
+	\Say{(3)}{ (0)(2)}{ ab^{-1} = e_G }
+	\Conclude{()}{\THM{UniqueInverse}(3)}{ a = b} 
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{Injective}}{\Big( f : G \ToInj H \Big)}
+	\EndProof
+	\\
+	\Theorem{ProductCondition}{\forall G : \TYPE{Group} \. \forall A,B \Sgrp G \.
+		\forall (0) : G = AB \. \forall (00) : \forall a \in A \. \forall b \in B \. ab = ba \.
+		\NewLine \.
+		\forall (000) : A \cap B = \{e_G\} \.   \Lambda (a,b) \in A \times B  \. ab : A \times B \xleftrightarrow{\GRP} G
+	}
+	\Say{f}{\Lambda (a,b) \in  A \times B \. ab}{  A \times B \to  G  }
+	\Assume{(a,b),(c,d)}{ \TYPE{In}( A \times B)}
+	\Conclude{()}{ \bd (a,b)(c,d) \bd f (00)(c,b)\bd^{-1} f       }
+	{ f\Big( (a,b)(c,d)\Big) = f( ac,bd) = acbd = abcd = f(a,b)f(c,d) }
+	\Derive{(1)}{\bd^{-1}\TYPE{Homomorphism}}{\Big( f : A \times B \xrightarrow{\GRP} G \Big)}
+	\Say{(2)}{(0)(\bd^{-1} f)}{(f : A \times B \ToSurj G ) }
+	\Assume{(a,b)}{A \times B}
+	\Assume{(3)}{f(a,b) = ab = e}
+	\Say{(4)}{\bd \TYPE{Inverse}(3)}{b = a^{-1}}
+	\Conclude{()}{\bd \TYPE{Subgroup}(G)(A,B)(000)(4)}{(a,b) = (e,e)}
+	\Derive{(3)}{ \bd^{-1} \ker f}{ \ker f = \{ e \}}
+	\Say{(4)}{\THM{TrivialKernelTHM}(3)}{( f : A \times B \ToInj G )}
+	\Conclude{(*)}{\bd \TYPE{Bijection}(1,2,4)}{\Big( f : A \times B\xleftrightarrow{\GRP} G \Big)}
+	\EndProof
+	\\
+	\DeclareFunc{powerMap}{\prod G : \GRP \. \Int \to G \to G }
+	\DefineNamedFunc{powerMap}{n,g}{F_n(g)}{g^n}
+	\\
+	\Theorem{PowerMapHomo}{\forall G : \Abel \. \forall n \in \Int \. F_n : G \xrightarrow{\GRP} G}
+	\Assume{a,b}{G}
+	\Conclude{()}{\bd F_n(ab) \bd \Abel(G)(a,b) \bd^{-1} F_n}{F_n(ab) = (ab)^n = a^nb^n = F_n(a)F_n(b)}
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Homomorphism}}{\Big(F_n : G \xrightarrow{\GRP} G\Big)}
+	\EndProof
+}
+\Page{
+	\Theorem{TotalGroupMult}{\forall G \in \GRP \.  \forall a,b \in G \. \exists c \in G \. ac = b}
+	\Conclude{(*)}{ \bd \TYPE{Inverse}(a)(aa^{-1}b)}{ a a^{-1}b = b}
+	\EndProof
+	\\
+	\DeclareFunc{index}{ \prod G \in \GRP \. \TYPE{Subgroup}(G) \to \mathsf{CARD} }
+	\DefineNamedFunc{index}{H}{[G : H]}{ \# \{ gH  | g \in G \} }
+	\\
+	\Theorem{IndexTHM}{\forall G  \in \Group  \And \TYPE{Finite} \. 
+		\forall H \Sgrp G \. |H|[G:H] = |G|
+	}
+	\Say{(1)}{\THM{TotalGroupMult}(G)}{ \bigcup \{ gH | g \in G \} = G }
+	\Say{(2)}{\bd \Group(G)}{\forall g \in G \. |gH| = |H|}
+	\Assume{a,b}{G}
+	\Assume{c}{\TYPE{In}(aH \cap bH)}
+	\Say{(h,g,3)}{\bd c}{\sum h,g \in H \. c = ah \And c = bg}
+	\Assume{y}{\TYPE{In}(aH)}
+	\Say{(x,4)}{\bd y}{\sum x \in H \. ax = y}
+	\Say{(5)}{ (3)\bd \FUNC{inv}(h)(4)}{bgh^{-1}x = ahh^{-1}x = ax = y}
+	\Conclude{() }{\bd (g,h,x)\bd H (5)}{ y \in bH}
+	\DeriveConclude{()}{\THM{EqSizeSubset}(2)\bd\TYPE{Subset}}{aH = bH}
+	\Derive{(3)}{\bd^{-1}\TYPE{Disjoint}}{ \Big( \{gH| g \in G \} : \TYPE{Disjoint}    \Big)  }
+	\Conclude{(*)}{\THM{DisjointSum}(1)(2)\bd^{-1}[G:h]}
+	{ |G| = \sum_{X \in \{gH | g \in G\}} |X| = \Big| \{ gH | g \in G \}\Big| |H| = [G : H]|H|  }
+	\EndProof
+	\\
+	\DeclareFunc{leftCosets}{\prod G \in \GRP \. \TYPE{Subgroup}(G) \to ??G}
+	\DefineNamedFunc{leftCosets}{H}{G/H}{\{gH : g \in G\}}
+	\\
+	\DeclareFunc{rightCosets}{\prod G \in \GRP \. \TYPE{Subgroup}(G) \to ??G}
+	\DefineNamedFunc{rightCosets}{H}{G\setminus H}{\{ Hg : g \in G\}}
+}
+\newpage
+\subsection{Normal Subgroups}
+\Page{
+	\DeclareType{Normal}{\prod G : \Group \.  ?\TYPE{Subgroup}(G)  }
+	\DefineNamedType{H}{Normal}{H \Nrml G}{ \forall h \in H \. \forall g \in G \. ghg^{-1} \in H   }
+	\\
+	\Theorem{NormalPropertyI}{\forall G : \Group \. \forall N \Nrml H \.  \forall g \in G \. gN = Ng}
+	\Assume{a}{\TYPE{In}(N)}
+	\Say{b}{gag^{-1}}{\TYPE{In}(N)}
+	\Say{(1)}{\bd b (bg) \bd \FUNC{inverse}(g)}{  bg = gag^{-1}g = ga     }
+	\Conclude{(2)}{\bd Ng(1)}{ ga \in Ng  }
+	\Derive{(*)}{\THM{EqSizeSubset}}{ gN = Ng  }
+	\EndProof
+	\\
+	\Theorem{NormalQuetient}{\forall N \Nrml G \. \Big(\{gN : g \in N  \},\cdot \Big) \in \GRP}
+	\Assume{a,b}{G}
+	\Conclude{(1)}{ \THM{NormalPropertyI}(N)(B)  }{ aNbN = abNN = abN  }
+	\Derive{(2)}{I(\forall)}{\forall a,b \in G \. aNbN = abN}
+	\NoProof
+	\\
+	\DeclareFunc{quetientGroup}{ \prod G \in \GRP \. \TYPE{Normal}(G) \to \GRP    }
+	\DefineNamedFunc{quetientGroup}{  N   }{ \frac{G}{N} }{ \Big( \{ gN | g \in G    \}, \cdot  \Big)}
+	\\
+	\DeclareFunc{naturalProjection}{\prod G \in \GRP \.  \prod N \Nrml G \. G \xrightarrow{\GRP} \frac{G}{N}}
+	\DefineNamedFunc{naturalProjection}{g}{\pi_N(g)}{gN}
+	\\
+	\Theorem{NormalKernel}{\forall G,H \in \GRP \. \forall f : G \xrightarrow{\GRP} H \. \ker f \Nrml G}
+	\Assume{a}{\ker f}
+	\Assume{g}{G}
+	\Say{(1)}{\bd f (gag^{-1}) \bd a \THM{HomoOnInv}(f)(g)\bd \bd \TYPE{Identity}(H)(e_H) \FUNC{inverse}(f(g))}
+	{ 
+		\NewLine :
+		f(gag^{-1}) = f(g)f(a)f(g^{-1}) = f(g)e_H(f(g))^{-1} = e_H}
+	\Conclude{()}{\bd^{-1} \ker f (1)}{gag^{-1} \in \ker f}
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Normal}}{\ker f \Nrml G}
+	\EndProof
+}
+\Page{
+	\Theorem{KernelOfProjection}{\forall G \in \GRP \. \forall N \Nrml G \. \ker \pi_N = N}
+	\Assume{a}{N}
+	\Say{(1)}{ \bd \pi_N(a) \bd \TYPE{Subgroup}(N) }{ \pi_N (a) = aN = N}
+	\Conclude{()}{\bd^{-1} \ker \pi_N}{ a \in \ker \pi_N}
+	\Derive{(1)}{\bd^{-1} \TYPE{Subset}}{N \subset \ker \pi_N}
+	\Assume{a}{\ker \pi_N}
+	\Say{(2)}{\bd a \bd \ker \pi_N}{ aN = \pi_N(a) = N}
+	\Say{(b,3)}{\bd \TYPE{Subgroup}(N)(2) }{ \sum b \in N \. ab = e }
+	\Say{(4)}{\bd^{-1} \TYPE{Inverse}(3)}{a = b^{-1}}
+	\Conclude{(5)}{\bd \TYPE{Subgroup}(N)(4)}{a \in N}
+	\DeriveConclude{(*)}{\bd \TYPE{SetEq}(1)\bd \TYPE{Subset}}{\ker \pi_N = N}
+	\EndProof
+	\\
+	\Theorem{AbeleanAllNormal}{\forall G : \Abel \. \forall H \Sgrp G \. H \Nrml G}
+	\Assume{h}{H}
+	\Assume{g}{G}
+	\Conclude{()}{\bd \TYPE{Abelean}(G)}{ghg^{-1}= gg^{-1}h = h}
+	\DeriveConclude{(*)}{\bd \TYPE{Normal}(G)}{H \Nrml G}
+	\EndProof
+	\\
+	\Theorem{NormalIntersect}{\forall G \in \GRP \. \forall X \in \SET \. \forall N : X \to \TYPE{Normal}(G) \.  
+		\bigcap_{x \in X} N_x \Nrml G
+	}
+	\NoProof
+	\\
+	\DeclareFunc{normalizer}{\prod G \in \GRP \.  \Set(G) \to \TYPE{Subgroup}(G)}
+	\DefineNamedFunc{normalizer}{X}{N(X)}{\{ g \in G : \forall x \in X \. gxg^{-1} \in X\}}
+	\\
+	\DeclareFunc{centralizer}{\prod G \in \GRP \. G \to \TYPE{Subgroup}(G)  }
+	\DefineNamedFunc{centralizer}{g}{C(g)}{N(\{g\})}
+	\\
+	\DeclareFunc{setCentralizer}{\prod G \in \GRP \. G \to \TYPE{Subgroup}(G)}
+	\DefineNamedFunc{setCentralizer}{X}{C(X)}{\bigcap_{x \in X} C(x)}
+}
+\Page{
+	\Theorem{NormalizerContains}{\forall G \in \GRP \. \forall H,K \Sgrp G \. \forall (0) : H \Nrml K \. K \subset N(H)}
+	\Assume{a}{K}
+	\Assume{h}{H}
+	\Say{()}{(0)(aha^{-1})}{ aha^{-1} \in G}
+	\DeriveConclude{()}{\bd^{-1}N(H)}{a \in N(H)}
+	\DeriveConclude{(*)}{\bd \TYPE{Subset} }{ K \subset N(H)}
+	\EndProof
+	\\
+	\Theorem{NormalizerIsAGroup}{\forall G \in \GRP \. \forall H \Sgrp G \. N(H) \in \GRP}
+	\Assume{a,b}{N(H)}
+	\Assume{h}{H}
+	\Say{(1)}{\bd N(H)(b,h)}{ bhb^{-1} \in H }
+	\Conclude{()}{\bd N(H)(a,bhb^{-1})(1)}{abhb^{-1}a^{-1} \in H}
+	\DeriveConclude{()}{\bd^{-1} N(H)}{ab \in N(H)}
+	\Derive{(1)}{I(\forall)}{\forall a,b \. ab  \in N(H) }
+	\Assume{a}{N(H)}
+	\Assume{h}{H}
+	\Say{(2)}{ \bd N(H)(a,h^{-1}) }{ah^{-1}a^{-1} \in H}
+	\Conclude{()}{\bd \TYPE{Subgroup(G)(H)}}{ \Big( ah^{-1}a^{-1} \Big) = a^{-1}ha \in H     }
+	\DeriveConclude{()}{\bd N(H)}{ \forall a \in N(H) \. a^{-1} \in N(H) }
+	\DeriveConclude{(*)}{\bd \TYPE{Grouup}(1)I(\forall) }{ N(H) \in \GRP }
+	\EndProof
+	\\
+	\Theorem{NormalizerAsLargest}{\forall G \in \GRP \. \forall H \Sgrp G \. N(H) = \bigcup \{ K \Sgrp G : H \Nrml K\}}
+	\Assume{K}{\TYPE{Subgroup}(K)}
+	\Assume{(1)}{H \Nrml K}
+	\Conclude{()}{\bd^{-1} N(H)\bd \TYPE{Normal}(K)(H)}{K \subset N(H)}
+	\Derive{(1)}{I(\forall)}{\forall K \Sgrp H : H \Nrml K \. K \subset N(H) }
+	\Say{(2)}{\bd N(H)}{ N(H) \in \{ K \Sgrp G : H \Nrml k \}      }
+	\Conclude{(*)}{\THM{MaxSet}(1)(2)}{ N(H) = \bigcup \{ K \Sgrp G : H \Nrml K \}}
+	\EndProof
+}\Page{
+	\Theorem{ProductOfSubgroups}{\forall G \in \GRP \. \forall H \Sgrp G \. \forall K \Sgrp N(H) \.  H \Nrml KH }
+	\Assume{a,b}{K}
+	\Assume{h,g}{H}
+	\Say{ (1)}{\THM{NormalPropertyI}(N(H),H)}{hb \in bH}
+	\Say{(f,2)}{ \bd bH(1)}{\sum f \in H \. hb = bf}
+	\Conclude{()}{(2)\bd^{-1} KH}{ahbg = abfg \in KH}
+	\Derive{(1)}{ I(\forall)}{ \forall x,y \in  KH \. xy \in KH    }
+	\Assume{a}{K}
+	\Assume{h}{H}
+	\Say{(2)}{\THM{NormalPropertyI}(N(H),H)}{h^{-1}a^{-1} \in a^{-1}H}
+	\Say{(g,3)}{\bd a^{-1}H (2)}{ \sum g \in H : h^{-1}a^{-1} = a^{-1}g }
+	\Conclude{ () }{ \THM{InverseMult}(2)  \bd^{-1}KH}{ (ah)^{-1} = h^{-1}a^{-1} = a^{-1}g \in KH }
+	\Derive{(0)}{\bd^{-1}\TYPE{Group}(1)I(\forall)}{KH \in \GRP}
+	\Assume{a}{K}
+	\Assume{h,g}{H}
+	\Say{ (2)}{\THM{NormalPropertyI}(N(H),H)}{ ha^{-1}, ga^{-1},h^{-1}a^{-1}  \in a^{-1}H}
+	\Say{(u,v,s,3)}{\bd a^{-1}H}{ \sum u,v,s \in H \. a^{-1}u = ha^{-1} \And a^{-1}v = ga^{-1} \And a^{-1}s = h^{-1}a^{-1}}
+	\Conclude{()}{(3)\bd \FUNC{inverse}\bd H \bd u,v,h,s}
+	{  ahgh^{-1}a^{-1} = ahga^{-1}s = aha^{-1}us = aa^{-1}vus = vus \in H   }
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{Normal}}{H \Nrml KH }
+	\EndProof
+	\\
+	\Theorem{isomorphismTHMI}{\forall A,B \in \GRP \. \forall f : A \xrightarrow{\GRP} B \. \exists! 
+		\varphi : \frac{A}{\ker f} \xleftrightarrow{\GRP} \im f : \pi_{\ker f} \varphi \iota_{\im f} = f }
+	\Assume{X}{\frac{A}{\ker f}}
+	\Say{(a,1)}{\bd \frac{A}{\ker f}}{\sum a \in A \. a \in X}
+	\Conclude{\varphi(X)}{f(a)}{\im f}
+	\Assume{b}{X}
+	\Say{(x,2)}{\bd \frac{A}{\ker f}}{\sum x \in \ker f \. b = xa}
+	\Conclude{()}{2)(f(b)) \bd f \bd x \bd^{-1} \varphi(X)}{ f(b) = f(xa) = f(x)f(a) = f(a) = \varphi(X)}
+	\Derive{\varphi}{\LOGIC{WellDefined}I(\to)}{\frac{A}{\ker f} \to \im f}
+	\Assume{X,Y}{\frac{A}{\ker \varphi}}
+	\Say{(a,b,1)}{\bd X,Y }{\sum a,b \in A : a \in X \. a \in b}
+	\Say{(2)}{\bd^{-1}XY(1)}{ab \in XY}
+	\Conclude{}{ \bd \varphi(XY)(2) \bd f \bd^{-1} \varphi   }{\varphi(XY) = f(ab) = f(a)f(b) = \varphi(X)\varphi(Y)}
+	\Derive{(1)}{\bd^{-1} \TYPE{Homomorphism}}{\left(\varphi : \frac{A}{\ker f} \xrightarrow{\GRP} \im f \right)}
+}\Page{
+	\Assume{y}{\im f}
+	\Say{(x,2)}{\bd \im f \bd y}{ \sum x \in A \. f(x) = y }
+	\Conclude{()}{\bd \varphi(x\ker f)\bd x \ker f}{ \varphi(x\ker f) = f(x) = y}
+	\Derive{(2)}{\bd^{-1} \TYPE{Surjection}}{\left(\varphi : \frac{A}{\ker f} \ToSurj \im f \right)}
+	\Assume{X}{\ker \varphi}
+	\Say{(x,3)}{\bd \varphi \bd X}{\sum x \in X \. \varphi(X) = f(x) = e}
+	\Say{(4)}{\bd^{-1} \ker f (3)}{x \in \ker f}
+	\Conclude{(5)}{\THM{IndexTHM}(4)}{ X = \ker f}
+	\Derive{(3) }{\bd^{-1}\TYPE{Bijection}(\varphi)\THM{TrivialKernelTHM}\bd^{-1}\TYPE{Singleton}}
+	{ \left( \varphi : \frac{A}{\ker f} \xleftrightarrow{\GRP} \im f \right) }
+	\Assume{a}{A}
+	\Conclude{()}{\bd \ldots}
+	{ (a)\pi_{\ker f} \varphi \iota_{\im f} = (a\ker f)\varphi \iota_{\im f} = f(a) \iota_{\im f} = f(a)}
+	\DeriveConclude{(4)}{I(\to.=)}{ \pi_{\ker } \varphi \iota_{\im f}  }
+	\Assume{(\psi,5)}{ \sum \psi : \frac{A}{\ker f} \xleftrightarrow{\GRP} \im f \. \pi \psi \iota = f }
+	\Assume{X}{\frac{A}{\ker f}}
+	\Say{(a,6)}{\bd X}{\sum a \in A : a \in X}
+	\Say{(7)}{ \bd \pi(6)(5) }{ (X)\psi \iota =  (a)\pi \psi \iota = f(a)}
+	\Say{(8)}{\bd \pi(6)(4)}{(X)\varphi \iota = (a) \pi \varphi \iota = f(a)}
+	\Conclude{()}{\bd \TYPE{Injective}(\iota)(7,8)}{\varphi(X) = \psi(X)}
+	\Derive{(*)}{I(\exists!)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\DeclareFunc{inducedIsomorphism}{\prod A,B \in \GRP \. \prod f : A \xrightarrow{\GRP} B \.  
+		 \frac{A}{\ker f} \xleftrightarrow{\GRP} \im f}
+	\DefineNamedFunc{inducedIsomorphism}{}{f_*}{\THM{IsomorphismTHMI}(f)}
+	\\
+	\Theorem{IsomorphismTHMII}{\forall G \in \GRP \. \forall K,H \Nrml G \. \forall (0) : K \Nrml H \.  
+		\frac{G}{K} / \frac{H}{K} \cong_{\GRP} \frac{G}{H}  
+	}
+	\Assume{(aK)}{ \frac{G}{K}}
+	\Say{\varphi(aK)}{aH}{\frac{G}{H}}
+	\Assume{ b }{aK}
+	\Say{ (k,1) }{\bd aH (b)}{\sum k \in K \. b = ah}
+	\Conclude{()}{(1)(0)\bd^{-1} \varphi(aK)}{  bH = akH = aH = \varphi(aK)  }
+	\Derive{\varphi}{\LOGIC{WellDefined}I(\to)\THM{NormalPropertyI}}{\frac{G}{K} \xrightarrow{\GRP} \frac{G}{H}}
+}\Page{
+	\Assume{aK}{\frac{G}{K}}
+	\Assume{(1)}{\varphi(aK) = H}
+	\Say{(2)}{\bd \varphi (1) \bd H }{ a \in H    }
+	\Conclude{(2)}{\bd^{-1}\frac{H}{K}(2)}{aK \in \frac{H}{K}}
+	\Derive{(1)}{\bd^{-1} \ker \varphi}{\ker \varphi = \frac{H}{K}}
+	\Say{(2)}{\bd \varphi_* E(=)(1)}{ \left( \varphi_* : \frac{G}{K} / \frac{H}{K} :\xleftrightarrow{\GRP} \frac{G}{H} 
+	\right)
+	}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Isomorphic}(\GRP)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{IsomorphismTHMIII}{ \forall G \in \GRP \. \forall H,K : \Nrml G \. \frac{H }{H \cap K  } \cong \frac{HK}{K}}
+	\Assume{h}{H}
+	\Conclude{\varphi(h)}{hK}{\frac{HK}{K}}
+	\Derive{\varphi}{I(\to)}{\varphi : H \to \frac{HK}{H}}
+	\Assume{a,b}{H}
+	\Say{(1)}{\bd H \bd^{-1} N(K)}{H \Sgrp G = N(K)  }
+	\Say{(2)}{\THM{ProductOfSubgroups}(K,H)(1)}{K \Nrml HK }
+	\Conclude{()}{ \THM{NormalPropertyI}(b,K)\bd K}{\varphi(a)\varphi(b) = aKbK = abKK = abK = \varphi(ab)}
+	\Derive{(1)}{\bd^{-1} \TYPE{Homomorphism}}{ \left( \varphi : H \xrightarrow{\GRP} \frac{HK}{K}\right)}
+	\Say{(2)}{\bd \varphi }{ \ker \varphi = K}
+	\Say{(3)}{\bd \varphi}{\im \varphi = \frac{HK}{K} }
+	\Say{(4)}{\THM{IsomorphismTHMI}(1,2,3)}
+	{\left( \varphi_* : \frac{H}{H \cap K}  \xleftrightarrow{\GRP} \frac{HK}{K} \right)}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Isomorphic}(\GRP)}{\frac{H}{H \cap K} \cong \frac{HK}{K}}
+	\EndProof
+	\\
+	\Theorem{NormalPullback}{\forall A,B \in \GRP \. \forall f : A \xrightarrow{\GRP} B \. 
+		\forall N \Nrml B \. f^{-1}(N) \Nrml A
+		}
+	\Assume{x}{f^{-1}(N)}
+	\Say{(1)}{\bd \TYPE{Preimage} }{f(x) \in N}
+	\Assume{a}{A}
+	\Say{(2)}{ \bd f\THM{HomoOnInv} (1)\bd \TYPE{Normal}(B)N}{f(axa^{-1}) = f(a)f(x)(f(a))^{-1} \in N}
+	\Conclude{()}{\bd^{-1}\TYPE{Preimage}(f,N)(2)}{ axa^{-1} \in f^{-1}(N) }
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Normal}}{f^{-1}(N) \Nrml B}
+	\EndProof
+}
+\newpage
+\subsection{Solvable Groups}
+\Page{
+	\DeclareType{Tower}{ \prod G \in \GRP \. \sum n \in \Int_+ \. n \to \TYPE{Subgroup}(G)}
+	\DefineType{H}{Tower}{ H_0 = G \And \forall i \in n - 1 \. H_{i+1} \Sgrp H_i  }
+	\\
+	\DeclareType{NormalTower}{?\TYPE{Tower}(G)}
+	\DefineType{(n+1,H)}{NormalTower}{ \forall i \in n \. H_{i+1} \Nrml H_i  }
+	\\
+	\DeclareType{TowerType}{ \prod T : ?\GRP \. ?\TYPE{NormalTower}(G)}
+	\DefineNamedType{(n+1,H)}{TowerType}{(n+1,H):T\hyph\TYPE{Tower}}{  \forall i \in n \. \frac{H_{i}}{H_{i+1}} : T }
+	\\
+	\DeclareType{Solvable}{?\GRP}
+	\DefineType{G}{Solvable}{\exists (n,H) : \Abel\hyph\TYPE{Tower}(G) \. H_n = \{ e \} }
+	\\
+	\DeclareType{Refinement}{\prod G \in \GRP \. ?(\TYPE{Tower}(G) \times \TYPE{Tower}(G))}
+	\DefineNamedType{\Big((n,A),(m,B)\Big)}{Refinement}{ (n,A) \le (m,B)  }{ 
+	\NewLine \iff n \le m \And \exists j : \TYPE{Increasing}(n,m) :
+		\forall i \in n \. A_i = B_{j(i)} }
+	\\
+	\Theorem{FiniteGroupsAbeleanTowerAdmitsCyclicRefinement}{\forall G \in \GRP \. \forall (n,H) : \Abel\hyph\TYPE{Tower}(G) \. 
+	 \NewLine \.
+	 \forall (0) : |G| < \infty \. \exists (m,Z) : \TYPE{Cyclic}\hyph\TYPE{Tower}(G) : (n,H) \le (m,Z)
+	}
+	\Say{(n_{0,0} + 1,H^{0,0})}{(n,H)}{\Abel\hyph\TYPE{Tower}}
+	\Say{\kappa_{0}}{\left|\left\{ k \in  n_{0,0} : \frac{H^{0,0}_{k}}{H^{0,0}_{k+1}} \IsNot \TYPE{Cyclic}\right\} 
+		\right|
+	}{\Nat}
+	\Assume{i}{\Nat}
+	\Assume{(00)}{\kappa_{i-1} \neq 0}
+	\Say{k}{ \min\left\{ k \in  n_{i-1,0} : \frac{H^{i-1,0}_{k}}{H^{i-1,0}_{k+1}} \IsNot \TYPE{Cyclic}\right\} }{n_{i-1,0}}
+	\Assume{j}{\Nat}
+	\Assume{(1)}{\frac{H^{i-1,j-1}_{k}}{H^{i-1,j-1}_{k+1}} \IsNot \TYPE{Cyclic}}
+	\Say{(2)}{\bd \Abel \hyph \TYPE{Tower}(G)\left( H^{i-1,j-1} \right)(k)}
+	{  \left( \frac{H^{i-1,j-1}_{k}}{H^{i-1,j-1}_{k+1}} : \Abel  \right)  }
+	\Say{(y,3)}{ (1)\bd \TYPE{Trivial}}{ \sum y \in \frac{H^{i-1,j-1}_{k}}{H^{i-1,j-1}_{k+1}} \. y \neq e }
+	\Say{(4)}{\THM{AbeleanAllNormal}(2)(\langle y \rangle)}{\left( \langle y \rangle \Nrml  
+		\frac{H^{i-1,j-1}_{k}}{H^{i-1,j-1}_{k+1}}\right)}
+	\Say{X}{ \pi^{-1}\langle y \rangle  }{\TYPE{Subgroup}(H^{i-1,j-1}_k)}
+	\Say{(5)}{\THM{NormalPullback}(4)\bd X}{X \Nrml H^{i-1,j-1}_k}
+	\Say{(6)}{\THM{SubgroupProduct}(5)}{ H^{i-1,j-1}_{k+1} \Nrml XH^{i-1,j-1}_{k+1} \Nrml H^{i-1,j-1}_k       }
+}\Page{
+	\Say{(n_{i-1,j} + 1,H^{i-1,j})}{(n_{i-1,j-1}+2,H^{i-1,j-1}_{1,\ldots,k}-XH^{i-1,j-1}_{k+1}
+		-H^{i-1,j-1}_{k+1,\ldots,n_{i-1,j-1} + 1}    )}{\Abel\hyph\TYPE{Tower}(G)}
+	\Say{\eta_{i,j}}{\bd^{-1}\TYPE{Refinment}\bd (n_{i-1,j}+1,H^{i-1,j})}
+	{ (n_{i-1,j-1} +1,H^{i-1,j-1} ) \le (n_{i-1,j} +1,H^{i-1,j})       }
+	\Say{\zeta_{i,j}}{  \bd (n_{i-1,j}+1,H^{i-1,j})}
+	{\left( \left|  \frac{H^{i-1,j}_{k}}{H^{i-1,j}_{k+1}} \right| <  
+		\left|\frac{H^{i-1,j-1}_{k}}{H^{i-1,j-1}_{k+1}}\right|\right)}
+	\Say{(7)}{\bd X \THM{IsomorphismTHMIII} \bd (n_{i-1,j}+1,H^{i-1,j} )}
+	{ 	
+	  \frac{H^{i-1,j}_{k+1}}{H^{i-1,j}_{k+2}} = \frac{XH^{i-1,j-1}_{k+1}}{H^{i-1,j-1}_{k+1}} \cong
+	   \frac{X}{X \cap H^{i-1,j-1}_{k+1}} = \langle y \rangle : \TYPE{Cyclic}
+	}
+	\Conclude{\xi_{i,j}}{ (7)\prod^{j-1}_{l=1} \xi_{i,l}} 
+	{   \forall l \in n_{i-1,j} -n_{i-1,0} \.  
+		       \frac{H^{i-1,j}_{k + l }}{H^{i-1,j}_{k+l + 1}} :  \TYPE{Cyclic}
+		}
+	\Assume{(1)}{\left( \frac{H^{i-1,j-1}_{k}}{H^{i-1,j-1}_{k+1}} : \TYPE{Cyclic} \right)}
+	\Say{(n_{i-1,j}+1,H^{i-1,j})}{(n_{i-1}+1,H^{i-1,j})}{\Abel\hyph\TYPE{Tower}(G)}
+	\Conclude{  (\eta,\zeta,\xi)}{((),(),())}{\top^3}
+	\Derive{\Big((n_{i-1},H^{i-1}),\eta_i,\zeta_i,\xi_i)\Big)}
+	{
+		I\left(\sum\right)I\left(\prod\right)                       
+	}
+	{
+		\NewLine :
+		\sum   (n^{i-1},H^{i-1}) : \Int_+ \to \Abel\hyph\TYPE{Tower}(G) \. \prod j \in \Nat \.
+		\frac{H^{i-1,j-1}_{k}}{H^{i-1,j-1}_{k+1}}  \IsNot \TYPE{Cyclic} 
+		\Rightarrow \NewLine \Rightarrow 
+		( n_{i-1,j-1}+1,H^{i-1,j-1}) < ( n_{i-1,j}, H^{i-1,j}) 
+		\And
+		\left|  \frac{H^{i-1,j}_{k}}{H^{i-1,j}_{k+1}} \right| <  
+		\left|\frac{H^{i-1,j-1}_{k}}{H^{i-1,j-1}_{k+1}}\right|
+		\And \NewLine \And
+		\forall l \in n_{i-1,j} -n_{i-1,0} \.  
+		\frac{H^{i-1,j}_{k + l }}{H^{i-1,j}_{k+l + 1}} : \TYPE{Cyclic}	 
+	}
+	\Say{(j,2)}{ (0) \prod_{j =1}^\infty \zeta_{i,j} }{ \sum j \in \Nat \.     
+		\frac{H^{i-1,j}_{k}}{H^{i-1,j}_{k + 1}} : \TYPE{Cyclic}	} 
+	\Say{(n_{i,0} + 1,H^{i,0}) }{ (n^{i-1,j} + 1, H^{i,0})  }{\Abel\hyph\TYPE{Tower}}
+	\Say{\kappa_{i}}{\left|\left\{ k \in  n_{i,0} : \frac{H^{i,0}_{k}}{H^{i-1,j}_{k+1}} \IsNot \TYPE{Cyclic}\right\} 
+		\right|
+	}{\Nat}
+	\Say{\mathcal{H}_i}{\mathcal{H}_{i-1}\prod^\infty_{j=1} \eta_{i,j} }{ (n,H) < (n_{i,0},H^{i,0})  }
+	\Conclude{\Xi_i}{\Xi_{i-1}\bd (n_{i,0},H^{i,0})(3)\prod^j_{l=0} \xi_{i,j} \bd^{-1} \kappa}
+	{  \kappa_i < \kappa_{i-1} }
+	\Assume{(00)}{\kappa_{i-1} = 0}
+	\Say{(n_{i,0},H^{i,0})}{(n_{i-1,0},H^{i,0})}{\Abel\hyph\TYPE{Tower}}
+	\Conclude{(\mathcal{H}_i,\Xi_i)}{(\mathcal{H}_{i-1},())}{ (n,H) < (n_{i,0},H_{i,0}) \times \top}
+	\Derive{\Big((n,H),  \mathcal{H}, \Xi \Big)}{I\left(\sum\right)I\left(\prod\right)}
+	{
+		\sum (n,H) : \Int_+^2 \to \Abel\hyph\TYPE{Tower} \. \NewLine \.
+		\prod i \in \Nat \.  (n,H) < (n_{i,0},H^{i,0}) \And \kappa_{i-1} \neq 0 \Rightarrow
+		\kappa_i < \kappa_{i-1} 
+	}
+	\Say{(i,1)}{\bd n \prod^\infty_{i=1} \Xi_i}{ \sum i \in \Nat : \kappa_i = 0  }
+	\Say{(m,Z)}{(n_{i,0},H^{i,0})}{\TYPE{Cyclic}\hyph\TYPE{Tower}}
+	\Conclude{(*)}{\bd(m,Z)\mathcal{H}_i}{(n,H) < (m,Z)}
+	\EndProof
+}
+\Page{
+	\Theorem{SolvableSubgroup}{\forall G : \TYPE{Solvable} \. \forall N \Nrml G \. N : \TYPE{Solvable}}
+	\Say{\Big((n+1,H),0\Big)}{ \bd \TYPE{Solvable}(G) }{ \sum (n+1,H) : \Abel\hyph\TYPE{Tower}(G) 
+		\.  H_{n + 1} = \{ e \} 
+	}
+	\Say{H'}{\Lambda i \in n + 1 \. H_i \cap N}{(n + 1)_{\Int_+} \to  \TYPE{Subgroup}(N) }
+	\Say{(1)}{\Big( \bd H'    \Big)_0\bd N}{ H'_0  = G \cap N = N   }
+	\Say{(2)}{\Big( \bd H' \Big)_{n+1}(0)\bd N}{ H'_{n+1} = \{  e   \} \cap N = \{e\}  }
+	\Say{(3)}{ \bd (H,n+1) \bd H' \bd N    }{ \forall i \in (n)_{\Int_+} \ . H_{i+1}' \Nrml H_i'}
+	\Say{(4)}{ \bd^{-1}\TYPE{NormalTower}(1,3) }{ \Big( (H_i,n+1) : \TYPE{NormalTower}( N )   \Big)  }
+	\Assume{i}{(n)_{\Int_+}}
+	\Say{(5)}{ 
+		\bd H' \bd \TYPE{Tower}(H)\bd^{-1} H_{i+1} \cap (H_i \cap N) 
+		\THM{IsomorphismTHMIII}( H_{i+1}(H_i \cap N),H_{i+1} )
+		\bd^{-1} \TYPE{Subset}
+	}
+	{
+		\NewLine :
+		\frac{H'_i}{H'_{i+1}} = \frac{H_i \cap N}{H_{i+1} \cap N} = 
+		\frac{H_i \cap N}{ H_{i+1} \cap (H_{i} \cap N)} \cong
+		\frac{H_{i+1}(H_i \cap N)}{H_{i+1}} \subset 
+		\frac{H_{i}}{H_{i+1}}             
+	}
+	\Conclude{()}{\bd \Abel \hyph \TYPE{Tower}(H,n)(5)}{\left(  \frac{H'_i}{H'_{i+1}} : \Abel \right)}
+	\Derive{(5)}{I(\forall)}{\forall i \in n \. \frac{H'_i}{H'_{i+1}} : \Abel}
+	\Say{(6)}{\bd^{-1} \Abel \hyph \TYPE{Tower}(4,5)}{\Big( (H,n) : \Abel \hyph \TYPE{Tower}(N) \Big)}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Solvable}(2,6)}{\Big( N :  \TYPE{Solvable}\Big)}
+	\EndProof
+	\\
+	\Theorem{SolvableQuetient}{ \forall G : \TYPE{Solvable} \. \forall N \Nrml G \. \frac{G}{N} : \TYPE{Solvable} }
+	\Say{\Big((n+1,H),0\Big)}{ \bd \TYPE{Solvable}(G) }{ \sum (n+1,H) : \Abel\hyph\TYPE{Tower}(G) 
+		\.  H_{n + 1} = \{ e \} }	
+	\Say{H'}{  \Lambda i \in (n+1)_{\Int_+} \. \frac{H_i}{H_i \cap N}    }{(n+1)_{\Int_+} \to  \GRP   }
+	\Say{(1)}{  (\bd H')_0  \bd N        }{  H'_0  = \frac{G}{N \cap G} = \frac{G}{N} }
+	\Say{(2)}{ (\bd H')_{n+1} (0)  }{  H'_{n+1} = \frac{\{e\}}{\{e\} \cap N } = \{e\}   }
+	\Say{(3)}{ \bd (H,n+1) \bd H' \bd N    }{ \forall i \in (n)_{\Int_+} \ . H_{i+1}' \Nrml H_i'}
+	\Say{(4)}{ \bd^{-1}\TYPE{NormalTower}(1,3) }{ \Big( (H_i,n+1) : \TYPE{NormalTower}( N )   \Big)  }
+	\Assume{i}{(n)_{\Int_+}}
+	\Say{(5)}{\bd H'  \THM{IsomorphisTHMIII}(H_{i+1},H_i \cap N)      
+		\THM{IsomorphismTHMII}(H_i,H_{i+1},H_i \cap N)
+		\NewLine
+		\THM{IsomorphismTHMII}(H_{i}, H_{i+1}(H_i \cap N)  , H_{i+1})
+	}
+	{  
+	   \NewLine :
+	   \frac{H_{i}'}{H_{i+1}'} = \left( \frac{H_i}{H_i \cap N} \right)/\left( \frac{H_{i+1}}{H_{i+1} \cap N} \right)   
+	   = \left( \frac{H_i}{H_i \cap N} \right)/\left( \frac{H_{i+1}}{H_{i+1} \cap ( H_i  \cap N)} \right) 
+	   \cong  \NewLine \cong
+	    \left( \frac{H_i}{H_i \cap N} \right)/\left( \frac{H_{i+1}(H_i \cap N)}{H_{i} \cap N} \right)
+	    \cong 
+	     \frac{H_i}{H_{i+1}(H_i \cap N)}  \cong 
+	     \left(\frac{H_i}{H_{i+1}} \right) / \left( \frac{H_{i+1}(H_i \cap N)}{H_{i+1}} \right)
+	}
+}\Page{  
+	\Conclude{()}{ \bd \Abel \hyph \TYPE{Tower}(H) \bd \FUNC{quetientGroup}(5)\bd^{-1} \Abel  }
+	{\left(  \frac{H'_i}{H'_{i + 1}}  : \Abel      \right) }
+	\Derive{(5)}{I(\forall)}{\forall i \in n \. \frac{H'_i}{H'_{i+1}} : \Abel}
+	\Say{(6)}{\bd^{-1} \Abel \hyph \TYPE{Tower}(4,5)}{\Big( (H',n) : \Abel \hyph \TYPE{Tower}(N) \Big)}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Solvable}(2,6)}{\left( \frac{G}{N} :  \TYPE{Solvable}\right)}
+	\EndProof	
+	\\
+	\Theorem{SolvabilityCriterion}{\forall G \in \GRP \. \forall N \Nrml G \. 
+	\forall (0) : N , \frac{G}{N} : \TYPE{Solvable} \. G : \TYPE{Solvable}}
+	\Say{(1)}{\bd \FUNC{quetientGroup}(G,N)}{G \cong N \times \frac{G}{N}}
+	\Say{\Big((n + 1,A),2\Big)}{ \bd \TYPE{Solvable}(N)}{ 
+		\sum (n + 1,A) : \Abel\hyph \TYPE{  Tower  }(N) \.  A_{n+1} = \{e\}  }
+	\Say{\Big((m + 1,B),3\Big)}{ \bd \TYPE{Solvable}(G/N)}{ 
+		\sum (m + 1,A) : \Abel\hyph \TYPE{  Tower  } \; \frac{G}{N} \. B_{m+1} = \{e\}   }
+	\Assume{(4)}{n=m}
+	\Say{H}{\Lambda i \in (n+1)_{\Int_+} \. A_i \times B_i}{ 
+		(n + 1)_{\Int_+} \to \TYPE{Subgroup}\left( N \times \frac{G}{N}\right)    }
+	\Say{(5)}{ (1)(\bd H)_0  }{ H_0 \cong G}
+	\Say{(6)}{(2)(3)(\bd H)_{n+1}}{ H_{n+1} = \{e\} \times \{e\} \cong \{e\} }
+	\NoProof
+}
+\newpage 
+\subsection{Commutator Subgroup}
+\Page{
+	\DeclareFunc{ commutator  }{\prod G \in \GRP \.  \TYPE{Subgroup}(G)}
+	\DefineNamedFunc{commutator}{  }{G^c}{\Big\langle \{ aba^{-1}b^{-1} | a,b \in G  \} \Big\rangle}
+	\\
+	\Theorem{CommutatorIsNormal}{\forall  G \in \GRP \. G^c \Nrml G  }
+	\Assume{g}{G}
+	\Assume{h}{G^c}
+	\Say{ (n,a,b,1) }{\bd G^c(h)}{ \sum n \in \Nat \. \sum a,b : n \to G \. h = \prod^n_{i=1} a_i b_i a_i^{-1} b^{-1}_i}
+	\Conclude{  ()   }{ (1)(ghg^{-1}) \bd^{-1} (ga_ig^{-1},gb_ig^{-1}) \bd^{-1} G^c         }
+	{  \NewLine : 
+	   ghg^{-1} = g\left( \prod^n_{i=1} a_i b_i a_i^{-1} b_i^{-1}  \right)g^{-1} = \prod^n_{i=1} (ga_ig^{-1})(gb_ig^{-1})
+		(ga_ig^{-1})^{-1} (gb_i g^{-1})^{-1} \in G^c 
+	}
+	\DeriveConclude{(*)}{ \bd^{-1}\TYPE{Normal}}{ G^c \Nrml G  }
+	\EndProof
+	\\
+	\Theorem{CommutatorQuetientIsAbelean}{\forall G \in \GRP \. \frac{G}{G^c } : \Abel}
+	\Assume{aG^c,bG^c}{\frac{G}{G^c}}
+	\Conclude{()}{\THM{NormalProperty}(G^c)(a,b) \bd G^c \THM{NormalProperty}(G^c)(a,b)   }
+	{ 
+	 \NewLine :
+	 aG^cbG^c = abG^c = abb^{-1}a^{-1}baG^c = baG^c  = bG^caG^c  }
+	\DeriveConclude{(*)}{\bd^{*}\Abel}{\Abel \; \frac{G}{G^c}}                               
+	\EndProof
+	\\
+	\DeclareType{Simple}{?\GRP}
+	\DefineType{G}{Simple}{\Big\{ H \Nrml G : \big(H : \TYPE{NonTrivial}(G)\big)  \Big\} = \emptyset  }
+}
+\newpage
+\subsection{Jordan-H\"{o}lder Theory }
+\Page{
+	\Theorem{PreButterflyLemmaI}{ \forall G \in \GRP \. \forall A,B \Sgrp G \. \forall a \Nrml A \. \forall b \Nrml B \.    
+		 a(A \cap b) \Nrml a(A \cap B)  }
+	\Assume{c,d}{a}
+	\Assume{x}{A \cap B}
+	\Assume{y}{A \cap b}
+	\Say{(z,1)}{\THM{NormalPropertyI}(y,x^{-1})}{\sum z \in A \cap b \. x^{-1}z = yx^{-1}}
+	\Say{(s,2)}{\THM{NormalPropertyI}(c^{-1},y)}{\sum s \in a \.  zc^{-1} = sz}
+	\Say{(3)}{\bd \TYPE{Normal}(A)(a)(d,x)}{xdx^{-1} \in a}
+	\Conclude{()}{(1)(2)(3)}
+	{    cxdyx^{-1}c^{-1}  = cxdx^{-1}zc^{-1} = cxdx^{-1}sz \in a(A \cap b)    }
+	\DeriveConclude{(1)}{\bd^{-1}\TYPE{Normal}}{   a(A \cap b) \Nrml a(A \cap B)    }
+	\EndProof
+	\\
+	\Theorem{PreButterflyLemmaII}{ \forall G \in \GRP \. \forall A,B \Sgrp G \. \forall a \Nrml A \. \forall b \Nrml B \.    
+		(a \cap B )b \Nrml (A \cap B)b}
+	\Assume{c,d}{b}
+	\Assume{x}{A \cap B}
+	\Assume{y}{a \cap B}
+	\Say{(z,2)}{\THM{NormalPropertyI}(c,y)}{\sum z \in b \. y z   =  c y}
+	\Say{(s,3)}{\THM{NormalPropertyI}(c^{-1},y)}{\sum s \in (a \cap B) \. xy = sx }
+	\Say{(4)}{\bd \TYPE{Normal}(B)(b)(zdc^{-1},x)}{xzdc^{-1}x^{-1} \in b}
+	\Conclude{()}{(2)(3)(4)}{  xcydc^{-1}x^{-1} = xyzdc^{-1}x^{-1} = sxzdc^{-1}x^{-1} \in (a \cap B)b    }
+	\DeriveConclude{(2)}{ \bd^{-1} \TYPE{Normal}  }{(a \cap B)b \Nrml (A \cap B)b }
+	\EndProof
+	\\
+	\Theorem{ButterflyLemma}{ \forall G \in \GRP \. \forall A,B \Sgrp G \. \forall a \Nrml A \. \forall b \Nrml B \.    
+		\frac{a(A \cap B)}{ a(A \cap b)} \cong \frac{(A \cap B )b}{(a \cap B)b}
+	}	
+	\Conclude{(3)}{ \THM{IntersectProduct}(A,B,a,b) \THM{IsomorphismTHMIII}\Big(a(A \cap B), ab\Big) 
+		\NewLine
+		\THM{NormalPropertyI}^2(A,a)(B,b) \THM{IsomorphismTHMIII}\Big((A \cap B)b, ab\Big)
+		\THM{IntersectionProduct}(A,B,a,b)
+	}{  \NewLine
+		\frac{a(A \cap B)}{  a(A \cap b) } = 
+		\frac{a(A \cap B)}{ a(A \cap B) \cap ab  } \cong   
+		\frac{a(A \cap B)ab}{ ab  } = \frac{ab(A \cap B)b}{ab} \cong
+		\frac{(A \cap B)b}{ ab \cap (A \cap B)b} = 
+		\frac{(A \cap B)b}{ (a \cap B)b}
+	}
+	\EndProof
+}
+\Page{
+	\DeclareType{EqNormalTowers}{  \prod G \in \GRP \.  ?\TYPE{NormalTower}^2(G)  }
+	\DefineNamedType{\Big((r + 1,H),(s+1,E)\Big)}{EqNormalTowers}{  (r+1,H) \sim (s +1, E)}
+	{ r = s \And \NewLine \And  
+	\exists \sigma \in \mathrm{Aut}_{\SET}(r) \. \forall i \in r \. \frac{H_i}{H_{i+1}} \cong 
+	\frac{E_{\sigma(i)}}{E_{\sigma(i)+1} }   }
+	\\
+	\DeclareType{PotentialSolution}{\prod G \in \GRP \. ?\TYPE{NormalTower}(G)}
+	\DefineType{(r,H)}{PotentialSolution}{H_{r} = \{e\}}
+	\\
+	\Theorem{SchreierTHM}{\forall G \in \GRP \. \forall (H,r + 1),(E,s + 1) : \TYPE{PotentialSolution}(G) \. 
+		\NewLine \. \exists (H',t + 1), (E',t + 1) : \TYPE{NormalTower}(G) : 
+		(H,r + 1) \le (H',t + 1) \And (E, s + 1) \le (E', t + 1) \And 
+		\NewLine \And (H,r + 1) \sim (E,t + 1)
+	}
+	\Say{t}{rs}{\Nat}
+	\Say{X}{\Lambda (i,j) \in  r \times s \.  H_{i+1}(H_i \cap E_j) }
+	{  r \times s \to \TYPE{Subgroup}(G)}
+	\Say{Y}{\Lambda i, j \in s \times r \.   (H_j \cap E_i) E_{i + 1}  }
+	{ s \times r \to \TYPE{Subgroup}(G)}
+	\Assume{k}{t + 1}
+	\Assume{(1)}{k = t + 1}
+	\Conclude{H'_k}{\{e\}}{\TYPE{Subgroup}(G)}
+	\Assume{(i,1)}{ \sum i \in \Nat \.  k = is }
+	\Conclude{H'_k}{ E_{i+1}}{\TYPE{Subgroup}(G)}
+	\Assume{(i,j,1)}{\sum  i \in \Nat \. \sum j \in s-1 \. k = is + j}
+	\Conclude{H'_k}{X_{i+1,j + 1} }{\TYPE{Subgrouo}(G)}
+	\Derive{\Big( (t,H'), 1 \Big) }{ I\left(\sum \right)\THM{PreButterflyLemmaI}\bd X }
+	{ \sum (t,H') : \TYPE{NormalTower}(G) \. (r,H) \le (t,H') }
+	\Assume{k}{t + 1}
+	\Assume{(1)}{k = t + 1}
+	\Conclude{E'_k}{\{e\}}{\TYPE{Subgroup}(G)}
+	\Assume{(i,1)}{ \sum i \in \Nat \.  k = ir }
+	\Conclude{H'_k}{ E_{i+1}}{\TYPE{Subgroup}(G)}
+	\Assume{(i,j,1)}{\sum  i \in \Nat \. \sum j \in r-1 \. k = ir + j}
+	\Conclude{H'_k}{Y_{i+1,j + 1} }{\TYPE{Subgroup}(G)}
+	\Derive{\Big( (t,H'), 2 \Big) }{ I\left(\sum \right)\THM{PreButterflyLemmaII}\bd Y }
+	{ \sum (t,H') : \TYPE{NormalTower}(G) \. (r,H) \le (t,H') }
+	\Assume{i}{r}
+	\Assume{j}{s}
+	\Conclude{(2)}{ \bd H' \bd X \THM{ButterflyLemma} \bd^{-1} Y \bd^{-1}}
+	{
+	  \NewLine :	
+	 \frac{H'_{(i-1)s +j}}{H'_{(i-1)s + j + 1}} = \frac{X_{i,j}}{X_{i,j+1}} = 
+	 \frac{ H_{i + 1}( H_{i} \cap E_{j})}{H_{i + 1}(H_{i } \cap E_{j+ 1} ) } \cong
+	 \frac{ (H_{i} \cap E_{j })E_{j + 1} }{(H_{i+2} \cap E_{j+1} )E_{j+ 1}} =  
+	 \frac{Y_{j ,i }}{Y_{j , i+1}} = \frac{E'_{(j-1)r + i}}{E'_{(j-1)r + i + 1}} 
+	}
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{EqNormalTower} }{(H',t+1) \sim (E',t + 1)}
+	\EndProof
+}\Page{
+	\Theorem{JordanH\ddot{o}lderTHM}{ \prod G \in \GRP \. \forall (r,H),(s,E) : \TYPE{Simple}\hyph\TYPE{Tower}(G)  
+		\.  (r,H) \sim (s,E)
+	}
+	\Say{\Big((t,H'),(s,E'),1\Big)}{\THM{SchreirTHM}\Big( (r,H),(s,E)\Big)}
+	{ \sum  (t,H'),(t,E') : \TYPE{NormalTower}(G) \. 
+	   \NewLine \.
+		(t,H') \sim (s,E')    
+	   \And   (r,H) \le (t,H') \And (s,E) \le (t,E') 	
+	}
+	\Say{ (2) }{(1)\bd(t,H')\bd \TYPE{Simple}\hyph\TYPE{Tower}(r,H)}{(r,H) = (t,H')}
+	\Say{ (3) }{(1)\bd(t,E')\bd \TYPE{Simple}\hyph\TYPE{Tower}(s,E)}{(s,E) = (t,E')}
+	\Conclude{(4)}{ (1)(2)(3)}{(r,H) \sim (t,E')}
+	\EndProof
+}
+\newpage
+\subsection{Semidirect Product}
+\Page{   
+	\Theorem{SemidirectProductBijection}{
+			\forall  G \in \GRP \. \forall N \Nrml G \. \forall H \Sgrp G \.   \forall (0) : H \cap N = \{e\} \.  
+			\NewLine \. \Lambda (a,b) \in N \times H \. ab : N \times H \ToBij NH
+		}
+	\Say{\mu}{\Lambda (a,b) \in N \times H \. ab }{N \times H \to NH}
+	\Assume{x}{NH}
+	\Say{(a,b,1)}{\bd \FUNC{product}}{\sum (a,b) \in N \times H \. x = ab }
+	\Conclude{()}{\bd \mu (a,b)(1)}{\mu(a,b)= ab = x}
+	\Derive{(1)}{\bd^{-1} \TYPE{Surjection}}{ \mu : N \times H : \ToSurj NH }
+	\Assume{(a,b),(c,d)}{N \times H}
+	\Assume{(2)}{ab = cd}
+	\Say{(3)}{\bd \TYPE{Normal}(G)(N)(a,b^{-1})}{b^{-1}ab \in N}
+	\Say{(4)}{(3)(2)}{b^{-1}cd \in N}
+	\Say{(5)}{\bd \TYPE{Normal}(G)(N)(4,d) }{ db^{-1}c \in N  }
+	\Say{(6)}{\THM{TotalGroupMult}(N)(5)}{ db^{-1} \in N   }
+	\Say{(7)}{\bd \TYPE{Subgroup}(G,H)(d,b^{-1}}{db^{-1} \in H}
+	\Say{(8)}{ \bd (0)(5,7) }{ db^{-1} = e  }
+	\Say{(9)}{ (8)b }{  d = b   }
+	\Say{(10)}{\THM{TotalGroupMult}(G)(9)(2)}{a = c}
+	\Conclude{()}{ I(=,\times)(9,10)}{ (a,b) = (c,d)}
+	\Derive{(2)}{\bd^{-1} \TYPE{Injective}}{\mu : N \times H \ToInj NH  }
+	\Conclude{(*)}{\bd^{-1}\TYPE{Bijective}(1,2)}{\mu N \times H \ToBij NH}
+	\EndProof
+	\\
+	\DeclareType{InnerSemidirectProduct}{  \prod G \in \GRP \. ?(\TYPE{Normal} \times \TYPE{Subgroup}(G))  }
+	\DefineNamedType{(N,H)}{InnerSemidirectProduct}{G = N \SDP H}{N \cap H = \{e\} \And  NH = G}
+	\\
+	\Theorem{SemidirectProductAsDirectProduct}{\forall (0) : G = N \SDP H \. \forall (00) : \gamma_{|H|N} = {\id}_{N} \.  G \cong_\GRP N \times H}
+	\Assume{a}{H}
+	\Assume{b}{N}
+	\Say{(1)}{ (00)(a,b) }{aba^{-1} = b}
+	\Conclude{()}{ (1)(a)  }{ab = ba}
+	\Derive{(1)}{ I(\forall)  }{ \forall a \in H \. b \in N \. ab = ba }
+	\Assume{h}{H}
+	\Assume{x}{G}
+	\Say{(a,b,2)}{(0)_2(x)}{\sum a \in N \. \sum b \in H \. x = ab}
+	\Conclude{(0)}{(2)(1)(a,b)(1)(a,h) \bd \TYPE{Subgroup}(H) }{ xhx^{-1} = abhb^{-1}a^{-1} = baha^{-1}b^{-1} = bhb^{-1} \in H}
+	\Derive{(2)}{\bd^{-1} \TYPE{Normal}(G) }{ \Big[ H : \TYPE{Normal}(G) \Big] }
+	\Conclude{(*)}{\THM{ProductCondition}(1,2)}{  H \times N \cong_{\GRP} G  }
+	\EndProof
+}
+\Page{
+	\Theorem{SemidirectQuotient}{ \forall (0) : G = N \SDP H \. \frac{G}{N} \cong_\GRP  H  }
+	\Conclude{(*)}{\THM{SemodirectProductBijection}(0)}{\pi_{|H} : H \ToIso{\GRP} \frac{G}{N}}
+	\EndProof
+	\\
+	\Theorem{OuterSemidirectProductIsGroup}{ 
+		\forall G,H \in \GRP \. \forall \varphi : G \Arrow{\GRP} \Aut_\GRP(H) \. \NewLine \.
+		\forall (\odot) : (G \times H)^2 \to G \times H \. 
+		\forall (0) : \forall (a,b),(c,d) \in (G \times H)^2 \. (a,b) \odot (c,d) = \Big(ac,  b \phi(a)(d) \Big)  \.
+		\NewLine \. \Big(  G \times H, \odot \Big) \in \GRP
+	}
+	\Assume{(a,b)(a',b')(a'',b'')}{G \times H}
+	\Conclude{()}{ (0) \bd^2 \TYPE{Homo}(\phi)(\phi(a))  }{
+			\big((a,b) \odot (a',b') \big) \odot (a'',b'') = 
+			(aa', b \phi(a)(b')) \odot (a'',b'') = \NewLine = 
+			\Big( aa'a'', b \phi(a)(b')\phi(aa')(b'') \Big)  = 
+			\Big( aa'a'', b \phi(a)(b')\phi(a)\big(\phi(a')(b'')\big) \Big) =
+			\Big( aa'a'', b \phi(a)\big(b'\phi(a')(b'')\big) \Big) = \NewLine = 
+			(a,b) \odot (a'a'', b'(\phi(a')(b''))  =
+			(a,b) \odot \big( (a',b') \odot (a'',b'') \big)
+		}
+	\Derive{(1)}{\bd^{-1} \TYPE{Semigroup}}{\Big[ ( G \times H, \odot): \TYPE{Semigroup} \Big] }
+	\Assume{(a,b)}{G \times H}
+	\Say{()_1}{ (0) \bd \TYPE{Homo}(\phi)   }{ (e,e) \odot (a,b) = (a, \phi(e)(b)) = (a,b) }
+	\Conclude{()_2}{ (0) \bd \TYPE{Homo}(\phi(a))  }{(a,b) \odot (e,e) = (a, b \phi(a)(e) ) = (a,b)}
+	\Derive{(2)}{\bd^{-1} \TYPE{Monoid}}{\Big[ (G \times H, \odot) : \TYPE{Monoid} \Big]}
+	\Assume{(a,b)}{G \times H}
+	\Say{(c,3)}{\bd \TYPE{Auto}(\phi(a))}{\sum c \in H \. \phi(a)(c) = b^{-1}}
+	\Say{()_1}{(0)(3)\bd \TYPE{Inverse} }{ (a,b) \odot (a^{-1},c) = (aa^{-1}, b\phi(a)(c)) = (aa^{-1},bb^{-1}) = (e,e)}
+	\Conclude{()_2}{ (0)\bd \TYPE{homo}(\phi)(\phi(a))(3) \bd \TYPE{Inverse} }
+	{ 
+		(a^{-1},c) \odot (a,b) = 
+		\Big(aa^{-1} c\phi(a^{-1})(b) \Big) = \NewLine = 
+		\Big(a^{-1}a,c\phi^{-1}(a)(b)\Big) = 
+		(a^{-1}a,cc^{-1}) = 
+		(e,e)   
+	}
+	\Derive{(*)}{\bd^{-1}\GRP}{ (G \times G,\odot) \in \GRP}
+	\EndProof
+	\\
+	\DeclareFunc{outerSemidirectProduct}{\prod G,H \in \GRP \. G \Arrow{\GRP} \Aut_{\GRP}(H) \to \GRP}
+	\DefineNamedFunc{outerSemidirectProduct}{\phi}{G \SDP_\phi H}{\Big( G \times H, \Lambda (a,b),(c,d) \in G \times H \. (ac,b\phi(a)(d)) \Big)}
+	\\
+	\Theorem{InnerAsOuter}{\forall (0) : G = N \SDP H \. G \cong_\GRP  H \SDP_{\gamma} N}
+	\Say{\mu}{ \Lambda (a,b) : H \SDP_{\gamma} N \. ba }{ H \SDP_{\gamma} N \to G  }
+	\Assume{(a,b),(a',b')}{H \SDP_{\gamma} N}
+	\Conclude{()}{\bd H \SDP_{\gamma} N (a,b)(a',b') bd \mu \bd \TYPE{Inverse}(a) \bd^{-1}\mu }{ 
+			\NewLine :
+			\mu\Big( (a,b)(a',b')  \Big)  = 
+			\mu\Big( aa', bab'a^{-1}  \Big) = 
+			bab'a^{-1}aa' = 
+			bab'a' =
+			\mu(a,b)\mu(a',b')
+		}
+	\Derive{(1)}{\bd^{-1} \TYPE{Homo}}{\Big[ \mu : H \SDP_\gamma N \Arrow{\GRP} G  \Big]}
+	\Conclude{(*)}{\THM{SemidirectProductBijection}(0)\bd \mu (1) }{\Big[ \mu : H \SDP_\gamma B \ToIso{\GRP} G \Big]}
+	\EndProof
+}
+\subsection{Group Extension[!]}
+\subsection{Nillpotent Groups[!]}
+\newpage
+\section{Finite Groups}
+\subsection{Cyclic Groups}
+\Page{
+	\DeclareFunc{exponent}{ \prod G \in \GRP \. G \to \Int \xrightarrow{\GRP} G  }
+ \DefineNamedFunc{exponent}{g,n}{\mathrm{exp}_g(n)}{g^n}
+ \\
+ \DeclareType{FiniteGroup}{ ? \TYPE{Group}}
+ \DefineType{G}{FiniteGroup}{ |G| < \infty }
+ \\
+ \Theorem{OrderIsWellDefined}{\forall G : \FG \. \forall g \in G \. \exists n \in \Nat \. g^n = e}
+ \Say{(1)}{\bd \FG(G)(g)}{ \langle g \rangle < |G| < \infty }
+ \Say{(n,m,2)}{ \bd g (1) }{ \sum n,m \in \Nat \. g^n = g^m \And n < m  }
+ \Conclude{(*)}{(2)g^{-1}}{ e = g^{n - m}}
+ \EndProof
+ \\
+ \DeclareFunc{order}{ \prod G : \FG \. G \to \Nat   }
+ \DefineNamedFunc{order}{g}{o(g)}{ \min \ker \mathrm{exp_g} \cap \Nat}
+ \\
+ \Theorem{OrderDivides}{\forall G : \FG \. \forall g \in G \. o(g) \; \vdots \; |G|  }
+ \Say{(1)}{\bd o(g)}{o(g) = \big|\langle g \rangle\big|}
+ \Say{(2)}{\THM{IndexTHM}\big(\langle g \rangle\big)}{ \big| \langle g \rangle \big| \big[ G : \langle g \rangle \big] = |G|  }
+ \Conclude{(*)}{\bd^{-1} \TYPE{Divisor}\big(|G|\big)(1)(2)}{ o(g) \; \vdots \; |G|   }
+ \EndProof
+ \\
+ \Theorem{PrimeOederIsCyclic}{\forall G : \FG \. |G| : \TYPE{Prime} \Rightarrow G : \TYPE{Cyclic}}
+ \Say{(1)}{\bd \TYPE{Prime}(|G|)}{|G| \neq 1}
+ \Say{(g,2)}{ \bd \TYPE{Group}(G)\bd \TYPE{Cardinality}(1)(e)}{ \sum g \in G \. g \neq e }
+ \Say{(3)}{\bd \FUNC{generate}(2)}{ \Big|\langle g \rangle\Big| \neq 1}
+ \Say{(4)}{ \THM{OrderDivides}(g)\bd o(g)}{ \Big| \langle g \rangle \Big| \; \vdots \; |G|   }
+ \Say{(5)}{\bd \TYPE{Prime} \; |G| (3)(4) }{ \Big| \langle g \rangle \Big| = |G| }
+ \Say{(6)}{ \THM{FiniteSubsetTHM}(G,\langle g \rangle) \; \THM{FiniteSetIsoTHM}(G,\langle g \rangle)(5) }
+ { \langle g \rangle = G  }
+ \Conclude{(*)}{\bd^{-1} \TYPE{Cyclic} (6)}{ \LOGIC{This}}
+ \EndProof
+}
+\Page{
+	\Theorem{PrimeOrderSamePeriod}{\forall G : \FG \. \forall (0) : \Big( |G| : \TYPE{Prime} \Big) 
+		\. \forall g \in G \. \forall (00) : g \neq e \. o(g) = |G|
+	}
+ \Say{(1)}{ \THM{OrderDivides}(g)}{ o(g) \; \vdots \; |G|}
+ \Conclude{(*)}{\bd \TYPE{Prime} \; |G|(1)(0)(00) }{ o(g) = |G| }
+ \EndProof
+\\
+\Theorem{IntIsCyclic}{(\Int : \TYPE{Cyclic})}
+\Say{(1)}{\bd \Int}{ \Int = \langle 1 \rangle}
+\Conclude{(*)}{\bd^{-1} \TYPE{Cyclic}(1)}{(\Int : \TYPE{Cyclic})}
+\EndProof
+\\
+\Theorem{IntSubgroupIsCyclic}{ \forall N \Nrml \Int \. N : \TYPE{Cyclic}}
+\Assume{(1)}{N \neq \{0\}}
+\Say{n}{\min  N \cap \Nat }{ \Nat}
+\Assume{a,b}{N}
+\Say{(s,r,2)}{\THM{GCDAlgorithm}\Big(|a|,|b|\Big)}{\sum s,r \in \Int \. \mathrm{gcd}\Big(|a|,|b|\Big) = s|a| + r|b|}
+\Conclude{()}{\bd \TYPE{Subgroup}(\Int)(N)(2) }{ \mathrm{gcd}\Big(|a|,|b|\Big) \in N  }
+\Derive{(2)}{I(\forall)}{\forall a, b \in N \. \mathrm{gcd}\Big(|a|,|b|\Big) \in N}
+\Assume{g}{N}
+\Say{(3)}{(2)(n,g)}{ \mathrm{gcd}\Big( n, |g| \Big)  \in N}
+\Say{(4)}{ \bd \mathrm{gcd}\Big( n, |g| \Big) \THM{DivisorSize}(n)  }{ 0 < \mathrm{gcd}\Big(n, |g| \Big) \le n }
+\Say{(5)}{ \bd n (4)  }{ \mathrm{gcd}\Big(n, |g| \Big) = n }
+\Conclude{(6)}{ \bd \mathrm{gcd}\Big(n, |g| \Big)(5) }{ n \; \vdots \; |g|}
+\Derive{(3)}{I(\forall)}{\forall g \in N \. n \; \vdots \; |g|}
+\Say{(4)}{\bd \Int(3)\bd n}{ N = \langle n \rangle   } 
+\Conclude{(5)}{\bd^{-1} \TYPE{Cyclic}}{ (N : \TYPE{Cyclic})}
+\NoProof
+\\
+\Theorem{ImageOfCyclicIsCyclic}{\forall G \in \GRP \. \forall Z : \TYPE{Cyclic} \. 
+	\forall f : Z \xrightarrow{\GRP} G \.  f(Z) : \TYPE{Cyclic}	
+}
+\Say{(z,1)}{\bd \TYPE{Cyclic}}{\sum z \in Z \. Z = \langle z \rangle }
+\Say{ (2) }{ \bd \TYPE{Image} \bd f \bd \FUNC{generate}(z)  }{   f(Z) = \langle f(z) \rangle           }
+\Conclude{ (*) }{\bd^{-1} \TYPE{Cyclic}}{ f(Z) : \TYPE{Cyclic}}
+\EndProof
+}\Page{
+\Theorem{QuetientOfCyclicIsCyclic}{\forall Z : \TYPE{Cyclic} \. \forall N \Sgrp Z \. \frac{Z}{N} : \TYPE{Cyclic}}
+\Say{(1)}{\bd \FUNC{quetientGroup}(Z,N)\bd^{-1} \pi_N}{ \frac{Z}{N} = \pi_N(Z)}
+\Conclude{(2)}{\THM{ImageOfCyclicIsCyclic}(1)}{ \frac{Z}{N} = \pi_N(Z)}
+\EndProof
+\\
+\DeclareFunc{nElementCyclic}{\Nat \to \TYPE{Cyclic}}
+\DefineNamedFunc{nElementCyclic}{n}{ Z_n}{\frac{\Int}{n\Int}}
+\\
+\Theorem{SubgroupOfCyclicIsCyclic}{\forall Z : \TYPE{Cyclic} \. \forall N \Sgrp Z \. N : \TYPE{Cyclic} }
+\Say{(z,1) }{ \bd \TYPE{Cyclic}(Z) }{ \forall z \in Z \. \langle z \rangle = Z }
+\Say{ f  }{ \mathrm{exp}_z  }{ \Int \xrightarrow{\GRP} Z }
+\Say{ M  }{f^{-1}(N)}{\TYPE{Subgroup}(Z)}
+\Say{ (2) }{\THM{IntSubgroupIsCyclic}(M)}{(M : \TYPE{Cyclic})}
+\Say{(3)}{ \bd M \bd \TYPE{Preimage}}{f(M) = N}
+\Conclude{(*)}{\THM{ImageOfCyclicIsCyclic}(2)(3) }{ (N : \TYPE{Cyclic})  }
+\EndProof
+\\ 
+\DeclareType{Generator}{\prod G : \GRP \. ?G}
+\DefineType{g}{Generator}{\langle g \rangle = G}
+\\
+\Theorem{GeneratorsOfIntegers}{ \TYPE{Generator}(\Int) = \{ 1, -1\}  }
+\Assume{n}{\TYPE{Generator}{Int}}
+\Say{(1)}{\bd \TYPE{Generator}(\Int)(n)}{\Int = \langle n \rangle}
+\Say{(k,2)}{\FUNC{genGroup}(1)[1]}{ \sum k \in \Int \. 1 = kn}
+\Conclude{(*)}{\THM{UnitDivisor}(2)}{n \in \{1,-1\}}
+\EndProof
+\\
+\Theorem{Integerlike}{\forall Z : \TYPE{Cyclic} \. \forall (0) : |Z| = \infty \.  Z \cong_{\GRP} \Int}
+\Say{g}{\bd \TYPE{Cyclic}(Z)}{ \TYPE{Generator}(Z)}
+\Say{f}{\exp_g }{\Int \to_{\GRP} Z}
+\Say{(1)}{\bd \TYPE{Generator}(Z)(g)\bd f(0) }{ (f : \TYPE{Injective})}
+\Say{(2)}{\bd \TYPE{Generator}(Z)(g)\bd f }{(f : \TYPE{Surjective})}
+\Say{(3)}{\bd^{-1} \TYPE{Bijection}(1)(2)}{(f : \TYPE{Bijection})}
+\Conclude{(4)}{\bd \TYPE{Isomorphic}(\bd f)(3)}{Z \cong \Int}
+\EndProof
+}\Page{
+	\Theorem{GeneratorsImageIsGenerator}{ \forall A,B \in \GRP \. \forall \varphi : A \leftrightarrow_{\GRP} B \. 
+		\NewLine
+		\forall a : \TYPE{Generator}(A) \. \varphi(a) : \TYPE{Generator}(B) }
+	& \text{Same proof as in $\THM{ImageOfCyclicIsCyclic}$} \\
+	\EndProof
+	\\
+	\Theorem{GeneratorsOfInfiniteCyclic}{\forall Z : \TYPE{Cyclic} \. \forall (0) : |Z| = \infty \. 
+		\# \TYPE{Generator}(Z) = 2
+	}
+	& \text{Combine $\THM{GeneratorsImageIsGenerator}$, $\THM{Integerlike}$ and $\THM{GeneratorsOfIntegers}$ }\\
+	\EndProof
+	\\
+	\Theorem{OrderOfPower}{\forall G : \FG \. \forall g \in G \. \forall n \in \Nat \. o(g^n) = \frac{o(g)}{\mathrm{gcd}
+		(o(g),n)} }
+	\Say{m}{\frac{o(g)}{\mathrm{gcd}(o(g),n)}}{\Nat}
+	\Say{(k,1)}{  \bd \TYPE{Divisor}(n)\; \THM{GCDIsDivisor}\bd m}{\sum k \in \Nat \. mn = ko(g)}
+	\Say{(2)}{\bd o(g)(1)(g^{mn})}{ e = g^{ko(g)} = g^mn}
+	\Assume{l}{\Nat}
+	\Assume{(3)}{l  < m}
+	\Say{(u,r,4)}{\THM{ReminderDivision}(nl,o(g))}{\sum u,r \in \Int_+  \. nl = uo(g) + r \And r < o(g)}
+	\Say{(5)}{ (3)\bd m \bd \TYPE{Divisor}  }{nl \not \Is \TYPE{Divisor}(o(g))}
+	\Say{(6)}{\bd \TYPE{Divisor}(4)(5)}{  r \neq 0  }
+	\Conclude{()}{ (4)(g^{nl})(5)\bd o(g)(4)  }{g^{nl} = g^{uo(g)}g^r = g^r \neq e}
+	\DeriveConclude{(*)}{\bd^{-1} o(g^n)(2)}{o(g^n) = m}
+	\EndProof
+	\\
+	\Theorem{GeneratorsByCoprime}{\forall G \in \GRP \. \forall n \in \Nat \. \forall (0) : |G| = n \. 
+	 \forall g : \TYPE{Generator}(G) \. 
+	 \NewLine \.
+	 \TYPE{Generator}(G) = \Big\{ g^k \Big| k : \TYPE{Coprime}(n) \Big\}
+	}
+	\Say{(1)}{\bd \TYPE{Generator}(G)(g)\bd^{-1}(o(g))(0)}{o(g) = n }
+	\Assume{k}{\TYPE{Coprime}(n)}
+	\Say{(2)}{\THM{OrderOfPower}(g,k) \bd \TYPE{Coprime}(n)(k)(1)}
+	{ o(g^k) = \frac{o(g)}{\mathrm{gcd}(o(g),k)} = n  }
+	\Conclude{()}{\bd^{-1} \TYPE{Generator}(G)(g)\bd o(g^k)(2)}{ \Big( g^k : \TYPE{Generator}(G) \Big) }
+	\Derive{(2)}{\bd \TYPE{Subset}}{ \Big\{ g^k \Big| k : \TYPE{Coprime}(n)  \Big\} \subset \TYPE{Generator}(G)}
+	\Assume{h}{\TYPE{Generator}(G)}
+	\Say{(3)}{\bd \TYPE{Generator}(G))(h)\bd^{-1}(o(h))(0)}{ o(h) = n }
+	\Say{(k,4)}{\bd \TYPE{Generator}(G)(g)(h)}{\sum k \in \Nat \. g^k = h}
+	\Conclude{()}{ \bd^{-1} \TYPE{Coprime}(n) \THM{NeutralDivision} \, \THM{OrderOfPower}(4)(3)}
+	{ \Big( k : \TYPE{Coprime}(n)  \Big)   }
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{SetEq}(2)}{ \LOGIC{This} }
+	\EndProof
+}\Page{
+	\Theorem{CyclicAuto}{\forall  G \in \GRP \. \forall a,b : \TYPE{Generator}(G) \. 
+		\exists ! \varphi \in \Aut_{\GRP}(G) \. \varphi(a) = b
+	}
+	& \text{Trivially define  $\varphi(a^k) = b^k$} \\
+	\EndProof
+	\\
+	\Theorem{CyclicDividingSubgroup}{\forall G : \TYPE{Cyclic} \. 
+		\forall n \in \Nat \. \forall (0) : |G| = n \. 
+		\NewLine \. 
+		\forall d : \TYPE{Divisor}(n) \.  \exists! N \Sgrp G  :  |N| = d 
+		}
+		\Say{ m }{  \frac{n}{d} }{ \Nat   }
+		\Say{ g }{ \bd \TYPE{Cyclic} }{ \TYPE{Generator}(G) }
+		\Say{ N  }{ \langle g^m \rangle  }{\TYPE{Subgroup}(G)}
+		\Say{(1)}{\THM{OrderOfPower}(\bd N)}{ |N| = d  }
+		\Assume{H}{H \Sgrp G}
+		\Assume{(2)}{ |H| = d}
+		\Say{(3)}{ \THM{CyclicSubgroup}  }{\Big( H : \TYPE{Cyclic} \Big)}
+		\Say{(k,4)}{  \bd  \TYPE{Cyclic}(H) }{ \sum k \in \Nat \. \langle g^k \rangle = H   }
+		\Say{(5)}{ (2)(4)\bd o(g^k)}{  o(g^k) = d }
+		\Say{(6)}{\THM{OrderOfPower}(H)(4)(5)}{ \mathrm{gcd}(k,d) = m }
+		\Say{(l,7)}{ \bd \mathrm{gcd}(k,m)(6) }{  \sum l : \TYPE{Coprime}(n) \. k = ml }
+		\Say{(8)}{ (7)\bd^7 H   }{ g^k = (g^m)^l \in H   }
+		\Conclude{(6)}{\bd \FUNC{generateGroup}\bd N (1)(2)(5)}{  H = N  }
+		\Derive{(*)}{ I \LOGIC{Unique} }{This}
+		\EndProof
+		\\
+     \Theorem{ CyclicProduct }{ \forall A,B : \TYPE{Cyclic} \. \forall (a,b) : \TYPE{Coprime}(\Int)  \. 
+	\forall (0) : |A| = a \And |B| = b \.    A \times B : \TYPE{Cyclic}      }
+    & \text{Apply $\THM{ChineseReminder}(\Int)$} \\
+    \EndProof
+    \\
+    \Theorem{CyclicByNumberOfSubgroups}
+    { 
+    	\forall G \in \ABEL \. \forall n \in \Nat \. \forall (0) : |G| = n \. 
+	\NewLine \.\forall (00) : \forall d : \TYPE{Divisor}(n) \. \#\{ H \Sgrp G  : |H| = d  \} \le 1 \. 
+	G : \TYPE{Cyclic}  
+    }
+    \Say{a}{\Lambda m \in \Nat \. \#\{ g \in G : o(g) = m \}  \}}{\Nat \to \Nat}
+    \Say{u}{\Lambda m \in \Nat \. \#\{ H \Sgrp G : |H| = n \And H : \TYPE{Cyclic} \}}{\Nat \to \Nat}
+    \Say{(1)}{\THM{DivisorSum}(n)(0)}{\sum_{d|n} \phi(d) = n = |G|}
+    \Say{(2)}{\THM{GeneratorByCoprime}}{\forall m \in \Nat \. a_m =\phi(m)u_m}
+    \Say{(3)}{\bd a \bd o \THM{OrderDivides}(2)(00)(1) }{ |G| = \sum_{d|n} a_n = \sum_{d|n} u_n \phi(n) \le \sum \phi(n)  = |G|  }
+    \Say{(4)}{\THM{MaximalSum}(00)(3)}{ \forall d \in \TYPE{Divisor}(n) \. u_d = 1  }
+    \Say{(5)}{(4)(n)}{u_n = 1}
+    \Conclude{\bd u_n (5)}{\Big[ G : \TYPE{Cyclic} \Big]}
+    \EndProof
+}
+\newpage
+\subsection{Symmetric Group}
+\Page{
+	\DeclareFunc{symmetricGroup}{\Nat \to \FG}
+	\DefineNamedFunc{symmetricGroup}{ n   }{S_n}{\Aut_{\SET}(n)}
+	\\
+	\DeclareType{KCycle}{\prod n \in \Nat \. n \to ?S_n}
+	& \sigma :   \TYPE{KCycle}(k) \iff
+	 \sigma : k \hyph \TYPE{Cycle} \iff \exists t : k \to n \. \forall i \in k \. \sigma(t_i) = \sigma(t_{i+1}) 
+		\And \NewLine \And \forall j \in (\im t)^\c \. \sigma(j) = j  \\
+	\\
+	\DeclareType{Cycle}{\prod n \in \Nat \. ?S_n}
+	\DefineType{\sigma}{Cycle}{\exists k \in n \. \sigma : k \hyph \TYPE{Cycle}}
+	\\
+	\DeclareFunc{support}{\prod n \in \Nat \. S_n \to ?n}
+	\DefineNamedFunc{support}{ \sigma }{ \supp(\sigma)   }{ \Big( \FUNC{fixedPoints}(\sigma) \Big)^\c }
+	\\
+	\DeclareType{NonIntersecting}{\prod n \in \Nat \. ? \TYPE{Cycle} \times \TYPE{Cycle}(n)}
+	\DefineType{(\sigma,\tau)}{NonIntersecting}{ \supp \sigma \cap \supp \tau = \emptyset }
+	\\
+	\DeclareType{PairwiseNonIntersecting}{\prod  \in \Nat \. ??\TYPE{Cycle}(n) }
+	\DefineType{A}{PairwiseNonIntersecting}{\forall \sigma,\tau \in A \. \sigma \neq \tau  \Rightarrow 
+		(\sigma, \tau) : \TYPE{NonIntersecting}(n)}
+	\\
+	\DeclareFunc{cycle}{\prod n \in \Nat \. \prod k \in \Nat \.  (k \to n) \to k\hyph\TYPE{Cycle}(n)}
+	\DefineNamedFunc{cycle}{a}{(a_1 a_2 \ldots a_n)}{ \Lambda i \in n \. \If i = a_j 
+		\Then a_{j+1} \Else i }
+	\\
+	\Theorem{NonIntersectingCyclesCommute}{\forall n \in \Nat \. \forall 
+		(\sigma,\tau) : \TYPE{PairwiseNonIntersecting}(n) \. 
+		\sigma\tau = \tau \sigma 
+		}
+		\NoProof
+	\\
+	\Theorem{NIProduct}{ \forall n,t \in \Nat \. \forall z  : t \to \TYPE{Cycle}(n) \. 
+		\forall (0) : \im z : \TYPE{PairwiseNonIntersecting}(n) \. \forall i \in t \. 
+		\NewLine
+		\. \prod^t_{j=1} z_j = \left(\prod^t_{j=1 : j \neq i} z_j \right)z_i  
+	}
+	& \text{ Apply Commutativity  } \\
+	\EndProof
+}\Page{
+	\Theorem{NonIntersectingCycleDecomposition}{ \forall n \in \Nat \. \forall \sigma \in S_n \. 
+		\NewLine \. \exists ! t \in \Nat : \exists ! Z : \TYPE{PairwiseNonIntersecting}(n)
+		: \exists z : t \ToBij_{\SET} Z : \sigma = \prod^t_{i=1} z_i 
+	}
+	\Assume{i}{n}
+	\Say{F}{ \{ k \in \Nat : \sigma^k(i) = i  \}}{?\Nat}
+	\Say{(1)}{ \bd \Aut_{\SET}(n)(\sigma)(\bd F)  }{F \neq \emptyset}
+	\Say{k}{\min F}{\Nat}
+	\Say{t}{\Lambda j \in k \. \sigma^j(i)}{ k \to n }
+	\Conclude{z_i}{  (t_1,\ldots,t_k) }{k\hyph\TYPE{Cycle}(n)}
+	\Derive{z}{I(\to)}{n \to \TYPE{Cycle}(n)}
+	\Say{Z}{ \{ z_i | i \in n \}}{ ?\TYPE{Cycle}(n)}
+	\Say{t}{|Z|}{\Nat}
+	\Assume{\alpha,\beta}{Z}
+	\Assume{(1)}{\alpha \neq \beta}
+	\Say{(i,2)}{ E(\#,\to)(1)}{\sum i \in n \. \alpha(i) \neq \beta(i)}
+	\Assume{(3)}{\alpha(i) \neq i}
+	\Say{(4)}{\bd(\alpha)\bd(Z)\bd(z)}{\supp \alpha = \{ \sigma^k(i) | k \in \Nat \}}
+	\Assume{(5)}{\supp \alpha \cap \supp \beta \neq \emptyset}
+	\Say{j}{\bd \TYPE{NonEmpty}(5)}{j \in \supp \alpha  \cap \supp \beta }
+	\Say{(k,6)}{(4)\bd \FUNC{intersect}(\supp \alpha, \supp \beta)(\bd j)}
+	{ \sum k \in \Nat \. j = \sigma^k(i)}
+	\Say{(7)}{bd \TYPE{Cycle}(n)(\beta)(6)(\bd j)}{i \in \supp \beta}
+	\Say{(8)}{(4)\bd \beta \bd Z (7)}{ \alpha(i) = \sigma(i) = \beta(i) }
+	\Conclude{()}{(8)(3)}{\bot}
+	\DeriveConclude{(6) }{\bd^{-1} \TYPE{NonInterseting}(n) E(\bot)}{ (\alpha,\beta) : \TYPE{NonIntersecting}(n)  }
+	& \ldots \\
+	\Derive{(2)}{\bd^{-1} \TYPE{PairwiseNonIntersecting}I(\forall)I(\Rightarrow)E(|)(\ldots)}{ 
+	\Big( Z : \TYPE{PairwiseNonIntersecting}(n) \Big)}
+	\Say{z'}{\FUNC{enumerate}(Z)}{ t \ToBij_{\SET} Z}
+	\Say{(0^*)}{\bd z' \bd Z}{ \prod^t_{i=1} z_i' = \sigma  }
+	\Assume{(s,Q,q,3)}{\sum s \in \Nat \. \sum Q : \TYPE{PairwiseNonIntersecting}(n) \.  
+		\sum q : s \ToBij_{\SET} Q \. \sigma = \prod^s_{i=1} q_i       
+	}
+	\Assume{i}{s}
+	\Say{(j,k,4))}{ \bd \TYPE{Cycle}(3)(i)}{\sum j,k \in n \.\supp q_i = \{ \sigma^l(j) | l \in k \}}
+	\Say{(5)}{\bd \TYPE{PairwiseNonIntersecting}(n)(Q)(3)(4)}{q_i(\sigma^k(j)) = j}
+	\Say{(6)}{\bd Z (5)}{q_i \in Z }
+	\Conclude{(5)}{\bd \TYPE{Bijection}(q)(4)}{Z \setminus \{e\}  = Q \setminus \{e\} \And t = s }
+	\Derive{(*)}{I(\LOGIC{Unique})}{\LOGIC{This}}
+	\EndProof
+}
+\Page{
+	\DeclareFunc{kSign}{\prod n \in \Nat \. \prod k \in n \. k\hyph \TYPE{Cycle}(n) \to \TYPE{Sign}}
+	\DefineFunc{kSign}{z}{(-1)^{k+1}}
+	\\
+	\DeclareFunc{sign}{\prod n \in \Nat \. S_n \to \TYPE{Sign}}
+	\DefineNamedFunc{sign}{\sigma}{(-1)^\sigma}{\prod^t_{i=1} \FUNC{kSign}(z_i) 
+	\NewLine \where \NewLine
+	(t,Z,z) = \THM{NonIntersectingCycleDecomposition}(n,\sigma)
+	}
+	\\
+	\Theorem{SignByTranspositions}{\forall n \in \Nat \. \forall k \in \NNInt \. \forall \sigma \in S_n \.
+		\forall \tau : k \to 2\hyph\TYPE{Cycle}(n) \. 
+		\NewLine \.
+		\forall (0) : \sigma = \prod^k_{i=1} \tau_i \.
+		(-1)^{\sigma} = (-1)^k 
+	}
+	\Say{R}{\Lambda k \in \NNInt \. \forall \sigma \in S_n \. \forall \tau : k \to 2\hyph\TYPE{Cycle}(n) \. 
+	 \forall (0) : \sigma = \prod^k_{i=1} \tau_i \. (-1)^{\sigma} = (-1)^k
+	}{\NNInt \to \Type}
+	\Assume{(1)}{k = 0}
+	\Say{(2)}{(0)(1)}{\sigma = e}
+	\Conclude{()}{ (2)\bd \FUNC{sign}(e)\THM{PowerZero}}{ (-1)^{\sigma} = (-1)^e = (-1)^2 = 1 = (-1)^0}
+	\Derive{(2)}{\bd R}{R(0)}
+	\Assume{k}{\Nat}
+	\Assume{(3)}{R(k-1)}
+	\Say{\sigma'}{ \prod^{k-1}_{i=1} \tau_{i}}{S_n}
+	\Say{(4)}{R(k-1)(\sigma',\tau_{|k-1},\bd \sigma')}{ (-1)^{\sigma'} = (-1)^{k-1} }
+	\Say{(t,Z,z,5)}{\THM{NonIntersectingCycleDecomposition}(n,\sigma')}
+	{\sum t \in n \. 
+		\NewLine \.
+		\sum Z : \TYPE{NonIntersectingCycle}(n) \. z  : t  \ToBij_{\SET} Z 
+		\.  \sigma' = \prod^t_{i=1} z_i }
+	\Say{(6)}{(0)\bd \sigma' (5)}{ \sigma =  \left(\prod^t_{i=1} z_i \right) \tau_k   }
+	\Say{(a,b,7)}{\bd 2\hyph\TYPE{Cycle}(n)(\tau_k)}{\tau_k = (ab)}
+	\Assume{(8)}{\forall i \in t \. a,b \not \in \supp z_i}
+	\Conclude{()}{\bd \FUNC{sign}(4)(6)(8)}{(-1)^\sigma = \FUNC{sign}\left( \prod^t_{i=1} z_i \right)\FUNC{sign}(\tau_k) =
+	  -(-1)^{k-1} = (-1)^k
+	}
+	\Derive{(8)}{I(\Rightarrow)}{ \FUNC{sign}(\sigma) = (-1)^k   }
+	\Assume{(9)}{\forall i \in t \. a \not \in \supp z_i \And \exists i \in t : b \in \supp z_i }
+	\Say{(i,10))}{E(\exists)}{\sum i \in t \. b \in \supp z_i}
+	\Say{(11) }{  \THM{NIProduct}(n,t)(z)(i)    }
+	{ \sigma' = \left( \prod_{j = 1, j \neq i}^t z_j \right)z_i }
+}\Page{
+	\Say{(l,c,12)}{\bd \TYPE{Cycle}(z_i)}{ \sum l \in n \. \sum c : l \to n \. z_i = (c_1 \ldots c_l b)    }
+	\Say{(13)}{\bd S_n(12)(7) z_i \tau_k  }{ z_i \tau_k = (c_1 \ldots c_l b a)}
+	\Conclude{()}{ \bd \FUNC{Sign}(6)\bd \FUNC{kSign}(z_i) \tau_k(13)(4) }{ 
+		(-1)^\sigma = \left(\prod^t_{j=1 : j \neq i} \FUNC{kSign}(z_j)\right) 
+		\FUNC{kSign}(c_1 \ldots c_l b a) =  -(-1)^{k-1} = (-1)^k   }
+	\Derive{(9)}{I(\Rightarrow)}{\forall i \in t \. b \not \in \supp z_i \And \exists a \in \supp z_i 
+		\Rightarrow (-1)^\sigma = (-1)^k}
+	\Assume{(10)}{\exists i,j \in t \. a \in \supp z_i \And b \in \supp z_j}
+	\Assume{(11)}{ z_i = z_j  }
+	\Say{(l,m,s,c,12)}{\bd \TYPE{Cycle}(z_i)}{ \sum l \in n \. 
+		\sum s,m \in l \. \sum c : l \to n \. z_i = (c_1 \ldots c_s a c_{s+1} \ldots c_m  b c_{m+1} \ldots c_l)}	
+	\Say{(13) }{  \THM{NIProduct}(n,t)(z)(i)    }
+	{ \sigma' = \left( \prod_{j = 1, j \neq i}^t z_j \right)z_i }
+	\Say{(14)}{\bd S_n (12) (7) }{z_i \tau_k = (c_1 \ldots c_s a c_{m+1} \ldots c_l )( c_{s+1} \ldots c_m  b )   }
+	\Conclude{()}{ \bd\FUNC{sign}(\sigma)(6)(13)  \bd \FUNC{kSign}(14)}{(-1)^\sigma = (-1)^k}
+	\Derive{(11)}{I(\Rightarrow)}{  z_i = z_j \Rightarrow (-1)^\sigma = (-1)^k  }
+	\Assume{(12)}{z_i \neq z_j}
+	\Say{(l,c,13)}{\bd \TYPE{Cycle}(z_i)}{ \sum l \in n \. \sum c : l \to n \. z_i = (c_1 \ldots c_l a)    }
+	\Say{(l',c',14)}{\bd \TYPE{Cycle}(z_j)}{ \sum l' \in n \. \sum c' : l' \to n \. z_j = (b c_1' \ldots c_{l'}' b)    }
+	\Say{(15)}{ \Big(\THM{NIProduct}(n,t)(z)\Big)^2(i)(j)  }
+	{
+		\sigma' = \left( \prod^t_{u = 1, u \not \in \{i,j\}} z_u \right)z_i z_j
+	}
+	\Say{(16)}{\bd S_n(13)(14)(7)}{ z_iz_j \tau_k = (c1 \ldots c_l a  b c'_1 \ldots c_l')  }
+	\Conclude{()}{ \bd \FUNC{sign}(\sigma)\bd \FUNC{kSign}(15)(16)}{ (-1)^\sigma = (-1)^k }
+	\Derive{(12)}{I(\Rightarrow)}{z_i \neq z_j \Rightarrow (-1)^\sigma = (-1)^k}
+	\Say{(13)}{\LOGIC{LEM}(z_i = z_j)}{ z_i \neq z_j | z_i = z_j  }
+	\Conclude{()}{E(|)(13)(12,11)}{ (-1)^\sigma = (-1)^k  }
+	\Derive{(10)}{I(\Rightarrow)}{\exists i, j \in t \. 
+		a \in \supp z_i \And b \in \supp z_j \Rightarrow  (-1)^\sigma = (-1)^k}
+	\Conclude{()}{E(|)\LOGIC{LEM}(\forall i \in t \. a,b \not \in \supp z_i)(8,9,10)}{(-1)^\sigma = (-1)^k}
+	\Derive{(3)}{I(\forall)I(\Rightarrow)}{\forall k \in \Nat \. R(k-1) \Rightarrow R(k)}
+	\Conclude{(*)}{\LOGIC{Induction}\bd \TYPE{WellFounded}(\NNInt)(2,3)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{CycleByTransposition}{ 
+		\forall n \in \Nat \. \forall z : \TYPE{Cycle}(n) \.  \exists t \in \Nat :
+		\exists \tau : t \to 2\hyph\TYPE{Cycle}(n) \.   z = \prod^t_{i=1} \tau_i
+		}
+	&  \text{Write $(a_1 \ldots a_k) = \prod^k_{i=2} (a_{i-1} a_i ) $}   \\
+	\EndProof
+}\Page{
+	\Theorem{PermutationByTransposition}{
+		\forall n \in \Nat \. \forall \sigma \in S_n \. \exists t \in \Nat :
+		\exists \tau : t \to 2\hyph\TYPE{Cycle}(n) \. \sigma = \prod^t_{i=1} \tau_i
+		}
+	& \text{Combine $\THM{NonIntersectingCycleDecomposition}$ and $\THM{CycleByTransposition}$.} \\
+	\EndProof
+	\\
+	\Theorem{TranspositionsGenPermutations}{
+		\forall n \in \Nat \.  S_n = \langle 2\hyph\TYPE{Cycle}(n) \rangle
+		}
+	&  \text{Direct consequence of  $\THM{PermutationByTransposition}(n)$}.  \\
+	\EndProof
+	\\
+	\Theorem{SignIsHomomorphism}{
+		\forall n \in \Nat \. 
+		 \FUNC{sign}_{S_n} : S_n \to_{\GRP} \TYPE{Sign} 
+	}
+	\Assume{\sigma,\tau}{S_n}
+	\Say{(s,z,1)}{\THM{TransmutationByTransposition}(n)(\sigma)}
+	{ \prod s \in \Nat \. \prod z : s \to 2\hyph\TYPE{Cycle} \. \sigma = \prod^s_{i=1} z_i }
+	\Say{(t,z',2)}{\THM{TransmutationByTransposition}(n)(\tau)}
+	{ \prod t \in \Nat \. \prod z' : t \to 2\hyph\TYPE{Cycle} \. \tau = \prod^t_{i=1} z'_i  }
+	\Conclude{(3)}{ (1,2)(\FUNC{sign}(\sigma \tau))\THM{SignByTransmutations} \bd \TYPE{Sign}  
+		\THM{SignByTransmutations} \bd^{-1}\FUNC{sign}^2(\sigma)( \tau )    }
+	{ 
+		\NewLine : 
+		\FUNC{sign}\left( \tau \sigma \right) = 
+		\FUNC{sign}\left(  \prod^t_{i=1} z_i \prod^s_{i=1} z'_i \right) = (-1)^{t + s} = 
+		(-1)^t(-1)^s =  \NewLine  
+		= \FUNC{sign}\left( \prod^t_{i=1} z_i \right)\FUNC{sign}\left( \prod^s_{i=1} z'_i \right) 
+		=  \FUNC{sign}(\sigma)\FUNC{sign}(\tau)  
+	}
+	\Derive{(4)}{\bd^{-1} \mathcal{M}_{\GRP}(S_n,\TYPE{Sign})}{(\FUNC{sign}: S_n \to_{\GRP} \TYPE{Sign})}
+	\EndProof
+	\\
+	\DeclareFunc{AlternatingGroup}{\prod n \in \Nat \. \TYPE{Normal}(S_n)  }
+	\DefineNamedFunc{AlternatingGroup}{}{A_n}{\ker \FUNC{sign}_{S_n}} 
+	\\
+	\DeclareFunc{cycleStructure}{ \prod n \in \Nat \. S_n \to n \to \NNInt }
+	\DefineFunc{cycleStructure}{\sigma, k }{ \If k == 1 \Then |\FUNC{fixedPoints}(\sigma)| 
+		\Else \bigg| \Big\{ i \in t \Big|  |\supp z_i| = k     \Big\} \bigg|  \NewLine
+		\where \NewLine 
+		(t,Z,z) = \THM{NonIntersectingCycleDecomposition}(n,\sigma)
+		}
+	\\
+	\Theorem{CycleStructureIsPreservedByConjugationForCycles}{
+		\forall n \in \Nat \.  \forall z : \TYPE{Cycle}(n) \forall \sigma \in S_n \. 
+			\NewLine
+			\FUNC{cycleStructure}\Big(\sigma z \sigma^{-1}\Big) = \FUNC{cycleStructure}(z)  }
+	& \sigma (a_1 \ldots a_n) \sigma^{-1}  =  (\sigma(a_1) \ldots \sigma(a_n)) \\
+	\EndProof
+}\Page{
+	\Theorem{CycleStructureIsPreservedUnderConcjugation}{
+		\forall n \in \Nat \. \forall \sigma, \alpha \in S_n \.
+		\NewLine
+		\FUNC{cycleStructure}(\sigma \alpha \sigma^{-1}) =
+		\FUNC{cycleStructure}(\alpha)
+		}
+		&  \text{From $\THM{NonIntersectingCycleDecomposition}$ take $\alpha = \prod^t_{i=1} z_i$, }\\
+		&  \text{then  $\sigma \left( \prod^t_{i=1} z_i \right) \sigma^{-1} = \prod^t_{i=1} \sigma z_i \sigma^{-1}$, } \\
+		&  \text{and apply $\THM{CycleStructurePreservedByCinjugationForCycles}$ to get result.}\\
+		\EndProof
+		\\
+	\Theorem{AlternatingGroupBy3Cycles}{\forall n \in \Nat \. \forall (0) : n > 4 \. 
+		A_n = \langle 3\hyph\TYPE{Cycle}(n) \rangle}
+	\Assume{\sigma}{\TYPE{In}(A_n)}
+	\Say{(k,z,1)}{ \THM{PermutataionByTranspositions}(n,\sigma)}
+	{ 
+	\sum k \in \NNInt \. z : k \to 2\hyph\TYPE{Cycle}(n) \. \sigma = \prod^{k}_{i = 1} }
+	\Say{(2)}{\bd A_n  \THM{SignByTransposition} (1)}{\Big( 2 : \TYPE{Divides}(k) \Big)}
+	\Conclude{k(\sigma)}{\frac{k}{2}}{\NNInt}
+	\Derive{ k }{I\left(\prod\right)I\left(\sum\right)}{ 
+		\prod \sigma \in A_n \. \sum k \in \NNInt \. \exists z : 2k \to 2\hyph\TYPE{Cycle}(n):
+		\sigma = \prod^{2k}_{i=1} z_i
+		}
+	\Say{\venus}{\Lambda m \in \NNInt \.  \forall \sigma \in A_n \. \forall \mars : k(\sigma) = m \. 
+		\exists l \in \NNInt \. 
+		\exists  \tau : l \to 3\hyph\TYPE{Cycle}(n) \. \sigma = \prod^l_{i=1} \tau_i  }
+	{\NNInt \to \Type}
+	\Assume{\sigma}{A_n}
+	\Assume{\mars}{k(\sigma) =0 }
+	\Conclude{(1)}{\bd k(\sigma)}{\sigma = e}
+	\Derive{(1)}{\bd^{-1} \venus}{\venus(0)}
+	\Assume{m}{\Int}
+	\Assume{(2)}{\venus(m-1)}
+	\Assume{\sigma}{A_n}
+	\Assume{\mars}{k(\sigma) = m }
+	\Say{(z,3)}{\bd k \mars}{ \sum z : 2k \to  2\hyph \TYPE{Cycle}(n) \. \sigma = \prod^{2k}_{i=1} z_i}
+	\Say{\sigma'}{\prod^{2(k-1)}_{i=1} z_i}{\TYPE{In}(S_n)}
+	\Say{(4)}{\THM{SignByTranspositions}(\sigma')\bd \sigma'}{\sigma' \in A_n}
+	\Say{(l,\tau,5)}{\bd \venus (2)(\sigma')}{ \sum l \in \NNInt \. \sum \tau : l \to 3\hyph\TYPE{Cycle}(n)
+		\. \sigma' = \prod^l_{i=1} \tau_i}
+	\Say{(6)}{ (3)  \bd \sigma' (5)}{\sigma = \left( \prod^l_{i=1} \tau_i \right)z_{2k-1}z_{2k}}
+}\Page{
+	\Assume{(7)}{\supp z_{2k-1} \cap  \supp z_{2k} \neq \emptyset}
+	\Assume{(8)}{|\supp z_{2k-1} \cap \supp z_{2k}| = 2}
+	\Conclude{()}{\bd \supp \bd 2\hyph\TYPE{Cycle}(n)(z_{2k-1}z_{2k})(8)}{ z_{2k-1}z_{2k} = e}
+	\Derive{(8)}{ I(\Rightarrow)\bd^{-1}\venus(m)(\sigma)(6)}
+	{|\supp z_{2-1} \cap \supp z_{2k}| = 2 \Rightarrow \venus(m)(\sigma)}
+	\Assume{(9)}{|\supp z_{2k-1} \cap \supp z_{2k}| = 1}
+	\Say{(a,b,c,10)}{\bd \supp \bd 2\hyph\TYPE{Cycle}(n)(z_{2k},z_{2k-1})}
+	{\sum a,b,c \in n \. z_{2k-1} = (ab) \And z_{2k} = (ac) }
+	\Conclude{()}{\bd S_n(z_{2k-1}z_{2k})(10)}{ z_{2k-1}z_{2k} = (ab)(ac) = (acb) }
+	\Derive{(9)}{I(\Rightarrow)\bd^{-1} \venus(m)(6)}
+	{|\supp z_{2k-1} \cap \supp z_{2k}|= 1 \Rightarrow \venus(m)(\sigma)}
+	\Conclude{}{\bd^{-1} \supp \bd 2\hyph\TYPE{Cycle}(z_{2k-1}z_{2k})E(|)(8,9)}
+	{
+		\venus(m)(\sigma)
+	}
+	\Derive{(7)}{I(\Rightarrow)}{ \supp z_{2k-1} \cap \supp z_{2k} \neq \emptyset \Rightarrow \venus(m)(\sigma)}
+	\Assume{(8)}{\supp z_{2k-1} \cap z_{2k} = \emptyset}
+	\Say{(a,b,c,d,9)}{ \bd 2\hyph\TYPE{Cycle}(z_{2k},z_{2k-1}) }{\sum a,b,c,d \in n \. z_{2k-1} = (ab) \And 
+		z_{2k} = (cd)}
+	\Say{(f,10)}{(5)(a,b,c,d)}{ \exists f \in  n \. f \not \in \{a,b,c,d\}}
+	\Conclude{()}{\bd S_n (9)(10}{ z_{2k-1}z_{2k} = (ab)(cd) = (fab)(fcb)(fcd)  }
+	\Derive{(8)}{ I(\Rightarrow)\bd^{-1}\venus(m)(\sigma)(6)   }
+	{\supp z_{2k-1} \cap \supp z_{2k} = \emptyset \Rightarrow \venus(m)(\sigma)}
+	\Conclude{()}{ \LOGIC{LEM}(\supp z_{2k-1} \cap \supp z_{2k} = \emptyset)E(|)(7)(6) }{\venus(m)(\sigma)}
+	\Derive{(2)}{I(\forall)I(\Rightarrow)I(\forall)}{\forall m \in \Nat \. \venus(m-1) \Rightarrow \venus(m)}
+	\Conclude{(*)}{\bd \venus \LOGIC{Induction}\bd \TYPE{WellFounded}(\NNInt)(1)(2)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{NormalAlternating3CycleLemma}{\forall n \in \Nat \. \forall (0) : n \ge 5 \. \forall N \Nrml A_n \.
+		\NewLine \. \forall \tau : 3\hyph\TYPE{Cycle}(n) \. \forall (00) : \tau \in N \. N = A_n 
+		}
+		\Assume{\theta}{3\hyph\TYPE{Cycle}(n)}
+		\Say{(\sigma,1)}{\bd S_n(\supp \theta, \supp \tau)}{\sum \sigma \in S_n \. \sigma \tau \sigma^{-1} = \theta}
+		\Assume{(2)}{\FUNC{sign}(\sigma) = -1}
+		\Say{(a,b,3)}{(0)\bd 3\hyph\TYPE{Cycle}}{a,b \not \in \supp \tau}
+		\Say{(4)}{ \bd S_n (1)(3)  }{  \sigma (ab) \tau (ab) \sigma^{-1} = \theta  }
+		\Say{(5)}{\bd^{-1} A_n (2)\THM{SignByTranspositions}}{\sigma (ab) \in A_n}
+		\Conclude{()}{\bd \TYPE{Normal}(A_n)(N)(4)(5)}{ \theta \in N  }
+		\Derive{(2)}{I(\Rightarrow)}{\FUNC{sign}(\sigma) = -1 \Rightarrow \theta \in N }
+		\Assume{(3)}{\FUNC{sign}(\sigma) = 1}
+		\Conclude{()}{\bd \TYPE{Normal}(A_n,n) \bd^{-1} A_n(1)(3)}{\theta \in N}
+		\Derive{(3)}{I(\Rightarrow)}{\FUNC{sign}(\sigma)= 1 \Rightarrow \theta \in N}
+		\Say{(4)}{\THM{FiniteSelection}(\TYPE{Sign})((-1)^\sigma)}{(-1)^\sigma = 1 | (-1)^\sigma = -1}
+		\Conclude{()}{E(|)(4)(2,3)}{\theta \in N}
+		\Derive{(1)}{ \bd^{-1} \TYPE{Subset} I(\forall)}{ 3\hyph \TYPE{Cycle}(n) \subset N}
+		\Conclude{(*)}{\THM{AlternatingGroupBy3Cycles}\bd \TYPE{Subgroup}(A_n)(N)(1)}{A_n = N}
+		\EndProof
+} \Page{
+	\Theorem{AlternatingGroupIsSimple}{\forall n \in \Nat \. \forall (0) : n \ge 5 \.  A_n : \TYPE{Simple}}
+	\Assume{N}{\TYPE{Nontrivial} \And \TYPE(A_n)}
+	\Say{\sigma}{ \arg \min_{\sigma \in N : \sigma \neq e} | \supp \sigma| }{\TYPE{In}(N)}
+	\Say{(t,Z,z,1)}{\THM{NonIntersectingCycleDecomposion}(n)(\sigma)}
+	{ \NewLine : 
+		\sum t \in \NNInt \. \sum Z : \TYPE{PairwiseNonIntersecting}(n) \. \sum z : t \ToBij Z \. 
+		\sigma = \sum^t_{i=1} z_i  }
+	\Assume{(2)}{\forall i \in t \. o(z_i) = 2 }
+	\Say{(3)}{ (2)(1)\bd A_n\THM{SignByTransposition}(\sigma)}{t \ge 2}
+	\Say{(a,b,c,d,4)}{\bd 2\hyph\TYPE{Cycle}(z_1,z_2)   }{ \sum a,b,c,d \in n \. z_1 = (ab) \And z_2 = (cd)  }
+	\Say{  (f,5) }{ (0)(a,b,c,d) }{\sum f \in n \. f \not \in \{a,b,c,d\} }
+	\Say{\tau}{(cdf)}{\TYPE{In}(A_n)}
+	\Say{(6)}{ \bd S_n \bd \tau (3)(5)}{ 0 <|\supp( \tau\sigma\tau^{-1}\sigma  )| < |\supp(\sigma)|  }
+	\Conclude{()}{\bd \sigma (6)}{\bot}
+	\Derive{(i,2)}{ \bd \sigma E(\bot)}{\sum i \in t \. o(z_i) > 2}
+	\Say{(\{a,b,c\},3)}{\bd \TYPE{Cycle}(n)(2)}
+	{\sum \{a,b,c\} : \TYPE{Pairwise} \; \TYPE{NonEq}(n) \. a,b,c \in \supp z_i}
+	\Assume{(4)}{\supp \sigma \neq \{a,b,c\}}
+	\Say{ (x,y,5)  }{ \bd A_n (2)(4)   }{ \sum x,y \in \supp \sigma \. x \neq y \And x,y \not \in \{a,b,c\}}
+	\Say{ \tau     }{  (cxy)}{ \TYPE{A_n} }
+	\Say{(6)}{\bd S_n (5)(2)}{ 0 < |\supp \tau \sigma \tau^{-1} \sigma^{-1}| < |\supp \sigma|}
+	\Conclude{()}{ \bd \sigma (6) }{\bot}
+	\Derive{(3)}{E(\bot)}{\supp \sigma = \{a,b,c\}}
+	\Say{(4)}{\bd^{-1} 3\hyph\TYPE{Cycle}(n)}{(\sigma : 3\hyph\TYPE{Cycle}(n))}
+	\Conclude{()}{\THM{NormalAlternating3CycleLemma}(n,0,N,\sigma)}{N = A_n}
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{Simple}}{ (A_4 : \TYPE{Simple})}
+	\EndProof
+}
+\newpage
+\subsection{Group Action}
+\Page{
+	\Conclude{\TYPE{Action}}{\Lambda G \in \GRP \. \Lambda X \in \SET \. G \to_{\GRP} \Aut_{\SET}(X)}{
+		\GRP \to \SET \to \SET }
+	\\
+	\DeclareType{Faithful}{\prod G \in \GRP \. \prod X \in \SET \. ?\TYPE{Action}(X,G)}
+	\DefineType{\alpha}{Faithful}{ \ker \alpha = \{e\}  }
+	\\
+	\DeclareFunc{orbit}{ \prod \alpha : \TYPE{Action}(G,X) \. X \to ?X }
+	\DefineNamedFunc{orbit}{x}{O_\alpha(x)}{\{ \alpha(g)(x) | g \in G   \}}
+	\\
+	\DeclareFunc{Isotropy}{\prod \alpha : \TYPE{Action}(G,X) \. X \to \TYPE{Subgroup}(X)}
+	\DefineNamedFunc{Isotropy}{x}{\mathrm{Stab}_\alpha (x)}{ \{ g \in G  : \alpha(g)(x) = x \}  }
+	\\
+	\Theorem{ActionCounting}{ \forall \alpha : \TYPE{Action}(G,X) \. 
+		 \forall x \in X \. \Big[G : \mathrm{Stab}_\alpha (x)\Big] = \Big|O_\alpha(x) \Big|
+		}
+	\Assume{g,h}{G}
+	\Assume{(1)}{\alpha(g)(x) = \alpha(h)(x)}
+	\Say{s}{ g^{-1}h   }{ G }
+	\Say{(2)}{ (1)\bd s }{s \in \Stab_\alpha(x)}
+	\Conclude{()}{ (2)\bd \TYPE{Subgroup}()(\Stab_\alpha(x))   }{g\Stab_\alpha(x) = h \Stab_\alpha(x)}
+	\Derive{(1)}{I(\forall)I(\Rightarrow)}{\forall g,h \in G \. \alpha(g)(x) = \alpha(h)(x) \Rightarrow 
+		g \Stab_\alpha(x) = h \Stab_\alpha(x)}
+	\Assume{g,h}{G}
+	\Assume{(2)}{g \Stab_\alpha(x) = h \Stab_\alpha(x)}
+	\Say{(s,3)}{ \bd \TYPE{Subgroup}(G)(\Stab_\alpha(x))(2)}{ \sum s \in \Stab_\alpha(x) \. g = hs }
+	\Conclude{()}{\bd \Stab_\alpha(x)(s)(3)}{ \alpha(g)(x) = \alpha(h)(x)}
+	\Derive{(2)}{ I(\forall)I(\Rightarrow)  }{\forall g,h \in G \. g\Stab_\alpha(x) = h\Stab_\alpha(x) 
+		\Rightarrow  \alpha(g)(x) = \alpha(h)(x)  }
+	\Say{f}{\Lambda g\Stab_{\alpha}(x) \in G\Stab_\alpha(x) \. \alpha(g)(x) }{G\Stab_\alpha(x) \ToInj X}
+	\Say{(3)}{\bd f (1)}{\im f = O_\alpha(x)}
+	\Conclude{(*)}{(3)\bd^{-1} [G:\Stab_\alpha(x)] }{ [G : \Stab_\alpha(x)] =  O_\alpha(x)}
+	\EndProof
+	\\
+	\DeclareFunc{actionByConjugation}{\prod G \in \GRP \. \TYPE{Action}(G,G)}
+	\DefineNamedFunc{actionByConjugation}{g}{\gamma_G(g)}{\Lambda h \in G \. ghg^{-1}}
+	\\
+	\DeclareFunc{actionByClassConjugation}{\prod G \in \GRP \. \TYPE{Action}(G, \TYPE{Subgroup}(G))}
+	\DefineNamedFunc{actionByClassConjugation}{g}{\Gamma_G(g)}{\Lambda H \Sgrp G \. gHg^{-1}}
+	\\
+	\DeclareType{Inner}{\prod G \. ? \Aut_{\GRP}(G)}
+	\DefineType{\phi}{Inner}{\exists g \in G \. \phi = \gamma_G(g)}
+}
+\Page{
+	\DeclareFunc{leftTranslation}{\prod G \in \GRP \. \TYPE{Action}(G,G)}
+	\DefineNamedFunc{leftTranslation}{g}{\lambda_G(g)}{\Lambda h \in G \. gh}
+	\\
+	\DeclareFunc{rightTranslation}{\prod G \in \GRP \. \TYPE{Action}(G.G)}
+	\DefineNamedFunc{rightTranslation}{g}{\rho_G(g)}{\Lambda h \in G \. hg }
+	\\
+	\DeclareFunc{leftCosetTranslation}{\prod G \in \GRP \. \prod H \Sgrp G \. \TYPE{Action}(G,G/H)}
+	\DefineNamedFunc{leftCosetTranslation}{g}{\Lambda_{G,H}(g)}{\lambda A \in G/H \. gA}
+	\\
+	\DeclareFunc{rightCosetTranslation}{\prod G \in \GRP \. \prod H \Sgrp G \. \TYPE{Action}(G.G\setminus H)}
+	\DefineNamedFunc{rightCosetTranslatrion}{g}{\mathcal{R}_{G,H}(g)}{\lambda A \in G \setminus H \. Ag}
+	\\
+	\Theorem{ConjugateClassCounting}{\forall G \in \GRP \. \forall H \Sgrp G \.  
+		\Big|\Gamma(G)(H)\Big| = \Big[G : N(H)\Big]  }
+	& \text{Apply $\THM{ActionCounting}$ with $ |O_\Gamma(H)| = |\Gamma(G)(H)|,  \Stab_\Gamma(H) = N(H)$}\\
+	\EndProof
+	\\
+	\Theorem{OrbitalDecomposition}{\forall \alpha : \TYPE{Action}(G,X) \. \exists I : \Set : \exists x : I \to X \.  
+		 X = \bigsqcup_{i \in I} O_\alpha(x_i)
+	}
+	\NoProof
+	\\
+	\Theorem{StabDecomposition}{\forall X : \TYPE{Finite} \. \forall  \alpha : \TYPE{Action}(G,X) \. \exists I : \Set
+	: \exists x : I \to X \. \NewLine \. |X| = \sum^n_{i=1} [G : \Stab_\alpha(x_i)]}
+	& \text{Combine $\THM{ActionCountiong}$ and $\THM{OrbitalDecomposition}$ with prpoerties of disjoint union.}\\
+	\EndProof
+	\\
+	\Theorem{ClassFormula}{\forall G : \FG \. \exists n \in \Nat : \exists g : n \to G \. 
+		|G| = \sum^n_{i=1}[ G : \Stab_\gamma(g_i) ]} 
+	\NoProof
+}\Page{
+	\Say{\TYPE{GSet}}{\prod G \in \GRP \. \sum X \in \SET \. \alpha : \TYPE{Action}(G,X)}{\Type}
+	\Conclude{G \hyph \Set}{\TYPE{GSet}(G)}{\Type}
+	\\
+	\DeclareType{GMap}{\prod (X,\alpha),(Y,\beta) : G\hyph\Set \. ?(X \to Y) }
+	\DefineNamedType{f}{GMap}{f : G\hyph\TYPE{Map}\Big((X,\alpha),(Y,\beta)\Big)}
+	{ \forall x \in X \. \forall g \in G \. f\Big( \alpha(g)(x) \Big) = \beta(g)\Big( f(x) \Big) }
+	\\
+	\DeclareFunc{gSetCat}{\GRP \to \Cat}
+	\DefineNamedFunc{gSetCat}{G}{G\hyph\SET}{(G\hyph\Set , G\hyph\TYPE{Map}, \circ)}
+}
+\newpage
+\subsection{Sylow Theory}
+\Page{
+	\DeclareType{PGroup}{ \TYPE{Prime} \to ?\FG    }
+	\DefineNamedType{G}{PGroup}{p\hyph\Group}{\Lambda p : \TYPE{Prime} \. \exists n \in \Nat \. |G| = p^n}
+	\\
+	\DeclareType{PSylow}{\prod G : \FG \. \TYPE{Prime} \to ?\TYPE{Subgroup}(G)}
+	\DefineNamedType{H}{PSylow}{H : p\hyph\TYPE{Sylow}(G)}{\Lambda p : \TYPE{Prime} \.
+		\exists m : \TYPE{Coprime}(p) : \exists n \in \NNInt \. |H| = p^n \And |G| = mp^n }
+	\\
+	\Theorem{PSylowLemma}{\forall G : \Abel \And \FG \. \forall p : \TYPE{Prime} \. \forall (0) : \TYPE{Divides}(p,|G|)
+		 \. \exists H \Nrml G : |H| = p
+	}
+	\Say{\mercury}{\Lambda n \in \Nat \. \forall G : \Abel \. \forall (0) : |G| \le n \. 
+		\forall p : \TYPE{Prime} \. \forall (00) : \TYPE{Divides}(p,|G|) \. \exists H \Nrml G : |H| = p  }
+	{ \NewLine : \Nat \to \Type} 
+	\Say{(1)}{\bd \mercury \bd \TYPE{Empty} \bd \TYPE{Prime}}{\mercury(1)}
+	\Assume{n}{\Nat}
+	\Assume{(2)}{\mercury(n)}
+	\Assume{G}{\Abel}
+	\Assume{(0)}{|G| = n + 1 }
+	\Assume{p}{\TYPE{Prime} \And \TYPE{Divisor}(n)}
+	\Say{(g,3)}{\bd^{-1} \TYPE{Group}(0)(e)}{\sum g \in G \. g \neq e}
+	\Assume{(4)}{\TYPE{Divides}(p,o(g))}
+	\Say{(m,5)}{\bd \TYPE{Divides}(p,o(g))(4)}{\sum m \in \Nat \. o(g) = mp}
+	\Conclude{()}{ \bd^{-1}\FUNC{generateGroup}(g^m)\bd \FUNC{order} 5}{\Big| \langle g^m \rangle \Big| = p}
+	\Derive{(4)}{I(\Rightarrow)}{\TYPE{Divides}(p.o(g)) \Rightarrow \mercury(n + 1)(G,(0),p) }
+	\Assume{(5)}{!\TYPE{Divides}(p,o(g))}
+	\Say{(6)}{(3)\bd\FUNC{quatientGroup}}{ \left| \frac{G}{\langle g \rangle}   \right| \le n }
+	\Say{(7)}{\THM{DivisionTransition} \; \THM{IndexTHM}{\bd p}(5)}
+	{\TYPE{Divides}\left(p, \left| \frac{G}{\langle g \rangle} \right| \right)}
+	\Say{(H,8)}{\mercury(n)(G,(7),p)}{\sum H \Nrml \frac{G}{\langle h \rangle} \. |H| = p}
+	\Say{(h,9)}{ \bd^{-1} \TYPE{Cyclic}\THM{PrimeOrderIsCyclic}(8,\bd p)}
+	{\sum h \in G \. H = \langle [h] \rangle}
+	\Conclude{()}{(9)(8)(5)}{|\langle h^{o(g)} \rangle| = n}
+	\Derive{(5)}{I(\Rightarrow)}{!\TYPE{Divides}(p,o(g)) \Rightarrow \mercury(n + 1)(G,(0),p) }
+	\Conclude{()}{E(|)\LOGIC{LEM}(\TYPE{Divides}(p,o(g)))(4,5)}{ \mercury(n + 1)(G,(0),p) }
+	\Derive{(2)}{I(\forall)I(\Rightarrow)I(\forall)}{ \forall n \in \Nat \. \mercury(n) \Rightarrow \mercury(n+1) }
+	\Conclude{(*)}{E(\Nat)(1)(2)}{\LOGIC{This}}
+	\EndProof
+} \newpage \Page{
+	\Theorem{SylowTHMI}{\forall G : \FG \. \forall p : \TYPE{PrimeDivisor}(|G|) \. \exists H : p\hyph\TYPE{Sylow}(G)}
+	\Say{\mercury }{\Lambda n \in \Nat \. \forall G  \in \GRP \. \forall (0) : |G| \le n \.  
+		\forall p : \TYPE{PrimeDivisor}(|G|) \. \exists H : p\hyph\TYPE{Sylow}(G)}
+	{ \Nat \to \Type }
+	\Say{  (1)   }{  \bd \mercury \bd\TYPE{Empty}\TYPE{primeDivisor}(1) }{ \mercury(1) }
+	\Assume{n}{\Nat}
+	\Assume{(2)}{\mercury(n)}
+	\Assume{G}{\GRP}
+	\Assume{(0)}{  |G| = n + 1 }
+	\Assume{p}{\TYPE{PrimeDivisor}(n + 1)}
+	\Say{(t,s,3)}{\bd p}{\sum t,s \in \Nat \. |G| = sp^t}
+	\Assume{(4)}{\forall H : \TYPE{ProperSubgroup}(G) \. [G : H] : \TYPE{DivisibleBy}(p)} 
+	\Say{(k,g,5)}{ \THM{ClassFormula}(G) }{ \sum k \in \Nat \. g : k \to G \. |G| = \sum^k_{i=1} [G : \Stab_\gamma(g_i)] }
+	\Say{(6)}{\bd \gamma(G)(e) \bd e}{  \gamma(G)(e) = \{e\}   }
+	\Say{(7)}{\bd \Stab_\gamma(e)(6)}{\Stab_\gamma(e) = G}
+	\Say{m}{|Z(G)|}{\Nat}
+	\Say{(8)}{\THM{OrbitalDecomposition}(G)(5)(6)}{ |G| = |Z(G)|  + \sum^k_{i = m + 1} [G : \Stab_\gamma(g_i)]  
+		\And \NewLine \And \forall i \in k \. (00) : i > m \. g_i \not \in Z(G)}
+	\Say{x}{\sum^k_{i = m + 1}  [G : \Stab_\gamma(g_i)]}{ \Nat  }
+	\Say{(9)}{(4)(8)_2 \bd x}{ x : \TYPE{DivisibleBy}(p)  }
+	\Say{(10)}{ \bd p (9)(8) }{ |Z(G)| : \TYPE{DivisibleBy}(p) }
+	\Say{(H,11)}{ \THM{PSylowLemma}(Z(G),(10),p)}{\sum H \Nrml C(G) \. |H| = p}
+	\Say{(12)}{\bd^{-1} \TYPE{Normal} \bd \FUNC{center}(Z(G))(H)}{  H \Nrml G }
+	\Say{(13)}{ \THM{IndexTHM}(G,H)(0)  }{  \left| \frac{G}{H} \right| \le n  }
+	\Say{(14)}{\THM{IndexTHM}(H,G)(3)}{ \left| \frac{G}{H} \right| = mp^{t-1} }
+	\Say{(K,15)}{\mercury(n)(G,p)}{ \sum K \Sgrp \frac{G}{H} \. |K| = p^{t-1}}
+	\Say{K'}{\pi^{-1}(K)}{\TYPE{Subgroup}(G)}
+	\Conclude{() }{ (11)(15)\bd K' }{|K'| = p^t}
+	\Derive{(3)}{I(\Rightarrow)}
+	{\forall H : \TYPE{ProperSubgroup}(G) \. [G : H] : \TYPE{Divisible}(p) \Rightarrow  \mercury(n+1)(G,p)}
+	\Assume{(H,4)}{\sum H : \TYPE{ProperSubgroup}(G) \. [G : H] : \TYPE{Divisible}(p)}
+	\Say{(5)}{(4)\bd \FUNC{index}(G,H)(3)}{ |H| : \TYPE{DivisibleBy}(p^{t})}
+	\Conclude{(K,6)}{\mercury(n)(H)}{ \sum K \Sgrp H \.  |K| = p^t }
+	\Derive{(4)}{I(\exists)I(\Rightarrow)}{\exists H  \Sgrp G : [G : H] : \TYPE{Divisible}(p) \Rightarrow \mercury(n+1)(G,p)}
+	\Conclude{(5)}{E(|)\LOGIC{LEM}(3)(4)}{\mercury(n+1)(G,p)}
+	\Derive{(2)}{I(\forall)I(\Rightarrow)I(\forall)}{ \forall n \in \Nat \. \mercury(n) \Rightarrow \mercury(n+1)  }
+	\Conclude{(*)}{E(\Nat)(1)(2)}{ \LOGIC{This}  }
+	\EndProof
+}
+\Page{
+	\DeclareType{FixedPoints}{\prod X \in \SET \. \TYPE{Action}(G,X) \to ?X}
+	\DefineType{x}{FixedPoints}{\Lambda \alpha : \TYPE{Action}(G,X) \. \forall  g \in G \. \alpha(g)(x) = x }
+	\\
+	\Theorem{FixedPointsOfPGroups}{\forall G : p\hyph\TYPE{Group} \. \forall X : \TYPE{Finite} \. 
+		\forall \alpha : \TYPE{Action}(G,X) \.  \Big| \TYPE{FixedPoints}(\alpha) \Big| =_{Z_p} |X|       
+	}
+	\Say{(n,g,1)}{\THM{StabDecompositon}(\alpha)}{ \sum n \in \Nat \. \sum x : n \to X \. |X| = 
+		\sum^n_{i=1} [G : \Stab_\alpha(x_i)] }
+	\Say{m}{\Big| \TYPE{FixedPoints}(\alpha)\Big|}{\Nat}
+	\Say{(2)}{\bd \THM{StabDecomposition}\bd^{-1} m }{ |X| = m + \sum^n_{i=m + 1} [G : \Stab_\alpha(x_i)]
+	 \And \NewLine \And \forall i \in [m+1,n]_\Nat \. x_i \not \in \TYPE{Fixedpoints}(\alpha) 
+	}
+	\Say{(3)}{\forall i \in [m+1,n]_\Nat \.\bd^{-1} \Stab_\alpha(x_i) \THM{SubgroupDivides}\bd p\hyph\Group(G)}
+	{ \NewLine : \forall i \in [m+1,n]_\Nat \. [G : \Stab_\alpha(x_i)] : \TYPE{DivisibleBy}(p) } 
+	\Conclude{(*)}{( (2) \mod p )(3)}{  |X| =_{Z_p} m       }
+	\EndProof
+	\\
+	\Theorem{SylowLemmaII}{\forall G : \FG \. \forall H : \TYPE{Subgroup(G)} \And p\hyph\Group
+		\. \forall K : p\hyph\TYPE{Sylow}( G ) \.  \NewLine \. \forall (0) : H \subset N(K) \. H \subset K     
+	}
+	\Say{\pi}{\FUNC{projection}(N(K),K)}{ N(K) \ToSurj_{\GRP} \frac{N(K)}{K}}
+	\Say{(n,t,1)}{\bd \TYPE{PrimeDivisor}(|G|)(p)}{ \sum t \in \Nat \. \sum n : \TYPE{Coprime}(p) \. |G| = np^t }
+	\Say{(m,2)}{\bd p\hyph\TYPE{Sylow}(G)(K)\THM{SubgroupDivides}\bd N(K)}{\sum m \in \TYPE{Divisor}(n) \. |N(K)| = mp^t}
+	\Say{(3)}{\bd p\hyph\TYPE{Sylow}(G)(K)\THM{IndexTHM}(2)(3) }{\left| \frac{N(K)}{K} \right| = m}
+	\Assume{h}{H}
+	\Say{(k,4)}{\bd p\hyph\Group(H)\THM{OrderDivides}(h,H)\bd o(h)}{\sum k \in \Nat \. h^{p^k} = e}
+	\Say{(5)}{ \pi (4) }{ \pi(h^{p^k}) = K  }
+	\Say{(6)}{(3)\THM{OrderDivides}\left( \frac{N(K)}{K},\pi(h)\right)}{ m | o(\pi \; h)   }
+	\Say{(7)}{\bd m (6)}{ o(\pi \; h) = 1 }
+	\Say{(8)}{\bd o (7)}{ \pi \; h = K }
+	\Conclude{(9)}{\bd \pi (8)}{h \in K}
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{Subset}I(\forall)}{H \subset K}
+	\EndProof
+}\Page{
+	\Theorem{SylowGroupMaximizePGroups}{\forall G : \FG \. 
+		\forall H : \TYPE{Subgroup}(G) \And p\hyph \Group \. 
+		\NewLine 
+		\exists K : p\hyph\TYPE{Sylow}(G) \. H \subset K 
+	}
+	\Say{(1)}{\THM{SubgroupDivides}(G,H) \bd p\hyph\TYPE{Group}(H)}{ |G|\; | \; p}
+	\Say{K}{\THM{SylowTHMI}(G,p)(1)}{p\hyph \TYPE{Sylow}(G)}
+	\Say{S}{\Gamma(H)(K)}{?p \hyph \TYPE{Sylow}(G)}
+	\Say{\alpha}{\Lambda h \in H \. \Lambda A \in S \. hAh^{-1}}{ \TYPE{Action}(H,S)}
+	\Say{(n,t,2)}{\bd \TYPE{PrimeDivisor}(|G|)(p)}{ \sum t \in \Nat \. \sum n : \TYPE{Coprime}(p) \. |G| = np^t }
+	\Say{(3)}{\bd p\hyph\TYPE{Sylow}(G)(K)(2)}{|K| = p^t}
+	\Say{(4)}{(3)\bd N(K) \bd^{-1} \Stab_\Gamma(K) }{ \Stab_\Gamma(K) : \TYPE{DivisibleBy}(p^t)    }
+	\Say{(5)}{ \bd^{-1}(S)\bd n(2)\THM{ActionCounting}(4)  }{ S \IsNot \TYPE{DivisibleBy}(p) }
+	\Say{(6)}{ \THM{FixedPointsOfPGroups}(\alpha)(5)}{ | \TYPE{FixedPoints}(\alpha)| \IsNot \TYPE{DivisibleBy}(p) }
+	\Say{(7)}{\THM{ZeroIsDivisible}(6)}{ \TYPE{FixedPoints}(\alpha) \neq \emptyset  }
+	\Say{F}{ \bd \TYPE{Nonempty}(7) }{\TYPE{FixedPoinint}(\alpha)}
+	\Say{(8)}{\bd^{-1} N(F) \bd \alpha \bd \TYPE{FixesPoints}(\alpha)(F)}{H \subset N(F)}
+	\Conclude{(*)}{\THM{SelowLemmaII}(8)}{H \subset F}
+	\EndProof
+	\\
+	\Theorem{SylowTHMII}{\forall H,K : p\hyph\TYPE{Sylow}(G) \. \exists g \in G \. K = gHg^{-1}}
+	\Say{S}{\Gamma(H)(K)}{?p \hyph \TYPE{Sylow}(G)}
+	\Say{\alpha}{\Lambda h \in H \. \Lambda A \in S \. hAh^{-1}}{ \TYPE{Action}(H,S)}
+	\Say{(n,t,2)}{\bd \TYPE{PrimeDivisor}(|G|)(p)}{ \sum t \in \Nat \. \sum n : \TYPE{Coprime}(p) \. |G| = np^t }
+	\Say{(3)}{\bd p\hyph\TYPE{Sylow}(G)(K)(2)}{|K| = p^t}
+	\Say{(4)}{(3)\bd N(K) \bd^{-1} \Stab_\Gamma(K) }{ \Stab_\Gamma(K) : \TYPE{DivisibleBy}(p^t)    }
+	\Say{(5)}{ \bd^{-1}(S)\bd n(2)\THM{ActionCounting}(4)  }{ S \IsNot \TYPE{DivisibleBy}(p) }
+	\Say{(6)}{ \THM{FixedPointsOfPGroups}(\alpha)(5)}{ | \TYPE{FixedPoints}(\alpha)| \IsNot \TYPE{DivisibleBy}(p) }
+	\Say{(7)}{\THM{ZeroIsDivisible}(6)}{ \TYPE{FixedPoints}(\alpha) \neq \emptyset  }
+	\Say{F}{ \bd \TYPE{Nonempty}(7) }{\TYPE{FixedPoinint}(\alpha)}
+	\Say{(8)}{\bd^{-1} N(F) \bd \alpha \bd \TYPE{FixesPoints}(\alpha)(F)}{H \subset N(F)}
+	\Say{(9)}{\THM{SelowLemmaII}(8)}{H \subset F}
+	\Say{(10)}{\THM{EqByCardinality}(9)\bd p\hyph\TYPE{Sylow}(G)(H,F)}{H = F}
+	\Conclude{(g,11)}{\bd S \bd F (10)}{\sum g \in G \. H = gKg^{-1}}
+	\EndProof
+	\\
+	\DeclareFunc{numberOfSylow}{\prod G : \FG \. \TYPE{PrimeDivisor}(|G|) \to \Nat}
+	\DefineNamedFunc{numberOfSylow}{p}{n(G,p)}{\Big|p\hyph\TYPE{Sylow}(G)\Big|}
+}
+\newpage
+\Page{
+	\Theorem{SylowLemmaIII}{\forall G : \FG \. \forall H : \TYPE{Subgroup}(G) \And p\hyph\TYPE{Group} \. 
+		[G:H] =_{Z_p} [N(H) : H]
+	}
+	\Say{\alpha}{\Lambda_{G,H|H}}{\TYPE{Action}(H, G/H)}
+	\Assume{gH}{\TYPE{FixedPoints}(\alpha)}
+	\Assume{h}{H}
+	\Say{(1)}{\bd \TYPE{FixedPoints}(\alpha)(gH,h)}{hgH = gH}
+	\Say{(x,2))}{(1)\bd \TYPE{LeftCoset}}{\sum x \in H \. hgx = g}
+	\Say{(3)}{g^{-1}h^{-1}(2)}{x = g^{-1}h^{-1}g}
+	\Conclude{()}{\bd \TYPE{Group}(H)(3)}{ ghg^{-1} \in H}
+	\Derive{(1)}{I(\forall)}{ \forall h \in H \. ghg^{-1} \in H}
+	\Conclude{()}{\bd^{-1} N(H)(1)}{gH \subset N(H)} 
+	\Derive{(1)}{\bd \TYPE{LeftCoset}(N(H))}{\TYPE{FixedPoints}(\alpha) = N(H)/H}
+	\Conclude{(*)}{\THM{FixedPointsOfPGroup}(\alpha)(1)}{ [G : H] =_{Z_p} [N(H) : H]    }
+	\EndProof
+	\\
+	\Theorem{SylowTHMIII}{\forall G : \FG \. \forall p : \TYPE{PrimeDivisor}(|G|) \. 
+		\forall m : \TYPE{Coprime}(p) \. \forall t \in \Nat \. \NewLine \.\forall (0) : |G| = mp^t \.
+		n(G,p) : \TYPE{Divisor}(m) \And n(G,p) =_{Z_p} 1
+	}
+	\Say{K}{\THM{SylowTHMI}(G,p)}{p\hyph\TYPE{SylowTHMI}(G)}
+	\Say{(2)}{  \THM{IndexTHM}(G,K)(0,\bd p\hyph\TYPE{Sylow}(G)(K))}
+	{ m = [G : K]   }
+	\Say{(3)}{ \THM{SylowTHMII}(G,p)\bd^{-1} n(G,p) \THM{ActionCounting}(\Gamma)\bd^{-1} N(K)}
+	{ m(G,p) = [G:N(K)]  }
+	\Say{(4)}{ \THM{IndexTHM}(N(K),K)(2)\left( \frac{|N(K)|}{|N(K)|} \right) \bd \FUNC{index}(3) }{ m = n(G,p) [N(K) : K]}
+	\Say{(5^*)}{ \bd^{-1} \TYPE{Divsor}(m)(4)  }{\Big( n(G,p) : \TYPE{Divisor}(m) \Big)}
+	\Say{(6)}{\THM{SylowLemmaIII}(G,K)(2)}{m =_{Z_p} [N(K) : K] }
+	\Conclude{(*)}{(4)(6)}{n(G,p) =_{Z_p} 1}
+	\EndProof
+	\\
+	\Theorem{ExtSylowTHM}{\forall G : \FG \. \forall p : \TYPE{PrimeDivisor}(|G|) \. \forall t : \TYPE{DivisorExponent}(|G|,p)
+		\.  
+		\NewLine \.
+		\exists H \Sgrp G : |H| = p^t   }
+	&  \text{Simillar proof as $\THM{SylowTHMI}$} \\
+	\EndProof
+	\\
+}
+\Page{
+	\Theorem{ NormalByPrimeIndex}{ \forall G : \FG \. \forall p : \TYPE{Min}\Big(\TYPE{PrimeDivisor}(|G|)\Big) \. 
+	     \NewLine \. \forall H \Sgrp G \. \forall (0) : [G : H] = p \. H \Nrml G	  }
+	\Assume{(1)}{N(H) = H }
+	\Say{S}{ O_\Gamma(H)}{??G}
+	\Say{(2)}{\THM{ActionCountong}(\Gamma,H)(1)}{|S| = p}
+	\Say{s}{ \FUNC{enumerate}(S,2)}{ p \ToBij S}
+	\Say{\varphi}{\Lambda g \in G \. \Lambda i \in p \.  s^{-1}(gs(i)g^{-1})}{G \to p \to p}
+	\Say{(3)}{\bd s \bd \varphi}{\im \varphi = S_i}
+	\Assume{a,b}{G}
+	\Assume{i}{}
+	\Conclude{()}{ \bd \varphi(b)(i) \bd \TYPE{Inverse}(s) \bd \varphi(a) \bd^{-1} \varphi(ab)}
+	{  \varphi(a)\varphi(b)(i) = \varphi(a)s^{-1}\Big(bs(i)b^{-1}\Big) = s^{-1}(abs(i)b^{-1}a^{-1}) = \varphi(ab)(i)}
+	\DeriveConclude{()}{I(=,\to)}{ \varphi(a)\varphi(b) = \varphi(a)(b)  }
+	\Derive{(4)}{ \bd^{-1} \TYPE{Homomorphism} }{\Big( \varphi : G \to_{\GRP} S_p\Big)}
+	\Say{K}{\ker \phi}{\TYPE{Normal}(G)}
+	\Say{(5)}{(1)\bd K}{K \subset H}
+	\Assume{(6)}{K \neq H}
+	\Say{(7)}{\THM{IndexTHM}(G,K)(G,H)(H,K)(0)}{[G : K] = p [H : K ]}
+	\Say{(8)}{ \THM{IsomorphismTHMI}(G,S_n)(\varphi)\bd K (7)  }{ |\im \varphi| = p [H : K]  }
+	\Say{(6')}{\Big(|S_2| = 2 \Big)\bd \varphi\THM{NatMultInc}(8)}{p \neq 2}
+	\Say{(9)}{\THM{SoubgroupDivide}(\im \varphi)}{  |\im \phi| \Big| p!    }
+	\Say{(10)}{ \bd \FUNC{index}(H,K)(6)}{ [H : K ] \neq 1 }
+	\Say{(11)}{(10)(9)(8)}{ \Big( |H| : \TYPE{NontrivialDivisor}((p-1)!)  \Big)}
+	\Say{(q,12)}{ \THM{FactorialPrimeDivisor}\bd \FUNC{factorial}(p-1))(11)(6') \bd \TYPE{NontrivialDivisor}}
+	{ \NewLine : \sum q : \TYPE{PrimeDivisor}(|H|) \. q < p  }
+	\Say{(13)}{\THM{SubgroupDivides}(G,H)(\bd q)}{q | |G| }
+	\Conclude{()}{\bd p (12)(13)}{\bot}
+	\Derive{(6)}{E(\bot)}{K = H}
+	\Say{(7)}{E(=)(6)\bd \TYPE{Normal}(G)(K)\bd^{-1}N(K)}{ N(H) = N(K) = G }
+	\Conclude{()}{(0)\bd \FUNC{index}(G,H))I(\#,\to)(1)(7)}{\bot}
+	\Derive{(1)}{E(\bot)(0)\bd \FUNC{index}(G,H)\THM{SubsetOfEqFiniteCard}}{ N(H) = G  }
+	\Conclude{(*)}{\bd^{-1} \TYPE{Normal}(1)}{ H \Nrml G}
+	\EndProof
+}
+\newpage
+\Page{
+	\Theorem{PGroupIsSolvable}{\forall G : p \hyph \TYPE{Group} \.  G : \TYPE{Solvable}}
+	\Say{\mercury}{\Lambda n \in \Nat \. \forall  G  : p \hyph \TYPE{Group} \. 
+		\forall (0) : |G| \le p^n \.  G : \TYPE{Cyclic}  
+	}{\Nat \to \Type}
+	\Say{(1)}{\bd^{-1} \TYPE{Solvalble}\;\THM{PrimeIsCyclic} \bd^{-1} \mercury}{\mercury(1)}
+	\Assume{n}{\Nat}
+	\Assume{(2)}{\mercury(n)}
+	\Assume{G}{p\hyph \TYPE{Group}}
+	\Assume{(3)}{ |G| = p^{n + 1}}
+	\Say{(H,4)}{\THM{ExtSylowTHM}(G,p,n)}{ \sum H \Sgrp G : |H| = p^n  }
+	\Say{(5)}{\THM{IndexTHM}(G,H)(3)(4)}{ [G:H] = p }
+	\Say{(6)}{\mercury(n)(H)}{(H : \TYPE{Solvable})}
+	\Say{(7)}{\THM{NormalByPrimeIndex}(G,H)}{ H \Nrml G}
+	\Say{(8)}{\THM{PrimeIsCyclic}(5)}{ \left( \frac{G}{H} : \TYPE{Cyclic} \right)   }
+	\Conclude{()}{\bd^{-1} \TYPE{Solvable}(8)(6)}{(G : \TYPE{Solvable})}
+	\Derive{(2)}{I(\forall)I(\Rightarrow)I(\forall)\bd^{-1} \mercury)}{ \forall n \in \Nat \. \mercury(n) \Rightarrow 
+	    \mercury(n + 1) }
+	\Conclude{(3)}{E(\Nat)(1)(2)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{PGroupHasCyclicTower}{\forall G : p \hyph \TYPE{Group} \. \exists (n,H) : \TYPE{Cyclic}\hyph\TYPE{Tower}(G) }
+	& \text{Evident from the previous proof} \\
+	\EndProof
+	\\
+	\Theorem{PQSolvabale}{\forall p,q : \TYPE{Prime} \. \forall G \in \GRP \. \forall (0) : |G| = pq \. G : \TYPE{Solvable} }
+	\NoProof
+}
+\subsection{Additional Tools[!]}
+\newpage
+\section{Abelean Groups}
+\subsection{Direct sums}
+\Page{	
+	\DeclareFunc{AbeleanCategory}{\Cat}
+	\DefineNamedFunc{AbeleanCategory}{}{\ABEL}{(\Abel,\TYPE{Homomorphism},\circ)}
+	\\
+	\DeclareFunc{directSum}{\ABEL \times \ABEL \to \ABEL}
+	\DefineNamedFunc{directSum}{A,B}{A \oplus B}{A \otimes B}
+	\\
+	\DeclareFunc{directSummation}{ \left(\sum I \in \SET \. I \to \ABEL \right) \to \ABEL}
+	\DefineNamedFunc{directSummation}{I,G}{\bigoplus_{i \in I} G_i}{  
+		\left\{ g \in \bigotimes_{i=1}  G_i : \Big|\{ i \in I : g_i \neq 0 \}\Big| < \infty   \right\}  }
+	\\
+	\DeclareFunc{Insertion}{ \prod  I \in \SET \. \prod G : I \to \ABEL \. \prod i \in I \. G_i \ToInj_{\ABEL} 
+		\bigoplus_{i \in I} G_i }
+	\DefineNamedFunc{Insertion}{g}{\iota_{I,G,i}(g)}{ \Lambda j \in I \. \If i == j \Then g \Else 0} 
+	\\
+	\Theorem{AbeleanCoproducts}{  (\FUNC{directSummation},\FUNC{insertion}) : \TYPE{Coproduct}(\ABEL)  }
+	\Assume{I}{\Set}
+	\Assume{G}{I \to \ABEL}
+	\Assume{H}{\ABEL}
+	\Assume{\varphi}{\prod i \in I \. G_i \to_{\ABEL} H}
+	\Say{\psi}{\Lambda x \in \bigoplus_{i \in I} G_i \.  \sum_{i \in I } \varphi_i(x_i)}{\bigoplus_{i \in I}  G_i \to H}
+	\NoProof
+	\\
+	\Theorem{AbeleanProducts}{(\FUNC{groupProduct},\FUNC{projection}) : \TYPE{Product}(\ABEL)}
+	\Assume{I}{\Set}
+	\Assume{G}{I \to \ABEL}
+	\Assume{H}{\ABEL}
+	\Assume{\varphi}{\prod i \in I \. H \to_{\ABEL} G_i}
+	\Say{\psi}{\Lambda h \in H \. \Lambda i \in I \. \varphi_{i}(h)}{ H \to_{\ABEL} \bigotimes_{i \in I} G_i}
+	\NoProof
+}\Page{
+	\DeclareFunc{freeAbelean}{\SET \to \ABEL}
+	\DefineNamedFunc{freeAbelean}{X}{\Int\langle X \rangle}{\bigoplus_{x \in X} \Int} 
+	\\
+	\DeclareType{Basis}{ \prod G \in \ABEL \. ?\TYPE{NonEmpty}(G)}
+	\DefineType{V}{Basis}{\forall g \in G \. \exists! z \in \Int\langle V \rangle \. g = \sum_{v \in V} z_v v }
+	\\
+	\DeclareType{FreeAbelean}{?\ABEL}
+	\DefineType{G}{FreeAbelean}{\exists V : \TYPE{Basis}(G)}
+	\\
+	\Theorem{AltFreeAbelean}{ \forall G \in \ABEL \. G : \TYPE{FreeAbelean} \iff \exists S \in \SET \. 
+	G \cong_{\ABEL} \Int\langle S \rangle}
+	\NoProof
+	\\
+	\DeclareFunc{freeAbeleanPushforward}{ \prod X,Y \in \SET \. (X \to Y) \to \
+		(\Int \langle X \rangle \to \Int \langle Y\rangle)}
+	\DefineNamedFunc{ freeAbeleanPushforward  }{f}{f_*}{\Lambda  v  \in \Int\langle X \rangle \. \Lambda y \in Y \. 
+		\sum_{x \in f^{-1}(y)} v_x } 
+	\\
+	\Theorem{FreeAbeleanFunctoriality}{ (\FUNC{freeAbelean},\FUNC{freeAbeleanPushforwatd}) : \Func {\SET}{\ABEL}  }
+	\NoProof
+	\\
+	\Conclude{ F_{\ABEL}}{(\FUNC{freeAbelean},\FUNC{freeAbeleanPushforward})}{ \Func {\SET}{\ABEL}}
+	\\
+	\DeclareFunc{groupOfGrothendieck}{ \TYPE{Commutative}\And \TYPE{Monoid} \to  \ABEL  }
+	\DefineNamedFunc{groupOfGrothendieck}{ M }{  K(M) }{ \frac{F_{\ABEL}(M)}{E} 
+	 	\NewLine \where \NewLine	
+		E = \Big \langle \{  F_{\ABEL}(a + b) - F_{\ABEL}(a) - F_{\ABEL}(b) | a,b \in M     \}  
+		\Big\rangle \Nrml  F_{\ABEL}(M) }
+	\\
+	\DeclareFunc{insertionOfGrothendieck}{ \prod M : \TYPE{Commutative} \And \TYPE{Monoid} \. K(M)}
+	\DefineNamedFunc{insertionOfGrothendieck}{ m }{\kappa(m)}{ \Big[\Lambda n \in M \.  \delta_{n,m}\Big]  }
+}
+\Page{
+	\Theorem{GrothendieckGroupTHM}{  \forall M : \TYPE{Commutative} \And \TYPE{Monoid} \. \forall A \in \ABEL \.    
+		\forall \varphi : \TYPE{Homomorphism}(M,A) \. 
+		\NewLine \. \exists ! \psi : K(M) \to_{\ABEL} A : \kappa \psi = \phi
+	}
+	\Say{(1)}{\bd A \bd K(A)}{K(A) = A}
+	\Say{(2)}{\bd^{-1} \Func{\SET}{\ABEL}(F_{\ABEL})}{\varphi F_{\ABEL} = F_{\ABEL} \varphi_*}
+	\Say{E}{  \Big \langle \{  F_{\ABEL}(a + b) - F_{\ABEL}(a) - F_{\ABEL}(b) | a,b \in M     \}\Big\rangle  }
+	{\TYPE{Normal}(F_{\ABEL}(M))}
+	\Say{B}{  \Big \langle \{  F_{\ABEL}(a + b) - F_{\ABEL}(a) - F_{\ABEL}(b) | a,b \in A     \}\Big\rangle  }
+	{\TYPE{Normal}(F_{\ABEL}(A))}
+	\Assume{a,b}{M}
+	\Say{(3)}{\bd \TYPE{Homomorphism}(K(M).K(A))(\phi_*)(2)(1)\bd \TYPE{Homomorphism}(M,A)(\phi)}
+	{  
+		\NewLine :
+		\pi_B\Big(\varphi_*(F_{\ABEL}(a + b) - F_{\ABEL}(a) - F_{\ABEL}(b))\Big) = 
+		\pi_B\Big(\varphi_*F_{\ABEL}(a + b) - \varphi_*F_{\ABEL}(a) - \varphi_*F_{\ABEL}(b) \Big) =  
+		\NewLine =  \pi_B\Big(  F_{\ABEL}\varphi(a + b) - F_{\ABEL}\varphi(a) - F_{\ABEL}\varphi(b) \Big) =
+		   \varphi(a + b) - \varphi(a) - \varphi(b) = 0
+	}
+	\Conclude{()}{\bd^{-1} \ker \varphi_*\pi_B(3)}{ F_{\ABEL}(a + b) - F_{\ABEL}(a) - F_{\ABEL}(b) \in \ker \varphi_*\pi_B }
+	\Derive{(3)}{ \bd^{-1} \ker \pi_E \bd^{-1}\TYPE{Subset}I(\forall)}{\ker \pi_E \subset \ker \varphi_*\pi_B}
+	\Say{\psi}{\Lambda [x] \in K(M) \. \pi_B\varphi_*(x)}{ K(M) \to_\ABEL A}
+	\Assume{m}{M}
+	\Conclude{()}{  \bd \FUNC{freeAbeleanPushforward}(\varphi)\bd \psi \bd \kappa(m)}
+	{ \psi \kappa(m) = \pi_B \varphi_*(\delta_m) = \varphi(m)}
+	\Derive{(4)}{I(=,\to)}{\kappa \psi = \varphi}
+	\Assume{\phi}{K(M) \to_{\ABEL} M}
+	\Assume{(5)}{\kappa \phi = \varphi}
+	\Assume{x}{K(M)}
+	\Say{(k,m, z, 6)}{\bd F_{\ABEL}\bd K(M)(x)}{\sum k \in \Nat \. \sum m : k \to M \. \sum z : k \to \Int \.  
+		x = \sum^k_{i=1} z_i [F_{\ABEL}(m_i)]}
+	\Say{(7)}{(5)(6)}{ \phi(x) = \sum^k_{i=1} z_i\phi(m_i)  }
+	\Say{(8)}{(4)(6)}{\psi(x) = \sum^k_{i=1} z_i \phi(m_i) }
+	\Conclude{()}{I(=)(7,8)}{\phi(x) = \psi(x)}
+	\DeriveConclude{()}{I(=,\to)}{\phi = \psi}
+	\DeriveConclude{()}{\bd^{-1} \LOGIC{Unique}}{\LOGIC{This}}
+	\EndProof
+}\Page{
+	\Theorem{GrothendieckGroupWithCancelation}{\forall M : \TYPE{Monoid} \And \TYPE{Commutative} \. 
+		M : \TYPE{CancelationLaw} \Rightarrow \NewLine \Rightarrow \kappa : M \ToInj K(M)}
+	\Say{E}{ \Big\{ \big((a,b),(c,d)\big) | a,b,c,d \in M : a + d = c + b   \Big\}  }{?M^4}
+	\Say{(1)}{\bd \TYPE{CanclationLaw}(M)\bd^{-1}\TYPE{Equalence}(M^2)(E)}{\Big( E : \TYPE{Equivalence}(M \times M) \Big)}
+	\Say{A}{ \left( \frac{M}{E}, \Big([(a.b)],[c,d)]\Big) \mapsto [(a+b,c + d)] \right) }{\ABEL}
+	\Say{\varphi}{\Lambda m \in M \. [(0,m)]}{ \TYPE{Injective} \And \TYPE{Homomorphism}(M,A) }
+	\Conclude{(*)}{ \THM{InjectiveByComposition}(\kappa)\THM{GrothendiekGroupTHM}(M)(\varphi) }
+	{\Big( \kappa : M \ToInj K(M) \Big)}
+	\EndProof
+	\\
+	\Theorem{AbeleanGroupsAreZModules}{\ABEL \cong_{\mathsf{CAT}} \Int\hyph\mathsf{MOD}}
+	\NoProof
+	}
+\newpage
+\subsection{Classification of Finetly Generated Abelean Groups}
+\Page{
+	\DeclareFunc{torsion}{\prod A \in \ABEL \. \TYPE{Normal}(A)}
+	\DefineNamedFunc{torsion}{A}{\tor A}{ \{ a \in A : \exists n \in \Nat : na = 0 \} }
+	\\
+	\DeclareType{Torsion}{ ?\ABEL  }
+	\DefineType{A}{Torsion}{ \tor A = A}
+	\\
+	\DeclareType{TorsionFree}{?\ABEL}
+	\DefineType{A}{TorsionFree}{\tor A = \{0\}}
+	\\
+	\DeclareFunc{pTorsion}{\prod A \in \ABEL \. \TYPE{Prime}(\Int) \to \TYPE{Normal}(A)}
+	\DefineNamedFunc{pTorsion}{A,p}{p\hyph\!\tor(A)}{ \{a \in A : \exists k \in \Nat : p^ka = 0 \} } 
+	\\
+	\Theorem{PTorsionIsAPGroup}{\forall A \in \ABEL \. \forall p : \TYPE{Prime}(\Int)  \. 
+		\forall (0) : |p\hyph\!\tor A| < \infty \. p\hyph\!\tor A : p\hyph\Group}
+	\Assume{q}{\TYPE{PrimeDivisor}\Big( p\hyph\!\tor A  \Big) }
+	\Assume{(1)}{q \neq p}
+	\Say{(H,1)}{\THM{PSylowLemma}(p\hyph\!\tor A, q)}{\sum H \Nrml p\hyph!\tor A \. |H| = q}
+	\Say{(2)}{\bd \TYPE{Prime}(q)}{q \neq 1}
+	\Say{(h,3)}{\bd \TYPE{NonTrivial}(G)(H)(1,2)}{\sum h \in H \. h \neq 0}
+	\Say{(4)}{\THM{OrderDivides}(H,h)(2,3)}{ o(h) = q}
+	\Say{(5)}{\bd \FUNC{order}(4)\THM{PrimePowersCoprime}(p,q)}{\forall t \in \Nat \. p^th \neq 0}
+	\Conclude{(6)}{\THM{orderDivides}(p\hyph\!\tor A,h)\bd H (5)}{\bot}
+	\DeriveConclude{(*)}{\bd^{-1} p\hyph\Group}{\Big( p\hyph\!\tor A :  p\hyph\Group  \Big)}
+	\EndProof
+}\Page{
+	\Theorem{TorsionDecomposition}{\forall A : \TYPE{Torsion} \. A \cong_{\ABEL} 
+		\bigoplus_{p : \TYPE{Prime}(\Int)} p\hyph\!\tor A  }
+	\Say{P}{\bigoplus_{p : \TYPE{Prime}(\Int)} p\hyph\!\tor A}{\ABEL}
+	\Say{\varphi}{\Lambda x \in P \. \sum^{\infty}_{i=1} x_i }{P \to_{\ABEL} A}
+	\Assume{a}{A}
+	\Say{(1)}{\bd \TYPE{Torsion}(A)(a)}{\{ n \in \Nat : na = 0\} \neq \emptyset}
+	\Say{n}{\min \{ n \in \Nat : na = 0  \}}{\Nat}
+	\Assume{(2)}{n \neq 1}
+	\Say{(k,t,p,3)}{\THM{PrimeFactorization}(n,2)}{ \sum k \in \Nat \. \sum p : k \ToInj \TYPE{Prime}(\Int) \.
+		\sum t : k \to \Nat \. n = \prod^k_{i=1} p_i^{t_i} }
+	\Say{(s,4)}{\bd^{-1}n \THM{IterativeMainTHMOfEucledeanDivision}(k,p^t)}{\sum s : k \to \Int \. \sum^k_{n=1} s_k = 1 \And 
+		p_k^{t_k}s_k : \TYPE{DivisiblyBy}(n)}
+	\Say{(5)}{\bd^{-1} p\hyph\!\tor A (4)}{\forall i \in k \. s_ix \in p_i\hyph\!\tor A }
+	\Say{x}{\Lambda q : \TYPE{Prime}(\Int) \. \If q = p_i \Then s_kx \Else 0 }{P}
+	\Conclude{()}{\bd \phi(x) \bd A (4)_1}{\phi(x) = \sum^k_{i=1} s_i x = \left( \sum^k_{i=1} s_i \right) x  = x}
+	\Derive{(2)}{I(\Rightarrow)I(\exists)}{n \neq 1 \Rightarrow \exists x \in P : \varphi(x) = a}
+	\Assume{(3)}{n = 1}
+	\Say{(2)}{(3)\bd n}{a = 0}
+	\Conclude{()}{\bd \varphi(a)(2)}{\varphi(0) = a}
+	\Derive{(3)}{I(\Rightarrow)I(\exists)}{n=1 \Rightarrow \exists x \in P : \varphi(x) = a}
+	\Conclude{()}{E(|)\LOGIC{LEM}(n=1)(2,3)}{\exists x \in P : \varphi(x) = a}
+	\Derive{(1)}{\bd^{-1}\TYPE{Surjective}I(\forall)}{\varphi : P \ToSurj A}
+	\Assume{x}{\ker \varphi}
+	\Assume{p}{\TYPE{Prime}(\Int)}
+	\Assume{(2)}{x_p \neq 0}
+	\Say{Q }{ \{  q : \TYPE{prime}(\Int) : x_q \neq 0  \} }{ ?\TYPE{Prime}(\Int)  }
+	\Say{(3)}{\bd x(2)\bd Q \bd P(x)}{1 < |Q | < \infty}
+	\Say{(t,4)}{\bd P \bd x\forall q \in Q \. \bd q\hyph\!\tor A \bd^{-1} Q}{ \sum t : Q \to \Nat \. \forall q \in Q \. 
+		q^{t_q}x_q = 0   }
+	\Say{n}{\prod_{q \in Q} q^{t_q}}{\Nat}
+	\Say{m}{\frac{n}{p^{t_p}}}{\Nat}
+	\Say{(5)}{\bd \varphi(x)\bd^{-1} Q \bd m (4) \bd p \THM{CoprimePeriods}(2)}{m\varphi(x) = \sum_{q \in Q} mx_q = mx_p \neq 0}
+	\Say{(6)}{\bd \FUNC{unity}(A)(5)}{\varphi(x) \neq 0}
+	\Conclude{(7)}{\bd x (6)}{ \bot}
+	\Derive{(2)}{I(\forall)E(\bot)}{\forall p : \TYPE{Prime}(\Int) \. x_p = 0}
+	\Conclude{()}{ I(=,\to)(2) }{x = 0}
+}\Page{
+	\Derive{(2)}{\bd^{-1}\TYPE{Singleton}}{ \ker \varphi(x) = \{0\} }
+	\Say{(3)}{\THM{TrivialKernelTHM}(2)}{\Big( \varphi : P \ToSurj A\Big)}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Isomorphic}(\ABEL)\bd^{-1} \TYPE{Isomorphism}(\ABEL)(P,A)(1)(3)}{ A \cong_{\ABEL} P  }
+	\EndProof
+	\\
+	\DeclareType{PType}{\prod p : \TYPE{Prime}(\Int) \. \prod n \in \Nat \. (n \to \Nat) \to ?(\ABEL \And p\hyph \Group)}
+	\DefineNamedType{A}{PType}{A : p\hyph\Type}{\Lambda t : n \to \Nat \. A \cong \bigoplus^n_{i=1} \frac{\Int}{p^{t_i}\Int}}
+	\\
+	\Theorem{AbeleanPGroupOrderLemma}{ \forall A : \ABEL \And p\hyph\Group \. \forall s,t \in \Nat \. \forall a \in A
+		\. \forall (0) : o(a) = p^t  \. \NewLine \. 
+		\forall (00) : o(A) \le \{ p^t \} \. \forall [b] \in \frac{A}{\langle a \rangle}   
+		\. \forall (000) : o\Big([b]\Big) = p^s \. \exists c \in [b] : o(c) = p^s}
+	\Say{(1)}{\bd \FUNC{order}(000) \bd \FUNC{factorGroup}\Big(A,\langle a \rangle\Big)}{ p^sb \in \langle a \rangle}
+	\Say{(n,2)}{\bd \TYPE{Cyclic}(a)(1)}{\sum n \in \Nat \. p^sb = na}
+	\Say{(k,m,3)}{\THM{PrimeDivisor}(n,p)}{\sum k \in \NNInt \. \sum m : \TYPE{Coprime}(p) \. n = p^km}
+	\Say{(4)}{ \bd \FUNC{order}(0)(3)(2)  }{k \le t}
+	\Say{(5)}{ (00)(4) \bd p\hyph\Group(A)\THM{OrderDivides}(0)}{\sum l \in  t - k \. p^{s + l}b = 0}
+	\Say{(6)}{ (5)(3)(2) }{  0 = p^{k + l}ma }
+	\Say{(7)}{ \bd l (0)\bd m \THM{GeneratorsByCoprime}\Big(\langle a \rangle \Big)(p^t)(0)(a)    }{l = t - k}
+	\Say{(8)}{(5)(7)\bd^{-1} o(b)}{o(b) =  t + s - k}
+	\Say{(9)}{(00)(8)}{ s \le  k   }
+	\Say{c}{  b - p^{k-s}ma }{[b]}
+	\Say{(10)}{\bd c(p^sc)(2)(3)\bd\FUNC{inverse}(p^kma)}{p^sc = p^sb - p^kma = p^kma - p^kma = 0 }
+	\Say{(11)}{\bd c \bd [b](000)}{\forall r \in \Nat \. r<s \. p^rc \neq 0}
+	\Conclude{(*)}{\bd^{-1} o(c)(10,11)}{ o(c) = p^s   }
+	\EndProof
+	\\
+	\Theorem{AbeleanPGroupHasPType}{\forall A : \ABEL \And p\hyph\Group \ \. \exists! n \in \Nat :
+		\exists! t : \TYPE{NonIncreasing}(n, \Nat) : A : p\hyph\Type(n)(t)}
+	\Say{\mars}{\Lambda k \in \Nat \. \forall A : \ABEL \And p\hyph\Group \. \forall (0) : |A| \le p^k \. 
+		\NewLine \.
+		\exists k \in \Nat \. \exists! n \in \Nat : \exists! t : \TYPE{NonIncreasing}(n,\Nat) : A : p\hyph\Type(n)(t) }
+	{\Nat \to \Type}
+	\Assume{A}{\ABEL \And p\hyph\Group}
+	\Assume{(1)}{|A| = p}
+	\Say{(2)}{\THM{PrimeIsCyclic}}{\Big( A : \TYPE{Cyclic}   \Big)}
+	\Conclude{()}{\bd^{-1}p\hyph\Type(A,(2))}{\Big( A : p\hyph\Type(1,(1)) \Big)}
+	\Derive{(1)}{\bd^{-1}\mars}{\mars(1)}
+}\Page{
+	\Assume{k}{\Nat}
+	\Assume{(2)}{\mars(k)}
+	\Assume{A}{\ABEL \And p\hyph\Group}
+	\Assume{(3)}{|A| = p^{k + 1}}
+	\Assume{(4)}{A \IsNot \TYPE{Cyclic}}
+	\Say{a}{\arg \max_{a \in A} o(A)}{A}
+	\Say{r}{\log_p o(a)}{\Nat}
+	\Say{(5)}{(4)(a)}{\langle a \rangle \neq A}
+	\Say{(n,t,6)}{\mars(k)\left( \frac{A}{\langle a \rangle} \right)}{
+		\sum n \in \Nat \. t : \TYPE{NonDecreasing}(n, \Nat) \.
+		\left( \frac{A}{\langle a \rangle} : 
+		p\hyph\Type(n,t)\right)}
+	\Say{(B,7)}{\bd p\hyph\Type\left( \frac{A}{\langle a \rangle} \right)(6) }
+	{ \sum B : n \to \TYPE{Normal}\left( \frac{A}{\langle a \rangle} \right) \. 
+		\frac{A}{\langle a \rangle}  = \bigoplus^n_{i=1} B_i \And 
+		\forall i \in n \. B_i \cong_{\ABEL} \frac{\Int}{p^{t_i}\Int}
+	}
+	\Assume{i}{n}
+	\Say{(b,8)}{\bd \TYPE{Cyclic}(7)_2(i)}{\sum b \in A \. B_i = \Big\langle [b] \Big\rangle}
+	\Say{(9)}{(7)_2(i)(8)}{o\Big( [b] \Big) = p^{t_i}}
+	\Conclude{(c_i,10)}{\THM{AbeleanPGRoupOrderLemma}(A,r,t_i,a,\bd r,\bd a,[b],(9))}
+	{\sum c_i \in [b] \. o(c_i) = p^{t_i}}
+	\Derive{(c,8)}{I\left( \prod \right)}{\prod i \in n \. \sum c_i \in A \. B_i = \Big\langle [c_i] \Big\rangle
+	      \And o(c_i) = p^{t_i}}
+	\Say{C}{\langle c \rangle}{ n \to \TYPE{Normal}(A)}
+	\Say{(9)}{\bd C(8)}{\forall i \in n \. C_i \cong \frac{\Int}{p^{t_i}\Int}}
+	\Say{G}{\langle a \rangle \oplus \bigoplus^n_{i=1}C_i}{\ABEL}
+	\Say{\varphi}{\Lambda x \in G \. \sum^{n+1}_{i=1} x_i}{G \to_{\ABEL} A}
+	\Assume{y}{A}
+	\Say{(z_i,10)}{(7)_1(8)([y])}{\sum z : n \to \Int \.  [y] = \sum^n_{i=1} z_i[c_i]}
+	\Say{(z',11)}{\bd [c_i](10)}{\sum z' \in \Int \. y =  z_1'a + \sum^n_{i=1} z_i c_i }
+	\Say{x}{\Lambda i \in n + 1 \. \If i = 1 \Then z'a \Else z_{i-1}c_{i-1}}{G}
+	\Conclude{()}{\bd x(11)}{\varphi(x) = y}
+	\Derive{(10)}{\bd^{-1} \TYPE{Surjective}}{(\varphi : G \ToSurj A)}
+	\Assume{x}{\ker \varphi}
+	\Say{(11)}{\bd \ker \varphi(x)\bd \varphi(x)}{0 = \varphi(x) = \sum^{n+1}_{i=1} x_i}
+	\Say{(12)}{\pi_{\langle a \rangle}(11)}{0 = \sum^{n+1}_{i = 2} [x_i]}
+	\Say{(13)}{ (7)(8)(12) }{\forall i \in n \. x_{i+1} = 0}
+	\Say{(14)}{(11)(13)}{x_1 = 0}
+	\Conclude{()}{(13)(14)}{x = 0}
+}\Page{
+	\Derive{(11)}{\bd^{-1}\TYPE{Singleton}}{\ker \varphi = \{0\}}
+	\Say{(12)}{\THM{TrivialKernelTHM}(11)}{(\varphi : G \ToInj A)}
+	\Say{(13)}{\bd^{-1} \TYPE{Issomrphic}(\ABEL) \bd^{-1}\TYPE{Isomorphism}(G,A)(10,12)}{G \cong A}
+	\Say{(N,\tau)}{(n+1,(r;t))}{\sum N \in \Nat \. N \to \Nat}
+	\Say{(14)}{\bd G(13)\bd^{-1} (N,\tau)}{\Big( A : p\hyph\Type(N,\tau) \Big)}
+	\Assume{(M,\sigma)}{\sum M \in \Nat \. M \to \Nat}
+	\Assume{(15)}{\Big(A : p\hyph\Type(M,\sigma)\Big)}
+	\Say{(16)}{\bd a \bd^{-1}pA}{a \not \in pA}
+	\Say{(17)}{\THM{StrictSubsetCard}(A,\bd p\hyph\Group(A),16)}{|pA| < |A|}
+	\Say{(\nu.\mu,18)}{\bd pA \bd^{-1} \TYPE{Unique} \mars(k)(pA)(17)}{\sum \nu \in N \. \sum \mu \in M \. 
+		(N-\nu,\tau_{|N-\nu}) = (M-\mu,\sigma_{|M-\mu}) \And \NewLine \And 
+		\Big(\forall i \in N \. i \ge N - \nu \Rightarrow \tau_i = 1\Big) \And  
+		\Big(\forall i \in M \. i \ge M - \mu \Rightarrow \sigma_i =1 \Big)}
+	\Say{(19)}{E(=,\And)(18)_1}{ N - \nu = M - \mu \And \tau_{|N - \nu} = \sigma_{|M-\mu}}
+	\Say{(20)}{ \THM{ProductCardinality}(14,15)}{ p^\mu \prod^{M-\mu}_{i=1} p^{\sigma_i}  = |A| 
+		= p^\nu \prod^{N - \nu} p^{\tau_i}}
+	\Say{(21)}{(20)(19)}{ \nu = mu  }
+	\Conclude{()}{(21)(19)}{(N,\tau) = (M,\sigma)}
+	\Derive{(4)}{I(\Rightarrow)I(\exists!)}{A \IsNot \TYPE{Cyclic} \Rightarrow \mars(n + 1)(A) }
+	\Assume{(5)}{(A : \TYPE{Cyclic})}
+	\Conclude{()}{\bd^{-1}p\hyph\Type \bd \TYPE{Cyclic}}{\Big( A : p\hyph\TYPE\Type(1,\log_p |A|) \Big)}
+	\Derive{(2)}{I(\forall)I(\Rightarrow)I(\forall)E(|)\LOGIC{LEM}(A :\TYPE{Cyclic})I(\Rightarrow)(4)}
+	{ \forall n \in \Nat \.  \mars(n) \Rightarrow \mars( n + 1)  }
+	\Conclude{(*)}{E(\Nat)(1,2)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Conclude{\FGA}{\ABEL \And \TYPE{FinetelyGenerated}}{ ?\ABEL }
+	\\
+	\Theorem{FinitelyGeneratedTorsionIsFinite}{\forall A : \FGA \And \TYPE{Torsion} \. |A| < \infty }
+	\Say{(F,1)}{\bd \FGA(A)}{\sum F : \TYPE{Finite} \. A = \langle F \rangle}
+	\Say{(n,2)}{ \forall f \in F \. \bd \TYPE{Torsion}(n)  }{ \sum n : F \to \Nat \. \forall f \in F \. n_f f = 0 }
+	\Say{(3)}{\bd \FGA(A) \THM{ProductCardinality}(2)}{|A| \le \prod_{f \in F} n_f \le \infty}
+	\EndProof
+}\Page{
+	\Theorem{TorsionOfFGAIsFinite}{\forall A : \FGA \. |\tor A| < \infty }
+	\Say{(n,a,1)}{\bd \TYPE{Finite} \bd \FGA(A)}{\sum n \in \Nat \. \sum a : n \to A \. 
+		A = \Big\langle \{a_i | i \in n \} \Big\rangle}
+	\Say{\varphi}{\Lambda z \in \Int^n \. \sum^n_{i=1} z_ia_i}{\Int^n \ToSurj_{\ABEL} A }
+	\Say{(2)}{\THM{FreeSubspace}(\Int^n,\phi^{-1}(\tor A))}{(\phi^{-1}(\tor A) : \FGA)}
+	\Say{(3)}{\THM{GeneratorsPushforward}(\phi,\phi^{-1}(\tor A))}{(\tor A : \FGA)}
+	\Conclude{(*)}{\THM{FinitelyGeneratedTorsionIsFinite}(\tor A)}{|\tor A| < \infty}
+	\EndProof
+	\\
+	\Theorem{TorsionFreeFGAIsFree}{\forall A : \FGA \And \TYPE{TorsionFree} \. A : \TYPE{Free}}
+	\Say{(F,1)}{\bd \FGA(A)}{\sum F : \TYPE{Finite} \. A = \langle F \rangle}
+	\Say{E}{\max \{ E \subset F : E : \TYPE{LinearlyIndependent}(\Int)  \}}{\TYPE{LinearlyIndependent}(\Int)(A)
+	\And \TYPE{Subset}(F)}
+	\Say{B}{\langle E \rangle}{\TYPE{Normal}(A)}
+	\Say{(2)}{\THM{FreeIsGenByLinearlyInd}(B,E)}{(B : \TYPE{Free})}
+	\Assume{f}{F \cap E^\c}
+	\Say{(\alpha,z,3)}{ \bd f \bd E \bd \TYPE{LinearlyIndependent}(\Int) }{\sum \alpha \in \Int \. z : E \to \Int \. 
+		0 = \alpha f + \sum_{a \in E} z_a a \And \alpha \neq 0 | z \neq 0}
+	\Assume{(4)}{\alpha \neq 0}
+	\Say{(5)}{\bd f (4)}{\alpha f \neq 0}
+	\Conclude{()}{(3)(5)\And (4)}{\alpha f \in B \And \alpha \neq 0}
+	\Derive{(4)}{I(\Rightarrow)}{\alpha \neq 0 \Rightarrow (\alpha f \in B \And \alpha \neq 0)}
+	\Assume{(5)}{z \neq 0}
+	\Say{(6)}{\bd \TYPE{LinearlyIndependent}(\Int)(E)(5)}{ \sum_{a \in E} z_a a \neq 0}
+	\Conclude{()}{(6)(3)_1}{ \alpha f \in B \And \alpha \neq 0  }
+	\Derive{(6)}{E(|)(3)_2(4)I(\Rightarrow)}{\alpha f \in B \And \alpha \neq 0}
+	\Conclude{n_f}{|\alpha|}{\Nat}
+	\Derive{(n,3)}{I\left( \prod \right)}{\prod f \in F \cap E^\c  \. \sum n_f \in \Nat \. n_f f \in B}
+	\Say{m}{\prod_{f \in F \cap E^\c} n_f}{\Nat}
+	\Say{(4)}{(3)\bd m (1)}{mA \subset B}
+	\Say{(5)}{\THM{FreeSubspace}(4)}{mA : \TYPE{Free}}
+	\Say{\varphi}{\Lambda a \in A \. ma}{ A \to_{\ABEL} mA  }
+	\Say{(6)}{\bd \TYPE{TorsionFree}(A)\bd \varphi}{\varphi : A \ToBij_{\ABEL} mA}
+	\Conclude{(*)}{\THM{GeneratorsPushforward}( \phi^{-1} , mA)}{(A : \TYPE{Free})}
+	\EndProof
+} \Page{
+	\Theorem{TorsionFactorIsTorsionFree}{\forall A \in \ABEL \. \frac{A}{\tor A} : \TYPE{TorsionFree}  }
+	\Assume{[x]}{\tor\frac{A}{\tor A}}
+	\Say{(n,2)}{\bd \tor \frac{A}{\tor A} \; [x]}{\sum n \in \Nat \. n[x] = \tor A}
+	\Say{(3)}{\bd [x](2)}{nx \in \tor A}
+	\Say{(m,4)}{\bd \tor A(nx)}{ \sum m \in \Nat \. mnx = 0}
+	\Say{(5)}{\bd^{-1} \tor A (m)}{x \in \tor A}
+	\Conclude{()}{\bd [x](5)}{[x] = \tor A}
+	\Derive{(1)}{\bd^{-1}\TYPE{Singleton}}{\tor \frac{A}{\tor A} = \{ \tor A \}}
+	\Conclude{(*)}{\bd^{-1}\TYPE{TorsionFree}}{\left( \frac{A}{\tor A} : \TYPE{TorsionFree} \right)}
+	\EndProof
+	\\
+	\Theorem{FGAClassification}{\forall A : \FGA \. \exists! n,m \in \NNInt : \NewLine : 
+		\exists! p : \TYPE{NonIncreasing}(m,\TYPE{Prime}(\Int)) : 
+		\exists! k : m \to \Nat \. 
+		\exists! t : \prod i \in m \. \TYPE{NonIncreasing}(k_i,\Nat) : \NewLine : 
+		A \cong_{\ABEL} \Int^n \oplus \bigoplus^m_{i=1} \bigoplus^{k_i}_{j=1} \frac{\Int}{p^{t^j_i}\Int}}
+		& \text{ write $A$ as $A \cong  \frac{A}{\tor A} \oplus \tor A $ ;} \\
+		& \text{ Combine theorems $\THM{TorsionFactorIsTorsionFree},\THM{TorsionFreeFGAIsFree},
+			\THM{GeneratorsPushforward}$ } \\ 
+		& \text{and $\THM{AltFree}$ to get $\frac{A}{\tor A} \cong \Int^n$;}\\
+		& \text{Use $\THM{TorsionDecomposion}$ to write $\tor A \cong \bigoplus^m_{i=1} p_i\hyph\!\tor A$
+		for a unique collection of primes $(p_i)^m_{i=1}$;}\\
+		& \text{for each $i \in m$  the theorem $\THM{TorsionOfFGAIsFinite}$ ensures that 
+			$p_i\hyph\!\tor A$ is also Finite;}\\
+		& \text{ Hence, it is a p$\hyph$group,so use $\THM{AbeleanPGroupHasPType}$ to write 
+			$ p_i\hyph\!\tor A = \bigoplus^{k_i}_{j=1} \frac{\Int}{p^{t^j_i}\Int}  $;} \\
+		& \text{Combining all together completes the proof.} \\
+		\EndProof
+}
+\newpage
+\subsection{Dual Groups}
+\Page{
+	\DeclareType{Exponent}{\Nat \to ?\ABEL}
+	\DefineType{A}{Exponent}{\Lambda n \in \Nat \. nA = \{0\}}
+	\\
+	\DeclareFunc{dualGroup}{\TYPE{Exponent}(n) \to \TYPE{Exponent}(n)}
+	\DefineNamedFunc{dualGroup}{ A  }{A^\wedge}{ \mathcal{M}_{\ABEL}(A,Z_n)  }
+	\\
+	\DeclareFunc{dualHomomorphism}{ \prod A,B : \TYPE{Exponent}(n) \. (A \to_{\ABEL} B) \to (B^\wedge \to_{\ABEL} A^\wedge)  }
+	\DefineNamedFunc{dualHomomorphism}{\varphi}{\varphi^\wedge}{ \Lambda  f \in B^\wedge \.  f \circ \varphi }
+	\\
+	\Theorem{DualId}{\forall A  : \TYPE{Exponent}(n) \. {\id_A}^\wedge = \id_{A^\wedge} }
+	& f \circ \id = f  = \id(f)\\
+	\EndProof
+	\\
+	\Theorem{ContravariantDual}{\forall A,B,C : \TYPE{Exponent}(n) \. \forall \varphi : A \to_{\ABEL} B \. 
+	\forall \psi : B \to_{\ABEL} C \. (\phi\psi)^\wedge = \psi^\wedge\phi^\wedge 
+	}
+	\Assume{f}{C^\wedge}
+	& (\phi\psi)^\wedge(f) = f \circ \psi \circ \phi = \phi^\wedge(f \circ \psi) = \psi^\wedge \phi^\wedge(f)   \\
+	\EndProof
+	\\
+	\Theorem{DualProduct}{\forall A,B : \TYPE{Exponent}(n) \. (A\times B)^{\wedge} = A^\wedge \times B^\wedge}
+	\Say{\varphi}{\Lambda f \in (A \times B)^\wedge \. \Big(\Lambda a \in A \. f(a,0) , \Lambda b \in B \. f(0,b)\Big) }
+	{(A \times B)^\wedge \to_{\ABEL} A^\wedge \times B^\wedge}
+	\Say{\psi}{\Lambda (f,g) \in A^\wedge \times B^\wedge \. \Lambda (a,b) \in A \times B \. f(a) + g(b)}
+	{A^\wedge \times B^\wedge  \to_{\ABEL} (A \times B)^\wedge}
+	\Say{(1)}{\bd \varphi \bd \psi}{ \varphi \psi = \id}
+	\Say{(2)}{\bd \psi \bd \varphi}{ \psi \varphi = \id}
+	\Conclude{(*)}{\bd \TYPE{Isomorphic}(\ABEL)\bd \TYPE{Isomorphism}(1,2)}{A^\wedge \times B^\wedge \cong (AB)^\wedge}
+	\EndProof
+	\\
+	\Theorem{DualOfCyclic}{\forall m : \TYPE{Divisor}(n) \. Z_m^{\wedge(n)} \cong_{\ABEL} Z_m }
+	\Say{(N,1)}{\THM{CyclicDividingSubgroup}(Z_n,m,n))}{ \sum N \Nrml Z_n \. N \cong Z_m \And N : \TYPE{Cyclic}}
+	\Say{\varphi}{ \Lambda k \in N \. l \in Z_m \. lk }{ N \to_{\ABEL} Z_m^{\wedge}}
+	\Say{\psi}{ \Lambda f \in Z_m^\wedge  \. f(1) }{Z_m^{\wedge} \to_{\ABEL} Z_m}
+	\Say{(2)}{\bd \psi \bd \varphi}{\psi \varphi = \id}
+	\Say{(3)}{\bd \varphi \bd \psi}{\varphi \psi = \id}
+	\Conclude{(*)}{\bd \TYPE{Isomorphic}(\ABEL)\bd \TYPE{Isomorphism}(2,3)}{ Z_m^{\wedge} \cong_{\ABEL} Z_m   }
+	\EndProof
+}
+\Page{
+	\Theorem{DualOfFiniteGroup}{\forall A : \TYPE{Exponent}(n) \And \FG \.  A^\wedge \cong A  }
+	& \text{ The torsion of $A$ having exponent $n$ is the $A$ itself, so by $\THM{FGAClassification}$}\\
+	& \text{  $A$ is a product of cyclic groups, and combinig $\THM{dualProduct}$ and $\THM{DualOfCyclic}$  
+		provides result.}\\
+	\EndProof
+	\\
+	\Theorem{BillinearBalanceTHM}{ \forall A,B \in \ABEL  \. 
+		\forall T : \mathcal{L}_{\Int}(A,B;Z_m) \. \forall (0) : \left|\frac{A}{l\hyph\ker T}\right| < \infty  
+		\.  \NewLine \.  \frac{A}{l\hyph\!\ker T} \cong \frac{B}{r\hyph\!\ker T}}
+	\Say{(1)}{\bd Z_m \bd \frac{A}{l\hyph\! \ker T}}{ \left( \frac{A}{l\hyph\! \ker T}  : \TYPE{Exponent}(m) \right) }
+	\Say{(2)}{\bd Z_m \bd \frac{B}{r\hyph\! \ker T}}{ \left( \frac{B}{r\hyph\! \ker T}  : \TYPE{Exponent}(m) \right) }
+	\Say{(C,3)}{\bd \frac{B}{r\hyph\!\ker T} \bd^{-1} \left( \frac{A}{r\hyph\!\ker T} \right)^\wedge   }
+	{  \sum C  \Nrml  \left( \frac{A}{r\hyph\!\ker T} \right)^\wedge  \. C \cong \frac{B}{l\hyph\!\ker T} }
+	\Say{(4)}{\THM{DualOfFiniteGroup}(0)}{  \left(\frac{A}{l\hyph\!\ker T} \right)^\wedge \cong \frac{A}{l\hyph\!\ker T} }
+	\Say{(5)}{\THM{SubsetCardinality}(3)(4)}{ \left| \frac{B}{r\hyph\! \ker T} \right| < \infty  }
+	\Say{(D,6)}{\bd \frac{A}{l\hyph\!\ker T} \bd^{-1} \left( \frac{B}{r\hyph\!\ker T} \right)^\wedge   }
+	{  \sum D  \Nrml  \left( \frac{B}{l\hyph\!\ker T} \right)^\wedge  \. D \cong \frac{A}{r\hyph\!\ker T} }
+	\Say{(7)}{\THM{DualOfFiniteGroup}(0)}{  \left(\frac{B}{r\hyph\!\ker T} \right)^\wedge \cong \frac{B}{r\hyph\!\ker T} }
+	\Conclude{(*)}{ (4)(3)(6)(7)}{\frac{A}{l\hyph\ker T} \cong \frac{B}{r\hyph\ker T}}
+	\EndProof
+	\\
+	\Theorem{OrthogonalComplement}{\forall A : \ABEL \And \FG \. \forall B \Nrml A \.  \frac{A^\wedge}{B^\bot} \cong B^\wedge}
+	& \text{Apply privious theorem with} \\
+	& T = \Lambda b \in B \. \Lambda f \in  A^\wedge \. f(b)  \\
+	\EndProof
+}
+\newpage
+\subsection{Miscoleneus Facts}
+\Page{
+	\Theorem{TwoGroupIsAbelean}{\forall G : 2\hyph\TYPE{Group} \. G \in \ABEL}
+	\Assume{a,b}{G}
+	\Say{(1)}{ \bd^2 \TYPE 2\hyph\TYPE{Group}(G)\Big((ab)(ba)\Big)}{(ab)(ba) = ab^2a = a^2 = e}
+	\Say{(2)}{\bd^{-1}\TYPE{Inverse}(1)}{(ab)^{-1} = ba}
+	\Say{(3)}{ \bd \TYPE 2\hyph \TYPE{Group} (ab)^2   }{ (ab)^2 = e }
+	\Say{(4)}{ \bd^{-1} \TYPE{Inverse}  }{ (ab)^{-1} = ab    }
+	\Conclude{()}{(3)(4)}{  ba = ab}
+	\Derive{(1)}{\bd^{-1}\ABEL}{ G \in \ABEL}
+	\EndProof
+}
+\subsection{Hildebrandt Theory[!]}
+\section{Global Group Theory}
+\subsection{Groups as Category}
+\Page{
+	\Theorem{GroupsHaveProducts}{ \GRP : \TYPE{WithProducts} }
+	\Assume{I}{\SET}
+	\Assume{G}{I \to \GRP}
+	\Assume{H}{\GRP}
+	\Assume{\phi}{\prod i \in I \. H \Arrow{\GRP} G_i}
+	\Say{\psi}{\Lambda h \in H \. (\phi_i(h))_{i \in I}}{  H \to   \prod_{i \in I} G_i  }
+	\Say{(1)}{\bd \psi}{\forall i \in I \. \pi_i \psi = \phi_i}
+	\Say{(2)}{\bd^{-1} \int \mathrm{Cone}_G(1)}
+	{\left[\psi : (H,\phi) \Arrow{\int \mathrm{Cone}_G} \left( \prod_{i \in I} G_i,\pi \right) \right]   }
+	\Assume{\alpha}{\psi : H \Arrow{\int \mathrm{Cone}_G} \prod_{i \in I} (G_i, \pi) }
+	\Say{(3)}{\bd \int \mathrm{Cone}_G (\alpha) }{ \forall i \in I \. \pi_i \psi = \phi_i }
+	\Conclude{()}{ I(=,\to)(2)(3)}{  \psi = \alpha  }
+	\DeriveConclude{ ()  }{\bd^{-1} \TYPE{Limit}(I,G) }
+	{ \left[ \left(\prod_{i \in I} G_i , \pi   \right)  : \TYPE{Limit}(I,G) \right]   }
+	\Conclude{(*)}{\bd^{-1} \TYPE{WithProducts} }{  [\GRP : \TYPE{WithProducts}] }
+	\EndProof
+	\\
+	\Theorem{GroupsWithEq}{\GRP : \TYPE{WithEqualizers}}
+	\Assume{G,H}{\GRP}
+	\Assume{\phi,\psi}{G \Arrow{\GRP} H}
+	\Say{E}{\{ g \in G : \phi(g) = \psi(g)  \}}{\TYPE{Subset}(G)}
+	\Assume{a,b}{E}
+	\Say{(1)}{\bd\phi \bd a \bd b \bd \psi}{  \phi(ab) = \phi(a)\phi(b) = \psi(a)\psi(b) = \psi(ab)    }
+	\Conclude{()}{\bd E (1)}{ab \in E}
+	\Derive{(1)}{ I(\forall)  }{ \forall a,b \in E \. ab \in E   }
+	\Assume{a}{ E  }
+	\Say{(2)}{\THM{HomoInv}(\phi)\bd a \THM{HomoInv}(\psi)}{  \phi(a^{-1}) = \phi^{-1}(a) = \psi^{-1}(a) = \psi(a^{-1}) }
+	\Conclude{()}{\bd E (2)   }{ a^{-1} \in E    }
+	\Say{(2)}{\bd E (2)  }{  a^{-1} \in E    }
+	\Say{(3)}{ \THM{HomoId}^2(\phi)(\psi)E(=)  }{  \phi(e) = e = \psi(e) }
+	\Say{(4)}{\bd E (3)}{ e \in E}
+	\Say{(5)}{\bd^{-1} \GRP\bd^{-1} \TYPE{Group}(1,2,4)}{E \in \GRP}
+	\NoProof
+}	
+\newpage
+\Page{
+	\Theorem{GroupCatIsComplete}{\GRP : \TYPE{Complete}}
+	\Conclude{(*)}{ \THM{CompleteByProductsAndEqualizers}(\GRP) }{\Big[ \GRP : \TYPE{Complete} \Big]}
+	\EndProof
+	\\
+	\DeclareFunc{ForgetGroupStructure}{  \GRP \Arrow{\mathsf{CAT}} \SET  }
+	\DefineNamedFunc{ForgetGroupStructure}{ G,\cdot}{ U_\GRP(G,\cdot)   }{  G  }
+	\DefineNamedFunc{ForgetGroupStructure}{G,H,f}{U_\GRP(G,H,f)}{f}
+	\\
+	\Theorem{ForgettingGroupStructureIsContinuous}{U_\GRP : \TYPE{Continuous}}
+	\Say{(1)}{\ldots}{U_\GRP\left( \prod_{i \in I} G_i   \right) = \prod_{i \in I} U_\GRP(G_i)}
+	\Say{(2)}{\ldots}{ U_\GRP(\FUNC{eq}(f,g)) = \FUNC{eq}(U_\GRP(f),U_\GRP(g))}
+	\EndProof
+	\\
+	\Theorem{GroupsAreIntersectable}{\GRP : \TYPE{Intersectable}}
+	\Assume{G}{\GRP}
+	\Assume{(H,i)}{\TYPE{Subobject}(G)}
+	\Conclude{(S,1)}{\bd \TYPE{Subobject}(G)}{ i(H) \cong_\GRP H   }
+	\Derive{(*)}{ \bd^{-1} \TYPE{Intersectable}  }{ \GRP : \TYPE{Intersectable}  }
+	\EndProof
+} \newpage \Page{
+	\Theorem{GroupIsCocomplete}{\GRP : \TYPE{Cocomplete}}
+	\Assume{\mathcal{I}}{\mathsf{SCAT}}
+	\Assume{G}{\mathcal{I} \Arrow{\mathsf{CAT}} \GRP}
+	\Say{A}{ \bigsqcup_{i\in \mathcal{I}}   }{ \SET}
+	\Say{\kappa}{\max(|A|, \aleph_0  ) }{\TYPE{Cardinal}}
+	\Say{V}{\prod \Big\{ H \Big| [H] : \TYPE{Isoclass}(\GRP)  : |H| < \kappa  \Big\}}{\GRP}
+	\Say{I}{ \left\{ \phi \Bigg| \prod i \in \mathcal{I} \.  G_i \to V \right\}}
+	{  \Set\left( \prod i \in \mathcal{I} \.  G_i \to V    \right)    } 
+	\Say{A}{\Lambda  \phi \in I \.  \left\langle \bigcup_{i \in \mathcal{I}} \im \phi_i \right\rangle}{I \to \GRP}
+	\Say{X}{\Lambda \phi \in I \. A_\phi / N\bigg\{  \phi_i(x) \phi_j^{-1}\big( G_{i,j}(h)(x) \big) \Big| 
+	   i,j \in \mathcal{I}, x \in G_i, h : i \Arrow{\mathcal{I}} j    \bigg\} }
+		{I \to \GRP  }
+	\Say{f}{\Lambda   \phi \in I \. \Lambda j \in \mathcal{I} \. \phi_j^{|A_i} \pi_{X_{\phi}}  }
+	{ \sum  \phi \in I \. \sum j \in \mathcal{I} \. G_j \Arrow{\GRP}  X(\phi)}
+	\Assume{\phi}{I}
+	\Assume{j,k}{\mathcal{I}}
+	\Assume{h}{j \Arrow{\mathcal{I}} k }
+	\Conclude{ ()  }{ \bd X \bd f   }{ \phi_{k} = G_{j,k}(h)\phi_{j}     } 
+	\Derive{(1)}{I(\forall)\bd^{-1} \TYPE{NaturalTransform}}
+	{ \forall \phi \in I \. f : G \Arrow{\GRP^\mathcal{I}} \Delta X(phi)   }
+	\Assume{H}{\GRP}
+	\Assume{\psi}{G \Arrow{\GRP^\mathcal{I}} \Delta H}
+	\Say{F}{\left\langle \bigcup_{i \in \mathcal{I}} \psi_i(G_i) \right\rangle}{\GRP}  
+	\Say{(2)}{\bd \kappa \THM{UnionCardinality} \THM{GeneratedCardinality}}{  \left|  F  \right| \le \kappa }
+	\Say{(\phi, \varphi ,3)}
+	{ \bd V \bd I \bd F (2)  }{ \sum \phi \in I \.  \sum \varphi : A_\phi \ToIso{\GRP} F \. \forall i \in \mathcal{I} \.  \psi_i = \phi_i \varphi \iota_{H} }
+	\Say{(4)}{ \bd \TYPE{NaturalTransform}(\psi) \bd X\bd \phi (3)}{ A_\phi \cong_{\GRP} X_\phi }
+	\Conclude{()}{\bd f(4)(3)}{ \psi = f_\phi \Delta(\varphi \iota_H)}
+	\Derive{(2)}{ I(\forall) I^{3}(\exists)I^2(\forall)I^2(\exists)}{ 
+		\NewLine :
+		\forall G : \mathcal{I} \Arrow{\mathsf{CAT}} \GRP \. 
+		\exists I : \SET : \exists X : I \to \GRP^{\mathcal{I}} \. \exists f : \sum i \in I \.  G \Arrow{\GRP^\I}  \Delta(X_\phi) :
+		\forall H : \GRP \. \forall \psi : G \Arrow{\GRP^{\mathcal{I}}} \Delta H \. \NewLine \.
+		\exists i \in I \. \exists h : X_i \Arrow{\GRP} H \. 
+		\psi = f_i \Delta(h) 
+	}
+	\Say{(L,3) }{ \THM{GeneralAdjointFunctorTheorem}(\Delta_{\mathcal{\I}}, (2)) }
+	{  \sum L  : \GRP^{\mathcal{I}} \Arrow{\mathsf{CAT}}  \GRP \. L \vdash \Delta_{\mathcal{\I}}    }
+	\Conclude{()}{\THM{ColimitAsAdjoint}(3)}{ \forall G : \GRP^{\mathcal{I}} \. \colim_{i \in \I} G_i = L(G) }
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{Cocomplete} I(\forall) }{ [ \GRP : \TYPE{Cocomplete} ]}
+	\EndProof
+}
+\newpage
+\subsection{Free Products}
+\Page{
+	\DeclareFunc{testSet}{ \prod I : \SET \. (I \to \GRP) \to \SET}
+	\DefineNamedFunc{testSet}{G}{T(G)}{\left\{ a : \left(\bigsqcup_{i \in I} G_i \setminus \{ e \} \right)^*  : \forall n \in \Nat \. a_{n,1} \neq a_{n+1,1}   \right\}}
+	\\
+	\DeclareFunc{testAction}{ \prod I : \SET \.  \prod G : I \to \GRP \. 
+		\Big(\sum i \in I \. G_i  \Big) \to \End_{\SET} T(G)  }
+	\DefineNamedFunc{testAction}{(i,e)}{\iota_i(e)}{\id}
+	\DefineNamedFunc{testAction}{(i,g)}{\iota_i(g)}
+	{  
+		\Lambda a \in  T(G) \. \If a = \epsilon \Then g \Else \If a_1 = g^{-1} \Then a_{+1} \Else 
+		\NewLine \Else \If a_1 \in G_i \Then  ga_1 \oplus a_{2,\ldots} \Else g \oplus a 
+	}
+	\\
+	\Theorem{testActionIsHomo}{ \forall I : \SET \. \forall (0) : |I| > 1 \. \forall G : I \to \GRP \. \forall i \in I \. \forall g,h \in G_i \. \iota_i(g)\iota_i(h) = \iota_(gh)}
+	\Say{(00)}{\bd T(G)(0)}{T(G) \neq \emptyset}
+	\Assume{a}{T(G)}
+	\Assume{(1)}{ a_1 \in G_i  }
+	\Assume{(2)}{ a_1 \neq h^{-1}  }
+	\Assume{(3)}{ha_1 \neq g^{-1}}
+	\Conclude{()}{\bd \GRP \bd \iota_i(2)(3)}{ \iota_i(g)\iota_i(h)a = \iota_i(g) ha_1 \oplus a_{+1} = gha_1 \oplus a_{+1}  = \iota_i(gh)(a) }
+	\Derive{(3)}{I(\Rightarrow)}{ ha_1 \neq g^{-1} \Rightarrow \LOGIC{This} }
+	\Assume{(4)}{ha_1 = g^{-1}}
+	\Say{(5)}{ h^{-1}(4)\THM{InverseProduct} }{ a_1 = h^{-1}g^{-1} = (hg)^{-1} }
+	\Conclude{()}{(1)(2)(4)(5)}{\iota_i(g)\iota_i(h)(a) = \iota_i(g) ha_1 \oplus a_{+1} = a_{+1} = \iota_i(gh)a}
+	\DeriveConclude{()}{I(\Rightarrow)E(|)\LOGIC{LEM}(3)}{\LOGIC{This}}
+	\Derive{(2)}{I(\Rightarrow)}{a_1 \neq h^{-1} \Rightarrow \LOGIC{This}  }
+	\Assume{(3)}{ a_1 = h^{-1} }
+	\Conclude{()}{(1)(3)}{\iota_i(g)\iota_i(h)a = \iota_i(g) a_{+1} = g \oplus a_{+1} = (gha_1) \oplus a_{+1} = \iota_i(gh)a}
+	\DeriveConclude{()}{I(\Rightarrow)E(|)(2)\LOGIC{LEM}}{\LOGIC{This}}
+	\Derive{(1)}{I(\Rightarrow)}{a_1 \in G_1 \Rightarrow \LOGIC{This}}
+	\Assume{(2)}{a_1 \not \in G_1}
+	\Assume{(3)}{g \neq h^{-1}}
+	\Conclude{()}{(2)(3)}{ \iota_i(g)\iota_i(h) a = \iota_i(g) h \oplus a = (gh) \oplus a = \iota_i(gh) a    }
+	\Derive{(3)}{I(\Rightarrow)}{g \neq h^{-1} \Rightarrow \LOGIC{This}}
+	\Assume{(4)}{g = h^{-1}}
+	\Conclude{()}{(2)(4)\bd^{-1}\iota_i(e)(4)}{\iota_i(g)\iota_i(h) a = \iota_i(g) h \oplus a = a = \iota_i(e) a = \iota_i(gh) a  }
+	\DeriveConclude{()}{I(\Rightarrow)E(|)(3)\LOGIC{LEM}}{ \LOGIC{This}  }
+	\DeriveConclude{(*)}{I(\Rightarrow)E(|)(1)\LOGIC{LEM}}{ \LOGIC{This}  }
+	\EndProof
+	\\
+	\Theorem{testActionIsAuto}{ \forall I : \SET \. \forall (0) : |I| > 1 \. \forall G : I \to \GRP \. \forall i \in I \. \forall g \in G_i  \. 
+		\iota_{i}(g) \in  \Aut_{\SET}T(G) } 
+	\Say{(1)}{\THM{TestActionIsHomo}(g,g^{-1})}{\iota_i(g)\iota_i(g^{-1}) = \iota_i(e) = \id }
+	\Say{(1)}{\THM{TestActionIsHomo}(g^{-1},g)}{\iota_i(g^{-1})\iota_i(g) = \iota_i(e) = \id }
+	\Conclude{(*)}{\bd \TYPE{Automorphisms}(\SET)(1)(2)\THM{InvertibleBijection}}{ \iota_i(g) \in \Aut_{\SET}T(G)   }
+}\Page{
+	\DeclareFunc{freeProduct}{ \prod I : \SET \. (I \to \GRP) \to \GRP }
+	\DefineNamedFunc{freeProduct}{(\{i\},G)}{\coprod_{i \in I} G_i}{G_i}
+	\DefineNamedFunc{freeProduct}{(I,G)}{\coprod_{i \in I} G_i}
+	{  
+		\Big\langle \{  \iota_i(g)   |  i \in \I, g \in G_i : g \neq e \Big\} \Big\rangle 
+	}
+	\\ 
+	\DeclareType{LengthType}{\prod I \in \SET \.\prod G : I \to \GRP \. \Nat \to   ? \coprod_{i \in I} G_i} 
+	\DefineType{x}{LengthType}{\Lambda n \in \Nat \. \exists i : n \to \I \. \exists g : \prod j \in n \. G_{i_j} \. x = \prod^n_{i=1} \iota_{i_j}(n) }
+	\\
+	\Theorem{FreeProductStructure}
+	{
+		\forall I \in \SET \. \forall G : I \to \GRP \. \forall x \in \coprod_{i \in I} \. 
+		\exists n \in \Int_+ \. \exists i : n \to I \. \exists g : \prod j \in n \. G_{i_j} \. 
+		x(\epsilon) = \prod_{j=1}^n g_j \And x = \prod_{j=1}^n \iota_{i_j}(g_j) 
+	}
+	\Say{(n,i,g,1)}{\bd \coprod}{ \sum n \in \Int_+ \. \sum i : n \to I \. \sum g : \prod j \in n \.  G_{i_j} \.  x = \prod^n_{j=1} \iota_{i_j}(g_j)  }
+	\Assume{(2)}{n = 0}
+	\Say{(3)}{(1)(2)}{ x = e }
+	\Say{(4)}{(3)(2)}{x(\epsilon) = e(\epsilon) = \epsilon = \prod^0_{n=1} g_i}
+	\Derive{(2)}{I(\Rightarrow)}{n = 0 \Rightarrow \LOGIC{This}(x)}
+	\Assume{(3)}{n > 1}
+	\Assume{(4)}{\forall y : \TYPE{LengthType}(n - 1) \. \LOGIC{This}(y) }
+	\Say{(m,i,g,5,6)}{(4)(1)}{ 
+		\sum m \in \Int_+ \. \sum j : m \to I \. \sum h : \prod k \in m  \.  G_{j_k} \.  
+		\prod^m_{j=1} \iota_{j_k}(h_k) = \prod^n_{j=1} \iota_{i_j}(g_j) \And  \NewLine \And 
+		\prod^m_{j=1} h_k = \prod^n_{j=1} \iota_{i_j}(g_j)(\epsilon)	
+	}
+	\Say{(7)}{(1)(5)}{x = \iota_{i_n}(g_n) \prod^m_{k=1} \iota_{j_k}(h_{j_k})}
+	\Say{(8)}{(1)(5)}{ x(\epsilon) = \iota_{i_n}(g_n) \prod^m_{k=1} h_{j_k}  }
+	\Assume{(9)}{h_{j_m} \in G_{i_n}}
+	\Say{10}{(9)(7)}{x = \iota_{i_n}(g_n h_n) \prod^{m-1}_{k=1} \iota_{j_k}(h_{j_k}) }
+	\Say{11}{(9)(8)}{x(\epsilon) = g_n h_n \prod^{m-1}_{k=1} \iota_{j_k}(h_{j_k})}
+	\Conclude{()}{(10)(11)}{\LOGIC{This}}
+	\Derive{(9)}{I(\Rightarrow)}{ h_{j_m} \in G_{i_n} \Rightarrow \LOGIC{This}(x) }
+	\Say{(10)}{I(\Rightarrow)\bd T(G)(5)(6)(7)(8)}{h_{j_m} \in G_{i_n} \Rightarrow \LOGIC{This}(x)}
+	\Conclude{(11)}{E(|)(10)(9)\LOGIC{LEM}}{\LOGIC{This}}
+	\Derive{(12)}{\THM{Induction}(\Int_+)(2)}{\LOGIC{This}}
+	\EndProof
+}\Page{
+	\Theorem{FreeProductIsCoproduct}{  \forall I \in \SET \. \forall G : I \to \GRP \. \coprod_{i \in \I} G_i : \TYPE{Coproduct}(\GRP,G)   }
+	\Assume{H}{\GRP}
+	\Assume{\phi}{\prod i \in \I \. G_i \Arrow{\GRP} H}
+	\Assume{x}{\prod_{i \in I} G_i}
+	\Say{(n,i,g,1)}{\bd T(G) x(\varepsilon) }{\sum n \in n \. \sum i : n \to I \. \sum g : \prod j \in n \. G_{j_k} \. x(\varepsilon) = \prod_{j = 1}^n g_j}
+	\Conclude{\psi(x)}{\coprod^n_{j=1} \phi_{i_j}(g_j)}{H}
+	\Derive{\psi}{I(\to)}{ \prod_{i \in I} G_i \Arrow{\GRP} H }
+	\Assume{i}{I}
+	\Assume{a}{G_i}
+	\Conclude{()}{ \bd \psi_{i}(a) }{\psi \iota_{i} (a) = \phi_i (a)  } 
+	\Derive{(1)}{I(\forall)}{\forall i \in I \. \forall a \in G_i \. \psi \iota_i(a) = \phi_i(a)}
+	\Assume{\psi'}{ \prod_{i \in I} G_i \Arrow{\GRP} H  }
+	\Assume{(2)}{\forall i \in I \. \forall a \in G_i \. \psi' \iota_i(a) = \phi_i(a)}
+	\Assume{x}{\coprod_{i \in I} G_i}
+	\Say{(n,i,g,3)}{\THM{FreeProductStructure}(x)}{ \sum n \in \Nat \. \sum i : n \to I \. \sum g : \prod j \in n \.  G_j \.   
+		\NewLine \. x = \prod^n_{j=1} \iota_{i_j}(g_j) \And x(\varepsilon)) = \prod^n_{j=1} g_j  }
+	\Conclude{()}{(1)(3)(2)}{\psi(x) = \prod^n_{j=1} \phi_{j_i}(g_j) = \psi'(x)}
+	\DeriveConclude{(*)}{ \bd^{-1} \TYPE{Coproduct} }{ \coprod_{i \in \I} X_i}
+	\EndProof
+}
+\newpage
+\subsection{Free Groups and Presentation}
+\Page{  
+	\DeclareFunc{freeGroup}{\SET \to \GRP}
+	\DefineNamedFunc{freeGroup}{A}{F_\GRP(A)}{ \coprod_{a \in A} \Int  }
+	\\
+	\DeclareFunc{freeHomo}{ \prod A, B \SET \. A \Arrow{\SET} B \to F(A) \Arrow{\GRP} F(B)}
+	\DefineNamedFunc{freeHomo}{f}{ F_{A,B}(f)}{ \Lambda \prod^n_{i = 1} (a_i, m_i) \in F(A) \. \prod^n_{i=1} (f(a_i),m_i) } 
+	\\
+	\Theorem{ForgetfulFunctorAdmitsLeftAdjoint}{ \exists F : \SET \Arrow{\CAT} \GRP \.  F \dashv U  }
+	\Assume{\mathcal{I}}{\mathsf{SCAT}}
+	\Assume{A}{\SET}
+	\Say{\kappa}{\max(|A|, \aleph_0  ) }{\TYPE{Cardinal}}
+	\Say{V}{\prod \Big\{ H \Big| [H] : \TYPE{Isoclass}(\GRP)  : |H| < \kappa  \Big\}}{\GRP}
+	\Say{I}{ \left\{ \phi \Bigg| A \to V \right\}}
+	{  \Set\left( A \to V    \right)    } 
+	\Say{X}{\Lambda \phi \in I \. \left\langle  \im \phi \right\rangle}{I \to \GRP}
+	\Say{f}{\Lambda   \phi \in I \.  \phi }
+	{ \sum  \phi \in I \.   A \Arrow{\SET} U(X_\phi)  }
+	\Assume{H}{\GRP}
+	\Assume{\psi}{A \Arrow{\SET} U(H)}
+	\Say{H'}{\left\langle   \psi_i(A) \right\rangle}{\GRP}  
+	\Say{(2)}{\bd \kappa \THM{GeneratedCardinality}}{  \left|  H'  \right| \le \kappa }
+	\Say{(\phi, \varphi ,3)}
+	{ \bd V \bd I \bd F (2)  }{ \sum \phi \in I \.  \sum \varphi : X_\phi \ToIso{\GRP} H' \. \forall i \in \mathcal{I} \. \psi_i = \phi_i \varphi \iota_{H} }
+	\Conclude{()}{\bd f(4)(3)}{ \psi = f_\phi U(\varphi \iota_H)}
+	\Derive{(2)}{ I(\forall) I^{3}(\exists)I^2(\forall)I^2(\exists)}{ 
+		\NewLine :
+		\forall A : \SET \. 
+		\exists I : \SET : \exists X : I \to \GRP \. \exists f : \sum i \in I \.  A \Arrow{SET} U(X_i) : 
+		\forall H : \GRP \. \forall \psi : G \Arrow{\GRP^{\mathcal{I}}} U(H) \. \NewLine \.
+		\exists i \in I \. \exists h :  X_i \Arrow{\GRP^\I}  H \. 
+		\psi = f_i \phi 
+	}
+	\Say{(F,3) }{ \THM{GeneralAdjointFunctorTheorem}(\Delta_{\mathcal{\I}}, (2)) }
+	{  \sum L  : \GRP^{\mathcal{I}} \Arrow{\mathsf{CAT}}  \GRP \. L \vdash \Delta_{\mathcal{\I}}    }
+	\NoProof
+	\\
+	\DeclareFunc{freeGroup2}{\SET \Arrow{\CAT} \GRP}
+	\DefineNamedFunc{freeGroup2}{}{F'_\GRP}{\THM{ForgetfulFunctorAdmitsLeftAdjoint}}
+}\Page{
+	\Theorem{FreeGroupOfSingleton}{ F_\GRP'(\mathbf{1}) \cong_\GRP \Int  }
+	\Say{C}{ \Lambda 1 \in \mathbf{1} \. n \As \Int }{\mathbf{1} \Arrow{\SET} \Int }
+	\Say{(\varphi,a,1)}{\bd F_\GRP'(\mathbf{1})(C)}{  \sum  \varphi : F'_\GRP(\mathbf{1}) \Arrow{\GRP} \Int \. \sum a : \mathbf{1} \to \in F'_\GRP(\mathbf{1})  \.  aU(\varphi) = C   }
+	\Say{(2)}{(1)\bd \exp_a}{\exp_a \varphi (a) = a}
+	\Say{(3)}{\bd \exp_a(1)}{ \varphi \exp_a(1) = 1 }
+	\Say{(4)}{ \bd F'_\GRP(2) }{ \exp_a \varphi = \id_{F'_\GRP()} }
+	\Say{(5)}{\THM{CyclicEndomorph}(3)}{ \varphi \exp_a = \id }
+	\Conclude{(*)}{\bd^{-1} \TYPE{Iso}(4)(5)}{  F'_\GRP(\mathbf{1}) \cong_\GRP \Int    }
+	\EndProof
+	\\
+	\Theorem{FreeGroupStrtucture}{F_\GRP = F'_\GRP }
+	\Conclude{(*)}{\THM{LeftAdointCommutesWithLimits}(F'_\GRP)\THM{FreeGroupOfSingleton} \bd F_\GRP}{F_\GRP = F'_\GRP}
+	\EndProof
+	\\
+	\DeclareType{Free}{?\GRP}
+	\DefineType{G}{Free}{\exists A : \SET \. G \cong_\GRP F(G)}
+	\\
+	\DeclareFunc{boolenization}{ \GRP \to \VS(\Field_2)    }
+	\DefineNamedFunc{boolenization}{ G }{ \bool(G)}{  \frac{ G }{\{  x^2 | x \in G \}}  }  
+	\\
+	\Theorem{ DimensionOfFreeBoolenization}{ \forall A : \SET \. \dim_{\Field_2} \bool \; F(A) = |A|}  
+	\Assume{b}{A \to \Field_2}
+	\Assume{(1)}{ \Big| \{ a \in A | b(a)  = 1 \}\Big| < \infty}
+	\Conclude{()}{\bd \bool}{ \sum_{a \in A} b(a)[a] \neq 0 }
+	\Derive{(1)}{\bd^{-1} \TYPE{LinearlyIndependent}}{ \bigg[\Big([a]\Big)_{a \in A} : \TYPE{LinearlyIndependent}(\bool F(A)) \bigg] }
+	\Say{(2)}{\bd \bool \bd F(A)}{ \bigg[ \Big([a]\Big)_{a \in A} : \TYPE{Generating}(\bool F(A)) \bigg] }
+	\Say{(3)}{\bd^{-1} \Basis (1,2)}{\bigg[ \Big([a]\Big)_{a \in A} : \Basis(\bool F(A)) \bigg]}
+	\Conclude{(*)}{\bd \dim (3)}{\dim F(A) = |A|}
+	\EndProof
+}\Page{
+	\Theorem{FreeGroupRankIsWellDefined}{\forall A, B : \SET \. \forall (0) : F(A) \cong_\GRP F(B) \. A \cong_\SET B    }
+	\Say{(1)}{\bd \bool (0)}{\bool F(A) \cong_{\VS(\Field_2)} \bool F(B)}
+	\Say{(2)}{ \dim (1)  }{ \dim \bool F(A) = \dim \bool F(B)}
+	\Say{(3)}{\THM{DimensionOfFreeBoolenization}(2)}{|A| = |B|}
+	\Conclude{(*)}{\bd \TYPE{EquallCard}(3)\bd^{-1}\TYPE{Iso}(\SET)}{A \cong_\SET B}
+	\EndProof
+	\\
+	\DeclareFunc{freeGroupRank}{\TYPE{Free} \to \TYPE{Card}}
+	\DefineNamedFunc{freeGroupRank}{G}{\rank G }{ \#\{ \bd \TYPE{Free}(g)\}}
+	\\
+	\Conclude{\TYPE{GroupRelation}}{ \Lambda X \in \SET \. \sum n \in \Nat \. n \to (X \times \Int)  }{\SET \to \Type}
+	\\
+	\DeclareFunc{presentation}{ \prod X \in \SET \.  ?\TYPE{GroupRelation}(X) \to \GRP}
+	\DefineNamedFunc{presentation}{R}{\langle X \; |R \rangle}{\frac{F(X)}{N\left\{ \prod^n_{i=1} \eta^{p_i}(x_i) \bigg| (n,x,p) \in R \right\}}}
+	\\
+	\DeclareType{PresentationHolds}{  \prod X : \SET \. \prod G : \GRP \.  ?\Big( (?\TYPE{GroupRelation}) \times  (X \to U(G)) \Big)  }
+	\DefineType{(R,f)}{PresentationHods}{ \forall (n,x,p) \in R \. \prod^n_{i=1} f^{p_i}(x_i) = e}
+	\\
+	\Theorem{UniversalPropertyOfPresentation}{ 
+		\forall X : \SET \. \forall G : \GRP \. \forall (R,f) : \TYPE{PresentationHolds} \. \NewLine \. 
+		\exists! \varphi : \langle X | R \rangle \Arrow{\GRP}  G \. f =  \eta U(\pi\varphi)   
+		}
+	\Say{(\psi,1)}{\bd \TYPE{Unit}(\eta_F)(f)}{ \sum \psi : F(X) \Arrow{\GRP} G \. f = \eta U(\psi)   }
+	\Say{A}{\left\{  \prod^n_{i=1} \eta^{p_i}(x_i) | (n,x,p) \in R    \right\}}{? F(X) }
+	\Say{N}{N(A)}{\TYPE{Normal}\Big( F(X) \Big)}
+	\Say{(2)}{ \bd \TYPE{PresentationHolds} \bd A \bd \psi }{A \subset \ker \psi }
+	\Say{(3)}{\bd \THM{KernelIsNormal}(2)\bd N}{ N \subset \ker \psi}
+	\Say{ (4) }{ \bd \ker \bd \pi (3)} { \forall a \in F(X) \. \forall b \in \pi(a) \. \psi(a) = \psi(b)  } 
+	\Say{ \varphi }{\Lambda [a] \in \langle X | R \rangle \. \psi(a) }{  \langle X | R \rangle \Arrow{\GRP} G  }
+	\Say{(*,1)}{\bd \varphi(1)}{ f = \eta U(\pi \varphi)}
+	\Conclude{(*,2)}{\bd \langle G | T \rangle \bd f}{ 
+		\forall \varphi' : \langle X | R \rangle \Arrow{\GRP} G \. 
+		\forall (0) :  \eta U(\pi \varphi' ) = f \. \varphi = \varphi'  
+	}
+	\EndProof
+}
+\newpage
+\subsection{Groups as Categories}
+\Page{
+	\DeclareFunc{groupCategory}{\GRP \to \mathsf{SCAT}}
+	\DefineNamedFunc{groupCategory}{G}{\G G}
+	{ \Big( \{*\} , * \mapsto G, (a,b)  \mapsto ab, * \mapsto e   \Big)  } 
+	\\
+	\Conclude{\C \hyph \TYPE{Action}}{ \Lambda G \in \GRP \. \Lambda \C \in \CAT \. \G G \Arrow{\CAT} \C  }{ \GRP \times \CAT \to \Type}
+	\\
+	\Theorem{FixedPointAsLimit}{ \forall \alpha : \SET\hyph\TYPE{Action}(G) \.  \lim \alpha   \cong_{\SET} \mathrm{Fix}(\alpha)}
+	\Say{I}{\Lambda a \in \mathrm{Fix}(\alpha) \. a}{\mathrm{Fix}(\alpha) \to  \alpha(*)  }
+	\Assume{g}{G}
+	\Assume{a}{\mathrm{Fix}(\alpha)}
+	\Conclude{()}{\bd I \bd \mathrm{Fix}(\alpha)\bd^{-1}I}{ \alpha(g)\Big( I(a) \Big) = \alpha(g)(a) = a = I(a)  }
+	\DeriveConclude{()}{ I(=,\to) }{ I\alpha(g) = I}
+	\Derive{(1)}{\bd^{-1} \TYPE{Cone}}{ (\mathrm{Fix}(\alpha),* \mapsto I) : \TYPE{Cone}(\G G, \alpha)   }
+	\Assume{(C,f)}{\TYPE{Cone}(\G G, \alpha)}
+	\Say{(2)}{\bd \TYPE{Cone}(\G G, \alpha)(C f))}{ \im f \subset \mathrm{Fix}(\alpha)}
+	\Say{ g }{ \Lambda x \in C \. f(x)}{ C \to \mathrm{Fix}(\alpha)}
+	\Say{(3)}{\bd g \bd I}{ f = gI}
+	\Assume{g'}{ C \to \mathrm{Fix}(\alpha) }
+	\Assume{(4)}{f = g'I}
+	\Conclude{()}{\bd I (4) }{g = g'}
+	\DeriveConclude{()}{\bd^{-1} \TYPE{Limit}}{ \lim \alpha = \mathrm{Fix}(\alpha)}
+	\EndProof
+	\\
+	\Theorem{OrbitsAsColimit}{\forall \alpha : \SET\hyph\TYPE{Action}(G) \. \colim \alpha \cong_{\SET} O(\alpha)}
+	\Assume{g}{G}
+	\Assume{a}{\alpha(*)}
+	\Conclude{()}{\bd O_\alpha(\alpha(g))}{ O_\alpha(\alpha(g)(a)) =  O_\alpha(a) }
+	\DeriveConclude{()}{I(=,\to)}{ \alpha(g)O_\alpha  = O_\alpha }
+	\Derive{ (1)  }{\bd^{-1}\TYPE{Cocone}}{  (O(\alpha),O_\alpha) : \TYPE{Cocone}(\G G, \alpha) }
+	\Assume{(C,f)}{\TYPE{Cocone}(\G G, \alpha)}
+	\Say{(2)}{\bd \TYPE{Cocone}(\G F,\alpha)(C,f)}{\forall a \in \alpha(*) \. \forall b \in O_\alpha(a) \. f(a) = f(b)}
+	\Say{(g,3)}{\THM{ClassExtension}(2)}{ \sum g : O(\alpha) \to C \. f = g O_\alpha  }
+	\Assume{g'}{ O(\alpha) \to C}
+	\Assume{(4)}{f = g' O_\alpha}
+	\Conclude{()}{\bd O_\alpha (2)}{g = g'}
+	\DeriveConclude{()}{\bd^{-1} \TYPE{Colimit}}{\colim \alpha = O(\alpha)}
+	\EndProof
+	\\
+	\Conclude{G\hyph\C}{ \Lambda G \in \GRP \. \Lambda \C \in \Cat \.  \C^{\G G}  }{\GRP\times\CAT \to \CAT}
+}
+\newpage
+\subsection{Direct Limits}
+\Page{
+	\DeclareType{PiDivisible}{ \prod p : \TYPE{Prime} \. ?\ABEL}
+	\DefineNamedType{G}{PiDivisible}{G : p\hyph\TYPE{Divisible}}{\Lambda g \in G \. pG : \TYPE{Surjective}}
+	\\
+	\DeclareFunc{piMult}{\prod p : \TYPE{Prime} \. \prod G : p\hyph \TYPE{Divisible} \. \End_\ABEL(G) }
+	\DefineNamedFunc{piMult}{a}{p(a)}{pa}
+	\\
+	\DeclareFunc{TateDiagramm}{ \prod p : \TYPE{Prime} \. \prod G : p\hyph\TYPE{Divisible} \. \mathsf{P}\Nat \Arrow{\CAT} \GRP }
+	\DefineNamedFunc{TateDiagramm}{ n, m, n \le m  }{A_{n,m}}{\Big(\ker p^n,\ker p^m,p^{m-n}\Big)}
+	\\
+	\DeclareFunc{TateGroup}{\prod p : \TYPE{Prime} \.  p\hyph\TYPE{Divisible} \to \GRP}
+	\DefineNamedFunc{TateGroup}{G}{T_p(G)}{\lim_{n \in \mathsf{P}\Nat} A_n(p,G)}
+	\\
+	\DeclareType{Profinite}{ ?\GRP }
+	\DefineType{G}{Profinite}{ \exists (\I,F) : \TYPE{DirectedDiagramm}(\GRP) \. \lim_{i \in \I} F(i) = G \And \forall i \in \I \. |F(i)| < \infty} 
+	\\
+	\DeclareType{DirectedNormality}{\prod G \in \GRP \. ?\Big(\Nat \to \TYPE{Normal}(G)\Big) }
+	\DefineType{N}{DirectedNormality}{ \forall n,m \in \Nat \. m \ge n \Rightarrow N_m \subset N_n}
+	\\
+	\DeclareType{Cauchy}{\prod G \in \GRP \. \prod N : \TYPE{DirectedNormality}(G) \. ?(\Nat \to G)  }
+	\DefineType{g}{Cauchy}{ \forall m \in \Nat \. \exists M \in \Nat \. \forall t,s \in \Nat \. t,s \ge M \Rightarrow g_t g^{-1}_s \in N_m  }
+	\\
+	\DeclareType{Null}{\prod G \in \GRP \. \prod N : \TYPE{DirectedNormality}(G) \. ?(\Nat \to G)}
+	\DefineType{g}{Null}{\forall m \in \Nat \. \exists M \in \Nat \. \forall t \in \Nat \. t \ge M \Rightarrow g_t \in N_m}
+	\\
+	\Theorem{CauchyIsGroup}{\forall G \in \GRP \. \forall N : \DN(G) \. \TYPE{Cauchy}(G,N) \in \GRP}
+	\Assume{a,b}{\TYPE{Cauchy}(G,N)}
+	\Assume{m}{\Nat}
+	\Say{(M,1)}{\bd \TYPE{Cauchy}(G,N)(b)}{\sum M \in \Nat \. \forall t,s \in \Nat \. t,s \ge M \Rightarrow b_t b_s^{-1} \in N_m }
+	\Assume{t,s}{\Nat}
+	\Assume{(2)}{ t,s \ge M}
+	\Conclude{()}{(1)(t,s) \bd \TYPE{Normal}(G)(N_m)}{ a_t b_t b^{-1}_s a^{-1}_s \in N_m  }
+	\Derive{(1)}{I(\forall)}{\forall a,b \in \TYPE{Cauchy}(G,N) \. ab \in \TYPE{Cauchy}(G,N)}
+	\Say{(2)}{\bd \TYPE{Subgroup}(G)(N)}{ \forall a \in \TYPE{Cauchy}(G,N) \. a^{-1} : \TYPE{Cauchy}(G,N)}
+	\Conclude{(*)}{\bd \GRP(1,2)}{ \TYPE{Cauchy}(G,N) \in \GRP }
+	\EndProof
+}\Page{
+	\Theorem{NullIsNormal}{\forall G \in \GRP \. \forall N : \DN(G) \. \TYPE{Null}(G,N) \Nrml \TYPE{Cauchy}(G,N)}
+	\Say{(1)}{\bd \TYPE{Subgroup}(N)}{\TYPE{Null}(G,N) \subset \TYPE{Cauchy}(G,N)}
+	\Conclude{(*)}{\bd \TYPE{Normal}(N)}{\TYPE{Null}(G,N) \Nrml \TYPE{Cauchy}(G,N)}             
+	\EndProof
+	\\
+	\DeclareFunc{completion}{ \prod G \in \GRP \. \DN(G) \to \GRP    }
+	\DefineNamedFunc{completion}{N}{C(G,N)}{\frac{\TYPE{Cauchy}(G,N)}{\TYPE{Null}(G,N)}}
+	\\
+	\Theorem{CompletionAsLimit}{\forall G \in \GRP \. \forall N \in \DN(G) \. C(G,N) \cong_\GRP \lim_{n \in \mathsf{P}\Nat} \frac{G}{N_n} }
+	\NoProof
+}
+\subsection{Primitive Groups}
+\subsection{Pullbacks and Pushouts[!]}
+\subsection{Nielson-Schrier Theory [!]}
+\subsection{Group objects [!]}
+\section{Virtual Groups [!!]}
+\end{document}

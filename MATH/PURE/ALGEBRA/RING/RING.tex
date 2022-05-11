@@ -1,0 +1,1885 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\DeclareMathOperator*{\supp}{supp}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cat}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\}
+\newcommand{\Assume}[2]{& \LOGIC{Assume} \; #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;}
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%SET
+%CAT
+\newcommand{\Arrow}[1]{\xrightarrow{#1}}
+\newcommand{\ToIso}[1]{\xleftrightarrow{#1}}
+%CategoryTheorey
+%Types
+\newcommand{\Cov}{\TYPE{Covariant}}
+\newcommand{\Contra}{\TYPE{Contravariant}}
+\newcommand{\NT}{\TYPE{NaturalTransform}}
+\newcommand{\UMP}{\TYPE{UnversalMappingProperty}}
+\newcommand{\CMP}{\TYPE{CouniversalMappingProperty}}
+\newcommand{\paral}{\rightrightarrows}
+%functions
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\obj}{\mathrm{obj}}
+\DeclareMathOperator*{\dom}{dom}
+\DeclareMathOperator*{\codom}{codom}
+\DeclareMathOperator*{\colim}{colim}
+%variable
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\R}{\mathrm{R}}
+\newcommand{\G}{\mathsf{G}}
+%Cats
+\newcommand{\CAT}{\mathsf{CAT}}
+\newcommand{\SET}{\mathsf{SET}}
+\newcommand{\PARALLEL}{\bullet \paral \bullet}
+\newcommand{\WEDGE}{\bullet \to \bullet \leftarrow \bullet}
+\newcommand{\VEE}{\bullet \leftarrow \bullet \to \bullet}
+%Algebra
+%Groups
+%Types
+\newcommand{\Group}{\TYPE{Group}}
+\newcommand{\Abel}{\TYPE{Abelean}}
+\newcommand{\Sgrp}{\subset_{\mathsf{GRP}}}
+\newcommand{\Nrml}{\vartriangleleft}
+\newcommand{\FG}{\TYPE{FiniteGroup}}
+\newcommand{\Stab}{\mathrm{Stab}}
+\newcommand{\FGA}{\TYPE{FinitelyGeneratedAbelean}}
+\newcommand{\DN}{\TYPE{DirectedNormality}}
+%Func
+\DeclareMathOperator{\tor}{tor}
+\DeclareMathOperator{\bool}{bool}
+\DeclareMathOperator{\rank}{rank}
+%Cats
+\newcommand{\GRP}{\mathsf{GRP}}
+\newcommand{\ABEL}{\mathsf{ABEL}}
+%Ops
+\newcommand{\SDP}{\rightthreetimes}
+%LINEAR
+%Types
+\newcommand{\Basis}{\TYPE{Basis}}
+%Func
+\DeclareMathOperator{\Span}{span}
+%Cats
+\newcommand{\VS}{\mathsf{VS}}
+%FIELDS
+\newcommand{\Field}{\mathbb{F}}
+%RINGS
+%TYPE
+\newcommand{\Ring}{\TYPE{Ring}}
+\newcommand{\CR}{\TYPE{CommutativeRing}}
+\newcommand{\Ideal}{\TYPE{Ideal}}
+\newcommand{\ID}{\TYPE{IntegralDomain}}
+\newcommand{\UFD}{\TYPE{UniqueFactorizationDomain}}
+\newcommand{\PID}{\TYPE{PrincipleIdealDomain}}
+\newcommand{\FGI}{\TYPE{FinitelyGeneratedIdeal}}
+\newcommand{\ER}{\TYPE{EuclideanRing}}
+\newcommand{\DVR}{\TYPE{DiscreteValuationRing}}
+\newcommand{\MoFT}{\TYPE{MonoidOfFiniteType}}
+\newcommand{\GA}{\TYPE{GradedAbelean}}
+%CATS
+\newcommand{\RING}{\mathsf{RING}}
+\newcommand{\ANN}{\mathsf{ANN}}
+\newcommand{\GRING}{\mathsf{GRING}}
+%FUNCS
+\DeclareMathOperator{\lcd}{lcd}
+\DeclareMathOperator{\lc}{lc}
+\DeclareMathOperator{\cont}{cont}
+\DeclareMathOperator{\antideg}{antideg}
+%Symbols
+\newcommand{\F}{\mathcal{F}}
+%Numbers
+%Integers
+%FUNCS
+\DeclareMathOperator{\divi}{div}
+\DeclareMathOperator{\remi}{rem}
+\DeclareMathOperator{\Frac}{Frac}
+\title{Ring Theory}
+\author{Uncultured Trump}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Ring Structure Theory}
+\subsection{Rings}
+\Page{
+	\DeclareType{Ring}{ ? \prod R \in \SET \. (R \times R \to R) \times (R \times R \to R)}
+	\DefineType{(R,+,\cdot)}{Ring}{(R,+) : \TYPE{Abelean} \And (R,\cdot) : \TYPE{Monoid} \And (R,+,\cdot) : \TYPE{Distributive}}
+	\\
+	\DeclareFunc{addition}{\prod (R,+,\cdot) : \Ring \. R \times R \to R }
+	\DefineNamedFunc{addition}{A}{(+_A)}{(+)}
+	\\
+	\DeclareFunc{multiplication}{\prod (R,+,\cdot) : \Ring \.R \times R \to R}
+	\DefineNamedFunc{multiplication}{A}{(\cdot_A)}{(\cdot)}
+	\\	
+	\DeclareFunc{RingGroup}{\prod (R,+,\cdot) : \Ring \. \ABEL}
+	\DefineNamedFunc{RingGroup}{A}{A}{(R,+)}
+	\\
+	\DeclareFunc{zero}{\prod R : \Ring \. R}
+	\DefineNamedFunc{zero}{R}{0_R}{ \FUNC{neutral}(+_R) }
+	\\
+	\DeclareFunc{identity}{\prod R : \Ring \. R}
+	\DefineNamedFunc{identity}{R}{1_R}{\FUNC{neutral}(\cdot_R)}
+	\\
+	\DeclareType{CommutativeRing}{?\Ring}
+	\DefineType{(R,+,\cdot)}{CommutativeRing}{(\cdot) : \TYPE{Commutative}(R)}
+	\\
+	\DeclareType{Division}{?\Ring}
+	\DefineType{(R,+,\cdot)}{Division}{(\cdot) : \TYPE{Invertible}(R)}
+	\\
+	\DeclareType{Field}{?(\TYPE{Division} \And \CR)}
+	\DefineType{k}{Field}{  0_k \neq 1_k  }
+	\\
+	\DeclareType{RingHomo}{\prod A,B : \Ring \. A \Arrow{\ABEL} B}
+	\DefineType{f}{RingHomo}{\forall x,y \in A \. f(xy) = f(x)f(y) \And f(1) = 1 }  
+	\\
+	\Theorem{IdIsHomo}{\forall R : \Ring \. {\id}_{R} : \TYPE{RingHomo}}
+	\Assume{a,b}{R}
+	\Conclude{(*)}{ \bd \id   }{  \id(ab) = ab  =\id(a)\id(b) }
+	\EndProof
+	\\
+}
+\Page{
+	\Theorem{RingHomoCompos}{\forall A,B,C : \Ring \. \forall f : \TYPE{RingHomo}(A,B) \. \forall g : \TYPE{RingHomo}(B,C) \. 
+		g \circ f : \TYPE{RingHomo}(A,C)}
+	\Assume{x,y}{R}
+	\Conclude{(*)}{\bd \TYPE{RingHomo}(f)\bd \TYPE{RingHomo}(g)}{g \circ f(xx') = g\big( f(x) f(x') \big) = f\big(g(x)\big)f\big(g(x')\big)  }
+	\\
+	\DeclareFunc{RingCat}{\CAT}
+	\DefineNamedFunc{RingCat}{}{\RING}{\Big( \Ring, \TYPE{HomoRing},\circ,\id \Big)}
+	\\
+	\DeclareFunc{CommRingCat}{\CAT}
+	\DefineNamedFunc{CommRingCat}{}{\ANN}{\Big( \CR, \TYPE{HomoRing},\circ,\id \Big)}		
+	\\
+	\DeclareType{Subring}{\prod R \in \RING \. ??R}
+	\DefineNamedType{A}{Subring}{A \subset_{\RING} R}{(A,+_{R|A},\cdot_{R|A}) \in \RING}
+	\\
+	\DeclareFunc{TrivialRing}{ \ANN  }
+	\DefineNamedFunc{TrivialRing}{}{\star}{\Big(\{\star\}, (\star,\star) \mapsto \star, (\star,\star) \mapsto \star \Big)}
+	\\
+	\Theorem{MultZero}{\forall R \in \RING \. \forall a \in R \. 0a = a0 = 0}
+	\Say{(1)}{ \bd \TYPE{Identity}(1)\bd \TYPE{Distrivutive}(R,+,\cdot)\bd\TYPE{Identity}(0)\bd\TYPE{Identity}(1)  }{  0a + a = (0 + 1)a = a   }
+	\Say{(2)}{ \bd \TYPE{Identity}(1)\bd \TYPE{Distrivutive}(R,+,\cdot)\bd\TYPE{Identity}(0)\bd\TYPE{Identity}(1)  }{  a0 + a = a(0 + 1) = a  }
+	\Conclude{(*)}{\THM{IdentityIsUnique}(1)(2)}{a0 = 0 = 0a}
+	\EndProof
+	\\
+	\Theorem{MultNeg}{\forall R \in \RING \. \forall a \in R \. (-1)a = -a = a(-1)}
+	\Say{(1)}{\bd \TYPE{Identity}\bd \TYPE{Distributive}(R)\bd \TYPE{Inverse}(1)}{ a + (-1)a = (1 - 1)a = 0}
+	\Say{(2)}{\bd \TYPE{Identity}\bd \TYPE{Distributive}(R)\bd \TYPE{Inverse}(1)}{ a + a(-1) = a(1 - 1) = 0}
+	\Conclude{(*)}{\THM{InverseIsUnique}(1)(2)}{ (-1)a = - a = a(-1)}
+	\EndProof
+	\\
+	\Theorem{SubringImage}{\forall A,B \in \RING \. \forall S : \TYPE{Subring}(A) \. \forall f : A \Arrow{\RING} B \. f(S) \subset_{\RING} B}
+	\Say{(1)}{\bd \TYPE{Subring}(S)\bd \TYPE{RingHomo}(f)\bd^{-1}\FUNC{image}}{f(1) = 1 \in f(S)}
+	\Say{(2)}{\bd \TYPE{Subring}(S) \bd \TYPE{Homo}(f) \bd^{-1} \FUNC{image}}{f(0) = 0 \in f(S)}
+	\Assume{x,y}{S}
+	\Say{(3)}{\bd \TYPE{Subgroup}(A)(S)(x,y)}{x + y \in S}
+	\Say{(4)}{\bd \TYPE{Homo}(A,B)(f)\bd^{-1} \FUNC{image}(3)}{f(x) + f(y) = f(x + y) \in f(S)}
+	\Say{(5)}{\bd \TYPE{Subgroup}(A)(S)(x)}{-x \in S}
+	\Say{(6)}{\THM{HomoInverse}(5) \bd^{-1} \FUNC{image}}{ -f(x) = f(-x) \in f(S)}
+	\Say{(7)}{\bd \TYPE{Sybring}(A)(S)}{xy \in S}
+	\Conclude{(*)}{\bd \TYPE{RingHomo}(A,B)(f)\bd^{-1} \FUNC{image}(7)}{f(x)f(y) = f(xy) \in f(S)}
+	\EndProof
+}\Page{
+	\Theorem{SubringPreimage}{ \forall A,B \in \RING \. \forall S : \TYPE{Subring}(B) \. \forall f : A \Arrow{\RING} B \. f^{-1}(S) \subset_{\RING} A}
+	\Say{(1)}{\bd \TYPE{Subring}(S)\bd \TYPE{RingHomo}(f)\bd^{-1}\FUNC{preimage}}{ 1 \in f^{-1}(S)}
+	\Say{(2)}{\bd \TYPE{Subring}(S) \bd \TYPE{Homo}(f) \bd^{-1} \FUNC{image}}{ 0 \in f^{-1}(S)}
+	\Assume{x,y}{f^{-1}(S)}
+	\Say{(3)}{\bd \TYPE{Homo}(A,B)(f) \TYPE{Subgroup}(A)(S)(x,y)}{f(x + y) = f(x) + (y) \in S}
+	\Say{(4)}{\bd^{-1} \FUNC{preimage}(3)}{ x + y \in f^{-1}(S)}
+	\Say{(5)}{\THM{HomoInverse}(f)(x)\bd \TYPE{Subgroup}(A)(S)(x)}{  f(-x) =-f(x) \in S}
+	\Say{(6)}{ (5) \bd^{-1} \FUNC{Preimagemage}}{  -x  \in f(S)}
+	\Say{(7)}{\bd \TYPE{RingHomo}(A,B)(f)(x,y)\bd \TYPE{Subring}(A)(S)}{f(xy) = f(x)f(y) \in S}
+	\Conclude{(*)}{\bd^{-1} \FUNC{image}(7)}{  xy \in f^{-1}(S)}
+	\EndProof
+	\\
+	\Theorem{RingOfAbeleanMorphism}{\forall A \in \ABEL \. \Big(\End_{\ABEL}(A),+,\circ\Big) \in \RING}
+	\NoProof
+	\\
+	\Theorem{RingOfFunctions}{\forall X \in \SET \. \forall R \in \RING \. \Big(\Mor_{\SET}(X,R),+,\cdot\Big) \in \RING}
+	\NoProof
+	\\
+	\DeclareFunc{productRing}{ \prod I \in \SET \. (I \to \RING) \to \RING}
+	\DefineNamedFunc{productRing}{R}{\prod_{i \in I} R_i}{  \left( \prod i \in I \. R_i, a,b \mapsto \Lambda i \in I \.  a_i + b_i , a,b \mapsto \Lambda i \in I \.  a_ib_i \right)}
+	\\
+	\DeclareFunc{projection}{\prod I \in \SET \. \prod R : I \to \RING \. \prod i \in I \.  \prod_{i \in I} R_i \Arrow{\RING} R_i }
+	\DefineNamedFunc{projection}{a}{\pi_i(a)}{a_i}
+	\\
+	\DeclareFunc{rightMultiplication}{ \prod R \in \RING \. R \Arrow{\RING} \End_{\RING}(R)}
+	\DefineNamedFunc{rightMultiplication}{a}{\rho_a}{ \Lambda b \in R \. ab}
+}
+\subsection{Multiplicative Identities}
+\Page{
+	\Theorem{BinomialSum}{ \forall R \in \RING \. \forall (a,b) : \TYPE{Commutes}(R,\cdot) \. \forall n \in \Nat \. (a + b)^n = \sum^n_{i=1} C^i_n a^i b^{n - i}}
+	\Say{z}{\Lambda i \in \{0,1\} \. \If i == 0 \Then a \Else b}{ \{ 0,1 \} \to R   }
+	\Say{(1)}{\bd \RING(R)}{  (a + b)^n = \sum_{i : n \to \{1,0\}} \prod^n_{j=1} z(i_j)   }
+	\Say{(2)}{\bd z \bd \TYPE{Commutes}(R,\cdot)}{\forall i : n \to \{0,1\} \. \forall k \in n \. |i^{-1}\{0\}| = k \Rightarrow \prod^n_{i=1} z(i_j) = a^k b^{n-k}  }
+	\Say{(3)}{ \bd \FUNC{binom}  }{ \forall k \in n \.  \Big|\Big\{ i : n \to \{0,1\} : |i^{-1}\{0\}| = k  \Big\}\Big|  = C^k_n}
+	\Conclude{(*)}{(1)(2)(3)}{ (a + b)^n = \sum^n_{i=0} C^i_n a^i b^{n-i} }
+	\EndProof
+	\\
+	\Theorem{MultinomialSum}{\forall R \in \RING \. \forall m,n \in \Nat \, \forall a : \TYPE{Commuting}(m,R,\cdot) \. 
+		\NewLine \. \left( \sum^m_{i=1} a_i \right)^n = \sum^n_{i:m \to \Int_+ :\sum^m_{j=1}i_j =n}  C^i_n \prod^m_{j=1} a_j^{i_j}}
+	\NoProof
+	\\
+	\Theorem{SumOfPowers}{\forall R \in \RING \. \forall (a,b) : \TYPE{Commutes}(R,\cdot) \. \forall n \in \Nat \.  a^n - b^n = (a - b) \sum^{n-1}_{i=0} a^i b^{n - 1 - i}   }
+	\Conclude{(*)}{ \bd \RING(R) \bd \TYPE{Commutes}(R,\cdot) \bd \FUNC{inverse}(R,+) }{  
+				(a - b) \sum^{n-1}_{i=1} a^i b^{n-1-i} =  \NewLine
+				= a \sum^{n-1}_{i=0} a^i b^{n-1 -i}  - b \sum^{n-1}_{i=0} a^i b^{n-1-i}  =  
+				 a^n  + \left(\sum^{n- 1}_{i=1}  a^i b^{n - i} - a^i b^{n-i} \right) - b^n = 
+		  		a^n + b^n }
+	\EndProof
+}
+\subsection{Elements of The Ring}
+\Page{
+	\DeclareType{LeftUnit}{\prod R \in \RING \. ?R}
+	\DefineType{u}{LeftUnit}{\exists a \in R : au = 1}
+	\\
+	\DeclareType{RightUnit}{\prod R \in \Ring \. ?R}
+	\DefineType{u}{RightUnit}{\exists a \in R : ua = 1 }
+	\\
+	\DeclareType{LeftZeroDivisor}{ \prod R \in \Ring \. ?R   }
+	\DefineType{x}{LeftZeroDivizor}{\exists a \in R \. xa = 0 \And x \neq 0}
+	\\
+	\DeclareType{RightZeroDivisor}{ \prod R \in \Ring \. ?R   }
+	\DefineType{x}{RightZeroDivizor}{\exists a \in R \. ax = 0 \And x \neq 0}
+	\\
+	\Conclude{\TYPE{ZeroDivisor}}{\Lambda R \in \RING \. \TYPE{RightZeroDivisor} | \TYPE{LeftZeroDivisor}(R)}{\RING \to \Type}
+	\\
+	\Conclude{ \TYPE{Regular} }{\Lambda R \in \RING \. !\TYPE{ZeroDivisor}}{\RING \to \Type}
+	\\
+	\Conclude{\TYPE{Unit}}{\Lambda R \in \RING \. \TYPE{LeftUnit} \And \TYPE{RightUnit}(R)}{\RING \to \Type}
+	\\
+	\Theorem{UnitsAreRegular}{\forall R \in \RING \.   \forall u : \TYPE{Unit}(R) \. u : \TYPE{Regular}(R)}
+	\Assume{a}{R}
+	\Assume{(1)}{ua = 0}
+	\Assume{(2)}{a \neq 0}
+	\Say{(3,v)}{\bd \TYPE{LeftUnit}(u)}{\sum v \in R  \.  vu = 1 }
+	\Say{(4)}{\bd \TYPE{Identity}(1)(a) (3)(vua)(1)\THM{ZeroMult}(v)}{ a = 1a  = vua = v0 = 0  }
+	\Conclude{()}{  (2)(4)  }{\bot}
+	\Derive{(1)}{\bd^{-1}\TYPE{RightZeroDivisor}E(\bot)}{[u \IsNot \TYPE{RightZeroDivisor}(R)]}
+	\Assume{a}{R}
+	\Assume{(2)}{au = 0}
+	\Assume{(3)}{a \neq 0}
+	\Say{(4,v)}{\bd \TYPE{LeftUnit}(u)}{\sum v \in R  \.  uv = 1 }
+	\Say{(4)}{\bd \TYPE{Identity}(1)(a) (3)(auv)(1)\THM{ZeroMult}(v)}{ a = 1a  = auv = 0v = 0  }
+	\Conclude{()}{  (2)(4)  }{\bot}
+	\Derive{(2)}{\bd^{-1}\TYPE{LeftZeroDivisor}E(\bot)}{[u \IsNot \TYPE{LeftZeroDivisor}(R)]}
+	\Conclude{(3) }{\bd^{-1}\TYPE{Regualar}(1)(2)}{ [u : \TYPE{Regular}] }
+	\EndProof
+	\\
+	\DeclareFunc{groupOfUnits}{\RING \to \GRP}
+	\DefineNamedFunc{groupOfUnits}{ R }{R^* }{(\TYPE{Unit}(R),\cdot_R)}
+}
+\Page{
+	\Theorem{RationalIdentity}{\forall R \in \RING \. \forall x,y \in R \.  (1 + xy) \in R^* \Rightarrow (1 + yx) \in R^*}
+	\Say{z}{1 - y(1  + xy)^{-1}x }{R}
+	\Say{(1)}{  (1 + yx)\bd z \bd \TYPE{Associative}(\cdot_R) \bd \TYPE{Inverse}{\cdot_R}(1 + xy) \bd \TYPE{Inverse}{+_R}(yx)  }
+	{ \NewLine : (1 + yx)z   =  1 + yx - (1 + yx)y(1 + xy)^{-1}x =  1 + yx - y(1 + xy)(1 + xy)^{-1}x = 1 + yx - yx = 1   }
+	\Say{(2)}{ \bd z (1 + yx) \bd \TYPE{Associative}(\cdot_R) \bd \TYPE{Iverse}{\cdot_R}(1 + xy) \bd \TYPE{Inverse}{+_R}(yx)    }
+	{
+		\NewLine : z(1 + yx) =  1 + yx - y(1 + xy)^{-1} x (1 + yx)  = 1 + yx - y(1 + xy)^{-1} (1 + xy)x = 1 + yx - yx = 1
+	}
+	\Conclude{(*)}{ \bd^{-1} \TYPE{Unit}(R)(1)(2)   }{  (1 + yx) \in R^*     }
+	\EndProof
+	\\
+	\DeclareType{Nillpotent}{ \prod R \in \RING \. ?R   }
+	\DefineType{a}{Nillpotent}{ \exists n \in \Nat :  a^n = 0}
+	\\
+	\DeclareType{Unipotent}{\prod R \in \RING \. ?R}
+	\DefineType{a}{Unipotent}{ a - 1 : \TYPE{Nillpotent}(R)  }
+	\\
+	\DeclareType{Idempotent}{\prod R \in \RING \. ?R}
+	\DefineType{a}{Idempotent}{ \exists n \in \Nat : a^2 = a}
+	\\
+	\DeclareType{Involution}{\prod R \in \RING \. ?}
+	\DefineType{a}{Involution}{a^2 = 1}
+	\\
+	\Theorem{NillpotentProduct}{\forall R \in \RING \.  \forall a : \TYPE{Nillpotent}(R) \. \forall b : \TYPE{Commutes}(R,\cdot_R)(a) \. ab : \TYPE{Nillpotent}(R) }
+	\Say{(1,n)}{\bd \TYPE{Nillpotent}(a)}{\sum n \in \Nat \. a^n = 0}
+	\Say{(2)}{\bd \TYPE{Commutes}(b)(ab)^n(1)\THM{ZeroMult}(R)(b^n)}{(ab)^n = a^nb^n =0b^n = 0}
+	\Conclude{()}{\bd^{-1} \TYPE{Nillpotent}(2)  }{ [ab : \TYPE{NillPotent}(R)]  }
+	\EndProof
+	\\
+	\Theorem{NillpotentSum}{\forall R \in \RING \. \forall a,b : \TYPE{Nillpotent}(R) \. \TYPE{Commutes}(R,\cdot_R)(a,b) \Rightarrow a + b : \TYPE{Nillpotent}(R) }
+	\Say{(1,n)}{\bd \TYPE{Nillpotent}(a)}{ \sum n \in \Nat \. a^n = 0}
+	\Say{(2,m)}{\bd \TYPE{Nillpotent}(b)}{ \sum m \in \Nat \. b^m = 0}
+	\Say{(3)}{\THM{BinomialSum}(b,m,n + m)(1)(2}{ (a + b)^{n + m} = \sum^{n + m}_{i = 1} C^i_{n + m} a^{i}b^{n + m - i} = 0    }
+	\Conclude{()}{\bd^{-1} \TYPE{Nillpotent}(3) }{ [a + b : \TYPE{NillPotent}(R)] }
+	\EndProof
+}\Page{
+	\Theorem{UnitDiff}{\forall R \in \RING \.  \forall a \in R^* \. \forall b : \TYPE{Nillpotent}(R) \. \TYPE{Commutes}(R,\cdot_R)(a,b) \Rightarrow a - b \in R^*}
+	\Say{(n,1)}{\bd \TYPE{Nillpotent}(b)}{\sum n \in \Nat \. b^n = 0}
+	\Say{(2)}{ \THM{SumOfPowers}(a,b,n)(1)\bd \TYPE{Inverse}  }{  (a - b)\left( \sum^{n-1}_{i=0} a^{i}b^{n-1 - i}  \right)a^{-n} = (a^n - b^n)a^{-n} = a^n a^{-n} = 1   }
+	\Conclude{(*)}{ \bd^{-1} R^*(2) }{ a - b \in R^*   }
+	\EndProof
+	\\
+	\DeclareType{IntegralDomain}{?\RING}
+	\DefineType{R}{IntgralDomain}{R \neq \star \And \forall a : \TYPE{ZeroDivisor}(R) \. a = 0}
+	\\
+	\DeclareFunc{multiplicativeMonoid}{\ID \to \TYPE{CommutativeMonoid}}
+	\DefineNamedFunc{multiplicativeMonoid}{R}{R^\times}{ (R\setminus\{0\},\cdot_R)  }
+	\\
+	\Theorem{RightCancelation}{\forall R : \ID \. \forall x,y \in R \. \forall a \in R^\times \. \forall (0) :  xa = ya \. x = y}
+	\Say{(1)}{ \Big((0) - ya)\Big)\bd\TYPE{Distributive}(R)  }{ 0 = xa - ya =(x - y)a    }
+	\Say{(2)}{\bd \ID(R)(1) \bd R^\times(a) }{x - y = 0}
+	\Conclude{(*)}{(2) + y}{x = y}
+	\EndProof
+	\\
+	\Theorem{LeftCancelation}{\forall R : \ID \. \forall x,y \in R \. \forall a \in R^\times \. \forall (0) :  ax = ay \. x = y}
+	\NoProof
+	\\
+	\DeclareType{Divides}{\prod R : \ID \. ?R^2 }
+	\DefineNamedType{a,b}{Divides}{a | b}{\exists x \in R : ax = b}
+	\\
+	\DeclareType{Associates}{\prod R : \ID \. ?R^2}
+	\DefineType{a,b}{Associates}{(a|b) \And (b|a)}
+	\\
+	\DeclareType{IrreducibleElement}{\prod R : \ID \. ?(R^\times \setminus R^*)}
+	\DefineType{a}{IrreducibleElement}{ \forall x,y \in R \. a = xy \Rightarrow \Big(x \in R^* \Big| y \in R^*\Big)  }
+	\\
+	\DeclareType{PrimeElement}{\prod R : \ID \. ?(R^\times \setminus R^*)}
+	\DefineType{a}{PrimeElement}{\forall x,y \in R \. a | xy \Rightarrow \Big( a | x \Big| a | y \Big) }
+}
+\Page{
+	\Theorem{PropertyOfAssociates}{\forall R : \ID \. \forall (a,b) : \TYPE{Associates}(R) \.  \exists u \in R^* \. a = ub}
+	\Say{\Big(x,(1)\Big)}{\bd \TYPE{Divides}(a,b)\bd \TYPE{Associates}(a,b)}{ \sum x \in R : b = xa }
+	\Say{\Big(y,(2)\Big)}{\bd \TYPE{Divides}(b,a)\bd \TYPE{Associates}(a,b)}{ \sum y \in R : a = yb }
+	\Say{(3)}{(1)(2)}{a = yxa}
+	\Say{(4)}{\THM{RightCancelation}(3)}{1 = yx}
+	\Say{(5)}{\bd R^*(4)}{y \in R^*}
+	\Conclude{(*)}{I(\exists)(2)(5) }{ \exists y \in R^* \. a = yb}
+	\EndProof
+	\\
+	\Theorem{PrimeElementIsIrreducible}{\forall R : \ID \. \forall p : \TYPE{PrimeElement}(R) \. p : \TYPE{IrreducibleElement}(R)}
+	\Assume{x,y}{R}
+	\Assume{(1)}{p = xy}
+	\Say{(2)}{\bd^{-1} Divides(p,xy)\Big(1,(1)\Big)}{ p | xy  }
+	\Say{(3)}{\bd \TYPE{PrimeElement}(p)(2) }{p|x \Big| p|y}
+	\Assume{(4)}{p|x}
+	\Say{\Big(z,5\Big)}{ \bd \TYPE{Divides}(4)   }{  \sum z \in R \.  x =  zp }
+	\Say{(6)}{(1)(5)}{ p = pzy   }
+	\Say{(7)}{\THM{LeftCancelation}(6)}{ 1 = zy }
+	\Say{(8)}{\bd^{-1} R^*(7)}{y \in R^*}
+	\Conclude{()}{I(|)(8)}{x \in R^*|y \in R^*}
+	\Derive{(4)}{I(\Rightarrow)}{ p|x \Rightarrow \Big(   x \in R^* \Big| y \in R^* \Big)}
+	\Assume{(5)}{p|y}
+	\Say{\Big(z,6\Big)}{ \bd \TYPE{Divides}(4)   }{  \sum z \in R \.  y =  zp }
+	\Say{(7)}{(1)(6)}{ p = xzp   }
+	\Say{(8)}{\THM{RightCancelation}(7)}{ 1 = xz }
+	\Say{(9)}{\bd^{-1} R^*(8)}{x \in R^*}
+	\Conclude{()}{I(|)(9)}{x \in R^*|y \in R^*}
+	\Derive{(5)}{I(\Rightarrow)}{p|y \Rightarrow \Big( x \in R^* \Big| y \in R^*\Big) }
+	\Conclude{()}{E(|)(3)(4)(5)}{x \in R^* | y \in R^*}
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{IrreducibleElement}}{[p : \TYPE{Irreducible}]  }
+	\EndProof
+}
+\newpage
+\subsection{Ideals and Quotients}
+\Page{
+	\DeclareType{LeftIdeal}{\prod R \in \RING \. ?\TYPE{Subgroup}(R)}
+	\DefineType{I}{LeftIdeal}{\forall a \in I \. \forall b \in R \. ba \in I}
+	\\
+	\DeclareType{RightIdeal}{\prod R \in \RING \. ?\TYPE{Subgroup}(R)}
+	\DefineType{I}{RightIdeal}{\forall b \in I \. \forall b \in R \. ab \in I}
+	\\
+	\Conclude{\TYPE{TwoSidedIdeal}}{\prod R \in \RING \. \TYPE{LeftIdeal}(R) \And \TYPE{RightIdeal}(R)}{\RING \to \Type}
+	\\
+	\Theorem{CommutativeIdeal}{\forall R \in \ANN \. \forall I : \TYPE{LeftIdeal}(R) \. I : \TYPE{TwoSidedIdeal}(R) }
+	\NoProof
+	\\
+	\Conclude{\Ideal}{\prod R \in \CR \. \TYPE{LeftIdeal}(R)}{\CR \to \Type}
+	\\
+	\DeclareFunc{quotMult}{\prod R : \RING \. \prod I : \TYPE{TwoSidedIdeal} \. \frac{R}{I} \to \frac{R}{I} \to \frac{R}{I}}
+	\DefineNamedFunc{quatMult}{[a],[b]}{[a][b]}{[ab]}
+	\Assume{x,y}{I}
+	\Say{(1)}{\bd \TYPE{RightIdeal}(a,y)}{ay \in I}
+	\Say{(2)}{ \bd \TYPE{LeftIdeal}(b,x) }{xb \in I}
+	\Say{(3)}{\bd \TYPE{RightIdeal}(x,y)}{xy \in I}
+	\Conclude{(*)}{ }{ [a + x][b + y] = [ab + xb + ay  + xy] = [ab]}
+	\EndProof
+	\\
+	\DeclareFunc{quotientRing}{\prod R : \RING \. \TYPE{TwoSidedIdeal} \to \GRP}
+	\DefineNamedFunc{quotientRing}{I}{\frac{R}{I}}{\left(\frac{R}{I},+,\FUNC{quatMult}\right)}
+	\\
+	\Theorem{LeftIdealPreimage}{ \forall A,B \in \RING \.  \forall f : A \Arrow{\RING} B \.  \forall I : \TYPE{LeftIdeal}(B) \. f^{-1} : \TYPE{LeftIdeal}(A)}
+	\Say{(1)}{\THM{SubgroupPreimage}(I,f)}{f^{-1}(I) \Sgrp A}
+	\Assume{x}{f^{-1}(I)}
+	\Say{(2)}{\bd \FUNC{preimage}(f,I)(x)}{f(x) \in I}
+	\Assume{a}{A}
+	\Say{(3)}{\bd \TYPE{RingHomo}(A,B)(f)(a,x)\bd \TYPE{Ideal}(B)(I)(2)}{f(ax) = f(a)f(x) \in I}
+	\Conclude{()}{ \bd^{-1} \FUNC{preimage}(f,I)(3)}{ ax \in I}
+	\DeriveConclude{(*)}{ I(\forall)\bd^{-1}\TYPE{LeftIdeal}(A)(1) }{\left(f^{-1}(I) : \TYPE{LeftIdeal}(A)\right)}
+	\EndProof
+}
+\Page{		
+	\Theorem{RightIdealPreimage}{ \forall A,B \in \RING \.  \forall f : A \Arrow{\RING} B \.  \forall I : \TYPE{RightIdeal}(B) \. f^{-1}(I) : \TYPE{RightIdeal}(A)}
+	\NoProof
+	\\
+	\Theorem{TwoSidedIdealPreimage}{ \forall A,B \in \RING \.  \forall f : A \Arrow{\RING} B \.  \forall I : \TYPE{TwoSidedIdeal}(B) \.  \NewLine \. f^{-1}(I) : \TYPE{TwoSidedIdeal}(A)}
+	\NoProof
+	\\
+	\Theorem{IdealPreimage}{ \forall A,B \in \CR \.  \forall f : A \Arrow{\RING} B \.  \forall I : \TYPE{Ideal}(B) \. f^{-1}(I) : \TYPE{Ideal}(A)}
+	\NoProof
+	\\
+	\Theorem{LeftIdealIntersection}{\forall R \in \RING \. \forall \mathcal{A} \in \SET \. \forall I : \mathcal{A} \to \TYPE{LeftIdeal}(R) \. \bigcap_{\alpha \in \mathcal{A}} I_{\alpha} : \TYPE{LeftIdeal}(R) }
+	\Say{(1)}{ \THM{SubgroupIntersection}(\mathcal{A},I) }{ \bigcap_{\alpha \in A} : \Sgrp R   }
+	\Assume{x}{\bigcap_{\alpha \in \mathcal{A}} I_{\alpha}}
+	\Say{(2)}{\bd \FUNC{Itersect}(\mathcal{A})(I)(x)}{\forall \alpha \in A \. x \in I_{\alpha}}
+	\Assume{a}{R}
+	\Assume{\alpha}{\mathcal{A}}
+	\Conclude{()}{\bd^{-1} \TYPE{Ideal}(I_\alpha)(2)(x)(a)}{ax \in I_{\alpha}}
+	\Derive{(3)}{I(\forall)}{\forall \alpha \in \mathcal{A} \. ax \in I_{\alpha}}
+	\Conclude{()}{\bd^{-1} \FUNC{intersect}(\mathcal{A})(I)(3)}{ax \in \bigcap_{\alpha \in \mathcal{A}} I_\alpha}
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{LeftIdeal}(R)(1)}{  \left[ \bigcap_{\alpha \in \mathcal{A}} I_\alpha : \TYPE{LeftIdeal}(R)  \right]    }
+	\EndProof
+	\\
+	\Theorem{RightIdealIntersection}{\forall R \in \RING \. \forall \mathcal{A} \in \SET \. \forall I : \mathcal{A} \to \TYPE{RightIdeal}(R) \. \bigcap_{\alpha \in \mathcal{A}} I_{\alpha} : \TYPE{RightIdeal}(R) }
+	\NoProof
+	\\
+	\Theorem{TwoSidedtIdealIntersection}{\forall R \in \RING \. \forall \mathcal{A} \in \SET \. \forall I : \mathcal{A} \to \TYPE{TwoSidedIdeal}(R) \. 
+		\NewLine \. \bigcap_{\alpha \in \mathcal{A}} I_{\alpha} : \TYPE{TwoSidedIdeal}(R) }
+	\NoProof
+}\Page{
+	\Theorem{IdealIntersection}{\forall R \in \ANN \. \forall \mathcal{A} \in \SET \. \forall I : \mathcal{A} \to \TYPE{Ideal}(R) \. \bigcap_{\alpha \in \mathcal{A}} I_{\alpha} : \TYPE{Ideal}(R) }
+	\NoProof
+	\\
+	\Theorem{SumOfLeftIdeals}{ \forall R \in \RING \. \forall \mathcal{A} \in \SET \. \forall I : \mathcal{A} \to \TYPE{LeftIdeal}(R) \. \sum_{\alpha \in \mathcal{A}} I_{\alpha} : \TYPE{LeftIdeal}(R)}
+	\NoProof
+	\\
+	\Theorem{SumOfRightIdeals}{ \forall R \in \RING \. \forall \mathcal{A} \in \SET \. \forall I : \mathcal{A} \to \TYPE{RightIdeal}(R) \. \sum_{\alpha \in \mathcal{A}} I_{\alpha} : \TYPE{RightIdeal}(R)}
+	\NoProof
+	\\
+	\Theorem{SumOfTwoSidedIdeals}{ \forall R \in \RING \. \forall \mathcal{A} \in \SET \. \forall I : \mathcal{A} \to \TYPE{TwoSidedIdeal}(R) \. 
+		\NewLine \sum_{\alpha \in \mathcal{A}} I_{\alpha} : \TYPE{TwoSidedIdeal}(R)}
+	\NoProof
+	\\
+	\Theorem{SumOfIdeals}{ \forall R \in \ANN \. \forall \mathcal{A} \in \SET \. \forall I : \mathcal{A} \to \TYPE{Ideal}(R) \. \sum_{\alpha \in \mathcal{A}} I_{\alpha} : \TYPE{Ideal}(R)}
+	\NoProof
+        \\
+	\DeclareFunc{compositeIdeal}{\prod R \in \RING \. \TYPE{LeftIdeal}(R) \times \TYPE{RightIdeal}(R) \to \TYPE{TwoSidedIdeal}(R)}
+	\DefineNamedFunc{compositeIdeal}{I,J}{IJ}{ \left\{  \sum^{n}_{\alpha=1} a_\alpha b_\alpha  | n \in \Nat, a : n \to I, b : n \to J  \right\}  }
+	\\
+	\DeclareFunc{compositeIdeal2}{\prod R \in \CR \. \prod n \in \Nat \. n \to \TYPE{Ideal}(R) \to \TYPE{Ideak}(R)}
+	\DefineNamedFunc{compositeIdeal2}{I}{\prod^n_{\alpha = 1} I_\alpha }{ \left\{ \sum^m_{\beta = 1} \prod^n_{\alpha = 1} a_{\alpha,\beta} |  m \in \Nat, a : \prod \alpha \in n \. m \to I_{\alpha}  \right\}  }
+}
+\Page{
+	\Theorem{ProperByUnityLeft}{\forall R \in \RING \. \forall I : \TYPE{LeftIdeal} \. I = R \iff 1 \in I }
+	\NoProof
+	\\
+	\Theorem{ProperByUnityRight}{\forall R \in \RING \. \forall I : \TYPE{RightIdeal} \. I = R \iff 1 \in I }
+	\NoProof
+	\\
+	\Theorem{ProperByUnityTwoSided}{\forall R \in \RING \. \forall I : \TYPE{TwoSidedIdeal} \. I = R \iff 1 \in I }
+	\NoProof
+        \\
+	\Theorem{ProperByUnity}{\forall R \in \ANN \. \forall I : \TYPE{Ideal} \. I = R \iff 1 \in I }
+	\NoProof
+	\\
+	\Theorem{UnionOfLeftIdeals}{ \forall R \in \RING \. \forall \A : \TYPE{TotallyOrdered} \And \TYPE{NonEmpty} \.  \NewLine \. \forall I : \TYPE{Nondecreasing}\Big( \TYPE{Proper} \And \TYPE{LeftIdeal}(R) \Big)     
+		 \bigcup_{\alpha \in \A} I_{\alpha} I_\alpha : \TYPE{Proper} \And \TYPE{LeftIdeal}(R)}
+	\Assume{(1)}{1 \in\bigcup_{\alpha \in \A} I_\alpha}
+	\Say{(\alpha,2)}{\bd \FUNC{union}}{ \sum \alpha \in A \. 1 \in I_{\alpha} }
+	\Say{(3)}{\THM{ProperByUnityLeft}(2)}{ I_\alpha =  R}
+	\Say{(4)}{\bd \TYPE{Proper}(I_\alpha)}{ I_\alpha \neq R     }
+	\Say{(5)}{ I (\bot)(3)(4)}{ \bot    }
+	\Derive{(1)}{  E(\bot)   }{1 \not \in \bigcap_{\alpha \in \A} I_\alpha}
+	\Say{(2)}{\bd^{-1} \TYPE{Proper}(1)}{\bigcap_{\alpha \in \A} I_\alpha}
+	\NoProof
+	\\
+	\Theorem{UnionOfRightIdeals}{ \forall R \in \RING \. \forall \A : \TYPE{TotallyOrdered} \And \TYPE{NonEmpty} \. \NewLine \. \forall I : \TYPE{Nondecreasing}\Big( \TYPE{Proper} \And \TYPE{RightIdeal}(R) \Big)  \.   
+		 \bigcup_{\alpha \in \A} I_{\alpha} I_\alpha : \TYPE{Proper} \And \TYPE{RightIdeal}(R)}
+	\NoProof
+}\Page{
+	\Theorem{UnionOfTwoSidedIdeals}{ \forall R \in \RING \. \forall \A : \TYPE{TotallyOrdered} \And \TYPE{NonEmpty} \. 
+		\NewLine \.\forall I : \TYPE{Nondecreasing}\Big( \TYPE{Proper} \And \TYPE{TwoSidedIdeal}(R) \Big)  \.    \bigcup_{\alpha \in \A} I_{\alpha} I_\alpha : \TYPE{Proper} \And \TYPE{TwoSidedIdeal}(R)}
+	\NoProof
+	\\
+	\Theorem{UnionOfIdeals}{ \forall R \in \ANN \. \forall \A : \TYPE{TotallyOrdered} \And \TYPE{NonEmpty} \. 
+		\NewLine \. \forall I : \TYPE{Nondecreasing}\Big( \TYPE{Proper} \And \TYPE{LeftIdeal}(R) \Big)  \.   \bigcup_{\alpha \in \A} I_{\alpha} I_\alpha : \TYPE{Proper} \And \TYPE{Ideal}(R) }	
+	\NoProof
+	\\
+	\DeclareType{MaximalLeftIdeal}{\prod  R \in \RING \.  ?\TYPE{Proper} \And \TYPE{LeftIdeal}(R) }
+	\DefineType{I}{MaximalLeftIdeal}{ \forall J : \TYPE{LeftIdeal}(R) \.  I \subset J \Leftarrow J = R }
+	\\
+	\DeclareType{MaximalRightIdeal}{\prod  R \in \RING \.  ?\TYPE{Proper} \And \TYPE{RightIdeal}(R) }
+	\DefineType{I}{MaximalRightIdeal}{ \forall J : \TYPE{RightIdeal}(R) \.  I \subset J \Leftarrow J = R }
+	\\
+	\DeclareType{MaximalTwoSidedIdeal}{\prod  R \in \RING \.  ?\TYPE{Proper} \And \TYPE{TwoSidedIdeal}(R) }
+	\DefineType{I}{MaximalTwoSidedIdeal}{ \forall J : \TYPE{TwoSidedIdeal}(R) \.  I \subset J \Leftarrow J = R }
+	\\
+	\DeclareType{MaximalLeftIdeal}{\prod  R \in \ANN \.  ?\TYPE{Proper} \And \TYPE{Ideal}(R) }
+	\DefineType{I}{MaximalLeftIdeal}{ \forall J : \TYPE{Ideal}(R) \.  I \subset J \Leftarrow J = R }
+	\\
+	\Theorem{MaximalLeftIdealExists}{\forall R \in \ANN \. \forall I : \TYPE{Proper}\And\TYPE{LeftIdeal}(R) \. 
+		\NewLine \. \exists M : \TYPE{MaximalLeftIdeal}(R) : I \subset M  }
+	& \text{Use $\THM{UnionOfLeftIdeals}$ and $\THM{ZornLemma}$} \\
+	\EndProof
+	\\
+	\Theorem{MaximalRightIdealExists}{\forall R \in \ANN \. \forall I : \TYPE{Proper}\And\TYPE{RightIdeal}(R) \. 
+		\NewLine \. \exists M : \TYPE{MaximalRightIdeal}(R) : I \subset M  }
+	\NoProof
+	\\
+	\Theorem{MaximalTwoSidedIdealExists}{\forall R \in \ANN \. \forall I : \TYPE{Proper}\And\TYPE{TwoSidedIdeal}(R) \. 
+		\NewLine \. \exists M : \TYPE{MaximalTwoSidedIdeal}(R) : I \subset M  }
+	\NoProof
+}\Page{
+	\Theorem{MaximalIdealExists}{\forall R \in \ANN \. \forall I : \TYPE{Proper}\And\TYPE{Ideal}(R) \. 
+		\NewLine \. \exists M : \TYPE{MaximalIdeal}(R) : I \subset M  }
+	\NoProof
+	\\
+	\DeclareFunc{genLeftIdeal}{\prod R \in \RING \.  ?R \to \TYPE{LeftIdeal} }
+	\DefineFunc{genLeftIdeal}{S}{\bigcap \{ I : \TYPE{LeftIdeal}(R) : S \subset R  \}}
+	\\
+	\DeclareFunc{genRightIdeal}{\prod R \in \RING \.  ?R \to \TYPE{RightIdeal} }
+	\DefineFunc{genRightIdeal}{S}{\bigcap \{ I : \TYPE{RightIdeal}(R) : S \subset R  \}}
+	\\
+	\DeclareFunc{genTwoSidedIdeal}{\prod R \in \RING \.  ?R \to \TYPE{TwoSidedIdeal} }
+	\DefineFunc{genTwoSidedIdeal}{S}{\bigcap \{ I : \TYPE{TwoSidedIdeal}(R) : S \subset R  \}}
+	\\
+	\DeclareFunc{genIdeal}{\prod R \in \ANN \.  ?R \to \TYPE{Ideal} }
+	\DefineFunc{genIdeal}{S}{\bigcap \{ I : \TYPE{Ideal}(R) : S \subset R  \}}	
+	\\
+	\Theorem{kernelIdeal}{\forall A,B \in \RING \. \forall \varphi : A \Arrow{\RING} B \.  \ker \varphi : \TYPE{TwoSidedIdeal}(A)}
+	\Say{(1)}{\THM{NormalKernel}(R,+)(\varphi)}{\ker \varphi \Sgrp A}
+	\Assume{x}{\ker \varphi}
+	\Assume{a}{ A }
+	\Say{(2)}{ \bd \ker \varphi (x)  }{\varphi(x) = 0}
+	\Say{(3)}{ \bd \TYPE{RingHomo}(A,B)(\varphi)(a,x)(2) \THM{ZeroMult}(B)(\varphi(a)) }{ \varphi(ax) = \varphi(a)\varphi(x) = \varphi(a)0 = 0}
+	\Conclude{ ()_1 }{ \bd^{-1}\ker \varphi}{ ax \in \ker \varphi }
+	\Say{(4)}{ \bd \TYPE{RingHomo}(A,B)(\varphi)(x,a)(2) \THM{ZeroMult}(B)(\varphi(a)) }{ \varphi(xa) = \varphi(x)\varphi(a) = \varphi(a)0 = 0}
+	\Conclude{ ()_2 }{ \bd^{-1}\ker \varphi}{ xa \in \ker \varphi }	
+	\Derive{(*)}{\bd^{-1} \TYPE{TwoSidedIdeal}((1),I(\forall))}{\Big[\ker \varphi : \TYPE{TwoSidedIdeal}(A)\Big]    }
+	\EndProof
+	\\
+	\Theorem{IdealProjectionIsRingHomo}{\forall R \in \RING \. \forall I : \TYPE{TwoSidedIdeal}(R) \.  \pi_{I} : R \Arrow{\RING} \frac{R}{I} }
+	\Say{(1)}{\bd \pi_I(1)}{\pi_I(1) = [1]}
+	\Assume{a,b}{R}
+	\Conclude{()}{\bd \pi_I(ab)\bd \FUNC{quotMult}([a],[b])\bd^{-1} \pi_I(a)\bd^{-1}\pi_I}{\pi_I(ab) = [ab] =[a][b] = \pi_I(a)\pi_I(b)}
+	\EndProof
+	\\
+	\Theorem{EveryIdealIsRHKernel}{ \prod R \in \RING \. \forall I : \TYPE{TwoSidedIdeal}(R) \. I = \ker \pi_I}
+	\NoProof
+}
+\newpage
+\subsection{Prime Ideals of Commutative Ring}
+\Page{
+	\DeclareType{Prime}{\prod R \in \ANN \. ?\TYPE{ProperIdeal}(R)}
+	\DefineType{I}{Prime}{\forall a,b \in R \. ab \in I \Rightarrow a \in I | b \in I}
+	\\
+	\DeclareType{Coprime}{\prod R \in \ANN \. ?\TYPE{ProperIdeal}^2(R)}
+	\DefineType{I,J}{Coprime}{I + J = R} 	
+	\\
+	\Theorem{PrimeQuotientIsID}{\forall R \in \ANN \. \forall I : \TYPE{Prime}(R) \. \frac{R}{I} : \ID  }
+	\Assume{[a]}{\TYPE{ZeroDividor} \; \frac{R}{I}}
+	\Say{\Big([b],(1)\Big)}{ \bd^{-1}\TYPE{ZeroDivisor} \; \frac{R}{I}  }{\sum [b] \in \frac{R}{I} \.  [b] \neq 0 \And [b][a] = 0  }
+	\Say{(2)}{ \bd \frac{R}{I} (1)_2 }{  ab \in I  }
+	\Say{(3)}{ \bd \TYPE{Prime}(R)(I)(2) }{a \in I | b \in I}
+	\Assume{(4)}{a \in I}
+	\Conclude{()}{\bd \frac{R}{I}(4)}{[a] = 0}
+	\Derive{(4)}{I(\rightarrow)}{a \in I \Rightarrow [a] = 0}
+	\Assume{(5)}{b \in I}
+	\Say{(6)}{ \bd \frac{R}{I}(5) }{[b] = 0}
+	\Say{(7)}{(6)(1)_1}{\bot}
+	\Conclude{()}{E(\bot)([a] = 0)}{[a] = 0}
+	\Derive{(5)}{I(\Rightarrow)}{b \in I \Rightarrow [a] = 0  }
+	\Conclude{()}{E(|)(3)(4)(5)}{[a] = 0 }
+	\DeriveConclude{(*)}{\bd^{-1} \ID}{ \left[ \frac{R}{I} : \ID \right] }
+	\EndProof
+	\\
+	\Theorem{PrimePreimage}{\forall A,B \in \ANN \. \forall I : \TYPE{Prime}(B) \. \forall \varphi : A \Arrow{\RING} B \. \varphi^{-1}(I) : \TYPE{Prime}(A)}
+	\Say{(0)}{\bd^{-1} \TYPE{RingHomo}(\varphi)\bd \TYPE{ProperIdeal}(B)(I)}{1 \not \in \varphi^{-1}(I)}
+	\Assume{x,y}{A}
+	\Assume{(1)}{xy \in \varphi^{-1}(I)}
+	\Say{(2)}{\bd \FUNC{preimage}(A,B)(\varphi)(I)(1)}{\varphi(xy) \in I}
+	\Say{(3)}{\bd \TYPE{RingHomo}(A,B)(\varphi)(a,b)(2)}{\varphi(x)\varphi(y) \in I}
+	\Say{(4)}{\bd \TYPE{Prime}(B)(I)(3)}{\varphi(x) \in I | \varphi(y) \in I}
+	\Conclude{()}{\bd^{-1} \FUNC{preimage}(A,B)(\varphi)(4)}{x \in \varphi^{-1}(I) | y \in \varphi^{-1}(I)}
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Prime}(I)(1)}{\Big[\varphi^{-1}(I) : \TYPE{Prime}(A)\Big]}
+	\EndProof
+}\Page{
+	\Theorem{MaximalIdealIsPrime}{  \forall R \in \ANN \. \forall I : \TYPE{Maximal}(R) \. I : \TYPE{Prime}(R)   }
+	\Assume{a,b}{R}
+	\Assume{(1)}{ab \in I}
+	\Assume{(2)}{a \not \in I \And b \not \in I}
+	\Say{(3)}{\bd \TYPE{Maximal}(I)(2)}{ I + \Big\langle \{ a \} \Big\rangle_{\RING} = R }
+	\Say{(4)}{\bd \TYPE{Ring}(R)}{1 \in R}
+	\Say{(i,v,5)}{(3)(4)}{\sum i \in I \. \sum v \in R \. 1 = i + va}
+	\Say{(6)}{b(5)}{b = bi + vab}
+	\Say{(7)}{\bd \Ideal(R)(I)(1)(6)}{b \in I}
+	\Conclude{()}{(2)(7)}{\bot}
+	\DeriveConclude{()}{E(\bot)}{a \in I | b \in I}
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Ideal}}{[I : \TYPE{Prime}(R)]}
+	\EndProof
+	\\
+	\Theorem{IdealsProductInIntersection}{\forall R \in \ANN \. \forall n \in \Nat \. \forall I : n \to \Ideal(R) \. \prod^n_{k=1} I_k \subset \bigcap^n_{i=1} I_k}
+	\Assume{x}{\prod^n_{k=1} I_k}
+	\Say{(m,a,1)}{\bd \FUNC{ringProfuct}(n,I)}{\sum m \in \Nat \. \sum a : \prod k \in n \. m \to I_k \.  x = \sum^m_{j = 1} \prod^n_{i=1} a_{i,j}  }
+	\Assume{j}{m}
+	\Assume{k}{n}
+	\Conclude{()}{\bd^{-1}\TYPE{Ideal}(R)(I_k)(a_{k,j}) }{ \prod^n_{i=1} a_{i,j} \in I_k }
+	\Derive{(2)}{I^2(\forall))}{ \forall j \in m \. \forall k \in n \. \prod^n_{I=1} a_{i,j} \in I_k }
+	\Say{(3)}{\bd^{-1} \FUNC{intersect}(n,I)(2) }{\forall j \in m \. \prod^n_{I=1} a_{i,j} \in \bigcap^n_{k=1} I_k}
+	\Conclude{(*)}{\bd \TYPE{Subgroup}(R)\left( \bigcap^n_{k=1} I_k \right)(1)  }{x \in \bigcap^n_{k=1}  I_k  }
+	\EndProof
+}\Page{
+	\Theorem{ProductInsidePrimeLemma}{\forall R \in \ANN \. \forall n \in \Nat \. \forall I : n \to \Ideal \. \forall P : \TYPE{Prime}(R) \.    
+		\NewLine \. \forall  (0) : \prod^n_{k=1} I_k \subset P \. \exists k \in n : I_k \subset P     }
+	\Assume{a}{\prod k \in n \. I_k}
+	\Assume{(1)}{\forall k \in \. a_k \not \in I_k}
+	\Say{(2)}{\bd \TYPE{Prime}(R)(P)(1)}{\prod^n_{k=1}a_i \not \in P}
+	\Conclude{()}{(2)(0)}{\bot}
+	\Derive{(1)}{ I(\forall)E(\bot)  }{\forall a : \prod k \in n \. I_k \. \exists k \in n : a_k \in P}
+	\Conclude{(*)}{\THM{FiniteChoice}(1)}{ \exists k \in n : I_k \subset P }
+	\EndProof
+	\\
+	\Theorem{IntersectInsidePrime}{\forall R \in \ANN \. \forall n \in \Nat \. \forall I : n \to \Ideal \. \forall P : \TYPE{Prime}(R) \.    
+		\NewLine \. \forall  (0) : \bigcap^n_{k=1} I_k \subset P \. \exists k \in n : I_k \subset P \.     }
+	\NoProof
+	\\
+	\DeclareType{CoprimeFamily}{\prod R \in \ANN \. \sum n \in \Nat \. ?\Big(n \to \Ideal(R)\Big)}
+	\DefineType{(n,I)}{CoprimeFamily}{\forall i,j \in n \. i \neq j \Rightarrow (I_i,I_j) : \TYPE{Coprime}(R)}
+	\\
+	\Theorem{CoprimeProdIsCoprime}{\forall R \in \ANN \. \forall J : \TYPE{Ideal}(R) \. \forall n \in \Nat \. \forall I : n \to \Ideal(n) \. 
+		\NewLine \.  \forall (0) : \forall k \in n \. (J,I_k) : \TYPE{Coprime}(R) \. \left( J, \prod^n_{k=1} I_k  \right) : \TYPE{Coprime}(R)}
+	\Say{(a,b,1)}{\bd \TYPE{Coprime}(0)\THM{ProperbyUnity}}{\sum a : n \to J \. \sum b : \prod k \in n \. I_k \. \forall k \in n \. 1 = a_k + b_k  }
+	\Say{(2)}{  \bd \ANN(R)\LOGIC{Iterate}(n)(1) }{1 = \prod^n_{k=1}b_k + \sum^{n-1}_{i=0} a_{i+1}\prod^i_{k=1} b_k    }
+	\Say{(3)}{  \bd \Ideal(R)(J)(\ldots) }{  \sum^{n-1}_{i=0} a_{i+1} \prod^i_{k=1} b_k \in J}
+	\Say{(4)}{ \bd \FUNC{idealProduct}(n,I)(b)}{\prod^n_{k=1} b_k \in \prod^n_{k=1} I_k }
+	\Say{(5)}{\bd \FUNC{idealSum}(2)(3)(4)}{1 \in J + \prod^n_{k=1} I_k}
+	\Say{(6)}{\THM{ProperByUnity}(5)}{R = J + \prod^n_{k=1} I_K}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Coprime}(6)}{ \left[  \left( J, \prod^n_{k=1} I_k\right) : \TYPE{Coprime}(n) \right]    }
+	\EndProof
+}\Page{
+	\Theorem{CoprimeIntersectIsCoprime}{\forall R \in \ANN \. \forall J : \TYPE{Ideal}(R) \. \forall n \in \Nat \. \forall I : n \to \Ideal(n) \. 
+		\NewLine \.  \forall (0) : \forall k \in n \. (J,I_k) : \TYPE{Coprime}(R) \. \left( J, \bigcap^n_{k=1} I_k  \right) : \TYPE{Coprime}(R)}
+	\NoProof
+	\\
+	\Theorem{CoprimeProductLemma1}{\forall R \in \ANN \. \forall (J,I) : \TYPE{Coprime}(R) \.  JI = J \cap I}
+	\Say{(a,b,1)}{\bd \TYPE{Coprime}(J,I) \THM{ProperByUnity}}{ \sum a \in J \. \sum b \in I \. 1 = a + b   }
+	\Assume{x}{ J \cap I }
+	\Say{(2)}{\bd \FUNC{Intersect}(J,I)(x) }{x \in J}
+	\Say{(3)}{\bd \FUNC{Intersect}(J,I)(x)}{ x \in I}
+	\Say{(4)}{\bd \FUNC{idealProdut}(J,I)(ax)}{ax \in JI}
+	\Say{(5)}{\bd \FUNC{idealProduct}(J,I)(xb))}{xb \in JI}
+	\Conclude{()}{ \bd \TYPE{Identity}(1_R)(x)(1)\bd \ANN(R)  }{x = (a + b)x = ax + bx \in JI}
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{SetEq}\Big(\bd^{-1}\TYPE{Subset}, \THM{IdealsProducitInIntersection} \Big)}{  JI = I \cap J  }
+	\EndProof
+	\\
+	\Theorem{CoprimeProductLemma2}{\forall R \in \ANN \. \forall (n,I) : \TYPE{CoprimeFamily}(R) \. \prod^n_{k=1} I_k = \bigcap^n_{k=1} I_k  }
+	\NoProof
+	\\
+	\Theorem{MaximalQuatientIsField}{\forall R \in \ANN \. \forall M : \TYPE{MaximalIdeal}(R) \. \frac{R}{M} : \TYPE{Field}}
+	\Assume{[a]}{\frac{R}{M}}
+	\Assume{(1)}{[a]\neq 0}
+	\Say{(2)}{\bd \frac{R}{M}(1)}{a \not \in M}
+	\Say{(u,r,3)}{\bd \TYPE{MaximaIdeal}(2)}{\sum u \in M \. \sum r \in R : \. 1 = u + ra}
+	\Conclude{()}{\bd \frac{R}{M}(3)\bd^{-1} \frac{R}{m}}{1 = [1] = [u + ra] = [ra] = [r][a] }
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Field}}{ \left[ \frac{R}{M} : \TYPE{Field} \right]  }
+	\EndProof
+}\Page{
+	\Theorem{ChineseReminderTheorem1}{\forall R \in \ANN \. \forall I,J : \TYPE{Coprime}(R) \. \frac{R}{I}\frac{R}{J} \cong_{\RING} \frac{R}{IJ}  }	
+	\Assume{\Big([a],[b]\Big)}{\frac{R}{I}\frac{R}{J}}
+	\Say{(u,v,1)}{ \bd \TYPE{Coprime}(-a + b)  }{\sum u \in I \. \sum v \in J \. -a + b = u + v}
+	\Say{(2)}{(1) + a - v}{  b - v = a + u   }
+	\Say{x}{b - v}{R}
+	\Say{\varphi\Big([a],[b]\Big)}{ \pi_{IJ}(x)  }{\frac{R}{IJ}}
+	\Say{(3) }{ \bd x (2) \bd \pi_I   }{ \pi_I(x) = \pi_I(a +u) = [a]  }
+	\Say{(4)}{  \bd x \bd \pi_J }{  \pi_J(x) = \pi_I(b - v) = [b]      }
+	\Assume{y}{R}
+	\Assume{(5)}{\pi_I(y) = [a]}
+	\Assume{(6)}{\pi_J(y) = [b]}
+	\Say{(u',7)}{(5)\bd \pi_I}{ \sum u' \in I : y = a + u}
+	\Say{(v',8)}{(8)\bd \pi_J}{\sum v' \in J : y  = b + v}
+	\Say{(9)}{ (7)\bd x(2)   }{   x - y = u - u' \in I  }
+	\Say{(10)}{ (8)\bd x   }{  x - y = u - u' \in J     }
+	\Conclude{()}{\THM{CoprimeProductLemma2}\bd^{-1}\TYPE{Intersect}(9)(10)}{x - y \in IJ}
+	\Derive{\varphi}{I(\to)}{\frac{R}{I}\frac{R}{J} \Arrow{\RING} \frac{R}{IJ}}
+	\Assume{\Big([a],[b]\Big)}{\frac{R}{I}\frac{R}{J}}
+	\Assume{(1)}{\varphi\Big([a],[b]\Big)=0}
+	\Say{(2)}{\bd \varphi(1)}{a \in I \And b \in J}
+	\Conclude{()}{\bd \FUNC{quotRing}(2)}{ \Big([a],[b]\Big) = 0}
+	\Derive{(2)}{\THM{HomoInj}}{\left[\varphi  : \frac{R}{I}\frac{R}{J} \ToInj{\RING} \frac{\RING}{IJ} \right]}
+	\Say{(3)}{\bd \varphi \bd \TYPE{Surj}  }{ \left[ \varphi : \frac{R}{I}\frac{R}{J} \ToIso{\RING} \frac{R}{IJ} \right]} 
+	\Conclude{(*)}{\bd \TYPE{Isomorphic}}{\frac{R}{I}\frac{R}{J} \cong \frac{R}{IJ}}
+	\EndProof
+	\\
+	\Theorem{ChineseReminderTheorem2}{\forall R \in \ANN \. \forall (n,I) : \TYPE{CoprimeFamily}(R) \. \prod^n_{k=1} \frac{R}{I_k} \cong_{\RING} \frac{R}{\prod^n_{i=1} I_k}  }
+	\NoProof
+}
+\subsection{Localization}
+\Page{
+	\DeclareType{MultiplivativeSubset}{ \prod R \in \RING \. ?R  } 
+	\DefineNamedType{S}{MultiplivativeSubset}{(S,\cdot_R) : \TYPE{Submonoid}\left( R, \cdot_R \right) }
+	\\
+	\DeclareFunc{localization}{\prod R \in \ANN \. \TYPE{MiltiplicativeSubset}(R) \to \RING }
+	\DefineNamedFunc{localization}{ S  }{ \frac{R}{S} }{ \Bigg( \frac{R \times S}{\Big\{\big( (r,s),(r',s') \big) : 
+		\exists z \in S : z(s'r - sr) = 0 \big| r \in R, s,z \in S    \Big\}}, \NewLine , 
+		\Lambda [a,b],[c,d] \in \frac{R}{S} \. [ad + bc, bd], \Lambda [a,b],[c,d] \in \frac{R}{S} \.  [ac, bd]   \Bigg)       }
+	\\
+	\DeclareFunc{fraction}{\prod A \in \ANN \. \prod S : \TYPE{MultiplicativeSubset}(A) \. A \times S \to \frac{A}{S}}
+	\DefineNamedFunc{fraction}{a,s}{\frac{a}{s}}{[a,s]}
+	\\
+	\DeclareType{Local}{?\ANN}
+	\DefineType{A}{Local}{\exists! M : \TYPE{MaximalIdeal}(A) }
+	\\
+	\DeclareFunc{localize}{\prod A \in \ANN \. \TYPE{Prime}(A) \to \TYPE{Local} }
+	\DefineNamedFunc{localize}{P}{A_P}{ \frac{A}{P^\c}  }
+	\\
+	\DeclareFunc{maximalIdeal}{\prod A : \TYPE{Local} \. \TYPE{maximalIdeal}(A)}
+	\DefineNamedFunc{maximalIdeal}{}{\mathfrak{m}(A)}{\bd \TYPE{Local}(A)}
+	\\
+	\Theorem{LocalInversion}{\forall A : \TYPE{Local} \. \forall a \in \mathfrak{m}^\c(A) \. a \in A^*}
+	\Assume{(1)}{a \not \in A^*}
+	\Say{(2)}{\bd \FUNC{genIdeal}\{a\}(1)}{ \FUNC{genIdeal}\{a\} \neq A}
+	\Say{(M,3)}{\THM{MaximalIdealExists}(2)}{\sum M : \TYPE{MaximalIdeal}(A) \. a  \in M}
+	\Say{(4)}{\THM{SetIneq}\bd a(3)}{\mathrm{m}(A) \neq M}
+	\Conclude{()}{\bd \TYPE{Local}(4)}{\bot}
+	\DeriveConclude{(*)}{E(\bot)}{ a \in A^* }
+	\EndProof
+}\Page{
+	\Theorem{LocalizationTHM}{\forall A \in \ANN \. \forall P : \TYPE{Prime}(A) \. \frac{A}{P^\c} : \TYPE{Local} }
+	\Say{(1)}{\bd^{-1} \TYPE{MultiplicativeSet} \bd \TYPE{Prime}(A)(P) }{[P^\c : \TYPE{MultiplicativeSet}(A)]}
+	\Say{M}{\left\{\frac{p}{a}|p\in P,a \in P^\c \right\}}{?\frac{A}{P^\c}}
+	\Say{(2)}{\bd \Ideal(A)(P)}{\left[M : \TYPE{Ideal} \; \frac{A}{S}\right]}
+	\Say{(3)}{\bd M \bd \frac{A}{P}}{M \neq \frac{A}{P^\c}}
+	\Assume{M'}{\TYPE{MacimalIdeal}\; \frac{A}{P^\c}}
+	\Assume{\frac{a}{b}}{M'}
+	\Say{(4)}{\bd \TYPE{ProperIdeal} \; \frac{A}{P^\c}(M')}{1 \not \in M' }
+	\Assume{(5)}{a \in P^\c}
+	\Say{(6)}{\bd \frac{A}{P^\c}}{\frac{b}{a} \frac{a}{b} = 1}
+	\Say{(7)}{\bd \Ideal \; \frac{A}{P^\c}(M')(6)}{1 \in M'}
+	\Conclude{()}{(7)(4)}{\bot}
+	\Derive{(5)}{\bd \FUNC{compliment}E(\bot)}{a \in P}
+	\Conclude{()}{\bd M(5)}{\frac{a}{b} \in M}
+	\Derive{(4)}{\bd^{-1}\TYPE{Subset}}{M' \subset M}
+	\Conclude{()}{\bd \TYPE{MaximalIdeal}(A)(M')(3)(4)}{M' = M}
+	\DeriveConclude{()}{\bd^{-1} \TYPE{Local}}{\left[\frac{A}{P^\c} : \TYPE{Local}\right] }
+	\EndProof
+	\\
+	\DeclareFunc{invCategoryOfMS}{\prod R \in \ANN \. \TYPE{MultiplicativeSet}(A) \to \CAT}
+	\DefineNamedFunc{invCategotyOfMS}{S}{\C_R(S)}
+	{\NewLine =\Bigg( \left\{ (B,\psi) : \sum B \in \ANN \. R \Arrow{\ANN} B : \forall s \in S \. \psi(s) \in B^* \right\}, \NewLine 
+	,    (B,\psi),(B',\psi') \mapsto \{ \varphi : B \Arrow{\RING} B' : \psi = \varphi \psi' \}, \circ, \id	\Bigg)   }
+}\Page{
+	\Theorem{LocalizationUniversalProperty}{\forall A \in \ANN \. \forall S : \TYPE{MultiplicativeSet}(A) \. \NewLine \. 
+		\left(\frac{A}{S}, a \mapsto \frac{a}{1} \right) : \TYPE{Initial}\Big( \C_A(S)\Big)}
+	\Assume{(B,\psi)}{  \C_A(S)   }
+	\Say{\varphi}{\Lambda \frac{a}{b} \in \frac{A}{S} \. \psi(a)\psi^{-1}(b) }{ \frac{A}{S} \to B  }
+	\Say{(1)}{\bd \TYPE{RingHomo}(\psi)}{\varphi(1) = \psi(1)\psi^{-1}(1) = 1}
+	\Assume{\frac{a}{b},\frac{c}{d}}{\frac{A}{S}}
+	\Say{(2)}{ \bd \frac{A}{S}\bd \TYPE{RingHomo}(psi)\bd \ANN(B)\bd^{-1}\varphi }{ 
+		\NewLine :
+		\varphi\left(\frac{a}{b}\frac{c}{d}\right) = 
+		\varphi\left(\frac{ac}{bd}\right) = 
+		\psi(ac)\psi^{-1}(bd) =
+		\psi(a)\psi(c)\psi^{-1}(b)\psi^{-1}(d) =  
+		\psi(a)\psi^{-1}(b)\psi(c)\psi^{-1}(d) =
+		\varphi\left(\frac{a}{b}\right)\varphi\left(\frac{c}{d}\right)
+	}
+	\Conclude{(3)}{\bd \frac{A}{S} \bd \varphi \bd \TYPE{RingHomo}(\psi)\bd \ANN(B)\bd^{-1}\varphi}{
+		\NewLine :
+		\varphi\left(\frac{a}{b} + \frac{c}{d}\right) = 
+		\varphi\left(\frac{ad + bc}{bd}\right) =
+		\psi(ad + bc)\psi^{-1}(bd) =
+		\psi(ad)\psi^{-1}(bd) + \psi(bc)\psi^{-1}(bd) = \NewLine =
+		\psi(a)\psi(d)\psi^{-1}(b)\psi^{-1}(d)  + \psi(b)\psi(c)\psi^{-1}(b)\psi^{-1}(d) = 
+		\psi(a)\psi^{-1}(b) + \psi(c)\psi^{-1}(d) = 
+		\varphi\left(\frac{a}{b}\right) + \varphi\left(\frac{c}{d}\right)
+	}
+	\Derive{(2)}{\bd^{-1}\TYPE{RingHomo}}{\left[\varphi : S^{-1}A \Arrow{\RING} B \right]}
+	\Say{(3)}{\forall a \in A \. \bd \varphi\left(\frac{a}{1}\right)}{ \forall a \in A \. \varphi\left( \frac{a}{1} \right) = \psi(a) }
+	\Say{(4)}{\bd \C_A(S)(2)(3)}{ \left[ \varphi : \left(S^{-1}A, a \mapsto \frac{a}{1} \right) \Arrow{\C_A(S)} (B,\psi) \right] }
+	\Assume{\varphi'}{\left(S^{-1}A,a \mapsto \frac{a}{1}\right) \Arrow{\C_A(S)} (B,\psi)}
+	\Say{(5)}{\forall a \in A \. \bd \C_A(S)(\varphi')\left(\frac{a}{1}\right)}{ \forall a \in A \. \varphi'\left(\frac{a}{1}\right) = \psi(a)  }
+	\Say{(6)}{\forall s \in S \. \THM{RingHomoInverse}(\varphi')\frac{1}{s}(5)}{\forall s \in S \. 
+		\varphi'\left( \frac{1}{s}\right) =  (\varphi')^{-1}\left( \frac{s}{1} \right) = \psi^{-1}(s)}
+	\Conclude{()}{\bd \varphi(5)(6)}{ \varphi = \varphi'   }
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Initial}\Big(\C_A(S)\Big)}{\left[\left(S^{-1}A,a \mapsto \frac{a}{1}\right) : \TYPE{Initial}\Big(\C_A(S)\Big)\right]}
+	\EndProof
+	\\
+	\DeclareFunc{idealTransfer}{\prod A \in \ANN \. \prod S : \TYPE{MultiplivativeSubset}(A) \. \Ideal(A) \to \Ideal \Big(S^{-1}A\Big)}
+	\DefineNamedFunc{idealTransfer}{I }{S^{-1}I}{\left\{ \frac{a}{s} \in S^{-1}A | a \in I  \right\}}
+} 
+\newpage
+\section{Basic Taxonomy of Commutative Rings}
+\subsection{Commutative Noetherian Rings}
+\Page{
+	\DeclareType{Noetherian}{ ?\ANN    }
+	\DefineType{A}{Noetherian}{  \forall I : \TYPE{Nondescsnding}(\Nat,\Ideal(A))  \. \exists N \in \Nat : \forall n : \FUNC{after}(N) \.  I_N = I_n  }
+	\\
+	\DeclareType{\FGI}{\prod A \in \ANN \. ?A}
+	\DefineType{I}{\FGI}{\exists F : \TYPE{Finite}(A) : I = \FUNC{genIdeal}(F)}
+	\\
+	\Theorem{NoetherianMax}{ \forall A : \TYPE{Noetherian} \. \forall \I : ?\Ideal(A) \. \I \neq \emptyset \Rightarrow \max \I \neq \emptyset}
+	&\text{Use Zorn lemma.}\\
+	\EndProof
+	\\
+	\Theorem{NoetherianHasFinitelyGeneratedIdeals}{\forall  A : \TYPE{Noetherian}  \. \forall I : \Ideal(A) \.  \NewLine \.I : \FGI(A)}
+	\Say{\F}{\{ \FUNC{genIdeal}(F) | F : \TYPE{Finite}(I)  \}}{??I}
+	\Say{J}{\THM{NotherianMax}(\F)}{\max \F}
+	\Say{(F,1)}{\bd \F (J)}{\sum F : \TYPE{Finite}(I) \. J = \FUNC{genIdeal}(F)}
+	\Assume{(2)}{J \neq I}
+	\Say{(a,3)}{\bd \TYPE{StrictSubset}(2)}{\sum a \in I \. a \not \in J}
+	\Say{(4)}{\THM{FiniteUnion}(F,\{a\})}{ F \cup \{a\} : \TYPE{Finite}(I)}
+	\Say{(5)}{\bd^{-1}(\F)(F \cup \{a\})}{ F \cup \{a\} \in \F   }
+	\Say{(6)}{\bd \FUNC{genIdeal}(F,F \cup \{a\}) \bd F \bd }{  J \subsetneq \FUNC{genIdeal}(F \cap \{a\})}
+	\Conclude{()}{\bd \max \bd J (6)(5)}{\bot}
+	\Derive{(2)}{E(\bot)}{I = J}
+	\Conclude{()}{(2)\bd^{-1}\FGI\bd \F}{[I : \FGI(A)]}
+	\EndProof 
+}\Page{
+	\Theorem{NoetherianByFiniteGeneration}{\forall A \in \ANN \. \forall (0) : \forall I : \Ideal(A) \. I : \FGI(A) \.  \NewLine \. A : \TYPE{Noetherian}  }
+	\Assume{I}{\TYPE{Nondecreasing}(\Nat,\Ideal(A))}
+	\Say{(1)}{\THM{IdealUnion}(I)}{\bigcup^\infty_{n=1} I_n : \Ideal(A)}
+	\Say{(2)}{(1)(0)}{ \left[ \bigcup^\infty_{n=1} I_n  : \FGI(A) \right]   }
+	\Say{(F,3)}{\bd \FGI(A)\left(\bigcup^\infty_{n=1} I_n \right) }{\sum F : \TYPE{Finite}(A) \. \bigcup^\infty_{n=1} I_n = \FUNC{GenIdeal}(F)}
+	\Say{(n,a)}{\FUNC{enumerate}(F)}{\sum n \in \Nat \. n \ToSurj F}
+	\Say{(m,4)}{\bd^{-1} \FUNC{union} }{ \sum n \to \Nat \. \forall i \in n \. a_i \in I_{m_i}  }
+	\Say{M}{ \max_{i \in n } m(i)  }{ \Nat  }
+	\Say{(5)}{\bd M \bd \TYPE{NonDecreasing}(I) \bd \FUNC{genIdeal}(3)}{  \bigcap^\infty_{n=1} I_n = I_M  }
+	\Conclude{()}{ \bd \TYPE{NonDecreasing}(I) \bd\FUNC{union}(5)}{\forall n : \FUNC{after}(M) \. I_M = I_n }
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Noetherian}}{[A : \TYPE{Noetherian}]}
+	\EndProof
+	\\
+	\Theorem{NoetherianQuotient}{\forall A : \TYPE{Noetherian} \. \forall I : \Ideal(A) \. \frac{A}{I} : \TYPE{Noetherian}}
+	\Assume{J}{\Ideal\;\frac{A}{I}}
+	\Say{(1)}{ \THM{IdealPreimage}}{\Big[\pi^{-1}_I(J) : \Ideal(A) \Big]}
+	\Say{(F,2)}{\bd \TYPE{Noetherian}(1)}{\sum F : \TYPE{Finite}(A) \. \pi^{-1}_I(J) : \Ideal(A)   }
+	\Say{(3)}{ \THM{FiniteImage}(\pi_I,A) }{ [\pi_I(F) : \TYPE{Finite}]}
+	\Say{(4)}{\bd \TYPE{Surjective}\left(A,\frac{A}{I}\right)(1)(2)}{  J = \FUNC{genIdeal}(\pi_I(F))     }
+	\Conclude{()}{\bd^{-1} \FGI(3)(4)}{ \left[J : \FGI \; \frac{A}{I}\right]  }
+	\DeriveConclude{(*)}{\THM{NoetherianByFiniteGeneration}}{\left[ \frac{A}{I} : \TYPE{Noetherian} \right]}
+	\EndProof
+	\\
+	\DeclareType{Factorization}{\prod R : \ID \. \prod a \in R \.  \sum n \in \Nat \. n \to \TYPE{IrreducibleElement}(I)  }
+	\DefineType{(n,p)}{ Factorization}{ a = \prod^n_{i=1} p_i}
+}\Page{
+	\Theorem{FactorizationsExistInNoetherian}{ \forall A : \TYPE{Noetherian} \And \ID \.  \forall a \in R^\times \setminus R^* \.  \NewLine \. \exists \TYPE{Factorization}(R,a)}
+	\Assume{a}{A^\times \setminus A^*}
+	\Say{T_0}{\FUNC{root}(0)}{\TYPE{Tree}(\prod n \in \Int \. n \to \{0,1\})}
+	\Say{q^0}{\Lambda 0 \in \FUNC{leaves}(T_1) \. a}{  \FUNC{leaves}(T_0) \to A^\times \setminus A^*   }
+	\Say{U_0}{\bd q^0 \bd^{-1} \TYPE{Product}}{ \prod_{i \in \FUNC{leaves}(T_0)} q^0_i = a  }
+	\Assume{n}{\Nat}
+	\Say{T_n}{T_{n-1}}{\TYPE{Tree}\left(\prod n \in  \Int \. n \to \{0,1\}\right)}
+	\Assume{i}{\FUNC{leaves}(T_{n-1})}
+	\Assume{(1)}{ q^n_i : \TYPE{IrreducibleElement}(A)  }
+	\Say{T_n}{ \FUNC{addLeave}(T_{n},i, i \oplus 0  ) }{ \TYPE{Tree}( \prod n \in \Int \. n \to \{0,1\})  }
+	\Conclude{q^n_{i \oplus 0} }{q^{n-1}_i}{A^\times \setminus A^*}
+	\Derive{(1)}{I(\Rightarrow)}{q^{n-1}_i : \TYPE{IrreducibleElement}(A) \Rightarrow q^n_{i \oplus 0} = q^{n-1}_i}
+	\Assume{(2)}{ q^{n-1}_i \; ! \; \TYPE{IrreducibleiElement}(A)}
+	\Say{(q^n_{i \oplus 0},q^n_{i \oplus 1},(3))}{\bd^{-1} \TYPE{IrreducibleElement}(A)(2)}
+	{ \sum q^n_{i \oplus 0},q^n_{i \oplus 1} \in A^\times \setminus A^* \.  q^n_{i \oplus 0}q^n_{i \oplus 1}  = q^{n-1}_i \And \NewLine \And 
+		(q^n_{i \oplus 0},q^{n-1}_i) \; ! \; \TYPE{Associates}(A) \And
+		(q^n_{i \oplus 0},q^{n-1}_i) \; ! \; \TYPE{Associates}(A)
+	}
+	\Conclude{T_n}{\FUNC{addLeaves}(T_{n},i,(i\oplus0,i\oplus1))}{\TYPE{Tree}(\prod n \in \Int \, n \to \{0,1\})}
+	\DeriveConclude{(2)}{I(\Rightarrow)}{ q^{n-1}_{i}  \Rightarrow q^{n-1}_{i} = q^n_{i \oplus 0}q^{n}_{i \oplus 1}  }
+	\Derive{q^n}{I\left(\sum\right)}{ \sum q^n : \FUNC{leaves}(T_n) \to A^\times \setminus A^* \. \forall i \in \FUNC{leaves}(T_{n-1}) \. \ldots  }
+	\Conclude{U_n}{\bd q^n\bd U_{n-1}}{a =  \prod_{i : \FUNC{leaves}(T_n)}  q^n_i  }
+	\Derive{(T,q,U)}{ I\left(\sum\right) }{ \sum T : \TYPE{Tree}\left( \prod n \in \Nat \. n \to \{0,1\} \right) \. q : \prod n \in \Nat \. \FUNC{layer}(n,T) \to A^\times \setminus A^* \.   
+		\NewLine \. \forall n \in \Nat \. a = \prod_{i \in \FUNC{layer}(n,T)} q^n_{i} }
+	\Say{(N,(1))}{\bd \UFD(A)\bd(T,q,U)}{\sum N \in \Nat : \forall n : \FUNC{after}(N) \. \NewLine \.  |\FUNC{layer}(n,A)| = |\FUNC{layer}(N,A)|}
+	\Conclude{(*)}{\bd^{-1}\TYPE{Factorization}\bd(T,q,U)\bd(N,(1))}{[q^N : \TYPE{Factorization}(a)]}
+	\EndProof
+}\Page{
+	\Theorem{NoetherianContainsPrimeProduct}{ \forall A : \TYPE{Noetherian} \. \forall I : \Ideal(A) \. \NewLine \. \exists n \in \Nat : \exists P : n \to \TYPE{Prime}(A) \.  \prod^n_{i=1} P_i \subset I   }
+	\Say{\I}{\left\{ I : \Ideal(A) : \forall n \in \Nat \. \forall P : n \to \TYPE{Prime}(A) \.  \   \prod^n_{i=1} P_i \neq\subset  I  \right\}}{?\Ideal(A)}
+	\Assume{(1)}{\I \neq \emptyset}
+	\Say{J}{\THM{NotherianMax}(A)(1)}{\max \I}
+	\Say{(2)}{ \bd \I(J)  }{  [J \IsNot \TYPE{Prime}(A)]  }
+	\Say{(a,b.3)}{ \bd \TYPE{Prime}(2) }{\sum a,b \in J^\c : ab \in J}
+	\Say{I}{  J + \FUNC{genIdeal}\{a\} }{\Ideal(A)}
+	\Say{(4)}{\bd I(3)}{J \subsetneq I}
+	\Say{(n,P,5)}{\bd J \bd \I(4) }{ \sum n \in \Nat \. \sum P : n \to \TYPE{Prime}(A) \.  \prod^n_{i=1} P_i \subset I   }
+	\Say{I'}{  J + \FUNC{genIdeal}\{b\} }{\Ideal(A)}
+	\Say{(6)}{\bd I'(3)}{J \subsetneq I'}
+	\Say{(m,P',7)}{\bd J \bd \I(6) }{ \sum m \in \Nat \. \sum P' : m \to \TYPE{Prime}(A) \.  \prod^m_{i=1} P_i' \subset I'   }
+	\Say{(8)}{\bd I \bd I (3) \bd \Ideal(J) }{ II' = J^2 + aJ + bJ + abA  = J }
+	\Say{(9)}{ (5)(7)  }{ \prod^n_{i=1} P_i \prod^m_{i=1} P'_i \subset II' = J}
+	\Conclude{()}{\bd \I(J)(9)}{\bot}
+	\DeriveConclude{(*)}{E(\bot)}{\I = \emptyset}
+	\EndProof
+}
+\newpage
+\subsection{Unique Factorization Domains}
+\Page{
+	\DeclareType{EqFactorization}{\prod R :  \ID \. \prod a \in R \. ?\TYPE{Factorization}^2(R,a)}
+	\DefineNamedType{\Big((n,p),(m,q)\Big)}{EqFactorization}{(n,p) \cong (m,q)}{ n = m \And \exists \sigma \in S^n : \. 
+		\NewLine \. \forall i \in n \. (p_i,q_{\sigma(i)}) : \TYPE{Associates}(R)}
+	\\
+	\DeclareType{UniqueFactorizationDomain}{?\ID}
+	\DefineType{R}{\UFD}{\forall a \in R^\times \setminus R^\times \. \exists \TYPE{Factorization}(a,n) \And  \NewLine \And \forall (n,p),(m,q) : \TYPE{Factorization}(R,a) \. (n,p) \cong (m,q) }
+	\\
+	\DeclareFunc{factorization}{\prod R : \UFD \. \prod a \in R^\times \setminus R^*  \. \TYPE{Factorization}(R,a)}
+	\DefineNamedFunc{factorization}{   }{\Big(n(a),p(a)\Big)}{ \bd^{-1} \TYPE{UFD} }
+	\\
+	\DeclareFunc{length}{ \prod R : \UFD \. R \to \Int }
+	\DefineNamedFunc{length}{a}{L(a)}{ \If a == 0 \Then -1 \Else \; \If a \in R^* \Then 0 \Else n(a)}
+	\\
+	\Theorem{IrreducibleIsPrimeInUFD}{ \forall R : \UFD \.  \forall a : \TYPE{Irreducible}(R) \. a : \TYPE{Prime} }
+	\Assume{x,y}{R}
+	\Assume{(1)}{ a | xy  }
+	\Say{(v,2)}{\bd \TYPE{Divides}(1)}{ \sum v \in R \. xy = av}
+	\Say{(3)}{\bd^{-1} \TYPE{Factorization}}{ \Big[ (n(v) + 1, p(v) \oplus a) : \TYPE{Factorization}(xy) \Big] }
+	\Say{(4)}{\bd^{-1} \TYPE{Factorization}}{ \Big[(n(x) + n(y), p(x) \oplus p(y)) : \TYPE{Factorization}(xy) \Big]  }
+	\Say{(5)}{\bd \UFD(R)(3)(4)  }{  n(v) + 1 = n(x) + n(y) \And \ldots}
+	\Say{(6)}{ (5)(n + 1)  }{  \exists i \in n(x) : (a,p_i(x)) : \TYPE{Associates} \Big| \exists j \in n(y) : (a,p_j(y)) : \TYPE{Associates}  }
+	\Conclude{()}{ \bd^{-1} \TYPE{Divisible} \bd \TYPE{Associates}(6)  }{ a | x \Big| a | y  }
+	\DeriveConclude{()}{ \bd^{-1} \TYPE{Prime} }{ \Big[ a : \TYPE{Prime}(R) \Big]}
+	\EndProof
+}
+\Page{
+	\DeclareType{CommonDivisor}{\prod R  : \ID \. prod n \in \Nat \. \prod a : n \to R \. ?R}
+	\DefineType{x}{CommonDivisor}{\forall i \in n \. x | a_i} 
+	\\
+	\DeclareType{GreatestCommonDivisor}{ \prod R : \ID \. \prod n \in \Nat \. \prod a : n \to R \. ?\TYPE{CommonDivisor}(R,n,a) }
+	\DefineNamedType{x}{GreatestCommonDivisor}{ x : \TYPE{GCD}(R,n,a) }{\forall y : \TYPE{CommonDivisor}(R,n,a) \. y | x}
+	\\
+	\DeclareFunc{greatestCommonDivisor}{ \prod R : \UFD \. \prod a,b \in R \. \TYPE{GCD}\Big(R,2,[a,b]\Big)}
+	\DefineNamedFunc{greatestCommonDivisor}{ }{ \gcd(a,b) }{  \If a == 0 \Then b \Else \; \If b == 0 \Then a \Else \NewLine     
+	    \If a \in R^* \Then a \Else \; \If b \in R^* \Then b \Else  \NewLine  	
+	    \If I = \emptyset \Then 1  \Else  p_i \gcd \left(  \prod^{n(a)}_{k=1, k \neq i} p_k(a), \prod^{n(b)}{k=1,k\neq j} p_k(a) \right)
+	    \NewLine   \where \quad I = \bigg\{  (i,j) \in n(a) \times n(b) : \Big(p_i(a),p_j(b)\Big)  : \TYPE{Associates}  \bigg\} 
+	    \NewLine \where \quad (i,j) = \min I         
+	}
+	\\
+	\DeclareFunc{greatestCommonDivisor2}{  \NewLine :: \prod R : \UFD \. \prod n \in \Nat \. \prod a : n \to R \. \TYPE{GCD}\Big(R,n,a)\Big)}
+	\DefineNamedFunc{greatestCommonDivisor2}{}{\gcd(n,a)}{ \If n == 1 \Then a   \Else \; \If n == 2 \Then \gcd(a_1,a_2)  \NewLine \Else \Else \gcd(a_n, \gcd\Big(n-1, a_{|n-1}) \Big)  }
+	\\
+	\DeclareType{CommonDenominator}{\prod R  : \ID \. \prod n \in \Nat \. \prod a : n \to R \. ?R}
+	\DefineType{x}{CommonDenominator}{\forall i \in n \. a_i | x} 
+	\\
+	\DeclareType{LeastCommonDenominator}{  \NewLine :: \prod R : \ID \. \prod n \in \Nat \. \prod a : n \to R \. ?\TYPE{CommonDenominator}(R,n,a) }
+	\DefineNamedType{x}{GreatestCommonDenominator}{ x : \TYPE{LCD}(R,n,a) }{\forall y : \TYPE{CommonDenominator}(R,n,a) \. x | y}
+	\\
+	\DeclareFunc{leastCommonDenominator}{ \prod R : \UFD \. \prod a,b \in R \. \TYPE{LCD}\Big(R,2,[a,b]\Big)}
+	\DefineNamedFunc{leastCommonDenominator}{ }{ \lcd(a,b) }{  \If a == 0 \Then 0 \Else \; \If b == 0 \Then 0 \Else \frac{ab}{\gcd(a,b)} }
+	\\
+	\DeclareFunc{leastCommonDenominator2}{ \NewLine :: \prod R : \UFD \. \prod n \in \Nat \. \prod a : n \to R \. \TYPE{LCD}\Big(R,n,a)\Big)}
+	\DefineNamedFunc{leastCommonDivisor2}{}{\gcd(n,a)}{ \If n == 1 \Then a   \Else \; \If n == 2 \Then \lcd(a_1,a_2) \Else \NewLine \Else \lcd(a_n, \lcd\Big(n-1, a_{|n-1}) \Big)  }                      
+}
+\newpage
+\subsection{Principle Ideal Domains}
+\Page{
+	\DeclareFunc{principle}{\prod A \in \ANN \. A \to \Ideal(A)}
+	\DefineNamedFunc{principle}{a}{\langle a \rangle}{aA}
+	\\
+	\DeclareType{Principle}{\prod A \in \ANN \. ?\Ideal(A)}
+	\DefineType{I}{Principle }{\exists a \in A \. I = \langle a \rangle}
+	\\
+	\DeclareType{\PID}{?\ID}
+	\DefineType{A}{\PID}{\forall I : \TYPE{Ideal}(A) \. I : \TYPE{Principle}(A)  \.   }     
+	\\
+	\Theorem{PrincipalIdealsOfIrreduciblesAreMaximal}{\forall A  : \PID \. \forall p : \TYPE{Irreducible} \. \langle p \rangle : \TYPE{MaximalIdeal}(A)   }
+	\Assume{a}{(R^\times \setminus R^*)}
+	\Assume{(-1)}{a \not \in \langle p \rangle}
+	\Assume{(0)}{\langle a \rangle + \langle p \rangle \neq A}
+	\Say{(1)}{ \bd a \bd^{-1} \FUNC{genIdeal} \bd \TYPE{NotIn}(-1)}{\langle p \rangle\subsetneq \FUNC{genIdeal}\{ a,p \} }
+	\Say{(b,2)}{ \bd \PID(A)\Big(\FUNC{genIdeal}\{a,p\}\Big) }{ \sum d \in A \. \langle b\rangle = \FUNC{genIdeal}\{a,p\} }
+	\Say{ (3)  }{  (2)(1)   }{ \langle p \rangle \subsetneq \langle b \rangle }
+	\Say{(4)}{\bd^2 \FUNC{principle}(p)(b)(3)}{  b | p }
+	\Say{(5)}{\bd \TYPE{IrreducibleElement}(A)(p)(4)\bd \TYPE{Associates}(A)(0)}{ p | b }
+	\Say{(6)}{\FUNC{principle}(5)}{b \in \langle p \rangle}
+	\Say{(7)}{ (2)(6) }{ a   \in \langle p \rangle }
+	\Conclude{()}{\bd a (7)}{\bot}
+	\Derive{(1)}{I(\forall)I(\rightarrow)}{ \forall a \in R^\times \setminus R^* \. a \not \in \langle p \rangle \Rightarrow \langle a \rangle + \langle p \rangle = A}
+	\Conclude{p}{\bd^{-1}\TYPE{MaximalIdeal}(A)}{[p : \TYPE{MaximalIdeal}(A)]}
+	\EndProof
+	\\
+	\Theorem{IrreduciblesArePrimeInPID}{ \forall A : \PID  \. \forall p : \TYPE{IrreducebleElement}(A) \. p : \TYPE{PrimeElement}(A)}
+	\Assume{x,y}{A}
+	\Assume{(1)}{a | xy}
+	\Assume{(2)}{a \not | y}
+	\Say{(3)}{ \bd \TYPE{MaximalIdeal} \THM{PrincipalIdealsOfIreduciblesAreMaximal}(A)(a)(y)(2)}{\langle  a  \rangle + \langle y \rangle = A }
+	\Say{(u,v,4)}{\bd \FUNC{principle}(3)}{\sum u,v \in A : ua + vy = 1}
+	\Say{(5)}{x(4)}{  uxa + vxy = x }
+	\Say{(6)}{\bd \FUNC{pricnciple}}{uxa \in \langle a \rangle}
+	\Say{(7)}{ \bd \TYPE{Ideal}(A)\big(\langle a \rangle\big)   }{  uxa \in \langle a \rangle  }
+	\Say{(9)}{ \bd \TYPE{Subgroup}(A)\big( \langle a \rangle \big)(5)(6)(7)}{x \in \langle a \rangle}
+	\Conclude{()}{\bd^{-1} \TYPE{principle}(9)}{a | x}
+	\EndProof
+}\Page{
+	\Theorem{PIDIsUFD}{ \forall A : \PID \.  A : \UFD }
+	\Say{(1)}{\bd \PID(A) \bd^{-1} \UFD(A)}{[A : \TYPE{Noetherian}]}
+	\Assume{a}{A^\times \setminus A^*}
+	\Say{(n,p)}{\THM{FactorizationExistsInNoetherian}(A,a))}{ \TYPE{Factorization}(A,a)}
+	\Assume{(m,q)}{\TYPE{Factorization}(A,a)}
+	\Conclude{()}{\bd^{-1}\TYPE{EqFactorizations}\bd \TYPE{Prime}\THM{IrreducibleArePrimeInUFD}(n,p)\bd^2 \TYPE{Factorization}(n,p)(m,q)}{ 
+		\NewLine : (n,p) \cong (m,q) }
+	\DeriveConclude{()}{\bd^{-1} \UFD  }{ [A : \UFD] }
+	\EndProof
+	\\
+	\DeclareType{DedikindHasseValuation}{\forall A : \ID \. A  \to \Int_+ }
+	\DefineType{v}{DedikindHasseValuation}{\forall a,b \in A \. a | b  \Big | \exists r,u,v \in A \. v(r) < v(a) \And ub = va + r} 
+	\\
+	\Theorem{DHVimpliesPID}{\forall A : \ID \.  \forall v : \TYPE{DedikindHasseValuation}(A) \. A : \PID}
+	\Assume{I}{\Ideal(A)}
+	\Assume{(1)}{I \neq \{ 0 \}}
+	\Say{a}{\arg \min_{a \in I \cap A^\times} v(a)}{I}
+	\Assume{b}{I}
+	\Assume{(2)}{ a \not | b}
+	\Say{(r,s,3)}{ \bd \TYPE{DedikindHasseValuation}(b,a)  }{ \sum r,u,v \in A \. ub = va + r \And v(r) < v(a)  }
+	\Say{(4)}{\bd \Ideal(A)(I)(3)_1}{ r \in I}
+	\Conclude{(5)}{ (4)(3)_2\bd a }{  \bot   }
+	\Derive{(2)}{I(\forall)E(\bot)}{ \forall b \in I \.  a | b}
+	\Say{(3)}{\bd \Ideal(A)\langle a \rangle(2)}{ I = \langle a \rangle}
+	\Conclude{()}{\bd^{-1} \TYPE{Principle}(I) }{ [I : \TYPE{Principle}(A)]}
+	\DeriveConclude{(*)}{\bd^{-1}\PID}{[A : \PID]}
+	\EndProof
+	\\
+	\Theorem{PIDAdmitsDHV}{\forall A : \PID \. \exists v : \TYPE{DedikindHasseValuation}(A)}
+	\NoProof
+	\\
+	\Theorem{PrincipleProduct}{\forall A \in \ANN \. \forall a,b \in A \.  \langle a \rangle \langle b \rangle = \langle ab \rangle}
+	\NoProof
+}
+\newpage
+\subsection{Euclidean Rings}
+\Page{
+	\DeclareType{EuclideanValuation}{\prod A : \ID \. A \to \Int_+}
+	\DefineType{v}{EuclideanValuation}{\forall a \in R \. \forall b \in R^\times \. \exists s,r \in R :  a = sb + r \And v(r) < v(b)} 
+	\\
+	\Conclude{\ER}{ \sum  A : \ID \. \TYPE{EuclideanValuation}}{\Type}
+	\\
+	\DeclareFunc{euclideanRingAsRing}{ \ER \to \Ring }
+	\DefineNamedFunc{euclideanRingAsRing}{A,v}{\FUNC{implicit}}{A}
+	\\
+	\DeclareFunc{euclideanValuation}{ \prod (A,v) : \ER \. \TYPE{EuclideanValuation}(A)}
+	\DefineNamedFunc{euclideanValuation}{a}{|a|}{v(a)}
+	\\
+	\Theorem{ERIsPID}{\forall A : \ER \. A : \PID}
+	\Assume{I}{\Ideal(A)}
+	\Assume{(1)}{I \neq \{ 0 \}}
+	\Say{a}{\arg \min_{a \in I \cap A^\times} |a|}{I}
+	\Assume{b}{I}
+	\Assume{(2)}{ a \not | b}
+	\Say{(r,s,3)}{ \bd \ER(b,a)  }{ \sum r,s \in A \. b = as + r \And |r| < |a|  }
+	\Say{(4)}{\bd \Ideal(A)(I)(3)_1}{ r \in I}
+	\Conclude{(5)}{ (4)(3)_2\bd a }{  \bot   }
+	\Derive{(2)}{I(\forall)E(\bot)}{ \forall b \in I \.  a | b}
+	\Say{(3)}{\bd \Ideal(A)\langle a \rangle(2)}{ I = \langle a \rangle}
+	\Conclude{()}{\bd^{-1} \TYPE{Principle}(I) }{ [I : \TYPE{Principle}(A)]}
+	\DeriveConclude{(*)}{\bd^{-1}\PID}{[A : \PID]}
+	\EndProof
+	\\
+	\DeclareFunc{euclideanDivisionAlgorithm}{\prod A : \ER \. A \times A \to \FUNC{List}(A \times A \times A)}
+	\DefineNamedFunc{euclideanDivisionAlgorithm}{ a,0 }{ \FUNC{eda}(a,0)}{[\;]}
+	\DefineNamedFunc{euclideanDivisionAlgotithm}{a,b}{\FUNC{eda}(a,b)}{  \FUNC{eda}(b,r) : (b,s,r)  \NewLine \where \quad (s,r) = \bd \ER(A)(a,b) } 
+	\\
+	\Theorem{EDATerminates}{ \forall A : \ER \. \forall a,b \in A \. \FUNC{len} \; \FUNC{eda}(a,b) < \infty  }
+	&  \text{ By definition of Euclidean Valuation and Well-orderedness of $\Int_+$. }  \\
+	\EndProof
+}\Page{
+	\Theorem{DivisionWithReminderLemma}{ \prod  A \in \ANN \. \forall a,b,u,r \in A \.  \NewLine \. a = ub + r \Rightarrow \FUNC{genIdeal}\{a,b\} = \FUNC{genIdeal}\{b,r\}  }
+	\NoProof
+	\\
+	\Theorem{GCDByDivisionWithReminder}{ \prod A : \UFD \. \forall a,b,u,r \in A \. \NewLine \.  a = ub + r \Rightarrow \Big( \gcd(a,b) , \gcd(r,b) \Big) : \TYPE{Associates}(A)  }
+	\NoProof
+	\\
+	\Theorem{EDADelieversGCD}{ \forall A : \ER \. \forall a,b \in R^\times  \. \gcd(a,b) =  \FUNC{first}\;\FUNC{head}\;\FUNC{eda}(a,b)  }
+	\NoProof
+	\\
+	\DeclareType{Normlike}{\prod A  : \ID \. ?\TYPE{EucleadianValuation}(A)}
+	\DefineType{v}{Normlike}{ \forall a,b \in A^\times \. v(ab) \ge v(b)}   
+	\\
+	\Theorem{ERAdmitsNormlike}{\forall A : \ER \. \exists \TYPE{Normlike}(A)}
+	& \text{Set $v(b) = \min \Big\{  |ab| \; \Big| a \in A^\times   \Big\}$} \\
+	\EndProof
+	\\
+	\DeclareType{DiscreteValuation}{\prod k : \TYPE{Field} \. k^* \Arrow{\GRP} \Int}
+	\DefineType{v}{DiscreteValuation}{ \forall a,b \in k^* \. a + b \in k^* \Rightarrow v(a + b) \ge \min\Big( v(a),v(b)\Big)  }
+	\\
+	\DeclareFunc{\DVR}{\prod k : \TYPE{Field} \. \TYPE{DiscreteValuation}(k) \to \ID }
+	\DefineNamedFunc{\DVR}{v}{\Int_k(v)}{\Big( \{ a,b \in k | v(k) \ge 0  \} \cup \{0\}, +_k,\cdot_k\Big)}
+	\\
+	\Theorem{DVRIsER}{\forall k : \TYPE{Field} \. \forall v : \TYPE{DiscreteValuation}(k) \. \Int_k(v) : \ER}
+	\NoProof
+}
+\newpage
+\subsection{Graded Rings}
+\Page{
+	\DeclareType{GradedAbelean}{ ? \sum G \in \ABEL \. \sum \Delta \in \SET \. \Delta \to \TYPE{Subgroup}(G)}
+	\DefineType{(G,\Delta,H)}{GradedAbelean}{G = \bigoplus_{\delta \in \Delta} H_\delta}
+	\\
+	\DeclareType{Homogeneous}{ \prod (G,\Delta,H) : \GA \. ?G }
+	\DefineType{g}{Homogeneous}{\exists \delta \in \Delta \. g \in H_\delta}
+	\\
+	\DeclareFunc{homogeneousElement}{\prod (G,\Delta,H) : \GA \. G \to \Delta \to \TYPE{Homogeneous}(G,\Delta,H) }
+	\DefineNamedFunc{homogeneousElement}{g,\delta}{g_\delta}{h_\delta  \quad \where \quad h = \bd \TYPE{DirectSum}\Big(\bd \GA(G,\Delta,H)\Big)(g)}
+	\\
+	\DeclareFunc{trivialGraduation}{\prod \Delta \in \SET \. \prod G \in \ABEL \. \Delta \to \GA(G,\Delta)}
+	\DefineFunc{trivialGraduation}{\delta}{\Lambda \alpha \in \delta \. \If \alpha == \delta \Then G \Else \{0\}}
+	\\
+	\DeclareType{Multigraduaion}{? \sum G \in \ABEL \. \sum \I \in \SET \. \Delta  : \I \to \SET \. \prod_{i \in \I} \Delta_i \to \TYPE{Subgroup}(G) }
+	\DefineType{(G,\I,\Delta,H)}{Multigrading}{\left(G, \prod_{i \in I} \right) : \GA}
+	\\
+	\DeclareFunc{partialGraduation}{ \prod (G,\I,\Delta,H) : \TYPE{Multigrading} \. \prod \J \subset \I \. \TYPE{Multigrading} }
+	\DefineFunc{partialGraduation}{G,\I,\Delta,H,\J}{
+		\left( 
+			G,
+			\J, 
+			\lambda \delta' \in \prod_{j \in \J} \Delta_j \. 
+			\bigoplus_{\delta \in \prod_{i \in \I \setminus \J} \Delta_{ i} }  H_{\delta \oplus_{\I} \delta'}   
+		\right)
+	}
+	\\
+	\DeclareFunc{derivedGraduation}{\prod G \in \ABEL \. \prod \Delta,\Delta' \in \SET \. \GA(G,\Delta) \to (\Delta \to \Delta') \to  \GA(G,\Delta') }
+	\DefineFunc{derivedGraduation}{ G,\Delta,H, f}{ \left(G,\Delta', \Lambda \delta' \in \Delta' \.  \bigoplus_{\delta \in f^{-1}\{\delta'\}} H_\delta  \right)  }
+	\\
+	\DeclareFunc{totalGraduation}{ 
+		\prod G \in \ABEL \. 
+		\prod \I \in \Set\. 
+		\prod \Delta : \TYPE{CommutativeMonoid} \. \NewLine \.  
+		\GA( G, \Delta^{\oplus I}) \to \GA(G,\Delta) 
+	}
+	\DefineFunc{totalGraduation}{G,\Delta^{\oplus I}, H}{\FUNC{derivedGraduation}
+		\left(G,\Delta^{\oplus I},H,\Lambda \delta \in \Delta^{\oplus I} \. \sum_{i \in I} \delta_i  \right)}
+	\\
+	\DeclareType{GradedRing}{? \sum R : \Ring \. \sum \Delta : \TYPE{CommutativeMonoid} \.  \Delta \to \TYPE{Subgroup}(R) }
+	\DefineType{(R ,\Delta,H)}{GradedRing}{ (R,\Delta,H) : \GA \And \forall a,b \in M \. H_a H_b \subset H_{a+b}  }
+}
+\newpage
+\Page{
+	\Theorem{TheZerothHomogeneousPart}{ \forall (R,\Delta,H) : \TYPE{GraderRing} \. \forall  [0] : (\Delta : \TYPE{Cancelable})    \.  H_0 \subset_{\RING} R }
+	\Assume{a,b}{H_0}
+	\Conclude{[(a,b).*]}{\bd \TYPE{GradedRing}(a,b)}{ab \in H_0}
+	\Derive{[1]}{I(\forall)}{\forall a,b \in H_0 \. ab \in H_0}
+	\Say{\Big(n, \delta, h,[2] \Big)}{\bd \GA(e)}{\sum n \in \Nat \. \sum \delta : n \ToInj \Delta \. h : \prod i \in n \. H_{\delta_i} \. e = \sum^n_{i=1} h_i }
+	\Assume{\alpha}{\Delta}
+	\Assume{x}{H_\delta}
+	\Say{[3]}{\bd e [2]}{x = xe = xh_i}
+	\Say{(i,[4])}{\bd \TYPE{GradedRing}[3]}{ \sum i \in n \. xh_i = x : \forall j \in n \setminus i \. xh_j = 0}
+	\Conclude{[\delta.*]}{[3]\bd \TYPE{Cancelable}[0]}{  \delta^{-1}(0) = i = 0}
+	\Derive{[3]}{I(\forall)}{ \forall \delta \in \Delta \. \forall x \in H_\delta \.  xh_{\delta^{-1}}(1) =  x}
+	\Say{[4]}{\bd \TYPE{GradedRing}(R,\Delta,H)[1]}{   \forall x \in A \. xh_{\delta^{-1}(1)} = x }
+	\Say{[5]}{\bd^{-1} \TYPE{Identity}[4]}{  e = h_{\delta^{-1}(1)}  \in H_{\delta^{-1}(q)}   }
+	\Say{[6]}{[0][5]}{e \in H_0}
+	\Conclude{[*]}{\bd^{-1} \Ring [6][1] }{ H_0 \subset_{\RING} R  }
+	\EndProof
+	\\
+	\DeclareFunc{CategoryOfGradedRings}{ \TYPE{CommutativeRing} \to \CAT  }
+	\DefineNamedFunc{CategoryOfGradedRings}{\Delta}{ \GRING(\Delta) }
+	{   
+		\Big(  \{ 
+			(R,\Delta,H) : \TYPE{GradedRings} \} ,  \NewLine,
+			(R,\Delta,H), (S,\Delta,G) \mapsto  \{  f : R \Arrow{\RING} S : \forall \delta \in \Delta \. f(H_\delta) \subset G_\delta \}      
+			,\circ,
+			\id
+		\Big)
+	}
+	\\
+	\DeclareType{GradedSubring}{ \GRING(\Delta) \to ?\GRING(\Delta)  }
+	\DefineNamedType{(R',\Delta, H')}{GradedSubring}{ (R',H') \subset_{\RING} (R,H)   }{\forall \delta \in \Delta \. H'_\delta \subset H_\delta}
+	\\
+	\Theorem{HomogeneousCentralizersAreGradedSubring}{
+		\forall (R,H) : \GRING(\Delta) \. 
+		\forall \delta \in \Delta \. \NewLine \. 
+		\forall [0] : (\Delta : \TYPE{Cancelable}) \.
+		\forall x \in H_\delta \.  
+		\exists V : \delta \to \TYPE{Subgroup}\Big(Z(x)\Big) \.
+		\big(Z(x), V\big) : \subset_{\GRING} (R,H)
+	}
+	\Say{V}{\Lambda \delta \in \Delta \. H_\delta \cap Z(x)}{\TYPE{Subgroup}(R)}
+	\Assume{y}{Z(x)}
+	\Say{[1]}{\bd Z(x) }{   0 = yx - xy = \sum_{\delta \in \Delta} (y_\delta x - x y_\delta)   }
+	\Say{[2]}{ \bd \TYPE{GradedRing}[0][1] }{ \forall \delta \in \Delta \. y_\delta x - x y_\delta = 0   }
+	\Conclude{[y.*]}{\bd^{-1} Z(x)[3]}{ \forall \delta \in \Delta \. V_\delta}
+	\Derive{[1] }{ \bd^{-1} \TYPE{InnerDirectSum}}{ Z(x)  = \bigoplus_{\delta \in \Delta} V_\delta }
+	\Conclude{[*]}{\bd Z(x) \bd^{-1}\TYPE{GradedSubring}}{ \big(Z(x),V\big) : \subset_{\GRING} (R,H) }
+	\EndProof
+}
+\Page{
+	\Theorem{GradedCentralizersAreGradedSubring}{
+		\forall (R,H) : \GRING(\Delta) \.
+		\forall [0] : (\Delta : \TYPE{Cancelable}) \. \NewLine \.
+		\forall (R',H') \subset_{\GRING(\Delta)} (R,H) \. 
+		\Big(Z(R'),Z(R') \cap H \Big) \subset_{\GRING(\Delta)} (R,H)   
+	}
+	\NoProof
+	\\
+	\DeclareType{GradedLeftIdeal}{ \prod (R,H) \in \GRING(\Delta) \. ?\TYPE{LeftIdeal}(R)}
+	\DefineType{I}{GradedLeftIdeal}{ \forall x \in I \. \forall \delta \in \Delta \. x_\delta \in I}
+	\\
+	\DeclareType{GradedRightIdeal}{ \prod (R,H) \in \GRING(\Delta) \. ?\TYPE{RightIdeal}(R)}
+	\DefineType{I}{GradedLeftIdeal}{ \forall x \in I \. \forall \delta \in \Delta \. x_\delta \in I}
+	\\
+	\DeclareType{GradedTwoSidedIdeal}{ \prod (R,H) \in \GRING(\Delta) \. ?\TYPE{RightIdeal}(R)}
+	\DefineType{I}{GradedTwoSidedIdeal}{\forall x \in I \. \forall \delta \in \Delta \. x_\delta \in I}
+}
+
+\section{Polynomials Over a Ring}
+\subsection{Algebra of Formal Polinomials}
+\Page{
+	\DeclareFunc{monoidRing}{\RING \times \TYPE{Monoid} \to \RING}
+	\DefineNamedFunc{monoidRing}{R,M}{R[M]}
+	{\bigg( \Big\{ f : M \to R : \big|f^{-1}\{0\}^\c\big| < \infty \Big\}, +_{M \to R}, (p,q) \mapsto \Lambda m \in M \. \sum_{ab = m} p(a)p(b)   \bigg) }
+	\Assume{f,g,h}{R[M]}
+	\Assume{m}{M}
+	\Conclude{()_1}{\bd \TYPE{Monoid}(M)\bd \RING(R)}{ \Big((fg)h\Big)(m) = \sum_{ab = m} \sum_{cd = a} f(c)g(d)h(b) = \sum_{cdb = m} f(c)g(d)h(b) = 
+		\NewLine = \sum_{ab = m} \sum_{cd = b } f(a)g(c)h(d) = \big((fg)h\big)(m) }
+	\Conclude{()_2}{\bd \TYPE{Ring}(R)}{  f(g + h)(m) = \sum_{ab = m} f(a)\Big(g(b) + h(b) \Big) = \sum_{ab = m} f(a)g(b) + \sum_{ab = m} f(a)h(b) = \Big( fg + fh \Big)(m)   } 
+	\Conclude{()_3}{\bd \TYPE{Ring}(R)}{  (g + h)f(m) = \sum_{ab = m} \Big(g(b) + h(b) \Big)f(a) = \sum_{ab = m} g(b)f(a) + \sum_{ab = m} h(b)f(a) = \Big( g + h \Big)f(m)   } 
+	\Derive{(1)}{I(=,\to)\bd^{-1}\TYPE{Associative}\bd^{-1}\TYPE{Distributive}}{\bigg[(\cdot_{R[M]}) : \TYPE{Associative} \And \TYPE{Distributive}\Big( R[M]\Big) \bigg]}
+	\Say{u}{ \Lambda m \in M \. \If m == e \Then 1 \Else 0    }{ R[M]}
+	\Assume{f}{R[M]}
+	\Assume{m}{M}
+	\Conclude{()_1}{ \bd u }{uf(m) = \sum_{ab=m} u(a)f(b) = f(m) }
+	\Conclude{()_2}{\bd u}{ fu(m) = \sum_{ab = m} f(a)u(b) = f(m)}
+	\Derive{(2)}{I(=,\to)\bd^{-1}\TYPE{Unity}}{\Big[ u : \TYPE{Unity}\Big( R[M] \Big) \Big]}
+	\Conclude{(3)}{\bd^{-1}\RING \; R[M]}{R[M] \in \RING}
+	\EndProof
+	\\
+	\Theorem{CommutativeMonoidRing}{\forall A \in \ANN \. \forall M : \TYPE{CommutativeMonoid} \. A[M] \in \ANN }
+	\Assume{f,g}{A[M]}
+	\Assume{m}{M}
+	\Conclude{()}{\bd \TYPE{CommutativeMonoid}(M)\bd \ANN(A)}{fg(m) = \sum_{ab = m} f(a)g(b) = \sum_{ba=m} f(a)g(b)  = \sum_{ba=m} g(b)f(a) = gf(m) }
+	\DeriveConclude{(*)}{\bd\bd^{-1}\ANN}{A[M] \in \ANN}
+	\\
+	\DeclareFunc{polinomial}{\prod R \in \RING \. \left( \prod n \in \Int_0 \. n \to R\right) \to R[\Int_+]}
+	\DefineNamedFunc{polinomial}{a}{\sum^n_{i=0} a_i x_i }{\Lambda i \in \Int_+ \. \If i \in n \Then  a_i \Else 0}
+	\\
+	\DeclareFunc{eval}{ R[\Int_+] \to R \to R  }
+	\DefineNamedFunc{eval}{f,x}{f(x)}{\sum^n_{i=0} f_ix^i}
+}
+\Page{
+	\DeclareFunc{degree}{\prod R \in \RING \. R[\Int_+] \to \Int_+ \cap \{-\infty\} }
+	\DefineNamedFunc{degree}{0}{\deg 0}{-\infty}
+	\DefineNamedFunc{degree}{f}{\deg f}{\max \{ i \in \Int_+ : f_i \neq 0  \}}
+	\\
+	\Theorem{DegreeHomo}{\forall R : \ID \. \forall f,g \in R[\Int_+] \. \deg fg = (\deg f) + (\deg g) }
+	\Assume{(0)}{f \neq 0 \neq g}
+	\Say{n}{\deg f}{\Int_+}
+	\Say{m}{\deg g}{\Int_+}
+	\Assume{k,l}{\Int_+}
+	\Assume{(1)}{k + l = m + n}
+	\Assume{(2)}{ k < m}
+	\Say{(3)}{(1)(2)}{ m + n = k + l < m + l}
+	\Conclude{()}{(3) - m}{n < l}
+	\Assume{(2)}{ l < n}
+	\Say{(3)}{(1)(2)}{ m + n = k + l < k + n}
+	\Conclude{()}{(3) - m}{m < k}
+	\Derive{(1)}{I(\forall)}{\forall k,l \in \Int_+ \. k + l = m + n \Rightarrow (k < m \Rightarrow l > n) \And (l < n \Rightarrow k > m)}
+	\Say{(2)}{\bd R[\Int_+](1)\bd n \bd m \bd \deg \bd \ID(R)}{(fg)_n = f_ng_m \neq 0  }
+	\Assume{N}{\Int_+}
+	\Assume{(3)}{N > n + m}
+	\Assume{k,l}{\Int_+}
+	\Assume{(4)}{N = k + l}
+	\Assume{(5)}{k \le n}
+	\Say{(6)}{(4)(5)}{k + l > n + m > k + m}
+	\Say{(7)}{(6) - K }{l > m}
+	\Conclude{(8)}{\bd \deg (7)}{f_kg_l = 0 }
+	\Assume{(6)}{k > n}
+	\Conclude{(9)}{\bd \deg (6)}{f_kg_l = 0}
+	\Derive{(4)}{I(\forall)I(\Rightarrow)E(|)\THM{Trichtomy}}{ \forall k,l \in \Int_+ \. k+l=N\Rightarrow f_kg_l=0}
+	\Conclude{()}{(4)\bd R[\Int_=]}{ (fg)_N = \sum_{k + l = N}f_kg_l = 0}
+	\Derive{(3)}{I(\forall)}{ \forall N : \FUNC{after}(n + m) \. (fg)_N = 0  }
+	\Conclude{(*)}{\bd \deg fg (3)(2)}{\deg fg =\deg g  + \deg f}
+	\EndProof
+	\\
+	\Theorem{IntegralPolinomials}{\forall R : \ID \. R[\Int_+] : \ID}
+	\Assume{f,g}{ R[\Int_+]  }
+	\Assume{(1)}{f \neq 0 \And g \neq 0}
+	\Say{(2)}{\bd^2 \deg (f)(g)(1)}{\deg f \neq -\infty \And \deg g \neq -\infty}
+	\Say{(3)}{ \THM{DegreeHomo}(f,g)(2)  }{\deg(fg) = \deg(f) + \deg(g) \neq -\infty}
+	\Conclude{()}{ \bd \deg(fg)(3)  }{fg \neq 0}
+	\DeriveConclude{(*)}{\bd^{-1}\ID}{ \Big[R[\Int_+] : \ID\Big]}
+	\EndProof
+}
+\Page{
+	\Theorem{MultivariatePolinomials}{\forall R \in \RING \. \forall n \in \Nat \. R[\Int^{n+1}_+] \cong_{\RING} R[\Int^n_+][\Int_+] }
+	\NoProof
+	\\
+	\Theorem{MulivariatePolinomialsAreID}{\forall R : \ID \. \forall n \in \Nat \. R[\Int^n_+] : \ID}
+	\NoProof
+	\\
+	\DeclareFunc{leadingCoefficient}{ R[\Int_+] \to R }
+	\DefineNamedFunc{leadingCoefficient}{0}{\lc 0}{ 0  }
+	\DefineNamedFunc{leadingCoefficient}{f}{\lc f}{f_{\deg f}}
+	\\
+	\DeclareType{Monic}{\prod R \in \RING \. ?R[\Int_+]}
+	\DefineType{f}{Monic}{f\neq 0 \And f_{\deg f} = 1}
+	\\
+	\Theorem{MonicMult}{\forall R \in \RING \. \forall f : \TYPE{Monic}(R) \. \forall g \in R[\Int_+] \. \deg fg = \deg f + \deg g}
+	\NoProof
+	\\
+	\Theorem{MonicRegular}{\forall R \in \RING \. \forall f : \TYPE{Monic}(R) \. f : \TYPE{Regular} \; R[\Int_+] }
+	\NoProof
+	\\
+	\Theorem{DivisionWithReminder}{\forall R \in \Ring \. \forall f : \TYPE{Monic}(R) \. \forall g \in R[\Int_+] \.  \NewLine \.\exists s,r \in R[\Int_+] \. g = fs + r \And \deg r < \deg f}
+	\Say{\mars}{\Lambda N \in \Int_+ \. \forall  f : \TYPE{Monic}(R) \. \forall g \in R[\Int_+] \.  (0 \le \deg f - \deg g  \le N ) \Rightarrow 
+		\NewLine \Rightarrow \exists s,r \in R[\Int_+] \. g = fs + r \And \deg r < \deg f}
+	{  \Nat \to \Type  }
+	\Assume{f}{\TYPE{Monic}(R)}
+	\Assume{g}{R[\Int_+]}
+	\Assume{(1)}{ \deg f - \deg g = 0 }
+	\Say{s}{\lc g}{R}
+	\Say{r}{g - sf}{R[\Int_+]}
+	\Conclude{(2)}{\bd \deg \bd r (1)}{ \deg r < \deg f}
+	\Derive{(1)}{\bd^{-1}\mars}{\mars(0)}
+	\Assume{N}{\Int_+}
+	\Assume{(2)}{\mars(N)}
+	\Assume{f}{\TYPE{Monic}(R)}
+	\Assume{g}{R[\Int_+]}
+	\Assume{(3)}{ \deg f - \deg g = N + 1  }
+}\Page{
+	\Say{a}{\lc g}{R}
+	\Say{g'}{g - af}{R}
+	\Say{(4)}{\bd \deg \bd g' (2)}{\deg g' - \deg f \le N}
+	\Say{(s,r,5)}{ (2)(4)(f,g') }{\sum r,s \in R[\Int_+] \.  g' = sf + r \And \deg r < \deg f}
+	\Conclude{()}{\bd g (5)}{  g = (ax^{N+1} +s)f + r    }
+	\Derive{(2)}{I(\forall)I(\Rightarrow) }{\forall N \in \Int_+ \. \mars(N) \Rightarrow \mars(N+1)}
+	\Conclude{()}{\bd \TYPE{InductiveSet}(\Int_+)(\mars)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{MonicQuotientStructure}{\forall R \in \ANN \. \forall f : \TYPE{Monic}(R) \. \frac{R[\Int_+]}{\langle f \rangle} \cong_{\GRP} R^n  \NewLine \where \quad n = \deg f}
+	\Say{\varphi}{\Lambda a \in R^n \. \left[\sum^n_{i=1} a_{i}x^{i-1} \right] }{ R^n \Arrow{\ABEL} \frac{R[\Int_+]}{\langle f \rangle}}
+	\Assume{[g]}{\frac{R[\Int_+]}{\langle g \rangle}}
+	\Say{(r,s,1)}{\THM{DivisionWithReminder}(g,f)}{\sum r,s \in R[\Int_+] \. g = fs + r \And \deg r < \deg f  }
+	\Conclude{()}{(2)}{\varphi(r) = [g]}
+	\Derive{(1)}{\bd^{-1}\TYPE{Surjective}}{ \left[ \varphi : R^n \ToSurj \frac{R[\Int_+]}{\langle f \rangle}  \right]  }
+	\Assume{a}{R^n}
+	\Assume{(2)}{\varphi(a) = 0 }
+	\Say{(3)}{ \bd \varphi (2)}{ \sum^n_{i=1} a^i x^{i-1} | f   }
+	\Conclude{()}{ \THM{DegreeHomo}(f)\bd \TYPE{Divides}(3)  }{ a = 0   }
+	\Derive{(2)}{\bd^{-1}\TYPE{Iso}\THM{InjHomoByKer}}{  \left[f : R^n \ToIso{\GRP} \frac{R[\Int_+]}{\langle f \rangle}  \right]  }
+	\Conclude{(*)}{\bd \TYPE{Isomotphic}(2)}{R^n \cong_{\GRP} \frac{R[\Int_+]}{\langle f \rangle}}
+	\EndProof
+	\\
+	\DeclareFunc{eval2}{\prod n \in \Nat \. \prod R \in \ANN \. R^n \to R[\Int^n_+] \Arrow{\RING} R}
+	\DefineNamedFunc{eval2}{a,f}{f(a)}{\sum_{m \in \Int^n_+} f_m\prod^m_{i=1} a^{m_i}_i }
+	\\
+	\DeclareType{Polynomial}{\prod R \in \ANN \. \prod n \in \Nat \. ?(R^n \to R)}
+	\DefineType{F}{Polynomial}{\exists f \in R[\Int^n_+] \.  F = \Lambda a \in R^n \. f(a)}
+	\\
+	\Theorem{EuclideanPolynomials}{\forall k : \TYPE{Field} \.  k[\Int_+] : \ER  }
+	\NoProof
+}
+\subsection{Hilbert Basis Theorem}
+\Page{
+	\Theorem{HilbertBasisTheorem}{\forall A : \TYPE{Noetherian} \. A[\Int_+] : \TYPE{Northerian}}
+	\Assume{I}{\Ideal\; A[\Int_+]}
+	\Say{J}{ \{  \lc f | f \in I  \}  }{ ?A[\Int_+]}
+	\Assume{a,b}{J}
+	\Say{(f,1)}{\bd J(a)}{  \sum f \in I \. \lc f = a   }
+	\Say{(g,2)}{\bd J(b)}{  \sum g \in I \. \lc g = b  }
+	\Say{l}{ \If \deg f > \deg g \Then \deg f - \deg g  \Else 0}{\Int_+}
+	\Say{k}{\If \deg g > \deg f \Then \deg f - \deg g \Else 0}{\Int_+}
+	\Say{(3)}{\bd \TYPE{Subgroup}(I)}{x^k f + x^l g \in I  }
+	\Say{(4)}{ \bd k \bd l  }{ \deg  x^k f = \deg x^l g   }
+	\Conclude{()}{\bd^{-1}(J)(3)(4)}{  \lc\Big( x^k f + x^l g \Big) = a + b \in J    }
+	\Derive{(1)}{\bd^{-1}\TYPE{Subgroup}(A)}{[J : \TYPE{Subgroup}(A)]}
+	\Assume{a}{J}
+	\Assume{b}{A}
+	\Say{(f,2)}{\bd J(a)}{\sum f \in I \. \lc f = a}
+	\Say{(3)}{\bd \TYPE{Ideal}(I)}{bf \in I}
+	\Conclude{()}{ \bd J(2)(3)\bd \lc bf}{\lc bf = ba \in J}
+	\Derive{(1)}{ \bd^{-1}\TYPE{Ideal}(A)(1)  }{[J : \TYPE{Ideal}(A)] }
+	\Say{(F,2)}{\bd \TYPE{Noetherian}(J)}{\sum F : \TYPE{Finite} \. J = \FUNC{genIdeal}(F)}
+	\Say{(n,j)}{\FUNC{enum}(F)}{ \sum n \in \Nat \. \sum j : n \ToIso{\SET} F }
+	\Say{f}{ \Lambda k \in n \. \arg \min \deg \{  f \in I : \lc f = j_k \}  }{ n \to I  }
+	\Say{d}{ \max_{k \in n} \deg f_k  }{ \Int_+ }
+	\Say{M}{ \{ f \in I :  \deg f < d   \}  }{\TYPE{Module}(A)}
+	\Say{(m,g,3)}{ \THM{NotherianModuleTHM}(M)  }{ \sum m \in \Nat \. g : m \to M \. M = \Span(g_i)^m_{i=1}  }
+	\Say{\venus}{\Lambda k \in \Nat \. \forall h \in I \. \deg h < d + k \Rightarrow \NewLine \Rightarrow \exists \alpha : n \to A[\Int_+] : \exists \beta : m \to A{\Int_+} : h = \sum^n_{i=1} \alpha_i f_i + \sum^m_{i=1} \beta_i g_i   }
+	{  \Nat \to \Type   }
+	\Assume{h}{I}
+	\Assume{(4)}{\deg h < d}
+	\Say{(5)}{\bd M(4)}{ h \in M  }
+	\Conclude{(a,6)}{(3)\bd \Span }{ \sum a : m \to A \. h = \sum^m_{i=1} a_ig_i }
+	\Derive{(4)}{I(\forall)I(\Rightarrow)I(\exists)}{ \venus(0)}
+}\Page{
+	\Assume{h}{I}
+	\Assume{k}{\Int_+}
+	\Assume{(4)}{ \venus(k)  }
+	\Assume{(5)}{\deg h = d + k}
+	\Say{k}{\Lambda i \in n\. d - \deg f_i }{n \to \Int_+}
+	\Say{(a,5)}{(2)(\lc h)}{\sum a : n \to A : \lc h = \sum^n_{i=1} a_i\lc f_i}
+	\Say{h'}{ h - \sum^n_{i=1} a_i x^{k_i} f_i }{I}
+	\Say{(6)}{(5)\bd h'}{\deg h' < d + K}
+	\Say{(\alpha,\beta,7)}{(4)(h')}{ \sum \alpha : n \to A[\Int_+] \. \sum \beta : m \to A[\Int_+] \. h' = \sum_{i=1}^n \alpha_i f_i + \sum^m_{i=1} \beta_i h_i}
+	\Conclude{()}{(7) \bd h'}{h = \sum^n_{i=1}(\alpha_i +  a_ix^{k_i})f_i + \sum^m_{i=1} \beta_i g_i }
+	\Derive{(6)}{I(\forall)I(\Rightarrow)\bd^{-1}}{\forall k \in \Int_+ \. \venus(k) \Rightarrow \venus(k+1)}
+	\Conclude{()}{\bd^{-1}\FGI \bd \TYPE{InductiveSet}(\Int_+)(\venus)(6)}{ I : \FGI\; \Big(A[\Int_+]\Big)}
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{Noetherian}}{ [R[\Int_+] : \TYPE{Noetherian}] }
+	\EndProof
+	\\
+	\Theorem{MultivariatePolynomialsNoetherian}{\forall A : \TYPE{Noetherian} \. A[\Int_+^n] : \TYPE{Noetherian}}
+	\NoProof
+}
+\newpage
+\subsection{Primitivity, Content and Gauss Lemma}
+\Page{
+	\DeclareFunc{PolynomialIdeal}{\prod A \in \ANN \.  \Ideal(A) \to \Ideal\Big(A[\Int_+]\Big)}
+	\DefineNamedFunc{PolinomialIdeal}{I}{IA[\Int_+]}{\left\{ \sum_{i=0} a_{i+1} x^i  | a : (n+1) \to I   \right\}}
+	\\
+	\Theorem{PolynomialIdealQuotient}{\forall A \in \ANN \. \forall I : \Ideal(A) \. \frac{A[\Int_+]}{IA[\Int_+]} \cong_{\RING} \frac{A}{I}[\Int_+]}
+	\Say{\varphi}{\Lambda [f] \in \frac{A[\Int_+]}{IA[\Int_+]} \. \sum^n_{i=0} [f_i] x^i}{ \frac{A[\Int_+]}{IA[\Int_+]} \to \frac{A}{I}[\Int_+]}
+	\Assume{f}{\frac{A[\Int_+]}{IA[\Int_+]}}
+	\Assume{g}{IA[\Int_+]}
+	\Conclude{()}{ \bd \FUNC{quotientRing}(A,I) }{\varphi[f+g] = \sum_{i=0} [f_i + g_i]x^i = \sum_{i=0} [f_i]x^i }
+	\Derive{(2)}{\LOGIC{WellDefined}}{ \left[\varphi : \frac{A[\Int_+]}{IA[\Int_+]} \Arrow{\RING} \frac{A}{I}[\Int_+] \right]  }  
+	\Conclude{(*)}{\bd \TYPE{PolinomialIdeal}\bd \varphi}{ \left[ \varphi : \frac{A[\Int_+]}{IA[\Int_+]} \ToIso{\RING} \frac{A}{I}[\Int_+] \right]   }
+	\EndProof
+	\\
+	\Theorem{PrimePolynomialIdeal}{ \forall A \in \ANN \. \forall P : \TYPE{Prime}(A) \.  PA[\Int_+] : \TYPE{Prime}\Big(A[\Int_+]\Big)}
+	\Say{(1)}{\THM{PolynomialIdealQuotient}(A,P)}{\frac{A[\Int_+]}{PA[\Int_+]} \cong_{\RING} \frac{A}{P}[\Int_+]}
+	\Say{(2)}{\THM{PrimeQuotientIsID}(A,P)}{\left[ \frac{A}{P} : \ID \right]}
+	\Conclude{(*)}{\THM{IntegralPolinomials}(2)(1)\THM{PrimeQuotientIsID}(A[\Int_+],PA[\Int_+])  }{\left[  PA[\Int_+] : \TYPE{Prime}\Big(A[\Int_+]\Big) \right]}
+	\EndProof
+	\\
+	\DeclareType{VeryPrimitive}{\prod A \in \ANN \. ?A[\Int_+]}
+	\DefineType{f}{VeryPrimitive}{\forall P : \TYPE{Prime} \. f \not \in PA[\Int_+]}
+	\\
+	\DeclareType{Primitive}{\prod A \in \ANN \. ?A[\Int_+]}
+	\DefineType{f}{Primitive}{\forall P : \TYPE{Prime} \And \TYPE{Principle} \. f \not \in PA[\Int_+] }
+	\\
+	\Theorem{PrimitivePolinimialsLemma}{ \forall A \in \ANN \. \forall f,g \in A[\Int_+] \. fg : \TYPE{Primitive}(A) \iff f,g : \TYPE{Primitive}  }
+	&\text{From properties of prime ideals}\\
+	\EndProof
+}\Page{
+	\Theorem{PrimitivePolinimialsLemma}{ \forall A \in \ANN \. \forall f,g \in A[\Int_+] \.  \NewLine \. fg : \TYPE{VeryPrimitive}(A) \iff f,g : \TYPE{VeryPrimitive}  }
+	&\text{From properties of prime ideals}\\
+	\EndProof
+	\\
+	\Theorem{PropertyOfVeryPrimitive}{\forall A \in \ANN \.  \forall f \in A[\Int_+] \. f : \TYPE{VeryPrimitive}(A) \iff \FUNC{genIdeal}(\im f) = A}
+	\Assume{(1)}{ [f : \TYPE{VeryPrimitive}(A)]}
+	\Assume{(2)}{\FUNC{genIdeal}(\im f) \neq A}
+	\Say{(M,1)}{\THM{MaximalIdealExists}(\FUNC{genIdeal}(\im f))}{ \sum M : \TYPE{MaximalIdeal}(A) \. \FUNC{genIdeal}(\im f) \subset M}
+	\Say{(2)}{ \THM{MaximalPrime}(M) }{ [M : \TYPE{Prime}(A)]  }
+	\Conclude{(3)}{ (1)\bd \TYPE{VeryPrimitive}(f)(2)(3)  }{ \bot   }
+	\DeriveConclude{(4)}{E(\bot)}{  \FUNC{genIdeal}(\im, f)  = A  }
+	\EndProof
+	\\
+	\Theorem{PropertyOfPrimitive}{\forall A : \UFD \. \forall \sum^n_{i=0} a_i x^i \in A[\Int_+] \. \NewLine \. \sum^n_{i=0} a_i x^i : \TYPE{Primitive}(A) \iff  \gcd(a) = 1}
+	\NoProof
+	\\
+	\DeclareFunc{content}{\prod A : \UFD \. A[\Int_+] \to A}
+	\DefineNamedFunc{content}{\sum^n_{i=0} a_i x^i}{ \cont\left( \sum^n_{i=0} a_i x^i \right)  }{\gcd(a)} 
+	\\
+	\Theorem{ContentDecomposition}{ \forall A : \UFD \. \forall f \in A[\Int_+] \.  \NewLine  \. \exists \bar f : \TYPE{Primitive}(A) : \langle f \rangle = \langle \cont(f) \rangle\langle \bar f \rangle  }
+	\Say{\bar f}{\sum_{i=0} \frac{f_i}{\cont(f)} x^i }{A[\Int_+]}
+	\Say{(1)}{\bd^{-1} \TYPE{Primitive}\bd \bar f \bd \cont(f)}{[\bar f : \TYPE{Primitive}(A)]}
+	\Say{(2)}{\bd \bar f}{ f = \cont(f) \bar f}
+	\Conclude{(*)}{\THM{PrincipleProduct}(2)}{\langle f \rangle = \langle \cont(f) \rangle \langle \bar f \rangle}
+	\EndProof
+	\\
+	\Theorem{ContentRecomposition}{\forall A : \UFD \. \forall f \in A[\Int_+] \. \forall c \in A \. \forall g : \TYPE{Primitive}(A) \.  \NewLine  \.
+		\langle c \rangle \langle g \rangle = \langle f \rangle  \Rightarrow    \langle c \rangle = \langle \cont(f) \rangle  }
+	\NoProof
+}
+\Page{
+	\Theorem{GaussLemma}{\forall A : \UFD \. \forall f,g \in A[\Int_+] \. \langle \cont(f,g) \rangle = \langle \cont(f)\cont(g) \rangle}
+	\Say{(\bar f,1) }{ \THM{ContentDecomposition}(f) }{ \sum \bar f : \TYPE{Primitive}(A) \.  \langle \cont(f) \rangle\langle \bar f \rangle  }
+	\Say{(\bar g,1)}{\THM{ContentDecomposition}(f)}{\sum \bar g : \TYPE{Pimitive}(A) \. \langle \cont(g) \rangle \langle \bar g \rangle }
+	\Say{(2)}{  \THM{principleProduct}(1)(2)\THM{principleProduct}   }{ \NewLine : \langle  f g \rangle = \langle f \rangle \langle g \rangle = 
+		\langle \cont(f) \rangle \langle \bar f \rangle  \langle \cont(g) \rangle \langle \bar g \rangle = \langle \cont(f)\cont(g) \rangle \langle \bar f\bar g \rangle}
+	\Say{(*)}{\bd^{-1} \THM{ContentRecomposition}(2)  }{ \langle \cont(fg) \rangle = \langle \cont(f) \rangle \langle \cont(g) \rangle  }
+	\EndProof
+	\\
+	\Theorem{GaussLemmaCorollarly}{ \forall A : \UFD \. \forall f,g \in A[\Int_+] \.  \forall (0) :   f | g \. \cont(f) | \cont(g)   }
+	\Say{\Big(h,(1)\Big)}{ \bd \TYPE{Divides}(f,g) }{\sum h \in A[\Int_+] \. g = fh}
+	\Say{(2)}{\THM{GaussLemma}(f,h)(1)}{  \cont(g) = \cont(f)\cont(h)    }
+	\Conclude{(*)}{\bd^{-1}\TYPE{Divides}(2)}{\cont(f) | \cont(g)}
+	\EndProof
+}
+\newpage
+\subsection{Factorization Of Polynomials}
+\Page{
+	\Theorem{DivisibilityInFieldsOfFractions}{
+	\forall A : \UFD \. \forall f,g \in A[\Int] \. \NewLine \. 
+	\forall (0) : \langle \cont(f) \rangle_A \subset \langle \cont(g) \rangle \.  
+	\forall (00) : \langle f \rangle_{\Frac(A)[\Int_+]} \subset \langle g \rangle_{\Frac(A)[\Int_+]} \.
+	\langle f \rangle_{A[\Int_+]} \subset \langle g \rangle_{A[\Int_+]}
+	}
+	\Say{\Big(h,(1)\Big)}{  \bd \TYPE{Divides}(00) }{\sum h : \Frac(A)[\Int_+] \.  g = hf }
+	\Say{\left(n,\frac{a}{b},(2)\right)}{\bd \Frac(A)[\Int_+](h)}{ \sum n \in \Nat \. \sum (n + 1) \to \frac{a}{b} \. \sum^n_{i=0} \frac{a_{i+1}}{b_{i+1}}x^i  = h(x)    }
+	\Say{\Big(\tilde h,(3)\Big)}{\bd\Frac(A)(2)}{ \sum \tilde h \in A[\Int_n] \.  h = \frac{\tilde h}{\lcd(b)} }
+	\Say{\Big( \bar h,(4)\Big)}{  \THM{ContentDecomposition}(\bar h)(3)  }{ \sum \bar h : \TYPE{Primitive}(A) \.   h   = \frac{ \cont(\tilde h) \bar h }{\lcd(b)} }
+	\Say{(5)}{ \bd \Frac(A)[\Int_+](4)(1)  }{  \lcd(b)g = \cont(\tilde h) \bar h f    }
+	\Say{(6)}{\THM{GaussLemma}(\Frac(A)[\Int_+])(5)}{ \cont(\lcd(b)g) = \cont(\tilde h)\cont(f) }
+	\Say{(7)}{\bd \TYPE{Divides}(00)(6)}{   \cont(\tilde h)\cont(f)  |  \lcd(b) \cont(f)   }
+	\Say{(8)}{\THM{DivisibleProduct}(7)}{ \cont(\tilde h) | \lcd(b)}
+	\Say{(9)}{ \bd\Frac(A)(3)(2)(8) }{  h \in A[\Int_+] }
+	\Conclude{(*)}{ (1)(9)  }{  \langle f \rangle_{A[\Int_+]} \subset \langle g \rangle_{A[\Int_+]} }
+	\EndProof 
+	\\
+	\Theorem{IrreducibilityInTheFieldOfFractions}{
+		\forall A : \UFD \. \NewLine \. \forall f : \TYPE{IrreducibleElement} \; A[\Int_+] \.  \forall (0) : \deg f > 0 \. f : \TYPE{IrreducibleElement} \; \Frac(A)[\Int_+]   
+	}
+	\Assume{(1)}{[f \IsNot \TYPE{IrreducibleElement} \; \Frac(A)[\Int_+]]}
+	\Say{\Big(g,h,(2)\Big)}{\bd \TYPE{IrreducibleElement}(f)}{\sum g,h :  \Frac(A)^\times[\Int_+] \setminus \Frac(A)^*[\Int_+] \.f = gh}
+	\Say{\left(n,\frac{a}{b},(3)\right)}{  \bd \Frac(A){\Int_+}  }{ \sum n \in \Nat \. \sum  \frac{a}{b} : (n +1) \to \Frac(A) \. g = \sum^n_{i=0} \frac{a_{i+1}}{b_{i+1}}x^{i}}
+	\Say{\left(m,\frac{c}{d},(4)\right)}{ \bd \Frac(A){\Int_+}  }{\sum m \in \Nat \. \sum \frac{c}{d} : (m +1) \to \Frac(A) \. h = \sum^m_{i=0} \frac{c_{i+1}}{d_{i+1}}x^i}  
+	\Say{\Big(\tilde g,(4)\Big)}{\bd \Frac(A)[\Int_+](3) }{ \sum \tilde g  :  A[\Int_+]  \.  g = \frac{\tilde g}{\lcd(b)}    }
+	\Say{\Big(\tilde h,(5)\Big)}{\bd \Frac(A)[\Int_+](4)}{ \sum \tilde h : A[\Int_+] \.     h = \frac{\tilde h}{\lcd(d)}    }
+	\Say{\Big(\bar g,(6)\Big)}{\THM{ContDecomposition}( \tilde g)}{ \sum \bar g : \TYPE{Primitive}(A) \. \cont( \tilde g  )\bar g   }
+	\Say{(7)}{\bd \TYPE{IrreducibleElement}(A)(f) \bd^{-1} \cont \bd^{-1} \TYPE{Primitive}  }{    \cont(f) = 1 = \cont(\bar g)   }
+	\Say{(8)}{ \bd A[\Int_+]  (6)(5)  }{   f =    \bar g \left( \frac{\cont(\tilde g) \tilde (h)}{\lcd(b)\lcd(d)} \right)   }
+	\Say{(9)}{ \THM{DivisibilityInFieldsOfFractions}(8) }{ (f)_{A[\Int_+]} \subset (\bar g)_{A{\Int_+}}}
+	\Conclude{()}{ (9)(2)\bd \TYPE{IrreducibleElement}(A)(f)}{\bot}
+	\Derive{(*)}{ E(\bot) }{ [f : \TYPE{IrreducibleElement}\; \Frac(A)[\Int_+]]  }
+	\EndProof
+}
+\Page{
+	\Theorem{IrreducibilityInTheFieldOfFractions2}{ \forall A : \UFD \. \forall f \in A[\Int_+] \.  \NewLine \forall (0) : \deg f > 0 \. f : \TYPE{IrreducibleElement} \; \Frac(A)[\Int_+] \iff f : \TYPE{IrreducibleElement} \;A[\Int_+]   } 
+	\NoProof
+	\\
+	\Theorem{IrreduciblePolynomialsArePrime}{ \forall A : \UFD \.  \NewLine \. \forall f :  \TYPE{IrreducibleElement}\Big(A[\Int_+]\Big) \. f : \TYPE{PrimeElement}\Big(A[\Int_+]\Big)  }
+	\Say{(1)}{ \THM{EuclideanPolynomials}(\Frac(A)) \THM{ERIdPID} \; \THM{PIDIsUFD} }{  \Big[\Frac(A)[\Int_+] : \UFD \Big] }
+	\Assume{(2)}{  \deg f > 0   }
+	\Say{(3)}{ \THM{IrreducibilityInTheFieldOfFractions}((0),f)  }{  [f : \TYPE{IrreducibileElement}\Big(\Frac(A)\Big)]   }
+	\Say{(4)}{ \TYPE{IrreducibleIsPrimeInUFD}((3),f) }{ [f : \TYPE{PrimeElement}\Big(\Frac(A)\Big)]}
+	\Say{(5)}{ \bd^{-1} \cont(f) \bd \TYPE{IrreducibleElement}\Big( A[\Int_+]\Big)(f) }{  \cont(f) = 1 }
+	\Assume{x,y}{A[\Int_+]}
+	\Assume{(6)}{ (f | xy)_{A[\Int_+]}}
+	\Say{(7)}{\bd \Frac(A)(6)}{ (f| xy)_{\Frac(A)[\Int_+]}}
+	\Say{(8)}{\bd \TYPE{PrimeElement}(7)}{ (f|x)_{\Frac(A)[\Int_+]} \Big| (f|y)_{\Frac(A)[\Int_+]} }
+	\Conclude{()}{ \THM{DivisibilityInFieldsOfFractions}(5)(8) }{  (f|x)_{A[\Int_+]} | (f|y)_{A[\Int_+]} }
+	\DeriveConclude{(6)}{\bd^{-1}\TYPE{PrimeElement} }{ f : \TYPE{PrimeElement} \; A[\Int_+] }
+	\Derive{(2)}{I(\Rightarrow)}{\deg f > 0 \Rightarrow f : \TYPE{PrimeElement} \; A[\Int_+] }
+	\Assume{(3)}{\deg f =  0}
+	\Say{(4)}{\bd \cont(f)(3)}{  f = \cont(f)  }
+	\Assume{x,y}{A[\Int_+]}
+	\Assume{(5)}{(f|xy)}
+	\Say{(6)}{ \THM{GaussLemmaCorollarly}(5)(4)   }{ (f|\cont(xy))_A }
+	\Say{(7)}{ \THM{GaussLemma}  }{(f|\cont(x)\cont(y))}
+	\Say{(8)}{ \THM{IrreducibleIsPrimeInUFD}(7) }{  f| \cont(x) \Big| f| \cont(y) }
+	\Conclude{()}{ \bd \cont (8)(3) }{  f|x \Big| f|y  }            
+	\DeriveConclude{(*)}{ \bd \deg f E(|)I(\Rightarrow)\bd^{-1}\TYPE{PrimeElement} \; A[\Int_+](2)}{  [f : \TYPE{PrimeElement}(A)]  }
+	\EndProof
+}
+\Page{
+	\Theorem{PolynomialsUFD}{ \forall A : \UFD \. A[\Int_+] : \UFD }
+	\Assume{f}{\Nat \to A[\Int_+]}
+	\Assume{(1)}{\langle f \rangle_{A[\Int_+]} : \TYPE{Nondescending}(A)}
+	\Say{(2)}{ \THM{GaussLemmaCorollarly}(1)  }{ [  \langle \cont f \rangle_A : \TYPE{Nondescending}(A)   ]   }
+	\Say{(N,3)}{ \THM{ACCByFactorization}(A)(2)  }{\sum N \in \Nat \. \forall n \in \FUNC{after}(N) \. \NewLine \. \langle \cont(f_N) \rangle_A = \langle \cont(f_n) \rangle_A } 
+	\Say{(M,4)}{\THM{ACCByFactorization}\Big( \Frac(A)[\Int_+] \Big)(2)}{ \sum M \in \Nat \. \forall n \in \FUNC{after}(M) \.  \NewLine \. \langle  f_n \rangle_{\Frac(A)[\Int_+]}  = \langle f_M \rangle_{\Frac(A)[\Int_+]} }
+	\Conclude{()}{ \bd \THM{DivisibilityInFieldsOfFractions}(4.3) }{  \forall n \in \FUNC{after}\Big(\max(M,N)\Big) \. \langle f_n \rangle_{A[\Int_+]} = \langle f_N \rangle_{A[\Int_+]}  }
+	\DeriveConclude{(*)}{\bd^{-1} \UFD\Big( \THM{IrreduciblePolynomialsArePrime } \Big)}{  \NewLine : \Big[A[\Int_+] : \UFD\Big]  }
+	\EndProof
+	\\
+	\Theorem{MultivariatePolynomialsUFD}{ \forall A : \UFD \. \forall n \in \Nat \. \NewLine \. A[\Int_+^n] : \UFD  }
+	\NoProof
+}
+\newpage
+\subsection{Roots And Irreducibility Criterions}
+\Page{
+	\Theorem{RootDivides}{ \forall A : \ID \.  \forall f \in  A[\Int_+]  \. \forall a \in A \. f(a) = 0 \Rightarrow  (x - a) | f  }
+	\Assume{(0)}{  f(a) = 0  }
+	\Say{(1)}{\bd^{-1}  }{\Big[ (x - a) : \TYPE{Monic}[\Int_+] \Big]}
+	\Say{(s,r,(2))}{\THM{DivisionWithReminder}(f,x-a)}{ \sum s \in A[\Int_+] \. \sum r \in A[\Int_+] :  f = s(x - a) + r }
+	\Say{(3)}{\bd^{-1}\FUNC{eval}(2)}{f(a) = r}
+	\Say{(4)}{ (0)(3)   }{  r = 0   }
+	\Conclude{()}{  (4)(2) }{  f = s(x - a)  }
+	\Derive{(1)}{  I(\Rightarrow) }{  f(a) = 0 \Rightarrow (x-a)|f   }
+	\Assume{(0)}{(x - a) | f}
+	\Say{(s,(2))}{  \bd \TYPE{Divides}(0)   }{  \sum s \in A[\Int_+] \.  f = s(x - a) }
+	\Conclude{()}{ \bd \FUNC{eval}(a,f)(2)   }{  f(a) = 0  }
+	\DeriveConclude{(*)}{I(\iff)}{ f(a) = 0 \iff (x - a)|f }
+	\EndProof
+	\\
+	\DeclareFunc{roots}{\prod A \in \ANN \. A[\Int_+] \to ?A }
+	\DefineNamedFunc{roots}{f}{\rho(f)}{\{a \in A : f(a) = 0 \}}
+	\\
+	\DeclareFunc{multiplicity}{\prod A : \ID \.  \prod f \in A[\Int_+] \. \rho(f) \to \Nat \cup \{+\infty\} }
+	\DefineNamedFunc{multiplicity}{a}{m_f(a)}{\max \bigg\{  m \in \Nat :\Big( (x - a)^m \big| f \Big)  \bigg\}}	
+	\\
+	\Theorem{ZeroPolynomialTHM}{ \prod A : \ID \. \forall (0) : |A| = \infty \. \NewLine \. \forall f \in A[\Int] \.  \Lambda a \in A \. f(a)  = 0 \iff f = 0   }   
+	\Assume{(1)}{\Lambda a \in A \. f(a) = 0}
+	\Assume{(2)}{f \neq 0}
+	\Assume{n}{\Nat}
+	\Conclude{()}{\THM{RootDivides}(1)(2)\bd \deg (n)}{  \deg f > n  }
+	\Say{(2)}{I(\forall)}{\forall n \in \Nat \. \deg f > n}
+	\Conclude{()}{\bd \deg (2)}{\bot}
+	\Derive{(2)}{E(\bot)}{f = 0}
+	\NoProof
+}
+\Page{
+	\DeclareFunc{polyMap}{ \prod A,B \in \ANN \. (A \Arrow{\ANN} B) \to \Big(A[\Int_+] \Arrow{\ANN} B[\Int_+])}
+	\DefineNamedFunc{polyMap}{\varphi,f}{\varphi[f]}{\Lambda n \in \Int_+ \. \varphi(f_n) }
+	\\
+	\DeclareType{IrreduciblePolynomial}{\prod A : \ID \. ?A[\Int_+] }
+	\DefineType{f}{IrreduciblePlynomial}{\exists g,h \in A[\Int] \. f = gh \And \deg g,\deg h \in \Int}
+	\\
+	\Theorem{EisensteinsCriterion}{ \forall A : \ID \. \forall n \in \Nat \. \forall \sum^n_{i=0} a^i x^i \in A[\Int_+] \. 
+		\forall  P : \TYPE{Prime}(A) \.  \NewLine \. \forall (0) : a_n \not \in P \. \forall (00) : \forall i \in (n-1) \. a^i \in P \.
+		\forall (000) : a_0 \not \in P^2 \.  \NewLine \.
+		\sum^n_{i=0} a^i x^i  : \TYPE{IrreducibleElement}\left(A[\Int_+]\right)
+	}
+	\Say{f}{\sum^n_{i=0} a^i x^i}{ A[\Int_+]}
+	\Assume{(1)}{[f \IsNot \TYPE{IrreduciblePolynomial}\left(A[\Int_+]\right)]}
+	\Say{(h,g,2)}{ \bd \TYPE{IrreduciblePolynomial}(1)(f)  }{ \sum h,g \in A^\times[\Int_+] \setminus A^*[\Int_+] \. f = hg  }
+	\Say{(m,b,3)}{\bd A[\Int_+](h)}{ \sum m \in \Nat \. \sum b : m \to A \. h = \sum^m_{i=0} b_ix^i}
+	\Say{(l,c,4)}{\bd A[\Int_+](g)}{\sum l \in \Nat \. \sum c : l \to A \. g = \sum^l_{i=0} c_ix^i}
+	\Say{(5)}{\bd \TYPE{Prime}(P)(3)(4)\bd A[\Int_+](000)}{ b_0 \not \in P | c_0 \not \in P }
+	\Say{(6)}{\bd \FUNC{polyMap}(0)(00)}{ \pi_P[f] = [a_n]x^n  }
+	\Say{(7)}{\bd \TYPE{Ideal}(P)(3)(4)}{b_m,c_l \not \in P}
+	\Say{(8)}{(6)(7)}{  \pi_P[h] = [b_m]x^m \And \pi_P[g] =[c_l]x^l}
+	\Say{(9)}{ \bd \TYPE{QuotienRing}(5) }{  [b_0] \neq 0 |  [c_0] \neq 0  }
+	\Conclude{()}{ (8)(9)}{\bot}
+	\Derive{()}{E(\bot)}{ [f : \TYPE{IrreduciblePolynomial}(A)]}
+	\EndProof
+	\\
+	\Theorem{ReductionCriterion}{\forall A,B \in \ID \. \forall \varphi : A \Arrow{\RING} B \. \forall f \in A[\Int_+] \. \NewLine \.  
+		\forall (0) : \deg f > 0 \. \forall (00) : \deg g = \deg \varphi[f] \. \forall  (000) : \varphi[f] : \TYPE{IrreduciblePolynomial}\;\Frac(B) \. \NewLine 
+		\. f : \TYPE{IrreduciblePolynomial}(A)  
+	}
+	\Assume{(1)}{[f \IsNot \TYPE{IrreduciblePolynomial}\left(A[\Int_+]\right)]}
+	\Say{(h,g,2)}{ \bd \TYPE{IrreduciblePolynomial}(1)(f)  }{ \sum h,g \in A[\Int_+] \. f = hg \And \deg h,g \in \Nat  }
+	\Say{ (3)  }{\bd \deg (0)(00)(2)}{  \deg h = \deg \varphi h \And \deg g = \deg \varphi h}
+	\Conclude{()}{(000)(3)}{\bot}
+	\Derive{()}{E(\bot)}{ [f : \TYPE{IrreduciblePolynomial}(A)]}
+	\EndProof
+}
+\newpage
+\subsection{Algebra of Formal Power Serias}
+\Page{
+	\DeclareType{\MoFT}{?\TYPE{Monoid}}
+	\DefineType{M}{\MoFT}{\forall m \in M \.  \Big| (\cdot_M)^{-1}\{m\} \Big| < \infty}
+	\\
+	\DeclareFunc{formalPowerSeriesAlgebra}{ \MoFT \times \RING \to \RING}
+	\DefineNamedFunc{formalPowerSeriesAlgebra}{R,M}{R\Big[[M]\Big]}{\bigg( M \to R, +_{M \to R} \. \Lambda a,b : M \to R \. \Lambda m \in M \. \sum_{kl = m} a_kb_l \bigg)}
+	\\
+	\DeclareFunc{formalPowerSeria}{ \prod M : \MoFT \. \prod R \in \RING \. (M \to R) \to  R\Big[[M]\Big]  }
+	\DefineNamedFunc{formalPowerSeria}{a}{\sum_{i \in M} a_i x^i }{a}
+	\\
+	\Theorem{PositiveIntegersAreFiniteType}{ \Int_+ : \MoFT}
+	\Assume{m}{\Int_+}
+	\Assume{a,b}{\Int_+}
+	\Assume{(1)}{m = a + b}
+	\Say{(2)}{\THM{NondecreasingAddition}(1)}{ a \le m \And b \le m }
+	\Conclude{()}{\bd^{-1} \FUNC{prim}(m)  }{ a,b \in \FUNC{prim}(\Int_+)(m)  }
+	\Derive{(1)}{I(\forall)I(\Rightarrow)}{ \forall a,b \in \Int_+ \. a + b = m \Rightarrow a,b \in  \FUNC{prim}(\Int_+)(m)  }
+	\Say{(2)}{\bd^{-1}\FUNC{preimage}(+)(m)(1)}{ (+)^{-1}(m) \subset \FUNC{prim}^2(m)}
+	\Conclude{(3)}{\THM{SubsetCardinality}(2)\; \THM{FiniteProductCard}\; \THM{PrimitiveSubsetCardinality}(\Int_+)(m)}{ 
+		\NewLine : \Big| (+)_{\Int_+}^{-1}(m)\Big| \le \Big|m_{\Int_+}\Big|^2 = m^2 + 2m + 1 < \infty}
+	\DeriveConclude{(*)}{\bd^{-1}\MoFT}{[\Int : \MoFT]} 
+	\\
+	\Theorem{PositiveLatticeIsFiniteType}{ \forall n \in \Nat \. \Int_+^n : \MoFT  }
+	\Assume{m}{\Int^n_+}
+	\Say{(1)}{ \bd \Int^n_+\Big( (+)^{-1}(m) \Big)  }{ (+)^{-1}(m) = \prod^n_{i=1} (+)^{-1}(m_i)}
+	\Conclude{()}{\THM{ProductCard}(1)\forall i \in n \. \bd \MoFT(\Int_+)(m_I)}{\Big| (+)^{-1}(m) \Big| \le \infty  }
+	\DeriveConclude{(*)}{\bd^{-1}\MoFT}{[\Int^n_+ : \MoFT]}
+	\EndProof
+	\\
+	\DeclareType{Topological}{\prod A \in \ANN \. ?\Ideal(A)}
+	\DefineType{I}{Topological}{\bigcap^{\infty}_{n=1}I^n = \{0\}}
+	\\
+	\DeclareFunc{iadicTopology}{\prod A \in \ANN \. \TYPE{Topological}(A) \to \TYPE{Topology}(A)}
+	\DefineNamedFunc{iadicTopology}{I}{\tau_A(I)}{\FUNC{genTop}\{ a + I^n | n \in \Int_+,a \in A\}}
+}
+\Page{
+	\DeclareType{Cauchy}{\prod A \in \ANN \. \prod I : \Ideal(A) \.?(\Nat \to A)}
+	\DefineType{a}{Cauchy}{\forall n \in \Nat \. \exists M \in Nat \. \forall m,m' : \FUNC{after}(M) \. a_m - a_{m'} \in I^n}
+	\\
+	\DeclareType{CompleteLocal}{?\TYPE{Local}}
+	\DefineType{A}{CompleteLocal}{\mathfrak{m}(A) : \TYPE{Toplogical} 
+		\And \forall a : \TYPE{Cauchy}(A,\mathfrak{m}(A)) \. a : \TYPE{Convergent}\Big(A,\tau_A\big(\mathfrak{m}(A)\big)\Big)}
+	\\
+	\DeclareFunc{degree}{\prod A \in \ANN \. A\Big[[ \Int_+ ]\Big] \to \Int_+ \cup \{-\infty,+\infty \}}
+	\DefineNamedFunc{degree}{a}{\deg a}{\max \{ i \in \Int_+ : a_i \neq 0\}}
+	\\
+	\DeclareFunc{degreeOfWeierstrass}{\prod A : \TYPE{Local} \. A\Big[[\Int_+]\Big] \to \Int_+ \cup \{+\infty \} }
+	\DefineNamedFunc{degreeOfWeierstrass}{a}{\deg_W a}{\min \{ i \in \Int_+ : a_i \not \in \mathfrak{m}(A)   \}}
+	\\
+	\DeclareFunc{tail}{\prod A : \TYPE{Local} \. A\Big[[\Int_+]\Big] \to A\Big[[\Int_+]\Big] }
+	\DefineNamedFunc{tail}{a}{t(a)}{\If \deg_W a = +\infty \Then 0 \Else \sum_{i = \deg_W a} a_ix^{i-n}}
+	\\
+	\DeclareFunc{head}{\prod A : \TYPE{Local} \. A\Big[[\Int_+]\Big] \to \mathfrak{m}(A)[\Int_+]}
+	\DefineNamedFunc{head}{a}{h(a)}{\If \deg_W a = + \infty \Then a \Else \sum^{\deg_W a - 1}_{i=0} a_i x^i}
+	\\
+	\DeclareFunc{tail2}{\prod A \in \RING \. A\Big[[\Int_+]\Big] \to \Nat \to A\Big[[\Int_+]\Big] }
+	\DefineNamedFunc{tail}{a}{t_n(a)}{ \sum^\infty_{i = n} a_ix^{i-n}}
+	\\
+	\DeclareFunc{head2}{\prod A \in \RING \. A\Big[[\Int_+]\Big] \to \Nat \to  A[\Int_+]}
+	\DefineNamedFunc{head}{a}{h_n(a)}{ \sum^{n - 1}_{i=1} a_i x^i}
+	\\
+	\Theorem{HeadTailDecomposition}{\forall A \in \RING \. \forall a \in A\Big[[\Int_+]\Big] \. \forall n \in \Nat \. a = h_n(a) + t_n(a)}
+	\NoProof
+}\Page{
+	\Theorem{CommutativePowerSeries}{\forall A \in \ANN \. \forall M : \TYPE{CommutativeMonoid} \And \MoFT \. \NewLine \. A\Big[[M]\Big] \in \ANN}
+	\NoProof
+	\\
+	\DeclareFunc{antidegree}{\prod A \in \RING \. A\Big[[M]\Big] \to \Int_+ \cup {+\infty}}
+	\DefineNamedFunc{antidegree}{a}{\antideg a}{\min{i \in \Int_+ : a_i \neq 0}}
+	\\
+	\Theorem{antidegHomo}{\forall A \in \RING \. \forall f,g \in A\Big[[\Int_+]\Big] \. \antideg fg \ge \antideg f + \antideg g  }
+	\Assume{n}{\antideg f + \antideg g}
+	\Assume{k,l}{\Int_+}
+	\Assume{(1)}{k + l = n - 1}
+	\Assume{(2)}{k \ge \antideg f \And l \ge \antideg g }
+	\Say{(3)}{\THM{AddIneq}(2)\bd n\THM{NextIsGreater}(n - 1)}{  k + l \ge \antideg f + \antideg g \ge n > n - 1 }
+	\Conclude{(4)}{\bd \TYPE{StrictlyLess}(3)(1)}{\bot}
+	\Derive{(2)}{E(\bot)}{k < \antideg f | l < \antideg g}
+	\Conclude{()}{\bd \antideg (2)\THM{ZeroMult}(A)}{f_lg_k = 0}
+	\Derive{(1)}{I(\forall)I(\Rightarrow)}{ \forall l,k \in \Int_+ \. l + k = n \Rightarrow f_lg_k = 0}
+	\Conclude{()}{\bd A\Big[[\Int_+]\Big] }{ (fg)_n = 0}
+	\Derive{(1)}{}{\forall n \in \antideg f + \antideg g \. (fg)_n = 0}
+	\Conclude{(*)}{\bd^{-1}(1)}{\antideg fg \ge \antideg f + \antideg g}
+	\EndProof
+	\\
+	\DeclareType{ZeroType}{\prod A \in \RING \. ?A\Big[[\Int_+]\Big]}
+	\DefineType{f}{ZeroType}{f_0 = 0}
+	\\
+	\DeclareFunc{powerSeriaOfPowerSeria}{ \prod A \in \RING \. \TYPE{ZeroType}(A) \to A\Big[[\Int_+]\Big] }
+	\DefineNamedFunc{powerSeriaOfPowerSeria}{f}{\sum^\infty_{k=0} f^k}{ \Lambda n \in \Int_+ \.  \sum^n_{i=0} (f^i)_n   }
+	\\
+	\Theorem{InveritiblePowerSeria}{\prod A \in \ANN \. \forall f \in A\Big[[\Int_+]\Big] \. \forall (0) : f_0 \in A^* \. f \in \bigg(A\Big[[\Int_+]\Big]\bigg)^*}
+	\Say{\Big(g,(1)\Big)}{\bd^{-1}\TYPE{ZeroType}(f)}{ \sum g : \TYPE{ZeroType}(A) \. f = f_0 + g   }
+	\Say{u}{ f^{-1}_0 \sum^{\infty}_{k=0}\Big(-f^{-1}_0 g \Big)^k }{A\Big[[\Int_+]\Big]}
+	\Conclude{(*)}{\bd u \bd A\Big[[\Int_+ ]\Big]\bd \FUNC{powerSeriaOfPowerSeria}}{uf = 1 + \sum^\infty_{i=1} f_0^{-i}g^i - f_0^{-i}g^i = 1}
+	\EndProof
+}\Page{
+	\Theorem{ManinDivision}{\forall A : \TYPE{CompleteLocal} \. 
+		\forall f,g \in A[[\Int_+]] \. 
+		\forall (0) : \deg_W f < \infty \. \NewLine \.
+		\exists! q,r \in A[[\Int_+]] :
+		\deg r < \deg_W f \And g = qf + r
+	}
+	\Say{n}{\deg_W f}{ \Nat }
+	\Say{(1)}{ \bd \deg_W \THM{HeadTailDecomposition}(n,f)}{ f = t_n(f) + h_n(f) = t(f)x^n + h(f) }
+	\Say{(2)}{ \bd h_n(g)\bd n }{\deg h_n(g) < \deg_W(f)}
+	\Say{(3)}{ \THM{InvertiblePowerSeria}(A)(t(f))\THM{InvertibleInLocal}(A)(f_n)    }{ \bigg[ t(f) : \TYPE{Invertible}\; A\Big[\Int_+\Big] \bigg]   }
+	\Assume{q}{A\Big[[\Int_+]\Big]}
+	\Assume{(4)}{ t_n(g) = t_n(qf)}
+	\Say{(5)}{ (4)(1)  }{  t_n(g) = t_n\Big(qt(f)x^n\Big) + t_n\Big(qh(f)\Big)  }
+	\Say{(6)}{\bd t_n(5)}{ t_n(g) = qt(f) + t_n\Big(qh(f)\Big) }
+	\Say{Z}{ qt(f) }{ A\Big[[\Int]\Big]    } 
+	\Say{(7)}{\bd^{-1}Z (6)}{t_n(g) = Z + t_n\left( Z\frac{h(f)}{t(f)}  \right)}
+	\Say{(9)}{ \bd^{-1}  \bigg(A\Big[ [\Int_+]\Big] \to A\Big[ [\Int]_+] \Big]\bigg) }{  t_n(g) =  \left( E + t_n \circ \mu\frac{h(f)}{t(f)}E\right)Z }
+	\Say{T}{t_n \circ \mu\left(\frac{h(f)}{t(f)}\right) }{ A\Big[[\Int_+]\Big] \Arrow{A\hyph\mathsf{Mod}} A\Big[[\Int_+]\Big]  }
+	\Say{S}{ \Lambda m \in \Nat \. \sum^m_{i=0} (-T)^i }{\Nat \to A\Big[[\Int_+]\Big] \Arrow{A\hyph\mathsf{Mod}} A\Big[[\Int_+]\Big]  }
+	\Assume{x}{A\Big[[\Int_+]\Big]}
+	\Assume{p}{\Nat}
+	\Assume{k,l}{\FUNC{after}(m)}
+	\Conclude{()}{\bd h(f)\bd S_k \bd S_l \bd T}{  S_kx - S_lx \in \mathfrak{m}^p(A)\Big[[\Int_+]\Big] }
+	\Derive{(10)}{\bd^{-1}\TYPE{Cauchy}\bigg( A\Big[[\Int_+]\Big],\mathfrak{m}(A)\Big[[\Int_+]\Big] \bigg)}
+	{\Bigg[ Sx : \TYPE{Cauchy}\bigg( A\Big[[\Int_+]\Big],\mathfrak{m}(A)\Big[[\Int_+]\Big] \bigg)\Bigg]}
+	\Conclude{(V(x),11)}{\bd^{-1}\TYPE{Complete}(A)}{\sum V(x) \in A\Big[[\Int_+]\Big] \. V(x) = \lim_{n \to \infty} S_n x}      
+	\Derive{(V,11)}{I(\to)}{\sum V :A\Big[[\Int_+]\Big] \Arrow{A\hyph\mathsf{Mod}} A\Big[[\Int_+]\Big] \. V = \lim_{n \to \infty} S_n }
+	\Say{(12)}{\bd S\bd V}{ V =\left( E + t_n\circ\frac{h(f)}{t(f)}E \right)^{-1}}
+	\Say{(13)}{(12)\left(  E + t_n \circ \frac{h(f)}{t(f)}E \right)^{-1}}{  Z = \left( E + t_n\circ\frac{h(f)}{t(f)}E \right)^{-1}t_n(g)}
+	\Conclude{()}{\bd Z (11)}{q  = \frac{t_n(g)\left(1 - t_n \circ \frac{h(f)}{t(f)}\right)^{-1}}{t(f)}}                               
+	\Derive{(4)}{I(\forall)I(\iff)}{\forall q \in A\Big[[\Int_+]\Big] \. t_n(g) = t_n(qf) \iff 
+		q = \frac{\left( E + t_n \circ \frac{h(f)}{t(f)}E \right)^{-1}t_n(g)}{t(f)} }
+	\Conclude{(*)}{(4)(2)\bd q \bd r}{\LOGIC{This}}
+	\EndProof
+}\Page{
+	\Theorem{WeierstrassPreparation}{\forall A : \TYPE{CompleteLocal} \. \forall f \in A\Big[[\Int_+]\Big] \. \forall (0) : \deg_W f < \infty \. \NewLine 
+		\exists! p : \TYPE{Monic} \; \mathfrak{m}(A) : \exists! u \in \bigg(A\Big[[\Int_+]\Big]\bigg) : f = pu }
+	\Say{n}{\deg_W f}{\Int_+}
+	\Say{\Big(q,r,(1)\Big)}{\THM{ManinDividion}(A,f,x^n)}{\sum q \in A\Big[[\Int_+]\Big] \. \sum r \in A[\Int_+] \. \deg r < \deg_W f \And x^n = fq + r}   
+	\Say{(2)}{\bd A\Big[[\Int_+]\Big](1)}{ 1 = \sum^n_{i=0}f_{n-i}q_{i} =  f_nq_0 + \sum^n_{i=1} f_{n-i}q_i  }
+	\Say{(3)}{\bd \Ideal \Big( \mathfrak{m}(A) \Big)\bd \deg_W f}{\sum^n_{i=1} f_{n-i}q_i \in \mathfrak{m}(A)}
+	\Say{(4)}{\THM{LocalInvertivle}\bd \TYPE{maximalIdeal}\Big( \mathfrak(m)(AA) \Big)}{f_n q_0 \in A^*}
+	\Say{(5)}{\bd A^*(4)}{ q_0 \in A^*  }
+	\Say{(6)}{\THM{InvertiblePowerSeria}(5)}{ q \in \bigg(A\Big[[\Int_+]\Big]\bigg)^*}
+	\Conclude{(*)}{\Big( (1) - r \Big)q^{-1}}{(x^n + r)q^{-1} = f}
+	\EndProof
+	\\
+	\Theorem{MultivariatePowerSerias}{\forall A \in \RING \. \forall n \in \Nat \. A\Big[[\Int^{n+1}_+]\Big] \cong_{\RING} A[\Int^n_+][\Int_+]}
+	\NoProof
+	\\
+	\Theorem{NoetherianPowerSerias}{\forall A : \TYPE{Noetherian} \. A\Big[[\Int_+]\Big] : \TYPE{Noetherian}}
+	\NoProof
+	\\
+	\Theorem{MultivariateNoetherianPowerSerias}{\forall A : \TYPE{Noetherian} \. A\Big[[\Int_+^n]\Big] : \TYPE{Noetherian}}
+	\NoProof
+} 
+\newpage
+\section{Categorical Ring Theory[!!]}
+\subsection{RNG and Adjoining of Unity}
+\subsection{Limits in RNG, RING and ANN}
+\subsection{Adjoints of Forgetful Functors}
+\end{document}

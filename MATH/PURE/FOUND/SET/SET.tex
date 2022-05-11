@@ -1,0 +1,557 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cat}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\}
+\newcommand{\A}{\LOGIC{Assume} \;} 
+\newcommand{\Assume}[2]{& \A #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%SetTheory
+%Cats
+\newcommand{\SET}{\mathsf{SET}}
+\author{Uncultured Tramp} 
+\title{Set Theory}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Locally Naive Typed Set Theory}
+\subsection{Sets ansd Subsest}
+\Page{
+	\Say{\Set}{\prod T : \Type \. T \to \TYPE{Bool} }{ \Type \to \Type  }
+	& S : \Set(T) \iff S : \; ?T  \\
+	\\
+	\Say{\TYPE{In}}{\prod S : \Set(T) \. \prod a : T \. S(a) =_{\TYPE{Bool}} 1 }
+	{ \prod T : \Type \.  ?T \to T \to \Type } 
+	& x : \TYPE{In}(S,a) \iff x : a \in S \\
+	\\
+	\Say{\TYPE{NotIn}}{\prod S : \Set(T) \. \prod a : T \. S(a) =_{\TYPE{Bool}} 0}
+	{\prod T : \Type \. ?T \to T \to \Type }
+	&  x : \TYPE{NotIn}(S,a) \iff x : a \not \in S\\
+	\\
+	\DeclareFunc{implicit}{\prod T : \Type \. ?T \to \Type}
+	\DefineFunc{implicit}{S}{ \sum a : T \. \exists a \in S}
+	\\
+	\DeclareFunc{emptySet}{ \prod  T : \Type \. \Set(T) }
+	\DefineNamedFunc{emptySet}{T}{\emptyset}{\Lambda a : T \. 0}
+	\\
+	\DeclareFunc{universum}{\prod T : \Type \. \Set(T)}
+	\DefineNamedFunc{universum}{T}{U(T)}{ \Lambda a :  T \. 1}
+	\\
+	\DeclareFunc{singleton}{\prod T \. T \to ?T}
+	\DefineNamedFunc{singleton}{a}{\{a\}}{\Lambda b : T \. a == b}
+	\\
+	\DeclareType{Subset}{\prod S : ?T \. ??T}
+	\DefineNamedType{A}{Subset}{A \subset S }{ \forall a : T \. a \in A \Rightarrow a \in S}
+	\\
+	\DeclareType{StrictSubset}{\prod S : ?T \. ?\TYPE{Subset}(S)}
+	\DefineNamedType{A}{StrictSubset}{A \subsetneq S}
+	{ \exists  \sum a \in S \.  a \not \in A }
+}
+\Page{
+	\Theorem{SetEq}{\forall A,B : \Set(T) \. A = B \iff A \subset B \And B \subset A}
+	\Assume{(1)}{A = B}
+	\Assume{x}{T}
+	\Assume{(2)}{x \in A}
+	\Say{(3)}{\bd \TYPE{In}(a,A)(2)}{A(x) = 1}
+	\Say{(4)}{ E(=,\to)(1)(3)  }{B(x) = 1}
+	\Conclude{()}{\bd^{-1}\TYPE{In}(a,B)(4)}{x \in B}
+	\DeriveConclude{()}{I(\Rightarrow)}{x \in A \Rightarrow x \in B}
+	\Derive{(2)}{I(\forall)}{\forall x : T \. x \in A \Rightarrow x \in B}
+	\Say{(3)}{\bd^{-1} \TYPE{Subset}(2)}{ A \subset B }
+	\Assume{(4)}{x \in B}
+	\Say{(5)}{\bd \TYPE{In}(a,B)(4)}{B(x) = 1}
+	\Say{(6)}{ E(=,\to)(1)(5)  }{A(x) = 1}
+	\Conclude{()}{\bd^{-1}\TYPE{In}(a,A)(6)}{x \in A}
+	\DeriveConclude{()}{I(\Rightarrow)}{x \in B \Rightarrow x \in A}
+	\Derive{(4)}{I(\forall)}{\forall x : T \. x \in B \Rightarrow x \in A}
+	\Say{(5)}{\bd^{-1} \TYPE{Subset}(4)}{ B \subset A }
+	\Conclude{(6)}{I(\And)(3)(5)}{ A \subset B \And B \subset A  }
+	\Derive{(1)}{I(\Rightarrow)}{A = B \Rightarrow A \subset B \And B \subset A}
+	\Assume{(2)}{A \subset B \And B \subset A}
+	\Say{(3)}{\pi_l(2)}{A \subset B}
+	\Say{(4)}{\pi_r(2)}{B \subset A}
+	\Assume{x}{T}
+	\Say{(5)}{\THM{LEM}(A(x))}{A(x) = 0 | A(x) = 1}
+	\Assume{(6)}{A(x) = 1}
+	\Say{(7)}{\bd^{-1} \TYPE{In}(6)}{x \in A}
+	\Say{(8)}{\bd \TYPE{Subset}(B)(A)(3)(7)}{x \in B}
+	\Say{(9)}{\bd \TYPE{In}(8)}{B(x) = 1}
+	\Conclude{(10)}{I(=)(6)(9)}{A(x) = B(x)}
+	\Derive{(6)}{I(\Rightarrow)}{A(x) = 1 \Rightarrow A(x) = B(x)}
+	\Assume{(7)}{A(x) = 0}
+	\Assume{(8)}{ B(x) = 1   }
+	\Say{(9)}{\bd^{-1} \TYPE{In}(B)(x)(8) }{x \in B}
+	\Say{(10)}{\bd \TYPE{Subset}(A)(B)(9)}{x \in A}
+	\Say{(11)}{\bd \TYPE{In}(A)(x)(10)}{A(x) = 1}
+	\Say{(12)}{I(=)(7)(11)}{0 = 1}
+	\Conclude{(13)}{\THM{TruthIsFalsehoodContradiction}(12)}{\bot}
+	\Derive{(8)}{E(\bot)}{B(x) \neq 1}
+	\Say{(9)}{\THM{EqLEM}(8)}{ B(x) = 0}
+	\Conclude{(10)}{E(=)(7)(9)}{A(x) = B(x)}
+	\Derive{(7)}{I(\Rightarrow)}{ A(x) = 0 \Rightarrow A(x) = B(x)}
+	\Conclude{(8)}{E(|)(5)(6)(7)}{A(x) = B(x)}
+	\Derive{(2)}{I(\Rightarrow)}{A \subset B \And B \subset A \Rightarrow A = B}
+	\Conclude{(*)}{I(\iff)(1)(2)}{A = B \iff A \subset B \And B \subset A}
+	\EndProof
+}
+\Page{
+	\Theorem{EmptySetRule}{  \forall S : \Set(T) \. \emptyset \subset S }
+	\Assume{x}{T}
+	\Assume{(1)}{x \in \emptyset}
+	\Say{(2)}{\bd \emptyset (x)}{\emptyset(x) = 0}
+	\Say{(3)}{ \bd \TYPE{In}(x)}{\emptyset(x) = 1}
+	\Say{(4)}{ I(=)(2)(3)}{1 = 0}
+	\Say{(5)}{\THM{TruthIsFalsehoodContradiction}(4)}{\bot }
+	\Conclude{(6)}{E(\bot)(x \in S )}{ x \in S ;  }
+	\Derive{(1)}{ I(\forall)I(\Rightarrow) }
+	{\forall x \in T \. x \in \emptyset  \Rightarrow  x \in S}
+	\Conclude{(*)}{\bd\TYPE{Subset}(1)}{\emptyset \subset S}
+	\EndProof
+	\\
+	\Theorem{UniverseRule}{ \forall S : \Set(T) \. S \subset U(T)}
+	\Assume{x}{T}
+	\Assume{(1)}{x \in S}
+	\Say{(2)}{\bd U(T)(x)}{ U(T)(x) = 1}
+	\Conclude{(3)}{\bd^{-1} \TYPE{In}(2)}{x \in U(T)}
+	\Derive{(1)}{ I(\forall)I(\Rightarrow)}{\forall x \in T \. x \in S \Rightarrow x \in U(T)}
+	\Conclude{(*)}{\bd\TYPE{Subset}(1)}{S \subset U(T)}
+	\EndProof
+	\\
+	\Theorem{SingletonRule}{\prod T : \Type \. \forall x \in T \. x \in \{ x \}  }
+	\Say{(1)}{\bd(==)(x)}{x == x = 1}
+	\Say{(2)}{\bd \FUNC{singleton}(x)(x)}{ \{x\}(x) = x == x }
+	\Say{(3)}{E(=)(1)(2)}{\{x\}(x) = 1}
+	\Conclude{(*)}{\bd^{-1} \TYPE{In}(\{x\})(3)}{x \in \{x\}}
+	\EndProof
+	\\
+	\Theorem{SingletonEq}{\prod T : \Type \. \forall a,b : T \. a = b \iff \{a\} = \{b\}}
+	\Assume{(1)}{a = b}
+	\Conclude{()}{I(=,\to)\FUNC{singleton}(a,b)(1)}{\{a\} = \{b\}}
+	\Derive{(1)}{I(\Rightarrow)}{a = b \Rightarrow \{a\} = \{b\}}
+	\Assume{(2)}{ \{ a \} = \{ b \} }
+	\Say{(4)}{\THM{SingletonRule}(a)}{a \in \{a\}}
+	\Say{(5)}{\bd \TYPE{In}(4)}{\{a\}(a) = 1}
+	\Say{(6)}{E(=,\to)(2)(5)}{\{b\}(a) = 1}
+	\Say{(7)}{\bd \FUNC{singleton}(6)}{ a == b = 1}
+	\Conclude{()}{\bd(==)(7)}{a = b}
+	\Derive{(2)}{I(\Rightarrow)}{\{a\} = \{b\} \Rightarrow a = b}
+	\Conclude{(*)}{I(\iff)(1)(2)}{a = b \iff \{a\} = \{b\}}
+	\EndProof
+}
+\subsection{Inner Set Algebra}
+\Page{
+	\DeclareFunc{union}{ \prod T : \Type\. ??T \to ?T }
+	\DefineNamedFunc{union}{\mathcal{A}}{\bigcup \mathcal{A}}{ \bigvee_{A \in \mathcal{A}}A  }
+	\\
+	\DeclareFunc{unionFunc}{\prod T,I : \Type\. (I \to ?T) \to T}
+	\DefineNamedFunc{unionFunc}{A}{ \bigcup_{i : I} A_i   }{\bigvee_{i : I} A_i}
+	\\
+	\DeclareFunc{binaryUnion}{\prod T : \Type \.  ?T?T \to ?T}
+	\DefineNamedFunc{binaryUnion}{A,B}{A \cap B}{ A \vee B  }
+	\\
+	\DeclareFunc{intersect}{ \prod T : \Type\. ??T \to ?T }
+	\DefineNamedFunc{intersect}{\mathcal{A}}{\bigcap \mathcal{A}}
+	{ \bigwedge_{A \in \mathcal{A}}A  }
+	\\
+	\DeclareFunc{intersectFunc}{\prod T,I : \Type\. (I \to ?T) \to T}
+	\DefineNamedFunc{intersectFunc}{A}{ \bigcap_{i : I} A_i   }{\bigwedge_{i : I} A_i}
+	\\
+	\DeclareFunc{binaryIntersect}{\prod T : \Type \.  ?T?T \to ?T}
+	\DefineNamedFunc{binaryIntersect}{A,B}{A \cap B}{ A \wedge B  }
+	\\
+	\DeclareFunc{setDifference}{\prod T : \Type \. ?T?T \to ?T}
+	\DefineNamedFunc{SetDifference}{A,B}{A \setminus B}{A \wedge \, ! B  }
+	\\
+	\DeclareFunc{complement}{\prod T : \Type \. ?T \to ?T}
+	\DefineNamedFunc{complement}{A}{A^\c}{ U(T) \setminus A  }
+	\\
+	\DeclareFunc{symmetricDifference}{ \prod T : \Type \. ?T?T \to ?T     }
+	\DefineNamedFunc{SetDifference}{A,B}{A \du B}{ A \oplus B  }
+	\\
+	\DeclareType{DisjointPair}{ \prod T : \Type \. ?(?T?T)  }
+	\DefineType{(A,B)}{DisjointPair}{ A \cap B = \emptyset}
+	\\
+	\DeclareType{Disjoint}{ \prod T : \Type \. ???T}
+	\DefineType{\mathcal{A}}{Disjoint}
+	{ \forall A,B \in \mathcal{A} \. \Big( A = B | (A,B) : \TYPE{DisjointPair} \Big) }
+}
+\Page{
+	\Theorem{UnionRule}{\forall \mathcal{A} : ??T \. \forall A \in \mathcal{A} \. 
+		A \subset \bigcup \mathcal{A}}
+	\Assume{a}{T}
+	\Assume{(1)}{a \in A}
+	\Say{(2)}{\bd \TYPE{In}(1)}{A(a) = 1}
+	\Say{(3)}{ \bd A \bd  \bigvee (\mathcal{A},2)(a) }
+	{ \bigvee_{b \in \mathcal{A}} b(a) = 1   }
+	\Conclude{(4)}{ \bd \TYPE{In} \bd \bigcup \mathcal{A} (a) }
+	{a \in \bigcup_{A \in \mathcal{A}} A}
+	\DeriveConclude{(*)}{ \bd \TYPE{Subset}I(\Rightarrow)}{ A \subset \bigcup \mathcal{A}}
+	\EndProof
+	\\
+	\Theorem{IntersectionRule}{\forall \mathcal{A} : ??T \. \forall A \in \mathcal{A} \. 
+		\bigcap \mathcal{A} \subset A }
+	\Assume{a}{T}
+	\Assume{(1)}{a \in \bigcap \mathcal{A}}
+	\Say{(2)}{\bd \TYPE{In}(1)}{\bigcap \mathcal{A}(a)  = 1  }
+	\Say{(3)}{\bd \bigcap \mathcal{A}(2) }{ \bigwedge_{A \in \mathcal{A}} A(a) = 1  }
+	\Say{(4)}{\bd \bigwedge \bd A (3) }{A(a) = 1}
+	\Conclude{(5)}{\bd^{-1} \TYPE{In}}{a \in A}
+	\DeriveConclude{(*)}{\bd \TYPE{Subset}I(\Rightarrow)}{ \bigcap \mathcal{A} \subset A}
+	\EndProof	
+}
+\subsection{Outer Set Algebra}
+\Page{
+	\DeclareFunc{cartesianProduct}{ \prod I : \Type \. \prod T : I \to \Type \. 
+		\left( \prod i : I \. ?T_i \right)  \to ? \left( \prod i : I \. T_i \right) }
+	\DefineNamedFunc{cartesianProduct}{ A  }{ \prod_{i : I} A  }
+	{ \Lambda f : \prod i : I \. T_i \. \bigwedge_{i : I} A_i \;  f \; i}
+	\\
+	\DeclareFunc{binaryProduct}{ \prod T,S : \Type \.  ?T?S \to ?TS   }
+	\DefineNamedFunc{binaryProduct}{ A,B }{A \times B}
+	{ \Lambda (t,s) : TS \. A(t) \wedge B(s)  }
+        \\
+	\DeclareFunc{disjointUnion}{ \prod I : \Type \. \prod T : I \to \Type \. 
+		\left( \prod  i : I \. ?T_i \right) 
+		\to ? \left( \sum i : I \. T_i \right) }
+	\DefineNamedFunc{disjoinUnion}{ A  }{ \bigsqcup_{i : I} A  }
+	{ \Lambda (i,x) : \sum i : I \. T_i \.  A_i \; x}
+	\\
+	\DeclareFunc{binaryDUnion}{ \prod T,S : \Type \.  ?T?S \to ?(T|S)   }
+	\DefineNamedFunc{binaryDUnion}{ A,B }{A \sqcup  B}
+	{ \Lambda (i,x) : T | S \.  \If  i == 1 \Then A(x) \Else B(x) }
+	\\
+	\Theorem{EmptyProductRight}{\forall A : ?T \. A \times \emptyset_S = \emptyset_{TS}}
+	\Assume{(x,y)}{TS}
+	\Say{(1)}{\bd \emptyset(y)}{\emptyset(y) = 0}
+	\Say{(2)}{ \bd \wedge (A(x))(1)}{A(x) \wedge \emptyset(y) = 0}
+	\Conclude{(3)}{ \bd A \times \emptyset (2)}{ A \times \emptyset(x,y) = 0  }
+	\Derive{(1)}{I(\forall)}{\forall (x,y) : TS \. A \times \emptyset(x,y) = 0}
+	\Conclude{(*)}{ \bd^{-1}\emptyset(1)}{A \times \emptyset = \emptyset}
+	\EndProof
+	\\
+	\Theorem{EmptyProductLeft}{\forall A : ?S \. \emptyset_T \times A = \emptyset_{TS}}
+	\Assume{(x,y)}{TS}
+	\Say{(1)}{\bd \emptyset(y)}{\emptyset(x) = 0}
+	\Say{(2)}{ \bd \wedge (A(x))(1)}{\emptyset(x) \wedge A(y) = 0}
+	\Conclude{(3)}{ \bd  \emptyset \times A (2)}{ \emptyset \times A(x,y) = 0  }
+	\Derive{(1)}{I(\forall)}{\forall (x,y) : TS \.  \emptyset \times A(x,y) = 0}
+	\Conclude{(*)}{ \bd^{-1}\emptyset(1)}{\emptyset \times A  = \emptyset}
+	\EndProof
+}
+\subsection{Set Functions}
+\Page{
+	\DeclareType{SetFunction}{\prod T,S : \Type \. ??TS}
+	\DefineNamedType{F}{SetFunction}
+	{ F \in S^T}{  \forall x \in T \. \left(\exists y \in S \. (x,y) \in F \right) \And 
+	\NewLine \And
+	\forall y,z \in S \.
+	\left( \Big( (x,y) \in F \And (x,z) \Big) \in F \rightarrow y = z \right)   }
+	\\
+	\DeclareFunc{graph}{  (T \to S) \to S^T   }
+	\DefineFunc{graph}{f}{ \Lambda (x,y) : TS \.  f(x) == y}
+	\\
+	\DeclareFunc{image}{ (X \to Y) \to ?X \to ?Y   }
+	\DefineNamedFunc{image}{f,A}{f(A)}{\Lambda y : Y \. \bigvee_{x : X} f(x) == y}
+	\\
+	\DeclareFunc{preimage}{ (X \to Y) \to ?Y \to ?X}
+	\DefineNamedFunc{preimage}{f,A}{f^{-1}(A) }
+	{ \Lambda x : X \. \bigvee_{y : Y} f(x) == y  }
+	\\
+	\DeclareFunc{degraph}{ S^T \to T \to S  }
+	\DefineFunc{degraph}{F}{ \Lambda x : T \. \bd F (x)}
+	\\
+	\DeclareFunc{compose}{S^T  R^S \to R^T}
+	\DefineFunc{compose}{F,G}
+	{ \Lambda (x,y) : TR \. \bigvee_{z : S} (x,z) \in F \wedge (z,y) \in G }
+}
+\subsection{Category SET} 
+\Page{ 
+	& \SET :: \Cat \\ 
+	& \mathcal{O}(\SET) = \sum T : \Type \. ?T  \\
+	& \mathcal{M}_{\SET}(T,A)(S,B) = \TYPE{SetFunction}(A,B) \\
+	& \mathrm{id}_{(T,A)} = \Lambda (x,y) : T^2 \. x == y \\
+	& \circ_\SET = \FUNC{compose} \\
+	\\
+}
+\section{Relations}
+\subsection{Types of Relations}
+\Page{
+	& \TYPE{Relation}(A) = ?(A \times A) : \prod T : \Type \. ?T \to ?(T \times T) \\
+ \\
+ \DeclareType{Reflexive}{ ?\TYPE{Relation}(A) }
+ \DefineType{R}{Reflexive}{\forall a \in A \. (a,a) \in R}
+ \\
+ \DeclareType{Antireflexive}{ ?\TYPE{Reflection}(A)}
+ \DefineType{R}{Antireflexive}{ \forall a \in A \. (a,a) \not \in R}
+ \\
+ \DeclareType{Symmetric}{?\TYPE{Relation}(A)}
+ \DefineType{R}{Symmetric}{\forall a,b \in A \. (a,b) \in R \iff (b.a) \in R }
+ \\
+ \DeclareType{Antisymmetric}{?\TYPE{Relation}(A)}
+ \DefineType{R}{Antisymmetric}{\forall a,b \in A \. \Big( (a,b) \in R \And (b,a) \in R \Big) \iff a = b}
+ \\
+ \DeclareType{Transitive}{?\TYPE{Relation}(A)}
+ \DefineType{R}{Transitive}{\forall a,b,c \in A \. (a,b),(b,c) \in R \Rightarrow (a,c) \in R}
+ \\
+ \DeclareType{Total}{?\TYPE{Relation}(A)}
+ \DefineType{R}{Total}{ \forall a,b \in A \. (a,b) \in A | (b,a) \in A} 
+ \\
+ \DeclareFunc{compose}{ \TYPE{Relation}(A) \times \TYPE{Relation}(A) \to \TYPE{Relation}(A)}
+ \DefineNamedFunc{compose}{ R,S}{ R \circ S}{ \Lambda (x,y) \in A^2 \.  \bigvee_{a \in A} R(x,a) \wedge S(a,y) }
+}
+\subsection{Equivalence Relation}
+\Page{
+	& \TYPE{EquivalenceRelation}(A) = \TYPE{Reflexive}(A) \And \TYPE{Symmetric}(A) \And \TYPE{Transitive}(A)  \\
+}
+\subsection{Factor Sets}
+\Page{
+	\DeclareFunc{equivalenceClass}{ \prod A : \Set(T) \. \TYPE{EquivalenceRelation}(A) \to A \to ?A }
+	\DefineFunc{equivalenceClass}{E,a }{ \{  x \in A : a = x   \} }
+	\\
+	\DeclareFunc{factorSet}{ \prod A : \Set(T) \. \TYPE{EquivalenceRelation}(A) \to ??A  }
+	\DefineNamedFunc{factorSet}{E}{\frac{A}{E}}{ \Big\{ \FUNC{equivalenceClass}(E,a) \Big| a \in A    \Big\}  }
+}
+\section{Locally Naive Cardinals}
+\subsection{Inner Cardinals}
+\Page{
+	\DeclareType{SetIsoclass}{\prod T : \Type \. ???T }
+	\DefineType{\mathcal{A}}{SetIsoclass}{\forall A,B \in \mathcal{A} \. \exists A \ToBij_{\SET}  B}
+	\\
+	\DeclareType{Cardinal}{\prod T : \Type \. ?\TYPE{SetIsoclass}(T)}
+	\DefineNamedType{\kappa}{ Cardinal }{ \kappa \in \mathcal{K}(T)}
+	{ \forall \alpha : \TYPE{SetIsoclass}(T) \. 
+		\big( \alpha \cap \kappa = \emptyset | \alpha \subset \kappa   \big)  
+	}
+	\\
+	\DeclareType{HasCardinality}{ \prod T : \Type \. ?((?T)\mathcal{K}(T))}
+	\DefineNamedType{(A,\kappa)}{HasCardinality}{|A| = \kappa}{A \in \kappa}
+	\\
+	\DeclareType{SameCardinality}{\prod T : \Type \. ?(?T \times ?T)}
+	\DefineNamedType{(A,B)}{SameCardinality}{ |A| = |B|  }
+	{\exists \kappa \in \mathcal{K}(T) \. |A| = \kappa \And |B| = \kappa}
+	\\
+	\DeclareType{IsBigger}{\prod T : \Type \. ?(?T \times ?T)}
+	\DefineNamedType{(A,B)}{IsBigger}{|A| \ge |B|}{ \exists S : \TYPE{Subset}(A) \. |S| = |B| }
+	\\
+	\Theorem{CardinalsExist}{\forall A : ?T \. \exists \kappa \in \mathcal{K}(T) \. |A| = \kappa }
+	\Say{X}{\Big\{ B : ?T \Big| \exists  A \ToBij_{\SET} B   \Big\}}{??T}
+	\Assume{I,J}{ X  }
+	\Say{f}{\bd I \bd X}{A \ToBij_{\SET} I}
+	\Say{g}{\bd J \bd X}{A \ToBij_{\SET} J}
+	\Conclude{(1)}{\THM{IsoComposition}(g,f^{-1})}{ g \circ f^{-1} : I \ToBij_{\SET} J  }
+	\Derive{(2)}{\bd \TYPE{SetIsoclass}I(\forall)}{  \Big( X : \TYPE{SetIsoclass}(T) \Big)  }
+        \Assume{Y}{\TYPE{SetIsoclass}(T)}
+	\Assume{(3)}{X \cap Y \neq \emptyset}
+	\Say{ B }{ \bd \emptyset (3) }{ \TYPE{In}(X \cap Y) }
+	\Assume{C}{\TYPE{In}(Y)}
+	\Say{f}{\bd \TYPE{SetIsoclass}(T)(Y)(B,C)}{  B \ToBij_{\SET} C  }
+	\Say{g}{\bd \TYPE{SetIsoclass}(T)(X)(A,B)}{ A \ToBij_{\SET} C  }
+	\Say{(4)}{\THM{IsoComposition}(f,g)}{f \circ g : (A \ToBij_{\SET} C) }
+	\Conclude{(5)}{\bd X(4)}{ C \in X }
+	\DeriveConclude{ (4) }{\bd^{-1} \TYPE{Subset} I(\Rightarrow)}{Y \subset X}
+	\Derive{(3)}{ \bd^{-1} \mathcal{K}(T)  I(\forall) }{ X \in \mathcal{K}(T)  }
+	\Conclude{(*)}{\bd^{-1} \TYPE{HasCardinality}(A,X )}{|A| = X }
+	\EndProof
+	\\
+	\DeclareFunc{cardinality}{\prod T : \Type \. ?T \to \mathcal{K}(T)}
+	\DefineNamedFunc{cardinality}{A}{|A|}{\THM{CardinalsExist}(A)}
+}
+\subsection{Global Cardinality}
+\Page{
+	\DeclareType{EquellCardinals}{ \prod T,S : \Type \. ?(\mathcal{K}(T) \times \mathcal{K}(S))  }
+	\DefineNamedType{(\alpha,\beta)}{EquallCardinals}{ \alpha = \beta  }
+	{ \forall A \in \alpha \. \forall B \in \beta \. \exists A \ToBij_{\SET} B }
+	\\
+	\DeclareType{IsBigger}{\prod T,S : \Type \. ?(?T \times ?S)}
+	\DefineNamedType{(A,B)}{IsBigger}{|A| \ge |B|}{ \exists S : \TYPE{Subset}(A) \. |S| = |B| }
+	\\
+	\DeclareFunc{zeroCardinal}{\prod T : \Type \. \mathcal{K}(T)}
+	\DefineNamedFunc{zeroCardinal}{}{0_T}{\{ \emptyset \}}
+	\\
+	\DeclareFunc{finiteCardinal}{ \Nat \to \mathcal{K}(\Nat)  }
+	\DefineNamedFunc{finiteCardinal}{n}{n}{\Big| \{  m : \Nat : m \le n   \} \Big|}
+	\\
+	\DeclareType{Finite}{\prod T : \Type \. ??T}
+	\DefineNamedType{A}{Finite}{|A| < \infty }{\exists n \in \Nat \. |A| = n}
+	\\
+	\DeclareType{Infinite}{\prod T : \Type \. ??T}
+	\DefineNamedType{A}{Infinite}{|A| = \infty}{\forall n \in \Nat \. |A| \ge n}
+	\\
+	\DeclareFunc{countableInfinity}{\mathcal{K}(\Nat)}
+	\DefineNamedFunc{countableInfinity}{}{\aleph_0}{|U(\Nat)|}
+	\\
+	\DeclareType{Countable}{\prod T : \Type \. ??T}
+	\DefineType{A}{Countable}{ |A| \le |U(\Nat)|  }
+	\\
+	\DeclareType{IsStrictlyBigger}{ ? \TYPE{IsBigger}(T,S)}
+	\DefineNamedType{(A,B)}{IsStriclyBigger}{|A| > |B|}{!|A| = |B|}
+}
+\subsection{Cantor Theorems}
+\Page{
+	\Theorem{CantorTHM}{\forall A : ?T \. \Big|2^A\Big| > |A| }
+	\Say{(1)}{\bd ?A \bd 2^A \bd \FUNC{singleton}}{\Big( \FUNC{singleton} : A \ToBij_{\SET} 
+		\big\{ \{a\}  \big| a \in A  \big\} \Big)}
+	\Say{(2)}{\bd^{-1} \TYPE{IsBigger}(2^A,A)(1)}{ |2^A| \ge |A| }
+	\Assume{(3)}{ |2^A| = |A| }
+	\Say{f}{\bd |2^A| = |A|}{ 2^A \ToBij_{\SET} A}
+	\Say{Z}{ \{ a \in A : a \not \in f(a)  \} }{ ?A }
+	\Say{(z,4)}{\bd f (Z)}{\sum z \in A \. f(z) = Z}
+	\Assume{(6)}{z \in Z}
+	\Say{(7)}{\bd Z(6)}{z \not \in f(z)}
+	\Say{(8)}{E(=)(4)(6)}{z \not \in Z}
+	\Conclude{(9)}{(8)(6) }{\bot}
+	\Derive{(6)}{E(\bot)}{ z \not \in Z}
+	\Say{(7)}{E(=)(4)(6)}{z \not \in f(z)}
+	\Say{(8)}{\bd Z (7)}{z \in Z}
+	\Conclude{(9)}{(6)(8)}{\bot}
+	\Derive{(3)}{E(\bot)}{!|2^A| = |A| }
+	\Conclude{(*)}{\bd^{-1} \TYPE{IsStrictlyBigger}(2^A,A)(2)(3)}{|2^A| > |A|}
+	\EndProof
+	\\
+	\DeclareFunc{continum}{\mathcal{K}(?\Nat)}
+	\DefineNamedFunc{continum}{}{\mathfrak{c}}{\Big|2^\Nat \Big|}
+	} \Page{
+	\Theorem{CantorBernsteinTHM}{\forall A : ?T \. \forall B : ?T \. 
+		|A| \ge |B| \And |B| \ge |A| \iff |A| = |B|}
+	\Assume{(1)}{|A| \ge |B| \And |B| \ge |A|}
+	\Say{(S,f)}{ \bd\TYPE{IsBigger}(A,B)(1)}{ \sum S : ?B \. f : A \ToBij_{\SET} S }
+	\Say{(R,g)}{ \bd\TYPE{IsBigger}(B,A)(2)}{\sum R : ?A \. g : B \ToBij_{\SET} R}
+	\Say{\alpha_0}{A}{?A}
+	\Say{\beta_0}{B}{?B}
+	\Assume{n}{\Nat}
+	\Say{\alpha_n}{g(\beta_{n-1})}{?A}
+	\Say{\beta_n}{f(\alpha_{n-1})}{?B}
+	\Say{(2_n)}{\THM{ConstrictBijection}(g,\beta_{n-1})\bd \alpha_n}{ \alpha_n \cong_{\SET} \beta_{n-1}}
+	\Say{(3_n)}{\THM{ConstricBijecction}(f,\alpha_{n-1})\bd \beta_n}{\beta_n \cong_{\SET} \alpha_{n-1}}
+	\Say{(4_n)}{(3_{n-1})5_{n-1}  }{\alpha_n \subset \alpha_{n-1}}
+	\Conclude{(5_n)}{2_{n-1}4_{n-1}}{\beta_n \subset \beta_{n-1}}
+	\Derive{(\alpha,\beta,2)}{I(\sum)}{\sum (\alpha,\beta) : \NNInt \to (?A)(?B) \. \forall n \in \Nat \. 
+		\NewLine
+		\alpha_n \cong_{\SET} \beta_{n-1} \And \beta_n \cong_{\SET} \alpha_{n-1}  \And   
+		\alpha_n \subset \alpha_{n-1} \And \beta_{n} \subset \beta_{n - 1}
+		}
+	\Say{(3)}{\bd(\alpha,\beta)\bd \FUNC{compose}}{\forall n \in \NNInt \. \alpha_n \cong_{\SET} \alpha_{n + 2}}
+	\Say{\delta}{\bigcap_{n}^\infty \alpha_n }{?A}
+	\Assume{n}{\NNInt}
+	\Conclude{\gamma_n}{\alpha_n \setminus \alpha_{n-1}}{?A}
+	\Derive{\gamma}{I(\to)}{ \NNInt \to ?A}
+	\Say{\gamma_\infty}{\delta}{?A}
+	\Say{(4)}{\THM{DifferenceIsomorphism}(\bd \gamma)(3)}{\forall n \in \NNInt \. \gamma_n \cong_{\SET} \gamma_{n + 1}}
+	\Say{(5)}{  \bd^{-1} \TYPE{Partition}  \bd \alpha \bd \gamma \bd \delta}{\gamma : \TYPE{Partition}(A))}
+	\Assume{x}{A}
+	\Say{(n,6)}{\bd \TYPE{Partition}(A)(x)}{ \sum n \in \NNInt \. x \in \gamma_n}
+	\Assume{(7)}{ (n : \TYPE{Odd})}
+	\Conclude{\varphi(x)}{ x }{A}
+	\Derive{(7)}{I(\Rightarrow)}{ (n : \TYPE{Odd}) \Rightarrow \varphi(x) = x}
+	\Assume{(8)}{(n : \TYPE{Even}) }
+	\Conclude{\varphi(x) }{ g \circ f (x)}{A}
+	\DeriveConclude{(8)}{I(\Rightarrow)}{ (n : \TYPE{Even}) \Rightarrow g \circ f (x)}
+	\Derive{\varphi}{ \bd \gamma \bd f \bd g \LOGIC{ConditionalFunction}}{ \alpha_0 \ToBij_{\SET} \alpha_1   }
+	\Say{(6)}{\bd \alpha_1 \bd \varphi E(=)}{ A \cong_{\SET} B}
+	\Conclude{(7)}{\bd^{-1} \TYPE{EquallCardinals} (6)}{|A| = |B|}
+	\Derive{(1)}{I(\Rightarrow)}{|A| \ge |B| \And |B| \ge |A| \Rightarrow |A| = |B| }
+	\Assume{(2)}{|A| = |B|}
+	\Say{(3)}{\bd^{-1} \TYPE{IsBigger}(A,B)(2)}{|A| \ge |B|}
+	\Say{(4)}{\bd^{-1} \TYPE{IsBiffer}(B,A)(2)}{|B| \ge |A|}
+	\Conclude{(5)}{I(\And)(3)(4)}{|A| \ge | B| \And |B| \ge |A|}
+	\Derive{(2)}{I(\Rightarrow)}{|A| = |B| \Rightarrow |A| \ge |B| \And |B| \ge |A|}
+	\Conclude{(*)}{I(\iff)(1)(2)}{|A| \ge |B| \And |B| \ge |A| \iff |A| = |B|}
+	\EndProof
+}
+\subsection{Cardinal Algebra}
+\Page{
+	\DeclareFunc{cardSum}{ \mathcal{K}(T) \times \mathcal{K}(S) \to \mathcal{K}(T|S)}
+	\DefineNamedFunc{cardSum}{A,B}{|A| + |B|}{ |A \sqcup B|}
+	\\
+	\DeclareFunc{cardProduct}{\mathcal{K}(T) \times \mathcal{K}(S) \to \mathcal{K}(T \times S)}
+	\DefineNamedFunc{cardProduct}{ A,B  }{|A||B|}{| A \times B|}
+	\\
+	\DeclareFunc{cardPower}{\mathcal{K}(T) \times \mathcal{K}(S) \to \mathcal{K}\big( T^S \big)}
+	\DefineNamedFunc{cardPower}{A,B}{|A|^{|B|}}{|A^B|}
+}
+\subsection{Category CARD}
+\end{document}

@@ -1,0 +1,326 @@
+\documentclass[12pt]{article}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=10mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\NewLine}{\\ & \kern 1pc}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\Co}{\mathbb{C} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cate}{\TYPE{Category}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+\renewcommand{\And}{\; \& \;}
+%%ProofWritting
+\newcommand{\A}{\LOGIC{Assume} \;} 
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\E}{ \; \LOGIC{Extract} } 
+\newcommand{\QED}{\; \square}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%MetricGeometry
+\newcommand{\Ball}[3]{ \mathbb{B}^{#1}\left(#2,#3\right) }
+\newcommand{\ClBall}[3]{ \overline{ \mathbb{B}}^{#1}\left(#2,#3\right) }
+\newcommand{\ToP}{\overset{p}{\to}}
+\newcommand{\ToU}{\rightrightarrows}
+%LinearAlgebra
+%TYPES
+\newcommand{\VS}[1]{\TYPE{VectorSpace}\left( #1 \right)}
+\newcommand{\Lin}[1]{\mathcal{L}\left( #1 \right)}
+\newcommand{\vs}[1]{\mathsf{VS}\left( #1 \right)}
+\DeclareMathOperator*{\rank}{rank}
+%FUNK
+\DeclareMathOperator{\rk}{rank}
+\author{Uncultured Tramp} 
+\title{Lp.Know}
+%Simbpls
+\renewcommand{\L}{\mathcal{L}}
+%Topology
+%TYPES
+\newcommand{\TS}{\TYPE{TopologicalSpace}}
+%MeasureTheory
+%TYPES
+\newcommand{\SA}[1]{\TYPE{\sigma \hyph  Algebra}\left( #1 \right) }
+\newcommand{\SF}[1]{\TYPE{\sigma \hyph  Finite}\left( #1 \right) }
+\newcommand{\CA}[1]{\TYPE{CountablyAdditive}\left( #1 \right) }
+\newcommand{\FA}[1]{\TYPE{Charge}\left( #1 \right) }
+\newcommand{\LS}{\TYPE{Lebesgue \hyph Stieltjes}}
+\newcommand{\DF}{\TYPE{DistributionFunction}}
+\renewcommand{\AE}[1]{\mathrm{a\. e\.} \left[#1\right]}
+\newcommand{\SI}[1]{\TYPE{\sigma \hyph  Ideal}\left( #1 \right) }
+%Simbols
+\newcommand{\F}{\mathcal{F}}
+\renewcommand{\O}{\Omega}
+\newcommand{\B}{\mathcal{B}}
+\renewcommand{\l}{\lambda}
+\renewcommand{\P}{\mathbb{P}}
+%LP
+%TYPE
+\newcommand{\CVBMF}{\TYPE{ComplexValuedBorelMeasurableFunction}}
+\newcommand{\Integrable}{\TYPE{Integrable}}
+\newcommand{\Lp}{\mathbf{L}}
+%FUNC
+\DeclareMathOperator*{\esssup}{ess \, sup}
+\begin{document}
+\maketitle
+\tableofcontents
+\section{$L^p$ Spaces}
+\subsection{Basic Definition}
+\begin{align*}
+& \CVBMF :: \prod X \in \mathtt{BOR} \. ?(X \to  \Co )  \\
+& f : \CVBMF \iff \Im f : \TYPE{Measurable}(X) \And \Re f : \TYPE{Measurable}(X)
+\\ \\
+& \Integrable :: \prod X \in \mathtt{MEAS} \. ?(X \to  \Co )  \\
+& f : \Integrable \iff \Im f : \TYPE{Integrable}(X) \And \Re f : \TYPE{Integrable}(X)
+\\ \\
+& \FUNC{Integrate} :: \Integrable(\O,\F,\mu) \to \Co \\
+& \FUNC{Integrate}(f) \de \int_\O f \mathrm{d}\mu = \int_\O \Re f \mathrm{d} \mu + \mathrm{i} \int_\O \Im f \mathrm{d}\mu,
+\\ \\
+&  \THM{AbsValIntegralInequality} :: \forall f : \Integrable(\O,\F,\mu) \. \left |\int_O f \mathrm{d}\mu \right | \le \int_\O |f|\mathrm{d}\mu \\
+&  \Proof =  \\
+&   \A f : \Integrable(\O,\F,\mu),      \\
+&  r\mathrm{e}^{\mathrm{i}\theta} \de \int_\O f \mathrm{d}\mu \in \Co, \\
+&  \ByDef (r, \theta) \leadsto E_1 : \left  |\int_O f \mathrm{d}\mu \right |  = r =  \mathrm{e}^{-\mathrm{i}\theta}r\mathrm{e}^{\mathrm{i}\theta}  =  \mathrm{e}^{-\mathrm{i}\theta}\int_\O f \mathrm{d}\mu  = \int_\O \mathrm{e}^{-\mathrm{i}\theta}f\mathrm{d}\mu, \\
+& \rho\mathrm{e}^{\mathrm{i}\phi} \de f : \Integrable(\O,\F,\mu),\\
+& E_1  \leadsto I_1 : \int_\O \mathrm{e}^{-\mathrm{i}\theta}f\mathrm{d}\mu = \int_\O \rho \cos \circ \phi \mathrm{d}\mu + \mathrm{i} \int_\O \rho \sin \circ \phi \mathrm{d}\mu = 
+\int_\O \rho \cos \circ \phi \mathrm{d}\mu  \le \int_\O \rho \mathrm{d}\mu = \int_\O |f|\mathrm d \mu ; \\
+& \QED
+\\ \\
+& \TYPE{Lp} :: \prod X \in \mathtt{MEAS} \. \Reals_{++} \to \Set(X \to \Co)\\
+& f \in \TYPE{Lp}(p) \iff f \in L^p \iff |f|^p : \Integrable(X) 
+\end{align*}
+\newpage
+\subsection{Inequalities}
+\begin{align*}
+& \THM{Ineq1} :: \forall a,b,x,y \in \Reals_{++} : x + y = 1 \. a^x b^y \le xa + yb  \\
+&  \Proof =  \\
+&  \A    a,b,x,y \in \Reals_{++} : x + y = 1 \,        \\
+&   I_1  \de \ByDef \TYPE{Convex}(-\log,x,y) : -\log(xa + yb) \le -x\log(a) - y\log(b), \\
+&   \THM{InverseMonotoneActIneq}(I_1, \exp \circ - \mathrm{id}) :: \exp(x\log(a) + y\log(b)) =
+ \NewLine
+= \exp(\log(a^xb^y)) = a^xb^y \le xa + xb = \exp \log (xa + xb) ; \QED     
+ \\ \\
+ & \THM{Ineq2} :: \forall a,b,x,y \in \Reals_{++} : (1/x) + (1/y) = 1 \. a b \le  \frac{a^x}{x} + \frac{b^y}{y}  \\
+&  \Proof =  \\
+&  \A    a,b,x,y \in \Reals_{++} : (1/x) + (1/y) = 1 ,        \\
+&  \THM{Ineq1}(a,b,1/x,1/y)) :: a b \le \frac{a^x}{x} + \frac{b^y}{y} ; \square
+\\ \\
+& \THM{H\ddot olderInequality} :: \forall p,q \in (1,\infty) : (1/p) + (1/q) = 1 \. 
+\NewLine \.
+\forall f \in L^p(\O,\F,\mu) \. \forall g \in L^q(\O,\F,\mu) \. \int_\O |fg| \mathrm{d} \mu \le \sqrt[p]{\int_\O |f|^p\mathrm{d}\mu}\sqrt[q]{\int_\O |g|^q\mathrm{d}\mu} \\
+& \Proof = \\
+&  \A p,q  \in (1,\infty) : (1/p) + (1/q) = 1, \\   
+&   \A f \in L^p(\O,\F,\mu), \\
+&  \A g \in L^q(\O,\F,\mu),  \\
+&   a \de   \sqrt[p]{\int_\O |f|^p\mathrm{d}\mu} \in Reals_+,            \\
+&  b \de   \sqrt[q]{\int_\O |g|^q\mathrm{d}\mu} \in \Reals_+, \\
+&  \A \Alt A : a = 0|b = 0, \\
+&  I_1 \de \THM{LowerBound}(\Reals_+,A) : ab = 0 =  \int_\O |fg| \mathrm{d}\mu; \\
+&   \CL \Alt A : a \neq 0 \And b \neq 0, \\
+&   \A \omega \in \O,           \\
+&   \THM{Ineq1}(|f(\omega)|/a, |g(\omega)|/b,p,q) : \frac{|f(\omega)||g(\omega)|}{ab} \le \frac{|f(\omega)|^p}{pa^p} +     \frac{|g(\omega)|^q}{qb^q};\\
+& R_1 : \forall \omega \in \O \.  \frac{|f(\omega)||g(\omega)|}{ab} \le \frac{|f(\omega)|^p}{pa^p} +     \frac{|g(\omega)|^q}{qb^q}, \\
+&  \THM{IntegralIneq}(R_1) : \frac{1}{ab}\int_\O |fg|\mathrm{d}\mu  = \int_\O \frac{|f||g|}{ab}\mathrm{d}\mu \le \int_\O \frac{|f(\omega)|^p}{pa^p} +     \frac{|g(\omega)|^q}{qb^q} \mathrm{d}\mu  =
+\end{align*}
+\newpage
+\begin{align*}
+& = \frac{1}{pa^p}\int_\O |f(\omega)|^p \mathrm{d}\mu + \frac{1}{qb^q} \int_\O |g|^q\mathrm{d}\mu = \frac{1}{p} + \frac{1}{q} = 1 \leadsto    \int_\O |fg|\mathrm{d}\mu \le ab
+ ;;;; \square
+ \\ \\
+ & \THM{Ineq3} :: \forall a,b \in \Reals_+ \. \forall p \in [1,\infty) \. (a + b)^p \le 2^{p-1}(a^p + b^p) \\ 
+ &   \Proof=         \\
+ &  \A a,b \in \Reals_+,     \\
+ &   p \in [1,\infty),                       \\
+ &    f  \de \Lambda   x \in \Reals_+ \. (a  +  x)^p  - 2^{p-1}(a^p + x^p) : \Reals_+ \to \Reals,                  \\
+ & E_1 \de \ByDef\FUNC{Derivative}: f' = \Lambda   x \in \Reals_+ \. p(a + x)^{p-1}  -2^{p-1}px^{p-1},          \\
+ & E_1 \leadsto f'(a) =  0 \leadsto  a : \TYPE{Extremum}(f),        \\
+ & \A x \in \Reals_{+} : x > a, \\
+ & f'(x) > 0 ; \\
+ & \A x \in \Reals_{+} : x < a,\\
+ &  f'(x) < 0 ;     \\
+ & a : \TYPE{Maximum}(f),  \\
+ & f(a) = 0 \leadsto   (a + b)^p \le 2^{p-1}(a^p + b^p) ;; \square
+ \\ \\
+ & \THM{MinkowskiInequality} :: \forall p \in [1,\infty) \.  \forall f,g \in L^p(\O,\F,\mu) \. f + g \in L^p \And 
+\NewLine \And 
+  \sqrt[p]{\int_\O |f + g|^p \mathrm{d} \mu} \le \sqrt[p]{\int_\O |f|^p \mathrm{d}\mu} +  \sqrt[p]{\int_\O |g|^p \mathrm{d}\mu}    \\
+&  \Proof = \\
+&  \A p \in [1, \infty), \\
+&   \A f,g \in L^p,  \\
+&   \A \omega \in \O,    \\
+&  I_1 \de  \THM{Ineq3}(|f(\omega)|,|g(\omega)|,p) : (|f(\omega)| + |g(\omega)|)^p \le 2^{p-1}(|f(\omega) |^p + |g(\omega)|^p), \\
+& I_2 \de \THM{MonotoneActIneq}(\THM{AbsSumIneq}(f(\omega),g(\omega)),\mathrm{id}^p) : |f(\omega) +  g(\omega)|^p \le (|f(\omega)| + |g(\omega)| )^p,          \\    
+& I_2I_1 : |f(\omega) +  g(\omega)|^p \le 2^{p-1}(|f(\omega) |^p + |g(\omega)|^p); \\
+& R_1 : \forall \omega \in \O : |f(\omega) +  g(\omega)|^p \le 2^{p-1}(|f(\omega) |^p + |g(\omega)|^p),\\
+& I_1 \de  \THM{IntegralIneq}(R_1) : \int_\O |f + g|^p\mathrm{d}\mu \le 2^{p-1}\int_\O |f|^p \mathrm{d}\mu + 2^{p-1}\int_\O |g|^p \mathrm{d}\mu  < \infty \leadsto       
+\NewLine
+\leadsto f + g \in L^p , \\
+& \A \Alt p = 1, \\
+&  I_1 \leadsto \int_\O |f + g|\mathrm{d}\mu \le \int_\O |f|\mathrm{d}\mu + \int_\O |g|\mathrm{d}\mu; \\
+&  \CL \Alt p > 1, \\
+&   q \de p/(p - 1) \in (1, + \infty), \\
+&   \A \omega \in \Omega ,  \\
+\end{align*}
+\newpage    
+\begin{align*}
+&  \THM{MonotoneActIneq}\left (\THM{AbsSumIneq}(f(\omega),g(\omega)),\mathrm{id}|f(\omega) + g(\omega)|^{(p-1)} \right ) : |f(\omega) + g(\omega)|^p \le   \NewLine 
+\le |f(\omega) + g(\omega)||f(\omega) + g(\omega)|^{(p-1)}
+   \le  |f(\omega)||f(\omega) + g(\omega)|^{(p-1)} + |g(\omega)||f(\omega) + g(\omega)|^{(p-1)} ;                     \\
+ &  A_2 : \forall \omega \in \O \.  |f(\omega) + g(\omega)|^p \le    
+|f(\omega)||f(\omega) + g(\omega)|^{(p-1)} + |g(\omega)||f(\omega) + g(\omega)|^{(p-1)} ; 
+            \\
+&   \int_\O  (|f + g|^{p - 1})^q \mathrm{d}\mu = \int_\O |f + g|^p \mathrm{d}\mu 
+ \leadsto |f + g|^{p - 1} \in L^q(\O,\F,\mu)       ; \\
+ & E_1 \de \ByDef(1/q) + 1/p : \frac{1}{q} + \frac{1}{p} =  \frac{1}{p} + \frac{p -1 }{p } = 1, \\
+ &  I_2 \de \THM{H\ddot olderInequality}\Big (|f|,|f + g|^{p - 1},p,q \Big ) :
+ \int_\O |f||f + g|^{p - 1} \mathrm{d}\mu \le 
+ \NewLine 
+ \le \sqrt[p]{\int_\O |f|^p \mathrm{d}\mu} \sqrt[q]{\int_\O |f + g|^{p}\mathrm{d}\mu},         
+       \\   
+ &  I_3 \de \THM{H\ddot olderInequality}\Big (|g|,|f + g|^{p - 1},p,q \Big ) :
+ \int_\O |g||f + g|^{p - 1} \mathrm{d}\mu \le 
+ \NewLine 
+ \le \sqrt[p]{\int_\O |g|^p \mathrm{d}\mu} \sqrt[q]{\int_\O |f + g|^{p}\mathrm{d}\mu},\\         
+  & (I_2,I_3,A_2) : \int_\O |f + g|^p\mathrm{d}{\mu} \le  
+  \sqrt[p]{\int_\O |f|^p \mathrm{d}\mu} \sqrt[q]{\int_\O |f + g|^{p}\mathrm{d}}
+  +
+  \sqrt[p]{\int_\O |g|^p \mathrm{d}\mu} \sqrt[q]{\int_\O |f + g|^{p}\mathrm{d}\mu}   
+   = 
+   \NewLine   
+   =   
+   \left( \sqrt[p]{\int_\O |f|^p \mathrm{d}\mu} 
+  +
+  \sqrt[p]{\int_\O |g|^p \mathrm{d}\mu} \right) \sqrt[q]{\int_\O |f + g|^{p}\mathrm{d}\mu} 
+    \leadsto_{E_1} \NewLine 
+    \leadsto_{E_1} \sqrt[p]{\int_\O |f + g|^p\mathrm{d}p} \le   \left( \sqrt[p]{\int_\O |f|^p \mathrm{d}\mu} 
+  +
+  \sqrt[p]{\int_\O |g|^p \mathrm{d}\mu} \right) ;;;\QED   \\  
+  \\ \\
+ & \THM{LpIsVS} :: \forall p \in [1,\infty) \. L^p : \mathsf{VS}(\Co) \\
+\end{align*}
+\newpage    
+\subsection{$L^p$ as Topological Vector Space}
+\begin{align*}
+&\FUNC{LpSeminorm} :: L^p(\O,\F,\mu) \to \Reals_+ \\
+&\FUNC{LpSeminorm}(f) = \| f \|_p \de \sqrt[p]{\int_\O |f|^p\mathrm{d}\mu}  
+\\ \\
+&\TYPE{LpSpace} ::  [1,\infty) \to \mathsf{MAES} \to \mathsf{NVS}(\Co)
+\\
+& \TYPE{LpSpace}(p)(X) =  \Lp^p(X) = \left (\frac{L^p(X)}{\{ (f,g) \in
+ (L^p(L))^2 : \| f - g \|_p = 0 \}}      , \| \cdot \|_p\right )  
+ \\ \\ 
+& \THM{ChebyshevIneq}  ::  \forall f \in L^p(\O,\F,\mu) : f > 0 \. \forall t \in \Reals_{++} \.
+   \mu\{ \omega \in O : f(\omega) > t \} \le \frac{1}{t^p} \int_\O f^p \mathrm{d}\mu        \\    
+& \Proof = \\
+&  \A f \in  L^p(\O,\F,\mu) : f > 0,    \\
+&  \A t \in \Reals_{++}, \\
+&  A \de \mu\{ \omega \in O : f(\omega) > t \} \in \F, \\
+&  \int_\O f^p \mathrm{d}\mu \ge \int_A f^p \mathrm{d}\mu \ge \int_A t^p \mathrm{d}\mu  =
+t^p\int_A\mathrm{d}\mu = t^p\mu(A) \leadsto  \mu(A) \le \frac{1}{t_p}\int_\O f^p\mathrm{d}\mu \QED      
+\\ \\
+&\THM{LpConvergenceLemma} :: \forall f : \Nat \to L^p(\O,\F,\mu)  : \forall k \in \Nat \.
+ \| f_k - f_{k+1} \|_p  \le (1/4)^k 
+ \.
+\NewLine \.
+   f : \TYPE{Converge}(\Co) \quad \AE{\mu} \\
+&  \Proof =  \\
+& \A f : \Nat \to L^p(\O,\F,\mu) :   \forall k \in \Nat \.
+ \| f_k - f_{k+1} \|_p \le (1/4)^k ,        \\
+&   \A k \in \Nat,               \\
+&  A_k \de \left  \{ \omega \in \O : |f_k(\omega) - f_{k +1}(\omega)| \le 2^{-k} \right  \} \in \F, \\
+&  \THM{ChebyshevIneq}(|f_k - f_{k-1}|, 2^{-k}) : \mu(A) \le 2^k\int_\O |f_k(\omega) -f_{k + 1}(\omega)|\mathrm{d}\mu  = \frac{1}{2^k} ;              \\
+&  a \leadsto  \mu \left (\lim \sup_n A_n \right ) = 0 \leadsto f : \TYPE{Cauchy}(\Co) \quad \AE{\mu} \leadsto f : \TYPE{Convergent}(\Co)  \square          
+ \\   \\
+&\THM{LpIsComplete} :: \Lp^p(X) : \TYPE{Complete} \\
+&   \Proof =     \\
+&   \A f : \TYPE{Cauchy}(\Lp^p(X)),\\
+&    \A k \in \Nat, \\
+&     N_k \de \ByDef\TYPE{Cauchy}(\Lp^p(X))(f) \in \Nat : \forall n,m \in \Nat : n \ge N : m \ge N : d(f_n,f_m) \le  4^{-k};\\
+&  N : \TYPE{Subseqer}                  ,\\ 
+&  g \de \FUNC{subseq}(f,N) : \Nat \to \Lp^p(X), \\
+&  \THM{LpConvergenceLemma}(g) : \big( g : \TYPE{Convergent} \, \AE{\mu_X} \big) \\
+\end{align*}
+\newpage    
+\begin{align*}
+&  \phi \de \lim_{n \to \infty} g_n : \Lp^p(X),                         \\
+&  \A \epsilon \in \Reals_{++},  \\
+&  M \de \ByDef\TYPE{Cauchy}(\Lp^p(X))(f) \in \Nat : \forall n,m \in \Nat : n > M : m > M \. d(f_n,f_m) < \epsilon,  \\
+&   \A n \in \Nat : n \ge M
+,      \\
+&  N' \de [N_k : N_k \ge M] : \TYPE{Subseqer}, \\
+&  h \de  f \circ N' : \Nat \to \Lp^p(X), \\
+& I_1 \de \ByDef\epsilon : \epsilon^p > \liminf_{m \to \infty} \mathrm d^p(f_n,h_m) =
+\liminf_{n \to \infty} \int_X |f_m -h_n |^p \mathrm d \mu_X \ge 
+\NewLine \ge 
+\int_X \liminf_{m \to \infty} |f_m - h_n|^p \mathrm d \mu_X = \int_X |f_n - \phi |^p \mathrm d \mu_X = d^p(f_m,\phi) ; \\
+& \exists  n \in \Nat \. d(f_m,\phi) \le \epsilon ;\\
+& a_2 : \lim_{n \to \infty} f_n = \phi  \leadsto  f : \TYPE{Convergent}(\Lp^p(X)) ; \\
+& \Lp^p(X) : \TYPE{Complete} \QED  
+\\ \\
+& \TYPE{LpSeq} :: [1,\infty) \to \Set \to \mathsf{NVS}(\Co), \\
+& \TYPE{LpSeq}(p)(X) = l^p(X) \de \Lp^p(X,2^X,\#)     \\  
+\\ 
+&\THM{SimpleAreDense} :: \forall X \in \mathsf{MEAS} \. \TYPE{Simple}(X) : \TYPE{Dense}(\Lp^p(X)) 
+\\ \\
+&\THM{ContAreDense} ::  \bigg[C\Big(\Reals^d\Big)\bigg] : \TYPE{Dense}(\Lp^p(X)) 
+\end{align*}
+\newpage    
+\subsection{$L^\infty$ Space}
+\begin{align*}
+&\FUNC{EssentialSupremum} :: \TYPE{Measurable}(\O,\F,\mu) \to \EReals \\
+ & \FUNC{EssentialSupremum}(f) = \esssup f \de \inf \left \{ c \in \EReals   : \mu\{ \omega \in \O : f(\omega) > c\} = 0  \right \}
+ \\ \\
+ & \FUNC{LInftySeminorm  } :: \CVBMF  \to \EReals_{+}  \\
+ & \FUNC{LInftySeminorm  }(f) =  \| f \|_\infty =\esssup |f| 
+ \\  \\
+ &  \LOGIC{Extend} \; L^\cdot (X) \;  \LOGIC{on} \; \{ \infty \} \\  
+ &   L^\infty(X) = \{ f : \CVBMF : \| f \|_\infty < \infty \} 
+ \\ \\
+ &  \LOGIC{Extend} \; \Lp^\cdot (X) \;  \LOGIC{on} \; \{ \infty \} 
+ \\  \\
+ &  \LOGIC{Extend} \; l^\cdot (X) \;  \LOGIC{on} \; \{ \infty \} 
+\end{align*}
+\end{document}

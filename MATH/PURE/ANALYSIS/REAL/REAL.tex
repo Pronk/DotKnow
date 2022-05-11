@@ -1,0 +1,4340 @@
+\documentclass[12pt]{scrartcl}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=10mm, left=10mm, right=2mm,heightrounded, includefoot]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\DeclareMathOperator*{\supp}{supp}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cat}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\SayIn}[3]{& #1 \de #2 \in #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\ConcludeIn}[3]{& #1 \de #2 \in #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\}
+\newcommand{\Assume}[2]{& \LOGIC{Assume} \;#1 : #2, \\}
+\newcommand{\AssumeIn}[2]{& \LOGIC{Assume} \; #1 \in #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\text{\thorn}}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+\newcommand{\Elim}{\LOGIC{E} \; }
+\newcommand{\Intro}{\LOGIC{I} \;}
+\newcommand{\Imply}{\Rightarrow}
+\newcommand{\Explain}[1]{& \text{#1.} \\}
+\newcommand{\Exclaim}[1]{& \text{#1!} \\}
+%SetTheory
+%Cats
+\newcommand{\SET}{\mathsf{SET}}
+\newcommand{\Countable}{\TYPE{Countable}}
+\newcommand{\Finite}{\TYPE{Finite}}
+\newcommand{\SA}{\TYPE{\sigma \hyph Algebra}}
+%Topology
+%General Topology
+%Types
+\newcommand{\TS}{\TYPE{TopologicalSpace}} 
+\newcommand{\NbhdBase}{\TYPE{NeighborhoodBase}}
+\newcommand{\LF}{\TYPE{LocallyFinite}}
+\newcommand{\PN}{\TYPE{PerfectlyNormal}}
+\newcommand{\CR}{\TYPE{CompletelyRegular}}
+%\newcommand{\OM}{\TYPE{OpenMap}}
+\newcommand{\Filter}{\TYPE{Filter}}
+\newcommand{\Filterbase}{\TYPE{Filterbase}}
+\newcommand{\CFilterbase}{\TYPE{ConvergentFilterbase}}
+\newcommand{\Dense}{\TYPE{Dense}}
+\newcommand{\Separable}{\TYPE{Separable}}
+\newcommand{\ND}{\TYPE{NowhereDense}}
+\newcommand{\Open}{\TYPE{Open}}
+\newcommand{\Net}{\TYPE{Net}}
+\newcommand{\Closed}{\TYPE{Closed}}
+\newcommand{\Clopen}{\TYPE{Clopen}}
+\newcommand{\Nbhd}{\TYPE{Neighborhood}}
+\newcommand{\Compact}{\TYPE{Compact}}
+\newcommand{\Compacts}{\TYPE{CompactSubset}}
+\newcommand{\OpenC}{\TYPE{OpenCover}}
+\newcommand{\Cluster}{\TYPE{Cluster}}
+\newcommand{\Convergent}{\TYPE{Convergent}}
+\newcommand{\LC}{\TYPE{LocallyCompact}}
+\newcommand{\Bair}{\TYPE{BaireSpace}}
+\newcommand{\Meager}{\TYPE{Meager}}
+\newcommand{\Connected}{\TYPE{Connected}}
+%FUNC
+\DeclareMathOperator*{\intx}{int}
+\DeclareMathOperator*{\cl}{cl} 
+\DeclareMathOperator*{\boundary}{\partial} 
+\DeclareMathOperator{\combo}{\triangledown} 
+\DeclareMathOperator{\diag}{\triangle} 
+\DeclareMathOperator{\rem}{rem}
+%CATS
+\newcommand{\TOP}{\mathsf{TOP}}
+\newcommand{\HC}{\mathsf{HC}}
+\newcommand{\CG}{\mathsf{CG}}
+%Symbols
+\newcommand{\T}{\mathcal{T}}
+\renewcommand{\U}{\mathcal{U}}
+\renewcommand{\O}{\mathcal{O}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\X}{\mathcal{X}}
+%\newcommand{\d}{\mathrm{d}}
+%Metric Topology
+%FUNC
+\DeclareMathOperator{\diam}{diam}
+\newcommand{\Cell}{\mathbb{B}}
+%CATS
+\newcommand{\Semiiso}{\mathsf{SMS}_{\circ \to \cdot}}
+\newcommand{\Iso}{{\mathsf{MS}_{\circ \to \cdot}}}
+\newcommand{\SMS}{\mathsf{SMS}}
+\newcommand{\MS}{\mathsf{MS}}
+\newcommand{\UNI}{\mathsf{UNI}}
+\newcommand{\UNIS}{\mathsf{UNIS}}
+\newcommand{\TG}{\mathsf{TG}}
+\newcommand{\CSeq}{\TYPE{CauchySequence}}
+\newcommand{\Complete}{\TYPE{Complete}} 
+\newcommand{\Bounded}{\TYPE{Bounded}}
+%Descriptive Set Theory
+%TYPE
+%\newcommand{\Bool}{\mathbb{B}}
+\newcommand{\IS}{\TYPE{InitialSegement}}
+\newcommand{\FS}[1]{{#1}{}^*}
+\newcommand{\Ext}{\TYPE{Extension}}
+\newcommand{\Tree}{\TYPE{Tree}}
+\newcommand{\Pruned}{\TYPE{Pruned}}
+\newcommand{\PTM}{\TYPE{ProperTreeMorphism}}
+\newcommand{\LTM}{\TYPE{LipschitzTreeMorphism}}
+\newcommand{\Polish}{\TYPE{Polish}}
+\newcommand{\IIPG}{\TYPE{InfiniteIterativeTwoPlayersGame}}
+\newcommand{\FPS}{\TYPE{FirstPlayerStrategy}}
+\newcommand{\SPS}{\TYPE{SecondPlayerStrategy}}
+\newcommand{\FPWS}{\TYPE{FirstPlayerWinningStrategy}}
+\newcommand{\SPWS}{\TYPE{SecondPlayerWinningStrategy}}
+\newcommand{\CS}{\TYPE{ChoquetSpace}}
+\newcommand{\SCS}{\TYPE{StrongChoquetSpace}}
+\newcommand{\BP}{\mathbf{BP}}
+\newcommand{\MGR}{\mathbf{MGR}}
+\newcommand{\cat}{\mathbf{CAT}}
+\newcommand{\BM}{\TYPE{BairMeasurable}}
+\newcommand{\CGSA}{\TYPE{CountablyGeneratedSigmaAlgebra}}
+\newcommand{\MC}{\TYPE{MonotonicClass}}
+\newcommand{\PSA}{\TYPE{PointSeparatingAlgebra}}
+\newcommand{\SBS}{\TYPE{StandardBorelSpace}}
+\newcommand{\IH}{\TYPE{InducedHomomorphism}}
+%FUNC
+\DeclareMathOperator{\len}{len}
+\newcommand{\inits}[2]{{#1}_{|\left[1,\ldots,#2\right]}}
+\DeclareMathOperator{\lb}{lb}
+\DeclareMathOperator{\WFpart}{WF}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\PTr}{PTr}
+\DeclareMathOperator*{\Tll}{{T\;\underline{lim}}}
+\DeclareMathOperator*{\Tul}{{T\;\overline{lim}}}
+\DeclareMathOperator*{\Tl}{{T\;lim}}
+\DeclareMathOperator{\rankcb}{rank_{CB}}
+\DeclareMathOperator{\lp}{lp}
+\newcommand{\alg}{\mathsf{A}}
+%CATS
+\newcommand{\TREE}{\mathsf{TREE}}
+\newcommand{\FSF}{\mathsf{FS}}
+\newcommand{\CRONE}{\mathsf{CRONE}}
+\newcommand{\BODY}{\mathsf{BODY}}
+\newcommand{\BOR}{\mathsf{BOR}}
+\newcommand{\bor}{\mathsf{B}}
+\newcommand{\Effros}{\mathsf{EFF}}
+%symbols
+\newcommand{\K}{\mathsf{K}}
+\renewcommand{\H}{\mathrm{H}}
+\renewcommand{\L}{\mathcal{L}}
+\renewcommand{\P}{\mathcal{P}}
+\renewcommand{\S}{\mathcal{S}}
+%%Measure theory
+%Types
+\newcommand{\Measure}{\TYPE{Measure}}
+%\newcommand{\MS}{\TYPE{MeasureSpace}}
+%\newcommand{\CMS}{\TYPE{CompleteMeasureSpace}}
+%\newcommand{\Null}{\mathcal{N}}
+%\renewcommand{\ae}{\mathrm{a.e.}}
+\newcommand{\OM}{\TYPE{OuterMeasure}}
+%\newcommand{\IM}{\TYPE{InnerMeasure}}
+%Symbols
+%\newcommand{\F}{\mathcal{F}}
+\newcommand{\Borel}{\mathcal{B}}
+\newcommand{\Cantor}{\mathcal{C}}
+%Analysis
+%Real
+%Types
+\newcommand{\OI}{\TYPE{OpenInterval}}
+\newcommand{\CI}{\TYPE{ClosedInterval}}
+\newcommand{\IPP}{\TYPE{IntermidiatePointProperty}}
+\newcommand{\LUB}{\TYPE{LowerUpperBound}}
+\newcommand{\ULB}{\TYPE{UpperLowerBound}}
+\newcommand{\CC}{ \TYPE{ConditionallyConvergent}}
+\renewcommand{\AC}{  \TYPE{AbsolutelyCovergent} }
+\newcommand{\ED}{\TYPE{EverywhereDense}}
+\newcommand{\ToU}{\rightrightarrows}
+\newcommand{\V}{\mathcal{V}}
+\newcommand{\VC}{\TYPE{VitalisCover}}
+\newcommand{\A}{\mathcal{A}} 
+\newcommand{\LS}{\TYPE{LebesgueStieltjes}}
+\newcommand{\DF}{\TYPE{DistirbutionFunction}}
+%Linear
+%Differential
+\newcommand{\DIFF}{\mathsf{DIFF}}
+\author{Uncultured Tramp} 
+\title{Analysis on Real Line}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{The Real Type}
+\subsection{Topology of an Archimedean Field }
+\Page{
+	\Theorem{ReductioInfinima}{\forall R : \TYPE{Archimedean} \. \lim_{n \to \infty} \frac{1}{n_R} = 0 }
+	\Assume{U}{\mathcal{U}_R(0)}
+	\Say{\Big((-a,a),1\Big)}{\bd \FUNC{orderTopology}(R)\bd \TYPE{Neighborhood}(R,0)(U)}
+	{ \sum (-a,a) : \TYPE{OpenInterval}(R) \. (-a.a) \subset U  }
+	\Say{ (N,2)  }{\bd \TYPE{Archemedean}(R)\big(a^{-1}\big)}{ \sum N \in \Nat \. N > a^{-1}  }
+	\Assume{n}{\Nat}
+	\Assume{(3)}{n \ge N}
+	\Say{(4)}{\bd \TYPE{Transitive}\Big( \FUNC{order}(\Nat) \Big)}{ n > a^{-1} }
+	\Say{(5)}{ (4)^{-1}}{ \frac{1}{n} < a}
+	\Say{(6)}{ \ldots   }{ -a < 0 < \frac{1}{n} }
+	\Conclude{(7)}{ \Big(\bd(-a,a)(5)(6)\Big)(1) }{  \frac{1}{n} \in U }
+	\DeriveConclude{(3)}{ I(\forall)I(\Rightarrow)  }{\forall n  \in \Nat \. n \ge N \Rightarrow \frac{1}{n} \in (-a,a)  }
+	\Derive{(2)}{I(\forall)I(\exists)(N)}
+	{\forall U : \TYPE{Open}(R) \. \exists N \in \Nat : \forall n \in \Nat \. n \ge N  
+		\Rightarrow \frac{1}{n} \in (-a,a)
+	}
+	\Conclude{(*)}{\bd \TYPE{Limit}(4)}{\lim_{n \to \infty} \frac{1}{n} = 0}
+	\EndProof
+	\\
+	\Theorem{ContinuousAddition}{\forall R : \TYPE{Archimedean} \. \forall x,y : \TYPE{Converging}(R) \.
+		\lim_{n \to \infty} x_n + y_n = \big(\lim_{n \to \infty} x_n \big) + \big( \lim_{n \to \infty} y_n \big)
+	}
+	\Say{X}{\lim_{n \to \infty} x_n}{R}
+	\Say{Y}{\lim_{n \to \infty} y_n}{R}
+	\Assume{\varepsilon}{R_{++}}
+	\Say{(M',1)}{\bd \TYPE{Limit}(x,X)(\varepsilon/2)}{\sum M' \in \Nat \. \forall n \in \Nat : n \ge M' \. 
+		|x_n - X| < \varepsilon/2}
+	\Say{(M,2)}{\bd \TYPE{Limit}(x,X)(\varepsilon/2)}{\sum M \in \Nat \. \forall n \in \Nat : n \ge M \. 
+		|y_n - Y| < \varepsilon/2}
+	\Say{N}{\max(M',M)}{\Nat}
+	\Assume{n}{\Nat}
+	\Assume{(3)}{ n \ge N }
+	\Conclude{()}{ \THM{TriangleIneq}(x_n - X,y_n - Y)(1,2)(\bd N(3))  }
+	{ | x_n + y_n - X  - Y| \le |x_n - X| + |y_n - Y| < \epsilon }
+	\DeriveConclude{(*)}{\bd \TYPE{Limit}I(\forall)I(\exists)(N)I(\forall)I(\Rightarrow)}
+	{\lim_{n \to \infty} x_n + y_n = X + Y}
+	\EndProof
+}
+\Page{
+	\Theorem{ContinuousMultiplication}{\forall R : \TYPE{Archimedean} \. \forall x.y : \TYPE{Converging}(R) \.
+		\lim_{n \to \infty} x_ny_n = \Big( \lim_{n \to \infty} x_n \Big)\Big( \lim_{n \to \infty} y_n \Big) 
+	}
+	\Say{X}{\lim_{n \to \infty} x_n}{R}
+	\Say{Y}{\lim_{n \to \infty} y_n}{R}
+	\Say{\Delta}{  x - X    }{\Nat \to R}
+	\Say{(1)}{ \THM{ContinuousAddition}(x_n,-X)}{ \lim_{n \to \infty} \Delta_n = 0}
+	\Say{\Delta'}{  y_ - Y    }{\Nat \to R}
+	\Say{(2)}{ \THM{ContinuousAddition}(y_n,-Y)}{ \lim_{n \to \infty} \Delta'_n = 0}
+	\Assume{\varepsilon}{R_{++}}
+	\Say{\delta}{\min\left( \frac{\varepsilon}{3|Y|}, \sqrt{\frac{\varepsilon}{3}}  \right)}{\hat R}
+	\Say{\delta'}{\min\left( \frac{\varepsilon}{3|X|}, \sqrt{\frac{\varepsilon}{3}}    \right)}{\hat R}
+	\Say{(M,3)}{ \bd \TYPE{Limit}(1)(\delta) }
+	{ \sum M \in \Nat : \forall n \in \Nat : n \ge M \. |\Delta_n| < \delta  }
+	\Say{(M',4)}{\bd \TYPE{Limit}(2)(\delta')}
+	{ \sum M' \in \Nat : \forall n \in \Nat : n \ge M' \. |\Delta_n'| < \delta'  }
+	\Say{N}{\max(M,M')}{\Nat}
+	\Assume{n}{\Nat}
+	\Assume{(5)}{n \ge  N}
+	\Conclude{()}{\bd^{-1} \Delta_n \bd^{-1} \Delta_n' \THM{TriangleIneq}(X\Delta'_n,Y\Delta_n,\Delta_n\Delta'_n) 
+		\THM{AbsoluteHomogenity}^2(X)(Y)(3,4)(5)\bd \delta \bd \delta'   }
+	{ \NewLine :
+		| x_ny_n - XY | \le  |X|| \Delta'_n| + |Y|| \Delta_n | + |\Delta_n \Delta'_n| < \varepsilon }
+	\DeriveConclude{(*)}{\bd \TYPE{Limit}I(\forall)I(\exists)(N)I(\forall)I(\Rightarrow)}
+	{\lim_{n \to \infty} x_n y_n = XY}
+	\EndProof
+	\\
+	\Theorem{ContinuousInverse}{\forall R : \TYPE{Archimedean} \. \forall x : \TYPE{Converging}(R) \.
+		\forall (1) : \forall n \in \Nat \. x_n \neq 0 \. 
+		\NewLine \.
+		\forall (2) : \lim_{n \to \infty} x_n \neq 0 \.
+		\lim_{n \to \infty} x_n^{-1} = \Big( \lim_{n \to \infty} x_n \Big)^{-1}
+	}
+	\Say{X}{\lim_{n \to \infty} x_n}{ R  }
+	\Say{\Delta}{ \frac{x}{X} - 1  }{\Nat \to R}
+	\Say{(1)}{\THM{ContinuousMultuplication}(x,X^{-1}) \THM{ContinuousAddition}\left( \frac{x}{X}, - 1 \right)} 
+	{ \lim_{n \to \infty} \Delta_n = 0 }
+	\Assume{\varepsilon}{R_{++}}
+	\Say{\delta}{\min\left(  \frac{\varepsilon}{2}  , \frac{1}{2}  \right)}{R_{++}}
+	\Say{(N,2)}{ \bd \TYPE{Limit}(1)  }{ \sum N \in \Nat \. \forall n \in \Nat : n \ge N \. |\Delta_n| < \delta }
+	\Assume{n}{\Nat}
+	\Assume{(3)}{ n \ge N    }
+	\Conclude{()}{ \bd^{-1} \Delta_n \THM{AbsoluteHomogenity}{\Delta_n}((2)(3) \bd \delta)^2   }
+	{ \left| \frac{X}{x_n} - 1 \right| = \left| \frac{1}{1 + \Delta_n}  - 1 \right| =  \frac{|\Delta_n|}{|1 + \Delta_n|} <   
+	 2|\Delta_n| < \varepsilon 
+	}
+	\Derive{(2)}{\bd \TYPE{Limit}I(\forall)I(\exists)(N)I(\forall)I(\Rightarrow)}
+	{\lim_{n \to \infty} \frac{X}{x_n} = 1}
+	\Conclude{}{\THM{ContinuousMultiplication}\left( \frac{X}{x}, X^{-1}  \right)}{ \lim_{n \to \infty} x^{-1}_n = X^{-1}}
+	\EndProof
+}
+\Page{
+	\Theorem{BernoulliIneq}{ \forall R : \TYPE{OrderedField} \. 
+		\forall  x \in (-1, +\infty)_R \. \forall n \in \Nat \.  (1 + x)^n \ge 1 + nx}
+	\Say{(1)}{\bd \TYPE{Reflexive}\Big( \FUNC{order}(R) \Big)(1 + x)  }{  1 + x \ge 1 + x  }
+	\Assume{n}{\Nat}
+	\Assume{(2)}{\LOGIC{This}(n)}
+	\Conclude{()}{ (2)\THM{ReduceIneq}(nx^2)   }
+	{   (1 + x)^{n + 1} \ge  (1 + nx)( 1 + x) =  1  + (n + 1)x + nx^2 \ge 1 + (1 + nx) }
+	\Derive{(2)}{I(\forall)I(\Rightarrow)}
+	{ \forall n \in \Nat \. \LOGIC{This}(n + 1) \Rightarrow  \LOGIC(This)(n)}
+	\Conclude{(*)}{E(\Nat)(1)(2)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{PowerCompression}{\forall R : \TYPE{Archimedean} \. \forall \gamma \in R \. 
+	 \forall (0) :  0 < |\gamma| < 1 \. 
+		\lim_{n \to \infty} \gamma^n = 0  }
+	\Say{\alpha}{|\gamma|^{-1}}{R}
+	\Say{(1)}{(0)^{-1}}{ \alpha > 1 }
+	\Say{\beta}{  \gamma - 1  }{R_{++}}
+	\Assume{\varepsilon}{R_{++}}
+	\Say{(N.2)}{ \THM{ReductioInfima}\left( \beta \varepsilon \right)  }
+	{ \sum N \in \Nat \. \forall n \in \Nat \. n \ge N \Rightarrow  \frac{1}{n} \le \beta \varepsilon     }
+	\Assume{n}{\Nat}
+	\Assume{(3)}{n \ge N}
+	\Conclude{()}{ \THM{AbsHomogen}^n(\gamma)  \bd^{-1}(\beta) \THM{BernoulliIneq}\ldots (2)\Big(n.(3)\Big)   }
+	{  \Big| \gamma^n \Big| = \frac{1}{(1 + \beta )^n} 
+	 \le \frac{1}{ 1 + n\beta  } \le \frac{1}{n\beta} < \varepsilon }
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{Limit} I(\forall) I(\exists,N) I(\forall) I(\Rightarrow)}
+	{  \lim_{n \to \infty} \gamma^n = 0  }
+	\EndProof
+}
+\newpage
+\subsection{Intermidiate Point Property}
+\Page{
+	\DeclareType{IntermidiatePointProperty }{ ?\TYPE{Poset}  }
+	\DefineType{R}{IntermidiatePointProperty}{ \forall A,B \subset R \. A <  B \Rightarrow   
+		\exists x \in R \. A \le x \le B
+	}
+	\\
+	\DeclareType{LowerUpperBound}{ \prod X : \TYPE{Poset} \. ?X \to ?X }
+	\DefineType{x}{LowerUpperBound}{  \Lambda A \subset X \. x \ge A 
+		\And \forall y \in A  \. y \le A \Rightarrow x \not > y}
+	\\
+	\DeclareType{UpperLowerBound}{\prod X : \TYPE{Poset} \. ?X \to ?X}
+	\DefineType{x}{UpperLowerBound}{ \Lambda A \subset X \. x \le A
+		\And \forall y \in A \. y \ge A \Rightarrow x \not < y}
+	\\
+	\Theorem{LUBExistsInIPP}{ \forall X : \IPP \. 
+		\forall A : \TYPE{BoundedFromAbove}(X) \. 
+		 \NewLine  \. A \neq \emptyset \Rightarrow \exists \LUB(A)  }
+	\Say{B}{\{ x \in X : x > A  \}}{?X}
+	\Say{(1)}{\bd \TYPE{BoundedFromAbove}(X)(\bd B)}{ B \neq \emptyset  }
+	\Say{(2)}{ \bd \IPP(X)(A,B) }{ \exists x \in X \. A \le x \le B  }
+	\Say{C}{ \{ x \in X : A \le x \le B \}  }{?X}
+	\Say{(3)}{  \bd \emptyset C   }{C \neq \emptyset}
+	\Say{(4)}{\ldots}{ \min C \neq \emptyset  }
+	\Say{(x)}{ \bd \emptyset(4) }{ \min C}
+	\Say{\Delta}{  x_n - X    }{\Nat \to R}
+	\Say{(1)}{ \THM{ContinuousAddition}(x_n,-X)}{ \lim_{n \to \infty} \Delta_n = 0}
+	\Assume{y}{\TYPE{In}(x)}
+	\Assume{(5)}{ y \ge A}
+	\Assume{(6)}{ x > y}
+	\Say{(7)}{(6)(2)}{ y \le B}
+	\Say{(8)}{ \bd C (7)      }{  y \in C  }
+	\Say{(9)}{ \bd x\bd \min  }{ x \not > y  }
+	\Conclude{(10)}{(6)(9)}{\bot}
+	\Derive{(5)}{I(\forall)I(\Rightarrow) E(\bot)}{\forall y \in X \. y \ge A \Rightarrow x \not > y}
+	\Conclude{(6)}{\bd \LUB(X)(A)(5,2) }{ \Big( x : \LUB(A) \Big) }
+	\EndProof
+	\\
+	\Theorem{LUBsUniqueInToset}{\forall X : \TYPE{Toset} \. \forall A \subset X \. \forall x,y : \LUB(A) \. x = y}
+	\Say{(1)}{ \bd_1 \LUB(A)(x)     }{ x \ge A  }
+	\Say{(2)}{ \bd_2 \LUB(A)(y)(x)  }{ x \ge y  }
+	\Say{(3)}{ \bd_1 \LUB(A)(y)     }{ y \ge A  }
+	\Say{(4)}{ \bd_2 \LUB(A)(x)(y)  }{ y \ge x  }
+	\Conclude{(*)}{ \bd \TYPE{Antysimmetric}(\FUNC{order}(X))(2,4)    }{ x = y}
+	\EndProof
+}
+\Page{
+	\Theorem{ULBExistsInIPP}{ \forall X : \IPP \. 
+		\forall A : \TYPE{BoundedFromBelow}(X) \. 
+		 \NewLine  \. A \neq \emptyset \Rightarrow \exists \ULB(A)  }
+	\Say{B}{\{ x \in X : x < A  \}}{?X}
+	\Say{(1)}{\bd \TYPE{BoundedFromBelow}(X)(\bd B)}{ B \neq \emptyset  }
+	\Say{(2)}{ \bd \IPP(X)(B,A) }{ \exists x \in X \. B \le x \le A  }
+	\Say{C}{ \{ x \in X : B \le x \le A \}  }{?X}
+	\Say{(3)}{  \bd \emptyset C   }{C \neq \emptyset}
+	\Say{(4)}{\ldots}{ \max C \neq \emptyset  }
+	\Say{(x)}{ \bd \emptyset(4) }{ \max C}
+	\Assume{y}{\TYPE{In}(x)}
+	\Assume{(5)}{ y \ge A}
+	\Assume{(6)}{ x > y}
+	\Say{(7)}{(6)(2)}{ y \ge B}
+	\Say{(8)}{ \bd C (7)      }{  y \in C  }
+	\Say{(9)}{ \bd x\bd \max  }{ x \not < y  }
+	\Conclude{(10)}{(6)(9)}{\bot}
+	\Derive{(5)}{I(\forall)I(\Rightarrow) E(\bot)}{\forall y \in X \. y \le A \Rightarrow x \not < y}
+	\Conclude{(6)}{\bd \ULB(X)(A)(5,2) }{ \Big( x : \ULB(A) \Big) }
+	\EndProof
+	\\
+	\Theorem{ULBsUniqueInToset}{\forall X : \TYPE{Toset} \. \forall A \subset X \. \forall x,y : \ULB(A) \. x = y}
+	\Say{(1)}{ \bd_1 \ULB(A)(x)     }{ x \le A  }
+	\Say{(2)}{ \bd_2 \ULB(A)(y)(x)  }{ x \le y  }
+	\Say{(3)}{ \bd_1 \ULB(A)(y)     }{ y \le A  }
+	\Say{(4)}{ \bd_2 \ULB(A)(x)(y)  }{ y \le x  }
+	\Conclude{(*)}{ \bd \TYPE{Antysimmetric}(\FUNC{order}(X))(2,4)    }{ x = y}
+	\EndProof
+	\\
+	\DeclareFunc{supremum}{ \prod X : \TYPE{Toset} \And \IPP \. \TYPE{BoundedFromAbove} \And \TYPE{NonEmpty}(X) \to X}
+	\DefineNamedFunc{supremum}{ A }{\sup A }{ \THM{LUBExistsInIPP} \And \THM{LUBsUniqueToToset}(A) }
+	\\
+	\DeclareFunc{infimum}{\prod X : \TYPE{Toset} \And \IPP \. \TYPE{BoundedFromBelow} \And \TYPE{NonEmpty}(X) \to X}
+	\DefineNamedFunc{infimum}{A}{\inf A}{\THM{ULBExistsInIPP} \And \THM{ULBsUniqueToToset}(A)}
+	\\
+	&\TYPE{Real} \de \TYPE{Archimedean}  \And \IPP \\
+}\Page{
+	\Theorem{RealIsUncountable}{ \forall R : \TYPE{Real} \. \#  R > \aleph_0 }
+	\Assume{(1)}{\# R = \aleph_0}
+	\Say{r}{\bd \TYPE{Cardinal}(1)}{ \Nat \ToBij_{\mathsf{SET}} R  }
+	\Say{a_1}{ r(0) }{R}
+	\Say{(b_1,l_1,2)}{-\bd\TYPE{Aechemedean}(R)(z)}{\sum b_1  \. b_1 < a_1}
+	\Say{I_0}{R}{?R}
+	\Say{J_0}{R}{?R}
+	\Assume{n}{\Nat}
+	\Say{I_n}{  \{  r(m)  :  m > n \And   b_n < r(m) < a_n    \}   }{ ?R  }
+	\Say{(3)}{\THM{SmallNumberLemma}(\bd I_n)}{I_n \neq \emptyset}
+	\Say{ a_{n+1}  }{\arg \min_{x \in I_n} r^{-1}(x)}{\TYPE{In}(I)}
+	\Say{ (2_n)   }{ \bd I (bd a_{n + 1})   }{ b_n  <   a_{n + 1} < a_n}
+	\Say{J_n}{  \{  r(m)  :  m > n \And   b_n < r(m) < a_{n + 1}  \}   }{ ?R  }
+	\Say{(4)}{\THM{SmallNumberLemma}(\bd J_n)}{J_n \neq \emptyset}
+	\Say{ b_{n+1}  }{\arg \min_{x \in J_n} r^{-1}(x)}{\TYPE{In}(J_n)}
+	\Conclude{ (2_n')   }{ \bd I (bd a_{n + 1})    }{ b_n  <   b_{n + 1} < a_{n + 1}}
+	\Derive{ (I,J,a,b,3)  }{I(\sum)}{ \sum (I,J) : \Nat \to ?R \.  \prod n \in \Nat \. 
+		I_{n-1} \times J_{n-1} \And b < a \And b,a : \TYPE{Monotonic}  }
+	\Say{(4)}{\bd(I.j,a,b,3)}{r^{-1}(a),r^{-1}(b) : \TYPE{Increasing}}
+	\Say{A}{ a(\Nat)}{?R}
+	\Say{B}{b(\Nat)}{?R}
+	\Say{(5)}{\bd A \bd B (3)}{ B < A }
+	\Say{(z,6)}{\bd \TYPE{IntermidiatePointProperty}}{\sum z \in R \. B \le z \le A}
+	\Say{(7)}{\bd z \bd I \bd J (6)}{\forall n \. z \in I_n \And z \in J_n}
+	\Say{(8)}{\bd a (7)(4) }{ a_{r^{-1}(z)} = z }
+	\Conclude{(*)}{ \bd A(3)(8)(6) }{ \bot  }
+	\Derive{(1)}{ E(\bot) }{\# R \neq \aleph_0}
+	\Say{(2)}{\THM{RationalsInCharZero}(R)}{ \Rats \subset R }
+	\Say{(3)}{ \bd^{-1}\TYPE{GeCardinality}(2)(1) }{\# R > \aleph_0}
+	\EndProof
+}
+\newpage
+\subsection{Construction By Cuts [!!]}
+\Page{
+\DeclareType{DedikindCuts}{ ?(?\Rats \times ?\Rats)  }
+\DefineType{(A,B)}{DedikindCuts}{ A < B \And A \cup B = \Rats \And \forall x \in A \. x \IsNot \LUB(A)    }
+\\
+\DeclareFunc{DedikindAdd}{  \TYPE{DedindCuts}  \times \TYPE{DedikindCuts} \to \TYPE{DedikindCuts}    }
+\DefineNamedFunc{DedikindAdd}{(A,B),(C,D)}{(A,B) + (C,D)}{(A+C,B + D)}
+}
+\newpage
+\subsection{Construction By Completion}
+\Page{
+	\DeclareType{Cauchy}{ ?(\Nat \to \Rats)  }
+	\DefineType{x}{Cauchy}{  \forall \varepsilon \in \Rats_{++} \. \exists N \in \Nat : \forall n,m \in \Nat 
+		\.  \forall  (0) : n \ge N \And m \ge N \. | x_n - x_m| \le \varepsilon
+	}
+	\\
+	\DeclareType{EqualCauchy}{ ?(\TYPE{Cauchy}\times\TYPE{Cauchy})    }
+	\DefineNamedType{(x,u)}{EqualCauchy}{  x = y }{ \lim_{n \to \infty} (x_n - y_n) = 0}
+	\\
+	\Theorem{CauchyEquality}{ \Big( \TYPE{EqualCauchy} : \TYPE{Equality}(\TYPE{Cauchy}) \Big)  }
+	\Assume{x}{\TYPE{Cauchy}}
+	\Say{ (1) }{ \bd \TYPE{Inverse}(x)}{ x - x = 0}
+	\Say{(2)}{ \THM{ConstantLimit}{0}  }{\lim_{n \to \infty} 0 = 0}
+	\Conclude{()}{\bd^{-1} \TYPE{EqualCaucht}(2)}{ x = x  }
+	\Derive{(1)}{\bd^{-1} \TYPE{Reflexive} I(\forall)}{ \Big( \TYPE{EqualCauchy} : \TYPE{Reflexive}  \Big) }
+	\Assume{x,y}{\TYPE{Cauchy}}
+	\Assume{(2)}{ x = y}
+	\Say{(3)}{\bd \TYPE{Commutative}\big(\FUNC{addition}(\Rats)\big)\bd \TYPE{EqualCauchy}(2)}
+	{ \lim_{n \to \infty} y_n  - x_n = \lim_{n \to infty} x_n - y_n = 0 }
+	\Conclude{()}{\bd^{-1} \TYPE{CauchyEqual}(3)}{ y = x}
+	\Derive{(2)}{\bd^{-1}\TYPE{Symmetric}I(\forall)I(\Rightarrow)}{ \Big( \TYPE{EqualCauchy} : \TYPE{Symmetric} \Big) }
+	\Assume{x,y,z}{\TYPE{Cauchy}}
+	\Assume{(3)}{x = y \And y = z}
+	\Say{(4)}{ \THM{AddZero}(-y_n)\THM{ContinuousAddition}\bd \TYPE{EqualCauchy}(3) }
+	{ 
+	\NewLine :
+		\lim_{n \to \infty} x_n - z_n = \lim_{n \to \infty} x_n - y_n + y_n - z_n 	
+		= \big(\lim_{n \to \infty} x_n - y_n \big) + \big(\lim_{n \to \infty} y_n - z_n) = 0}
+	\Conclude{()}{ \bd^{-1} \TYPE{CauchyEqual}(4) }{x = z}
+	\Derive{(3)}{\bd^{-1} \TYPE{Transitive} I(\forall) I(\Rightarrow)}{ \Big( \TYPE{EqualCauchy} : \TYPE{Transitive}   \Big)  }
+	\Conclude{(*)}{\bd \TYPE{Transitive}}{\Big( \TYPE{EqualCauchy} : \TYPE{Equality}   \Big)}
+	\EndProof
+	\\
+	\Say{\Reals}{ \frac{\TYPE{Cauchy}}{\TYPE{EqualCauchy}}}{??\TYPE{Cauchy}}
+}\Page{
+	\Theorem{CauchyAddition}{\forall x,y : \TYPE{Cauchy} \. x + y : \TYPE{Cauchy}}
+	\Assume{\varepsilon}{\Rats_{++}}
+	\Say{ (M,1)  }{ \bd \TYPE{Cauchy}(x)(\varepsilon/2)  }
+	{\sum M \in \Nat : \forall n,m \in \Nat :  n \ge N : m \ge M \. | x_n - x_m | < \varepsilon/2 }
+	\Say{ (M',2)  }{ \bd \TYPE{Cauchy}(y)(\varepsilon/2)  }
+	{\sum M' \in \Nat : \forall n,m \in \Nat :  n \ge M' : m \ge N \. | y_n - y_m | < \varepsilon/2 }
+	\Say{N}{\max(M,M')}{\Nat}
+	\Assume{n,m}{\Nat}
+	\Assume{(3)}{n \ge N \And m \ge N} 
+	\Conclude{()}{ \THM{TriangleIneq}(x_n - x_m,y_n - y_m) (1,2)(\bd N(3))  }
+	{ 
+	\NewLine :
+	| x_n + y_n - x_m - y_m| \le |x_n - x_m| + |y_n - y_m| < \varepsilon }
+	\DeriveConclude{(*)}{ \bd^{-1} \TYPE{Cauchy} I(\forall)I(\exists)(N)I(\forall)}
+	{ \Big( x + y : \TYPE{Cauchy} \Big)}
+	\EndProof
+	\\
+	\DeclareFunc{AddCauchyClass}{ \Reals \times \Reals \to \Reals}
+	\DefineNamedFunc{AddCauchyClass}{[a],[b]}{[a] + [b]}{[a + b]}
+	\\
+	\Theorem{CauchyClassAdditionIsWellDefined}{ \forall [a],[b] \in \Reals \. \forall x \in [a] \. \forall y \in [b]
+		[x + y] = [a + b]
+	}
+	\Say{(1)}{  \THM{ContinuousAddition}(x_n - a_n,y_n - a_n) \bd \TYPE{EqualCauchy}^2(x_n,a_n)(y_n,b_n)  }
+	{  
+	\NewLine :
+	\lim_{n \to \infty} x_n + y_n - a_n - b_n = \Big(\lim_{n \to \infty} x_n - a_n \Big) 
+		+ \Big( \lim_{n \to \infty} y_n - b_n \Big) = 0 }
+	\Conclude{(*)}{\bd \Reals  \bd^{-1}\TYPE{EqualCauchy}(1) }{ [x + y] = [a + b] }
+	\EndProof
+	\\
+	\Theorem{CauchyClassesAsGroup}{ (\Reals,+) : \TYPE{Abelean}}
+	\Assume{[a],[b],[c]}{\Reals}
+	\Say{()}{\bd(+,\Reals) \bd(-,\Nat \to \Rats)}{  [a] + [-a] = [ a - a] = [0]  }
+	\Say{()}{\bd(+,\Reals) \bd(0, \Nat \to \Rats) }{  [a] + [0] = [a + 0 ] = [a]  }
+	\Say{()}{ \ldots  }
+	{ 
+	\NewLine :
+	([a] + [b]) + [c] = [a + b] + [c] = [(a + b) + c] = [a + (b + c) ] = [a] + [b + c] = [a] + ([b] + [c])   }
+	\Conclude{()}{\ldots}{ [a] + [b] = [a + b] = [b + a] = [b] + [a]}
+	\DeriveConclude{(*)}{ \bd^{-1}\TYPE{Abelean}I(\forall)}{ \Big( (\Reals,+) : \TYPE{Abelean} \Big)}
+	\EndProof 
+}\Page{
+	\Theorem{CauchyMult}{ \forall x,y : \TYPE{Cauchy} \. xy : \TYPE{Cauchy} }
+	\Say{(K,1)}{ \bd \TYPE{Cauchy}(x)(1)}
+	{ \sum K \in \Nat : \forall n,m \in \Nat : n \ge K : m \ge K \. |x_n - x_m| < 1 }
+	\Say{(K',2)}{ \bd \TYPE{Cauchy}(y)(1)}
+	{ \sum K' \in \Nat : \forall n,m \in \Nat : n \ge K' : m \ge K \. |y_n - y_m| < 1 }
+	\Say{L}{\max(K,K')}{\Nat}
+	\Assume{\varepsilon}{\Rats_{++}}
+	\Say{\delta}{\max\left( \frac{\varepsilon}{3\big( |y_L| + 1  \big)}, \sqrt{\frac{\varepsilon}{3}} \right)}{\hat \Rats}
+	\Say{\delta'}{\max\left( \frac{\varepsilon}{3\big(|x_L| + 1 \big))}, \sqrt{\frac{\varepsilon}{3}} \right)}{\hat \Rats}
+	\Say{(M,3)}{ \bd \TYPE{Cauchy}(x)(\delta)}
+	{ \sum M \in \Nat : \forall n,m \in \Nat : n \ge M : m \ge M \. |x_n - x_m| < \delta }
+	\Say{(M',4)}{ \bd \TYPE{Cauchy}(y)(\delta')}
+	{ \sum M' \in \Nat : \forall n,m \in \Nat : n \ge M' : m \ge M' \. |y_n - y_m| < \delta' }
+	\Say{N}{\max(M,M',L)}{\Nat}
+	\Assume{n,m}{\Nat}
+	\Assume{(5)}{ n \ge N \And m \ge N  }
+	\Say{\Delta}{x_m - x_n}{\Rats}
+	\Say{\Delta'}{y_m - y_n}{\Rats}
+	\Conclude{()}{ \bd^{-1} \Delta \bd^{-1} \Delta' \THM{TriangleIneq}(\ldots) 
+		\THM{AbsHomogen}^3(\ldots) \bd L \bd N (5, \bd \Delta, \bd \Delta') \bd \delta \bd \delta'}
+	{\NewLine: |x_ny_n - x_my_m| = | y_n\Delta + x_n\Delta' + \Delta\Delta'| \le
+		|y_n||\Delta| +  |x_n||\Delta'|  + |\Delta||\Delta'| < \varepsilon
+	}
+	\DeriveConclude{(*)}{ \bd^{-1} \TYPE{Cauchy} I(\forall)I(\exists)(N)I(\forall)}
+	{ \Big( xy : \TYPE{Cauchy} \Big)}
+	\EndProof
+	\\
+	\DeclareFunc{multCauchyClass}{\Reals \times \Reals \to \Reals}
+	\DefineNamedFunc{multCauchyClass}{[a],[b]}{[a][b]}{[ab]}
+	\\
+	\Theorem{CauchyClassMultiplicationIsWellDefined}{\forall [a],[b] \in \Reals \. 
+		\forall x \in [a] \. \forall  y \in [b] \. 
+		[a][b] = [x][y]
+	}
+	\Say{\Delta}{ a - x}{\Nat \to \Rats}
+	\Say{\Delta'}{b - y}{\Nat \to \Rats}
+	\Say{(1)}{\bd \TYPE{EqualCauchy}(a,x)}{ \lim_{n \to \infty} \Delta_n = 0  }
+	\Say{(2)}{\bd \TYPE{EqualCauchy}(b,y)}{\lim_{n \to \infty } \Delta'_n = 0 }
+	\Say{(3)}{ \bd^{-1} \Delta \bd^{-1} \Delta' \THM{ContinuousMultiplication}^3(\Delta,a)(\Delta',b)(\Delta,\Delta')   }
+	{ 
+	\NewLine :
+	\lim_{n \to \infty} a_nb_n  - x_ny_n = - \lim_{n \to \infty} \Delta_n a_n + \Delta'_n b_n + \Delta_n \Delta'_n
+	  =    0       	}
+	\Say{(*)}{\bd^{-1} \TYPE{EqualCauchy}(ab, xy)  }{ ab = xy  }
+	\EndProof
+} \Page{
+	\Theorem{CauchyClassesAsRing}{ (\Reals , +, \cdot ) : \TYPE{CommutativeRing}}
+	\Assume{[a],[b],[c]}{\Reals}
+	\Say{()}{  \ldots  }{  [a][1] = [a]   }
+	\Say{()}{ \ldots  }{ [a][b] = [ab] = [ba] = [b][a]   }
+	\Say{()}{ \ldots   }{  ([a][b])[c] =[ab][c] = [(ab)c] = [a(bc)] = [a][bc] =[a]([b][c]) }
+	\Conclude{()}{ \ldots }{  ([a] + [b])[c] = [a + b][c] =  [(a +b)c] = [ac + bc] = [ac] + [bc] = [a][c] + [b][c] }
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{CommutativeRing}}{ (\Reals,+,\cdot) : \TYPE{CommutativeRing} }
+	\EndProof
+	\\
+	\DeclareType{SeparatedFromZero}{?\TYPE{Cauchy}}
+	\DefineType{x}{SeparatedFromZero}{ \exists s \in \Rats_{++} : \forall n \in \Nat \. |x_n| \ge s }
+	\\
+	\Theorem{CauchyInverse}{\forall x : \TYPE{SeparatedFormZero} \. x^{-1} : \TYPE{Cauchy}}
+	\Say{(s,0)}{\bd \TYPE{SeparatedFromZero}(x)}
+	{\sum s \in \Rats_{++} \. \forall n \in \Nat \. |x_n| \ge s }
+	\Assume{\varepsilon}{\Rats_{++}}
+	\Say{\delta}{\min\left( \frac{s}{2}, \frac{s^2\varepsilon}{2}  \right)}{\Rats_{++}}
+	\Say{(N,1)}{ \bd \TYPE{Cauchy}(x)(\delta)}{ \sum N \in \Nat \. \forall n,m \in \Nat : 
+		n,m \ge N \.  | x_n - x_m| \le \delta}
+	\Assume{n,m}{\Nat}
+	\Assume{(2)}{ \min(n,m) \ge  N}
+	\Say{\Delta}{  x_m - x_n  }{ \Rats }
+	\Conclude{()}{ \bd^{-1} \Delta \THM{AbsHomogen}(\Delta)(1)(2)\bd \delta \bd \Delta(0)   
+	   (1)(2) \bd \delta \bd \Delta	}
+	{      \NewLine:
+		\left|  \frac{1}{x_n}  - \frac{1}{x_m} \right| = 
+		\left|  \frac{1}{x_n} - \frac{1}{x_n + \Delta} \right| =
+		  \frac{|\Delta|}{|x_n||(x_n + \Delta)|} \le  \frac{2|\Delta|}{s^2} \le \varepsilon 
+	}
+	\DeriveConclude{(*)}{ \bd^{-1}\TYPE{Cauchy} I(\forall) I(\exists, N) I(\forall) I(\Rightarrow) }
+	{\Big( x^{-1} : \TYPE{Cauchy} \Big)}
+	\EndProof
+	\\
+	\Theorem{CauchyClassInversion}{\forall [x] \in \Reals. [x] \neq [0] \Rightarrow \exists [y] \in \Reals : [x][y] = [1] }
+	\Say{(s,1)}{\bd \TYPE{EqualCauchy}([x],[0]) \bd [x]}{ \sum s \in \Rats_{++} \. 
+		\forall N \in \Nat \. \exists n \in \Nat : n \ge N \. |x_n| \ge s
+	}
+	\Say{n_1}{(1)(1)}{\Nat}
+	\Say{(z_1,2_1)}{x_{n_1}}{\sum z_1 \in \Rats : |z_1| \ge s}
+	\Assume{m}{\Nat}
+	\Say{ (n_{m + 1} 3_m)  }{ (1)(n_m + 1)  }{\sum n_{m + 1} \in \Nat \. n_{m + 1} \ge n_m + 1 > n_m }
+	\Conclude{(z_{m+1},2_{m+1})}{x_{ n_{m + 1}}}{ \sum z_{m + 1} \in \Rats \. |z_{m +1}| \ge s  }
+	\Derive{(n,z,2)}{ I\left(\sum \right)  }{\sum (n,z) : \TYPE{Subsequencer} \times \Nat \to \Rats 
+		\. z = x(n) \And \forall m \in \Nat \. |z_m| \ge s }
+	\Say{(3)}{\bd^{-1} \TYPE{Cauchy}(2)}{\Big(  z : \TYPE{Cauchy}\Big)}
+	\Say{(4)}{\bd^{-1} \TYPE{SeparetedFromZero}(2)}{\Big(z : \TYPE{SeparatedFromZero}\Big)}
+}
+\Page{
+	\Assume{\varepsilon}{\Rats_{++}}
+	\Say{(N,5)}{\bd \TYPE{Cauchy}(x)}{\sum N \in \Nat \. 
+		\forall n ,m \in \Nat \. \max(n,m) \ge N \. | x_m - x_n| \le \varepsilon }
+	\Assume{m}{\Nat}
+	\Assume{(6)}{m \ge N}
+	\Say{(7)}{\bd \TYPE{Subsequencer}(n)(m)}{n_m \ge n}
+	\Conclude{()}{ (2)_1(m)(5)(6,7)}{|x_m - z_m| = |x_m - x_{n_m}| \le \varepsilon}
+	\Derive{(5)}{\bd^{-1} \TYPE{Limit} I(\forall)I(\exists,N)I(\forall)I(\Rightarrow)}
+	{\lim_{n \to \infty} x_n - z_n = 0}
+	\Say{(6)}{\bd^{-1} \TYPE{EqualCauchy}(5)}{ [z] = [x]   }
+	\Conclude{(*)}{ E(=)(6)\Big([z^{-1}][x] \Big)\bd \FUNC{multCauchyClass}}{  [z^{-1}][x] = [z^{-1}][z] = [1] }
+	\EndProof
+	\\
+	\Theorem{CauchyClassesAreField}{ (\Reals,+,\cdot) : \TYPE{Field} }
+	\NoProof
+	\\
+	\DeclareType{CauchyClassGE}{ ?(\Reals \times \Reals)   }
+	\DefineNamedType{\big([a],[b]\big)}{CauchyClassGE}{ [a] \ge [b]}
+	{ \exists x \in [a] : \exists y \in [b] : \forall n \in \Nat \. x_n \ge y_n }
+	\\
+	\Theorem{CauchyClassOrder}{ \TYPE{CauchyClassGE} : \TYPE{Order}(\Reals) }
+	\Assume{[x]}{\Reals}
+	\Say{(1)}{ \bd \TYPE{Reflexive}(\FUNC{order}(\Nat \to \Rats))  }{x \ge x}
+	\Conclude{()}{ \bd^{-1} \TYPE{CauchyClassGe}(1)}{[x] \ge [x]}
+	\Derive{(1)}{\bd^{-1} \TYPE{Reflexive} I(\forall)    }{ \Big( \TYPE{CauchyClassGe} : \TYPE{Reflexive}(\Reals)  \Big)}
+	\Assume{[a],[b]}{\Reals}
+	\Assume{(2)}{[a] \ge [b] \And [b] \ge [a]  }
+	\Say{(x,y,3)}{ \bd(2)_1  }{\sum (x,y) \in [a] \times [b] \. x \ge y}
+	\Say{(x',y',4)}{ \bd(2)_2 }{\sum (x',y') \in [a] \times [b] \. y' \ge x'}
+	\Say{(5)}{ \bd \Reals\Big([b]\Big) 
+		\bd \TYPE{EqualCauchy}(y,y')(3)(4)\bd \Reals\Big([a]\Big) \bd \TYPE{EqualCauchy}(x,x')  }{ 
+		\NewLine :
+		0 = \lim_{n \to \infty} y_n - y'_n \le \lim_{n \to \infty} x_n - y'_n \le 
+		\lim_{n \to \infty} x_n - x'_n = 0 }
+	\Say{(6)}{\THM{DoubleIneqLimit}(5)}{\lim_{n \to \infty} x_n - y'_n = 0 }
+	\Conclude{()}{\bd \Reals([a].[b]) \bd^{-1}\TYPE{EqualCauchy} \bd x \bd y'(6)}{[a] = [b]}
+	\Derive{(2)}{\bd^{-1} \TYPE{Antysimmetric} I(\forall) I(\Rightarrow)}
+	{\Big( \TYPE{CauchyClassGE} : \TYPE{Antysimmetric}(\Reals)    \Big)  }
+	\Assume{[a],[b],[c]}{\Reals}
+	\Assume{(3)}{[a] \ge [b] \And [b] \ge [c]}
+	\Say{(x,y,4)}{ \bd(3)_1  }{\sum (x,y) \in [a] \times [b] \. x \ge y}
+	\Say{(x',z,5)}{ \bd(3)_2 }{\sum (y',z) \in [b] \times [c] \. y' \ge z}
+	\Say{\Delta}{ y' - y  }{ \Nat \to \Rats  }
+	\Say{(6)}{ \bd \TYPE{EqualCauchy}(y,y')\bd^{-1} \Delta}{ \lim_{n  \to \infty } \Delta_n = 0}
+}\Page{
+	\Say{(7)}{  (4)\Big( x + |\Delta|\Big)\bd^{-1} \Delta \THM{AbsValueIsGreater}(5)     }
+	{ 
+	\NewLine :
+	x + |\Delta| \ge y + |\Delta| = y' -\Delta + |\Delta| \ge y' \ge z   }
+	\Say{(8)}{ \bd \FUNC{inverse}(x_n)  (6) }
+	{ \lim_{n \to \infty} x_n + |\Delta_n| - x_n = \lim_{n \to \infty} |\Delta_n| = 0}
+	\Say{(9)}{\bd \Reals \bd^{-1} \TYPE{EqualCauchy}(*)}{ x + |\Delta| \in [a]}
+	\Conclude{()}{\bd \TYPE{CauchyClassGe}(9)\bd z(8)}{ [a] \ge [c]  }
+	\Derive{(3)}{\bd^{-1} \TYPE{Transitive}}{\Big( \TYPE{CauchyClassGe} : \TYPE{Transitive}(\Reals)\Big) }
+	\Conclude{(*)}{\bd^{-1} \TYPE{Order}}{ \Big( \TYPE{CauchyClassGe} : \TYPE{Order}(\Reals)\Big)  }
+	\EndProof
+	\\
+	\Theorem{CauchyClassOrderIsTotal}{\forall [x],[y] \in \Reals \. [x] \le [y] \Big| [y] \le [x]}
+	\Say{(1)}{\THM{LEM}([x] = [y])}{ [x] = [y] \; \Big| \: [x] \neq [y] }
+	\Assume{(2)}{[x] = [y]}
+	\Say{(3)}{\bd \TYPE{Reflexive}(\FUNC{order}(\Reals))(2)}{[x] \le [y]}
+	\Conclude{()}{I(|)(3)([y] \le [x])}{ [x] \le [y] \; \Big| \; [y] \le [x] }
+	\Derive{(2)}{I(\Rightarrow)}{ [x] = [y] \Rightarrow \bigg( [x] \le [y] \; \Big|\;  [y] \le [x] \bigg) }
+	\Assume{(3)}{[x] \neq [y]}
+	\Say{(s,4)}{\bd \Rats_{++} \bd \TYPE{EqualCauchy}(3)}{\sum s \in \Rats_{++} \.  \forall N \in \Nat \. 
+		\exists n \in \Nat : n \ge N \. | x_n - y_n | \ge s  }
+	\Say{(M,5)}{\bd \TYPE{Cauchy}(x)(s/4)}{
+		\sum M \in \Nat \. \forall n,m \in \Nat : n \ge M \And m \ge M \. 
+			|x_n - x_m| \le \frac{s}{4}
+		}
+	\Say{(L,6)}{\bd \TYPE{Cauchy}(y)(s/4)}{
+		\sum  L \in \Nat \. \forall n,m \in \Nat : n \ge L \And m \ge L \.
+			| y_n - y_m| \le \frac{s}{4}
+		}
+	\Say{N}{\max(M,L)}{\Nat}
+	\Say{(7)}{\bd \TYPE{Total}(\FUNC{order}(\Rats))(x_N,y_N)}{ x_N \ge y_N \; \Big| y_N \ge x_N   }
+	\Assume{(8)}{x_N \ge y_N}
+	\Assume{n}{\Nat}
+	\Assume{(9)}{n \ge N}
+	\Say{(m,10)}{(4)(N)}{ \sum m \in \Nat \. m \ge N \And  x_m - y_m > s  }
+	\Conclude{()}{\ldots}{    x_n - y_n \ge  x_m - y_m  - \frac{s}{2} \ge \frac{s}{2} > 0   }
+	\Derive{(9)}{\bd\FUNC{order}(\Nat \to \Rats)}{x(+N) \ge y(+N)}
+	\Conclude{(10)}{ \bd \TYPE{CaichyClassGE}(9) }{[x] \ge [y]}
+	\Derive{(8)}{I(\Rightarrow)I(I)}{ x_N \ge y_N \Rightarrow [x] \ge [y] \; \Big| \; [y] \ge [x]  }
+	\Derive{(9)}{\LOGIC{RepeatInvert}(x,y)}{ y_N \ge x_N \Rightarrow [x] \ge [y] \; \Big| \; [y] \ge [x]   }
+	\Conclude{()}{E(|)(7,8,9)}{[x] \ge [y] \; \Big| \; [y] \ge [x]}
+	\Derive{(3)}{I(\Rightarrow)}{ [x] \neq [y] \Rightarrow \bigg( [x] \ge [y] \; \Big| \; [y] \ge [x] \bigg)  }
+	\Conclude{(4)}{E(|)(1,2,3)}{   [x] \ge [y] \; \Big| \; [y] \ge [x]}
+	\EndProof
+}
+\Page{
+	\Theorem{CauchyClassesAreOrderedField}{(\Reals,\ge) : \TYPE{OrderedField}}
+	\Assume{[a],[b],[c]}{ \Reals }
+	\Assume{(1)}{[a] \ge [b]}
+	\Say{(x,y,2)}{ \bd \TYPE{CauchyClassGE}(x)  }{  \sum (x,y) \in [a] \times [y] \. 
+		  x \ge y     }
+	\Say{(3)}{ (2) + c }{ x + c \ge x + y  }
+	\Conclude{()}{\bd^{-1} \TYPE{CauchyClassGE}(x) }{  [a] + [c] = [x + c] \ge [y + c] =  [b] + [c] }
+	\Derive{(1)}{I(\forall)I(\Rightarrow)}{ \forall [a],[b],[c] \in \Reals \.  
+	   [a] \ge [b] \Rightarrow   [a] + [c] \ge [b] + [c] }
+	\Assume{[a],[b]}{ \Reals   }
+	\Assume{(2)}{ [a] \ge [0] \And [b] \ge [0] }
+	\Say{(x, 3)}{ \bd \TYPE{CauchyClassGE}(x)  }{\sum x \in [a] \. x \ge 0}
+	\Say{(y,4)}{  \bd \TYPE{CauchyClassGE}(y)   }{ \sum y \in [b] \. y \ge 0}
+	\Say{(5)}{  \bd \TYPE{OrderedField}(\Rats)(x,y) }{  xy \ge 0  }
+	\Conclude{(6)}{ \bd^{-1} \TYPE{CauchyClassGE}(5)    }{ [a][b] \ge [xy] \ge [0]  }
+	\Derive{(2)}{ I(\forall)I(\Rightarrow) }{  \forall [a],[b] \in \Reals \. [a] \ge 0 \And [b] \ge 0  
+	  \Rightarrow  [a][b] \ge [0]  } 
+	\Conclude{(3)}{ \bd^{-1} \TYPE{OrderedField}(1)(2) }{ \Big( \Reals : \TYPE{OederedField} \Big)    }
+	\EndProof
+	\\
+	\Theorem{CauchyClassesAreArchimedean}{ (\Reals,\ge) : \TYPE{Archimedean} }
+	\Assume{[x]}{\Reals_{++}}
+	\Say{(N,1)}{ \bd \TYPE{Cauchy}(x)(1)}{ \sum N \in \Nat \. \forall n,m \in \Nat \. 
+             n \ge N \And m \ge N \.  |x_n - x_m| \ge 1	 }
+	\Say{n}{ \lceil x_N \rceil + 1 }{\Nat}
+	\Say{y}{x(N+)}{ \TYPE{Cauchy}  }
+	\Assume{m}{\Nat}
+	\Conclude{()}{ \bd(y_m)(1)(N + m)\bd \FUNC{ceiling}(x_N)\bd^{-1}n   }
+	{ y_m = x_{N + m} \le x_N + 1 \le \lceil x_N \rceil + 1 = n }
+	\Derive{(1)}{\bd \FUNC{order}(\Nat \to \Rats)}{ y \le n }
+	\Conclude{(2)}{\bd y (1) \bd \Reals }{ [x] \le [n]}
+	\Derive{(3)}{ I(\forall) I(\exists,n)}{ \forall [x] \in \Reals_{++} \. \exists n \in \Nat : n \ge [x]  }
+	\Conclude{(*)}{ \bd^{-1}\TYPE{Archimedean} }{  \Big( R : \TYPE{Archimedean} \Big)  }
+ 	\EndProof
+ }\Page{
+	\Theorem{CauchyClassesAreReal}{ \Reals : \TYPE{Real}    }
+	\Assume{ A,B}{?\Reals}
+	\Assume{(1)}{ A < B  }
+	\Say{X}{\{ x \in \Reals : A < x < B  \}}{?\Reals}
+	\Say{(2)}{ \THM{LEM}\Big(X = \emptyset\Big)  }{ X = \emptyset \; \Big| \; X \neq \emptyset}
+	\Assume{(3)}{X \neq \emptyset }
+	\Conclude{(x,4)}{ (3)(\bd X) }{ A \le x \le B }
+	\Derive{(3)}{I(\rightarrow)I(\exists,x)}{X \neq \emptyset \Rightarrow  A \le x \le B   }
+	\Assume{(4)}{X = \emptyset}
+	\Say{(x_1,1)}{\bd \TYPE{NonEmpty}(A)}{\sum x_1 \in \Reals \. x_1 \in A }
+	\Assume{n}{\Nat}
+	\Conclude{(x_{n+1},3)}{(1)(4)}{ \sum x_{n + 1} \in A \. x_{n + 1}  + \frac{1}{2n} \ge A \And x_n \le x_{n+1} }
+	\Derive{(x,3)}{I\left( \prod \right)}{ \prod n \in \Nat \. \sum x_n \in  A \.  x_{n + 1}  + \frac{1}{2n} \ge A \And 
+	x_n \le x_{n+1}}
+	\Say{(4)}{\bd^{-1}\TYPE{Nondecreasing}(3)}{\Big( x : \TYPE{Nondecreasing} \Big)}
+	\Assume{n}{\Nat}
+	\Say{(a^n,5)}{\bd \Reals (x_n)(4)}{\sum a^n : \TYPE{Cauchy} \. a^n \in x_n \And a^{n} \le a^{n + 1}
+	 \And \forall k,l \in \Nat \. |a^n_k - a^n_l| < \frac{1}{2n}
+	}
+	\Conclude{y_n}{ a_n  }{\Rats}
+	\Derive{y}{I(\to)}{\Nat \to \Rats}
+	\Assume{\varepsilon}{\Rats_{++}}
+	\Say{ (N,5)}{\THM{ReductioInfima}(\varepsilon)}{  \frac{1}{N} \le \varepsilon }
+	\Assume{ n,m  }{\Nat}
+	\Assume{(6)}{n > N \And m > N }
+	\Conclude{()}{ \bd (a^n,a^m)(3)_1(5)  }{ |x_n + x_m| < \varepsilon}
+	\Derive{(5)}{\bd^{-1}\TYPE{Cauchy} \bd I(\forall)I(\exists,N+1)I(\forall)I(\Rightarrow) }
+	{\Big( y : \TYPE{Cauchy} \Big)}
+	\Assume{a}{A}
+	\Say{(6)}{\bd y}{ a \le \Lambda n \in \Nat \. y_n + \frac{1}{n}  }
+	\Say{(7)}{\bd \Reals \bd \TYPE{EqualCauchy}\Big(y, \Lambda n \in \Nat \. y_n + \frac{1}{n}\Big)}
+	{    \Lambda  n \in \Nat \.  y_n + \frac{1}{n} \in [y]   }
+	\Say{(8)}{ (6)(7) }{   a \le [y]    }
+	\Derive{(6)^*}{\bd^{-1} \TYPE{SetIneq}}{  A \le [y]}
+	\Assume{b}{B}
+	\Say{(\beta,7)}{\bd \Reals(b)}{  \sum b \in \beta \. \beta : \TYPE{Decreasing}   }
+}\Page{
+	\Assume{n}{\Nat}
+	\Conclude{()}{ \bd y (1) }{ y_n = a^n_n \le \beta_n}
+	\Derive{(8)}{\bd \TYPE{order}(\Nat \to \Rats) }{  y \le \beta   }
+	\Conclude{(9)}{\bd \Reals \bd \TYPE{CauchyClassGe} \bd \beta }{ [y] \le b }
+	\DeriveConclude{()}{\bd^{-1} \TYPE{SetIneq}}{B \ge [y]}
+	\Derive{(1)}{ \bd^{-1}\TYPE{IntermidiatePointProperty} }
+	{\Big(\Reals : \TYPE{IntermidiatePointProperty}\Big)}
+	\Conclude{(2)}{\bd^{-1} \Reals(1)}{ \Big( \Reals : \TYPE{Reals} \Big)}
+	\EndProof
+}
+\subsection{Rationals in Reals}
+\Page{
+	& \Reals : \TYPE{Real}\\
+	\\
+	\Theorem{RationalApproximation}{ \forall r \in \Reals_++ \.  \forall  \varepsilon \in \Reals \. 
+		\exists q \in \Rats \. |r - q| \le \varepsilon }
+	\Say{u_0}{ \lfloor r \rfloor}{\Int}
+	\Assume{n}{\Nat}
+	\Say{d_n}{\lceil 10^n(r - u_{n-1}(-1)) \rceil}{\Int}
+	\Conclude{U_n}{u_{n-1}  + 10^{-n}d_n}{\Reals}
+	\Derive{(u,1)}{I\left(\sum \right)}{ \sum u : \Nat \to \Rats \.  |u_n - r | < 10^{-n} }
+	\Conclude{(*)}{\THM{PowerCompression}(1)}{ \exists n \in \Nat \.  |u_n - r| \le \varepsilon}
+	\EndProof
+	\\
+	\Theorem{RationalsDensity}{ \Rats : \TYPE{Dense}(\Reals)}
+	\NoProof
+	\\
+	\Theorem{DisjointIntervalsAreAtmostCountable}{
+		\forall U : \TYPE{Disjoint}\Big(\TYPE{OpenInterval}(\Reals)\Big) \. |U| \le \aleph_0  }
+	\Assume{I}{U}
+	\Conclude{(q_I,1_I)}{\bd \TYPE{Dense}\Big(\THM{RationalDensity}\Big)(I)}{\sum q_I \in \Rats \. q_I \in I}
+	\Derive{q}{I\left(\prod\right)}{ \prod I \in U \. \Rats \cup I  }
+	\Assume{I,J}{U}
+	\Assume{(1)}{I \neq J}
+	\Say{(2)}{\bd q_I}{q_I \in I}
+	\Say{(3)}{\bd q_J}{q_j \in J}
+	\Conclude{(4)}{\bd \TYPE{Disjoint}(1,2,3)}{q_I \neq q_J}
+	\Derive{(5)}{\bd^{-1} \TYPE{Injection}}{\Big( q : \TYPE{Injection}(U,\Rats)  \Big)}
+	\Conclude{(6)}{ \THM{InjectionCardinality}(5) }{  |U| \le |\Rats| = \aleph_0     }
+	\EndProof
+	\\
+	\DeclareType{Period}{\prod G : \TYPE{Abelian} \. \prod X : \TYPE{Set} \. G \to X \to ?G}
+	\DefineType{p}{Period}{ \Lambda f : G \to X \. \forall g \in G \. f(p +g) = f(p) \And p \neq 0}
+	\\
+	\DeclareType{Periodic}{\prod G : \TYPE{Abelian} \. \prod X : \TYPE{Set} \. ?(G \to X)}
+	\DefineType{f}{Periodic}{\exists p : \TYPE{Period}(f)}
+}\Page{
+	\DeclareType{Coirrational}{ ?(\Reals \times \Reals)}
+	\DefineType{(a,b)}{Coirrational}{\forall q \in \Rats \. qa \neq b}
+	\\
+	\Theorem{IrrationalGenDense}{\forall r \in \Rats^\c \. \{  nr + m | n,m \in \Int \} : \TYPE{Dense}}
+	\Assume{(0)}{r > 0}
+	\Say{\Delta}{\Lambda n \in \Int \. \{nr\} }{ \Int \to [0,1)  }
+	\Say{x}{ \inf \im \Delta }{ [0,1) }
+	\Assume{(1)}{ x = \min \im \Delta }
+	\Say{(2)}{\bd \Delta \bd \Rats}{x \not \in \Rats}
+	\Say{\mathcal{N}}{ \{ n \in \Nat : nx \ge  1  \} }{  ?\Nat  }
+	\Say{(3)}{\bd \TYPE{Archemedean}(\Reals)(1/x)\bd \mathcal{N}}{ \mathcal{N} \neq \emptyset}
+	\Say{n}{ \inf \mathcal{N} }{ \Nat  }
+	\Assume{(4)}{ nx - 1 \ge  x }
+	\Say{(5)}{ (4) + 1 - x }{ (n-1)x \ge 1 }
+	\Conclude{(6)}{ \bd n \bd \min  (5)  }{\bot}
+	\Derive{(4)}{ E(\bot)  }{ nx - 1 < x  }
+	\Say{(m,5)}{ \bd x \bd r \bd \mathcal{N} \bd n   }{  \sum m \in \Nat \.  nx - 1 = \Delta_m   }
+	\Conclude{(6)}{\bd x \bd \min(5)}{\bot}
+	\Derive{(1)}{E(\bot)}{ x \neq \min \im \Delta }
+	\Say{(\delta,2)}{\bd \inf (1)}{ \sum \delta \in \im \Delta \. \lim_{n \to \infty} \delta_n = x  }
+	\Assume{a}{\Reals}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(N,3)}{\bd \TYPE{Cauchy}(\delta)}{ \sum N \in \Nat \. \forall n,m \Nat \. |\delta_n - \delta_m| < \varepsilon }
+	\Say{(m,4)}{ \bd \Delta(3)(2)(1) }{\sum m \in \Nat \. \Delta_m < \varepsilon}
+	\Say{\mathcal{N}}{\{ n \in \Int :  n\Delta_m   >  r \}}{ ?\Int  }
+	\Say{(5)}{ \bd \TYPE{Archemedean}\left( \frac{r}{\Delta_m} \right)  \bd \mathcal{N} }{  \mathcal{N} \neq \emptyset}
+	\Say{n}{\arg \; \min_{n \in \mathcal{N}} |n|}{\Int}   
+	\Conclude{()}{ \bd \mathcal{N} \bd n (4) }{ |n \Delta_m - r | < \varepsilon   }
+	\DeriveConclude{(*)}{ \bd \TYPE{Dense} \bd \forall \bd \forall }{ \LOGIC{This} }
+	\EndProof
+}\Page{
+	\Theorem{DensePeriodicImage}{\forall f : \TYPE{Periodic}(\Reals,\Reals) \And C(\Reals,\Reals) \. 
+		\forall \Delta \in \Reals_{++}
+		\. \NewLine \.  \forall (0) : \Big( \forall p : \TYPE{Period}(f) \. (p,\Delta) : \TYPE{Coirrational}  \Big)
+		\.  \{  f(n\Delta) \; | \; n \in \Nat    \} : \TYPE{Dense} \big( \im f \big) 
+	}
+	\Say{p}{\bd \TYPE{Periodic}(f)}{ \TYPE{Period}(p)}
+	\Say{(1)}{ (0)(p) }{ \Big( p, \Delta  \Big) : \TYPE{Coirrational} }
+	\Assume{y}{\im f}
+	\Say{(x,4)}{ \bd \im f (y)  }{\sum x \in \Reals  \. f(y) = x}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(\delta,5)}{\bd C(\Reals,\Reals)(x,\delta)}{\sum \delta \in \Reals_{++} \. 
+		 \forall z \in (x - \delta,x + \delta) \. f(z) \in (y - \varepsilon, y + \varepsilon)}
+	\Say{(m,z,6)}{\THM{DenseGenGense}(x/p,\delta/p)}{ \sum m,z \in \Int \.  
+		\left|\frac{m\Delta}{p} + z - \frac{x}{p}\right| < \frac{\delta}{p}}
+	\Say{(7)}{ p(6)}{ | m\Delta + pz  - x|  <  \delta       }
+	\Conclude{()}{ \bd \TYPE{Period}(f)(p)(5)(7) }{ 
+		\left| f(m\Delta) - f(z) \right| 
+			=\left| f\left(  m\Delta  + pz \right)  - y \right| \le \varepsilon
+		}
+	\DeriveConclude{(*)}{I(\forall)I(\forall)\bd^{-1} \TYPE{Dense}}{\LOGIC{This}}
+	\EndProof
+}
+\section{Real Sequences}
+\subsection{Monotonic Sequences}
+\Page{
+	\Theorem{NondecreasingAndBoundedConverge}{\forall x : \TYPE{Nondecreasing} \And \TYPE{BoundedFromAbove}(\Nat,\Reals)
+		\. x : \TYPE{Convergent}}
+	\Say{X}{x(\Nat)}{?\Reals}
+	\Say{(1)}{\bd X \bd \TYPE{BoundedFomAbove} x}{ \Big( X : \TYPE{BoundedFromAbove} \Big)}
+	\Say{c}{\sup X}{\Reals}
+	\Assume{(2)}{\lim_{n \to \infty} x_n \neq c}
+	\Say{(\varepsilon,3)}{\bd \TYPE{Limit}(2)}{\sum \varepsilon \in \Reals_{++} \. \forall n \in \Nat 
+	 \. \exists m \in \Nat : m \ge n  \And  | c - x_n| > \varepsilon
+	}
+	\Say{(4)}{(3)\bd c\bd \sup \bd X }{\forall n \in \Nat 
+	 \. \exists m \in \Nat : m \ge n  \And   c - x_n > \varepsilon }
+	\Say{(5) }{\bd \TYPE{Nondecreasing}(4)}{\forall n \in \Nat \. c - x_n > \varepsilon}
+	\Say{(6)}{\bd \sup \bd X (5)}{c \neq \sup X}
+	\Conclude{()}{(6)\bd c}{ \bot  }
+	\DeriveConclude{(*)}{E(\bot)}{c = \lim_{n \to \infty} x_n}
+	\EndProof
+	\\
+	\Theorem{NonincreasingAndBoundedConverge}{\forall x : \TYPE{Nonincreasing} \And \TYPE{BoundedFromBelow}(\Nat,\Reals)
+		\. x : \TYPE{Convergent}}
+	\NoProof
+	\\
+	\Theorem{MonotonicAndBoundedConverges}{\forall x : \TYPE{Monotonic} \And \TYPE{Bounded}(\Nat,\Reals)
+		\. x : \TYPE{Convergent}}
+	\NoProof
+	\\
+	\DeclareFunc{limitSuperior}{  \Nat \to \Reals \to \EReals      }
+	\DefineNamedFunc{limitSupereior}{x}{\lim \sup x}{ \lim_{n \to \infty} \sup \{ x_m | m \in \Nat : m \ge n   \} }
+	\\
+	\DeclareFunc{limitInferior}{  \Nat \to \Reals \to \EReals      }
+	\DefineNamedFunc{limitInferior}{x}{\lim \inf x}{ \lim_{n \to \infty} \inf \{ x_m | m \in \Nat : m \ge n   \} }
+	\\
+	\Theorem{LimitReverse}{\forall x : \Nat \to \Reals \. -\lim \sup x = \lim \inf - x}
+	\NoProof
+}
+\Page{
+	\Theorem{LimSupStructure}{\forall x : \Nat \to \Reals \. \exists k : \TYPE{Subsequencer} \. 
+		\lim \sup x = \lim_{n \to \infty} x_{k_n}}
+	\Say{X}{\Lambda n \in \Nat \. \{ x_m | m \in \Nat : m \ge n\}}{ \Nat \to ?\Reals }
+	\Assume{(1)}{\forall n \in \Nat \. \exists y \in X_n : y = \max X_n}
+	\Say{(y_1,2_1)}{(1)(1)}{\sum y_1 \in X_1 \. y_1 = \max X_1}
+	\Say{(k_1,3_1)}{\bd X_1(y_1)}{\sum k_1 \in \Nat \. y_1 = x_{k_1}}
+	\Assume{n}{\Nat}
+	\Say{(y_{n +1},2_{n+1})}{ (1)(k_{n} + 1)  }{\sum y_{n+1} \in X_{k_n + 1} \. y_{n +1} = \max X_{k_n + 1}}
+	\Say{(k_{n+1},3_{n+1})}{\bd X_{k_n + 1} \bd y_{n + 1}  }{ \sum k_{n + 1} \. y_{n + 1} = x_{k_{n +1}}}
+	\Conclude{()}{ \bd X_{k_n + 1} \bd k_{n + 1}(3_{n +1})(2_{n + 1})}{ k_{n + 1} > k_{n}  }
+	\Derive{(k,2) }{\bd \TYPE{Subsequencer} I(\sum)}{\sum k : \TYPE{Subsequencer} \. \forall n \in \Nat \. 
+	x_{k_n} = \max X_{k_n}}
+	\Conclude{()}{ \lim_{n \to \infty}  (2)  \bd^{-1} \sup  \THM{ConvergentSubseq}\Big(\EReals\Big)
+		(\sup X_k)\bd^{-1} \lim \sup x}{ 
+		\NewLine
+		\lim_{n \to \infty} x_{k_n} = \lim_{n \to \infty} \max X_{k_n} = \lim_{n \to \infty} \sup X_{k_n} 
+		= \lim_{n \to \infty} \sup X_{n} = \lim \sup x
+	}
+	\Derive{(1)}{I(\Rightarrow)I(\exists)(k)}{\forall n \in \Nat \. \exists y \in X_n :  y = \max X_n 
+	\Rightarrow \LOGIC{This} }
+	\Assume{(2)}{\exists n \in \Nat \. \forall y \in X_n \. y \neq \max X_n}
+	\Say{(n,3)}{E(\exists)(2)}{\sum n \in \Nat \. \forall y \in X_n \. y \neq X_n}
+	\Say{(k,4)}{\bd X_n \bd \sup}{ \exists k : \TYPE{Subsequencer} \. \lim_{m \to \infty } x_{k_m} = \sup X_n}
+	\Assume{m}{\Nat}
+	\Assume{(5)}{m \ge n}
+	\Say{(l,6)}{\bd X_n \bd X_m}{ \sum l \in \Nat \. \forall d \in \Nat : d \ge l \. x_{k_l} \in X_m}
+	\Conclude{()}{\bd \sup (6)}{ \sup X_m = \lim_{m \to \infty} x_{k_m}}
+	\DeriveConclude{()}{\lim_{m \to \infty} \THM{FinitelyReducedSequenve} \bd^{-1} \lim \sup}{ 
+		\lim_{m \to \infty} x_{k_m} =  \lim_{m \to \infty} \sup X_{m} = \lim \sup x       }
+	\Derive{(2)}{I(\Rightarrow)I(\exists)}{ \exists n \in \Nat \. \forall y \in X_n \. y \neq \max X_n 
+		\Rightarrow \LOGIC{This}}
+	\Say{(3)}{\LOGIC{LEM}(\forall n \in \Nat \. \exists x \in X_n : x = \max X_n)}
+	{ \forall n \in \Nat \. \exists x \in X_n : x = \max X_n \; \Big| \NewLine \Big| \; 
+	  \exists n \in \Nat :  \forall x \in X_n \. x \neq \max X_n 
+	}
+	\Conclude{(*)}{E(|)(1,2,3)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{LimInfStructure}{\forall x : \Nat \to \Reals \. \exists k : \TYPE{Subsequencee} \.
+           	\lim_{n \to \inf} x_{k_n} = \lim \inf x	}
+	\NoProof
+}\Page{
+	\Theorem{ConvergenceByCoincidence}{\forall x : \TYPE{Bounded}(\Nat,\Reals) \.
+		x : \TYPE{Convergent} \iff \lim \inf x = \lim \sup x } 
+	\Assume{(1)}{ (x : \TYPE{Convergent}) }
+	\Say{X}{\lim_{n \to \infty} x_n}{\Reals}
+	\Say{(k,2)}{\THM{LimSupStructure} (x)}{\sum k : \TYPE{Subsequencer} \. 
+		\lim_{n \to \infty}  x_{k_n} = \lim \sup x}
+	\Say{(3)}{\THM{ConvergentSubseq}(2, \bd X )}{ \lim \sup x = X }
+	\Say{(l,4)}{\THM{LimInfStructure} (x)}{\sum l : \TYPE{Subsequencer} \. 
+		\lim_{n \to \infty}  x_{l_n} = \lim \inf x}
+	\Say{(5)}{\THM{ConvergentSubseq}(4, \bd X )}{ \lim \inf x = X }
+	\Conclude{()}{E(=)(3)(5)}{\lim \inf x = \lim \sup x}
+	\Derive{(1)}{E(\Rightarrow)}{ x : \TYPE{Convergent} \Rightarrow \lim \inf x = \lim \sup x   }
+	\Assume{(2)}{ \lim \inf x = \lim \sup x }
+	\Say{X}{\lim \sup x}{\Reals}
+	\Assume{n}{\Nat}
+	\Conclude{()}{\bd \sup \bd \inf }{  \inf \{ x_m | m \in \Nat : m \ge n\}     \le x_n        
+	 \le  \sup \{ x_m | m \in \Nat : m \ge n\}
+	}
+	\Derive{(3)}{ \bd^{-1} X\THM{DoubleIneq}{(2)} \bd^{-1} \lim \sup  \bd^{-1} \lim \inf   \lim_{n} \to \infty  }
+		{ \lim_{n \to \infty} = X }
+	\Conclude{()}{\bd^{-1} \TYPE{Convergent}(3)}{\Big( x : \TYPE{Convergent}\Big)}
+	\Derive{(2)}{I(\Rightarrow)}{ \lim \inf x = \lim \sup x \Rightarrow x : \TYPE{Convergent}}
+	\Conclude{(*)}{I(\iff)(1,2)}{\lim \inf x = \lim \sup x \iff x : \TYPE{Convergent}}
+	\EndProof
+}
+\newpage
+\subsection{Stolz-Cizaro Theorem}
+\Page{
+	\DeclareType{Stolz}{?(\Nat \to \Reals)}
+	\DefineType{x}{Stolz}{\exists y : \Nat \to \Reals : \exists
+		z : \TYPE{Increasing} \. \lim_{n \to \infty} z_n = \infty \And x = \frac{y}{z} }
+	\\
+	\DeclareFunc{stolzOperator}{ \TYPE{Stolz} \to \Nat \to \Reals }
+	\DefineNamedFunc{stolzOperator}{\frac{x}{y}}{ \frac{\Delta x}{\Delta y}  }
+	{ \Lambda n \in \Nat \. \frac{x_{n+1} - x_n}{y_{n + 1} - y_n}   }
+	\\
+	\Theorem{StolzCizaro}{\forall  \frac{x}{y} : \TYPE{Stolz} \.  \forall L \in \Reals \.  
+	 \lim_{n \to \infty} \frac{\Delta x_n}{\Delta y_n} = L \Rightarrow
+	 \lim_{n \to \infty} \frac{x_n}{y_n} = L
+	}
+	\Assume{\varepsilon}{\Reals}
+	\Say{(N,1)}{\bd \TYPE{Limit}\left( \frac{\Delta x}{\Delta y}, L \right)}
+	{  \sum N \in \Nat \. \forall n \in  \Nat : n \ge N \.  \left| \frac{\Delta x_n}{\Delta y_n} - L  \right|
+		< \varepsilon}
+	\Assume{n}{\Nat}
+	\Assume{(2)}{n \ge N}
+	\Conclude{()}{(1)(n,2)/(y_{n + 1} - y_n)}{   (L - \varepsilon)(y_{n + 1} - y_n) \le  x_{n+1} - x_n \le           
+		(L + \varepsilon)(y_{n + 1} + y_n)}
+	\Derive{(2)}{I(\forall)}{ \forall n \in \Nat : n \ge N \.    
+		(L - \varepsilon)(y_{n + 1} + y_n) \le x_{n + 1} - x_n \le (L + \varepsilon)(y_{n+1} + y_n)
+	}
+	\Assume{k}{\Nat}
+	\Assume{(3)}{ k > N }
+	\Say{(4)}{ \sum^{k-1}_{n = N} (2)(n) }{ (L - \varepsilon)(y_k + y_N) \le x_k + x_N \le (L + \varepsilon)(y_k + y_N)}
+	\Conclude{(5)}{ (2)/y_k   }{ (L - \varepsilon)\left( 1  + \frac{y_N}{y_k} \right)   
+	 \le  \frac{x_k}{y_k} + \frac{x_N}{y_k} \le  (L + \varepsilon)\left( 
+	   1   + \frac{y_N}{y_k}
+	 \right)
+	}
+	\DeriveConclude{()}{\THM{LimitIneq}}{  (L - \varepsilon) \le \lim_{n \to \infty} \frac{x_n}{y_n} 
+		\le  (L + \varepsilon)   }
+	\Derive{(1)}{ \lim_{\varepsilon \to 0}  I(\forall)}{ L \le \lim_{n \to \infty} \frac{x_n}{y_n} \le L  }
+	\Conclude{(*)}{\THM{DoubleIneq}(1)}{ \lim_{n \to \infty} \frac{x_n}{y_n} = L  }
+	\EndProof
+}
+\newpage
+\subsection{Real Series}
+\Page{
+	\DeclareFunc{partialSums}{\prod G : \TYPE{TopologicalGroup} \. (\Nat \to G) \to \Nat \to G}
+	\DefineNamedFunc{partialSums}{x}{S(x)}{\Lambda n \in \Nat \. \sum^n_{i=1} x_i}
+	\\
+	\DeclareType{ConvergentSeria}{\prod G : \TYPE{TopologicalGroup} \. ?(\Nat \to G)}
+	\DefineType{ x  }{ ConvergentSums }{ S(x) : \TYPE{Convergent} }
+	\\
+	\DeclareFunc{infinitSum}{ \prod G : \TYPE{TopologicalGroup} \. \TYPE{ConvergentSeria}(G) \to G  }
+	\DefineNamedFunc{ infinitSum }{x}{ \sum^\infty_{n = 1} x_n }{\lim_{n \to \infty}  S_n(x) }
+	\\
+	\Theorem{ SeriaSum  }{ \forall a,b : \TYPE{ConvergentSeria}(\Reals) \. 
+	\sum^{\infty}_{n=1} a_n + b_n =  \sum^\infty_{n=1} a_n + \sum^\infty_{n=1} b_n }
+	\NoProof
+	\\
+	\Theorem{ NthTermTest  }
+	{ \forall x : \TYPE{ConvergentSeria}(\Reals) \. \lim_{n \to \infty} x_n = 0   }
+	\Say{(1)}{ \THM{ConvergentIsCauchy} \bd \TYPE{ConvergentSeria}(x)}{ \Big( S(x) : \TYPE{Cauchy} \Big)  }
+	\Assume{\varepsilon}{ \Reals_{++}}
+	\Say{(N,2)}{ \bd \TYPE{Cauchy}(x,1) (\varepsilon)   }
+	{ \sum N \in \Nat \. \forall n,m \in \Nat : \min(n,m) \ge N \.   \Big|S_n(x) - S_m(x) \Big| < \varepsilon   }
+	\Assume{n}{\Nat}
+	\Assume{(3)}{n \ge N + 1}
+	\Conclude{(4)}{ \bd^{-1} \FUNC{partialSums}(2)(n,3)   }{ |x_{n}| = |S_{n + 1}(x) - S_n(x)| < \varepsilon   }
+	\Derive{(5)}{\bd^{-1} \TYPE{Limit} I(\forall)I(\exists)(N + 1)I(\forall)I(\Rightarrow) }
+	{ \lim_{n \to 0} x_n = 0  }
+	\EndProof
+	\\
+	\Theorem{ComperissonTest}{ \forall a : \Nat \to \Reals \. \forall b : \TYPE{ConvergentSeria}(\Reals) \.
+	   \forall (0) :  |a| \le b \.  a : \TYPE{ConvergentSeria}(\Reals)
+	}
+	\Say{(1)}{ \THM{ConvergentIsCauchy} \bd \TYPE{ConvergentSeria}(b)}{ \Big( S(b) : \TYPE{Cauchy} \Big)  }
+	\Assume{\varepsilon}{\Reals}
+	\Say{ (N,2) }{  \bd \TYPE{Cauchy}(b,1)(\varepsilon)}
+	{ \sum N \in \Nat \. \forall n,m \in \Nat : \max(n,m) \ge N \. |S_n(b) - S_m(b) | }
+	\Assume{n,m}{\Nat}
+	\Assume{(3)}{ \max(n,m) \ge N }
+} \Page{
+	\Conclude{()}{ \bd S(a) \THM{TriangeIneq}(a) (0) \bd^{-1}S(b)(2)(n,m,3)}
+	{  \NewLine : |S_n(a) - S_m(a)| = \left| \sum^m_{i=n} a_i  \right|  
+		\le \sum^n_{i=m} | a_i| \le \sum^n_{i=m} b_i  =
+		| S_n(b) - S_m(b) | < \varepsilon
+	}
+	\Derive{(5)}{\bd^{-1} \TYPE{ConvergentSums} I(\forall)I(\exists)(N + 1)I(\forall)I(\Rightarrow) }
+	{ \Big(  a : \TYPE{ConvergentSeria}   \Big) }
+	\EndProof
+	\\
+	\DeclareFunc{alternatingSigns}{ \Nat \to \Int   }
+	\DefineNamedFunc{alternatingSigns}{}{ (-1)^n}{\Lambda n \in \Nat \. (-1)^n}
+	\\
+	\Theorem{AlternatingTest}{\forall x : \Nat \to \Reals_{+} \. 
+		\forall (0_1) : \lim_{n \to \infty} x_n = 0 \.
+		\forall (0_2) : \Big( |x| : \TYPE{Decreasing} \Big) \.
+		\NewLine \.
+			(-1)^nx : \TYPE{ConvergingSeria}(\Reals)
+	}
+	\Say{a}{\Lambda n \in \Nat \. \sum^{2n}_{i=1} (-1)^i x_i}{\Nat \to \Reals}
+	\Say{b}{\Lambda n \in \Nat \. \sum^{2n-1}_{i=1} (-1)^i x_i}{\Nat \to \Reals}
+	\Assume{n}{\Nat}
+	\Say{(*_1)}{\bd a \bd \TYPE{Decreasing}(x)}{ a_{n + 1} - a_n = x_{2n + 2} - x_{2n + 1} < 0 }
+	\Say{(*_2)}{ \bd b \bd \TYPE{Decreasing}(x)}{b_{n + 1} - b_n = -x_{2n  + 1} + x_{2n} > 0}
+	\Conclude{()}{\bd b \bd a \bd x \bd \Reals_+}{  a_n - b_n  = x_{2n} \ge 0 }
+	\Derive{(1)}{\bd^{-1}\TYPE{Increasing } \bd^{-1}\TYPE{Decreasing} \bd^{-1}
+	\FUNC{order}(\Nat \to \Reals) }
+	{ \Big( a : \TYPE{Decreasing} \Big)  \And \Big( b : \TYPE{Increasing} \Big) \And b \le a   }
+	\Say{(2)}{(1_1)(1_3)}{ b_1 \le a  }
+	\Say{(3)}{\bd^{-1} \TYPE{BoundedFromBelow}(2)}{ \Big( a : \TYPE{BoundedFromBelow} \Big)   }
+	\Say{(4)}{(1_2)(1_3)}{ b \le a_1  }
+	\Say{(5)}{\bd^{-1} \TYPE{BoundedFromAbove}(2)}{ \Big( b : \TYPE{BoundedFromAbove} \Big)   }
+	\Say{6}{\THM{NondecreasingAndBoundedConverge}(b,1_2,5)}{\Big( b : \TYPE{Convergent} \Big)}
+	\Say{7}{\THM{NonincreasingAndBoundedConverge}(a,1_1,3)}{\Big( a : \TYPE{Convergent} \Big)}
+	\Say{A}{\lim_{n \to \infty} a_n}{\Reals}
+	\Say{B}{\lim_{n \to \infty} b_n}{\Reals}
+	\Say{(8)}{ \bd A \bd B (A - B) \THM{LimitSum} \bd a \bd b (0_1)    }
+	{ A - B = \lim_{n \to \infty} a_n - \lim_{n \to \infty} b_n = \lim_{n \to \infty} x_{2n} = 0 }
+	\Say{(9)}{\bd \TYPE{Inverse}(\Reals) (8)}{A = B}
+	\Conclude{(*)}{\THM{SequenceCompositionLimits}(9,\bd a,\bd b) \bd^{-1} \FUNC{infiniteSum}}
+	{ \sum^\infty_{n=1} (-1)^nx_n = A  }
+	\EndProof
+	\\
+	\DeclareFunc{geometricSeria}{\Reals \to \Nat \to \Reals}
+	\DefineNamedFunc{geometricSeria}{a}{  a^n  }{ \Lambda n \in \Nat \. a^{n-1}}
+}\Page{
+	\Theorem{FiniteGeometricSum}{\forall a \in \Reals : a \neq 1 \. \forall n \in \Nat \. 
+		\sum^n_{i=0} a^i = \frac{1- a^{i + 1}}{1 - a}}
+	\Say{(1)}{I(=)(1)}{  \sum^0_{i = 0} a^i = 1 = \frac{1 - a^{1}}{1 - a}  }
+	\Assume{n}{\Nat}
+	\Assume{(2)}{\LOGIC{This}(a,n)}
+	\Conclude{(2)}{}{  \sum^{n + 1}_{i = 0} a^i =  a^{n + 1} + \frac{1 - a^{n + 1}}{ 1 - a}   
+		=  \frac{1 - a^{n + 2} }{1 - a}
+	}
+	\DeriveConclude{(*)}{I(\Nat)(1)}{  \sum^n_{i=0} a^i = \frac{1 - a^{i + 1}}{1 - a}  }
+	\EndProof
+	\\
+	\Theorem{InfiniteGeometricSum}{\forall a \in (-1,1) \. \sum^\infty_{n=0} a^n = \frac{1}{1 - a}}
+	\Conclude{(*)}{ \bd \FUNC{infiniteSum}(a^n)\bd  S_n(a^n) \THM{FiniteGeometrisSum}(a) \THM{PowerCompression}(a) }
+	{ 
+		\NewLine
+		\sum^\infty_{n=0} a^n = 
+		\lim_{n \to \infty} S_n(a^n) =
+		\lim_{n \to \infty} \frac{1 - a^{n + 1}}{1 - a}  
+		=  \frac{1}{1 - a}
+	}
+	\EndProof
+	\\
+	\Theorem{RatioTest}{\forall x : \Nat \to \Reals \. \forall r \in (0,1) \. 
+		\forall (0) : \lim_{n \to \infty} \frac{|x_{n+1}|}{|x_n|} = r \. 
+		x : \TYPE{ConvergentSeria}
+	}
+	\Say{\varepsilon}{ \frac{1 - r}{2} }{(0,1)}
+	\Say{r'}{r + \varepsilon}{(0,1)}
+	\Say{(N,1)}{\bd \TYPE{Limit}(0)(\varepsilon)}{\sum N \in \Nat \. \forall n \in \Nat : n \ge N \.  
+		\left| \frac{|x_{n+1}|}{|x_n|} - r \right| < \varepsilon }
+	\Assume{n}{\Nat}
+	\Assume{(2)}{n \ge N}
+	\Conclude{()}{\Big(\bd\FUNC{absValuse}(1)(n,2)  + r\Big)|x_n| \bd^{-1} r'}{ |x_{n + 1}| < r'|x_n|  }
+	\Derive{(2)}{I(\forall)}{ \forall n\in \Nat : n \ge N \. |x_{n+1}| < r'|x_n|  }
+	\Say{(3)}{ \THM{InductionIneq}(2) }{ \forall n \in \Nat  \. |x_{N + n}| < (r')^n|x_N|}
+	\Say{(*)}{   \THM{ComparissonTest}(\THM{InfiniteGeometricSum}(a),x_{+N}) + \sum^{N-1}_{i = 1} x_i  }
+	{ \Big(  x : \TYPE{ConvergentSeria} \Big)  }
+	\EndProof
+}
+\newpage 
+\subsection{Absolute Convergence [!!]}
+\Page{
+	\DeclareType{AbsolutelyConvergent}{?\TYPE{ConvergentSeria}(\Reals)}
+	\DefineType{x}{AbsolutelyConvergent}{ |x| : \TYPE{ConvergentSeria}(\Reals)}
+	\\
+	\Theorem{AbsConvStable}{ \forall  x : \TYPE{AbsolutelyConvergent}(\Reals) \. 
+		\forall  \sigma : \Nat \ToBij_{\mathsf{SET}} \Nat \. 
+		\sum^\infty_{i=1} x_{\sigma(i)} = \sum^\infty_{i=1} x_i   }
+	\Assume{\varepsilon}{\Reals}
+	\Say{(N,1)}{ \bd \TYPE{Cauchy} \bd \TYPE{ConvergentSeria}\Big( \bd \TYPE{AbsolutelyConvergent} \Big)(\varepsilon)   }
+	{ 
+		\NewLine :
+		\sum N \in \Nat \. \forall n,m \in \Nat : \max(n,m) \ge N \.  \Big| S_n\big(|x|\big) - S_m\big(|x|\big) \Big|      
+	}
+	\Say{M}{\max \{  \sigma^{-1}(n) :  1 \le n \le N  \} }{\Nat}
+	\Assume{n,m}{\Nat}
+	\Assume{(2)}{ n \ge M \And m \ge N}
+	\Conclude{(3)  }{ \bd S(x) \THM{TriangularIneq} \bd M(2)\bd^{-1}S(|x|)(1)(\bd N)  }
+	{      
+		\NewLine:
+		\Big| S_{\sigma(n)}(x) - S_{m}(x) \Big| \le \sum_{i = N}^{\sigma(n)} | x_i | +
+		\sum_{i = N}^{m} |x_i|
+		\le 2\sum^\sigma(n)_{i = N } | x_i|  =  2\Big(  S_{\sigma(n)}(|x|) - S_{N}(|x|) \Big)
+		< 2\varepsilon
+	}
+	\Derive{(1)}{
+		    \bd^{-1} \FUNC{infinitSum}   \THM{ContinuousAddition}\bd^{-1}\TYPE{Limit}}
+	{ \sum^\infty_{i=1} x_{\sigma(i)} - \sum^\infty_{i=1} x_i = 0}
+	\Conclude{(*)}{ (1) + \sum^\infty_{i=1} x_i }{ \sum_{i=1}^\infty  x_{\sigma(i)} = \sum^\infty_{i=1} x_i}
+	\EndProof
+	\\
+	\Say{\TYPE{ConditionallyConvergent}}{ \TYPE{ConvergentSeria}(\Reals) \And \IsNot \TYPE{AbsolutelyConvergent}}
+	{\TYPE{Type}}
+	\\
+	\DeclareFunc{support}{\prod G : \TYPE{Abelean} \. (\Nat \to G) \to ?\Nat }
+	\DefineNamedFunc{support}{x}{\supp x}{ \{ n \in \Nat : x_n \neq 0  \}}
+	\\
+	\Theorem{CondConvStructure}{\forall x : \CC \.  \# \supp x^- = \infty = \# \supp x^+ }
+	\Assume{(1)}{\# \supp x^- < \infty}
+	\Say{(I, 2)}{  \bd \TYPE{Finite} (1)}{ \sum I : \TYPE{Finite}(\Nat) \. I = \supp x^-  }
+	\Say{(3)}{\bd_1 \CC(x) \bd^{-1} \FUNC{absValue}\bd x^-(1)(2)}
+	{ \sum^{\infty}_{i = 1} x_i = \sum^{\infty}_{i=1} |x_i| + 2 \sum_{i \in I} x_i   }
+	\Conclude{()}{\bd^{-1} \TYPE{AsolutelyConvergent} \bd \CC(x)}{\bot}
+	\Derive{(3)}{E(\bot)}{ \# \supp x^- = \infty }
+	\NoProof
+}\Page{
+	\Theorem{RiemannRearangementTHM}{
+		\forall x : \CC \. 
+		\forall r \in \Reals \. 
+		\exists  \sigma : \Nat \ToBij_{\mathsf{SET}} \Nat \. 
+		\sum^\infty_{n = 1} x_{\sigma(n)} = r
+	}
+	\Say{I}{\supp x^+ }{ ?\Nat }
+	\Say{J}{\supp x^-}{?\Nat}
+	\Say{n}{\THM{CondConvStructure}(x)\ByConstr I \bd \TYPE{EqCard}}{  I \ToBij_{\SET} \Nat  }
+	\Say{m}{\THM{CondConvStructure}(x)\ByConstr J \bd \TYPE{EqCard}}{  J \ToBij_{\SET} \Nat  }
+	\Say{(1)}{\bd \CC(x) \bd \FUNC{absVal} \ByConstr^{-1} I \ByConstr^{-1} J \bd^{-1} n \bd^{-1} m }
+	{  \NewLine:
+		\infty = \sum^\infty_{n=1} |x_n| = \sum^\infty_{i = 1} x_{n_i} - \sum_{j = 1}^\infty x_{m_j} }
+	\Say{(2)}{ \ByConstr^{-1} I \ByConstr^{-1} J \bd^{-1} n \bd^{-1} m }
+	{  
+		 \sum^\infty_{n=1} x_n = \sum^\infty_{i = 1} x_{n_i} + \sum_{j = 1}^\infty x_{m_j} }
+	\Say{(3)}{(1) + (2) }{ \sum^\infty_{i = 1} x_{n_i} = \infty}
+	\Say{(4)}{(1) - (2) }{ \sum^{\infty}_{j = 1} x_{m_j} = -\infty  }	
+	\Say{(N_0,M_0,K_0)}{(0,0)}{\Int}
+	\Assume{a}{\Int_+}
+	\Assume{i}{\TYPE{In}\{0,1\}}
+	\Say{R_{2a + i}}{ r - \sum^{K_{2a + i - 1}}_{j=1} y_j}{\Reals}
+	\Assume{(5)}{i = 0}
+	\Say{\mathcal{K}}{\left\{ k \in \Nat : \sum^{k}_{ j = N_{a-1} + 1 } x_{n_j} \ge R_{2a + i} \right\}}{?\Nat}
+	\Say{(6)}{ (3)(\ByConstr \mathcal{K})  }{\mathcal{K} \neq \emptyset }
+	\Say{N_a}{\min \mathcal{K}}{\Nat}
+	\Say{K_{2a}}{K_{2a -1} + N_a - N_{a-1}}{\Int_+}
+	\Assume{ K_{2a - 1} + k}{(K_{2a - 1},  K_{2a}]_\Nat}
+	\Conclude{ y_{K_{2n} + k}}{ x_{N_{a} + k}  }{\Reals}
+	\Derive{y}{\LOGIC{Extend}(\to)}{ (0,K_{2a}] \to \Reals  }
+	\Conclude{(7_{n,i})}{\ByConstr y \ByConstr \mathcal{K}}{ r - \sum^{K_{2a}}_{j= 1} \le 0 }
+	\Derive{(5^*)}{\Alt(y)}{\ldots}
+	\Assume{(5)}{i = 1}
+	\Say{\mathcal{K}}{\left\{ k \in \Nat : \sum^{k}_{ j = M_{a-1} + 1 } x_{m_j} \le R_{2a + i} \right\}}{?\Nat}
+	\Say{(6)}{ (3)(\ByConstr \mathcal{K})  }{\mathcal{K} \neq \emptyset }
+	\Say{M_a}{\min \mathcal{K}}{\Nat}
+	\Say{K_{2a + 1}}{K_{2a} + M_a - M_{a-1}}{\Int_+}
+	} \Page{
+	\Assume{ K_{2a} + k}{(K_{2a},  K_{2a +1}]_\Nat}
+	\Conclude{ y_{K_{2n} + k}}{ x_{N_{a} + k}  }{\Reals}
+	\Derive{y}{\LOGIC{Extend}(\to)}{ (0,K_{2a + 1}] \to \Reals  }
+	\Conclude{(7_{n,i})}{\ByConstr y \ByConstr \mathcal{K}}{ r - \sum^{K_{2a}}_{j= 1} \le 0 }
+	\Derive{(y,K,5)}{I\left(\sum\right)}{\sum y : \Nat \to \Reals \. \sum K : \TYPE{Increasing}(\Nat,\Nat) \.
+		\NewLine \.
+		\forall a \in (2,\infty)_\Nat \. \forall b \in [ K_a, K_{a + 1} )  \.   
+		\left | r  - \sum^b_{i=1} y_i  \right| \le |y_{K_a}|                                                    
+	}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(\sigma,6)}{ \ByConstr y }{\sum \sigma : \Nat \ToBij_\SET \Nat \. y : \TYPE{Subsequence}(x_{\sigma})}
+	\Say{(7)}{\THM{SubseqLimit} \, \THM{LimitRearangement}(x,x_\sigma)\Big( \THM{NthTermTest}(\bd_1 \CC(x)) \Big)}
+	{ \NewLine : \lim_{n \to \infty} y_n = 0}
+	\Say{(N,8)}{  \bd \TYPE{Limit}(7) (\varepsilon)  }
+	{ 
+	      \sum N \in \Nat \. \forall n \in \Nat : n \ge N \. |y_n| < \varepsilon 
+	}
+	\Say{(M,9)}{\bd \TYPE{Increasing}(K)(N)}{\sum M \in \Nat : \forall m \in \Nat : m \ge M \. K_m \ge N}
+	\Assume{n}{\Nat}
+	\Assume{(10)}{n \ge \max(K_M,K_2)}
+	\Say{(m,11)}{  \ByConstr K (n) }{\sum m \in \Nat \. n \in [K_m,K_{m + 1}) \And m \ge M }
+	\Say{(12)}{  \bd \TYPE{increasing}(K)(11)(9)       }{  K_m \ge K_M \ge N    }
+	\Conclude{()}{ \bd \FUNC{partialSum}(m,y)(5)(m)(8)(12)   }
+	{   | S_m(y) - r| = \left| \sum^m_{i=1} y_i - r  \right| \le   | y_{K_m} | < \varepsilon }
+	\Derive{(6)}{\bd^{-1} \FUNC{infiniteSum} \bd^{-1} \TYPE{Limit} I(\forall) I(\exists)(K_M)
+	I(\forall)I(\Rightarrow)
+	}{ \sum^\infty_{n=1} y_n = r }
+	\Conclude{(*)}{\THM{ZeroSeriaPart}(x_\sigma,y)(6)}{\sum^\infty_{n=1} x_{\sigma(n)} = r}
+	\EndProof
+	\\
+	\Theorem{RiemannRearangementDivergnece}{
+		\forall x : \CC \. 
+		\exists  \sigma : \Nat \ToBij_{\mathsf{SET}} \Nat \. 
+		\sum^\infty_{n = 1} x_{\sigma(n)} = \infty
+	}
+	\NoProof
+ } \Page{
+	\DeclareFunc{productPartialSums}{ \prod R : \TYPE{Ring} \. (\Nat \to R^2) \to \Nat \to R }
+	\DefineNamedFunc{productPartialSums}{ x,y}{ S(x,y)}{ \Lambda n \in \Nat \. 
+		\left(\sum^n_{i = 1} x_i \right)\left( \sum^n_{i=1} y_i \right) }
+	\\
+	\Theorem{CauchyProduct}{\forall x,y : \AC \.  \sum^\infty_{n=1} \sum^{n-1}_{m=1} x_m y_{n - m}  = 
+		\left(\sum^\infty_{n = 1} x_n \right)\left( \sum^\infty_{n=1} y_n \right) }
+	\NoProof
+}
+\newpage
+\subsection{Real Exponention [!!]}
+\Page{
+	\DeclareFunc{realExponent}{ \Reals \to \Int_+ \to \Reals }
+	\DefineNamedFunc{realExponent}{ a,0  }{ a^0 }{1}
+	\DefineNamedFunc{realExponent}{ a,n  }{ a^n }{ aa^{n - 1} }
+	\\
+	\DeclareFunc{realNegativeExponent}{\Reals^\times \to \Int_{--} \to \Reals^\times}
+	\DefineNamedFunc{realNegativeExponent}{ a,-n  }{a^{-n}}{\frac{1}{a^{n}}}
+	\\
+	\Theorem{PositiveRootExists}{\forall a \in \Reals_+  \. \forall n \in \Nat \.   
+	  \exists  b \in \Reals \. b = \sup \{ x \in \Reals : x^n \le a \}
+	}
+	\Say{A}{ \{ x \in \Reals : x^n \le a    \} }{   ?\Reals  }
+	\Say{(m,  1)}{\bd \TYPE{Archimedean}(a)}{ \sum m \in \Nat \. a < m}
+	\Say{(2)}{ \THM{NaturalIneqExp}(1)   }{ a < m  \le  m^n  }
+	\Say{(3)}{ \sqrt[n]{ \ByConstr A (2)}}{  A < m }i
+	\Say{(4)}{ \bd^{-1} \TYPE{BoundedFomAbove} (3) }{\Big( A : \TYPE{BoundedFromAbove}(\Reals) \Big)}
+	\Conclude{b}{\sup A}{\Reals}
+	\EndProof
+	\\
+	\DeclareFunc{realRoot}{ \Nat \to \Reals_+ \to \Reals_+ }
+	\DefineNamedFunc{realRoot}{n,a}{\sqrt[n]{a}}{ \sup \{ x \in \Reals : x^n \le a \} }
+	\\
+	\DeclareFunc{realRationalExponent}{\Reals_{++} \to \Rats \to \Reals_{++}}
+	\DefineNamedFunc{realsRationalExponent}{ a, \frac{n}{m}   }{ a^{\frac{n}{m}}  }{ \left( \sqrt[m]{a} \right)^n}
+	\\
+	\Theorem{RealRatExpIsConsistent}{\forall x \in \Reals_{++} \. \forall \frac{a}{b}, \frac{n}{m} \in \Rats.
+		\forall (0) : \frac{a}{b} =_{\Rats} \frac{n}{m} \.
+		x^{\frac{a}{b}} = x^{\frac{n}{m}}
+	}
+	\Say{(c,d,k,l,1)}{ \bd \Rats (1) }{\sum c d, k \in \Nat \. \sum l \in \Int \.  
+		n = {cl} \And a = dl \And m = ck \And b = dk }
+	\Conclude{(2)}{\bd x^{\frac{n}{m}}(1)\bd \FUNC{RealRoot}(1)\bd^{-1} x^{\frac{a}{b}}}{ 
+		x^{\frac{n}{m}} = ( \sqrt[m]{x} )^n  = (\sqrt[ck]{x} )^{cl} = (\sqrt[b]{x})^a = x^{\frac{a}{b}}  }
+	\EndProof
+} \Page{
+	\Theorem{RootLimit}{\forall a \in \Reals_{++} \.  \lim_{n \to \infty} a^{1/n} = 1}
+	\Assume{(1)}{a \ge 1}
+	\Assume{n,m}{\Nat}
+	\Assume{(2)}{ n > m }
+	\Say{(3)}{\bd \TYPE{realRoot}(n,m)(a)}{ (\sqrt[n]{a})^n = a = (\sqrt{m}{a})^m }
+	\Say{(4^*)}{\THM{IneqMult}(3_1)(1)}{ \sqrt[n]{a} \ge 1   }
+	\Say{(5^*)}{\THM{IneqMult}(3_2)(1)}{\sqrt[m]{a} \ge 1  }
+	\Assume{(6)}{\sqrt[n]{a} > \sqrt[m]{a}}
+	\Say{(7)}{\THM{IneqMult}(4,5)(2)(6)}{  (\sqrt[n]{a})^n > (\sqrt[m]{a})^m }
+	\Say{(8)}{I(E)(3,7)}{a < a}
+	\Conclude{()}{ \bd \TYPE{StricIneq}I(=)(a)  }{ \bot }
+	\DeriveConclude{(6^*)}{E(\bot)}{ \sqrt[n]{a} \le \sqrt[m]{a}}
+	\Derive{(2)}{\bd^{-1} \TYPE{Nonincreasing} \bd^{-1} 
+		\TYPE{BoundedFromBelow }}
+	{ \NewLine : \Lambda n \in \Nat \. \sqrt[n]{a} : \TYPE{Nonincreasing} \And 
+		\TYPE{BoundedFromBelow}(\Nat, \Reals_{++}) }	
+	\Conclude{(3)}{\THM{NonincreasingAndBoundedConverge}(2)}
+	{\Lambda n \in \Nat \. \sqrt[n]{a} : \TYPE{Converging}(\Reals)}
+	\Say{L}{\lim_{n \to \infty} \sqrt[n]{a}  = 1}{[1,a]}
+	\Say{(4)}{\bd^{-1} \TYPE{Subseq}}{ \Lambda n \in \Nat \.  
+		\sqrt[2^n]{a} : \TYPE{Subseq}\Big( \Lambda b \in \Nat \. \sqrt[n]{a} \Big)  }
+	\Say{(5)}{\THM{SubseqLim}}{ L = \lim_{n \to \infty} \sqrt[2^n]{a}}
+	\Say{(6)}{\THM{LimitFixedPoint}(5)}{\sqrt{L} = L}
+	\Conclude{()}{\bd L (6)}{ L = 1  }
+	\Derive{(1)}{I(\Rightarrow)}{a \ge 1 \Rightarrow \lim_{n \to \infty} \sqrt[n]{a} = 1}
+	\Assume{(2)}{a < 1}
+	\Say{(3)}{(2)^{-1}}{ a^{-1} \ge 1  }
+	\Say{(4)}{\THM{NegativeExponent}(1)(3)}{ \lim_{n \to \infty}  
+	    \Big( \sqrt[n]{a}  \Big)^{-1} = \lim_{n \to \infty} \sqrt[n]{a^{-1}} = 1  }
+	\Conclude{()}{\THM{ContinuousDivision}(4)}{ \lim_{n \to \infty} \sqrt[n]{a} = 1  }
+	\Derive{(2)}{I(\Rightarrow)}{ a < 1 \Rightarrow \lim_{n \to \infty} \sqrt[n]{a} = 1  }
+	\Conclude{(*)}{E(|)\THM{IneqAlternative}(a,1)(1)(2)}
+	{
+		\lim_{n \to \infty} \sqrt[n]{a} = 1	
+	}
+	\EndProof
+}\Page{
+	\Theorem{ContinuousExponentI}{\forall a \in \Reals_{++} \. \forall q : \TYPE{Cauchy}(\Rats) 
+		 \. a^q : \TYPE{Converging}
+	}
+	\Assume{\varepsilon}{\Reals_++}
+	\Say{(1)}{\THM{ConvergingIsBounded}\bd \TYPE{Comlete}(\Reals)(q)}
+	{\Big( q : \TYPE{Bounded} \Big)}
+	\Say{(m,2)}{\THM{MonotonicExponent}(q,1)}{ \sum m \in \Nat \. m = \arg \max_{n} a^{q_n}} 
+	\Say{(N,3)}{\THM{RootLimit}(a)\left( \frac{\varepsilon}{a^{q_m}}\right)}
+	{ \sum N \in \Nat \. \forall n \in \Nat : n \ge N \. \left| a^{1/n} - 1 \right| 
+		< \frac{\varepsilon}{a^{q_m}}}
+	\Say{(M,4)}{\bd \TYPE{Cauchy}(q)(1/N)}
+	{ \sum M \in \Nat \. \forall n,m \in \Nat : \min(n,m) \ge  M 
+		\.  | q_n - q_m| < \frac{1}{N}
+	}
+	\Assume{n,m}{\Nat}
+	\Assume{(5)}{\min(n,m) \ge M}
+	\Conclude{()}{ \THM{AbsHomogen}(a^{q_n} - a^{q_m}, a^{\min{q_n,q_m}})(2)\THM{MonotonicExponent}(a,(3)(4)(5))   }
+	{\NewLine : 
+	  | a^{q_n} - a^{q_m}| = a^{\min(q_n,q_m)} \left| a^{|q_n - q_m|}      - 1  \right| 
+	  <   a^{q_m} \frac{\varepsilon}{a^{q_m}} = \varepsilon
+	}
+	\DeriveConclude{(*)}{\bd \TYPE{Complete}(\Reals)\bd^{-1}\TYPE{Cauchy}I(\forall)I(\exists)(M)I(\forall)I(\Rightarrow)}
+	{
+		\Big( x^q : \TYPE{Converging} \Big)	
+	}
+	\EndProof
+	\\
+	\Theorem{ContinuousExponentII}{\forall a \in \Reals_{++} \. \forall q,p : \TYPE{Cauchy}(\Rats) \.
+		\forall (0) : \lim_{n \to \infty} q_n = \lim_{m \to \infty} q_m \.
+		\lim_{n \to \infty} a^{q_n} = \lim_{n \to \infty} a^{p_n} 
+	}
+	\Say{(1)}{\THM{ContinuousAddition}(0)}{\lim_{n \to \infty} q_n - p_n = 0}
+	\Say{c}{\max \Big\{ \max(a^{q_n}, a^{p_n}) : n \in \Nat    \Big\}}{\Reals_{++}}
+	\Say{(N,3)}{\THM{RootLimit}(a)\left( \frac{\varepsilon}{c}\right)}
+	{ \sum N \in \Nat \. \forall n \in \Nat : n \ge N \. \left| a^{1/n} - 1 \right| 
+		< \frac{\varepsilon}{c}}
+	\Say{(M,4)}{\bd \TYPE{Cauchy}(q)(1/N)}
+	{ \sum M \in \Nat \. \forall n \in \Nat : n \ge  M \. 
+		\.  | q_n - p_n| < \frac{1}{N}
+	}	
+	\Assume{n}{\Nat}
+	\Assume{(5)}{ n \ge M}
+	\Conclude{()}{ \THM{AbsHomogen}(a^{q_n} - a^{p_n}, a^{\min{q_n,p_n}})\ByConstr^{-1} c 
+		\THM{MonotonicExponent}(a,(3)(4)(5))   }
+	{\NewLine : 
+	  | a^{q_n} - a^{p_n}| = a^{\min(q_n,p_n)} \left| a^{|q_n - p_m|}      - 1  \right| 
+	  <   c \frac{\varepsilon}{c} = \varepsilon
+	}
+	\DeriveConclude{(*)}{\THM{ContinuousAddition}\bd^{-1}\TYPE{Limit}I(\forall)I(\exists)(M)I(\forall)I(\Rightarrow)}
+	{
+		\lim_{n \to \infty} a^{q_n} = \lim_{n \to \infty} a^{p_n}	
+	}
+	\EndProof
+	\\
+	\DeclareFunc{realRealExponent}{ \Reals_{++} \to \Reals \to \Reals_{++} }
+	\DefineNamedFunc{realRealExponent}{ x,y    }{x^y}{\lim_{n \to \infty} x^{q_n} 
+	 \NewLine \where \quad  q = \THM{RationalApproximation}(y)}
+}
+\newpage
+\section{Topology of The Real Line}
+\subsection{Open And Closed Sets}
+\Page{
+	\Theorem{OpenRealStructure}{
+		\forall U : \TYPE{Open}(\Reals) \. \exists I : \TYPE{Countable} \.
+		\exists (a,b) : \TYPE{Disjoint}(I,\TYPE{OpenInterval}(\Reals)) \.
+		\NewLine \.
+		U = \bigcup_{i \in I} (a_i,b_i)
+		}
+	\Say{(I,(a,b),1)}{\bd \FUNC{topology}(\Reals)}{ \sum I : \TYPE{Set} \.
+	 	\sum (a.b) : \TYPE{Disjoint}(I,\TYPE{openInterval}(\Reals)) \.
+		 U = \bigcup_{i \in I} (a_i,b_i) }
+	\Conclude{(2)}{\THM{DisjointIntervalsAreAtmostCountable}(1)}{\Big( I : \TYPE{Countable}\Big)}
+	\EndProof
+	\\
+	\Theorem{ClosedRealStructure}{
+		\forall K : \TYPE{Closed}(\Reals) \. \exists I : \TYPE{Countable} \.
+		\exists U : I \to \TYPE{Open}(\Reals) \.
+		 K = \bigcap_{i \in I} U_i                  
+		}
+		\NoProof
+}
+\newpage
+\subsection{Nested Closed Intervals}
+\Page{
+	\DeclareFunc{length}{\TYPE{ClosedInterval}(\Reals) \to \EReals_+}
+	\DefineNamedFunc{length}{[a,b]}{ \lambda [a,b]  }{b - a}
+	\\
+	\Theorem{CantorIntersectionTheorem}{\forall I :  \TYPE{Nested}(\Nat,  \TYPE{ClosedInterval})  
+		\. \forall (0) : \lim_{n \to \infty} \lambda(I_n) = 0 \.
+		\NewLine \.
+		\exists x \in \Reals \. \bigcap_{n = 1}^\infty I_n = \{x\}
+	}
+	\Say{a}{\min I_n}{\Nat \to \Reals}
+	\Say{(1)}{\ByConstr a \bd \TYPE{Nested}(I)}{ \Big( a : \TYPE{Nondecreasing} \And \TYPE{BoundedFromAbove}(\Reals) \Big) }
+	\Say{(2)}{\THM{NondecreasingAndBoundedConverge}}{ \Big( a : \TYPE{Converging}(\Reals) \Big)   }
+	\Say{A}{\lim_{n \to \infty} a_n}{\Reals}
+	\Assume{n}{\Nat}
+	\Say{(b,3)}{\bd \TYPE{ClosedInterval}}{ \sum b \in \Reals \. [a_n,b] = I_n }
+	\Say{(4)}{\ByConstr A \bd b}{ a_n \le A \le b   }
+	\Conclude{()}{(4)(3)}{ A \in  I_n     }
+	\Derive{(3)}{I(\forall)}{\forall n \in \Nat \.  A \in I_n}
+	\Say{(4)}{\bd \FUNC{intersect}}{ A \in \bigcap^n_{i=1} I_n}
+	\Assume{B}{\bigcap^\infty_{n=1} I_n}
+	\Assume{(5)}{A \neq B}
+	\Say{\delta}{|A - B|}{\Reals_{++}}
+	\Say{(n,6)}{\bd \TYPE{Limit}(0)(\delta)}{\sum n \in \Nat \. \lambda(I_n) < \delta }
+	\Say{(7)}{\bd \FUNC{Intersect}(n)\bd A \bd B }{ A,B \in I_n }
+	\Say{(8)}{ \bd \TYPE{ClosedInterval} \bd \FUNC{length}(6) }{ |A - B| < \delta   }
+	\Conclude{()}{ \bd \TYPE{StrictIneq}(8) \ByConstr \delta  }{ \bot  }
+	\Derive{(6)}{I(\forall)E(\bot)}{\forall B \in \bigcap^\infty_{n=1} I_n \. B = A}
+	\Conclude{(7)}{\bd^{-1}\TYPE{Singleton}(6)}{\bigcap^\infty_{n=1} = \{A\}}
+	\EndProof
+}
+\newpage
+\Page{
+	\Theorem{BolzanoWeierstrass}{ \forall x : \TYPE{Bounded}(\Nat,\Reals) \.   
+		\exists n : \TYPE{Subseqer} \. x_n : \TYPE{Converging}
+	}
+	\Say{[a_1,b_1]}{[ \inf_n x_n, \sup_n y_n ]}{\TYPE{ClosedInterval}}
+	\Say{r}{ 2\lambda [a_1,b_1] }{\Reals_+}
+	\Say{(1_1)}{\ByConstr I_1 \bd \lim \inf x \bd \lim \sup y}{ | [a_1,b_1] \cap \im x | = \infty }
+	\Assume{n}{\Nat}
+	\Say{I_1}{\left[a_n, \frac{a_n + b_n}{2}\right]}{\TYPE{ClosedInterval}}
+	\Say{I_2}{\left[\frac{a_n + b_n}{2}, b_n \right]}{\TYPE{ClosedInterval}}
+	\Say{(2)]}{\ByConstr I_1 \ByConstr I_2}{ I_1 \cup I_2 = [a_n,b_n]}
+	\Say{(i,3)}{\THM{PigionholePrinciple}(\aleph_0)(2)(1_n)}{\sum i \in \{1,2\} \. |I_i  \cap \im x| = \infty}
+	\Say{[a_{n+1},b_{n+1}]}{I_i}{\TYPE{ClosedInterval}}
+	\Say{(2_n)}{\ByConstr [a_{n+1},b_{n+1}]E(=)(3)}{ \Big| [a_i,b_i] \cap \im x \Big| = \infty}
+	\Say{(4^*_n)}{  \bd^{-1} \TYPE{Subset} \ByConstr [a_{n + 1},b_{n+1}] \ByConstr i \ByConstr I_1 \ByConstr I_2  }
+		{ [a_{n + 1}, b_{n+1}] \subset [a_n,b_n] }
+	\Conclude{(5^*_n)}{\bd^{-1} \FUNC{length} \ByConstr [a_{n + 1},b_{n+1}] \ByConstr i \ByConstr I_1 \ByConstr I_2 }
+		{ \lambda [a_{n+1},b_{n+1}] = \frac{\lambda [a_{n},b_{n}]}{2}  }
+	\Derive{([a,b],2])}{I\left(\sum \right)\bd^{-1}\TYPE{Nested}(4)\THM{RecursiveApplication} I(\forall)}
+	{ \NewLine : \sum [a,b] : \TYPE{Nested}(\Nat,\TYPE{ClosedInterval}) \. \forall n \in \Nat \. 
+		\lambda [a_n,b_n] = 2^{-n} r  \And   \Big| [a_n,b_n] \cap \im x    \Big| = \infty  }
+	\Say{(3)}{\THM{PowerCompression}(2_1)}{\lim_{n \to \infty} \lambda [a_n,b_n] = 0}
+	\Say{ (X,4)  }{\THM{CantorIntersectionTheorem}([a,b])(3)}{\sum X \in \Reals \. \{X\} = \bigcap^\infty_{n=1} [a_n,b_n] }
+	\Say{(n,5) }{ \bd^{-1} \TYPE{Subseq} \Lambda m \in \Nat \.  \THM{InfSeq}(x)[a_m,b_m] }
+	{  \sum n : \TYPE{Subseqer} \. \forall m \in \Nat \. x_{n_m} \in [a_m,b_m] }
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(N,6)}{ \bd \TYPE{Limit}(3)(\varepsilon)  }
+	{\sum N \in \Nat \. \forall m \in \Nat : m \ge N \. \lambda[a_m,b_m] < \varepsilon}
+	\Assume{m}{\Nat}
+	\Assume{(7)}{m \ge N}
+	\Say{(8)}{(5)(m)}{ x_{n_m} \in [a_m,b_m]}
+	\Say{(9)}{(4)\bd\FUNC{intersect}(m)}{X \in [a_m,b_m] }
+	\Conclude{(10)}{\bd \FUNC{length}(8)(9)(6)(m,7)}{ | X  - x_{n_m}| < \varepsilon }
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{Limit}I(\forall)I(\exists)(N)I(\forall)I(\Rightarrow)}
+	{  \lim_{m \to \infty} x_{n_m} = X      }
+	\EndProof
+}
+\newpage
+\subsection{Sets of Partial Limits[!]}
+\newpage
+\subsection{Elementary Baire Category}
+\Page{
+	\DeclareType{NowhereDense}{??\Reals}
+	\DefineType{A}{NowhereDense}{\forall U : \TYPE{Open} \And \TYPE{NonEmpty}(\Reals) \. 
+		\exists V : \TYPE{Open} \And \TYPE{NonEmpty}(\Reals) : V \subset U \And V \cap A = \emptyset}
+	\\
+	\DeclareType{Meager}{??\Reals}
+	\DefineType{A}{Meager}{\exists Z : \Nat \to \ND \. A = \bigcup^\infty_{n=1} Z_n}
+	\\
+	\DeclareType{Comeager}{??\Reals}
+	\DefineType{A}{Comeager}{\exists U : \Nat \to \TYPE{Dense} \And \TYPE{Open}(\Reals) \. A = \bigcap^\infty_{n=1} U_n}
+	\\
+	\Theorem{RealBaireTheoremI}{\forall U : \TYPE{Open} \And \TYPE{NonEmpty}(\Reals) \. U \IsNot \TYPE{Meager}}
+	\Assume{(0)}{U : \TYPE{Meager}}
+	\Say{(Z,00)}{\bd \TYPE{Meager}(0)}{\sum Z : \Nat \to \ND \. U = \bigcup^\infty_{n=1} Z_n}
+	\Say{(a,1)}{\bd \TYPE{NonEmpty} }{\sum a \in \Reals : a \in U }
+	\Say{ (I_1,2) }{ \bd \FUNC{topology}(\Reals)\bd \TYPE{Open}(\Reals)(U)(a)  }
+	{ \sum I_1 : \TYPE{OpenInterval}(\Reals) \. a \in I_1 \subset U  }
+	\Say{ (K_1,3_1)}{ \bd^{-1} \TYPE{ClosedInerval} \THM{IntermidiateNumber}^2(I_1,2)  }
+	{ \sum K_1 : \TYPE{ClosedInterval}(\Reals) \.   K_1 \subset I_1  }
+	\Assume{n}{\Nat}
+	\Say{(V,4)}{\bd^{-1} \TYPE{OpenInterval} \bd \TYPE{ClosedInerval}(K_n)}{
+		\sum V : \TYPE{Open}(K_n) \.  V \subset K_n }
+	\Say{(I_{n+1},5)}{\bd \ND (Z_n)}{ \sum I_{n + 1} : \TYPE{Open}(\Reals) : 
+		I_{n + 1} \subset V  \And I_n \cap Z_n = \emptyset   }
+	\Say{(K_{n + 1},3_{n + 1})}
+	{  \bd^{-1} \TYPE{ClosedInerval} \THM{IntermidiateNumber}^2(I_{n + 1})\bd \FUNC{topology}(\Reals)  
+		\bd \TYPE{Open}(\Reals) }
+	{ \NewLine : \sum K_{n + 1} : \TYPE{ClosedInterval} \. K_{n + 1} \subset I_{n + 1}  }
+	\Say{6_n}{  (3_n)(5_1)(4) }{K_{n + 1} \subset K_n }
+	\Conclude{7_n}{\THM{IntersectSubset}(3_n)(5_2)}{ K_{n + 1} \cap Z_n = \emptyset}
+	\Derive{(K,4)}{I\left(\sum\right)\ldots}
+	{
+	   \sum K : \TYPE{Nested}\Big(\Nat,\TYPE{ClosedInterval}\Big) \.
+	   \forall n \in \Nat \. K_n \cap Z_n = \emptyset
+	}
+	\Say{(5)}{\THM{CantorIntersectTheorem}}{\bigcap^\infty_{n=1} K_n \neq \emptyset}
+	\Say{H}{ \bigcap^\infty_{n=1} K_n \neq \emptyset }{??\Reals}
+	\Say{(6) }{\ByConstr H \bd \TYPE{Nested}(K) \bd \FUNC{intersect}(3_1)(2) }{ H \subset U }
+	\Say{(7)}{ (00)(4)(H)}{H \cap U = \emptyset}
+	\Conclude{()}{(7)(6)(5)}{\bot }
+	\DeriveConclude{(*)}{E(\bot)}{ U \IsNot \TYPE{Meager}  }
+	\EndProof
+}
+\Page{
+	\Theorem{RealBaireTheoremII}{ \forall A : \TYPE{Comeager} \. A : \TYPE{Dense}(\Reals)}
+	\Say{(U,1)}{\bd \TYPE{Comeager}(A)}{ \sum U : \Nat \to \TYPE{Open} \And \TYPE{Dense}(\Reals) \.
+		A = \bigcap^\infty_{n=1} U_n}
+	\Assume{n}{\Nat}
+	\Assume{V}{\TYPE{Open} \And \TYPE{NonEmpty}(\Reals)}
+	\Say{(x,2)}{\bd \TYPE{Dense}(\Reals)(U)(V)}{ \sum x \in V \. x \in U  }
+	\Say{(W,3)}{ \THM{OpenIntersect}(V) \bd \TYPE{Open}(U,x) }
+	{\sum W : \TYPE{Open}(\Reals) \. x \in W \subset U \cap V   }
+	\Conclude{(4)}{\THM{ComplementSubset}(3)}{ W \cap U^\c = \emptyset}
+	\Derive{(2)}{I(\forall)\bd^{-1} \ND I(\forall)}
+	{ \forall n \in \Nat \. U^\c_n : \ND   }
+	\Say{(5)}{\THM{DeMorganLaw}(1)\bd^{-1} \TYPE{Meager}}{ A^\c = \bigcup^\infty_{n=1} U^\c : \TYPE{Meager}}
+	\Assume{V}{\TYPE{Open} \And \TYPE{NonEmpty}(\Reals)}
+	\Say{(6)}{\THM{RealBaireTheoremII}(A^\c , V)}{ V \not \subset A^\c }
+	\Conclude{(a,7)}{\bd \FUNC{complement}(6)}{\sum a \in A \. a \in V}
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{Dense} I(\forall) I(\exists)(a)}
+	{(A : \TYPE{Dense}(\Reals))}
+	\EndProof
+	\\
+	\Theorem{IrrationalsAreNotCountableUnionOfClosed}{
+		\forall C : \Nat \to \TYPE{Closed}(\Reals) \.  \Rats^\c \neq \bigcup^\infty_{n=1} C_n
+	}
+	\Assume{(1)}{ \Rats^\c = \bigcup^\infty_{n = 1} C_n}
+	\Assume{n}{\Nat}
+	\Assume{U}{\TYPE{Open}\And \TYPE{NonEmpty}(\Reals)}
+	\Assume{(2)}{\forall V : \TYPE{Open} \And \TYPE{NonEmpty}(\Reals) \. V \subset U \Rightarrow V \cap C_n \neq \emptyset}
+	\Say{(3)}{\bd^{-1}\TYPE{Dense}(2)}
+	{ 
+		\Big( U \cap C_n : \TYPE{Dense}(C_n) \Big)                            
+	}
+	\Say{(4)}{\THM{IntersectSubset}\bd \FUNC{closeure}(U \cap C_n)\THM{DenseClosure}(3)}{  U \subset C_n  }
+	\Say{(q,5)}{ \bd \TYPE{Subset}(4)\bd \TYPE{Dense}(\Rats)(U)  }{\sum q \in \Rats \. q \in C_n }
+	\Conclude{()}{ \bd \FUNC{complement}(1)\bd \FUNC{union}(5) }{\bot}
+	\Derive{(2)}{ I(\forall)\bd \ND I(\forall)E(\bot)}{\forall n \in \Nat \. K_n : \ND}
+	\Say{q}{\bd \TYPE{EqCard}}{\Nat \ToBij_{\SET} \Rats}
+	\Say{C'}{\Lambda n \in \Nat \. C_n \cup \{ q_n \} }{\Nat \to \ND}
+	\Say{(3)}{\ByConstr C' \THM{UnionCommute} (1)\bd q \THM{ComplementUnion}}
+	{\bigcup^\infty_{n=1} C'_n = \bigcup^\infty_{n=1} C_n \cup \bigcup^\infty_{n=1} \{q_n\} 
+	 = \Rats^\c \cup \Rats = \Reals}
+	 \Conclude{()}{\THM{RealBaireTheoremI}(\Reals)(C')(3)}{\bot}
+	\Derive{(*)}{E(\bot)}{\Rats^\c \neq \bigcup^\infty_{n=1} C_n}
+	\EndProof
+}
+\subsection{Cantor Set[!]}
+\newpage
+\subsection{Meshes on Reals Intervals}
+\Page{
+	\DeclareType{Mesh}{\sum [a,b] : \TYPE{ClosedInterval} \. \Reals_{++} \to      
+	 ? \sum n \in \Nat \. \TYPE{Increasing}\Big(n, [a,b] \Big) 
+	}
+	\DefineType{(n,t)}{\varepsilon \hyph Mesh}{ \bigcup^{n-1}_{i=1} [t_i,t_{i+1}]  = [a,b] 
+		\And \forall i \in \Nat : i < n \.  t_{i+1} - t_i < \varepsilon  }
+	\\
+	\Theorem{LittleStepsTHM}{\forall \delta \in \Reals_{++} \. \forall n \in \Nat \. 
+		\forall \Delta : n \to [-\delta,\delta] \. \forall x : \TYPE{Between}\left(\Delta_1,
+		\sum^n_{i=1} \Delta_i \right) \. 
+		\NewLine \.
+		\exists k \in n : 
+		\left| \sum^k_{i=1} \Delta_i - x \right| \le \delta
+	}
+	\Say{S}{\sum^n_{i=1} \Delta_i}{\Reals}
+        \Assume{(1)}{n=1}
+	\Say{(2)}{\ByConstr S(1)}{\Delta_1 = S  }
+	\Say{(3)}{ \bd \FUNC{closedSet}  }{ [\Delta_1,S] = \{ S \} }
+	\Say{(4)}{\bd x (3)}{x = \Delta_1}
+	\Conclude{(5)}{\bd \FUNC{absVal}(3)\bd \delta}{|x - \Delta_1| = 0 < \delta}
+	\Derive{(1)}{\bd^{-1} \LOGIC{This}}{\LOGIC{This}(\delta, 1 )}
+	\Assume{(2)}{\LOGIC{This}(\delta,n)}
+	\Assume{\Delta'}{(n+1) \to \Reals : \forall i \in n + 1 \. |\Delta_i|< \delta}
+	\Say{s_+}{\sum^{n+1}_{i=1} \Delta'_i}{\Reals}
+	\Say{s_-}{\sum^{n}_{i=1} \Delta'_i}{\Reals}
+	\Say{(3)}{\bd \TYPE{Between}(\Delta_1,s_+)(s_1)}{ \bigg( x : \TYPE{Between}(\Delta,s_-) \; \Big| \; 
+		x : \TYPE{Between}(s_-,s_+) \bigg) } 
+	\Assume{(4)}{ x : \TYPE{Between}(\Delta, s_-)  }
+	\Conclude{(5)}{(2)(\Delta'_{|n})}{ \LOGIC{This}(\delta,n+1,\Delta')}
+	\Derive{(4)}{I(\Rightarrow)}{ x : \TYPE{Between}(\Delta,s_-) \Rightarrow \LOGIC{This}(\delta,n+1,\Delta') }
+	\Assume{(5)}{x : \TYPE{Between}(s_-,s_+)}
+	\Say{(6)}{\bd \Delta \ByConstr s_- \ByConstr s_+}{|s_- - s_+| < \delta}
+	\Conclude{(7)}{(5)(6)}{\LOGIC{This}(\delta,n+1,\Delta')}
+	\Derive{(5)}{I(\Rightarrow)}{x : \TYPE{Between}(s_-,s_+) \Rightarrow \LOGIC{This}(\delta,n+1,\Delta')}
+	\Conclude{()}{E(|)(3)(4)(5)}{\LOGIC{This}(\delta,n+1,\Delta')}
+	\DeriveConclude{(*)}{E(\Nat)}{\LOGIC{This}}
+	\EndProof
+}\Page{
+	\Theorem{MeshExists}{\forall [a,b] : \TYPE{ClosedInterval} \. \forall \varepsilon \in \Reals_{++} \.
+	   \exists (n,t) : \TYPE{\varepsilon\hyph Mesh}[a,b]                              
+	}
+	\Say{n }{\left \lceil \frac{2(b - a)}{\varepsilon} \right \rceil}{\Nat}
+	\Say{t}{\Lambda k \in n + 1  \. \min\left(  a + \frac{(k - 1)\varepsilon}{2} , b \right) }
+	{ \TYPE{Increassing}\Big(n, [a,b]\Big)}
+	\Say{(2)}{\ByConstr t \bd \varepsilon}{\forall i \in n \. t_{i+1} - t_i \le \frac{\varepsilon}{2} < \varepsilon}
+	\Assume{x}{\TYPE{In}[a,b]}
+	\Say{(k,3)}{\THM{LittleStepsTHM}\left( \frac{\varepsilon}{2}, n + 1 , \Lambda k \in n + 1  \. 
+		[k > 1](t_{k} - t_{k - 1}),x - a  \right)}{ k \in n \. x \in [t_i,t_{i+1}] }
+	\Conclude{()}{\bd^{-1} \TYPE{In}\bd \FUNC{union}(3)}{x \in \bigcup^n_{i=1} [t_i,t_{i+1}]}
+	\Derive{(3)}{\bd^{-1}\TYPE{Subset}}{ [a,b] \subset \bigcup^n_{i=1} [t_i,t_{i+1}]  }
+	\Say{(4)}{\ByConstr t_1}{t_1 = a}
+	\Say{(5)}{\ByConstr t_{n+1}}{t_{n + 1}}
+	\Say{(6)}{\bd \TYPE{Union} \bd \TYPE{ClosedInterval} \bd \TYPE{Increasing}(t)(4)(5)}{ 
+		\bigcup^n_{i=1} [t_i,t_{i+1}] \subset [a,b] }
+	\Say{(7)}{\bd \TYPE{SetEq}(3)(6)}{[a,b] = \bigcup^n_{i=1} [t_i,t_{i+1}]}
+	\Conclude{(8)}{\bd^{-1} \TYPE{\varepsilon\hyph Mesh}(2)(7)}{
+		\Big( (n-1,t) : \TYPE{\varepsilon \hyph Mesh}[a,b] \Big)
+		}
+	\EndProof
+	\\
+	\DeclareFunc{mesh}{\prod [a,b] : \TYPE{ClosedInterval} \. \prod \varepsilon \in \Reals_{++} \. 
+		 \TYPE{\varepsilon\hyph Mesh}[a,b]}
+	\DefineFunc{mesh}{   }{\THM{MeshExists}\Big([a,b],\varepsilon\Big)}
+}\Page{
+	\DeclareFunc{partitionSystem}{\prod [a,b] : \TYPE{ClosedInterval} \. ??\sum n \in \Nat \. \TYPE{Increasing}(n,[a,b])}
+	\DefineNamedFunc{partitionSystem}{}{\mathfrak{P}[a,b]}{ 
+		\Big\{ \{ (n,t) : \TYPE{\varepsilon\hyph\TYPE{Mesh}}   
+	\}  \Big| \varepsilon \in \Reals_{++}    \Big\}  }
+	\\
+	\Theorem{PartitionSystemsDirectNet}{\forall [a,b] : \TYPE{ClosedInterval} \.  
+		\Big(\mathfrak{P}[a,b], \subset \Big) : \TYPE{NetIndex} }
+	\Assume{P}{\mathfrak{P}[a,b]}
+	\Conclude{()}{\THM{MeshExists}\bd \mathfrak{P}[a,b](P)}{P \neq \emptyset}
+	\Derive{(1)}{I(\forall)}{ \forall P \in \mathfrak{P}{a,b} \. P \neq \emptyset  }
+	\Assume{P,Q}{\mathfrak{P}[a,b]}
+	\Say{(\varepsilon,2)}{\bd \mathfrak{P}[a,b](P)}{\sum \varepsilon \in \Reals_{++} \. P = 
+		\Big\{ (n,t) : \TYPE{\varepsilon \hyph Mesh}[a,b] \Big\}}
+	\Say{(\delta,3)}{\bd \mathfrak{P}[a,b](Q)}{\sum \delta \in \Reals_{++} \. Q = 
+		\Big\{ (n,t) : \TYPE{\varepsilon \hyph Mesh}[a,b] \Big\}}
+	\Assume{(4)}{\delta \le \varepsilon}
+	\Assume{(n,t)}{\TYPE{In}(Q)}
+	\Say{(5)}{\bd \TYPE{\delta \hyph Mesh} (n,t)(3)(4)}{ \forall i \in n-1 \. t_{i+1} - t_i < \delta \le \varepsilon}
+	\Conclude{(6)}{\bd^{-1} \TYPE{\varepsilon \hyph Mesh}(5)(2) }{(n,t) \in P}
+	\Derive{(7)}{I(\Rightarrow)\bd^{-1}\TYPE{Subset}}{ \delta \le \varepsilon \Rightarrow Q \subset P     }
+	\Conclude{(8)}{\bd^{-1}\mathfrak{P}[a,b]\THM{SubsetIntersection}(7)}
+	{
+		P \cap Q = \Big\{ (n,t) : \min(\delta,\varepsilon)\hyph\TYPE{Mesh}[a,b]  \Big\} \in 
+		\mathfrak{P}[a,b]
+	}
+	\Derive{(2)}{I(\forall)}{\forall P,Q \in \mathfrak{P}[a,b] \. P \cap Q \subset \mathfrak{P}[a,b]}
+	\Conclude{(*)}{\bd^{-1} \TYPE{NetIndex}(2)}{\bigg( \Big( \mathfrak{P}[a,b],\subset\Big) : \TYPE{NetIndex} \bigg)}
+	\EndProof
+}
+\newpage
+\section{Continuous Functions}
+\subsection{Limit of a function}
+\Page{
+	\DeclareType{UpperLimit}{  \prod U : ?\Reals \.  ?\Big(U \cup \{ \inf U \} \times (U \to \Reals) \times \Reals \Big) }
+	\DefineNamedType{(a,f,y)}{UpperLimit}{ \lim_{x \downarrow a} f(x) = y  }
+	{ \forall \epsilon \in \Reals_{++} \. \exists \delta \in \Reals_{++} :
+		\NewLine :
+		\forall x \in (a,a + \delta) \cap U \.   f(x) \in (y - \varepsilon, y + \varepsilon) 
+	}
+	\\
+	\DeclareType{LowerLimit}{  \prod U : ?\Reals \.  ?\Big(U \cup \{ \sup U \} \times (U \to \Reals) \times \Reals \Big) }
+	\DefineNamedType{(a,f,y)}{LowerLimit}{ \lim_{x \uparrow a} f(x) = y  }
+	{ \forall \epsilon \in \Reals_{++} \. \exists \delta \in \Reals_{++} :
+		\NewLine :
+		\forall x \in ( a - \delta, a) \cap U \.   f(x) \in (y - \varepsilon, y + \varepsilon) 
+	}
+	\\
+	\Theorem{TwoSidedFLimit}{\prod U : ?\Reals \.  \forall f : U \to \Reals \. \forall a \in U \.
+		\forall (0) \lim_{x \downarrow a} f(x) = f(a) = \lim_{x \uparrow a} f(x) \. f \in C(U,\Reals,a)  }
+	\Assume{\varepsilon}{\Reals}
+	\Say{(\delta_+,1)}{(0_1)(\varepsilon)}{ \sum \delta_+ \in \Reals_{++} \.  
+		\forall x \in (a,a + \delta_+) \. |f(x) - f(a)| < \varepsilon  }
+	\Say{(\delta_-,2)}{(0_1)(\varepsilon)}{ \sum \delta_- \in \Reals_{++} \.  
+		\forall x \in (a - \delta_-,a ) \. |f(x) - f(a)| < \varepsilon  }
+	\Say{\delta}{\min(\delta_+,\delta_-)}{\Reals_{++}}
+	\Assume{x}{ (a - \delta,a + \delta) }
+	\Conclude{()}{(1)(2)\bd \delta \bd x}{|f(x) - f(a)| < \varepsilon}
+	\Derive{(1)}{\bd^{-1}\TYPE{Limit}}{\lim_{x \to a} f(x) = f(a)}
+	\Conclude{(*)}{\THM{SeqContAtAPoint}(1)}{f \in C(C,\Reals,a)}
+	\EndProof
+}\Page{
+	\Theorem{ZeroAtInftyTest}{\forall f : C\Big( (0,\infty), \Reals \Big) \. \forall (0) : \forall  
+		x \in (0,\infty) \. \lim_{n \to \infty} f(nx) = 0 \.    
+		\lim_{x \to \infty} f(x) = 0 
+	}
+	\Assume{(1)}{\lim_{x \to \infty} f(x) \neq 0}
+	\Say{(\varepsilon,2)}{\bd \TYPE{Limit}(1)}{\sum \varepsilon \in \Reals_{++} \. \forall \delta \in \Reals_{++} \.
+		\exists x \in (\delta,+\infty) \.  |f(x)| \ge \varepsilon
+	}
+	\Say{C}{ \Lambda n \in \Nat \. \left\{ x \in \Reals_{++} :  | f(nx) | \le \frac{\varepsilon}{2}   \right\} }
+	{ \TYPE{Closed}(\Reals_{++})  }
+	\Say{K}{\Lambda n \in \Nat \. \bigcap_{k = n}^\infty C_n}{\TYPE{Closed}(\Reals_{++})}
+	\Say{(3)}{\ByConstr K (1)}{ \bigcup^\infty_{n = 1} K_n = \Reals  }
+	\Say{(N,4)}{\THM{RealBairCategoryI}(3)}{\sum N \in \Nat \. K_N \IsNot \ND}
+	\Say{\Big((a,b), 5 \Big)}{ \THM{ClosedDense}\bd \ND (4) \ByConstr K }
+	{ \sum (a,b) \subset K_N : \forall x \in (a,b) \. \And \forall n \in \Nat : n \ge N \.  
+		\NewLine \.
+		 | f(nx)| \le \frac{\varepsilon}{2}
+	}
+	\Say{M}{\max\left(N, \left\lceil \frac{a}{b-a} \right\rceil  \right)}{\Nat}
+	\Assume{k}{\Nat}
+	\Conclude{()}{  \bd M \bd (k,a,b) }{ 
+	(M + k)b - (M + k + 1)  = K(b - a) + M(b - a) - a \ge  \NewLine \ge K(b - a) + a - a = K(b-a) > 0    }
+	\Derive{(6)}{\bd^{-1} \FUNC{union}}{\bigcup^\infty_{n = M} (na,nb) =  (Ma,+\infty)}
+	\Say{(7)}{(6)(5)}{\forall x \in (Ma,+\infty) \. |f(x)| < \varepsilon}
+	\Conclude{()}{(7)(2)}{\bot}
+	\DeriveConclude{(*)}{E(\bot)}{\lim_{x \to \infty} f(x) = 0 }
+	\EndProof
+	\NoProof
+} 
+\newpage
+\subsection{Points of Discontinuity}
+\Page{
+	\DeclareType{RemovableDiscontinuity}{\prod U : ?\Reals \. f : U \to \Reals \. ?U}
+	\DefineType{a}{RemovableDiscontinuity}{\exists b \in \Reals : \lim_{x \downarrow a} f(x) = b = \lim_{x \uparrow a} f(x) 
+		\And b \neq f(a)}
+	\\
+	\DeclareType{DiscontinuityI}{\prod U : ?\Reals \. f : U \to \Reals \. ?U}
+	\DefineType{a}{DiscontinuityI}{\exists b,c \in \Reals : \lim_{x \downarrow a} f(x) = b 
+		\And \lim_{x \uparrow a} f(x) = c \And b \neq c}
+	\\
+	\DeclareType{DiscontinuityII}{\prod U : ?\Reals \. f : U \to \Reals \. ?U}
+	\DefineType{a}{DiscontinuityII}{ \left( \forall b \in \Reals \. \lim_{x \downarrow a} f(x) \neq b \right) \; \Big| \;  
+		 \left( \forall b \in \Reals \. \lim_{x \uparrow a} f(x) \neq b \right) }
+	\\ 
+	\DeclareFunc{setOfDiscontinuities}{\prod U : ?\Reals \. U \to \Reals \to ?U}
+	\DefineNamedFunc{setOfDiscontinuities}{f}{\mathcal{D}(f)}{\Big\{ x \in U : f \IsNot C(U,\Reals,x) \Big\}}
+	\\
+	\DeclareFunc{oscilationInSet}{\prod U : ?\Reals \. (U \to \Reals) \to ?U \to \EReals_+ }
+	\DefineNamedFunc{oscilationInSet}{f,X}{\omega(f,X)}{\sup_{a,b \in X} | f(x) - f(y)|}
+	\\
+	\DeclareFunc{oscilationAtPoint}{\prod U : ?\Reals \. (U \to \Reals) \to U \to \EReals_+ }
+	\DefineNamedFunc{oscilationAtPoint}{f,x}{\omega(f,x)}
+	{ \lim_{t \to 0} \omega\Big(f, (x-t,x+t) \cap U \Big)}
+	\\
+	\Theorem{OscilationZeroIffC}{\forall U : ?\Reals \. \forall f : U \to \Reals \. \forall x \in U \.
+		\omega(f,x) = 0 \iff f \in C(U,\Reals,x)
+	} 
+	& \text{Straight from definitions.}\\
+	\EndProof
+}\Page{
+	\Theorem{DiscSetStructure}{\forall f : \Reals \to \Reals \. \exists C : \Nat \to \TYPE{Closed}(\Reals) \.
+		\mathcal{D}(f) = \bigcup^\infty_{n=1} C_n
+	}
+	\Say{C}{\Lambda n \in \Nat \. \left\{ x \in \Reals : \omega(f,x) \ge \frac{1}{n}  \right\} }
+	{   \Nat \to ?\Reals     }
+	\Assume{n}{\Nat}
+	\Assume{x}{\TYPE{In}\Big(C^\c_n\Big)}
+	\Say{(1)}{ \bd \FUNC{complement} \bd x \ByConstr C_n}{ \omega(f,x) < \frac{1}{n}}
+	\Say{(\Delta,2)}{\bd \TYPE{StrictIneq}(1)}{\sum \Delta \in \Reals_{++} \. \omega(f,x) + \Delta < \frac{1}{n} }
+	\Say{(t,3)}{\bd \omega(f,x)(1)}{\sum t \in \Reals_{++} \. \omega\Big(f, (x -t, x+t) \Big) < \omega(f,x) + \Delta}
+	\Assume{y}{\TYPE{In}(x-t,x+t)}
+	\Say{(4)}{ \bd \omega(f,y) (3)(2)}
+	{  \omega(f,y) \le \omega\Big(f,(x - t,x + t)\Big) < \omega(f,x) + \Delta < \frac{1}{n}}
+	\Conclude{()}{\bd^{-1}\FUNC{complement}\ByConstr C_n}{ y \in C_n^\c}
+	\DeriveConclude{()}{\bd^{-1}\TYPE{Subset}}{ (x-t,x+t) \subset C_n^\c}
+	\Derive{(1)}{I(\forall)\bd^{-1}\TYPE{Closed}\THM{OpenByNeighbourhoods}}{ \forall n \in \Nat \. C_n : \TYPE{Closed}}
+	\Conclude{(*)}{\THM{OscilationZeroIffC}(\ByConstr C)}{\mathcal{D}(f) = \bigcup^\infty_{n=1} C_n}
+	\EndProof
+	\\
+	\Theorem{DiscSetofMonotonicAtmostCountable}{\forall f : \TYPE{Monotonic}(\Reals,\Reals) \. 
+		\# \mathcal{D}(f) \le \aleph_0
+	}
+	\Assume{(1)}{\Big( f : \TYPE{NonDecreasing}(\Reals) \Big)}
+	\Assume{x}{\mathcal{D}(f)}
+	\Conclude{(a,b)}{ (\lim_{x \downarrow t} f(t), \lim_{x \uparrow t} f(t))  }{\TYPE{OpenInterval}}
+	\Derive{(a,b)}{I(\to)}{ \mathcal{D}(f) \to \TYPE{OpenInterval}  }
+	\Say{(2)}{\bd \TYPE{Increasing}(f)\ByConstr(a,b)}
+	{ \Big( (a,b) : \TYPE{Disjoint}(\mathcal{D}(f),\TYPE{OpenInterval})\Big)}
+	\Conclude{(*)}{\THM{DishointIntervalsAreAtmostCountable}(2)}{ \# \mathcal{D}(f) \le \aleph_0  }
+	\NoProof
+}
+\newpage
+\subsection{Uniformly Continuous Functions}
+\Page{
+	\Theorem{GlobalUCCriterion}{\forall f \in C(\Reals,\Reals) \. \forall a,b \in \Reals \. 
+		\forall (1) :  \lim_{x \to \infty}  f(x) = a \And \lim_{x \to -\infty} f(x) = b \.
+		f \in UC(\Reals,\Reals)
+	}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(t,1)}{\bd \TYPE{LimToInfty}(0_1)\left(\frac{\varepsilon}{2}\right)}
+	{ \sum t \in \Reals_{++} \. \forall x \in (t, +\infty) \. |f(x) - a| < \frac{\varepsilon}{2}} 
+	\Say{(s,2)}{\bd \TYPE{LimToInfty}(0_2)\left(\frac{\varepsilon}{2}\right)}
+	{ \sum s \in \Reals_{++} \. \forall x \in ( -\infty,s) \. |f(x) - b| < \frac{\varepsilon}{2}}
+	\Say{(\delta_+,3)}{\bd C(f)(t)(\varepsilon/2)}
+	{  \sum \delta_+ \in \Reals_{++} : \forall x \in (t - \delta_+, t + \delta_+) \. |f(x) - f(t)| < \frac{\varepsilon}{2}      }
+	\Say{(\delta_-,4)}{\bd C(f)(s)(\varepsilon/2)}
+	{  \sum \delta_- \in \Reals_{++} : \forall x \in (s - \delta_-, s + \delta_-) \. |f(x) - f(s)| < \frac{\varepsilon}{2}      }
+	\Say{I}{ [s - \delta_-,t + \delta_+]  }{ \TYPE{ClosedInterval} }
+	\Say{(5)}{\THM{CompactUCCriterion}(f,I)}{ \Big( f_{|I} : UC(I,\Reals) \Big)    }
+	\Say{(\delta_0,6)}{ \bd UC(I,\Reals)(5)(\varepsilon)\bd \FUNC{constrict}(f,I) }
+	{ \sum \delta_0 \in \Reals_{++} \. \forall x,y \in \Reals \. |f(x) - f(y)| < \varepsilon}
+	\Say{\delta}{\min(\delta_-,\delta_0,\delta_+)}{\Reals_{++}}
+	\Assume{x,y}{\Reals}
+	\Assume{(7)}{|x - y| < \delta}
+	\Say{(8)}{\bd I(7)}{x,y \in (-\infty,s) \; \Big| \; x,y \in I \; \Big| \; x,y \in (t,+\infty)}
+	\Conclude{()}{ E(|)(1)(2)(6)}{ | f(x) - f(y)| < \varepsilon }
+	\DeriveConclude{(*)}{\bd^{-1 } UC(\Reals,\Reals)}{f \in UC(\Reals,\Reals)}
+	\EndProof
+}
+\newpage
+\subsection{Intermidiate Value Theorem}
+\Page{
+	\Theorem{IntermidiateValueTHM}{\forall f \in C\Big([a,b],\Reals\Big) \. 
+		\forall y \in [f(a),f(b)] \. \exists x \in [a,b] : f(x) = y }
+	\Say{(1)}{\THM{CompactUCCritrion}(f,[a,b])}{\Big( f : UC\Big([a,b],\Reals\Big) \Big)}
+	\Assume{n}{\Nat}
+	\Say{(\delta,2)}{\bd UC(1)(1/n)}{ 
+		\sum \delta \in \Reals_{++} \.  
+		\forall x,y \in [a,b] : | x - y| < \delta \. |f(x) - f(y)| < \frac{1}{n} 
+	}
+	\Say{(m,x,3)}{\FUNC{mesh}\Big([a_n,b_n], \delta\Big)}{\sum n \in \Nat \. x : \TYPE{Increasing}(n,[a_n,b_n])
+		\. [a,b] = \bigcup^{n-1}_{i=1} [x_i,x_{i+1}] 
+		\NewLine
+		\And \forall i \in \Nat : i  < m \. x_{i+1} - x_i < \delta,
+	}
+	\Say{(4)}{\ByConstr(2)(r)}{m \ge n}
+	\Say{(i,5)}{ \arg \min_{i} | f(x_i) - y  |  }{n}
+	\Say{u_n}{ x_i }{\TYPE{In}[a,b]}
+	\Conclude{(6_n)}{ \THM{LittleStepTHM}(3)(4)\ByConstr(u_n)\ByConstr(i)}{ | f(u_n) - y| < \frac{1}{n}}
+	\Derive{(u,2)}{I\left( \sum \right)I(\forall)}
+	{\sum u : \Nat \to [a,b] \. \forall n \in \Nat \. | f(u_n) - y| < \frac{1}{n}}
+	\Say{(3)}{\THM{TwoSideLimit}(0,\Lambda n \in \Nat \. 1/n) \THM{ReductioInfima} (2)}{\lim_{n \to \infty} f(u_n) = y}
+	\Say{(m,4)}{\THM{BolzanoWeierstrass}([a,b],u)}{\sum m : \TYPE{Subseqer} \. u_m : \TYPE{Converging}}
+	\Say{x}{\lim_{n \to \infty} u_{m_n}}{\TYPE{In}[a,b]}
+	\Conclude{(*)}{\THM{SubseqLimit}(3,f(u))\THM{SeqContinuous}(f,x)\ByConstr x \Big( f(x) \Big)}
+	{ f(x) = f\Big(\lim_{n \to \infty} u_{m_n}\Big)  = \lim_{n \to \infty} f(u_{m_n}) = y
+	}
+	\EndProof
+	\\
+	\Theorem{FreshmensFixedPointTHM}{\forall f : C\Big([0,1], [0,1] \Big) \. \exists x  \in [0,1] : f(x) = x}
+	\Say{g}{\Lambda x \in [0,1] \. f(x) - x}{C\Big( [0,1] , \Reals  \Big)}
+	\Assume{ (1)}{f(0) \neq 0 \And f(1) \neq (1) }
+	\Say{(2)}{ \bd g \bd [0,1] (1) }{ 0 \in [g(1),g(0)]}
+	\Say{(x,3)}{\THM{IntermidiateValueTHM}(g)(2)(0)}{ \sum x \in [0,1] \. g(x) = 0 }
+	\Conclude{()}{\bd g (3)}{ f(x) = x}
+	\Derive{(1)}{I(\Rightarrow)I(\exists)(x)}
+	{ \Big( f(0) \neq 0 \And f(1)\Big) \neq 1 \Rightarrow \exists x \in [0,1] \. f(x) = x}
+	\Conclude{(*)}{E(|)(\ldots)(1)}{\exists x \in [0,1] \. f(x) = x}
+	\EndProof
+}\Page{
+	\Theorem{IncreasingHomeomorphism}{\forall f : \TYPE{Increasing} \And C\Big([a,b],\Reals\Big) \. 
+		f : [a,b] \ToBij_{\mathsf{TOP}} [f(a),f(b)]
+	}
+	\Assume{x}{[a,b]}
+	\Say{(1)}{\bd x}{a \le x \le b }
+	\Say{(2)}{\bd \TYPE{Increasing}(f)(1)}{f(a) \le f(x) \le f(b)}
+	\Conclude{()}{\bd^{-1} [f(a),f(b)](2)}{ f(x) \in [f(a),f(b)]}
+	\Derive{(0)}{\bd^{-1} \LOGIC{Codomain}}{\Big(f : [a,b] \to [f(a),f(b)]\Big)}
+	\Assume{y}{[f(a),f(b)]}
+	\Conclude{()}{\THM{IntermidiateValueTHM}(f,y)}{\exists x \in [a,b] \, f(x) = y}
+	\Derive{(1)}{\bd^{-1} \TYPE{Surjection}}{\Big(f : [a,b]\ToSurj [f(a),f(b)]\Big)}
+	\Assume{t,s}{[a,b]}
+	\Assume{(2)}{f(t) = f(s)}
+	\Conclude{()}{\bd \TYPE{Increasing}(2)}{t = s}
+	\Derive{(2)}{ \bd^{-1} \TYPE{Injection} }{\Big( f : [a,b] \ToInj [f(a),f(b)]  \Big)}
+	\Say{(3)}{\bd^{-1} \TYPE{Bijection}(1)(2)}{\Big( f : [a,b] \ToBij [f(a),f(b)] \Big) }
+	\Assume{f(x)}{\Nat \to [f(a),f(b)]}
+	\Assume{f(X)}{[f(a),f(b)]}
+	\Assume{(4)}{\lim_{n \to \infty} f(x_n) = f(X)}
+	\Assume{(5)}{\lim_{n \to \infty} x_n \neq X}
+	\Say{(\varepsilon,6)}{\bd \TYPE{Limit}(5) }{ \sum \varepsilon \in \Reals_{++} \. 
+		\forall N \in \Nat  \. \exists n \in \Nat : n \ge N \. |x_n - X| \ge \varepsilon  }
+	\Say{ \delta  }{\min\Big( \big|f(X) - f(X - \varepsilon)\big|,\big| f(X) - f(X + \varepsilon)\big| \Big) }{\Reals_{++}}
+	\Assume{N}{\Nat}
+	\Say{(n,7)}{(6)(N)}{ \sum n \in \Nat : n \ge N \. | x_n - X| \ge \varepsilon }
+	\Conclude{()}{\bd \TYPE{Increasing}(f)(7) \bd^{-1} \delta}{ | f(x_n) - f(X) | \ge \delta }
+	\Derive{(7)}{\LOGIC{Negate}\bd \TYPE{Limit}}{ \lim_{n \to \infty} f(x_n) \neq f(X) }
+	\Conclude{()}{(7)(4)}{\bot}
+	\Derive{(4)}{\THM{SeqContinuous} I(\forall)I(\forall)I(\Rightarrow)E(\bot)}
+	{  f^{-1} : [f(a),f(b)] \to_{\mathsf{TOP}} [a,b]   }
+	\Conclude{(*)}{\bd^{-1} \TYPE{Homeo}(3)(4)}{f : [a,b] \ToBij_{\mathsf{TOP}} [f(a),f(b)] }
+	\EndProof
+}
+\newpage
+\subsection{Continuous Wonders[!]}
+\newpage
+\section{Convergence of Functions}
+\subsection{Pointwise Topology}
+\Page{
+	\DeclareFunc{pointwisePolynorm}{ \prod A \subset \Reals \.  A \to (A \to \Reals) \to \Reals_{+}  }
+	\DefineNamedFunc{pointwisePolynorm}{x,f}{\mathbf{p}_x(f)}{|f(x)|}
+	\\
+	\Theorem{PointwiseIsPolynormed}{\forall A \subset \Reals \. \mathbf{p}(A) : \TYPE{Polynorm}(\Reals)}
+	\Assume{x}{\TYPE{In}(A)}
+	\Say{(1)}{\bd \mathbf{p}_x(0) \bd \FUNC{absValue}}{ \mathbf{p}_x(0) = |0(x)| = |0| = 0  }
+	\Assume{f,g}{A \to \Reals}	
+	\Conclude{()}{
+		\bd\mathbf{p}_x(f + g) \THM{TriangleIneq}(\FUNC{absValue}(\Reals)) \bd^{-1} \mathbf{p}_x 
+	}{  \NewLine :
+		\mathbf{p}_x(f + g) = |f(x) + g(x)| \le |f(x)| + |g(x)| = \mathbf{p}_x(f) + \mathbf{p}_x(g)}
+	\Derive{(2)}{I(\forall)}{\forall f,g : A \to \Reals \. \mathbf{p}_x(f + g) \le \mathbf{p}_x(f) + \mathbf{p}_x(g)}
+	\Assume{f}{A \to \Reals}
+	\Assume{\alpha}{\Reals}
+	\Conclude{()}{\bd \mathbf{p}_x(\alpha f) \THM{AbsHomogen}(\FUNC{absValue}(\Reals)) \bd^{-1} \mathbf{p}_x}
+	{   \mathbf{p}_x(\alpha f) = |\alpha f(x)| = |\alpha||f(x)| = |\alpha|\mathbf{p}_x(f)      }
+	\Derive{(3)}{I^2(\forall)}{\forall f : A \to \Reals \.  \forall \alpha \in \Reals \. \mathbf{p}_x(\alpha f) 
+		= |\alpha| \mathbf{p}_x(f)
+	}
+	\Conclude{()}{\bd^{-1}\TYPE{Seminorm}(1)(2)(3)}{ \Big( \mathbf{p}_x : \TYPE{Seminorm}(\Reals) \Big)  }
+	\Derive{(1)}{I(\forall)}{\forall x \in A \. \mathbf{p}_x : \TYPE{Seminorm}(\Reals)}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Polynorm}(x)}{\Big( \mathbf{p} : \TYPE{Polynorm}(\Reals) \Big)}
+	\EndProof
+}\Page{
+	\Theorem{PointwiseContinuousLimit}{ 
+	\forall f : \Nat \to C(\Reals,\Reals) \. \forall \varphi : \Reals \to \Reals  
+		\. \forall (0) :  f \xrightarrow{\mathbf{p}} \varphi \.	\mathcal{D}^\c(\varphi) : \TYPE{Dense}(\Reals)
+	}
+	\Say{C}{\Lambda i \in \Nat \. \Lambda j \in \Nat \. \Lambda r \in \Reals \. 
+		\{ x \in \Reals \. |f_i(x) - f_j(x)| \le r  \} }{ \Nat \to \Nat \to \Reals \to  \TYPE{Closed}(\Reals)   }
+	\Assume{U}{\TYPE{Open} \And \TYPE{NonEmpty}(\Reals)}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{K}{ \Lambda n \in \Nat \. \bigcap^\infty_{i = n} \bigcap^\infty_{j = i + 1} C(i,j)(\varepsilon) }
+	{ \Nat \to \TYPE{Closed}(\Reals)  }
+	\Say{(1)}{(0)\ByConstr}{ \bigcup^\infty_{n=1} K_n = \Reals}
+	\Say{(n,2)}{\THM{RealBairCategoryI}(U)(1)}{\sum n \in \Nat \. K_n \IsNot \ND(U)  }
+	\Say{(V,3)}{\bd \ND(2)}{  \sum V : \TYPE{Open} \And \TYPE{NonEmpty}(U) \. K_n \cap V : \TYPE{Dense}(V) }
+	\Say{(4)}{\THM{DenseClosed}(3)}{V \subset K_n}
+	\Assume{x}{\TYPE{In}(V)}
+	\Say{ (\delta,5)}{\bd C(f_{n|V})(x)(\varepsilon) }
+	{ \sum \delta \in \Reals_{++} \. \forall y \in \mathbb{B}_V(x,\delta) \. f(y) \in \mathbb{B}(f(x),\varepsilon) }
+	\Assume{s,t }{ \TYPE{In} \mathbb{B}_V(x,\delta)}
+	\Conclude{()}{\THM{TriangelIneq}(f(s),-f_k(s),f_k(s),-f_k(x),f_k(x),-f_k(t),f_k(t),-f(t))
+		\ByConstr^2 C \ByConstr K \bd V \bd s,t (5)(\bd s,t)  }
+	{  
+		\NewLine :
+		|f(s) - f(t)| \le  
+		| f(s) - f_k(s)| + |f_k(s) - f_k(x)| + |f_k(x) - f_k(t)| + | f_k(t) - f(t) | < 4\varepsilon 
+	}
+	\DeriveConclude{()}{I (\forall)\bd^{-1} \omega(f,x) I(\forall)}
+	{ \forall x \in V \. \omega(f,x) < 4\varepsilon }
+	\Derive{(1)}{I(\forall) \bd^{-1} \ND  I(\forall)I(\exists)(V)}
+	{  \forall \varepsilon \in \Reals_{++} \. \{  x \in \Reals : \omega(f,x) \ge 4\varepsilon \} : \ND  }
+	\Say{(2)}{\bd^{-1}\mathcal{D}(f) \bd \omega(f,x)}{\mathcal{D}(f)  = \bigcup_{n = 1}^\infty 
+		\{ x \in \Reals : \omega(f,x) \ge  n^{-1} \}}
+	\Assume{U}{\TYPE{Open} \And \TYPE{NonEmpty}(\Reals)}
+	\Say{(3)}{(2)\THM{RealBairCategoryI}(U)(1)}{U \not \subset \mathcal{D}(f)}
+	\Conclude{(x,4)}{\bd^{-1}\FUNC{complement}\bd\TYPE{Subset}(3)}{\sum x \in U \. x \in \mathcal{D}^\c(f)}
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{Dense}}{ \Big( \mathcal{D}^\c(f) : \TYPE{Dense}(\Reals) \Big) }
+	\EndProof
+}
+\newpage
+\subsection{Relation between Pointwise and Uniform Convergence}
+\Page{
+	& \Big( \|\cdot\|_\infty \Big) \; \lim_{n \to \infty}  f_n =   \varphi 
+		\iff f \ToU \varphi \\
+    \\
+    \Theorem{NonDecreasingConvergenceIsUniform}{ \forall f : \Nat \to \TYPE{Nondecreasing} \And C\Big( [a,b] ,\Reals\Big) 
+    	\. \forall \varphi \in C\Big( [a,b], \Reals \Big) \. \NewLine \.
+	\forall (0) : f \xrightarrow{\mathbf{p}} \varphi \. f \ToU \varphi
+    }
+    \Assume{\varepsilon}{\Reals_{++}}
+    \Say{(\delta,00)}{ \bd UC \THM{CompactUCCriterion}(\varphi)\left( \frac{\varepsilon}{2} \right)   }
+    { \sum \delta \in \Reals_{++} \. \forall x,y \in [a,b] : |x - y| < \delta \. |\varphi(x) - \varphi(y)| < \varepsilon }
+    \Say{(n,t,1)}{\FUNC{mesh}([a,b],\delta)}{
+	    \sum n \in \Nat \. \sum t : \TYPE{NonDecreasing}\Big( n,  [a,b]\Big) \. 
+	    \NewLine \.
+	    [a,b] = \bigcup^{n-1}_{i = 1}  [t_i,t_{i + 1}] \And
+	    \forall i \in \Nat : i < n \.   t_{i+1} - t_{i} \le \delta
+    }
+    \Say{(N,2)}{ (0)(t)(\varepsilon/2) }
+    {\sum N \in \Nat \. \forall i \in \Nat : i \le n \And \forall m \in \Nat : m \ge N \.  
+      | f_n(t_i) - \varphi(t_i) | < \frac{\varepsilon}{2} 
+    }
+    \Assume{s}{[a,b]}
+    \Assume{m}{\Nat}
+    \Assume{(3)}{ m \ge N }
+    \Say{(i,4)}{(1_1)(t)}{ \sum i \in \Nat : i < n \.  s \in [t_i,t_{i+1}] }
+    \Say{(5)}{\bd \TYPE{NonDecreasing}(f_m)(t_i,s,t_{i+1})(4)}{f_m(t_i) \le f_m(s) \le f_m(t_{i+1})}
+    \Say{(6)}{(5)(2)(3)}{  \varphi(t_i) - \frac{\varepsilon}{2} \le f_m(s) \le \varphi(t_{t+1}) + \frac{\varepsilon}{2}   }
+    \Say{(7)}{(00)(1)(4)(6)}{ \varphi(s) - \varepsilon \le f_m(s) \le \varphi(s) + \varepsilon }
+    \Conclude{()}{\bd^{-1}\FUNC{absValue}}{| f_m(s) - \varphi(s)  | < \varepsilon}
+    \DeriveConclude{(*)}{\bd^{-1} f \ToU \varphi}{f \ToU \varphi}
+    \EndProof
+    \\
+    \Theorem{NonIncreasingConvergenceIsUniform}{ \forall f : \Nat \to \TYPE{NonIncreasing} \And C\Big( [a,b] ,\Reals\Big) 
+    	\. \forall \varphi \in C\Big( [a,b], \Reals \Big) \. \NewLine \.
+	\forall (0) : f \xrightarrow{\mathbf{p}} \varphi \. f \ToU \varphi
+    }
+    \NoProof
+}
+\newpage
+\Page{
+	\Theorem{DiniCondition}{ \forall f : \Nat \to C\Big([a,b],\Reals\Big) \. \forall \varphi \in C\Big([a,b],\Reals\Big) 
+		\.  \forall (0) : f \xrightarrow{\mathbf{p}} \varphi \. 
+		\NewLine \.  \forall Y : \forall x \in [a,b] \. 
+		 f(x) : \TYPE{Monotonic}(\Nat,\Reals) \. f \ToU \varphi
+	}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{U}{\Lambda n \in \Nat \. \Big\{ x \in [a,b] \; \Big| \; |f_n(x) - \varphi(x)| < \varepsilon  \Big\} }
+	{\Nat \to \TYPE{Open}[a,b]}
+	\Say{(1)}{(0)\ByConstr(U)}{ \bigcup^\infty_{n=1} U_n = [a,b]  }
+	\Say{(n,k,2)}{\bd \TYPE{Compact}[a,b](U)(1)}{\sum n \in \Nat \. \sum k : n \to \Nat \. \bigcup^n_{i=1} U_{k_i} = [a,b]}
+	\Say{(3)}{(0)(Y)\ByConstr(U)}{\Big( U : \TYPE{Increasing}(?[a,b]) \Big)}
+	\Conclude{()}{(2)(3)}{U_{n_k} = [a,b]}
+	\DeriveConclude{(*)}{ \bd^{-1} f \ToU \varphi I(\forall) \bd U}{f \ToU \varphi}
+	\EndProof
+}
+\newpage
+\subsection{Pointwise Compactness}
+\Page{
+	\DeclareType{UniformlyBounded}{ ??(X \to \Reals)}
+	\DefineType{F}{UniformlyBounded}{\exists c \in \Reals_{++} \. \forall f \in F \. \forall x \in X \. |f(x)| \le c}
+	\\
+	\Theorem{SimpleHellySelection}{\forall f : \Nat \to \TYPE{Monotonic}\Big([a,b],\Reals\Big) \. 
+		\forall (0) : \Big( \im  f : \TYPE{UniformlyBounded} \Big) \. \NewLine \. \exists n : \TYPE{Subseqer} : 
+		\Big( f_n : \TYPE{Converging}(\mathbf{p}) \Big)                                 
+	}
+	\Say{(1,q)}{\bd \TYPE{EqCard} \THM{RationalIntervalsAreCountable}[a,b]}
+	{ \sum (1) : \top \. q :\Nat \ToBij_{\mathsf{Set}} \Rats \cap [a,b]}
+	\Say{n^1}{\Lambda k \in \Nat \. k}{\TYPE{Subseqer}}
+	\Assume{m}{\Nat}
+	\Say{(k,2)}{\THM{CompactSubseq}(f_{n^m}(q_m))\bd \TYPE{UniformlyBounded}(0)}
+	{\sum k : \TYPE{Subseqer} \. f_{n_k^m}(q_m) : \TYPE{Converging}(\Reals))}
+	\Conclude{n^{m+1}}{n^m_k}{\TYPE{Subseqer}} 
+	\Derive{(n.2)}{I\left( \sum \right)\THM{SubseqLimit}}
+	{ \sum n :  \TYPE{Decreasing}(\Nat,  \TYPE{Subseqer}) \. \forall k \in \Nat \. \forall i \in \Nat :
+		i \le k \.  \NewLine \. f_{n^k}(q_i) : \TYPE{Converging}[a,b]}
+	\Say{n'}{\Lambda k \in \Nat \. n^k_k}{ \TYPE{Subseqer}}
+	\Say{(3)}{\ByConstr n' (2)}{ \forall k \in \Nat \. f_{n'}(q_k) : \TYPE{Converging}(\Reals) }
+	\Assume{r}{[a,b] \cap \Rats}
+	\Say{(l,4)}{\bd q(r)}{\sum l \in \Nat \. q_l = r}
+	\Conclude{\varphi(r)}{\lim_{m \to \infty} f_{n'_m}}{ \Reals  }
+	\Derive{ \varphi  }{I(\to)}{[a,b] \cap \Rats \to \Reals}
+	\Assume{x}{[a,b] \cap \Rats^\c}
+	\Say{(q,4)}{\THM{RationalApproximation}(x)}{ \sum q : \Nat \to [a,b] \cap \Rats \. q \uparrow x }
+	\Say{(5)}{ \bd \TYPE{UniformlyBounded}(f) \bd \TYPE{Monotonic}(f)}
+	{\Big( \varphi(q) : \TYPE{Monotonic} \And \TYPE{Bounde}  \Big)}
+	\Say{(6)}{\THM{MonotonicAndBoundedIsConverging}(5)}{\Big( \varphi(q) : \TYPE{Converging} \Big)}
+	\Conclude{\varphi}{I(\to)}{[a,b] \to \Reals}
+	\Say{(4)}{ \ByConstr(\varphi)\bd \TYPE{Monotonic}(f)}{(\varphi : \TYPE{Monotonic})}
+	\Say{(5)}{\LOGIC{RepeatAndRepalce}(1)(\Rats \cap [a,b], (\Rats \cap [a, b]) \cup \mathcal{D}(\varphi))}
+	{ \forall x \in \mathcal{D}(f) \. \lim_{k \to \infty} f_{n'_k}(x) = \varphi(x)  }
+	\Assume{x}{\mathcal{D}^\c(\varphi)}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(6)}{\bd x \bd \mathcal{D}(\varphi)}{ \varphi \in C\Big([a,b],\Reals,x\Big) }
+	\Say{(\delta,7)}{ \bd C\Big([a,b],\Reals,x\Big)(\varphi)(\varepsilon) }
+	{   \sum \delta \in \Reals_{++} \. \forall t,s \in ( x - \delta, x + \delta) \.    
+		| \varphi(t) - \varphi(s)| <  \varepsilon
+	}
+	\Say{ (p,q,8)  }{ \bd \TYPE{Monotonic}(f,\varphi) \THM{RationalApproximation}     }
+	{ \sum p,q \in \Rats \cap (x - \delta, x + \delta) \. \forall k \in \Nat \.   
+		\NewLine \.
+		\varphi(p) - f_{n'_k}(q) \le \varphi(p) - f_{n'_k}(q) \le \varphi(q) - f_{n'_k}(p) 
+	}
+}\Page{
+	\Conclude{()}{\lim_{k \to \infty}(8)(k)\ByConstr(\varphi)(7)(\bd p,q)}{ \NewLine : 
+		\lim_{k \to \infty}  \Big| \varphi(x) - f_{n_k'}(x) \Big|
+		  \le \lim_{k \to \infty} \max\bigg( \Big| \varphi(p) - f_{n_k'}(q) \Big|,
+		  \Big|\varphi(q) - f_{n_k'}(p) \Big|  \bigg) = | \varphi(p) - \varphi(q) | < \varepsilon
+		}
+	\Derive{(6)}{I(\forall)}{  \forall \varepsilon \in \Reals_{++} \. \lim_{k \to \infty} 
+		| f_{n'_k}(x) - \varphi(x)| < \varepsilon   }
+	\Say{(7)}{\lim_{\varepsilon \to 0} (6)(\varepsilon)}{ \lim_{k \to \infty} | f_{n'_k}(x) - \varphi(x)| = 0   }
+	\Conclude{()}{\bd^{-1}\TYPE{Limit}(7)}{\lim_{k \to \infty} f_{n'_k}(x) = \varphi(x)}
+	\Derive{(6)}{I(\forall)}{\forall x \in \mathcal{D}(\varphi) \. \lim_{k \to \infty} f_{n'_k}(x) = \varphi(x)}
+	\Conclude{(*)}{\bd^{-1} f_{n'} \xrightarrow{\mathbf{p}} \varphi (5)(6)}{f_{n'} \xrightarrow{\mathbf{p}} \varphi}
+	\EndProof
+}
+\newpage
+\subsection{Approximation Theorems [!!]}
+\Page{
+	\DeclareFunc{partialBernsteinPolynomial}{\prod n \in \Nat \. n \to \Reals[\Int_+] }
+	\DefineNamedFunc{partialBernsteinPolynomial}{k}{b^n_k}{ \Lambda x \in \Reals \. \binom{n}{k}x^k(1 - x)^{n-k} }
+	\\
+	\DeclareFunc{funcBernsteinPolynomial}{ \Big( [0,1] \to \Reals \Big) \to \Nat \to \Reals[\Int_+] }
+	\DefineNamedFunc{funcBernsteinPolynomial}{ f, n  }{B^n_f}{\Lambda x \in \Reals \. 
+		\sum^n_{k=0} f\left( \frac{k}{n} \right) b_k^n(x) }
+	\\
+	\Theorem{BernsteinLemmaI}{\forall n \in \Nat \. B^n_1 = 1}
+	\Assume{x}{\Reals}
+	\Conclude{(*)}{\bd B^n_1(x) \THM{BinomialExpansion} \bd^{-1}\TYPE{Unity}(1) }
+	{ B^n_1(x) =  \sum^n_{k=0} \binom{n}{k}x^k(1 - x)^{n-k} = (x + 1 -x)^n = 1 }
+	\EndProof
+	\\
+	\Theorem{BernseinLemmaII}{\forall n \in \Nat \. \forall x \in \Reals \. \sum^n_{k=0} k b^n_k(x) = nx}
+	\Say{f}{\Lambda (x,y) \in \Reals \times \Reals \. (x + y)^n }{  \Reals^2 \to \Reals }
+	\Say{(1)}{ \THM{BinomialExpansion} \, \THM{LinearDifferentiation}\bd\frac{\partial f}{\partial x}  }{
+	\NewLine : \forall x, y \in \Reals \. \sum^n_{k=0}  k x^{k-1}y^{n-k} =
+		\sum^n_{k=0} \frac{\partial}{\partial x} x^ky^{n-k}=\frac{\partial f}{\partial x}(x,y) = n(x + y)^{n-1}
+		}
+	\Say{(2)}{\Lambda x,y \in \Reals \. x(1)}{\forall x,y \in \Reals \. \sum^n_{k=0} kx^ky^{n-k} = nx(x + y)^{n-1}}
+	\Conclude{(*)}{ \bd^{-1} b^n_k \Lambda x \in \Reals \. (2)(x,1-x)}
+	{  \forall x \in \Reals \. \sum^n_{k=0} k b^n_k(x) = nx     }
+	\EndProof
+	\\
+	\Theorem{PositiveBernstein}{\forall n \in \Nat \. \forall k \in n \. \forall x \in [0,1] \. 
+		b^k_(x) \ge 0
+	}
+	\NoProof
+}\Page{
+	\Theorem{BerensteinLemmaIII}{\forall n \in \Nat \. \forall x \in \Reals \. \sum^n_{k=0} k^2 b^n_k(x) = n(n-1)x^2 + nx}
+	\Say{f}{\Lambda (x,y) \in \Reals \times \Reals \. (x + y)^n }{  \Reals^2 \to \Reals }
+	\Say{(1)}{ \THM{BinomialExpansion} \, \THM{LinearDifferentiation}\bd\frac{\partial^2 f}{\partial x^2}  }{
+		\NewLine : \forall x, y \in \Reals \. \sum^n_{k=0}  k(k - 1) x^{k-2}y^{n-k} =
+		\sum^n_{k=0} \frac{\partial^2}{\partial x^2} x^ky^{n-k}=\frac{\partial^2 f}{\partial x^2}(x,y) = 
+		n(n - 1)(x + y)^{n-2}
+		}
+	\Say{(2)}{\Lambda x,y \in \Reals \. x^2(1)}{\forall x,y \in \Reals \. \sum^n_{k=0} (k-1)kx^ky^{n-k} = 
+		n(n-1)x^2(x + y)^{n-2}}
+	\Say{(3)}{  (2) + \frac{\partial f}{\partial x}  }
+	{  \forall x,y \in \Reals \.  \sum^n_{k=0} k^2 x^k y^{(n-k)} = n(n - 1)x^2(x + y)^{n-2} + nx(x + y)^{n - 1} }
+	\Conclude{(*)}{ \bd^{-1} (3)(x,1-x)   }
+	{
+	 	\forall x \in \Reals \. 
+		\sum^{\infty}_{k=0} k^2 b^n_k(x) =  n(n-1)x^2  + nx
+	}
+	\EndProof
+	\\
+	\Theorem{BernsteinLemmaIV}{\forall n \in \Nat \. \forall x \in \Reals \. 
+		\sum^n_{k=0}  (k - nx)^2 b^n_k(x) = nx(1 - x)
+	}
+	\Say{(*)}
+	{   x^2n^2\THM{BernsteinLemmaI} - 2xn \THM{BernsteibLemmaII} + \THM{BernsteinLemmaIII}  }
+	{
+		 \NewLine :
+		\forall x \in \Reals \. 
+		\sum^n_{k=0} (k - nx)^2 b^n_k(x) =   n(n-1)x^2 + nx  - 2n^2x^2 + n^2x^2 = nx(1 - x)
+	}
+	\EndProof
+}\Page{
+	\Theorem{BernsteinPolynomialApproximation}{\forall f \in C\Big([0,1],\Reals\Big) \. B_f \ToU f}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{ (\delta,1)  }{\THM{CompactUCCriterion}\bd UC(f)(\varepsilon/2)}{ 
+		\sum \delta \in \Reals_{++} \.   
+		\forall x,y \in [0,1] : |x - y| < \delta \. 
+		| f(x) - f(y) | < \frac{\varepsilon}{2}
+	}
+	\Say{N}{\left \lceil  \frac{\|f\|_\infty}{\delta^2}    \right \rceil}{ \Nat }
+	\Assume{n}{\Nat}
+	\Assume{(3)}{n \ge N}
+	\Assume{x}{\TYPE{In}[0,1]}
+	\Say{J_1}{\left\{ k \in n :\left| \frac{k}{n}  - x \right| < \delta \right\}}
+	{?n}
+	\Say{J_2}{J_1^\c}{?n}
+	\Say{(4)}{ \THM{TriangleIneq} \ByConstr J_1 \THM{PositiveBernstein}(x)\THM{BernsteinLemmaI}(n,x)  }
+	{ 
+	 \NewLine :
+		\left| \sum_{k \in J_1} \left(f\left(\frac{k}{n}\right) - f(x) \right)b^n_k(x)  \right|
+	 	\le \sum_{k \in J_1} \left| f\left( \frac{k}{n}\right) -f(x) \right| b^n_k(x) <
+	 	\frac{\varepsilon}{2} \sum_{k = 0}^n b^n_k(x) = \frac{\varepsilon}{2} 
+	}
+	\Say{(5)}{\THM{BernsteinLemaIV}(x) \THM{PositiveBernstein}(J_2)\ByConstr J_2}
+	{
+	 \NewLine :
+		nx(1-x) = \sum^n_{k=0} (k - nx)^2 b^n_k(x) \ge 
+		\sum_{k \in J_2}  (k -nx)^2 b^n_k(x) \ge 
+		\sum_{k \in J_2}   \delta^2 n^2 b^n_k(x)        
+	}
+	\Say{(6)}{ (5) \THM{MaxIneq}(\Lambda x \. x(1 - x) ) }
+	{
+		\sum_{k \in J_2} B^n_k(x) \le \frac{nx(1-x)}{\delta^2 n^2}
+		\le \frac{1}{4 \delta n}
+	}
+	\Say{(7)}{    \THM{TriangleIneq} \bd^{-1} \| f \|_\infty(6)(3)\ByConstr(N) }{
+		\NewLine :
+			\left| \sum_{k \in J_2} \left(f\left(\frac{k}{n}\right) - f(x) \right) b^n_k(x) \right|
+			\le
+			\sum_{k \in J_2} \left| f\left( \frac{k}{n} \right) - f(x)  \right| b^n_k(x) \le
+			2\| f \|_\infty \sum_{k \in J_2}  b^n_k(x) \le 
+			\frac{ \| f \|_\infty }{ 2 n \delta^2  } < \frac{\varepsilon}{2}
+	}
+	\Conclude{()}{(4)(7)}{ |B_f(x) - f(x)| < \varepsilon  }
+	\Derive{(4)}{I(\forall)}{\forall x \in [0,1] \. |B_f^n(x) - f(x)| < \varepsilon }
+	\Conclude{(5)}{\bd^{-1} \| \cdot \|_\infty \THM{CompactMaxPrinciple}(4)}{  
+	\| B_f^n - f \|_\infty = \sup_{x \in [0,1]} | B_f^n(x) -f(x)| < \varepsilon }
+	\DeriveConclude{(*)}{\bd^{-1} B_f \ToU f}
+	{
+		B_f \ToU f
+	}
+	\EndProof
+}
+\newpage
+\Page{
+	\Theorem{PiecewiseLinearApproximation}
+	{ 
+		\forall f \in  C\Big([0,1], \Reals\Big) \. \exists L : \Nat \to \TYPE{Piecewise} \; \TYPE{Linear} 
+		\left([0,1], \Reals \right) \. L \ToU f 
+	}
+	\Say{(0)}{\THM{CompactUCriterion}(f)}{ \bigg( f : UC\Big( [0,1], \Reals \Big) \bigg)}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(\delta,1)}{\bd UC\Big( [0,1], \Reals  \Big)\left( \frac{\varepsilon}{2} \right)}{  
+		\sum \delta \in \Reals_{++} \.  \forall x,y \in [0,1] :  |x - y| < \delta \.    
+		| f(x) - f(y) | < \frac{\varepsilon}{2}
+		}
+	\Say{(n,t,2)}{ \FUNC{mesh}[0,1](\delta)}{ \sum n \in \Nat \. \sum t : \TYPE{Increasing}\Big(n,[0,1] \Big) \.  
+	  \NewLine \. 
+	  [0,1] = \bigcup^{n-1}_{i=1} [t_i,t_{i+1}] \And \forall i \in \Nat : i < n \. t_i - t_{i-1} < \delta 
+	}
+	\Assume{x}{[0,1]}
+	\Say{(i,3)}{(2_1)(1)}{ \sum i \in n - 1 \.   x \in [t_i,t_{i + 1}] }
+	\Say{  L(x)}{  \frac{t_{i + 1} - x}{ t_{i + 1}  - t_i}f(t_i)  + 
+		\frac{ x - t_{i}}{t_{i + 1} - t_i }    f(t_{i + 1})   }{\Reals}
+	\Say{(4)}{\bd^{-1} \Big[f(t_{i}),f(t_{i+1})\Big] \ByConstr L(x)}{L(x) \in \Big[ f(t_{i}), f(t_{i+1}) \Big]}
+	\Conclude{()}{(4)(1)(2)(3)(x) }{ | L(x) - f(x) | \le \max\Big( |f(t_i) - f(x)|,|f(x) - f(t_{i+1})|  \Big) 
+	 < \varepsilon
+	}
+	\Derive{(1)}{I(\forall)\bd^{-1} \TYPE{Piecewise} \; \TYPE{Linear} I(\forall)}
+	{\forall \varepsilon \in \Reals_{++} \. \exists L : \TYPE{Piecewise} \; \TYPE{Linear} \Big( [0,1],\Reals \Big) 
+		\.   \|  L   -  f\|_{\infty} < \varepsilon
+	}
+	\Say{(2)}{\bd^{-1} \TYPE{Dense}(1)}{\bigg( \TYPE{Piecewie} \; \TYPE{Linear}\Big([0,1],\Reals\Big) : 
+		\TYPE{Dense}\Big( C[0,1](\Reals), \| \cdot \|_\infty \Big) \bigg)}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Limit} \bd \TYPE{Dense}(2)  }{
+			\LOGIC{This}
+		}
+	\EndProof
+}
+\newpage
+\subsection{Power Series }
+\Page{
+	\DeclareFunc{radiOfConvergence}{ (\Nat \to \Reals) \to \EReals}
+	\DefineNamedFunc{radiOfConvergence}
+	{a}{R(a)}{\lim \sup_{n} \Big( \sqrt[n]{|a_n|}  \Big)^{-1} }
+	\\
+	\DeclareFunc{ powerSeria  }{  (\Nat \to \Reals ) \to \Nat \to \Reals \to \Reals    }
+	\DefineNamedFunc{powerSeria}{a,n,x}{F^n_a(x)}{ \sum^n_{i = 0} a_{n-1} x^n}
+	\\
+	\Theorem{PowerSeriaConvergence}{
+		\forall a : \Int_+ \to \Reals \. \forall r < R(a) \. \exists f  : (-r,r) : F_a \ToU f   }
+	\Assume{\beta}{ (r,R(a)) }
+	\Say{(N,1)}{\bd (1)}{  \sum N \in \Nat \. \forall n \in \Nat : n \ge N \. \sqrt[n]{a_n} < \frac{1}{\beta} }
+	\Assume{x}{\TYPE{In}[-r,r]}
+	\Assume{n}{\Nat}
+	\Assume{(2)}{ n \ge N  }
+	\Conclude{()}{(1)(n)\bd x \ByConstr \beta}{ \big|a_n x^n \big| \le \left( \frac{r}{\beta}  \right)^n  }
+	\Derive{(2)}{I^3(\forall)}{ \forall x \in [-r,r] . \forall n \in \Nat : n \ge N \. \big| a_n x^n| \le 
+		\left( \frac{r}{\beta} \right)^n}
+	\Conclude{(*)}{\THM{ComparissonTest}(2)\THM{InfiniteGeometricSum}(r/\beta)\bd^{-1} F_a}
+	{  F_a \ToU \sum^\infty_{n=0} a_nx^n  }
+	\EndProof
+}
+\newpage
+\section{Applications of Differential Analysis}
+\subsection{Mean Value Theorems}
+\Page{
+	\DeclareType{DifferentiableAtInterval}{\prod [a,b] : \TYPE{ClosediInerval}(\Reals) \. ?C\Big([a,b],\Reals\Big)}
+	\DefineNamedType{f}{DifferentiableAtInterval}{f : [a,b] \to_{\DIFF(\Reals)} \Reals}{ 
+		f_{|(a,b)}  : (a,b)\to_{\DIFF(\Reals)} \Reals   } 
+	\\
+	\Theorem{RolleLemma}{\forall f : C[a,b] : f(a) = f(b) \. \exists x  : \TYPE{Optimizer}(f) : x \in (a,b)}
+	\Say{(x,1)}{\THM{CompactMax}(f)}{ \sum x \in [a,b] \. \forall y \in [a,b] \. |f(x)| \ge |f(y)|}
+	\Assume{(2)}{\forall y \in [a,b] \. f(x) \ge f(y)}
+	\Assume{(3)}{x \in \{a,b\}}
+	\Say{(4)}{(2)(3)\bd f}{\forall y \in [a,b] \. f(a) = f(b) \ge f(x)}
+	\Conclude{()}{\bd^{-1} \arg \min f (4)}{ \arg \min f \in (a,b)}
+	\Derive{(3)}{I(\Rightarrow)I(\exists)(\arg \min f)}{x \in \{a,b\} \Rightarrow \exists y : \TYPE{Optimizer}(f)
+		: y \in (a,b)
+	}
+	\Conclude{()}{\THM{LEM}(x \in \{a,b\})(3)}{\exists y : \TYPE{Optimizer}(f) : y \in (a,b)}
+	\Derive{(2)}{I(\Rightarrow)}{\Big( x : \TYPE{Maximizer}(f) \Rightarrow \LOGIC{This}(f) \Big)}
+	\Assume{(3)}{\forall y \in [a,b] \. f(x) \le f(y)}
+	\Assume{(4)}{x \in \{a,b\}}
+	\Say{(5)}{(3)(4)\bd f}{\forall y \in [a,b] \. f(a) = f(b) \le f(x)}
+	\Conclude{()}{\bd^{-1} \arg \min f (5)}{ \arg \max f \in (a,b)}
+	\Derive{(4)}{I(\Rightarrow)I(\exists)(\arg \max f)}{x \in \{a,b\} \Rightarrow \exists y : \TYPE{Optimizer}(f)
+		: y \in (a,b)
+	}
+	\Conclude{()}{\THM{LEM}(x \in \{a,b\})(3)}{\exists y : \TYPE{Optimizer}(f) : y \in (a,b)}
+	\Derive{(3)}{I(\Rightarrow)}{\Big( x : \TYPE{Minimizer}(f) \Rightarrow \LOGIC{This}(f) \Big)}
+	\Conclude{(*)}{E(|)\bd \TYPE{Optimizer}(x)(2)(3)}{\LOGIC{This}(x)}
+	\EndProof
+	\\
+	\Theorem{LagrangeMeanValueTheorem}{  \forall f : [a,b]  \to_{\DIFF(\Reals)}  \Reals \. 
+		\exists x \in [a,b] : \frac{f(b) - f(a)}{a - b} = f'(x)    }
+	\Say{F}{\Lambda x \in [a,b] \. f(x) - \frac{f(b) - f(a)}{b - a} (x - a)}
+	{   [a,b] \to_{\DIFF(\Reals)} \Reals}
+	\Say{ (x,1) }{\THM{RolleLemma}\ByConstr F }
+	{\sum x \in (a,b) \. x : \TYPE{Optimizer}(F)}
+	\Say{ (2)}{\THM{FirstDerivativeOptimumCriterion}(1) }{F'(x) =  f'(x) - \frac{f(b) - f(a)}{b - a} =  0}
+	\Conclude{(*)}{ -\Big( (2) - f'(x) \Big)}{ \frac{f(b) - f(a)}{b - a} = f'(x)}
+	\EndProof
+}
+\newpage
+\Page{
+	\Theorem{IncreasingByPositiveDerivative}{  
+	   \forall f : [a,b] \to_{\DIFF(\Reals)} \Reals \. \forall (0) : f' > 0 \. f : \TYPE{Increasing}(a,b)
+	}
+	\Assume{x,y}{(a,b)}
+	\Assume{(1)}{ x < y }
+	\Say{(t,2)}{  \THM{LagrandgeMeanValueTHM}(f_{|[x,y]}(0)(t)  }
+	{ \sum t \in (x,y) \. \frac{f(y) -f(x)}{y - x} = f'(t) > 0     }
+	\Conclude{()}{ (2)(y - x) + f(x) }{f(y) > 0}
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{Increasing}I(\forall)I(\Rightarrow)}
+	{
+		\LOGIC{This}(f)
+	}
+	\EndProof
+	\\
+	\Theorem{DecreasingByNegativeDerivative}{  
+	   \forall f : [a,b] \to_{\DIFF(\Reals)} \Reals \. \forall (0) : f' < 0 \. f : \TYPE{Decreasing}(a,b)
+	}
+	\NoProof
+	\\
+	\Theorem{NonDecreasingByNonNegativeDerivative}{  
+	   \forall f : [a,b] \to_{\DIFF(\Reals)} \Reals \. \forall (0) : f' \ge 0 \. f : \TYPE{NonDecreasing}(a,b)
+	}
+	\NoProof
+	\\
+	\Theorem{NonIncreasingByNonPositveDifferential}{  
+	   \forall f : [a,b] \to_{\DIFF(\Reals)} \Reals \. \forall (0) : f' \le 0 \. f : \TYPE{NonIncreasing}(a,b)
+	}
+	\NoProof
+	\\
+	\Theorem{CauchyMeanValueTheorem}{ \forall f,g : [a,b] \to_{\DIFF(\Reals)} \Reals  
+		\. \exists t \in (a,b) \. \big(f(b) - f(a)\big) g'(t) = \big( g(b) - g(a)\big)f'(t)  
+	}
+	\Say{F}{\Lambda x \in [a,b] \. f(x)\big(g(b) -g(a)\big) - g(x)\big(f(b) -f(a) \big) }
+	{
+		[a,b] \xrightarrow{\DIFF(\Reals)} \Reals
+	}
+	\Say{(1)}{\ByConstr F(a)}{F(a) = f(a)g(b) - f(b)g(a)}
+	\Say{(2)}{\ByConstr F(b)}{F(b) = f(a)g(b) - f(b)g(a)}
+	\Say{(x,3)}{\THM{RolleLemma}(1,2)}{\sum x \in (a,b) \. x : \TYPE{Optimizer}(F)}
+	\Conclude{ (*) }{\THM{FirstDerivativeOptimumCriterion}(f)}{
+		0 = f'(t) = f'(x)\big( g(b) - g(a)\big) - g'(x)\big( f(b) - f(a)\big) 
+		}
+	\EndProof
+}
+\newpage
+\subsection{L'hopital Rule}
+\Page{
+	\Theorem{ZeroLhopitalRule}{\forall U : \TYPE{Open} \And \TYPE{Connected}(\Reals) \. 
+		\forall f,g : U \xrightarrow{\DIFF(\Reals)} \Reals \. \forall V : \TYPE{Open}(U) :
+		g'\Big( \dot V  \Big) \neq 0 \.  \NewLine  \NewLine \. \forall a \in \Reals \. \forall L \in \Reals \. 
+		\forall (0) : \lim_{x \to a} f(x) = 0 \And \lim_{x \to a} f(x) = 0 \. \forall
+		(00) : \lim_{x \to a} \frac{f'(x)}{g'(x)} = L \. \lim_{x \to a} \frac{f(x)}{g(x)} = L
+	}
+	\Assume{x,y}{V}
+	\Assume{(1)}{ y > x}
+	\Say{(t,2)}{\THM{CauchyMeanValueTheorem}(f_{[|x,y]},g_{|[x,y]})}{
+		\frac{f(y) - f(x)}{g(y) - g(x)} = \frac{f'(t)}{g'(t)}
+	}
+	\Conclude{()}{(2)\left( 1 - \frac{g(x)}{g(y)}   \right)}
+	{
+		\frac{f'(t)}{g'(t)}\left( 1 - \frac{g(x)}{g(y)} \right)  =  \frac{f(y)}{g(y)} - \frac{f(x)}{g(y)}
+	}
+	\Derive{(1)}{I(\forall)}{\forall x,y \in V : y >  x \. \exists t \in (x,y) :
+		\frac{f'(t)}{g'(t)}\left( 1 - \frac{g(x)}{g(y)} \right)  =  \frac{f(y)}{g(y)} - \frac{f(x)}{g(y)}
+	}
+	\Conclude{(*)}{ (00)(0)\lim_{y \to a} \lim_{x \to a} (1)(x,y)(0)}
+	{
+		L = \lim_{y \to a} \frac{f'(t(y))}{g'(t(y))} = 
+		\lim_{y \to a} \lim_{x \to a} \frac{f'(t)}{g'(t)}\left(  1 - \frac{g(x)}{g(y)}    \right) =
+		\NewLine 
+		=  \lim_{y \to a} \lim_{x \to a} \frac{f(y)}{g(y)} - \frac{f(x)}{g(y)} =
+		\lim_{y \to a} \frac{f(y)}{g(y)}
+	}
+	\EndProof
+	\\
+	\Theorem{InftyLhopitalRule}{\forall U : \TYPE{Open} \And \TYPE{Connected}(\Reals) \. 
+		\forall f,g : U \xrightarrow{\DIFF(\Reals)} \Reals \. \forall V : \TYPE{Open}(U) :
+		g'\Big( \dot V  \Big) \neq 0 \.  \NewLine  \NewLine \. \forall a \in \Reals \. \forall L \in \Reals \. 
+		\forall (0) : \lim_{x \to a} f(x) = \infty \And \lim_{x \to a} f(x) = \infty \. \forall
+		(00) : \lim_{x \to a} \frac{f'(x)}{g'(x)} = L \. \lim_{x \to a} \frac{f(x)}{g(x)} = L
+	}
+	\NoProof	
+}
+\newpage
+\subsection{Analytic Functions[!]}
+\newpage
+\section{Riemann-Stieltjes  Integral}
+\subsection{Riemann Integrable Functions}
+\Page{
+	\DeclareType{RSIntegrable}{ \prod E \in \mathsf{BAN}(K) \. ([a,b]\to \Reals) \to ?\Big( [a,b] \to E   \Big) }
+		\DefineNamedType{f}{RSIntegrable}{ f \in \mathcal{R}\Big([a,b],\varphi\Big)  }
+	{ \Lambda \varphi [a,b] \to \Reals \. 
+		\exists I \in E \. \NewLine \. \forall x : \prod [t,s] : \TYPE{ClosedInterval}[a,b] \. [t,s] \. 
+		\NewLine \.
+		\lim_{(n + 1,t) \in \mathfrak{P}[a,b]} \sum^n_{i=1} f\Big(x[t_i,t_{i + 1}]\Big)
+		\big(\varphi(t_{i+1}) -\varphi(t_i)\big) = I } 
+	\\
+	\DeclareFunc{definiteRSIntegral}{ \mathcal{R}(E)\Big([a,b],\varphi\Big) \to E}
+	\DefineNamedFunc{definiteRSIntegral}{f}{\int^b_a f \mathrm{d}\; \varphi}{\bd \mathcal{R}\Big([a,b],\varphi\Big)(f)}
+	\\
+	\Say{\prod E : \mathsf{BAN}(K) \. \mathcal{R}(E)[a,b]}{
+		\prod E : \mathsf{BAN}(K) \. \mathcal{R}(E)\Big([a,b],\varphi\Big) }
+	{     ?\Big( [a,b] \to E \Big)     }
+	\\
+	\Theorem{RSIntegrableIsBounded}{\forall \varphi : \TYPE{StrictMonotonic}\Big([a,b],\Reals\Big) \. \forall f \in 
+	\mathcal(E)\Big([a,b],\varphi\Big) \. f :  \TYPE{Bounded}\Big([a,b],E\Big)}
+	\Say{I}{\int^b_a f \mathrm{d}\; \varphi}{ \TYPE{In}( E)}
+	\Assume{(1)}{f \IsNot \TYPE{Bounded}}
+	\Assume{P}{\mathfrak{P}[a,b]}
+	\Assume{(n+1,t)}{\TYPE{In}(P)}
+	\Say{(i,2)}{ \bd \TYPE{Bounded}(1)\bd (n + 1,t) \bd P \bd \mathfrak{P}[a,b]}
+	{ \sum i \in n \. \forall \eta \in \Reals_{++} \. \exists x \in [t_i,t_{i+1}] 
+	    \.   \| f(x) \| \ge \eta	}
+	\Say{(3)}{\bd \TYPE{StrictlyMonotonic}(\varphi)(n+1,t)(i)}{ \varphi(t_{i+1}) - \varphi(t_i) }
+	\Conclude{(x,4)}{ \THM{FiniteSelection}\bd \TYPE{Norm} \bd I (2)(3)   }    
+	{ \sum x : \prod [u,v] : \TYPE{ClosedInterval}[a,b] \. [u,v] \. 
+		\NewLine \.
+	\left\|I - \sum^{n}_{i=1} f\Big(x[t_{i},t_{i+1}]\Big)   
+	\big( \varphi(t_{i+1}) - \varphi(t_i) \big)	\right\| > 1 }
+	\Derive{(2)}{\bd^{-1}\FUNC{definiteIntegral}\bd \TYPE{NetLimit}}{ \int^b_a f \mathrm{d} \; \varphi \neq I }
+	\Conclude{(3)}{(2)\bd I}{\bot}
+	\DeriveConclude{(4)}{E(\bot)}{\bigg( f : \TYPE{Bounded}\Big( [a,b],\Reals \Big) \bigg)}
+	\EndProof
+	\\
+	\DeclareType{SummableVariation}{\prod E \in \mathsf{BAN}(K) \. \Big([a,b] \to \Reals\Big) \to 
+		?\Big([a,b] \to E \Big)}
+	\DefineType{f}{SummableVariation}
+	{ \Lambda \varphi : [a,b] \to \Reals \. \lim_{(n+1,t) \in \mathfrak{P}[a,b]} 
+		\sum^n_{i=1} \omega\Big(f, [t_i,t_{i+1}] \Big)\big| \varphi(t_{i+1}) - \varphi(t_i)  \big| = 0 }
+}
+\newpage
+\Page{
+	\Theorem{RiemannIntegrabilityCriterion}{\forall \varphi : [a,b] \to \Reals \. 
+		\forall f : \TYPE{SummableVariation}(E)\Big( [a,b], \varphi \Big) \. 
+		\NewLine \. f \in \mathcal{R}(E)\Big([a,b],\varphi\Big) }
+	\Assume{x}{\prod [t,s] : \TYPE{ClosedInterval}[a,b] \. [t,s]}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(\delta,1)}{\bd \TYPE{SummablleVariation}(f)(\varepsilon)}
+	{
+		\NewLine :
+		\sum \delta \in \Reals_{++} \. \forall (n+1,t) : \delta\hyph \TYPE{Mesh}[a,b] \. 
+		 \sum^n_{i=1} \omega\Big(f, [t_i,t_{i+1}] \Big) \big|  \varphi(t_{i}) - \varphi(t_{i+1}) \big| 
+		 < \varepsilon} 
+	\Assume{(n+1,t),(m+1,s)}{\delta \hyph \TYPE{Mesh}[a,b]}
+	\Say{(k+1,u)}{(n+1,t) \cup (m+1,s)}{\frac{\delta}{2} \hyph \TYPE{Mesh}[a,b] }
+	\Say{(i,2)}{\ByConstr(k+1,u)(n+1,t)}{\sum i : k \to n : \forall l \in k \.   t_{i(l)}\le u_l <  t_{i(l)+1}}
+	\Say{(j,3)}{\ByConstr(k+1,u)(m+1,s)}{\sum j : k \to m : \forall l \in k \.   s_{j(l)}\le u_l <  s_{j(l)+1}}
+	\Conclude{()}{ \bd^{-1}(k+1,u)\THM{DistributiveScalarMult}(E)\THM{TriangleIneq}(E) \THM{AbsHomogen}(E)
+	\NewLine \bd^{-1}\omega(f,\cdot) (1) \Big(\bd (n-1,t)\bd(m+1,s)\Big) 
+	}
+	{
+		\NewLine :
+		\left\| \sum^n_{i=1} f\Big( x[t_i,t_{i+1}] \Big)\big(\varphi(t_{i + 1}) - \varphi(t_i)\big) 
+		- \sum^m_{j=1} f\Big( x[s_j,s_{j+1}] \Big)\big(\varphi(s_{j + 1}) - \varphi(s_j)\big) \right\| 
+		=\NewLine =
+		\left\|  \sum^k_{l=1} f\Big( x[t_{i(l)},t_{i(l) +1}]\Big)\big(\varphi(u_{l+1}) - \varphi(u_l)\big)
+		- \sum^k_{l=1} f\Big( x[s_{j(l)},s_{j(l) +1}]\Big)\big(\varphi(u_{l+1}) - \varphi(u_l)\big) \right\|
+		= \NewLine = 
+		\left\|  \sum^k_{l=1} \bigg( f\Big( x[t_{i(l)},t_{i(l)+1}]\Big) - f\Big( x[s_{j(l)},s_{j(l)+1}]\Big)\bigg)
+		\big(\varphi(u_{l+1}) - \varphi(u_{l})\big) \right\|	
+		\le \NewLine \le   
+		\sum^k_{l=1} \bigg\| f\Big( x[t_{i(l)},t_{i(l)+1}]\Big) - f\Big( x[s_{j(l)},s_{j(l)+1}]\Big)\bigg\|
+		\big|\varphi(u_{l+1}) - \varphi(u_{l})\big|
+		\le \NewLine \le 
+		\sum^k_{l=1} \omega\Big(f, \big[\min(t_{i(l)},s_{j(l)},\max(t_{i(l)+1},s_{j(l)})\big]\Big)
+		\big|\varphi(u_{l+1}) - \varphi(u_l)  \big| < \varepsilon
+	}
+	\DeriveConclude{(*)}{\bd^{-1} \mathcal{R}(E)\Big( [a,b],\varphi \Big)  
+		\bd \TYPE{Complete}(E)\bd^{-1}\TYPE{NetCauchy}(E)}
+		{f \in \mathcal{R}(E)\Big([a,b],\varphi\Big)}
+	\EndProof
+}\Page{
+	\Theorem{ContinuousIsRiemannIntegrable}{\forall f \in C\Big([a,b],E\Big) \. f \in \mathcal{R}\Big([a,b],E\Big) }
+	\Say{ (1)   }{\THM{CompactUCCriterion}(\bd f)}{\bigg( f : UC\Big( [a,b], E \Big) \bigg)}
+	\Assume{\varepsilon}{\Reals}
+	\Say{(\delta,2)}{\bd \TYPE{UC}(f,1)\left( \frac{\varepsilon}{b-a} \right) }
+	{ \sum \delta \in \Reals_{++} \. \forall x,y \in [a,b] : | x - y| < \delta \. 
+		\left\| f(x) - f(y) \right\| < \frac{\varepsilon}{b-a}  }
+	\Assume{(n+1,t)}{\delta\hyph\TYPE{Mesh}[a,b]}
+	\Conclude{()}{ (2)(\bd \TYPE \delta\hyph\TYPE{Mesh})\THM{DistributiveScalarMult}(E)   }
+	{
+		\NewLine :
+		\sum^n_{i=1} \omega\Big( f,[t_i,t_{i+1}] \Big)( t_{i+1} - t_i ) <
+		\frac{\varepsilon}{b-a} \sum^n_{i=1} t_{i+1} - t_i = 
+		\frac{\varepsilon(b-a)}{b- a} = \varepsilon 
+	}
+	\Derive{(2)}{\bd^{-1} \TYPE{SummableVariation}}{\Big( f : \TYPE{SummableVariation}\big([a,b],\mathrm{id}\big)\Big)}
+	\Conclude{(*)}{\THM{RiemannIntegrabilityCriterion}(2)}
+	{
+		f \in \mathcal{R}\Big([a,b],E\Big)
+	}
+	\EndProof
+	\\
+	\Theorem{MonotonicIsRiemannIntegrable}{\forall f : \TYPE{Monotonic}\Big([a,b],\Reals \Big) \. 
+		\forall \varphi \in C\Big([a,b], \Reals \Big) \. f \in \mathcal{R}(\Reals)\Big([a,b], \varphi \Big) \.  
+		}
+	\Say{ (1)   }{\THM{CompactUCCriterion}(\bd \varphi)}{\bigg( \varphi : UC\Big( [a,b], \Reals \Big) \bigg)}
+	\Assume{\varepsilon}{\Reals}
+	\Say{(\delta,2)}{\bd \TYPE{UC}(\varphi,1)\left( \frac{\varepsilon}{f(b)-f(a)} \right) }
+	{ \sum \delta \in \Reals_{++} \. \forall x,y \in [a,b] : | x - y| < \delta \. 
+		| \varphi(x) - \varphi(y) | < \frac{\varepsilon}{f(b)-f(a)}  }
+	\Assume{(n+1,t)}{\delta\hyph\TYPE{Mesh}[a,b]}
+	\Conclude{()}{(2)(\bd \TYPE \delta\hyph\TYPE{Mesh})\THM{DistributiveScalarMult}(E) 
+		\bd \omega(f,\cdot) \bd \TYPE{Monotonic}(f)
+	}
+	{ 
+		\NewLine :
+		\sum^n_{i=1} \omega\Big( f,[t_i,t_{i+1}] \Big)( \varphi(t_{i+1}) - \varphi(t_i) ) <
+		\frac{\varepsilon}{f(b)-f(a)} \sum^n_{i=1} t_{i+1} - t_i = 
+		\frac{\varepsilon(f(b)-f(a))}{f(b)- (a)} = \varepsilon 
+	}
+	\Derive{(2)}{\bd^{-1} \TYPE{SummableVariation}}{\Big( f : \TYPE{SummableVariation}\big([a,b],\varphi \big)\Big)}
+	\Conclude{(*)}{\THM{RiemannIntegrabilityCriterion}(2)}
+	{
+		f \in \mathcal{R}(\Reals)\Big([a,b],\varphi \Big)
+	}
+	\EndProof
+	\\
+	\Theorem{RiemannIntegrableFormVS}{\forall E \in \mathsf{BAN}(k) \. \forall 
+		[a,b] : \Type{ClosedInterval}(\Reals) \. \forall \varphi : [a,b] \to \Reals \.
+		\NewLine :
+		\mathcal{R}(E)\Big( [a,b],\varphi\Big) \in \mathsf{VS}(k)	
+	}
+	&\text{Follows from continuity of addition and scalar multiplication in $E$.}\\
+	\EndProof
+	\\
+	\Theorem{RiemannIntegralIsFunctional}{\forall E \in \mathsf{BAN}(k) \. \forall 
+		[a,b] : \Type{closedinterval}(\Reals) \. \forall \varphi : [a,b] \to \Reals \.
+		\NewLine :
+		\FUNC{definiteRSInegral} : \mathcal{R}(E)\Big([a,b],\varphi\Big) 
+		 \xrightarrow{ \mathsf{VS}(k)} 	E
+	}
+	&\text{Follows from continuity of addition and scalar multiplication in $E$.}\\
+	\EndProof
+	\\
+}
+\newpage
+\subsection{Darbuex Lore}
+\Page{
+	\Say{\mathcal{R}\Big([a.b],\varphi\Big)}{\mathcal{R}(\Reals)[a,b]}{ ?\Big( [a,b] \to \Reals \Big)}
+   	\\
+	\DeclareFunc{lowerDarbuexSum}{ \prod [a,b] : \TYPE{ClosedInerval}(\Reals) \.   
+		\TYPE{NonDecreasing}\Big([a,b],\Reals\Big) \to \Big([a,b] \to \Reals\Big) \to 
+		 \NewLine
+		 \to \TYPE{Mesh}[a,b] \to \Reals
+	}
+	\DefineNamedFunc{lowerDarbuexSum}{\varphi,f,(n+1,t)}{s\Big(\varphi,f,(n+1,t) \Big)}
+	{ \sum^n_{i=1} \inf_{x \in [t_i,t_{i+1}]} f(x) \big(\varphi(t_{i+1}) - \varphi(t_{i})\big) }
+	\\
+	\DeclareFunc{upperDarbuexSum}{ \prod [a,b] : \TYPE{ClosedInerval}(\Reals) \.   
+		\TYPE{upperDecreasing}\Big([a,b],\Reals\Big) \to \Big([a,b] \to \Reals\Big) \to 
+		 \NewLine
+		 \to \TYPE{Mesh}[a,b] \to \Reals
+	}
+	\DefineNamedFunc{LowerDarbuexSum}{\varphi,f,(n+1,t)}{S\Big(\varphi,f,(n+1,t) \Big)}
+	{ \sum^n_{i=1} \sup_{x \in [t_i,t_{i+1}]} f(x) \big(\varphi(t_{i+1}) - \varphi(t_{i})\big) }
+	\\
+	\Theorem{LowerDarbuexLemmaI}{\forall [a,b] : \TYPE{ClosedInterval}(\Reals) \. 
+		\varphi : \TYPE{NonDecreasing}\Big( [a,b] \Big) \. \forall f : [a,b] \to \Reals \. 
+		\NewLine \.
+		\forall (n+1,t) : \TYPE{Mesh}\big([a,b]\big) \.
+		s\Big(\varphi, f, (n+1,t)\Big) = 
+		 \NewLine =  \inf \left\{\sum^n_{i=1} f\Big(x[t_i,t_{i+1}]\Big)\big(\varphi(t_{i+1}) - \varphi(t_i)\big) 
+		  \bigg|x : \prod [u,v] : \TYPE{ClosedInterval}[a,b] \. [u,v] \right\}      
+		}
+	& \text{Trivially, compute infimums.}\\
+	\EndProof
+	\\
+	\Theorem{UpperDarbuexLemmaI}{\forall [a,b] : \TYPE{ClosedInterval}(\Reals) \. 
+		\varphi : \TYPE{NonDecreasing}\Big( [a,b] \Big) \. \forall f : [a,b] \to \Reals \. 
+		\NewLine \.
+		\forall (n+1,t) : \TYPE{Mesh}\big([a,b]\big) \.
+		S\Big(\varphi, f, (n+1,t)\Big) = 
+		 \NewLine =  \sup \left\{\sum^n_{i=1} f\Big(x[t_i,t_{i+1}]\Big)\big(\varphi(t_{i+1}) - \varphi(t_i)\big) 
+		  \bigg|x : \prod [u,v] : \TYPE{ClosedInterval}[a,b] \. [u,v] \right\}      
+		}
+	& \text{Trivially, compute supremums.}\\
+	\EndProof
+	\\
+	\Theorem{DarbuexIneq}{\forall [a,b] : \TYPE{ClosedInterval}(\Reals) \. 
+		\varphi : \TYPE{NonDecreasing}\Big( [a,b] \Big) \. \forall f : [a,b] \to \Reals \. 
+		\NewLine \. 
+		\forall P,Q : \TYPE{Mesh}[a,b] \. 
+		s(\varphi, f, P ) \le S(\varphi,f , Q )
+		}
+	\Say{R}{P \cap Q}{\TYPE{Mesh}[a,b]}
+	\Conclude{(*)}{ \bd s(\varphi,f,\cdot) \bd S(\varphi,f,\cdot)    }
+	{  s(\varphi,f,P) \le s(\varphi,f,R) \le S(\varphi,f,R) \le s(\varphi,f,Q)    }
+}\Page{
+	\Theorem{lowerDarbuexLemmaII}{\forall [a,b] : \TYPE{ClosedInterval}(\Reals) \. 
+		\forall \varphi : C \And \TYPE{Increasing}
+		\Big( [a,b], \Reals  \Big) \. 
+		\NewLine \.
+		\forall f : \TYPE{Bounded}\Big( [a,b],\Reals \Big) \.
+		\lim_{P \in \mathfrak{P}[a,b]} s(f,\varphi,P) = 
+			\lim_{\varepsilon \to 0} \sup \Big\{ s(\varphi,f,P) | P : \varepsilon \hyph \TYPE{Mesh}[a,b] \Big\} 
+	}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Assume{ P  }{\varepsilon \hyph \TYPE{Mesh}}
+	\Conclude{()}{\bd s(\varphi,f, P)}{  \sup_{x \in [a,b]} f(x)\big( \varphi(b) - \varphi(a) \big)
+		\ge  s(\varphi,f,P) \ge \inf_{x \in [a,b]} f(x)\big(\varphi(b) - \varphi(a)\big)   }
+	\Derive{(1)}{\bd^{-1}\TYPE{Bounded}}{ 
+		\Big( s(\varphi,f,P) : \TYPE{Bounded}(\Reals)    \Big)
+	}
+	\Conclude{m(\varepsilon)}{ \sup \Big\{ s( \varphi,f, P ) | P : \varepsilon \hyph \TYPE{Mesh}[a,b]  \Big\}}{\Reals}
+	\Derive{m}{I(\to)}{\Reals_{++} \to \Reals}
+	\Say{(2)}{\bd m\bd \FUNC{supremum}}{ \Big( m : \TYPE{Increasing} \Big) \And 
+		m \ge \inf_{x \in [a,b]} f(x)\Big( \varphi(b) - \varphi(a)   \Big) }
+	\Say{\underline{I}}{\lim_{\varepsilon \to 0} m(\varepsilon)}{\Reals}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(P,3)}{ \bd \underline{I}\left( \frac{\varepsilon}{2} \right)}
+	{ \sum (t,(n+1)) : \TYPE{Mesh}[a,b] \. \underline{I} - s\Big(\varphi,f, (t,n-1)\Big) < \frac{\varepsilon}{2}  }
+	\Say{(\delta,4)}{\bd^{-1} UC(\varphi)\left( \frac{\varepsilon}{2n\omega\Big(f, [a,b] \Big) } \right)}
+	{
+		\sum \delta \in \Reals \.  \forall x,y \in [a,b] \. 
+		| \varphi(x) - \varphi(y)| < \frac{\varepsilon}{2n\omega\Big(f,[a,b]\Big)}
+	}
+	\Say{\lambda}{\min_{i \in n} t_{i+1} - t_i}{ \Reals_{++}}
+	\Say{r}{\min( \lambda, \delta)}{\Reals_{++}}
+	\Assume{Q}{r\hyph\TYPE{Mesh}[a,b]}
+	\Conclude{()}{\bd s(f,\varphi,Q)\ByConstr r\bd Q (3)(4)}{\underline{I} - s(f,\varphi,Q) < \varepsilon}
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{NetLimit}}
+	{ \lim_{P \in \mathfrak{P}[a,b]} S(\varphi,f,P) = \underline{I} }
+	\EndProof
+	\\
+	\Theorem{lowerDarbuexLemmaII}{\forall [a,b] : \TYPE{ClosedInterval}(\Reals) \. 
+		\forall \varphi : C \And \TYPE{Increasing}
+		\Big( [a,b], \Reals  \Big) \. 
+		\NewLine \.
+		\forall f : \TYPE{Bounded}\Big( [a,b],\Reals \Big) \.
+		\lim_{P \in \mathfrak{P}[a,b]} S(f,\varphi,P) = 
+			\lim_{\varepsilon \to 0} \inf \Big\{ S(\varphi,f,P) | P : \varepsilon \hyph \TYPE{Mesh}[a,b] \Big\} 
+	}
+	\NoProof
+	\\
+	\DeclareFunc{lowerDarbuexIntegral}{\prod [a,b] : \TYPE{ClosedInterval}(\Reals) \. \NewLine \.  
+		 \TYPE{NonDecreasing}\Big([a,b],\Reals\Big) \to \TYPE{Bounded}\Big( [a,b],\Reals \Big) \to
+		 \Reals
+	}
+	\DefineNamedFunc{lowerDarbuexIntegral}{\varphi, f}{\underline{I}(\varphi,f)}{  
+	 \lim_{P \in \mathfrak{P}[a,b]} s( \varphi,f, P) 
+	}
+	\\
+	\DeclareFunc{upperDarbuexIntegral}{\prod [a,b] : \TYPE{ClosedInterval}(\Reals) \. \NewLine \.  
+		 \TYPE{NonDecreasing}\Big([a,b],\Reals\Big) \to \TYPE{Bounded}\Big( [a,b],\Reals \Big) \to
+		 \Reals
+	}
+	\DefineNamedFunc{upperDarbouxIntegral}{\varphi, f}{\overline{I}(\varphi,f)}{  
+	 \lim_{P \in \mathfrak{P}[a,b]} S( \varphi,f, P) 
+	}
+}\Page{
+	\Theorem{DarbuexCriterion}{\forall [a,b] : \TYPE{ClosedInterval}(\Reals) \. 
+	 	\forall \varphi \in C \And \TYPE{Increasing}(\Reals) \.  
+	 	\forall f :  [a,b] \to \Reals \. 
+      		\NewLine 
+		f \in \mathcal{R}\Big(  [a,b], \varphi \Big) \iff \overline{I}(\varphi,f) = \underline{I}(\varphi,f)
+	}
+	\Assume{R}{\overline{I}(\varphi,f) = \underline{I}(\varphi,f)}
+	\Assume{(n+1,t)}{ \TYPE{Mesh}[a,b]   }
+	\Conclude{()}{\bd \FUNC{infimum} \bd \FUNC{supremum}
+		\THM{LowerDarbuexLemmaI} \otimes \THM{UpperDarbuexLemmaII}\Big([a,b],\varphi,f,(n+1,t)\Big) }
+	{ \NewLine : 
+		\forall x : \prod [u,v] : \TYPE{ClosedInterval}[a,b] \. [u,v] \. \NewLine \. 
+		  s\Big( \varphi, f, (n+1,t)   \Big) \le \sum^n_{i=1} f\Big( x[t_{i},t_{i+1}]\Big)\big(\varphi(t_i)  
+		  - \varphi(t_{i+1}) \big)  \le S\Big( \varphi,f (n+1,t)\Big)                             
+	}
+	\DeriveConclude{()}{ \bd^{-1} \FUNC{definiteRSintegral}R\THM{DoubleIneqLimit}I(\forall)}
+	{
+		\int^b_a f \; \mathrm{d}   \varphi = \underline{I}(\varphi, f)
+	}
+	\Derive{R}{I(\Leftarrow)}{\LOGIC{Left} \Leftarrow  \LOGIC{Right} }
+	\Assume{L}{f \in \mathcal{R}\Big([a,b],\varphi\Big)}
+	\Assume{\varepsilon}{\Reals_++}
+	\Say{(\delta_0,1)}{\bd \mathcal{R}\Big( [a,b], \varphi \Big)(f)\left( \frac{\varepsilon}{4} \right) }
+	{ \sum \delta_0 \in \Reals_{++} \. \forall (n+1,t,x) : \delta_0 \hyph \TYPE{PointedMesh}
+		\. \left| \sum^n_{i=1} f(x_i)\big( \varphi(t_{i+1}) - \varphi(t_{i+1}) \big) 
+			- \int^b_a f \; \mathrm{d} \varphi \right| < \frac{\varepsilon}{4}
+	}
+        \Say{(\delta_-,2)}{\bd \underline{I}(  \varphi, f )\left( \frac{\varepsilon}{6} \right) }
+	{ \NewLine :\sum \delta_- \in \Reals_{++} \. \forall P : \delta_- \hyph \TYPE{Mesh}[a,b]
+		\. \left| \underline{I}(\varphi,f) - s ( \varphi, f, P) \right| < \frac{\varepsilon}{6}
+	}
+	\Say{(\delta_+,3)}{\bd \overline{I}(\varphi,f)\left( \frac{\varepsilon}{6} \right) }
+	{ \sum \delta_+ \in \Reals_{++} \. \forall P : \delta_+ \hyph \TYPE{Mesh}[a,b]
+		\. \left| \overline{I}(\varphi,f) - S(\varphi,f,P) \right| < \frac{\varepsilon}{6}
+	}
+	\Say{\delta}{\min(\delta_-,\delta_0,\delta_+)}{\Reals_{++}}
+	\Assume{(n+1,t)}{\delta \hyph \TYPE{Mesh}[a,b]}
+	\Say{(x,4)}{\bd \FUNC{infimum}\bd s\Big(\varphi,f,(n+1,t)\Big)\left(\frac{\varepsilon}{6}\right)}
+	{ \NewLine : \sum x : \prod i \in n \. [t_i,t_{i+1}] \. 
+		\left| s\Big( \varphi,f,(n+1,t)\Big) - \sum^n_{i=1} f(x_i)\big( \varphi(t_{i+1}) - \varphi(t_{i+1})\big) 
+		\right|< \frac{\varepsilon}{6}
+	}
+	\Say{(y,5)}{\bd \FUNC{supremum}\bd S\Big(\varphi,f,(n+1,t)\Big)\left(\frac{\varepsilon}{6}\right)}
+	{ \NewLine : \sum y : \prod i \in n \. [t_i,t_{i+1}] \. 
+		\left| S\Big( \varphi,f,(n+1,t)\Big) - \sum^n_{i=1} f(y_i)\big( \varphi(t_{i+1}) - \varphi(t_{i+1})\big) 
+		\right|  < \frac{\varepsilon}{6}
+	}
+	\Conclude{()}{\THM{TriangleIneq}(1)(2)(3)(4)(5)\ByConstr \delta \bd (n+1,t) \bd x \bd y}
+	{ | \underline{ I}(\varphi,f) - \overline{I}(\varphi,f) | \le \NewLine \le
+		\bigg| \underline{I}(\varphi,f) - s\Big( \varphi, f, (n+1,t) \Big)     \bigg| + 
+		\left|  s\Big( \varphi ,f , (n+1,t) \Big) - \sum^n_{i=1} f(x_i)\big(\varphi(t_{i+1}) - \varphi(t_i)\big)\right|
+		+\NewLine 
+		+\left| \sum^n_{i=1} f(x_i)\big(\varphi(t_{i+1}) - \varphi(t_i)\big) - \int^b_a f \; \mathrm{d}\varphi \right|+
+		\left| \sum^n_{i=1} f(y_i)\big(\varphi(t_{i+1}) - \varphi(t_i)\big) - \int^b_a f \; \mathrm{d}\varphi \right|+
+		\NewLine +
+		\left|  S\Big( \varphi, f, (n+1,t) \Big) - \sum^n_{i=1} f(y_i)\big(\varphi(t_{i+1}) - \varphi(t_i)\big)\right|
+		+\bigg| \overline{I}(\varphi,f) - S\Big( \varphi, f, (n+1,t) \Big)     \bigg| < \varepsilon
+	}
+	\DeriveConclude{()}{ \bd_1 \TYPE{AbsValue}(\FUNC{absValue}(\Reals)) \lim_{\varepsilon \to 0} I(\forall)}
+	{ \underline{I}(\varphi,f) = \overline{I}(\varphi,f) }
+	\DeriveConclude{(*)}{  I(\iff ) R I(\Rightarrow)}{\LOGIC{This}}
+	\EndProof
+}\Page{
+	& \varphi : C \And \TYPE{Increasing}\Big([a,b], \Reals \Big) \\
+	\\
+	\Theorem{RiemannIntegrableHaveSummableVariation}{
+		\forall f \in \mathcal{R} \Big([a,b],\varphi \Big) \.  
+		f : \TYPE{SummableVariation}(\Reals)\Big([a,b], \varphi \Big)}
+	\Say{I}{\int^b_a f \mathrm{d} \; \varphi }{\Reals}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(\delta_-,1)}{\THM{DarbuexCriterion}(f)\bd \underline{I}\left( \frac{\varepsilon}{2} \right)  }
+	{\exists \delta_- \in \Reals_{++} \. \forall P : \delta_- \hyph \TYPE{Mesh}[a,b] \. 
+		\left| \int^b_a f \; \mathrm{d} \varphi  - s( \varphi, f, P)     \right| < \frac{\varepsilon}{2}
+	}
+	\Say{(\delta_+,2)}{\THM{DarbuexCriterion}(f)\bd \overline{I}\left( \frac{\varepsilon}{2} \right)  }
+	{\exists \delta_+ \in \Reals_{++} \. \forall P : \delta_+ \hyph \TYPE{Mesh}[a,b] \. 
+		\left| \int^b_a f \; \mathrm{d} \varphi  - S( \varphi, f, P) \right| < \frac{\varepsilon}{2}
+	}
+	\Say{\delta}{\min(\delta_-,\delta_+)}{\Reals_{++}}
+	\Assume{(n+1,t)}{\delta \hyph \TYPE{Mesh}[a,b]}
+	\Conclude{()}{\bd \omega(f,\cdot) \bd^{-1} S\Big( \varphi,f,(n+1,t) \Big) 
+		\bd^{-1} s\Big(\varphi, f,(n+1,t) \Big) \ByConstr(\delta)\bd (n+1,t)(1)(2) }
+	{ \NewLine :
+		\sum^n_{i=1} \omega\Big(f, [t_i,t_{i+1}]\Big)( \varphi(t_i) - \varphi(t_{i+1}) ) =
+		S\Big( \varphi,f,(n+1,t) \Big) - s\Big( \varphi,f, (n+1,t) \Big) < \varepsilon
+	}
+	\Derive{(1)}{\bd^{-1} \TYPE{NetLimit} I(\forall)I(\exists)(\delta)I(\forall)}{
+		\lim_{(n+1,t) \in \mathfrak{P}[a,b]}
+		\sum^n_{i=1} \omega\Big(f, [t_i,t_{i+1}]\Big)( \varphi(t_i) - \varphi(t_{i+1}) ) = 0
+	}
+	\Conclude{(*)}{\bd^{-1}\TYPE{SummableVariation}}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{ConctractionIsIntegrable}{\forall f \in \mathcal{R}\Big( [a,b], \varphi  \Big)
+	 \. \forall [c,d] : \TYPE{ClosedInterval}[a,b] \. f_{|[c,d]} \in \mathcal{R}\Big( [c,d], \varphi \Big)
+	}
+	&  \text{ Sums of variations of contraction can be bounded by sums of variations of $f$.}    \\
+	\EndProof
+	\\
+	\Theorem{AbsValIsIntegrable}{\forall f \in \mathcal{R}\Big( [a,b], \varphi  \Big)
+	 \.  |f|_{|[c,d]} \in \mathcal{R}\Big( [c,d], \varphi \Big)
+	}
+	&  \text{ Sums of variations of absolute values can be bounded by sums of variations of $f$.}    \\
+	\EndProof
+	\\
+	\Theorem{SquareIsIntegrable}{\forall f \in \mathcal{R}\Big( [a,b], \varphi \Big) \.  
+	     f^2 \in \mathcal{R}\Big( [a,b], \varphi \Big)  
+	}
+	& \text{ Use estimate for variation} \\
+	& \omega\Big(f^2, A\Big) = \sup_{x,y \in A} \| f^2(x) - f^2(y) \| = 
+		\sup_{x,y \in A} \Big\| \big(f(x) + f(y)\big)\big(f(x) - f(y) \big) \Big\| \le
+		2 \| f \|_\infty \sup_{x,y \in A}\big| f(x) - f(y)  \big| = 
+		\NewLine = 
+		2 \| f \|_\infty \omega(f,A)
+	\\
+	\EndProof
+}
+\newpage
+\Page{
+	\Theorem{RiemannIntegrableFormAlgebra}
+	{  \mathcal{R}\Big( [a,b], \varphi \Big) : \TYPE{Algebra}(\Reals) }
+	& \text{Use representation for $f,g \in \mathcal{R}\Big([a,b],\varphi\Big)$} \\
+	&   fg = \frac{(f + g)^2 - (f - g)^2}{4} \\ 
+	\EndProof
+	\\
+	\Theorem{IntegralDecomposition}
+	{ \forall f \in \mathcal{R}\Big( [a,b], \varphi \Big) \. \forall c \in [a,b] \.                 
+		\int^b_a f \; \mathrm{d} \varphi = \int^c_a f \; \mathrm{d} \varphi + \int^b_c f \; \mathrm{d} \varphi 
+	}
+        & \int^b_a f\; \mathrm{d} \varphi  = \int^b_a I_{[a,c]}f + I_{[c,b]}f \; \mathrm{d} \varphi  = 
+	\int^b_a I_{[a,c]} f \; \mathrm{d} \varphi + \int^b_a I_{[c,b]}f \mathrm{d} \varphi = 
+	\int^c_a f \; \mathrm{d} \varphi + \int^b_c f \; \mathrm{d} \varphi \\
+	\EndProof
+	\\
+	\DeclareFunc{inverseIntegral}{\mathcal{R}\Big([a,b],\varphi\Big) \to \TYPE{ClosedInterval}[a,b] \to \Reals}
+	\DefineNamedFunc{inverseIntegral}{ f, [c,d]  }{\int^d_c f \; \mathrm{d} \varphi}
+	{ - \int^c_d f \; \mathrm{d} \varphi  }
+	\\
+	\DeclareFunc{generalAntiderivative}{\mathcal{R}\Big([a,b],\varphi\Big) \to [a,b] \to \Reals}
+	\DefineNamedFunc{generalAntiderivative}{f}{\int f}{\Lambda x \in [a,b] \. \int^x_a f \; \mathrm{d} \varphi}
+}
+\newpage
+\subsection{Integral Estimates }
+\Page{
+	\Theorem{IntegralIsMonotonic}{\forall f,g \in \mathcal{R}\Big([a,b], \varphi \Big)  \. \forall (0) : f \le g \. 
+		\int^b_a f \; \mathrm{d}\varphi \le \int^b_a g \; \mathrm{d}\varphi 
+	}
+	& \text{For every pointed mesh $(n+1,t,x)$  it holds} \\
+	& \sum^n_{i=1} f(x_i)\big( \varphi(t_{i+1}) - \varphi(t_i) \big) \le 
+		\sum^n_{i=1} g(x_i)\big( \varphi(t_{i+1})- \varphi(t_i) \big), \\
+	& \text{and taking limit over $\mathfrak{P}[a,b]$ delievers the result.} \\
+	\EndProof
+	\\
+	\Theorem{IntegralTriangleIneq}{\forall f \in \mathcal{R}\Big([a,b],\varphi\Big)  \.
+		\left| \int^b_a f \; \mathrm{d}\varphi \right| \le \int^b_a |f| \; \mathrm{d} \varphi
+	}
+	& \text{For every pointed mesh $(n+1,t,x)$  it holds} \\
+	& \left|\sum^n_{i=1} f(x_i)\big( \varphi(t_{i+1}) - \varphi(t_i) \big) \right| \le 
+		\sum^n_{i=1} \Big|f(x_i)\Big|\big( \varphi(t_{i+1})- \varphi(t_i) \big), \\
+	& \text{and taking limit over $\mathfrak{P}[a,b]$ with continuity of $|\cdot|$ delievers the result.} \\
+	\EndProof
+	\\
+	\Theorem{BasicIntegralEstimate}{\forall f \in \mathcal{R}\Big([a,b],\varphi\Big) \. 
+		\NewLine \.
+		\left(\inf_{x \in [a,b]} f(x) \right)(\varphi(b) - \varphi(a)) \le \int^b_a f \; \mathrm{d}\varphi \le 
+		\left(\sup_{x \in [a,b]} f(x)\right)(\varphi(b) - \varphi(a))
+	}
+	& \text{By definition of infimum and supremum} \\
+	& \inf_{x \in [a,b]} f(x) \le f \le \sup_{x \in [a,b]} f(x), \\
+	& \text{So by $\THM{IntegralMonotonic}$ this estimte holds. } \\
+	\EndProof
+	\\
+	\Theorem{BasicMeanValueIntegral}{\forall f \in \mathcal{R}\Big([a,b],\varphi\Big) \. 
+	 \exists \mu \in \left[ \inf_{x \in [a,b]} f(x), \sup_{x \in [a,b]} f(x) \right] \. 
+	 \int^b_a f \; \mathrm{d}\varphi = \mu\big( \varphi(b) - \varphi(a) \big) 
+	}
+	&  \mu = \frac{1}{\varphi(b) -\varphi(a)} \int^b_a f \; \mathrm{d}\varphi \\
+	& \text{By  $\THM{BasicIntegralEstimate} \quad \mu \in 
+		\left[ \inf_{x \in [a,b]} f(x),\sup_{x \in [a,b]} f(x) \right]$} \\
+	\EndProof
+}\Page{
+	\Theorem{ContBasicMeanValueIntegral}{\forall f \in C[a,b] \. \exists  x \in [a,b] \. 
+		\int^b_a f \; \mathrm{d}\varphi = f(x)\big( \varphi(b) - \varphi(a)\big)
+	}
+	& \text{By $\THM{IntermidiateValueTHM}$ there exists $x : f(x) = \mu$, where $\mu$
+	selected as in the privious theorem. 
+	}\\
+	\EndProof
+	\\
+	\Theorem{MeanValueIntegralI}{\forall f,g \in \mathcal{R}\Big([a,b],\varphi\Big) \. 
+		\forall (0) : g \ge 0 \. \exists \mu \in \left[ \inf_{x \in [a,b]} f(x),\sup_{x \in [a,b]} f(x) \right]
+		: \NewLine : \int^b_a fg \mathrm{d}\varphi  = \mu \int^b_a g \mathrm{d} \varphi 
+	}
+	& \text{By initial assumptions} \\
+	&  \inf_{x \in [a,b]} f(x)g \le fg \le \sup_{x \in [a,b]} f(x)g, \\
+	& \text{then the proof follows as with the basic estimate.} \\
+	\EndProof
+	\\
+	\Theorem{ContMeanValueIntegralI}{\forall g \in \mathcal{R}\Big([a,b],\varphi\Big) \. 
+		\forall f \in C[a,b] \. 
+		\forall (0) : g \ge 0 \. \exists x \in \left[ a,b  \right]
+		: \NewLine : \int^b_a fg \mathrm{d}\varphi  = f(x) \int^b_a g \mathrm{d} \varphi 
+	}
+	\NoProof
+	\\
+	\Theorem{AbelTransform}{\forall a,b : \Nat \to \Reals \. \forall n \in \Nat \.
+	  \sum^n_{i=1} a_ib_i = b_n S_n(a)  + \sum^{n-1}_{i=i} S_i(a)( b_{i} - b_{i+1})
+	}
+	\Conclude{(*)}{\bd \FUNC{sum}\bd^{-1}S_1(a)}
+	{  	\NewLine :
+		\sum^n_{i=1} a_ib_i =  \sum^n_{i=1} \Big(S_i(a) - S_{i-1}(a)\Big)b_i 
+		= \sum^n_{i=1} S_i(a) b_i - \sum^{n-1}_{i=1} S_i(a)b_{i+1}    
+		= S_n(a) b_n   + \sum^{n-1}_{i=1} S_i(a)(b_i - b_{i+1})
+	}
+	\EndProof
+	\\
+	\Theorem{AbelTransformIneq}{\forall a,b : \Nat \to \Reals \. 
+		\forall m,M \in \Reals \. \forall (0)  : \forall n \in \Nat \. m \le S_n(a) \le M \. 
+			\NewLine \.
+		\forall (00) : b \ge 0 \. \forall (000) : \Big( b : \TYPE{NonIncreaisng} \Big) \.
+		\forall n \in \Nat \, b_1m \le \sum^n_{i=1} a_ib_i \le b_1 M
+		}
+		\Say{(1)}{ \THM{AbelTransform}(0)(00)(000)(M)\bd \TYPE{Distributive}(\FUNC{mult}(\Reals))  }
+		{ \NewLine:
+			\sum^n_{i=1} a_i b_i = S_n(a)b_n + \sum^{n-1}_{i=1} S_i(a)( b_i - b_{i+1}) 
+		 \le  Mb_n + \sum^{n=1}_{i=1} Mb_i  = Mb_1
+		}
+		\Say{(2)}{ \THM{AbelTransform}(0)(00)(000)(m)\bd \TYPE{Distributive}(\FUNC{mult}(\Reals))  }
+		{ \NewLine:
+			\sum^n_{i=1} a_i b_i = S_n(a)b_n + \sum^{n-1}_{i=1} S_i(a)( b_i - b_{i+1}) 
+		 \ge  mb_n + \sum^{n=1}_{i=1} mb_i  = mb_1
+		}
+		\EndProof
+}\Page{
+	\Theorem{ContinuousAntiderivative}
+	{
+		\forall f \in \mathcal{R}[a,b] \. \int f \in C[a,b]
+	}
+	\Assume{x}{\TYPE{In}(a,b)}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{\delta}{\min\left(\frac{\varepsilon}{\| f \|_\infty}, x - a, b - x \right)}{\Reals_{++}}
+	\Assume{h}{\TYPE{In}(-\delta,\delta)}
+	\Conclude{()}{
+		\bd \FUNC{generalAntiderivative}(f)\THM{IntegralDecomposition} \; \THM{IntegralTriangleIneq}
+		\NewLine \THM{BasicIntegralEstimate}(|f |)\bd h \ByConstr \delta
+		}
+	{ \NewLine : 
+	  \left| \int f(x)  - \int f(x + h) \right| = 
+	  \left|  
+		\int_a^x f(x) \; \mathrm{d}x - \int_a^{x + h} f(x) \; \mathrm{d}x
+	  \right|   =
+	  \left| \int_{x}^{x + h} f(x) \; \mathrm{d}x  \right| \le 
+	  \NewLine \le
+	  \left| \int_x^{x + h} |f|(x) \mathrm{d}x \right| \le \|f\|_\infty|h| < \varepsilon
+	}
+	\Derive{(*)}{ \bd^{-1} C[a,b]  }{\left(  \int f \in C[a,b] \right)}
+	\EndProof
+	\\
+	\Theorem{IntegralMeanValueLemma}{   
+		\forall f,g \in \mathcal{R}[a,b] \. \forall
+		(0) : g > 0 \. \forall g : \TYPE{NonDecreasing} \. \exists x \in [a,b] \.
+		\NewLine \. 
+		\int^b_a f(x)g(x) \; \mathrm{d}x = g(a)\int^x_a f(x) \; \mathrm{d}x
+	}
+	\Assume{(n+1,t)}{\TYPE{Mesh}[a,b]}
+	\Conclude{ () }{\THM{RiemannIntegralIsFunctional}(f)\THM{IntegralDecomposition}\Big(f,(n+1,t)\Big)}
+	{  
+	    \NewLine
+	    \int^b_a f(x)g(x) \; \mathrm{d}x  
+	    = \sum^n_{i=1} \int^{t_{i+1}}_{t_i} f(x)g(x) \; \mathrm{d}x
+	    = \sum^n_{i=1} g(t_i)\int^{t_{i+1}}_{t_i} f(x) \; \mathrm{d}x   
+	    + \int^{t_{i+1}}_{t_i} f(x)\Big( g(x) - g(t_i)\Big) \;\mathrm{d}x
+	}
+	\Derive{(1)}{I(\forall)}{\forall (n+1,t) : \TYPE{Mesh}[a,b] \. \NewLine \. 
+	    \int^b_a f(x)g(x) \; \mathrm{d}x = \sum^n_{i=1} g(t_i)\int^{t_{i+1}}_{t_i} f(x) \; \mathrm{d}x   
+	    + \int^{t_{i+1}}_{t_i} f(x)\Big( g(x) - g(t_i)\Big) \;\mathrm{d}x	
+	}
+	\Assume{\varepsilon}{\Reals_{++}}
+	\Say{(\delta,2)}{\bd \TYPE{SummableVariation}(g) \frac{\varepsilon}{\|f\|_\infty}}
+	{ \NewLine :
+		\sum \delta \in \Reals_{++} \. \forall (n+1,t) : \delta\hyph\TYPE{Mash}[a,b] \.  
+		\sum^n_{i=1} \omega\Big( g, [t_i,t_{i+1}] \Big)(t_{i+1} - t_i) < \frac{\varepsilon}{\|f\|_\infty}
+	}
+	\Assume{(n+1,t)}{\delta \hyph \TYPE{Mesh}}
+	\Conclude{()}{ \THM{TrianglelIneq} \; \THM{IntegralTriangleIneq} \; \THM{BasicIntegralEstimate}  
+		\bd (n+1,t) (2)
+		}{ \NewLine :  
+			\left| \sum^n_{i=1} \int^{t_{i+1}}_{t_i} f(x)\big(g(x) - g(t_i) \big) \; \mathrm{d}x   \right| \le
+			\sum^n_{i=1}   \int^{t_{i+1}}_{t_i} |f(x)|| g(x) - g(t_i)|\; \mathrm{d}x \le 
+			\NewLine
+			\le \| f \|_\infty \sum^n_{i=1}  \omega\Big( f,[t_i,t_{i+1}] \Big))(t_{i+1} - t_i) < \varepsilon
+	}
+	\Derive{(2)}{\bd^{-1} \TYPE{NetLimit}}{\lim_{(n+1,t) \in \mathfrak{P}[a,b]}
+		\sum^n_{i=1} \int^{t_{i+1}}_{t_i} f(x)\big( g(x) - g(t_u) \big) \; \mathrm{d}x = 0
+	}
+}
+\Page{
+	\Say{m}{\min_{x \in [a,b]} \int f(x)}{\Reals}
+	\Say{M}{\max_{x \in [a,b]} \int f(x)}{\Reals}
+	\Assume{(n,t+1)}{\TYPE{Mesh}[a,b]}
+	\Conclude{()}{\THM{AbelTrandformIneq}(g(t),\ldots)\ByConstr m \ByConstr M (0)(00)}
+	{   g(a)m \le \sum^{n}_{i=1} g(t_i) \int^{t_{i+1}}_{t_i} \le g(a)M         
+	}
+	\Derive{(3)}{\lim_{P \in \mathfrak{p}[a,b]} (1)(2)(P)}
+	{
+		g(a)m \le \int^b_a f(x)g(x) \mathrm{d}x \le g(a)M
+	}
+	\Say{\mu}{\frac{\int^b_a f(x)g(x) \; \mathrm{d}x}{g(a)}}{\Reals}
+	\Say{(4)}{(3)\ByConstr \mu}{\mu \in {m,M}}
+	\Say{(x,5)}{\THM{IntermidiateValueTHM}\left( \int f \right)(4)}
+	{
+		\sum x \in [a,b] \. 
+			 \mu = \int^x_a f(x) \; \mathrm{d} x
+	}
+	\Conclude{(6)}{(5)\ByConstr \mu}{\int^b_a f(x)g(x) \; \mathrm{d}x = g(a)\int^x_a f(x) \; \mathrm{d}x}
+	\EndProof
+	\\
+	\Theorem{IntegralMeanValueTHMII}{\forall f,g \in \mathcal{R}[a,b] \. 
+		\forall (0) : \Big( g : \TYPE{Monotonic} \Big)  \.   \exists s \in [a,b] \.
+		\NewLine :
+		\int^b_a g(x)f(x) \; \mathrm{d}x = g(a)\int^s_a f(x) \; \mathrm{d}x - g(b) \int_s^b f(x) \; \mathrm{d}x 
+	}
+	\Say{G}{\Lambda x \in [a,b] \. \max_{i \in \{1,-1\} }  i(g(b) - g(x)) }
+	{ \TYPE{NonIncreasing}\Big([a,b],\Reals \Big)  }
+	\Say{(1)}{\ByConstr G}{G > 0}
+	\Say{(s,2)}{\bd G\THM{IntegralMeanValueLeamma}(f,G,1)\bd G}
+	{ \NewLine :
+		\sum s \in [a,b] \. 
+		g(b)\int^a_b f(x) \; \mathrm{d}x  - \int^a_b f(x)g(x) \; \mathrm{d}x =
+		\pm \int^a_b G(x)f(x) \; \mathrm{d}x = \NewLine
+		\pm G(a) \int^s_a f(x) \; \mathrm{d}x =
+		g(b) \int^s_a f(x) \; \mathrm{d}x - g(a)\int^s_a f(x) \; \mathrm{d}x 
+	}
+	\Conclude{(*)}{\THM{IntegralDecomposition}\left(-\left( (2) - g(b)\int^b_a f(x) \; \mathrm{d}x \right) \right)}
+	{ 
+	\NewLine :
+	\int^b_a f(x)g(x) \; \mathrm{d}x = g(a)\int^s_a f(x) \mathrm{d}x - g(b)\int^b_s f(x) \mathrm{d}x    }
+	\EndProof
+}
+\subsection{Fundamental Theorem of Calculus }
+\Page{
+	\Theorem{DifferentiableAntiderivative}{\forall f \in \mathcal{R}[a,b] \. \forall x \in (a,b)  
+		(0) : f \in C\Big([a,b],\Reals, x\Big) \. \left( \int f \right)'(x) = f(x)
+	}
+	\Say{c}{\min(x - a,b - x)}{\Reals_{++}}
+	\Assume{h}{(-c,c)}
+	\Say{(1^*)}{\bd \FUNC{generalAntiderivative} \bd \THM{IntegralDecomposition} \bd^{-1} f(a)}
+	{ 
+		\NewLine :
+		 \int f (x + h)  - \int f (x)  = 
+		 \int^{x+h}_a f(t) \; \mathrm{d}t - \int^x_a f(t) \; \mathrm{d}t  =
+		 \int_x^{x+h} f(t) \; \mathrm{d}t = \NewLine =
+		 \int_x^{x + h} f(x) + \int_x^{x + h} f(t) - f(x) \; \mathrm{d}t 
+		 =  hf(x) + \int_x^{x + h} f(t) - f(x) \; \mathrm{d}t
+	}
+	\Conclude{()}{  \THM{IntegralTriangleIneq}(f - f(a)) \THM{BasicIntegralEstimate}(| f(t) - f(a)|) \bd^{-1} \omega   }
+	{
+		\NewLine :	
+		\left| \int_x^{x + h} f(t) - f(x) \; \mathrm{d}t \right| \le
+		 \int_x^{x + h} \left| f(t) - f(x) \right| \; \mathrm{d}t \le
+		 \omega\Big(f, (x \pm h,x \mp h) \Big)|h|  
+	}
+	\Derive{(1)}{I(\forall)}
+	{
+		\forall h \in (-c,c) \.  \int f(x + h) - \int f(x) = hf(x) + \int^{x+h}_x f(t) - f(x) \; \mathrm{d}t 
+		\And \NewLine \And  \left| \int^{x+h}_x f(t) - f(a) \; \mathrm{d}t \right| < 
+			\omega\Big(f, (x \pm h, x \mp h) \Big)|h|
+	}
+	\Say{(2)}{(0)\lim_{h \to 0} (1_2)(h)}{
+		\lim_{h \to 0} \frac{\int^{x + h}_x f(t) - f(x) \; \mathrm{d}t}{h} = 0 }
+	\Conclude{(*)}{\bd^{-1}\TYPE{Differential}(1_1)(2)}{\left(\int f \right)'(x) = f'(x)}
+	\EndProof
+	\\
+	\DeclareType{Antiderivative}{ \mathcal{R}[a,b] \to ?C[a,b]  }
+	\DefineType{F}{Antiderivative}{
+		\Lambda f \in \mathcal{R}[a,b] \. \exists X : \TYPE{Finite}[a,b] \. 
+		\forall x \in X^\c \. F'(x) = f(x)                                    	
+	}
+}\Page{
+	\DeclareFunc{straightPath}{\Big([a.b] \to \Reals\Big) \to \Reals}
+	\DefineNamedFunc{straightPath}{F}{F |^b_a}{F(b) - F(a)}
+	\\
+	\Theorem{FundamentalTheoremOfCalculus}
+	{
+		\forall f \in \TYPE{Piecewise}\; C[a,b] \. \forall F : \TYPE{Antiderivative}(f) \.
+		\NewLine \.
+		\int^b_a f(t) \; \mathrm{d}t = F |^b_a
+	}
+	\Say{(X,1)}{\bd \TYPE{Antiderivative}(F) \bd \TYPE{Piecewise} \; C[a,b]}
+	{
+		\sum X : \TYPE{Finite} \. \forall x \in X^\c \. 
+		\NewLine \.
+		f \in C\Big( [a,b],\Reals,x\Big)  
+		\And  F'(x) = f(x)
+	}
+	\Assume{x}{ \TYPE{In}\Big(X^\c \Big)}
+	\Say{(2)}{\THM{DifferentiableAndtiderivative}(f,x)\bd F(x)}
+	{  F(x) = \int^x_a f(t) \; \mathrm{d}t  + F(a) }
+	\Conclude{(*)}{(2) - F(a)}{F(x) - F(a) = \int^x_a f(t) \; \mathrm{d}t}
+	\Derive{(2)}{I(\forall)}{
+		\forall x \in X^\c \.  \int^x_a f(t) \; \mathrm{d}t = F(x) - F(a) 
+	}
+	\Conclude{(*)}{\lim_{x \to b} (2)(b)}{\int^b_a f(t) \; \mathrm{d}t = F(b) - F(a)}
+	\EndProof
+}
+\newpage
+\subsection{Theorems of Integral Calculus [!!]}
+\Page{
+	\Theorem{IntegrationByParts}{
+		\forall v,u : [a,b] \xrightarrow{ \mathsf{DIFF} } \Reals \. 
+		\int^b_a v(x)u'(x) \; \mathrm{d}x = vu|^b_a - \int^b_a v'(x)u(x) \; \mathrm{d}x
+	}
+	\Say{(1)}{ \THM{ProductDifferential}(v,u)  }{ (vu)' = v'u + vu'}
+	\Say{(2)}{\THM{FundamentalTheoremOfCalculus}(1)}{ 
+		\int^b_a v'(x)u(x) + v(x)u'(x) \; \mathrm{d}x  =  vu |^b_a  
+		}
+	\Conclude{(3)}{  (2) - \int^b_a v'(x)u(x) \; \mathrm{d}x  }
+	{  \int^b_a v(x)u'(x)  \; \mathrm{d}x = vu|^b_a - \int^b_a v'(x)u(x) \; \mathrm{d}x   }
+	\EndProof
+	\\
+	\Theorem{IntegralReminderTaylorSeria}{\forall U : \TYPE{Open}(\Reals) \. \forall f \in C^n(U)
+		\. \forall [a,x] : \TYPE{ClosedInterval}(U) \. \NewLine \.
+		f(x) - f(a) = \sum^{n-1}_{k=1} \frac{f^{(k)}(a)(x -a)^k}{k!} + 
+		\int^x_a \frac{f^{(n)}(t)\big( x - t \big)^{n-1}}{(n-1)!} \; \mathrm{d} t
+	}
+	\Say{A(1)}{\THM{FundamentalTheoremOfCalculus}(f',f)}
+	{ f(x) - f(a) = \int^x_a f'(t)\mathrm{d}t  }
+	\Assume{m}{\TYPE{In}(n-1)}
+	\Assume{A(m)}{f(x) - f(a) = \sum^{m-1}_{k=1} \frac{f^{(k)}(a)(x-a)^n}{k!}    
+		+ \int^x_a \frac{f^{(m)}(t)(x-t)^{m-1}}{(m-1)!} \; \mathrm{d} t
+	}
+	\Conclude{A(m+1)}{\THM{IntegrationByParts}\Big( f^(m),(x-t)^{m-1}\Big)A(m)}
+	{
+		\NewLine :
+		f(x) - f(a) = \sum^{m}_{k=1} \frac{f^{(k)}(a)(x-a)^n}{k!}    
+		    + \int^x_a \frac{f^{(m + 1)}(t)(x-t)^{m}}{m!} \; \mathrm{d} t
+	}
+	\Derive{R}{I(\forall)}{\forall m \in n-1 \. \LOGIC{This}(m) \Rightarrow \LOGIC{This}(m+1)}
+	\Conclude{(*)}{E(n)A(1)R}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{ChangeOfVariableInIntegral}{\forall f \in C[\alpha,\beta] \. \forall \varphi : [a,b] 
+		\xleftrightarrow{\mathsf{DIFF}} [\alpha,\beta] \.   
+		 \int^b_a f\big(\varphi(t)\big)\varphi'(t) \; \mathrm{d}t =
+		 \int^\beta_\alpha f(x)  \; \mathrm{d}x
+		}
+	\Say{F}{\Lambda x \in [\alpha,\beta] \. \int^x_\alpha f(t) \; \mathrm{d}t}
+	{[\alpha,\beta] \xrightarrow{DIFF} \Reals}
+	\Say{(1)}{\THM{CpmpositionDiff}(F(\varphi))}{\Big(F(\varphi)\Big)' =\varphi' f(\varphi)}
+	\Conclude{(*)}{\THM{FuncdamentalTheoremOfCalculus}(1)}{
+		\int^b_a f(\varphi(t)) \varphi'(t) \; \mathrm{d}t = 
+		   \int^\beta_\alpha f(x) \; \mathrm{d}x
+		}
+	\EndProof
+}
+\newpage
+\subsection{Improper Integral[!]}
+\Page{
+}
+\newpage
+\subsection{Additive Functions of Intervals[!] }
+\Page{
+}
+\newpage
+\section{Lebesgue Measure on the Interval}
+\subsection{Measure of Open Sets}
+\Page{
+	\DeclareFunc{length}
+	{
+		\TYPE{OpenInterval}(\Reals) \to \Reals_+
+	}
+	\DefineNamedFunc{length}{a,b}{\lambda(a,b)}{b-a}
+	\\
+	\Theorem{FiniteOuterIntervalBound}
+	{
+		\NewLine		
+		\forall (A,B) : \OI(\Reals) \.
+		\forall n \in \Nat \. 
+		\forall (a,b) : \TYPE{DisjointFamily}\Big( \{1,\ldots,n\}, \OI(\Reals) \Big) \. \NewLine \.
+		\forall \beth : \forall k \in \{1,\ldots,n\} \. (a_k,b_k) \subset (A,B) \.
+		\sum^n_{k=1} \lambda(a_k,b_k) \le \lambda(A,B) 
+	}
+	\Say{\Big((a,b), \beth,[1]\Big)}{\FUNC{sort}\Big( (a,b),\Lambda (c,d) : \OI(\Reals) \. c\Big)}
+	{
+		\NewLine :		
+		\sum (a,b) : \TYPE{DisjointFamily}\Big(\{1,\ldots\}, \OI(\Reals) \Big) \.
+		\forall k \in \{1,\ldots,n\} \. (a_k,b_k) \subset (A,B)
+		\And \NewLine \And
+		\forall k \in \{1, \ldots, n -1 \} \.  a_k \le a_{k+1}
+	}
+	\Say{[2]}{
+		\Elim \TYPE{DisjointFamily}\Big( \{1,\ldots,n\}, \OI(\Reals), (a,b) \Big) [1]
+	}{
+			\forall k \in \{1, \ldots, n -1 \} \.  a_k \le b_k <  a_{k+1}
+	}
+	\Say{[3]}{\Elim \beth \Elim \OI(\Reals)}{ \forall k \in \{1,\ldots,n\} \. A \le a_k \And b_k \le B  }
+	\Say{[4]}{[3.1](1)}{A \le a_1 }
+	\Say{[5]}{[3.2](n)}{b_n \le B}
+	\Say{[6]}{[2]\Elim \TYPE{OrderedField}(\Reals)}{\forall k \in \{1,\ldots,n-1\} \. b_k - a_{k+1} < 0 }
+	\Conclude{[*]}{		
+		\Lambda k \in \{1,\ldots,n\} \Elim \lambda(a_k,b_k) 
+		\Elim \FUNC{sum}
+		[6][4][5]
+		\Intro \lambda(A,B)		
+	}
+	{
+		\NewLine :		
+		\sum^n_{k=1} \lambda(a_k,b_k) =
+		\sum^n_{k=1} b_k - a_k = 
+		b_n + \left(\sum^{n-1}_{k=1} b_{k} - a_{k+1}\right) - a_1 \le
+		b_n - a_1 \le 
+		B - A =
+		\lambda(A,B)
+	}
+	\EndProof
+	\\
+	\Theorem{CountableOuterIntervalBound}
+	{
+		\NewLine		
+		\forall (A,B) : \OI(\Reals) \. 
+		\forall (a,b) : \TYPE{DisjointSequence}\Big(  \OI(\Reals) \Big) \. \NewLine \.
+		\forall \beth : \forall k \in \{1,\ldots,n\} \. (a_k,b_k) \subset (A,B) \.
+		\sum^\infty_{n=1} \lambda(a_n,b_n) \le \lambda(A,B) 
+	}
+	\Explain{
+		$
+			\sum^\infty_{n=1} \lambda(a_n,b_n) =
+			\lim_{n \to \infty}\sum^n_{k=1} \lambda(a_k,b_k) \le 
+			\lim_{n \to \infty} \lambda(A,B) = 
+			\lambda(A,B)
+		$
+	}
+	\EndProof
+	\\
+	\DeclareFunc{openLebesgueMeasure}
+	{
+		\T(\Reals) \to \EReals_+
+	}
+	\DefineNamedFunc{openLebesgueMeasure}{U}{\lambda U}
+	{
+		\sum_{i \in I} \lambda(a_i,b_i) \quad \where \quad \Big(I,(a,b)\Big) = \THM{OpenRealStructure}(U)
+	}
+}
+\Page{
+	\Theorem{OpenOuterIntervalBound}
+	{
+		\NewLine :		
+		\forall U \in \T(\Reals) \.
+		\forall (A,B) : \OI(\Reals) \.
+		\forall \beth : U \subset (A,B) \.
+		\lambda U \le \lambda (A,B)
+	}
+	\Explain{ $U = \bigcup_{i \in I} (a_i,b_i)$ by property of real line, where each $(a_i,b_i)$ is disjoint}
+	\Explain{ $\beth$ says that $(a_i,b_i) \subset (A,B)$ for each $i \in I$}
+	\Explain{ So by definition and previously proved theorems $\lambda U \le \lambda (A,B)$}
+	\EndProof
+	\\
+	\Theorem{OpenOuterOpenBound}
+	{
+		\NewLine :		
+		\forall U,V \in \T(\Reals) \.
+		\forall \beth : U \subset V \.
+		\lambda U \le \lambda V
+	}
+	\Explain{ $U = \bigcup_{i \in I} (a_i,b_i)$ by property of real line, where each $(a_i,b_i)$ is disjoint}
+	\Explain{ Also $V = \bigcup_{i \in J} (c_i,d_i)$ , where each $(c_i,d_i)$ is disjoint}
+	\Explain{ 
+		By definition of open interval $\beth$ witnesses partion $E : J \to 2^I$ of $I$ 
+		such that $i \in E_j \iff (a_i,b_i) \subset (c_j,d_j)$}
+	\Explain{ Then, 
+		$
+			\lambda U = 
+			\sum_{i \in I} \lambda(a_i,b_i) =
+			\sum_{j \in J} \sum_{i \in E_j} \lambda(a_i,b_i) \le 
+			\sum_{j \in J} \lambda(c_j, d_j) = 
+			\lambda V
+		$}
+	\EndProof
+	\\
+	\Theorem{OpenLebesgueMeasureAsInf}
+	{
+		\forall U \in \T(\Reals) \.
+		\lambda U = \min \Big\{ \lambda V \Big| V \in \T(\Reals),  U \subset V \Big\} 
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Theorem{OpenLebesgueAdditivity}
+	{
+		\forall U : \TYPE{DisjointSequence}\Big( \T(\Reals) \Big) \.
+		\lambda \bigcup^\infty_{n=1} U_n = \sum^\infty_{n=1} \lambda U_n
+	}
+	\Explain{
+		$U_n = \bigcup_{i \in I_n} (a_{n,i},b_{n,i})$ 
+		by property of real line, where each $(a_{n,i},b_{n,i})$ is disjoint}
+	\Explain{ 
+		But, for distinct $n,m$ set  $U_n,U_m$ are disjoint} 
+	\Explain{
+		So, each $(a_{n,i},b_{n,i})$ and $(a_{m,j},b_{m,j})$ are disjoint
+		for each $i \in I_n$ and each $j \in J_n$}  
+	\Explain{
+		Hence, $\left( \sum^\infty_{n=1} I_n, (a,b) \right)$ is a suitable representation for
+		$\bigcup^\infty_{n=1} U_n$ 
+	}
+	\Explain{
+		By partition of the sum, the result follows
+	}
+	\EndProof
+}
+\Page{
+	\Theorem{ClosedIntervalBound}
+	{
+		\NewLine ::		
+		\forall A,B \in \Reals \.
+		\forall \aleph : A \le B \.
+		\forall n \in \Nat \. 
+		\forall (a,b) : \{1,\ldots,n\} \to \OI(\Reals) \. \NewLine \.
+		\forall \beth : [A,B] \subset \bigcup^n_{k=1} (a_k,b_k) \.
+		B - A < \sum^n_{k=1} \lambda(a_k,b_k)
+	}
+	\SayIn{\alpha_1}{A}{[A,B]}
+	\AssumeIn{m}{\Nat}
+	\Say{\Big( k_m, [1]\Big) }{\Elim \beth (\alpha_m)}
+	{
+			\sum k_m \in \{ 1, \ldots, n  \} \. \alpha_m \in (a_{k_m},b_{k_m})
+	}
+	\Say{[2]}{\Elim \OI(a_{k_m},b_{k_m})[1]}{A \le \alpha_m < b_{k_m}}
+	\Say{\alpha_{m+1}}{\If B \in (a_{k_m},b_{k_m}) \Then \alpha_m \Else b_{k_m} }
+	{
+		\Reals
+	}
+	\Conclude{[m.*]}{\Elim \alpha_{m+1}[2]}{\alpha_{m+1} \in [A,B]}
+	\Derive{\Big(m,k,[1]\Big)}{\LOGIC{FiniteRecursion}}
+	{
+		\NewLine :		
+		\sum^n_{m=1} \sum k : \{1, \ldots, m \} \to \{1,\ldots, n\} \.
+		a_{k_1} < A \And B < b_{k_m} \And 
+		\forall l \in  \{1,\ldots, m-1 \} \.
+		 a_{k_{l+1}} < b_{k_l} < b_{k_{l+1}}
+	}
+	\Conclude{[*]}{
+		[1.2] \Elim \FUNC{sum}(\Reals) [1.2] [1.1]	
+	}
+	{
+		\NewLine :		
+		\sum^n_{k=1} \lambda(a_k,b_k) \ge
+		\sum^m_{l=1} \lambda(a_{k_l}, b_{k_l})  =
+		\sum^m_{l=1} b_{k_l} - a_{k_l} =
+		b_{k_m} +  \left(\sum^{m-1}_{l=1} b_{k_l} - a_{k_{l+1}}\right)  - a_{k_1} > 
+		b_{k_m} - a_{k_1} > B - A
+	}
+	\EndProof
+	\\
+	\Theorem{OpenIntervalSubbaditivity}
+	{
+		\NewLine ::		
+		\forall (A,B) : \OI(\Reals) \.
+		\forall I : \TYPE{Countable} \.
+		\forall U : I \to \T(\Reals) \.
+		\forall \aleph : (A,B) = \bigcup_{i \in I} U_i \.
+		\lambda(A,B) \le \sum_{i \in i} \lambda\;U_i 
+	}
+	\Say{\Big(J,(a,b),[1] \Big)}
+	{
+		\THM{OpenRealsStrucure}(U)
+	}
+	{
+		\NewLine :		
+		\sum J : I \to \TYPE{Countable} \. 
+		(a,b) : \prod_{i \in I} J_i \to \OI(\Reals) \.
+		\forall i \in I \. U_i = \bigcup_{j \in J_i} (a_{i,j},b_{i,j})
+	}
+	\AssumeIn{\varepsilon}{\Reals_{++}}
+	\Say{[2]}{\Elim \aleph \Elim \TYPE{ClosedIntervals}\Big( \Reals, [A,B] \Big)}
+	{
+		[A,B] \subset  
+			(A-\varepsilon,A + \varepsilon) \cup (B-\varepsilon,B+\varepsilon)		\cup
+			\bigcup_{i \in I} \bigcup_{j \in J_i}  (a_{i,j},b_{i,j})
+	}
+	\Say{\Big( n,k, [3] \Big)}{\Elim \Compacts\Big( \Reals, [A,B] \Big)[2]}
+	{
+		\NewLine :		
+		\sum^\infty_{n=1} \sum k : \{1,\ldots,n\} \to \sum_{i \in i} J_i \. 
+		[A,B] \subset 
+		(A-\varepsilon,A + \varepsilon) \cup (B-\varepsilon,B+\varepsilon)		\cup
+			\bigcup^n_{l=1}  (a_{k_l},b_{k_l})
+	}
+	\Conclude{[\varepsilon.*]}{
+		\Elim \lambda(A,B)
+		\THM{ClosedIntervalBound}[3] 
+		\Elim^2 \FUNC{length}
+		\Elim k
+		\Lambda i \in I \. \Intro \lambda(U_i)
+	}
+	{
+		\NewLine :
+		\lambda(A,B) = B - A 
+		< 
+			\lambda(A-\varepsilon,A + \varepsilon) + 
+			\lambda(B-\varepsilon,B+ \varepsilon)  
+			+ \sum^n_{l=1} \lambda(a_{k_l},b_{k_l}) =
+			4\varepsilon +   \sum^n_{l=1} \lambda(a_{k_l},b_{k_l}) \le \NewLine \le
+			4\varepsilon + \sum_{i \in I} \sum_{j \in J_i} \lambda(a_{i,j},b_{i,j}) =
+			4\varepsilon + \sum_{i \in I} \lambda( U_i)
+	}
+	\DeriveConclude{[*]}{\THM{LimitIneq}}
+	{
+		\lambda(A,B)  \le  \sum_{i \in I} \lambda( U_i)
+	}
+	\EndProof
+}\Page{
+	\Theorem{OpenSubbaditivity}
+	{
+		\NewLine ::		
+		\forall V \in \T(\Reals) \.
+		\forall I : \TYPE{Countable} \.
+		\forall U : I \to \T(\Reals) \.
+		\forall \aleph : V = \bigcup_{i \in I} U_i \.
+		\lambda\;V \le \sum_{i \in i} \lambda\;U_i 
+	}
+	\Say{\Big(J,(a,b),[1] \Big)}
+	{
+		\THM{OpenRealsStrucure}(V)
+	}
+	{		
+		\NewLine :		
+		\sum J : \TYPE{Countable} \. 
+		(a,b) : \TYPE{DisjointFamily}\Big(J, \OI(\Reals) \Big)\.
+		V = \bigcup_{j \in J} (a_j,b_j)
+	}
+	\Say{W}
+	{
+		\Lambda i \in I \.
+		\Lambda j \in J \.
+		U_i \cap (a_j,b_j)
+	}
+	{
+		I \to J \to \T(\Reals)
+	}
+	\Say{[2]}{\Elim W \Elim  \TYPE{DisjointFamily}\Big(J, \OI(\Reals), (a,b) \Big) }
+	{
+		\forall i \in I \.
+		\TYPE{DisjointFamily}\Big(J, \T(\Reals), W_i \Big) 
+	}
+	\Say{[3]}{\Elim W \Elim \aleph}
+	{
+		\forall j \in J \. (a_j,b_j) =\bigcup_{i \in I} W_{i,j}
+	}
+	\Say{[4]}{\Elim \aleph \Elim W }
+	{
+		\forall i \in I \. U_i =\bigcup_{j \in J} W_{i,j}
+	}
+	\Conclude{[*]}
+	{
+		\Elim \lambda \; V [1]
+		\THM{OpenIntervalSubbaditivity}[3]
+		\THM{NonNegSumExchange}(\lambda W)
+		\THM{OpenLebesgueAdditivity}[2][4]
+	}
+	{
+		\NewLine :		
+		\lambda \; V = \sum_{j \in J} \lambda(a_j,b_j)  \le 
+		\sum_{j \in J} \sum_{i \in I}	\lambda \; W_{i,j} =
+		\sum_{i \in I} \sum_{j \in j} \lambda \; W_{i,j} = 
+		\sum_{i \in I} \lambda \; U_i
+	}	
+	\EndProof
+}
+\newpage
+\subsection{Outer Measure and Measurabilty}
+\Page{
+	\DeclareFunc{outerMeasureOfLebesgue}
+	{2^\Reals \to \EReals_+ }
+	\DefineNamedFunc{outerMeasureOfLebesgue}
+	{A}{ \lambda^\star(A) }{
+		\inf \Big\{  \lambda\;U | U \in \T(\Reals), A \subset U  \Big\}	
+	}
+	\\
+	\Theorem{OuterMeasureOpenValue}
+	{
+		\forall U \in \T(X) \.
+		\lambda(U) = \lambda^\star(U)
+	}
+	\Explain{Use open Lebesgue measure as inf}
+	\EndProof
+	\\
+	\Theorem{OuterMeasure}
+	{
+		\OM(\Reals,\lambda^\star)
+	}
+	\Say{[1]}{\THM{OuterMeasureOpenValue}(\emptyset)}
+	{
+		\lambda^\star\Big(\emptyset\Big) = \lambda(\emptyset) = 0
+	}
+	\Say{[2]}{
+		\Lambda A,B \subset \Reals \. 
+		\Lambda \aleph : A \subset B \. 
+		\Elim  \lambda^\star(A)
+		\THM{InfIsAntitone}(\aleph) 
+		\Intro \lambda^\star(B)
+	}{
+		\lambda^\star(A) \le \lambda^\star(B)
+	}
+	\Assume{A}{\Nat \to 2^\Reals}
+	\Assume{\aleph}
+	{
+		\sum^\infty_{n=1} \lambda^\star(A_n) < \infty
+	}
+	\Explain{Otherwise the bound is trivial}
+	\Say{\Big( V, [3]\Big)}{\Lambda n \in \Nat \. \Elim \lambda^\star(A_n) \Elim \Reals}
+	{
+		\NewLine 	
+		\sum V : \Nat^2 \to \T(\Reals) \. 
+		\forall n \in \Nat \. \lambda(V_n) \downarrow \lambda^\star(A_n) 
+		\And
+		\forall m \in \Nat \. \lambda(V_{n,m}) \le \lambda^\star(A_n) + \frac{1}{2^{n}} \And
+		A_{n} \subset V_{n,m}
+	}
+	\Say{[4]}{ \Elim \aleph \THM{PowerSeriesConvergence}}
+	{
+		 \sum^\infty_{n=1}  \lambda^\star(A_n) + \frac{1}{2^{-n}} < \infty
+	}
+	\Conclude{[A.*]}{
+	        \Elim \lambda^\star\left( \bigcup^\infty_{n=1} A_n \right) 
+	        \Lambda m \in \Nat \. \Elim \inf\left( \bigcup^\infty_{n=1}  V_{n,m} \right) [3.3]
+	        \THM{LimitIneq}
+	        \Lambda m \in \Nat \. \THM{OpenSubbaditivity}(V_{\bullet,m})
+	        \NewLine
+	        \THM{DominatedConvergenceTHM}\Big( 
+	        	\lambda V_n, 
+	        	\Lambda n \in \Nat \. \lambda^\star(A_n) + 2^{-n} , [3.2], [4] \Big)
+	        [3.1]
+	}	
+	{
+		\NewLine :		
+		\lambda^\star\left( \bigcup^\infty_{n=1} A_n \right) = 
+		\inf \left\{  \lambda\;U \Bigg| U \in \T(\Reals),  \bigcup_{n=1}^\infty A \subset U  \right\}  \le
+		 \lim_{m \to \infty}  \lambda\;\bigcup^\infty_{n=1}  V_{n,m} \le 
+		 \lim_{m \to \infty} \sum^\infty_{n=1} \lambda \; V_{n,m} = \NewLine =
+		 \sum^\infty_{n=1} \lim_{m \to \infty} \lambda \; V_{n,m} =
+		 \sum^\infty_{n=1} \lambda^\star(A_n)
+	}
+	\Derive{[3]}{\Intro \forall}
+	{
+		\forall A : \Nat \to 2^\Reals \.
+		\lambda^\star\left( \bigcap^\infty_{n=1} A_n \right) \le 
+		\sum^\infty_{n=1} \lambda^\star(A_n) 	
+	}
+	\Conclude{[*]}{\Intro \OM [1][2][3]}{\OM\left(\Reals,\lambda^\star \right)}
+	\EndProof
+	\\
+	\DeclareFunc{measurableSetsOfLebesgue}{\SA(\Reals)}
+	\DefineNamedFunc{measurableSetsOfLebesgue}{}{\Lambda}{\Sigma_{\lambda^\star}}
+}\Page{
+	\DeclareFunc{measureOfLebesgue}{\Measure(\Reals)}
+	\DefineNamedFunc{measureOfLebesgue}{}{\lambda}{\lambda^\star_{|\Lambda}}
+	\\
+	\Theorem{OpenHalfIntervalsAreLebesgueMeasurable}
+	{
+		\forall \alpha \in \Reals \. (\alpha,+ \infty) \in \Lambda
+	}
+	\AssumeIn{A}{2^\Reals}
+	\Say{[1]}{
+		\Lambda \varepsilon \in \Reals_{++} \.
+		\Elim^2 \lambda^\star 
+		\THM{InfSum}(\EReals)
+		\THM{OpenSubbaditivity}(\ldots)
+		\Elim \lambda \Elim \inf 
+		\THM{OpenAdditivity}(\ldots) \NewLine
+		\THM{OpenOuterOpenBound}(\ldots)	\Intro \lambda^\star(A)
+	}{
+		\NewLine :		
+		\forall \varepsilon \in \Reals_{++} \. \lambda^\star\Big( A \cap (\alpha,+ \infty)    \Big)	 + 
+		\lambda^\star\Big( A \setminus (\alpha, +\infty) \Big) = \NewLine =
+		\inf \Big\{  \lambda\;U \Big| U \in \T(\Reals), A \cap (\alpha,+\infty) \subset U  \Big\}	 +
+		\inf \Big\{  \lambda\;U \Big| U \in \T(\Reals), A \setminus (\alpha,+\infty)  \subset U  \Big\}	
+		= \NewLine =
+		\inf \Big \{ \lambda\; U + \lambda\; V\Big|
+				U,V \in \T(\Reals), A \cap (\alpha,+\infty) \subset U, A  \cap (-\infty,\alpha]
+			\Big\}  \le \NewLine \le
+		\inf \Big \{ \lambda\; U + \lambda\; V + \lambda(\alpha -\varepsilon,\alpha + \varepsilon)\Big|
+				U,V \in \T(\Reals), A \cap (\alpha,+\infty) \subset U, A  \cap (-\infty,\alpha) \subset V
+			\Big\} = \NewLine =
+		\inf \Big \{ \lambda(V \cup U) \Big|
+				U \in \T(\alpha,+\infty), 
+				V \in \T(-\infty,\alpha), 
+				A \cap (\alpha,+\infty) \subset U, 
+				A  \cap (-\infty,\alpha) \subset V
+			\Big\}	 + 2\varepsilon  \le  \NewLine \le
+		\inf \Big \{ \lambda(U) \Big|
+				U \in \T(\Reals), A \subset U
+			\Big\}	 + 2\varepsilon =  \lambda^\star(A) + 2\varepsilon
+	}
+	\Say{[2]}{\THM{LimIneq}[1]}
+	{
+			\lambda^\star\Big( A \cap (\alpha,+ \infty)    \Big)	 + 
+		\lambda^\star\Big( A \setminus (\alpha, +\infty) \Big) \le \lambda(A)
+	}
+	\Conclude{[A.*]}{\Elim_3 \OM(\Reals,\lambda^\star)[2]}
+	{
+		\lambda^\star\Big( A \cap (\alpha,+ \infty)    \Big)	 + 
+		\lambda^\star\Big( A \setminus (\alpha, +\infty) \Big) = \lambda(A)
+	}
+	\DeriveConclude{[*]}{\Elim \Lambda}
+	{
+		(a,+\infty) \in \Lambda
+	}
+	\EndProof
+	\\
+	\Theorem{BorelSetsAreLebesgueMeasurable}
+	{
+		\Borel(\Reals) \subset \Lambda
+	}
+	\Explain{ Closed rays of form $(-\infty,\alpha]$ are complements of open rays of form $(\alpha,+\infty$}
+	\Explain{ Represent half open intervals as intersections 
+		$(\alpha,\beta] = (\alpha,+\infty) \cap (+\infty,\beta]$}
+	\Explain{ Represent open intervals $(\alpha,\gamma) = \bigcap^\infty_{n=1} (\alpha,\beta_n]$,
+		where $\beta_n = \gamma + \frac{1}{n}$ for example}
+	\Explain{Open intervals generate topology of $\Reals$, so every Borel set is measurable}
+	\EndProof
+}
+\newpage
+\subsection{Measuring with Closed  Sets}
+\Page{
+	\Theorem{MeasureOfClosedInterval}
+	{
+		\forall [A,B] : \TYPE{ClosedInterval}(\Reals) \.
+		\lambda [A,B] = B - A
+	}
+	\AssumeIn{U}{\T(\Reals)}
+	\Assume{\aleph}{[A,B] \subset A}
+	\Say{\Big( I,(a,b),[1]\Big)}{\THM{OpenRealStrucute}(U)}
+	{
+		\NewLine :	
+		\sum I : \Countable \. (a,b) : 
+		\TYPE{DisjointFamily}\Big(I , \OI(\Reals) \Big) \. 
+		U = \bigcup_{i \in i} (a_i,b_i)
+	}
+	\Say{[2]}{\Elim \CI\Big(\Reals, [A,B]\Big)}{[A,B] \neq \emptyset}
+	\Derive{\Big(i,[3]\Big)}{\THM{SubsetOfUnionIntersection}}
+	{	
+		\sum i \in I \. \exists [A,B] \cap  (a_i,b_i)
+	}
+	\SayIn{t}{\Elim \exists [3]}
+	{
+		[A,B] \cap (a_i,b_i)
+	}
+	\Say{[4]}
+	{
+		\Lambda \beth : A \le a_i \. 
+		\Elim \beth 
+		\Elim t 
+		\Elim \CI [A,B] 
+		\Elim \aleph
+		\Elim \Open (a_i ,b_i) \Elim \OI (a_i,b_i) \NewLine
+		\Elim 	\TYPE{DisjointFamily}\Big(I , \OI(\Reals), (a_i,b_i) \Big) 
+	}
+	{
+		\NewLine :		
+		A \le a_i \Imply 
+		A \le a_i \le t \le B \Imply 
+		a_i \in [A,B] \Imply
+		\exists j \in I \. a_i \in (a_j, b_j) \Imply \NewLine \Imply
+		\exists j \in I \. j \neq I \And \exists (a_j,b_j) \cap (a_i,b_i) \Imply 
+		\bot
+	}
+	\Say{[5]}{\Elim \bot [4]}{a_i < A}
+	\Say{[6]}
+	{		
+		\Lambda \beth : B \ge a_i \. 
+		\Elim \beth 
+		\Elim t 
+		\Elim \CI [A,B] 
+		\Elim \aleph
+		\Elim \Open (a_i ,b_i) \Elim \OI (a_i,b_i) \NewLine
+		\Elim 	\TYPE{DisjointFamily}\Big(I , \OI(\Reals), (a_i,b_i) \Big) 
+	}{
+		\NewLine :
+		B \ge b_i \Imply 
+		B \ge b_i \ge t \ge A \Imply 
+		b_i \in [A,B] \Imply
+		\exists j \in I \. b_i \in (a_j, b_j) \Imply \NewLine \Imply 
+		\exists j \in I \. j \neq I \And \exists (a_j,b_j) \cap (a_i,b_i) \Imply 
+		\bot
+	}
+	\Say{[7]}{\Elim \bot [6]}{B < b_j}
+	\Say{[8]}{\Elim\lambda(a_i,b_i)[5][7] }{\lambda(a_i,b_i) = b_i - a_i  > B - A }
+	\Conclude{[U.*]}{\Elim \lambda U [1]  \THM{NonegSumIneq}\Big( I, (a,b),i \Big)[8]}
+	{
+		\lambda \; U = \sum_{j \in I} \lambda(a_j,b_h)  
+		\ge \lambda(a_i,b_i)  > B - A  
+	}
+	\Derive{[1]}{\Intro^2 \forall}
+	{
+		\forall  U \in \T(\Reals) . 
+		[A,B] \subset U
+		\Imply
+		\lambda(U)  > B -A 
+	}
+	\Say{[2]}{\Elim \lambda [A,B][1]}
+	{
+		\lambda [A,B] \ge B - A
+	}
+	\Say{[3]}
+	{
+		\Lambda \varepsilon \in \Reals_{++} \.
+		\Elim \CI [A,B] \Elim \OI (A-\varepsilon, B + \varepsilon) \Intro \subset
+	}
+	{
+		\NewLine :		
+		\forall \varepsilon  > 0 \. [A,B] \subset (A-\varepsilon, B - \varepsilon)
+	}
+	\Say{[4]}{
+		\Lambda \varepsilon \in \Reals_{++} \. 
+		\THM{MeasureMonotonicity}(\Reals,\lambda)[3](\varepsilon) 
+		\Elim \lambda
+		(A-\varepsilon, B - \varepsilon)
+	}
+	{
+		\NewLine :		
+		\forall \varepsilon > 0 \.
+		\lambda [A,B] \le \lambda (A-\varepsilon, B - \varepsilon) = B - A + 2 \varepsilon
+	}
+	\Say{[5]}{\THM{LimitIneq} [4]}{\lambda [A,B] \le B - A}
+	\Conclude{[*]}{\Elim(\le)[2][5]}
+	{
+			\lambda [A,B] = B - A
+	}
+	\EndProof
+}\Page{
+	\Theorem{CantorSetHasMeasureZero}
+	{
+		\lambda(\Cantor) = 0
+	}
+	\Explain{
+		Cantor's set $\Cantor$ is constructed as 
+		$[0,1] \setminus \bigcup^\infty_{n=1} \bigcup^{k_n}_{i=1}\Delta_{n,i}$}
+	\Explain{
+		Here each $\Delta_{n,i}$
+		represent evenly spaced disjoint open intervals 
+		of length $3^{-n}$ }
+	\Explain{
+		$k^n = 2^{n-1}$ represents quantity of intervals of fixed length}
+	\Explain{ 
+		So the measure of sum of $\Delta_{n,i}$  equels to 
+		$
+			\sum^\infty_{n=1} \frac{2^{n-1}}{3^n} = 
+			\frac{1}{3}\sum^\infty_{n=0}  \left( \frac{2}{3} \right)^n = 1
+		$}
+	\Explain{
+		By basic property of measure the result follows}
+	\EndProof
+	\\
+	\Theorem{BoundedInteriorMeasure}
+	{
+		\NewLine ::		
+		\forall E \in \Lambda \.
+		\Bounded(\Reals,E) \Imply
+		\lambda \; E = \sup \{ \lambda \; K | K : \Closed(\Reals), K \subset E  \}
+	}
+	\Say{\Big((A,B),[1]\Big)}
+	{
+		\Elim \Bounded(\Reals,E)
+	}
+	{
+		\sum (A,B) : \OI(\Reals) \. E \subset R
+	}
+	\SayIn{F}{[A,B] \setminus E}{\Lambda}
+	\Say{\Big(U,[2]\Big)}{\Elim \lambda(F) \Elim \inf}
+	{
+		\sum U : \Nat \downarrow \T(\Reals) \.
+		\forall n \in \Nat \. F \subset U_n \And
+		\lambda \; F = \lim_{n \to \infty} \lambda(U_n)
+		\And   \forall n \in \Nat \. \lambda(U_n \setminus [A,B]) < \frac{1}{n}	
+	}
+	\Say{K}{\Lambda n \in \Nat \. [A,B] \setminus U_n}
+	{
+		\Nat \to \Closed(\Reals)
+	}
+	\Say{[3]}{\Elim K \Elim F [2.1]}
+	{
+		\forall n \in \Nat \. K_n \subset E
+	}
+	\Say{[4]}{
+		\THM{Difference}(\Reals,\Lambda,\lambda)[2.2] 
+		\THM{ContinuousAddition}\Big( \lambda[A,B] \Big)
+		\Elim \Lambda\Big( [A,B] \Big)
+		\THM{Difference}(\Reals,\Lambda,\lambda)[2.3] \NewLine
+		\THM{ContinuousAddition}\Big( \lambda \; K, \lambda n \in \Nat \. 1/n \Big)
+		\THM{ReductioInfima} 
+	}
+	{
+		\NewLine :
+		\lambda \; E = 
+		\lambda[A,B] - \lambda(F) =
+		\lambda[A,B] - \lim_{n\to \infty}\lambda(U_n) =
+		\lim_{n \to \infty} \Lambda[A,B] - \lambda(U_n) = \NewLine =
+		\lim_{n \to \infty} \Lambda[A,B] - \lambda\Big(U_n \cap [A,B]\Big) 
+		+  \lambda\Big(U_n \setminus [A,B]\Big) \le
+		\lim_{n \to \infty} \lambda \; K_n + \frac{1}{n} = \NewLine = 
+		\lim_{n \to \infty} \lambda \; K_n + \lim_{n \to \infty} \frac{1}{n} =
+		\lim_{n \to \infty} \lambda \; K_n
+	}
+	\Say{[5]}{\Elim_2 \Measure(\Reals,\Lambda,\lambda)[3]}
+	{
+		\forall n \in \Nat \. \lambda(K_n) \le \lambda \; E
+	}
+	\Say{[6]}{\THM{LimitIneq}[5]\Elim (\le)[4]}
+	{
+		\lambda(E) = \lim_{n \to \infty} K_n
+	}
+	\Conclude{[*]}{\Elim_2 \Measure(\Reals,\Lambda,\lambda)[5]\Intro \sup}
+	{
+		\lambda \; E = \sup \{ \lambda \; K | K : \Closed(\Reals), K \subset E  \}
+	}
+	\EndProof
+}\Page{
+	\Theorem{InteriorMeasure}
+	{
+		\NewLine ::		
+		\forall E \in \Lambda \.
+		\lambda \; E = \sup \{ \lambda \; K | K : \Closed(\Reals), K \subset E  \}
+	}
+	\Say{F}{\Lambda n \in \Int \. E \cap [n,n+1]}{\TYPE{DisjointFamily}(\Int,\Lambda)}
+	\Say{\Big(K, [1] \Big)}{\THM{BoundedInteriorMeasure}(F)\Elim \sup}
+	{
+		\NewLine :		
+		\sum K : \Int \times \Nat \to \Closed(\Reals) \.
+		\forall n \in \Int \. \TYPE{Increasing}\Big( K_n \Big) \And 
+		\lim_{m \to \infty} \lambda(K_{n,m}) = \lambda(F_n) \And \NewLine \And
+		\forall m \in \Nat \. K_{n,m} \subset F_n
+	}
+	\Say{[2]}{\Elim F}{E = \bigcup^\infty_{n=-\infty} F_n}
+	\Say{[3]}{\Elim F [1.3]}{\forall m \in \Nat \. \TYPE{LocallyFinite}(K_{\bullet,m})}
+	\Say{G}{\Lambda m \in \Nat \. \bigcup^\infty_{n=-\infty} K_{n,m}}{\Nat \to \Closed(\Reals)}
+	\Say{[4]}{\Elim G [1.3] \THM{SubsetOfUnion}[2]}{ \forall m \in \Nat \. G_m \subset E }	
+	\Say{[5]}{\Elim \TYPE{DisjointFamily}(\Int,\Lambda) [1.3] }
+	{
+		\forall m \in \Nat \. \TYPE{DisjointFamily}(\Int,\Lambda,K_{\bullet,m})
+	}	
+	\Say{[6]}{
+		\Elim_3 \Measure(\Reals,\Lambda,\lambda)[1.2]
+		\THM{MonotonicConvergenceTHM}(\#,\lambda \; K)[1.1]
+		\Elim_3 \Measure(\Reals,\Lambda,\lambda)[5]
+		\Intro G
+	}
+	{
+		\NewLine :		
+		\lambda(E) = \sum^\infty_{n=-\infty} \lambda(F_n) =
+		\sum^\infty_{n=-\infty} \lim_{m \to \infty} \lambda\; K_{n,m} =
+		\lim_{m \to \infty} \sum^\infty_{n=-\infty} \lambda \; K_{n,m} = 
+		\lim_{m \to \infty} \lambda  \bigcup^\infty_{n=-\infty} K_{n,m} =
+		\lim_{m \to \infty} \lambda \; G_m
+	}
+	\Conclude{[*]}{\THM{Monotonicity}\Big(\Reals,\Lambda,\lambda\Big)[4][6]}
+	{
+		\lambda \; E = \sup \{ \lambda \; K | K : \Closed(\Reals), K \subset E  \}
+	}
+	\EndProof
+	\\
+	\Theorem{PointHasZeroMeasure}
+	{
+		\forall t \in \Reals \. \lambda \{ t \} = 0
+	}
+	\Explain{  $\lambda \{ t \} =  \lambda [t,t] = t - t = 0 $   }
+	\EndProof
+	\\
+	\Theorem{CountableHasZeroMeasure}
+	{
+		\forall C  :  \Countable(\Reals) \. \lambda \; C = 0
+	}
+	\Explain{  $\lambda \;  =  \lambda \bigcup_{x \in C} \{x \} = \sum_{x \in C} \lambda\{x\} = 
+		\sum_{x \in C} 0  = 0$   }
+	\EndProof
+	\\
+}
+\newpage
+\subsection{Motion Invariance}
+\Page{
+	\Theorem{ShiftPreservesIntervalLength}
+	{
+		\forall (a,b) : \OI(\Reals) \.
+		\forall t \in \Reals 
+		\lambda\Big( (a,b) + t \Big) = \lambda (a,b)
+	}
+	\Explain{
+		$
+			\lambda\Big( (a,b) + t \Big) 
+			\lambda\Big( a + t, b + t \Big)  = 
+			(b + t) - (a + t) =  
+			b - a =
+			\lambda(a,b)
+		$}
+	\EndProof
+	\\
+	\Theorem{ReflectionPreservesIntervalLength}
+	{
+		\forall (a,b) : \OI(\Reals) 
+		\lambda(a,b) = \lambda(-b,-a)
+	}
+	\Explain{
+		$\lambda(a,b) = b - a =  (-a) -(-b) = \lambda(-b,-a)$
+	}
+	\EndProof
+	\\
+	\Theorem{MotionPreservesIntervalLength}
+	{
+		\forall (a,b) : \OI(\Reals) \.
+		\forall \phi \in \mathbf{E}(1) \.
+		\lambda \phi(a,b) = \lambda(a,b)
+	}
+	\Explain{
+		Use the fact that every $\phi \in \mathbf{E}(1)$ can be represented 
+		as composition of shifts and reflections
+	}
+	\EndProof
+	\\
+	\Theorem{MotionPreservesMeasureOfOpenSets}
+	{
+		\forall U \in \T(\Reals) \. 
+		\forall \phi \in \mathbf{E}(1) \.		
+		\lambda \; \phi(U) =  \lambda \;U 
+	}
+	\Explain{
+		$U = \bigcup_{i \in I} (a_i,b_i)$ for some 
+		countable  set $I$		
+		by property of Reals, and $(a,b)$ are pairwise disjoint}
+	\Explain{
+		Obviously $\phi$ maps open intervals into open intervals}
+	\Explain{
+		And the image also pairwise disjoint as $\phi$ is bijection
+	}
+	\Explain{
+		So,
+		$
+				\lambda \; \phi(U) = 
+				\lambda \bigcup_{i \in I} \phi(a_i,b_i) =
+				\sum_{i \in i} \lambda \phi (a_i, b_i) =
+				\sum_{i \in I} \lambda (a_i, b_i) = 
+				\lambda U
+ 		$}
+ 	\EndProof
+ 	\\
+ 	\Theorem{MotionPreservesOuterMeasure}
+ 	{
+ 		\forall A \subset \Reals \.
+ 		\forall \phi \in \mathbf{E}(1) \.		
+		\lambda^* \; \phi(A) =  \lambda^* \;A 
+ 	}
+ 	\Explain{ Let $U$ be some open set with $A \subset U$}
+ 	\Explain{ Then $\phi(A) \subset \phi(U)$}
+ 	\Explain{ But $\lambda \; \phi(U) =  \lambda \;U$}
+ 	\Explain{ So, $\lambda^* \phi(A) \le \lambda^* \; A$} 
+ 	\Explain{ On the other hand, $\phi^{-1}$ is also a motion so simmilar derivations witness 
+ 		that $\lambda^\star A \le \lambda^* \phi(A)$}	
+ 	\EndProof
+ 	\\
+ 	\Theorem{MotionPreservesLebesgueMeasure}
+ 	{
+ 		\forall E \in \Lambda \.
+ 		\forall \phi \in \mathbf{E}(1) \.		
+		\lambda \; \phi(E) =  \lambda \; E 
+ 	}
+ 	\Explain{
+ 		Obvious at this stage
+ 	}
+ 	\EndProof
+}\Page{
+	\Theorem{MotionPreservesInnerMeasure}
+ 	{
+ 		\forall A \subset \Reals \.
+ 		\forall \phi \in \mathbf{E}(1) \.		
+		\lambda_* \; \phi(A) =  \lambda_* \;A 
+ 	}
+ 	\Explain{Simmilar proof as with outer measure}
+ 	\Explain{ But instead of open $U$ use measurable $E$ with $E \subset A$}
+ 	\EndProof
+ 	\\
+ 	\Theorem{LengthScaling}
+ 	{
+ 		\forall (a,b) : \TYPE{Interval}(\Reals) \.
+ 		\forall t \in \Reals_+ \.
+ 		\lambda\sigma\left( \frac{a + b}{2} , t , (a,b) \right) = t \lambda (a,b)
+ 	}
+ 	& \lambda\sigma\left( \frac{a + b}{2} , t , (a,b) \right) = 
+ 		\lambda\left(  t \left(a -  \frac{a + b}{2} \right) +   \frac{a + b}{2} ,  
+					 		t \left(a -  \frac{a + b}{2} \right) +   \frac{a + b}{2}
+ 		\right) 
+ 		=  \\&
+ 		t \left(b -  \frac{a + b}{2} \right) + \frac{a + b}{2} 
+ 		 - t \left(a -  \frac{a + b}{2} \right) - \frac{a + b}{2}  = 
+ 		 tb - ta = 
+ 		 t(b - a) =
+ 		 t \lambda(a,b)
+		\\
+ 		\EndProof
+}
+\newpage
+\subsection{Vitali's Theorem}
+\Page{
+	\DeclareType{\VC}
+	{
+		\prod A \subset \Reals \. ?\TYPE{Cover}\Big(A, \CI(\Reals)\Big)	
+	}
+	\DefineType{\V}{\VC}
+	{
+		\forall a \in A \.
+		\forall t \in \Reals_{++} \.
+		\exists I \in \mathcal{V} \.
+		\lambda I < t \And a \in I
+		\And
+		\forall I \in \mathcal{V} \.
+		\lambda I > 0
+	}
+	\\
+	\Theorem{VitaliCoveringTHM}
+	{
+		\forall A : \Bounded(\Reals) \. 
+		\forall \V : \VC(A) \. \NewLine \.
+		\exists \V' : \Countable \And \TYPE{PairwiseDisjoint}(\V) \.
+		\lambda^\star \left( A \setminus \bigcup_{V \in \V'} V \right) = 0
+	}
+	\Say{\Delta}{[\inf A, \sup A]}{\CI(\Reals)}
+	\Explain{Without loss of generality assume that $\forall I \in \V \. I \subset \Delta$}
+	\Say{\V''_0}{\emptyset}{\Finite(\V)}
+	\AssumeIn{n}{\Nat}
+	\Assume{\aleph}{\lambda^\star \left( A \setminus \bigcup_{V \in \V'} V \right) > 0}
+	\Explain{Otherwise just set $\V''_n=\V''_{n+1}$}
+	\Say{\A}{\{ I \in \V : \forall J \in \V''_{n-1} \. I \cap J = \emptyset   \}}{?\V}
+	\Say{K}{\bigcup_{I \in \V''_{n-1}} I}{\Closed(\Reals)}
+	\SayIn{U}{K^\c}{\T(\Reals)}	
+	\Say{\Big(X,(a,b),[1]\Big)}{\THM{OpenRealsStrucuture}(U)}
+	{
+		\NewLine :		
+		\sum X : \Countable \.
+		\sum (a,b) : \TYPE{DisjointFamily}\Big(I, (a,b) \Big) \.
+		U = \bigcup_{i \in X} (a_i,b_i)
+	}
+	\Say{[2]}{\Elim_1 \OM(\Reals,\lambda^\star) \Elim \aleph} 
+	{
+		\exists A \setminus K 
+	}
+	\SayIn{t}{\Elim \exists [2]}{A \setminus K }
+	\Say{\Big(i,[2]\Big)}{\Elim U [1]}
+	{
+		\sum i \in I \.   t \in (a_i,b_i)
+	} 
+	\Say{\Big(I,[3]\Big)}{\Elim \VC(A,\V)[2] }
+	{
+		\sum I \in \V \. t \in I \subset (a_i,b_i)  	
+	}
+	\Say{[4]}{\Elim U [3] \Intro I}{\A \neq \emptyset}
+	\Say{c_n}{\sup_{I \in \A}  \lambda\;I}{\Reals_++}
+	\Say{I,[5]}{\Elim c_n \Elim \sup }
+	{
+		\sum I \in \A \.  \lambda \; I > \frac{c_n}{2}
+	}
+	\Conclude{\V''_n}{V''_{n+1} \cup \{I\}}{\Finite(\V)}
+	\Derive{\Big(V'',c,[1]\Big)}{\Intro \sum}
+	{
+		\sum \V'' : \Int_+ \to \Finite(\V) \. 
+		\sum c : \Nat \to \Reals_{++} \.
+		\forall n \in \Int_+ \.  \NewLine \. 
+		|\V''_n | = n \And \TYPE{PairwiseDisjoint}(\V''_n) 
+		\And \NewLine \And
+		\forall n \in \Nat \. \forall I : \CI(\Reals) \.   
+		\forall \aleph : \{I\} = \V''_n \setminus \V''_{n+1} \.
+		\lambda\; I \ge \frac{c_n}{2}
+	}
+	\Say{\V'}{\bigcup^\infty_{n=1} \V''_n}{\Countable \And \TYPE{PairwiseDisjoint}(\V)}
+}\Page{
+	\SayIn{B}{\bigcup \V'}{\Borel(\Reals)}
+	\Say{J}{
+		\Lambda [a,b] \in \V'' \.
+		\FUNC{scale}\left( \frac{a+b}{2}, 5 , [a,b] \right) 
+	}
+	{
+		\V'' \to \CI(\Reals)
+	}
+	\Say{[2]}{
+		\Elim J_I	\THM{LengthScaling}(I,5)
+		\Elim_3 \Measure(\Reals,\Lambda,\lambda) 
+		\THM{Monotonicity}
+		\Elim \lambda \Delta
+	}
+	{
+		\NewLine :		
+		\sum_{I \in \V'} \lambda \; J_I = 
+		\sum_{I \in \V'} 5\lambda\; I  =
+		5 \lambda \bigcup_{I \in \V'} I \le 
+		5 \lambda \Delta < \infty
+	}
+	\Say{I}{\FUNC{enumerate}(\V')}{\TYPE{Surjective}\Big(\Nat,\V'\Big) }
+	\Say{[3.1]}{\THM{AbsoluteConvergence}[3]}
+	{
+		\lim_{n \to \infty} \lambda J_{I_n} = 0
+	}
+	\Say{[3.2]}{ \THM{MeasureMonotonicity}(\Reals,\Lambda,\lambda)[3.1]  }
+	{
+		\lim_{n \to \infty} \lambda I_n= 0
+	}
+	\Say{K}{\Lambda n \in \Nat \. \bigcup^n_{k=1} I_k}{\Nat \uparrow \Closed(\Reals)}
+	\Say{U}{K^\c}{\Nat \downarrow \Open(\Reals)}
+	\AssumeIn{n}{\Nat}
+	\AssumeIn{x}{A \setminus B}
+	\Say{[4]}{\Elim U x}{\forall n \in \Nat \. x \in U_n}
+	\Say{\Big(C,[5]\Big)}{\Elim \VC(\V)[4]}
+	{
+		 \sum  C : \Nat \to \V  \. 
+		 \forall n \in \Nat \. x \in C_n \subset U_n
+	}
+	\Say{[6]}{\Elim c [5] \Elim U[1]}
+	{
+		\forall n \in \Nat \. 
+		\lambda \; C_n \le c_n \le 2 \lambda \; I_n
+	}
+	\Say{[7]}{[3.2][6]}{\lim_{n \to \infty} \lambda C_n = 0}
+	\SayIn{m}{\min \{ m \in \Nat : \exists F_m  \cap C_n  \}}{\Nat}
+	\Say{[8]}{\Elim m \Elim F_n}{\exists C \cap I_m}
+	\Say{[9]}{\Elim m \Elim F_n [1] \Elim c}
+	{
+		\lambda C_n \le c_m \le 2 \lambda I_m
+	}
+	\Say{[10]}{\THM{MeasureOfClosedInterval}[9]\Elim \CI(C_m)\Intro J_m}
+	{
+		C_m \subset J_m
+	}
+	\Say{[11]}{[5]\Elim m}{m > n}
+	\Conclude{[x.*]}{[5][10]}{x \in J_m}
+	\DeriveConclude{[n.*]}{\Intro \exists \Intro \bigcup}
+	{
+		A \setminus B \subset \bigcup^\infty_{m=n+1} J_m
+	}
+	\Derive{[4]}{\Intro \forall}
+	{
+		\forall n \in \Nat \.
+		A \setminus B \subset \bigcup^\infty_{m=n+1} J_m
+	}
+	\Conclude{[*]}{  \Elim \OM(\Reals,\lambda^\star)[4] \THM{Subbaditivity}  [3.1]}
+	{
+		\NewLine : 		
+		\lambda^\star(A \setminus B) \le 
+		\lim_{n \to \infty} \lambda\left( \bigcup^\infty_{m=n+1} J_m   \right) \le 
+		\lim_{n \to \infty} \sum^\infty_{m=n+1}  \lambda \; J_m = 0
+	}
+	\EndProof
+	\\
+	\Theorem{ApproximateVitaliCoveringTHM}
+	{
+		\forall A : \Bounded(\Reals) \. 
+		\forall \V : \VC(A) \. \NewLine \.
+		\forall \varepsilon \in \Reals_{++} \.
+		\exists \V' : \Finite \And \TYPE{PairwiseDisjoint}(\V) \.
+		\lambda^\star \left( A \setminus \bigcup_{V \in \V'} V \right) < \varepsilon
+	}
+	\Explain{Find large finite sum instead of the infinite one as in the proof above}
+	\EndProof
+}
+\newpage
+\subsection{Measurable Wonders}
+\Page{
+	\Theorem{MeasurableSetsCardinality}
+	{
+		|\Lambda| = 2^{|\Reals|}
+	}
+	\Explain{ $\Lambda \subset 2^\Reals$, so $|\Lambda| \le 2^{|\Reals|}$  }
+	\Explain{ But as $\lambda \; \Cantor = 0$, every subset of $\Cantor$ is measurable}
+	\Explain{ However, $|\Cantor| = |\Reals|$, so $|\Lambda| = 2^{|\Reals|}$ }
+	\EndProof
+	\\	
+	\Theorem{NonMeasurableSetExists}
+	{
+		\Lambda \subsetneq 2^\Reals
+	}
+	\Explain{ Compute quotient $X = \frac{[0,1]}{\Rats}$ by $x \sim y$ if $x-y \in \Rats$}
+	\Explain{ By axiom of choice sellect set of representatives 
+		$E = \Big\{ x \Big| [x] \in X \Big\}$}
+	\Explain{ Let $q$ be anumeration of $\Rats \cap [0,1]$  }
+	\Explain{ Let $E_k =  (E + q_k) \; \mod \; 1$}
+	\Explain{ Then, if $E$ is measurable, then 
+		$2 = \lambda [-1,1] = \lambda \bigcup^\infty_{n=1} E_n = \sum^\infty_{n=1} \lambda \; E_n$,
+		where we used that $E_n$ are disjoint.	
+	}
+	\Explain{ So, there must be some $E_n$ with $\lambda \; E_n > 0$} 
+	\Explain{ But by translation invariance for each $\lambda E_n = \lambda E_m$}
+	\Explain{ So,   $\sum^\infty_{n=1} \lambda \; E_n = \infty$, a contradiction}
+	\EndProof	
+	\\
+	\Theorem{LebesgueMeasurableAreMoreThenBorel}
+	{
+		\Borel(\Reals) \subsetneq \Lambda
+	}
+	\Explain{ Let $A$ be a Borel non-measurable subset of $\Reals$ }
+	\Explain{ But $\Reals$ is Borel-isomorphic to Cantor set $\Cantor \subset \Reals$}
+	\Explain{ So, let $\varphi$ be a corresponding isomorphism}
+	\Explain{ Then $\varphi(A)$ must also be non-Borel in $\Cantor$}
+	\Explain{ So, $\varphi(A)$ is also non-Borel in $\Reals$ as $\Cantor$ has subset topology}
+	\Explain{ But $\lambda(\Cantor) =0$, so $\varphi(A)$ must be Lebesgue measurable
+		as $(\Reals,\Lambda,\lambda)$ is complete} 
+	\Explain{ As measure space produced by outer measures are complete}
+	\EndProof
+}
+\subsection{Lebesgue-Steltjes Measures and Distributions and Distributions}
+\Page{
+\DeclareType{\LS}{ ?\TYPE{Measure}\big(\Reals,\Borel(\Reals)\big)}
+\DefineType{\mu}{\LS}{\forall I \in \Borel(\Reals) \. \Bounded(\Reals,U) \Imply \mu(I) < \infty} 
+\\ 
+\DeclareType{ \DF}{  ?\left(\TYPE{RightContinuous} \& \TYPE{Increasing}\left(\EReals,\EReals \right)\right) }
+\DefineType{F}{\DF}{ F(\infty) > -\infty} 
+\\ 
+ \Theorem{MeasureAsDistribution}{
+	\forall \mu : \LS(\Reals) \. 
+	\forall x,c \in \Reals \.  \NewLine
+	\exists F : \DF(\Reals) : F(x)=c : \forall (a,b] : \TYPE{SemiClosed}(\Reals) \. 
+	\. \mu(a,b] = F(b) - F(a)
+}
+	\Say{F}{\Lambda t \in \Reals \. \If t = x \Then c \Else \If t < x \Then c - \mu(a,x] 
+		\Else   \mu(x,a] - c}{ \Reals \to \Reals }
+	\Say{[1]}{\Elim F  \Elim \Measure\Big(\Reals,\Borel(\Reals),\mu \Big) }
+	{
+		\forall (a,b]  : \TYPE{SemiClosed}(\Reals) \.
+		F(b) - F(a) = \mu(a,b]
+	}
+	\AssumeIn{ a,b}{\Reals}
+	\Assume{\aleph}{b > a}
+	\Say{[2]}{ [1](a,b] \Elim \Measure\Big(\Reals,\Borel(\Reals),\mu \Big)}{  F(b) - F(a) = \mu(a,b] \ge 0  }
+	\Conclude{\Big[(a,b).*\Big]}{[1] + F(a)}{ F(b) \ge F(a) }
+	\Derive{[2]}{\Intro \TYPE{Increasing}}{\TYPE{Increasing}(\Reals,\Reals,F)}
+	\Assume{a}{\Nat \to \Reals}
+	\AssumeIn{A}{\Reals}
+	\Assume{\aleph}{a \downarrow A}
+	\Say{[3]}{\Elim \aleph \Intro \emptyset}{(A,a]\downarrow \emptyset}
+	\Say{[4]}{	    
+		\Lambda n \in \Nat \. [1](A,a_n) 
+		\THM{UpperContinuity}\Big(\Reals,\Borel(\Reals),\mu \Big)
+		\Elim\Measure\Big(\Reals,\Borel(\Reals),\mu \Big)
+	}
+	{
+		\NewLine : 		
+		\lim_{n \to \infty}  \big( F(a_n) - F(A) ) =
+		\lim_{n \to \infty } \mu(A,a_n)  = 
+		\mu \bigcap^\infty_{n=1} \mu(A,a_n) =
+		\mu(\emptyset) =
+		0
+	}
+	\Conclude{[a.*]}{\THM{ConstantLimit}\Big([4] + F(A)\Big)}
+	{
+		\lim_{n \to \infty} F(a_n) = F(A)
+	}
+	\Derive{[3]}{\Intro \TYPE{RightContinuous}}
+	{
+		\TYPE{RightContinuous}(F)
+	}
+	\Conclude{[*]}{\Intro \DF [2][3]}{\DF(F)}
+	\EndProof
+	\\
+	\DeclareFunc{toDistribution}{\LS \to \DF} \\
+	\DefineNamedFunc{toDistribution}{\mu}{F_\mu}{  \THM{MeasureAsDistribution}(\mu,0,0)  }
+}\newpage
+\Page{
+	\Theorem{DistributionAsMeasure}{
+		\forall F : \DF(\Reals) \. \exists! \mu : \LS(\Reals) \. \NewLine\.
+  		\THM{MeasureAsDistribution}(\mu,0,F(0)) = F 
+ 	}
+	\Say{\mu^*}
+	{
+		\Lambda A \subset \Reals \.
+		\inf		
+		\left\{
+			\sum^\infty_{n=1} F(b_n) - F(a_n) \Bigg|
+			(a_n,b_n] : \Nat \to \TYPE{SemiClosed}(\Reals),
+			A \subset \bigcup^\infty_{n=1} (a_n,b_n]
+		\right\}
+	}{2^\Reals \to \EReals_+}
+	\Explain{
+		Then mimic the construcion of the Lebesgue measure}
+	\EndProof
+	\\
+	\DeclareFunc{measureFromDistribution}
+	{
+		\DF \to \LS(\Reals)
+	}
+	\DefineNamedFunc{measureFromDistribution}{F}{\mu_F}
+	{
+		\THM{DistributionAsMeasure}(F)
+	}
+}
+\newpage
+\section{Lebesgue Integration on the Real Line}
+\subsection{Integration over Intervals}
+\subsection{Laplace Transform}
+\newpage
+\section*{Sources}
+\begin{enumerate}
+\item Натансон И. П.  --- Теория функций вещественной переменной 1941
+\item  Фихтенгольц Г. М. --- Курс дифференциального и интегрального исчисление 1947
+\item Зорич В. A. --- Математический анализ. Часть 1 1984
+\item R. Ash -- Probability and Measure Theory 2000
+\item C. C. Pugh --- Real mathematical analysis 2002
+\item T. Tao --- Analysis I 2006
+\item D. H. Fremlin --- Measure Theory (11) 2016
+\item C. В. Шапошников --- Матемтический анализ (листки НМУ) 2017
+\end{enumerate}
+\end{document}

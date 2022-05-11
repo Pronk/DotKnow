@@ -1,0 +1,881 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{\begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cate}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\}
+\newcommand{\A}{\LOGIC{Assume} \;} 
+\newcommand{\Assume}[2]{& \A #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%MetricGeometry
+\newcommand{\Ball}{ \mathbb{B} }
+\newcommand{\ClBall}[3]{ \overline{ \mathbb{B}}^{#1}\left(#2,#3\right) }
+\newcommand{\Sphere}{\mathbb{S}}
+\newcommand{\ToP}{\overset{p}{\to}}
+\newcommand{\ToU}{\rightrightarrows}
+%LinearAlgebra
+%TYPES
+\newcommand{\VS}[1]{\TYPE{VectorSpace}\left( #1 \right)}
+\newcommand{\Lin}[1]{\mathcal{L}\left( #1 \right)}
+\newcommand{\vs}[1]{\mathsf{VS}\left( #1 \right)}
+\DeclareMathOperator*{\rank}{rank}
+%FUNK
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\rk}{rank}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\codim}{codim}
+%Simbpls
+\renewcommand{\L}{\mathcal{L}}
+%Topology
+%TYPES
+\newcommand{\TS}{\TYPE{TopologicalSpace}}
+\newcommand{\UC}{\rightrightarrows}
+\newcommand{\MS}{\TYPE{MetricSpace}}
+\newcommand{\Sep}{\TYPE{Separable}}
+\newcommand{\LC}{\TYPE{LocallyComapact}}
+\newcommand{\Compact}{\TYPE{Compact}}
+\newcommand{\Dense}{\TYPE{Dense}}
+\newcommand{\Complete}{\TYPE{Complete}}
+\newcommand{\SB}{\TYPE{Superbounded}}
+%CATS
+\newcommand{\TOP}{\mathsf{TOP}}
+%FUNC
+\newcommand{\supp}{ \mathrm{supp} \, } % Support (may be overloaded)
+%Functional Analysis
+%TYPES
+\newcommand{\PLF}{\TYPE{PositiveLinearFunctional}} % functional mappin positive w.r.t to some cone elements to positive numbers
+\newcommand{\NS}{\TYPE{NormedSpace}} % Vector Space with Topology defined by a norm
+\newcommand{\SNS}{\TYPE{SeminormedSpace}} % Vector space with topology defined by a seminorm
+\newcommand{\Banach}{\TYPE{Banach}} % A Complete Normed Space
+\newcommand{\IPS}{\TYPE{InnerProductSpace}} %  Vector Space with  topology defined by an inner product
+\newcommand{\TVS}{\TYPE{TopologicalVectorSpace}} % Most General type of spaces admitting differential calculus
+\newcommand{\PNS}{\TYPE{PolynormedSpace}} % Topological vector space equiped with polynorm
+%\newcommand{\SA}{\mathfrak{SA}} % Self-Adjoint Operators on a Hilbert Space
+\newcommand{\HP}{\mathcal{HP}} % Homegeneous Polynomials
+%\renewcommand{\P}{\mathcal{P}} % Preanalytic  Polynomials
+\newcommand{\AP}{\mathcal{AP}} % Analytic Polynomials
+%FUNC
+\DeclareMathOperator{\ind}{ind}
+\newcommand{\spec}{\sigma}
+%CATS
+\newcommand{\PRE}{\mathsf{PRE}} % Category of seminormed spaces with bounded operators as morphisms
+\newcommand{\PREI}{\mathsf{PRE}_{\circ \to \cdot}} % Category of seminormed spaces with nonexpanding operators as morphisms 
+\newcommand{\NORM}{\mathsf{NORM}} % Category of normed spaces with bounded operators as morphisms
+\newcommand{\NORMI}{\mathsf{NORM}_{\circ \to \cdot}} % Category of normed spaces with bounded operators as morphism
+\newcommand{\DIFF}{\mathsf{DIFF}}
+\newcommand{\BAN}{\mathsf{BAN}} % Category of Banach Spaces with bounded operators as morphisms
+\newcommand{\HIL}{\mathsf{HIL}} % Category of Hilbert spaces with bounded operators as morphisms
+\newcommand{\HILI}{\mathsf{HIL}_{\circ \to \cdot}}
+%Symbol
+\newcommand{\vertiii}[1]{{\left\vert\kern-0.25ex\left\vert\kern-0.25ex\left\vert #1 \right\vert\kern-0.25ex\right\vert\kern-0.25ex\right\vert}} % notation for norm
+\newcommand{\K}{\mathcal{K}} % Compact Operators
+\newcommand{\s}{\mathbf{s}}
+\renewcommand{\S}{\mathcal{S}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\D}{\mathrm{D}}
+%MeasureTheory
+%TYPES
+\newcommand{\SA}[1]{\TYPE{\sigma \hyph  Algebra}\left( #1 \right) }  % s
+\newcommand{\SF}[1]{\TYPE{\sigma \hyph  Finite}\left( #1 \right) }
+\newcommand{\CA}[1]{\TYPE{CountablyAdditive}\left( #1 \right) }
+\newcommand{\FA}[1]{\TYPE{Charge}\left( #1 \right) }
+\newcommand{\LS}{\TYPE{Lebesgue \hyph Stieltjes}}
+\newcommand{\DF}{\TYPE{DistributionFunction}}
+\renewcommand{\AE}[1]{\quad \mathrm{a\. e\.} \left[#1\right] }
+\newcommand{\SI}[1]{\TYPE{\sigma \hyph  Ideal}\left( #1 \right) }
+\newcommand{\DRP}{\TYPE{DiscreteRandomProcess}}
+\newcommand{\CRP}{\TYPE{ContinuousRandomProcess}}
+\renewcommand{\AC}{\TYPE{AbsolutelyContinuous}}
+%Category
+\newcommand{\BOR}{\mathsf{BOR}}
+\newcommand{\BORN}{\mathsf{BOR}^0}
+\newcommand{\MEAS}{\mathsf{MEAS}}
+%Simbols
+\newcommand{\F}{\mathcal{F}}
+\renewcommand{\O}{\Omega}
+\newcommand{\B}{\mathcal{B}}
+\renewcommand{\l}{\lambda}
+\renewcommand{\P}{\mathbb{P}}
+%Probability
+%Data
+\newcommand{\RV}{\TYPE{RandomVariable}}
+\newcommand{\RO}{\TYPE{RandomObject}}
+\newcommand{\RS}{\TYPE{RandomSequence}}
+%FUNC
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Corr}{\mathrm{Corr}}
+%Symbol
+\DeclareMathOperator*{\Exp}{\mathbb{E}}
+\DeclareMathOperator*{\Var}{\mathbb{V}}
+\author{Uncultured Tramp} 
+\title{Random Variables}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Random Variable in Topological Vector Space}
+\subsection{Random Variables And Corresponding Events}
+\Page{
+	& \RV  = \prod (\O,\F,P) : \TYPE{ProbabilitySpace} \. \prod V : \mathsf{TOPVS}(K)  \.  (\O,\F) \to_\BOR (V,\B V) \\ 
+	\\
+	\DeclareFunc{associatedProbability}{ \RV\Big( (\O,\F,P), V \Big) \to \TYPE{Probability}(V,\B V)  }
+	\DefineNamedFunc{associatedProbability}{X}{\P_X}{\Lambda B \in \B V \.  P(X^{-1}B) }
+	\\
+	\DeclareFunc{empiricEventProbability}{\RV ( \O , V  ) \to \B V \to [0,1]}
+	\DefineNamedFunc{empiricEventProbability}{X,B}{ \P(X \in B)  }{\P_X(B)}
+	\\
+	\DeclareType{IndependentEvents}{\prod (\O,\F,P) : \TYPE{PobabilitySpace} \. ? \F^2}
+	\DefineNamedType{A,B}{IndependantEvents}{A \bot B}{ P(A \cap B ) = P(A)P(B)  }
+	\\
+	\DeclareType{conditionalProbability}{\prod (\O,\F,P) : \TYPE{ProbabilitySpace} \. \F \to \F \setminus I^0_P \to [0,1]}
+	\DefineNamedFunc{conditionalProbability}{A,B}{P(A|B)}{\frac{P(A \cap B)}{P(B)}}
+	\\
+	\Theorem{TotalProbability}{
+		\forall (\O,\F,P) \. 
+		\forall A \in \F \. 
+		\forall n \in \aleph_0 \. 
+		\forall B : \TYPE{Disjoint}(n,\F \setminus I^0_P) \. \NewLine \.
+		\forall (1) : \bigcup^n_{i = 1} B_i = \O \.
+		P(A) = \sum^n_{i = 1} P(B_i)P(A|B_i)
+	}
+	\Say{ (2) }{\forall i \in n \. \THM{DisjointIntersection}(A,B_i)}{A \cap B : \TYPE{Disjoint}(n,\F)}
+	\Say{ (3) }{\THM{SetSpliting}(A,B)(1)}{A = \bigcup^n_{i=1} A \cap B_i}
+	\Say{(4)}{\bd \TYPE{Measure}(\O,\F)(P)(2)}{P(A) = \sum^n_{i=1} P(A \cap B_i)}
+	\Assume{i}{n}
+	\Conclude{(5)}{P(B_i)\bd P(A|B_i)}{P(A \cap B_i) = P(B_i)P(A|B_i)}
+	\Derive{(5)}{I(\forall)}{ \forall i \in n \. P(A \cap B_i) = P(B_i)P(A \cap B_i )  }
+	\Conclude{(*)}{(5)(4)}{P(A) = \sum_{i = 1}^n P(B_i) P(A \cap B_i)}
+	\EndProof
+}
+\subsection{Distribution Functions and Densities in Eucledean Space }
+\Page{
+	\DeclareFunc{ProbabilityDistribution}{\RV(\O,\Reals^n) \to \Reals^n \to [0,1]}
+	\DefineNamedFunc{ProbabilityDistribution}{X}{P_X}{\Lambda x \in \Reals^d \. \P_X((-\infty,x])}
+	\\
+	\DeclareFunc{ProbabilityFunction}{\RV(\O,V) \to V \to [0,1]}
+	\DefineNamedFunc{ProbabilityFunction}{X}{p_X}{\frac{\mathrm{d}\P_X}{\mathrm{d}\#}}
+	\\
+	\DeclareFunc{ProbabiltiDensityByMeasure}{ \prod X : \RV(\O,V) \. \prod \mu :  \TYPE{Measure}(V,\B V) \. \P_X \ll \mu 
+	\to \NewLine 
+	\to V \to \Reals_+ }
+	\DefineNamedFunc{ProbabilityDensityByMeasure}{ X,\mu }{f_{X,\mu}}{ \frac{\mathrm{d} \P_X}{\mathrm{d}\mu} }
+	\\
+	\DeclareType{\AC}{?\RV(\O,\Reals^d)}
+	\DefineType{X}{\AC}{\P_X \ll \l}
+	\\
+	\DeclareFunc{ProbabilityDensity}{\prod X : \AC(\O,\Reals^d) \. \Reals^d \to \Reals_{+} }
+	\DefineNamedFunc{ProbabilityDensity}{X}{f_X}{\frac{\mathrm{d}\P_X}{\mathrm{d}\l}}
+}
+\subsection{Independant Random Objects}
+\Page{
+	& \RO  = \prod (\O,\F,P) : \TYPE{ProbabilitySpace} \. \prod (\O',\F') \in \BOR  \.  (\O,\F) \to_\BOR (\O',\F') \\ 
+	\\
+	\DeclareFunc{associatedProbability}{ \RO\Big( (\O,\F,P), (\O',\F') \Big) \to \TYPE{Probability}(V,\B V)  }
+	\DefineNamedFunc{associatedProbability}{X}{\P_X}{\Lambda B \in \F' \.  P(X^{-1}B) }
+	\\
+	\DeclareFunc{empiricEventProbability}{\RO ( \O , (\O',\F')  ) \to \F' \to [0,1]}
+	\DefineNamedFunc{empiricEventProbability}{X,B}{ \P(X \in B)  }{\P_X(B)}
+	\\
+	\DeclareType{IndependentFamily}{\prod n \in \Nat \. ? \prod i \in n \. \RO(\O,(\O_i',\F_i'))}
+	\DefineNamedType{X}{IndependentFamily}{\bot(X)}{ \forall B : \prod i \in n \to \F_i' \. \P \left( (X_i)^n_{i = 1} \in \prod^n_{i = 1} B_i  \right) = \prod^n_{i = 1} P(X_i \in B_i)  }
+}\Page{
+	\Theorem{IndependenceByCDF}{ \forall n \in \Nat \. \forall m : n \to \Nat \.  \forall X : \prod i \in n \. \RV(\O,\Reals^{m_i}) \.
+		\NewLine
+		\. \bot(X) \iff P_X = \prod^m_{i = 1} P_{X_i} 
+	}
+	\Say{N}{\sum^n_{i=1} m_i}{\Nat}
+	\Assume{L}{\bot(X)}
+	\Assume{x}{\Reals^n}
+	\Conclude{(1)}{ \bd P_X \bd \bot(X) \forall i \in n \. \bd^{-1} P_{X_i}    }{ P_X(x) = \P_X(-\infty,x] = \prod^n_{i=1} \P_{X_i}(-\infty,x_i]  = \prod^n_{i=1} P_{X_i}(x_i)  }
+	\DeriveConclude{(1)}{I(\forall)}{ P_X = \prod^n_{i = 1} P_{X_i}}
+	\Derive{(1)}{I(\Rightarrow)}{ \bot(X) \Rightarrow P_X = \prod^n_{i = 1} P_{X_i}}
+	\Assume{R}{P_X = \prod^m_{i = 1} P_{X_i}}
+	\Assume{A}{ \left\{  \bigcup^k_{i = 1} ( x_i, y_i] | k \in \Nat,  x,y : k \to \Reals^n    \right\} }
+	\Assume{B}{\prod i \in n \. \B \Reals^{m_i}}
+	\Say{Z}{\prod^n_{i=1} B_i}{ \B \Reals^N  }
+	\Assume{(2)}{Z \in A}
+	\Say{(k,x,y,3)}{\bd A(Z)(2)}{\sum k \in \Nat \. \sum (x,y) : \Nat \to \Reals^n \times \Reals^n \. \forall i,j \in k \. x_i < y_i \And 
+	\NewLine \And
+	i \neq j
+	\Rightarrow
+	(x_i,y_i] \cap (x_j,y_j) = \emptyset \And B = \bigcup^k_{i=1} (x_i,y_i]}
+	\Conclude{(4)}{ \bd \P(X \in Z)(3)\bd P_X (2) \forall i \in n \. \bd^{-1}\P(X \in B_i)   }{
+		\NewLine :
+		\P(X \in Z) = 
+		\sum^k_{i=1} \P\Big( X \in (x_i,y_i] \Big) =
+		\sum^k_{i=1} \Big(P_{X}(y_i) - P_X(x_i)\Big) =
+		\sum^k_{i=1} \prod^n_{j = 1}\left(  P_{X_j}(y_{i,j}) - P_{X_j}(x_{i,j}) \right)=
+		\NewLine
+		=\prod^n_{j=1} \sum^k_{i=1} \left( P_{X_j}(y_{i,j}) - P_{X_j}(x_{i,j})  \right) =
+		\prod^n_{i = 1} \P(X \in B_i)  
+	} 
+	\Derive{(2)}{I(\forall)I(\Rightarrow)}{\forall B : n \to \B \Reals^{m_i} \. \prod^n_{i=1} B_i \in A \Rightarrow \P\left(X \in \prod^n_{i=1} B_i\right) = \prod^n_{i=1}\P(X_i \in B_i) }
+	\Say{Z}{\left\{ \prod n \in \Nat \. \B \Reals^m_i : \P\left(X \in \prod^n_{i=1} B_i \right) = \prod^n_{i=1} \P( X_i \in B_i )  \right\}}{ ? \prod i \in n \. \B \Reals^{m_i}}
+	\Say{(3)}{\forall i \in n \. \THM{MonotoneConvergence}(\P_{X_i})}{\forall i \in n \. \Big( Z(i) : \TYPE{MonotoneClass} \Big)}
+	\Conclude{(4)}{\THM{MonotoneClassTHM}(2)(3)}{ \Big( Z : \TYPE{Universe} \Big)}
+	\DeriveConclude{(*)}{I(\iff)(1)I(\Rightarrow)}{ \LOGIC{This} }
+	\EndProof
+}
+\Page{
+	\Theorem{IndependenceByDensity}{
+		\forall n \in \Nat \. \forall m : n \to \Nat \. 
+		\NewLine
+		\. \forall X : \RV\left(\O, \prod^n_{i = 1} \Reals^{m_i} \right) \.  \forall (1) : \P_X \ll \l \. 
+		\forall \bot(X) \iff f_{X} = \prod^n_{i = 1} f_{X_i}
+	}
+	\Say{N}{\sum^n_{i=1} m_i}{\Nat}
+	\Assume{i}{n}
+	\Assume{(2)}{\P_{X_i} \not \ll \l}
+	\Say{(B,3)}{\bd (2)}{\sum B \in \B \Reals^{m_i} \. \P_{X_i}(B) > 0 \And \l(B) = 0}
+	\Say{(4)}{\THM{FullProduct}(\P_X,B)(3)}{ \P_X \left( B \oplus \bigoplus^{n}_{j = 1 : j \neq i} \Reals^{m_i} \right) = \P_{X_i}(B) > 0 }
+	\Say{(5)}{\THM{FullProduct}(\l,B)(3)}{ \l \left( B \oplus \bigoplus^{n}_{j = 1 : j \neq i} \Reals^{m_i} \right) = \l(B) = 0 }
+	\Say{(6)}{ \bd \AC (4,5)}{\P_X \not \ll \l}
+	\Conclude{(7)}{I(\bot)(1)(6)}{\bot}
+	\Derive{(2)}{I(\forall)E(\bot)}{\forall i \in n \. \P_{X_i} \ll \l}
+	\Assume{ L   }{ \bot(X)  }
+	\Assume{x}{ \Reals^N}
+	\Conclude{(3)}{\bd f_X(x) \bd L \THM{LebesgueIsProduct}(N,m) \, \THM{CubeSeparation}(N,m) \forall i \in n \. \bd^{-1} f_{X_i}}
+	{	
+		\NewLine
+		f_X(x) =  
+		\lim_{r \to 0} \inf_{C : \TYPE{Cube}(N,r,x)}  \frac{\P_X(C)}{\l(C)} = 
+		\lim_{r \to 0} \inf_{C : \TYPE{Cube}(N,r,x)} \frac{\prod^n_{i = 1} \P_{X_i}(C_i)}{\prod^n_{i = 1}\l(C_i)}  =
+		\prod^{n}_{i = 1}\lim_{r \to 0 } \inf_{C : \TYPE{Cube}(m_i,r,x_i)} \frac{\P_{X_i}(C_i)}{\l(C_i)} =
+		\prod^{n}_{i = 1} f_{X_i}(x_i)
+	}
+	\Derive{(2)}{I(\Rightarrow)I(=,\to)I(\forall)}{ \bot(X) \Rightarrow f_X = \prod^n_{i = 1} f_{X_i}   }
+	\Assume{R}{ f_X = \prod^n_{i=1} f_{X_i}}
+	\Assume{B}{\prod i \in n \. \B \Reals^{m_i}}
+	\Say{A}{\prod^n_{i=1} B_i}{\B \Reals^N}
+	\Conclude{(3)}{
+		\THM{DensityProbability}(\P_X,A)
+		\THM{Fubini}(A,B_i)
+		R
+		\THM{IntegralHomogen}
+		\forall i \in n \. \THM{DensityProbability}(\P_{X_i},B_i)
+	}{ 
+		\NewLine :
+		\P\left(X \in A \right) = 
+		\int_A f_X \, \mathrm{d}\l = 
+		\int_{B_1} \ldots \int_{B_n} f_X(x_i)^n_{i=1} \, \mathrm{d}\l(x_1)\ldots \mathrm{d}\l(x_n) =
+		\NewLine =
+		\int_{B_1} \ldots \int_{B_n} \prod^n_{i=1} f_{X_i}(x_i) \, \mathrm{d}\l(x_1) \ldots \mathrm{d}\l(x_n) =
+		\prod^n_{i=1} \int_{B_i} f_{X_i} \mathrm{d} \l= 
+		\prod^n_{i = 1} \P(X_i \in B_i)
+	}
+	\DeriveConclude{(*)}{I(\iff)(2)I(\Rightarrow)\bd \bot(X) I(\forall)}{\LOGIC{This}}
+	\EndProof
+}\Page{
+	\Theorem{AbstractIndepndanceByDensity}{\forall n \in \Nat \. \forall (\O',\F') : n \to \BOR \. \forall \mu : \prod i \in n \. \TYPE{Measure}(\O'_i,\F'_i)\.
+	  \NewLine \.
+	  \forall X : \prod i \in \. \RO\Big(\O ,(\O'_i,\F'_i) \Big) \. \forall (1) : X \ll M \. f_{X,M} = \prod^n_{i=1} f_{X_i,\mu_i} \NewLine 
+	  \LOGIC{where}
+	  \NewLine
+	  M = \prod^n_{i=1} \mu_i \iff \bot(X)
+	}
+	& \textrm{Proof as above: replace $\l$ by $M$} \\
+	\EndProof \\
+	\Theorem{IndependanceIsBOR}{ \forall n \in \Nat \. \forall (\O',\F'),(\O'',\F'') : n \to \BOR \.  
+	\NewLine \.
+	\forall X : \prod i \in n\. \RO\Big( \O, (\O'_i,\F'_i) \Big) \. \forall g : \prod i \in n \. (\O'_i,\F'_i) \to_\BOR (\O''_i,\F''_i) \.
+	\bot(X) \Rightarrow \bot\Big(g(X) \Big) 
+	}
+	& B : \prod i \in n \. \F_i   \\
+	& A = \prod^n_{i = 1} B_I \in \sigma\left( \prod^n_{i=1} \F_i  \right)  \\
+	& \P\Big( g(X) \in A  \Big) = \P( X \in g^{-1} A ) = \prod^n_{i=1} \P(X_i \in g^{-1}_i B_i) = \prod^n_{i = 1} \P\Big(g_i(X_i)  \in  B_i \Big) \\
+	\EndProof
+	\\
+	\DeclareType{IndependentClass}{\prod (\O,\F,P) : \TYPE{ProbabilitySpace} \. ?\prod n \in \Nat \. n \to ?\F}
+	\DefineNamedType{X}{IndependentClass}{ \bot{X}}{\forall B : \prod i \in  n \.  X_i \. P\left( \bigcap^n_{i=1}  B_i   \right) = \prod^n_{i=1} P(B_i)}
+} 
+\newpage
+
+
+
+\subsection{Pushforward of Density}
+\Page{
+	\Theorem{DensityPushforward}{ \forall X : \AC(\O,\Reals^n) \. \forall U,V : \TYPE{Open}(\Reals^n) \. 
+	\NewLine \.
+	\forall (1) : \im X \subset U \. \forall g : (\Reals^n,U) \ToBij_{\DIFF(1)} (\Reals^n,V)
+	\. 
+	 \forall x \in V \. f_{g(X)}(x) = \Big|\det \D g^{-1} |_x \Big| f\Big( g^{-1}(x) \Big)     
+	}
+	&  \P(g(X) \in A) = \P(X \in g^{-1}A) = \int_{g^{-1}(A)} f \, \mathrm{d} \l = \int_A  \Big| \det \D g^{-1}  \Big| f \circ g^{-1} \mathrm{d}\l   \\
+	\EndProof
+}
+\newpage
+\subsection{Expectation And Variance}
+\Page{
+	\DeclareType{ExpectaionExists}{?(\RV(\O,V))}
+	\DefineType{X}{ExpectationExists}{\mathrm{id} : \TYPE{PetisIntegrable}(\P_X)}
+	\\ 
+	\DeclareType{NthMomentExists}{\prod V : \TYPE{TopologicalAlgbra}(K) \. \Nat \to ?\RV(\O,V)} \\
+	& X : \TYPE{NthMomentExists}(n) \iff \mathrm{id}^n : \TYPE{PetisIntegrable}(\P_X)
+	\\  \\
+	\DeclareFunc{expectation}{ \TYPE{NthMomentExists}(\O,V)(1) \to V  }
+	\DefineNamedFunc{expectation}{X}{\Exp X}{\int_V x \, \mathrm{d}\P_X}
+	\\
+	\Theorem{ExpectationPushforward}{ \forall X : \RO(\O,A) \. \forall g : \TYPE{PetisIntegrable}(A,V)(\P_X) \. 
+	\NewLine
+	\. \Exp g(X) = \int g \, \mathrm{d} \, \P_X  }
+	& \textrm{Use simple function approximation}
+	\EndProof
+	\\
+	\DeclareType{NthCentralMomentExists}{ ? \TYPE{NthMomentExists}(\O,\Reals)(1)}
+	& X : \TYPE{NthCentralMomentExists}(n) \iff   \Big(\mathrm{id} -  \Exp X\Big)^n : \TYPE{Integrable}(\P_X)
+	\\ \\
+	\DeclareType{NthAbsoluteCentralMomentExists}{ ? \TYPE{NthMomentExists}(\O,\Reals)(1)}
+	& X : \TYPE{NthAbsoluteCentralMomentExists}(n) \iff   \Big|\mathrm{id} -  \Exp X\Big|^n : \TYPE{Integrable}(\P_X)
+	\\ \\
+	\DeclareFunc{variance}{\TYPE{NthCentralMomentExists}(\O,\Reals)(2) \to \Reals_{+}}
+	\DefineNamedFunc{variance}{X}{\Var(X)}{\int_{-\infty}^\infty(x - \Exp X)^2 \, \mathrm{d} \P_X  }
+	\\ \\
+	\DeclareType{Covariant}{\prod V : \BAN(K) \. ?\TYPE{ExpectationExists}(\O,V)(1) }
+	\DefineType{X}{Covariant}{ \| \mathrm{id} \|^2 : \TYPE{Integrable}(\P_X) }
+	\\ 
+	\DeclareFunc{covarianceOperator}{\prod V : \BAN(K) \. \TYPE{Covariant}(\O,V) \to \B( V^*; V^{**}  ) }
+	\DefineNamedFunc{covarianceOperator}{X}{\Var X}{ \Lambda a,b \in V^* \. \int_V a(x - \Exp x)b(x - \Exp x) \, \mathrm{d} \P_X(x)  }
+}\Page{
+	\Theorem{MomentExistanceTheorem}{ \forall X : \TYPE{NthMomentExists}(V,\Reals)(n) \. \forall k \in n \. X : \TYPE{NthMomentExists}(\O,\Reals)(k)  }
+	&  \int^\infty_{0} x^k \, \mathrm{d}\P_X = \int^1_{-1} x^k \, \mathrm{d}\P_X + \int_1^\infty  x_k \, \mathrm{d} \P_X \le
+	\P(|X| < 1 ) + \int^{\infty}_{ 0} x^n < \infty
+	\\
+	& \textrm{Apply same logic to possibly negative parts}. \\
+	\EndProof
+	\\
+	\Theorem{VarianceRepresentation}{ \forall X : \TYPE{NthMomentExists}(V,\Reals)(2) \. \Var X = \Exp X^2 - (\Exp X)^2 }
+	& \Var X = \Exp \Big( X - \Exp X  \Big)^2 = \Exp X^2  - 2 X \Exp X + (\Exp X)^2 =  \Exp X^2 - (\Exp X)^2 \\
+	\EndProof
+	\\
+	\Theorem{IndepedentExpextion}{\forall V : \TYPE{BanachAlgebra}(K) \. \forall n \in \Nat \. \forall X : n \to \RV(\O,V) 
+		\NewLine \.
+		\forall (1) : \bot(X) \.  
+		\Exp \prod^n_{i=1} X_i = \prod^n_{i=1} \Exp X_i
+	}
+	& \textrm{Use Fubbini theorem} \\
+	\EndProof
+	\\
+	\DeclareFunc{covariance}{\TYPE{NthMomentExists}^2(\O,\Reals)(2) \to \Reals}
+	\DefineNamedFunc{covariance}{X,Y}{\Cov(X,Y)}{\Var (X,Y)(e_1)(e_2)}
+	\\
+	\DeclareFunc{correlation}{\TYPE{NthMomentExists}^2(\O,\Reals)(2) \to [-1,1]}
+	\DefineNamedFunc{correlation}{X,Y}{\Corr(X,Y)}{\frac{\Cov(X,Y)}{\sqrt{\Var(X)\Var(Y)}}}
+	\\
+	\Theorem{VarianceSum}{\forall n \in \Nat \. \forall X : n \to \TYPE{NthMomentExists}(\O,\Reals)(2) \. 
+	 \Var\left( \sum^n_{i=1} X_i  \right) = \sum^n_{i,j=1} \Cov(X_i,X_j)
+	}
+	& \textrm{By sum expansion and the additivity of the integral} \\
+	\EndProof
+	\\
+	\Theorem{ExpectionIsLinear}{ \Exp : \mathcal{L}\Big( \TYPE{NthMomemntExists}(\O,V)(1), V \Big)}
+	&\textrm{By linearity of integral} \\
+	\EndProof
+	\\
+	\Theorem{CovarianceIsBilliner}{\Cov : \mathcal{L}\Big(\TYPE{NthMomentExists}^2(\O,\Reals)(2),\Reals\Big)}
+	& \textrm{As product of two linear maps} \\
+	\EndProof
+}\Page{
+	\Theorem{VarianceIsQuadraticForm}{\Var : \mathcal{Q}\Big(\TYPE{NthMomentExists}(\O,\Reals)(2)\Big)}
+	&\textrm{By linearity of expectation}  \\
+	&\Var cX = \Exp c^2X^2 + \big(\Exp cX\big)^2 = c^2\big( \Exp X^2 + \big(\Exp X\big)^2 \Big) = c^2 \Var X \\
+	& \Var X + Y = \Var X   + 2 \Cov(X, Y) \Var Y \\
+	\EndProof
+	\\
+	\Theorem{VarianceMatrix}{\forall X : \RV( \O , \Reals^n  ) \. \forall A \in \mathcal{L}(\Reals^n,\Reals^n) \. \Var AX =  A (\Var X) A^*  }
+	\Say{\Sigma}{\Var X}{\mathcal{L}(\Reals^n,\Reals^n;\Reals)}
+	\Say{B}{A \Sigma A^*}{\mathcal{L}(\Reals^m,\Reals^m; \Reals)}
+	\Assume{i,j}{m}
+	\Conclude{(1)}{ \bd \Var AX \bd^{-1}B}{
+			\Big(\Var AX \Big)_{i,j} = \exp \left(\sum^n_{k=1} A_{i,k} (X_k - \Exp X_k)   \right)\left( \sum^n_{k=1} A_{j,k} (X_k - \Exp X_k) \right) =
+			\NewLine
+			= \sum^n_{k,l = 1} A_{i,k} \Sigma_{i,j} A_{j,k} = B_{i,j}
+		}
+	\DeriveConclude{(2)}{\THM{MatrixUnique}}{\Var AX = B}
+	\EndProof
+}  
+\newpage
+\subsection{Weak Law of large numbers}
+\Page{
+	& \RS(\O,V) = \Nat \to \RV(\O,V) \\
+	\\
+	\Theorem{RandomSequenceIsRandomVariable}{\forall X : \RS(\O,V) \. X : \RV\left(\O, \bigoplus^\infty_{i=1} V  \right) }
+	&  X^{-1} A =  \bigcup^\infty_{n = 1} X_n^{-1} \pi_n A \in \F_\O \\
+	\EndProof
+	\\
+	\DeclareType{IndependentSequence}{? \RS(\O,V)}
+	\DefineNamedType{X}{IndependentSequence}{\forall n \in \Nat \. \forall m : n \to \Nat \. \bot(X_m)}
+	\\
+	\Theorem{WeakLawOfLargeNumbers}{
+		\forall X : \RS(\O,\Reals) \. 
+		\forall (1) : \bot(X) \. 
+		\NewLine \.
+		\forall (2) : \forall n \in \Nat \. X_n : \TYPE{NthCentralMomentExists}(\O,\Reals)(2) \. 
+		\NewLine \.
+		\forall (M,3) : \sum M \in \Reals_{++} \. \forall n \in \Nat \. \Var X_n \le M \.
+		\frac{\sum^n_{i=1} X_i - \sum^n_{i=1} \Exp X_i }{n} \xrightarrow[n \to \infty]{\P_X} 0
+	} 
+	& \textrm{Assume $\varepsilon \in \Reals_{++}$} \\
+	& \textrm{By Chebyshev Inequelity} \\ 
+	& \P\left( \frac{\left| \sum^n_{i=1} X_i -  \Exp X_i \right|}{n} > \varepsilon    \right) \le \frac{\Exp \left( \sum^n_{i=1} X_i - \Exp X_i  \right)^2}{\varepsilon^2 n^2} = 
+	   \frac{\Var\left( \sum^n_{i=1} X_i \right)}{\varepsilon^2 n^2} = \frac{\sum^n_{i=1} \Var(X_i)}{\varepsilon^2 n^2} \le  
+	  \frac{M}{\varepsilon^2 n} \xrightarrow[n \to \infty]{} 0 \\
+	\EndProof
+}
+\newpage
+\section{Conditional Probability Theory}
+\subsection{Conditional Probability and Excpectation In the Point}
+\Page{
+	\Theorem{ ConditionalProbabilityExists}{ 
+		\forall X : \RO\Big( (\O,\F,\P), (\O',\F') \Big) \. \forall B \in \F \. 
+		\NewLine \.
+		\exists g : (\O',\F') \to_\BOR (\Reals,\B \Reals) \. 
+		 \forall A \in \F' \. \P\Big( X^{-1}A \cap B \Big) = \int_A g(x) \, \mathrm{d} \P_X
+	}
+	& \textrm{We have measure which is a. c. w. r. $\P_X$.} \\
+	& \textrm{Apply Radon-Nikodym theorem to it.} \\
+	\EndProof
+	\\
+	\DeclareFunc{conditionalProbabilityAtAPoint}{\RO\Big( (\O,\F,\P), (\O',\F')  \Big) \to \F \to \O' \to \Reals_{++}}
+	\DefineNamedFunc{conditionalProbabilityAtAPoint}{ X,B,x}{ \P( B | X = x) }
+	{ 
+		g(x) \NewLine 
+		\LOGIC{Where}
+		\NewLine
+		g = \THM{ConditionalProbabilityExists}(X,B)
+	}
+	\\
+	\DeclareFunc{conditionalDensity}{\AC\Big( \O,\O'^2 \Big) \to \O' \to \Reals}
+	\DefineNamedFunc{conditionalDensity}{Y|X}{f_{Y|X}}{\frac{f_{X,Y}}{f_Y}}
+	\\
+	\Theorem{ConditionalDensityTHM}{\forall X,Y : \AC\Big( \O ,(\O',\F')^2\Big) \. \forall B \in \F 
+	\NewLine
+	\. \forall x \in \O' \. \P( Y \in B | X = x) = \int_B f_{Y|X}(x,y) \, \mathrm{d}\l(y)  }
+	\NoProof
+	\\
+	\Theorem{ConditionalExpectationExists}{
+		\forall (X,Y) : \RV\Big( (\O,\F,\P), \O' \times (\Complex^m,\B \Complex^n)  \Big) \. 
+		\NewLine
+		\exists g \in \O' \to_\BOR (\Complex^n, \B \Complex^n)  \. 
+		\forall A \in \B V \. 
+		\int_{X^{-1}A} Y \, \mathrm{d} \P = \int_{A} g \, \mathrm{d} \P_X \.
+		}
+	& \textrm{Simmilar prove with Radon-Nikodym applied to a complex measures.} \\
+	\EndProof
+		\\
+	\DeclareFunc{conditionalExpectationAtAPoint}{\RV\Big( \O, \O'  \Big) \to \RV\Big(\O, (\Complex^m,\B \Complex^m) \Big)   \to \O'  \to \Complex^n}
+	\DefineNamedFunc{conditionalExpectationAtAPoint}{ X,Y,x  }{\Exp (Y|X = x)}
+	{ 
+		g(x) \NewLine 
+		\LOGIC{Where}
+		\NewLine
+		g = \THM{ConditionalExpectationExists}(X,Y)
+	}
+}\Page{
+	& K = \Reals | K = \Complex \\
+	\\
+	\Theorem{ConditionalExpectationWithDensity}{\forall (X,Y) : \AC\Big(\O, (K^m,\B K^m)\times (K^n,\B K^n)\Big) \.  \NewLine \. 
+		\forall x \in K^m \. \Exp(Y| X = x) = \int_{K^n} y f_{Y|X}(x,y) \, \mathrm{d}y }
+	\Assume{A}{\F_{\O'}}
+	\Conclude{(1)}{ 
+		\bd^{-1} f_{(X,Y)} \left( \int_{X^{-1}A} Y \, \mathrm{d} \P_\O \right)
+		\THM{Fubbini}(\l) 
+		\THM{UnitalMult}(f_X(x)) \bd^{-1} f_{X|Y}(x,y) 
+		\bd f_X	
+	}
+	{ 
+		\NewLine :
+		\int_{ X^{-1}A} Y \, \mathrm{d} \P_\O = 
+		\int_{A \times K^n} y f_{(X,Y)}(x,y) \, \mathrm{d}(x,y) = \NewLine =
+		\int_A \int_{K^n} y f_{(X,Y)}(x,y) \, \mathrm{d}(y) \mathrm{d} (x) =
+		\int_{A} f_X(x) \int_{K^n} y f_{(Y|X)}(x,y) \, \mathrm{d}(y) \mathrm{d} (x) =
+		\int_{A} \int_{K^n} y f_{Y|X} \, \mathrm{d}(y) \mathrm{d} \P_X(x)
+	}
+	\DeriveConclude{(*)}{\bd^{-1} \Exp(Y|X=x)}{\Exp(Y|X=x) = \int_{K^n} y f_{Y|X}(x,y) \, \mathrm{d}y}
+	\EndProof
+	\\
+	\Theorem{ConditionalExpectationPushforward}{\forall (X,Y) : \AC\Big(\O, (K^m,\B K^m)\times (K^n,\B K^n)\Big) \.  \NewLine \. 
+		\forall x \in K^m \. \forall g : (K^n,\B K^n) \to (K^k,\B K^k) \. \Exp(g(Y)| X = x) = \int_{K^n} g(y) f_{Y|X}(x,y) \, \mathrm{d}y }
+	\Assume{A}{\F_{\O'}}
+	\Conclude{(1)}{ 
+		\bd^{-1} f_{(X,Y)} \left( \int_{X^{-1}A} g(Y) \, \mathrm{d} \P_\O \right)
+		\THM{Fubbini}(\l) 
+		\THM{UnitalMult}(f_X(x)) \bd^{-1} f_{X|Y}(x,y) 
+		\bd f_X	
+	}
+	{ 
+		\NewLine :
+		\int_{ X^{-1}A} g(Y) \, \mathrm{d} \P_\O = 
+		\int_{A \times K^n} g(y) f_{(X,Y)}(x,y) \, \mathrm{d}(x,y) = \NewLine =
+		\int_A \int_{K^n} g(y) f_{(X,Y)}(x,y) \, \mathrm{d}(y) \mathrm{d} (x) =
+		\int_{A} f_X(x) \int_{K^n} g(y) f_{(Y|X)}(x,y) \, \mathrm{d}(y) \mathrm{d} (x) =
+		\int_{A} \int_{K^n} g(y) f_{Y|X} \, \mathrm{d}(y) \mathrm{d} \P_X(x)
+	}
+	\DeriveConclude{(*)}{\bd^{-1} \Exp(g(Y)|X=x)}{\Exp(g(Y)|X=x) = \int_{K^n} g(y) f_{Y|X}(x,y) \, \mathrm{d}y}
+	\EndProof
+	\\
+}
+\newpage
+\subsection{Conditional Expectation Given a Sigma-Field}
+\Page{
+	\DeclareFunc{inducedSigmaField }{ \RO\Big( \O, (\O',\F') \Big) \to \SA{\O}} 
+	\DefineNamedFunc{inducedSigmaField}{ X }{\sigma(X)}{ \{ X^{-1}(A) | A \in \F'   \}  }
+	\\
+	\Theorem{MeasurabilityWithInducedSigmaField}{
+	\forall X : \RO\Big( (\O,\F), (\O',\F') \Big) \. 
+	\NewLine \.
+	\sigma(X)  = \bigcap\bigg\{ \mathcal{A} : \SA{\O} : X \in \mathcal{M}_\BOR\Big( (\O,\mathcal{A}),(\O',\F') \Big)    \bigg\}  
+		}
+	& \textrm{Every set in the intersection contains $\sigma(X)$ and $\sigma(X)$ itself is in the intersection. Result follows} \\
+	\EndProof
+	\\
+	\Theorem{BORCompositionExists}{\forall X : \RO(\O,\O') \. \forall Z : \RO\Big(\sigma(X),(K^n,\B K^n) \Big) \. 
+	\NewLine \.
+	\exists f : \O' \to_\BOR \O'' \. Z = f \circ X }
+	\Assume{a}{\im Z}
+	\Say{(A,2)}{ Z^{-1}{a}}{ \sum A \in \sigma(X) \. A \neq \emptyset  }
+	\Assume{\omega}{A}
+	\Assume{(\omega',3)}{\sum \omega \in \O \. X(\omega') = X(\omega) }
+	\Conclude{(4)}{\bd \sigma(X)(A)(\omega,\omega')(3)}{ \omega' \in A  }
+	\Derive{(3)}{I(\forall)}{\forall p \in \O : X(p) = X(\omega) \. p \in A }
+	\Conclude{f(X(\omega))}{a}{K^n}
+	\DeriveConclude{f}{I(\to)}{A \to \{a\}}
+	\Conclude{(2)}{\THM{StitchedFunction}}{f : \im X \to K^n }
+	\Say{f'}{ \Lambda x \in O' \. \LOGIC{if} \quad x \in \im X \quad \LOGIC{then} \quad f(x) \quad \LOGIC{else} \quad 0}{\O' \to_\BOR (K^n,\B K^n)}
+	\Conclude{(*)}{\bd f \bd f'}{Z = f' \circ X}
+	\EndProof
+	\\
+	\Theorem{ConditionalExpectationWRSFExists}{\forall X  : \RV\Big( (\O,\F,\P), (K^n,\B K^n)  \Big) \. \NewLine \.
+		\forall \mathcal{A} : \TYPE{\sigma \hyph Subalgebra}(\F) \. \exists g : (\O.\mathcal{A}) \to_\BOR  (K^n,\B K^n) \.
+		\forall A \in \mathcal{A} \. \int_A X \, \mathrm{d}\P = \int_A g \, \mathrm{d}\P
+	}
+	& \textrm{Apply Radon-Nikodym to a measure defined by the integral relatively to $\P$} \\
+	\EndProof
+	\\
+	\DeclareFunc{conditionalExpectationWRSF}{ \RV\Big( \O, (K^n,\B K^n) \Big)  \to \TYPE{\sigma \hyph Subalgebra}(\F) \to 
+		\NewLine \to
+		\RV\Big(\O, (K^n,\B K^n)\Big)  }
+	\DefineNamedFunc{conditionalExpectationWRSF}{ X, \mathcal{A}  }{ \Exp(X|\mathcal{A})  }{g \NewLine \LOGIC{Where} \NewLine g = \THM{ConditionalExpectationWRSFExists}(X,\mathcal{A})  }
+}
+\Page{
+	\DeclareFunc{conditonalExpetationWRRO}{\RV\Big(\O, K^n, \Big) \to \RO(\O,\O') \to \NewLine \to \RV\Big(\O, (K^n,\B K^n) \Big)}
+	\DefineNamedFunc{conditionalExpectationWRRO}{X,Y}{\Exp(X|Y)}{ \Exp(X|\sigma(Y)) } 
+	\\
+	\DeclareFunc{conditionalProbabilityWRSA}{ \prod (\O,\F,\P) : \TYPE{ProbabilitySpace} \. \TYPE{\sigma\hyph subalgebra}(\F) \to \F \to [0,1]    }
+	\DefineNamedFunc{conditionalProbabilityWRSA}{A}{\P(A|\mathcal{A})}{\Exp( I_A | \mathcal{A}  )}
+	\\
+	\DeclareFunc{conditionalProbabilityWRRO}{ \prod (\O,\F,\P) : \TYPE{ProbabilitySpace} \.  \RO(\O,\O') \to \F \to [0,1]   }
+	\DefineNamedFunc{conditionalProbabilityWRRO}{A}{\P(A|X)}{\P(A|\sigma(X))} 
+	\\
+	\Theorem{CEWRSAofAConstant}{\forall X : \RV\Big(\O, (K^n,\B K^n) \Big) \forall (c,1) : \sum c \in \Complex^n \. \P(X = x) = 1 \. 
+	\NewLine
+	\forall  \mathcal{A} : \TYPE{\sigma\hyph Subalgebra}(\F_\O) \. \P\Big( \Exp(X|\mathcal{A}) = c \Big) = 1 }
+	\Say{(2)}{\THM{MeasurableConstant}(c)}{ \Big( \Lambda \omega \in \O \. c : \O \to_\BOR (K^n,\B K^n ) \Big) }
+	\Say{E}{ X^{-1}\{c\}}{\F_\O}
+	\Say{(3)}{(1)(E)}{\P_\O(E) = 1}
+	\Assume{C}{\mathcal{A}}
+	\Conclude{(4)}{ 
+		\THM{DisjointMeasure}\left(\int_\bullet X \, \mathrm{d}\P,C \cap E,C \cap E^c\right) 
+		(3)
+		\THM{ConstantInegral}(c,C,\P)
+	}
+	{ 
+		\NewLine :
+		\int_C X \, \mathrm{d}\P =  \int_{C \cap E} c \, \mathrm{d}\P + \int_{C \cap E^\c} X \mathrm{d}\P = c\P(C) = \int_C c \, \mathrm{d}\P
+	}
+	\DeriveConclude{*}{\bd^{-1} \Exp`:(X|\mathcal{A})(2)}{ \P\Big( \Exp(X|\mathcal{A}) = c \Big) = 1  }
+	\EndProof
+	\\
+	\Theorem{CEWRSAIneq}{
+		\forall X,Y \in \RV\Big( \O, \Reals  \Big) \. \forall \mathcal{A} : \TYPE{\sigma \hyph Subalgebra}(\F_\O) \. 
+		\NewLine \.
+		\forall (1) : X \le Y \.  \Exp(X| \mathcal{A}) \le \Exp(Y|\mathcal{A}) \AE{\P_\O}
+	}
+	\NoProof
+	\\
+	\Theorem{CEWRSATriangularIneq}{
+		\forall X \in \RV\Big( \O, K^n \Big) \. \forall \mathcal{A} : \TYPE{\sigma \hyph Subalgebra}(\F_\O) \. 
+		\NewLine \.
+		\big\| \Exp( X |  \mathcal{A} )  \big\|  \le \Exp\big( \|X\| \big| \mathcal{A} \big) \AE{\P_\O}
+	}
+	\NoProof
+}
+\Page{
+	\Theorem{CEWRSALinearity}{
+		\forall X,Y \in \RV\Big( \O, K^n \Big) \. \forall \mathcal{A} \. \forall a,b \in K \. \NewLine
+		\Exp( aX + bY | \mathcal{A}  ) = a\Exp(X|\mathcal{A}) + b\Exp(Y|\mathcal{A}) \AE{\P_\O}
+	}
+	\Assume{C}{\mathcal{A}}
+	&   \int_C aX + bY \, \mathrm{d}\P_\O  = a\int_C X \, \mathrm{d}\P_\O + b\int_C Y \, \mathrm{d}\P_\O  = a \int_C \Exp(X|\mathcal{A}) \mathrm{d}\P_\O + b \int_C \Exp(Y|\mathcal{A})\mathrm{d}\P_\O 
+	= \NewLine	= \int_C a\Exp(X|\mathcal{A}) + b\Exp(Y|\mathcal{A}) \mathrm{d} \P_\O   ;                    \\
+	\EndProof
+	\\
+	\Theorem{CEWRSAMonotonicConvergence}{ \forall Y : \Nat \to \RV(\O,\Reals) \. \forall X : \RV(\O,\Reals) \.  
+		\NewLine \. \forall (1) : Y \uparrow X  \AE{\P_\O}\. \Exp(Y|\mathcal{A}) \uparrow \Exp(X|\mathcal{A})  \AE{\P_\O} }
+	\NoProof
+	\\
+	\Theorem{CEWRSATonneli}{\forall Y : \Nat \to \RV(\O,\Reals) \. \forall (1) : Y \ge 0 \quad \AE{\P_\O} \. 
+		\NewLine \.
+		\Exp\left( \sum^\infty_{n = 1} Y_n | \mathcal{A}  \right) = \sum^\infty_{n=1} \Exp( Y_n | \mathcal{A} ) \quad \AE{\P_\O}
+	}
+	\NoProof
+	\\
+	\Theorem{CPWRSAMonotonicConvergence}{ 
+		\forall (\O,\F,\P) : \TYPE{ProbabilitySpace} \. \forall A : \TYPE{Disjoint}(\Nat,\F) \. 
+		\NewLine \.
+		\P\left( \bigcap^\infty_{i=1} A_i | \mathcal{A} \right)  = \sum^\infty_{i=1} \P\left( A_i | \mathcal{A}  \right) 
+		\AE{\P_\O}
+	}
+	\NoProof
+	\\
+	\Theorem{CEWRSAExpectation}{\Exp \Exp(Y|\mathcal{A}) = \Exp Y}
+	& \Exp \Exp (Y|\mathcal{A}) = \int_\O \Exp (Y|\mathcal{A}) \, \mathrm{d}\P = \int_\O Y \, \mathrm{d}\P = \Exp Y  \\
+	\EndProof
+}
+\Page{
+	\Theorem{CEWRSADominatedConvergence}{
+		\forall Y : n \to \RV(\O,K^n) \.
+		\NewLine :
+		\forall (Z,1) : \sum Z : \RV(\O.\Reals) \. \forall n \in \Nat \. \| Y_n \| \le Z \.
+		\NewLine \.
+		\forall (X,2) : \sum Y : \RV(\O,\Reals) \. \lim_{n \to \infty} Y_n = X \AE{\P} \.
+		\lim_{n \to \infty} \Exp (Y_n|\mathcal{A}) = \Exp ( X | \mathcal{A} ) \AE{\P}
+	}
+	\Say{\Delta}{ \Lambda n \in \Nat \. \sup_{k \ge n} \| X - Y_n \|   }{ \Nat \to \RV(\O,K^n) }
+	\Say{(3) }{ (2)( \bd \Delta  ) }{ \Delta_{n \to \infty} \downarrow 0 \AE{\P}  }
+	\Say{(4)}{   \THM{CEWARALinearity}(Y,X) \THM{CEWSRATriangularIneq}(Y - X) \bd^{-1} \Delta   }
+	{ \NewLine : \left\| \Exp(Y|\mathcal{A}) - \Exp(X|\mathcal{A}) \right\| \le \Exp\Big(\|Y-X\| \Big| \mathcal{A}\Big) \le \Exp ( \Delta | \mathcal{A} )   }
+	\Say{(5)}{ \THM{CEWRAMonotonicConvergence}(2Z - \Delta)(2)  }{\lim_{n \to \infty} \Exp(2Z - \Delta_n|\mathcal{A}) = \Exp(2Z|\mathcal{A})}
+	\Say{(6)}{ \THM{CEWRALinearity}(-2Z + \Delta,2Z) \THM{LinearLimit}(\ldots)(5)}{
+		\NewLine
+		\lim_{n \to \infty} \Exp(\Delta_n|\mathcal{A}) =  \lim_{n \to \infty} -\Exp(2Z - \Delta_n|\mathcal{A}) + \Exp (2Z  | \mathcal{A})
+		\NewLine
+		=  \lim_{n \to \infty} \Exp(2Z | \mathcal{A} ) - \lim_{n \to \infty} \Exp(2Z - \Delta_n| \mathcal{A}) = \Exp( 2Z | \mathcal{A}  ) - \Exp(2Z | \mathcal{A}) \AE{\P} = 0 \AE{\P} }
+	\Say{(7)}{(4)(6)}{ \lim_{n \to \infty} \Big\| \Exp(X|\mathcal{A}) - \Exp(Y_n|\mathcal{A})  \Big\| = 0 \AE{\P}}
+	\Conclude{(*)}{\THM{DiffferenceLimit}(7)}{\lim_{n \to \infty} (Y_n|\mathcal{A}) = \Exp(X | \mathcal{A}) \AE{\P}}
+	\EndProof
+	\\
+	\Theorem{CEWRSAExtendedMonotoneConvergenceAbove}{
+		\forall Y : \Nat \to \RV(\O,\Reals) \. 
+		\NewLine \.
+		\forall (Z,1) :\sum Z :  \RV(\O,\Reals) \. \Exp Z > - \infty \.  
+		\forall (2) : Y > Z \AE{\P} \.
+		\NewLine \.
+		\forall (X,3) : \RV(\O,\Reals) \. Y \uparrow X \AE{\P} \.
+		\Exp(Y|\mathcal{A}) \uparrow \Exp(X|\mathcal{A}) \AE{\P}
+	}
+	\NoProof
+	\\
+	\Theorem{CEWRSAExtendedMonotoneConvergenceBelow}{
+		\forall Y : \Nat \to \RV(\O,\Reals) \. 
+		\NewLine \.
+		\forall (Z,1) :\sum Z :  \RV(\O,\Reals) \. \Exp Z <  \infty \.  
+		\forall (2) : Y < Z \AE{\P} \.
+		\NewLine \.
+		\forall (X,3) : \RV(\O,\Reals) \. Y \downarrow X \AE{\P} \.
+		\Exp(Y|\mathcal{A}) \downarrow \Exp(X|\mathcal{A}) \AE{\P}
+	}
+	\NoProof
+	\\
+	\Theorem{CEWRSAFatouLemmaAbove}{
+		\forall Y : \Nat \to \RV(\O,\Reals) \. 
+		\NewLine \.
+		\forall (Z,1) :\sum Z :  \RV(\O,\Reals) \. \Exp Z > - \infty \.  
+		\forall (2) : Y > Z \AE{\P} \.
+		\NewLine \.
+		\lim \inf_{n \to \infty} \Exp(Y_n| \mathcal{A}) \ge \Exp\left( \lim \inf_{n \to \infty} Y_n | \mathcal{A}\right)
+	}
+	\NoProof
+} 
+\Page{
+	\Theorem{CEWRSAFatouLemmaBelow}{
+		\forall Y : \Nat \to \RV(\O,\Reals) \. 
+		\NewLine \.
+		\forall (Z,1) :\sum Z :  \RV(\O,\Reals) \. \Exp Z <  \infty \.  
+		\forall (2) : Y < Z \AE{\P} \.
+		\NewLine \.
+		\lim \sup_{n \to \infty} \Exp(Y_n| \mathcal{A}) \le \Exp\left(\lim \sup_{n \to \infty} Y_n | \mathcal{A}\right)
+	}
+	\NoProof
+	\\
+	\Theorem{TrivialCEWRSA}{
+		\forall X  : \RV(\O,K^n) \. \Exp\big(X| \{\emptyset,\O\}\big) = \Exp X
+	}
+	& \textrm{The only measurable maps fo this algebra are constant and $\Exp X$ is the only constant which satisfy} \\
+	& \int_\O \Exp X \, \mathrm{d} \P  = \Exp X = \int_\O X \, \mathrm{d} \P \\
+	& \int_\emptyset \Exp X \mathrm{d} \P = 0 = \int_\emptyset X \, \mathrm{d} \P \\
+	\EndProof
+	\\
+	\Theorem{FullCEWRSA}{
+		\forall X : \RV(\O,K^n) \. \Exp\big(X| \F_\O ) = X \AE{\P}
+		}
+		& \textrm{Integration on Measurable subsets defines random variable almost surely.} \\
+		\EndProof
+	\\
+	\DeclareType{Atom}{\prod (\O,\F,\mu) : \MEAS \. ?\F}
+	\DefineType{A}{Atom}{ \mu(A) > 0 \And \Big(\forall B \in \F \. B \subset A \Rightarrow \big(\mu(B) = 0 | \mu(A\setminus B) = 0 \big)\Big) }
+	\\
+	\Theorem{AtomConstantLemma}{\forall \O : \MEAS \. \forall f : \O \to_\BOR (\EReals, \B \EReals) \. \forall A : \TYPE{Atom}(\O) \. f_{|A} : \TYPE{Constant} \AE{\mu_\O}}
+	\Say{\mu}{\mu_\O}{\TYPE{Measure}(\O)}
+	\Assume{y}{f(A)}
+	\Conclude{(B_y,1)}{f^{-1}\{y\} \cap A  }{\sum B_y : ?A \. B_y \neq \emptyset}
+	\Derive{B}{ I\left(\prod\right)}{ \prod x \in f(A) \. \sum B_x : ?A \. B_y \neq \emptyset }
+	\Say{(1)}{\THM{DisjointPreimage}\bd B}{\Big( B : \TYPE{Disjoint}(f(A),\F_\O) \Big)}
+	\Assume{(x,y,2)}{\sum x,y \in f(A) \. x \neq y \And \mu(A \setminus B_x) = 0 \And \mu(A \setminus B_y) = 0}
+	\Say{(3)}{\THM{SubsetMeasure}(A,B_x\cup B_y)\bd \TYPE{Measure}(\O)(\mu)}{  
+		\NewLine :
+		\mu(A) > \mu(B_x \cup B_y) = \mu(B_x) + \mu(B_y) = \mu(A) - \mu(A\setminus B_y) + \mu(A) - \mu(A \setminus B_x) =  2\mu(A)   }
+	\Conclude{(4)}{ \bd\TYPE{OrderedField}(\Reals)(3) }{\bot}
+	\Derive{(2)}{E(\bot)}{\forall x,y \in f(A) \. \Big( \mu(B_x) = \mu(A) \And  \mu(B_y) = \mu(A) \Big) \Rightarrow x = y }
+}\Page{
+	\Assume{n}{\Nat}
+	\Say{G}{\FUNC{grid}\left(\EReals, \frac{1}{n} \right)}{\TYPE{Grid}\left( \EReals \right)}
+	\Say{(3)}{ \bd \TYPE{Grid}(G)\THM{MonotoneConvergence} }{ \mu\left( A \cap  \bigcup^\infty_{i=1} f^{-1} G_i   \right) = \mu(A)  }
+	\Say{ g_n  }{\bigcap\{ G_m : m \in \Nat, \mu(A) = \mu(A \cap f^{-1}G_m) \}}{\TYPE{Compact}\Big( \EReals \Big)}
+	\Conclude{(4)}{\bd \TYPE{Atom}(A)(3)(2)\bd g_n}{g_n \neq \emptyset}
+	\Derive{(g,3)}{I\left(\prod\right)}{\prod n \in \Nat \. \sum g_n : \TYPE{Compact}\Big(\EReals\Big) \. \rho(g) \le \frac{1}{n}}
+	\Say{(4)}{\bd g (2)}{\Big(g : \TYPE{Decreasing} \Big)}
+	\Say{ (x,5)}{\THM{NestedCompactIntersection}(g,4)(3)}{ \sum x \in \EReals \. \{x\} = \bigcap^\infty_{n = 1} g_n}
+	\Say{(6)}{\THM{MonotoneConvergence}(\bd g)(5)}{\mu(A) = \lim_{n \to \infty} \mu(A \cap f^{-1}g_n) = \mu(B_x)}
+	\Say{(7)}{(2)(6)}{ \forall y \in f(A) : y \neq x \.  \mu(B_y) = 0 }
+	\Conclude{(*)}{\bd B (6)(7)}{f_{|A} = x \AE{\mu}}
+	\EndProof
+	\\
+	\Theorem{AtomSmoothingCEWRSA}{\forall A : \TYPE{Atom}(\mathcal{A}) \. \forall X : \RV(\O,\Reals) \.  
+	\NewLine \.
+	\Exp(X|\mathcal{A})_{|A} = \frac{1}{\P(A)}\int_A X \, \mathrm{d}\P \AE{\P} }
+	&  \int_A \Exp(X|\mathcal{A}) \, \mathrm{d}\P = \int_A X \, \mathrm{d}\P   \\
+	& \textrm{But conditional expectation is a constant almost surely on $A$, which provides the exact value.} \\
+	\EndProof
+	\\
+	\Theorem{CoarserCEWRSA1}{
+		\forall (\O,\F,\P) : \TYPE{ProbabilitySpace} \. \forall (\O,\mathcal{C}),(\O,\mathcal{S}) : \BOR \. 
+		\forall (1) : \mathcal{C}  \subset \mathcal{S} \subset \F \.
+		\NewLine \.
+		\forall X : \RV\Big((\O,\F,\P),K^n) \.
+		\Exp\Big( \Exp(X|\mathcal{S})|\mathcal{C}\Big) = \Exp(X|\mathcal{C})
+	}
+	&  \int_C \Exp\Big(\Exp(X|\mathcal{S})|\mathcal{C}\Big) \, \mathrm{d}\P = \int_C  \Exp(X |\mathcal{S}) \, \mathrm{d}\P 
+	 =  \int_C Y \, \mathrm{d}\P = \int_C \Exp(X|\mathcal{C})\\
+	\EndProof
+	\\
+	\Theorem{CoarserCEWRSA2}{
+		\forall (\O,\F,\P) : \TYPE{ProbabilitySpace} \. \forall (\O,\mathcal{C}),(\O,\mathcal{S}) : \BOR \. 
+		\forall (1) : \mathcal{C}  \subset \mathcal{S} \subset \F \.
+		\NewLine \.
+		\forall X : \RV\Big((\O,\F,\P),K^n) \.
+		\Exp\Big( \Exp(X|\mathcal{C})|\mathcal{S}\Big) = \Exp(X|\mathcal{C})
+	}
+	&  \Exp(X|\mathcal{C}) : (\O,\S) \to_\BOR (K^n,\B K^n)
+	\\
+	\EndProof
+	\\
+	\Theorem{CEWRSAMeasurableModularity}{   
+		\forall (\O,\F,\P) : \TYPE{ProbabilitySpace} \. \forall (\O,\mathcal{C}) : \BOR \.
+		\NewLine \.
+		\forall (1) : \mathcal{C} \subset \F \.
+		\forall X : \RV\Big((\O,\F,\P),K\Big) \.
+		\forall Z : (\O,\mathcal{C}) \to_\BOR (K, \B K) \.
+		\Exp(ZX | \mathcal{C}) = Z\Exp(X|\mathcal{C})
+	}
+	& \textrm{Start with indiicators and proceed to measurable functions.} \\
+	\EndProof
+}
+\subsection{Regular Conditional Probabilities}
+\Page{
+	\Say{\O}{(\O,\F,\P)}{\TYPE{ProbabilitySpace}}\\
+	\\
+	\Assume{(\O,\mathcal{C})}{\BOR} \\
+	\\
+	\Assume{(0)}{\mathcal{C} \subset \F} \\
+	\\
+	\DeclareType{RegularConditionalDistribution}{\prod X : \RV(\O,\Reals) \. ?\big(\O \to \Reals \to [0,1]\big)}
+	\DefineType{F}{RegualarConditionalDistribution}{\Big( \forall \omega \in \O \.  F(\omega) : \DF  \Big) \And 
+	\NewLine \And
+	\Big( \forall y \in \Reals \. \Lambda \omega \in \O \. F(\omega,y) = \P(X \le y| \mathcal{A}) \AE{\P}  \Big)}
+	\\
+	\Theorem{RegularConditionalDistributionExists}{\forall X : \RV(\O,\Reals) \. 
+		\NewLine \.	\exists F : \TYPE{RegularConditionalDistribution}(X) }
+}
+\end{document}

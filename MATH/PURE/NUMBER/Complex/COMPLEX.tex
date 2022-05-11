@@ -1,0 +1,3760 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{extpfeil}
+\usepackage{graphicx}
+\usepackage{scalerel}
+\usepackage{esvect}
+\usepackage{upgreek}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+\newcommand{\Imply}{\Rightarrow} 
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+\newcommand{\Class}{\TYPE{Kind}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Sphere}{\mathbb{S}}
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\DeclareMathOperator*{\supp}{supp}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cat}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToMono}{\xhookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToEpi}{\xtwoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\ToIso}{\xleftrightarrow}
+\newcommand{\Arrow}{\xrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+\renewcommand{\i}{\mathbf{i}}
+\newcommand{\llbracket}{\left[\!\!\left[}
+\newcommand{\rrbracket}{\right]\!\!\right]}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\} 
+\newcommand{\Assume}[2]{& \LOGIC{Assume} \; #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\rotatebox[origin=c]{-180}{$D$}}%\text{\textthorn}}  %Extracts defining type statement from the type member, may be inverted  (T -> Type)
+\newcommand{\ByConstr}{\rotatebox[origin=c]{-180}{$C$}}%\text{\textopeno}} %Extract the defining statement from the defined value 
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%CategoryTheorey
+%Types
+\newcommand{\Cov}{\TYPE{Covariant}}
+\newcommand{\Contra}{\TYPE{Contravariant}}
+\newcommand{\NT}{\TYPE{NaturalTransform}}
+\newcommand{\UMP}{\TYPE{UnversalMappingProperty}}
+\newcommand{\CMP}{\TYPE{CouniversalMappingProperty}}
+\newcommand{\paral}{\rightrightarrows}
+%functions
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\obj}{\mathrm{obj}}
+\DeclareMathOperator*{\dom}{dom}
+\DeclareMathOperator*{\codom}{codom}
+\DeclareMathOperator*{\colim}{colim}
+%variable
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\R}{\mathrm{R}}
+%Cats
+\newcommand{\CAT}{\mathsf{CAT}}
+\newcommand{\SET}{\mathsf{SET}}
+\newcommand{\PARALLEL}{\bullet \paral \bullet}
+\newcommand{\WEDGE}{\bullet \to \bullet \leftarrow \bullet}
+\newcommand{\VEE}{\bullet \leftarrow \bullet \to \bullet}
+%Topology
+%General Topology
+%Types
+\newcommand{\TS}{\TYPE{TopologicalSpace}} 
+\newcommand{\LF}{\TYPE{LocallyFinite}}
+\newcommand{\PN}{\TYPE{PerfectlyNormal}}
+%FUNC
+\DeclareMathOperator*{\intx}{int}
+\DeclareMathOperator*{\cl}{cl} 
+\DeclareMathOperator*{\boundary}{\partial} 
+\DeclareMathOperator{\combo}{\triangledown} 
+\DeclareMathOperator{\diag}{\triangle} 
+\DeclareMathOperator{\rem}{rem}
+%CATS
+\newcommand{\TOP}{\mathsf{TOP}}
+\newcommand{\HC}{\mathsf{HC}}
+\newcommand{\CG}{\mathsf{CG}}
+%Symbols
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\U}{\mathcal{U}}
+\renewcommand{\O}{\mathcal{O}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\X}{\mathcal{X}}
+%\newcommand{\d}{\mathrm{d}}
+%Metic Topology
+%FUNC
+\DeclareMathOperator{\diam}{diam}
+%CATS
+\newcommand{\Semiiso}{\mathsf{SMS}_{\circ \to \cdot}}
+\newcommand{\Iso}{\mathsf{MS}_{\circ \to \cdot}}
+\newcommand{\SMS}{\mathsf{SMS}}
+\newcommand{\MS}{\mathsf{MS}}
+\newcommand{\UNI}{\mathsf{UNI}}
+\newcommand{\UNIS}{\mathsf{UNIS}}
+\newcommand{\TG}{\mathsf{TG}}
+%Algebra
+%Groups
+%Types
+\newcommand{\Group}{\TYPE{Group}}
+\newcommand{\Abel}{\TYPE{Abelean}}
+\newcommand{\Sgrp}{\subset_{\mathsf{GRP}}}
+\newcommand{\Nrml}{\vartriangleleft}
+\newcommand{\FG}{\TYPE{FiniteGroup}}
+\newcommand{\Stab}{\mathrm{Stab}}
+\newcommand{\FGA}{\TYPE{FinitelyGeneratedAbelean}}
+\newcommand{\DN}{\TYPE{DirectedNormality}}
+%Func
+\DeclareMathOperator{\tor}{tor}
+\DeclareMathOperator{\bool}{bool}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Fix}{Fix}
+%Cats
+\newcommand{\GRP}{\mathsf{GRP}}
+\newcommand{\ABEL}{\mathsf{ABEL}}
+%Ops
+\newcommand{\SDP}{\rightthreetimes}
+%LINEAR
+%Linear Algebra
+%Types
+\newcommand{\Basis}{\TYPE{Basis}} % Basis of the linear space
+\newcommand{\submod}[1]{\subset_{\LMOD{#1}}}% submodule as a subset
+\newcommand{\subvec}[1]{\subset_{\VS{#1}}}% vector subspace as a subset
+\newcommand{\FGM}{\TYPE{FinitelyGeneratedModule}}% Finitely generated module
+\newcommand{\LI}{\TYPE{LinearlyIndependent}}
+\newcommand{\LIS}{\TYPE{LinearlyIndependentSet}}
+\newcommand{\FM}{\TYPE{FreeModule}}
+\newcommand{\IBP}{\TYPE{InvariantBasisProperty}}
+\newcommand{\UTM}{\TYPE{UpperTriangularMatrix}}
+\newcommand{\LTM}{\TYPE{LowerTriangularMatrix}}
+\newcommand{\Diag}{\TYPE{DiagonalMatrix}}
+\newcommand{\FP }{\TYPE{FinitelyPresented}}
+\newcommand{\GL}{\mathbf{GL}}% General Linear Group
+\newcommand{\SL}{\mathbf{SL}}% Special Linear group
+\newcommand{\SO}{\mathbf{SO}}
+\newcommand{\SU}{\mathbf{SU}}
+\newcommand{\prsubvec}[1]{\subsetneq_{\VS{#1}}}	% poper vector subspace as a subset
+\newcommand{\LC}{\TYPE{LinearComplement}} 
+\newcommand{\IS}{\TYPE{InvariantSubspace}}
+\newcommand{\RP}{\TYPE{ReducingPair}}
+\newcommand{\RCF}{\TYPE{RationalCanonicalForm}}
+\newcommand{\JCF}{\TYPE{JordanCanonicalForm}}
+\newcommand{\Diagble}{\TYPE{Diagonalizable}}
+\newcommand{\UT}{\TYPE{UpperTriangulizable}}
+\newcommand{\LT}{\TYPE{LowerTriangulizable}}
+\newcommand{\IPS}{\TYPE{InnerProductSpace}}
+\newcommand{\OBasis}{\TYPE{OrthonormalBasis}}
+\newcommand{\FDIPS}{\TYPE{FiniteDimensionalInnerProductSpace}}
+\newcommand{\NO}{\TYPE{NormalOperator}}
+\newcommand{\NM}{\TYPE{NormalMatrix}}
+\newcommand{\SA}{\TYPE{SelfAdjoint}}
+\newcommand{\SSA}{\TYPE{SkewSelfAdjoint}}
+\newcommand{\PI}{\TYPE{Pseudoinverse}}
+\newcommand{\OVS}{\TYPE{OrthogonalVectorSpace}}
+\newcommand{\SVS}{\TYPE{SymplecticVectorSpace}}
+\newcommand{\MVS}{\TYPE{MetricVectorSpace}}
+\newcommand{\FDMVS}{\TYPE{FiniteDimensionalMetricVectorSpace}}
+\newcommand{\Sp}{\mathbf{Sp}}
+%Func
+\DeclareMathOperator{\Span}{span} % spann by subset
+\DeclareMathOperator{\Ann}{Ann}   % annihilator
+\DeclareMathOperator{\Ass}{Ass}   % associated primes:
+\DeclareMathOperator{\adj}{adj}   % an adjoint matrix
+\DeclareMathOperator{\tr}{tr}     % trace
+\DeclareMathOperator{\codim}{codim} % codimension
+\DeclareMathOperator{\Cell}{\mathbf{C}} % a componion matrix
+\DeclareMathOperator{\JC}{\mathbf{J}}  % a Jordan cell
+\DeclareMathOperator{\bigboxplus}{\scalerel*{\boxplus}{\sum}} % a direct sum of operators in the sence of the reducing a pair
+\DeclareMathOperator{\Spec}{Spec} % Spectre
+\DeclareMathOperator{\bigbot}{\scalerel*{\bot}{\sum}} % an othogonal direct sum
+\DeclareMathOperator{\GS}{\mathbf{GS}} %Gramm-Smmidt process
+\DeclareMathOperator{\NGS}{\mathbf{NGS}} %Normalized Gramm-Smmidt process
+\DeclareMathOperator{\WI}{\mathrm{WI}} %Witt Index
+%Cats
+\newcommand{\VS}[1]{#1\hyph\mathsf{VS}} % a category of vector spaces (Field)
+\newcommand{\FDVS}[1]{#1\hyph\mathsf{FDVS}} % a category of finite-dimensional vector spaces (Field)
+\newcommand{\LALGE}[1]{#1\hyph\mathsf{ALGE}}
+\newcommand{\LMOD}[1]{#1\hyph\mathsf{MOD}} % a category of the left modules (Ring)
+\newcommand{\RMOD}[1]{\mathsf{MOD}\hyph#1} % a category of the right modules (Ring)
+\newcommand{\LLMAP}[1]{#1\hyph\mathsf{LMAP}} % a cagory of based linear maps with the left scalar multiplication (Ring)
+\newcommand{\LMAT}[1]{#1\hyph\mathsf{MAT}}  % a category of based matrices with the left scalar multiplication (Ring)
+\newcommand{\NMAT}[1]{#1\hyph\mathbb{N}} % a category of finite matrices (Field)
+%Symbols
+\renewcommand{\L}{\mathcal{L}}
+\renewcommand{\O}{\mathbf{O}}
+\renewcommand{\S}{\mathcal{S}}
+%FIELDS
+\newcommand{\Field}{\TYPE{Field}}
+\newcommand{\ACF}{\TYPE{AlgebraicallyClosedField}}
+%RINGS
+%TYPE
+\newcommand{\Ring}{\TYPE{Ring}}
+\newcommand{\CR}{\TYPE{CommutativeRing}}
+\newcommand{\Ideal}{\TYPE{Ideal}}
+\newcommand{\ID}{\TYPE{IntegralDomain}}
+\newcommand{\UFD}{\TYPE{UniqueFactorizationDomain}}
+\newcommand{\PID}{\TYPE{PrincipleIdealDomain}}
+\newcommand{\FGI}{\TYPE{FinitelyGeneratedIdeal}}
+\newcommand{\ER}{\TYPE{EuclideanRing}}
+\newcommand{\DVR}{\TYPE{DiscreteValuationRing}}
+\newcommand{\MoFT}{\TYPE{MonoidOfFiniteType}}
+%CATS
+\newcommand{\RING}{\mathsf{RING}} % A category of Rings
+\newcommand{\ANN}{\mathsf{ANN}} % A category of Commutative Rings
+%FUNCS
+\DeclareMathOperator{\lcd}{lcd} % least common devided 
+\DeclareMathOperator{\lc}{lc} % leading coefficient of the polynomial
+\DeclareMathOperator{\cont}{cont} % content of the polynomial
+\DeclareMathOperator{\antideg}{antideg} % antideree if the foramal power series
+%Symbolsqq
+%ALGEBRA
+\newcommand{\LALG}[1]{#1\hyph\mathsf{ALG}}% Left associative unital algebras (Ring)
+\newcommand{\RALG}[1]{\mathsf{ALG}\hyph#1}% Right associative unital  algebras (Rings)
+%Numbers
+%Integers
+%FUNCS
+\DeclareMathOperator{\divi}{div} % devide withou reminder
+\DeclareMathOperator{\remi}{rem} % reminder
+\DeclareMathOperator{\Frac}{Frac} % Field of fractions
+%Complex
+%Symb
+\newcommand{\Herm}{\mathbf{H}}
+\newcommand{\p}{\mathbf{p}}
+\newcommand{\Inv}{\mathrm{Inv}}
+\newcommand{\Stg}{\mathrm{Stg}}
+\newcommand{\M}{\mathcal{M}}
+%Geometry
+%Affine
+%Type
+\newcommand{\AS}{\TYPE{AffineSpace}}
+\newcommand{\ASS}{\TYPE{AffineSubspace}}
+\newcommand{\AI}{\TYPE{AffineIndepend}}
+\newcommand{\WL}{\TYPE{WithLines}}
+\newcommand{\SAFF}{\mathbf{SAFF}}
+\newcommand{\AFF}{\mathbf{AFF}}
+\newcommand{\SLI}{\mathcal{SL}}
+\newcommand{\SGL}{\mathbf{SGL}}
+\newcommand{\GVS}{\TYPE{GeometricVectorSpace}}
+\newcommand{\TP}{\TYPE{TrigonometricPlane}}
+\newcommand{\OrVS}{\TYPE{OrientatedVectorSpace}}
+\newcommand{\OTP}{\TYPE{OrientatedTrigonometricPlane}}
+\newcommand{\MAS}{\TYPE{MetricAffineSpace}}
+%Func
+\newcommand{\Gr}{\mathrm{Gr}}
+\newcommand{\Di}{\mathrm{Di}}
+\newcommand{\Sc}{\mathrm{Sc}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\DeclareMathOperator{\Aff}{Aff}
+\DeclareMathOperator{\rat}{rat}
+%Symbol
+\newcommand{\tri}{\triangle}
+\author{Uncultured Tramp} 
+\title{Complex Numbers}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Complex Plane}
+\subsection{Algebraic Definition}
+\Page{
+	\DeclareFunc{complexNumbers}{\Field}
+	\DefineNamedFunc{complexNumbers}{}{\Complex}{\frac{\Reals}{(x^2 + 1)}}
+	\\
+	\Theorem{complexNumbersDimension}{\dim_\Reals \Complex = 2}
+	\Say{[1]}{\THM{DegreeOfSimpleExtension}\bd \Complex}{\deg \Complex = 2}
+	\Conclude{[*]}{\bd \deg [1]}{\dim_{\Reals} \Complex = 2}
+	\EndProof
+	\\
+	\DeclareFunc{imaginaryUnit}{\Complex}
+	\DefineNamedFunc{imaginaryUnit}{}{\i}{\pi_{\Complex}(x)}
+	\\
+	\Theorem{ImagenaryUnitSquare}{\i^2 = -1}
+	\Say{[1]}{ \bd \LALGE{\Reals}\Big(  ,\Complex, \pi_\Complex \Big) \bd \Complex}{ \i^2 + 1 = \pi^2_\Complex(x) + 1 = \pi_\Complex(x^2 + 1) = 0 }
+	\Conclude{[*]}{[1] -1}{\i^2 = - 1}
+	\EndProof
+	\\
+	\Theorem{ImagenraryUnitInverse}{\i^{-1} = -\i}
+	\Say{[1]}{\bd \ABEL(\Complex^\times) \THM{ImaginaryUnitSquare}()\THM{DoubleNegation}(\Complex)}{\i (-\i) = - \i^2 = -(-1) = 1}
+	\Conclude{[*]}{\bd^{-1} \TYPE{Inverse}[1]}{\i^{-1} = -\i}
+	\EndProof
+	\\
+	\Theorem{ComplexBasis}{\TYPE{Basis}\Big(\Reals,\Complex, (1,\i)\Big)}
+	\Say{[1]}{\THM{PositiveSquare}(\Reals)}{\forall a \in \Reals \. a^2 \ge 0}
+	\Say{[2]}{\THM{ImaginaryUnitSquare}()[1]}{\forall a \in \Reals \. a \neq \i}
+	\Say{[3]}{\bd^{-1} \LI(\Reals,\Complex)[2]}{\LI\Big(\Reals,\Complex, (1,\i) \Big) }
+	\Conclude{[4]}{\bd \TYPE{Basis} [3] \THM{ComplexNumberDimension}()}{\TYPE{Basis}\Big(\Reals,\Complex, (1,\i)\Big)}
+	\EndProof
+	\\
+	\Theorem{ComplexAlgebraicPresentation}{\forall z \in \Complex \. \exists! a,b \in \Reals \. z = a + b\i}
+	\Conclude{[*]}{\THM{ComplexBasis}()\bd \TYPE{Basis}(\Reals,\Complex)}{\forall z \in \Complex \. \exists! a,b \in \Reals \. z = a + b\i}
+	\EndProof
+}
+\Page{
+	\DeclareFunc{realPart}{\Complex \to \Reals}
+	\DefineNamedFunc{realPart}{a + b\i}{\Re(a + b\i)}{a}
+	\\
+	\DeclareFunc{imaginablePart}{\Complex \to \Reals}
+	\DefineNamedFunc{imaginablePart}{a + b\i}{\Im(a + b\i)}{b}
+	\\
+	\Theorem{ComplexGaloisGroup}{G(\Reals;\Complex) = \{\id,\gamma\} 
+		\quad \where \quad \gamma = \Lambda a + b\i \. a - b\i }
+	\Say{[1]}{\bd \Complex}{\FUNC{minimal}(\Reals;\Complex) = x^2 + 1}
+	\Say{[2]}{\bd \i }{\rho(x^2 + 1) = \{+\i,-\i\}}
+	\Say{[3]}{\THM{GaloisTHM}\bd \Complex}{\Big| G(\Reals;\Complex)  \Big| = \dim_{\Reals} \Complex = 2}
+	\Say{\Big(\gamma, [4] \Big)}{\bd \GRP\Big( G(\Reals\;\Complex) \Big) [3]}{\sum \gamma \in G(\Reals; \Complex)\. \gamma \neq \id \And  G(\Reals; \Complex) = \{\id,\gamma\}  }
+	\Say{[*]}{\bd G(\Reals;\Complex) [2][4]}{\gamma(1) = 1 \And \gamma(\i) = -\i}
+	\EndProof
+	\\
+	\DeclareFunc{conjugation}{\Complex \Arrow{\LALGE{\Reals}} \Complex}
+	\DefineNamedFunc{conjugation}{a + \i b}{\overline{a + \i b}}{ a - \i b}
+	\\
+	\Theorem{ConjugataProductIsRealNonNeg}{\forall z \in \Complex \. z \bar  z \in \Reals_+}
+	\Say{\Big(a,b, [1] \Big)}{\THM{ComplexAlgebraicPresentation}[2]}{\sum a,b \in \Reals \. z = a + b\i}
+	\Conclude{[*]}{ [1] \bd \FUNC{conjugation} \bd \i \THM{SquareSumNonNeg}(\Reals)}{ z \bar z = (a + b\i)(a - b\i) = a^2 + b^2 \ge 0}
+	\EndProof
+	\\
+	\Theorem{ComplexIsConjugationField}{\TYPE{ConjugationField}(\Reals.\Complex)}
+	\NoProof
+	\\
+	\Theorem{RealPartByConjugation}{\forall z \in \Complex \. \Re(z) = \frac{z + \bar z}{2}}
+	\NoProof
+	\\
+	\Theorem{ImaginablePartByConjugation}{\forall z \in \Complex \. \Im(z) = \frac{z - \bar z}{2 \i}}
+	\NoProof
+}
+\newpage
+\subsection{Geometric Representation}
+\Page{
+	\Theorem{SOAlgebraStructure}
+	{
+		\forall A \in \Big\langle  \SO(\Reals,2) \Big\rangle_{\LALGE{\Reals}} \. 
+		\exists r \in \Reals_{+}  :
+		\exists T \in \SO(\Reals,2) :
+		A = rT
+	}
+	\Say{\Big(n,S,a,[1]\Big)}{\bd \LALGE{\Reals} \bd \GRP}
+	{
+		\sum n \in \Nat \.
+		\sum S : n \to \SO(\Reals,n) \.
+		\sum a : n \to \Reals \,
+		A = \sum^n_{i=1} a_i S_i
+	}
+	\Say{[2]}{\THM{TrigonometricRepresentation}(\Reals^2,S)}
+	{
+		\forall i \in n \.
+		 S_i =
+		\left[ 
+			\begin{array}{cc}
+			\cos S_i & \sin S_i \\
+			- \sin S_i & \cos S_i
+			\end{array}
+		\right]
+	}
+	\Say{\Big(A,B, [3] \Big)}{[1][2]}
+	{
+		A = \left[ 
+			\begin{array}{cc}
+			 A & B \\
+			 -B & A
+			\end{array}
+		\right]
+	}
+	\Assume{[4]}{(A,B) \neq 0}
+	\Say{T}{
+		\frac{1}{A^2 + B^2}\left[ 
+			\begin{array}{cc}
+			 A & B \\
+			 -B & A
+			\end{array}
+		\right] 
+	}{\SO(\Reals,2)}
+	\Conclude{[4.*]}{\ByConstr T [3]}{A = (A^2 + B^2)T}
+	\Derive{[4]}{I(\Imply)}{(A,B) \neq 0 \Imply \exists r \in \Reals_{+} :  \exists T \in \SO(\Reals,2) :  A = rT}
+	\Assume{[5]}{(A,B) = 0}
+	\Conclude{[5.*]}{[5][4]}{ A = 0 =0I }
+	\Derive{[4]}{I(\Imply)}{(A,B) = 0 \Imply \exists r \in \Reals_{+} :  \exists T \in \SO(\Reals,2) :  A = rT}
+	\Conclude{[*]}{E(|)\LOGIC{LEM}((A,B)=0)[5][4]}{ \exists r \in \Reals_{+} :  \exists T \in \SO(\Reals,2) :  A = rT}
+	\EndProof
+	\\
+	\DeclareFunc{matrixRepresentation}{\Complex \ToIso{\VS{\Reals}}  \Big\langle  \SO(\Reals,2) \Big\rangle_{\LALGE{\Reals}} }
+	\DefineNamedFunc{matrixRepresentation}{a + b\i }{\mathrm{mat}(a +b\i)}{ 
+		\left[ 
+			\begin{array}{cc}
+			  a & b \\
+			 -b & a
+			\end{array}
+		\right]      
+	}
+	\\
+	\Theorem{SOAlgebraIsComplexNumbers}{\Complex \cong_{\LALGE{\Reals}} \Big\langle  \SO(\Reals,2) \Big\rangle_{\LALGE{\Reals}} }
+	\Assume{a +b\i, c + d\i}{\Complex}
+	\Conclude{[\ldots*]}
+	{
+		\bd \i
+		\bd   \mathrm{mat}
+		\bd \FUNC{matrixMult}(\Reals^2)
+		\bd^{-1}   \mathrm{mat}
+	}
+	{
+		   \mathrm{mat}\Big( (a + b\i)(c + d\i) \Big) = 
+		   \mathrm{mat}\Big( (ac - bd) + (ad + bc)\i\Big) = \NewLine =
+		   \left[
+		   	     \begin{array}{cc}
+		   		ac -  bd & ad + bc \\
+		   		ad + bc & ac - bd 					
+		               \end{array}		
+		   \right]  = 
+		   \left[ 
+			\begin{array}{cc}
+			  a & b \\
+			 -b & a
+			\end{array}
+		\right]    
+		\left[ 
+			\begin{array}{cc}
+			  c & d \\
+			 -d & c
+			\end{array}
+		\right]     =
+		\mathrm{mat}(a + b\i)\mathrm{mat}(c + d\i)
+	}
+	\Derive{[1]}{\bd^{-1}\LALGE{\Reals}}{\TYPE{Isomorphism}\bigg(\LALGE{\Reals},\Complex,\Big\langle  \SO(\Reals,2) \Big\rangle_{\LALGE{\Reals}},\mathrm{mat}\bigg)}
+	\Conclude{[*]}{\bd^{-1}\TYPE{Isomorphic}[1]}
+	{
+		\Complex \cong_{\LALGE{\Reals}} \Big\langle  \SO(\Reals,2) \Big\rangle_{\LALGE{\Reals}}
+	}
+	\EndProof
+	\\
+	\Theorem{ComplexPolarPresentation}{\forall z \in \Complex \. \exists! T \in \SO(\Reals,2) : z = |z|\cos T + \i |z| \sin T}
+	\NoProof
+	\\
+	\DeclareFunc{argument}{\Complex^\times \Arrow{\GRP}  \SO(\Reals,2) }
+	\DefineNamedFunc{argument}{|z|\cos T + \i |z| \sin T}{\mathrm{Arg}\Big( |z|\cos T + \i |z| \sin T \Big)}{T}
+}\Page{
+	\Theorem{DeMuavreFormula}{\forall T \in \SO(\Reals,2) \. \forall n \in \Nat \. \Big( |\cos T + \i  \sin T  \Big)^n = \cos T^n + \i \sin T^n}
+	\NoProof
+}
+\newpage
+\subsection{Roots}
+\Page{
+	\Theorem{ComplexHasSquareRoots}{\forall z \in \Complex \. \exists \sqrt{z}}
+	\Say{\Big(x, y, [1]\Big)}{\THM{ComplexAlgebraicPresentation}(z)}{\sum x,y \in \Complex \. z = x + \i y}
+	\Assume{[1]}{z \not \in \Reals_{-}}
+	\Assume{a + \i b}{\sqrt{z}}
+	\Say{[2]}{[1]\bd (a + \i b)}{a^2 - b^2 = x \And 2ab = y}
+	\Say{[3]}{\frac{[2.2]}{2a}}{b = \frac{y}{2a}}
+	\Say{[4]}{[2.1][3]}{ a^2 - \frac{y^2}{4 a^2} = x }
+	\Say{[5]}{a^2([4]-x)}{a^4 - xa^2 - \frac{y^2}{4} = 0}
+	\Say{[*.1]}{\THM{RootsOfParabola}}{a = \pm\sqrt{\frac{x + \sqrt{x^2 + y^2}}{2} } = \pm \sqrt{\frac{x + |z|}{2} } \in \Reals}
+	\Conclude{[*.2]}{[6][3]}{ b = \pm \sqrt{ \frac{|z| - x }{2}}}
+	\Derive{[2]}{\bd \TYPE{TwoElementSet}}{ 
+		\NewLine :
+		\sqrt{z} = \pm \left( \sqrt{\frac{x + |z|}{2} } + \sqrt{ \frac{|z| - x }{2}}\i\right)
+	}
+	\Say{[3]}{\bd \FUNC{absoluteValue}(\Complex)\THM{MonotonicSquareRoot}(\Reals)}{x + |z|, |z| - x \ge 0}
+	\Conclude{[1.*]}{[3][2]}{\exists \sqrt{z}}
+	\Derive{[1]}{I(\Imply)}{z \not \in \Reals_{-} \Imply \exists \sqrt{z}}
+	\Assume{[2]}{z \in \Reals_{--}}
+	\Conclude{[2.*]}{\bd \i [2]}{\sqrt{z} = |z|\i}
+	\Derive{[2]}{I(\Imply)}{z \in \Reals_{-} \Imply \exists \sqrt{z}}
+	\Conclude{[*]}{E(|)\LOGIC{LEM}[1][2]}{\exists \sqrt{z}}
+	\EndProof
+}\Page{
+	\Theorem{ComplexHasAllRoots}{
+		\forall z \in \Complex^\times \. 
+		\forall n \in \Nat \.
+		\Big| \sqrt[n]{z} \Big| =   n
+	}
+	\Say{T}{\mathrm{Arg}\; z}{\SO(\Reals,2)}
+	\Say{t}{\mathrm{arc}\;T(1)}{\frac{\Reals}{2\pi \Int}}
+	\Say{S}{\Lambda k \in n \. \mathrm{rot}\left(\frac{1}{n}t + \frac{2(k-1)\uppi}{n}\right)}{n \to \SO(\Reals,2)}
+	\Say{u}{\Lambda k \in n \.  \sqrt[n]{|z|}\Big(\cos S_k  + \i \sin S_k\Big) }{n \to \Complex^\times}
+	\Assume{k}{n}
+	\Say{[1]}{
+		\bd S^n_k 
+		\bd \GRP\left(\mathrm{rot},\frac{\Reals}{2\uppi \Int},\SO(\Reals,2)\right)
+	           \bd t
+	}
+	{
+		\NewLine :
+		S^n_k =   
+		\mathrm{rot}^n\left(\frac{1}{n}t + \frac{2(k-1)\uppi}{n}\right) = 
+		\mathrm{rot}\left(  t +  2(k-1)\uppi\right) =
+		\mathrm{rot}(t) = T
+	}
+	\Say{[2]}{\bd u_k \THM{DeMuavreFormula}(u_k,n) [1] \THM{ComplexPolarPresentation} }
+	{
+		\NewLine :
+		u^n_k = 
+		|z|  \Big(\cos S_k^n  + \i \sin S_k^n\Big)  =
+		|z|   \Big(\cos T  + \i \sin T \Big)  = 
+		 z
+	}
+	\Conclude{[1.*]}{\bd \TYPE{NRoot}[2]}{u_k = \sqrt[n]{u}}
+	\Derive{[1]}{I(\forall)}{ \forall k \in n \. u_k = \sqrt[n]{u}}
+	\Assume{k,l}{n}
+	\Assume{[2]}{k \neq l}
+	\Say{[3]}{ \bd \frac{\Reals}{2\uppi\Int}\bd (k,l)[2] }
+	{
+		\frac{1}{n}t + \frac{2(k-1)\uppi}{n}  - \frac{1}{n}t - \frac{2(l-1)\uppi}{n} =
+		\frac{2(k-l)\uppi}{n} \neq 0
+	} 
+	\Say{[4]}{
+		\bd \TYPE{Isomorphism}(\mathrm{rot}) \bd^{-1} S
+	}
+	{
+			S_l \neq S_k
+	}
+	\Conclude{[*]}{\bd u}{
+		u_l \neq u_k
+	}
+	\Derive{[2]}{I(\forall)}
+	{
+		\forall k,l \in n \. k \neq l \Imply u_l \neq u_k
+	}
+	\Conclude{[*]}{\THM{RootNumber}[1][2]}{\Big| \sqrt[n]{z} \Big| = n}
+	\EndProof
+	\\
+	\DeclareFunc{circleGroup}{\TYPE{Subgroup}(\Complex^\times)}
+	\DefineNamedFunc{circleGroup}{}{\mathbb{S}}{\{z \in \Complex : |z| = 1 \}}
+	\\
+	\DeclareFunc{rootsOfUnity}{\prod_{n=1}^\infty n \to \mathbb{S}}
+	\DefineNamedFunc{rootsOfUnity}{k}{\xi_{n,k}}{\mathrm{mat}^{-1} \; \mathrm{rot}\left( \frac{2\uppi k}{n}\right)}
+	\\
+	\DeclareType{PrimitiveRootsOfUnity}{\prod n \in \Nat \.?\sqrt[n]{1}}
+	\DefineNamedType{z}{PrimitiveRootsOfUnity}{z \in \mathrm{P}_n(\Complex)}{\forall k \in (n-1)_\Nat \. z^k \neq 1}
+	\\
+	\Theorem{RootsOfUnityTruePower}{ \forall n \in \Nat \. \forall k \in n \. \min \{ t \in n : \xi_{n,k}^t = 1 \} =  \frac{n}{\mathrm{gcd}(n,k)}}
+	\NoProof
+}
+\Page{
+	\DeclareFunc{totientFunctionOfEuler}{\Nat \to \Nat}
+	\DefineNamedFunc{totientFunctionOfEuler}{n}{\varphi(n)}{\Big|\big\{ k : \TYPE{Coprime}(n) : k < n \big\} \Big|}
+	\\
+	\Theorem{PrimitiveRootsCardinality}{\forall n \in \Nat \.  \Big|\mathrm{P}(n)\Big| = \varphi(n) }
+	\Assume{k}{n}
+	\Conclude{[k.*]}{\bd \xi_{n,k} \bd \mathrm{P}(n) \bd \TYPE{Coprime}\THM{RootsOfUnity}}
+	{ \NewLine : \TYPE{Coprime}(n,k) \iff  \mathrm{gcd}(n,k) = 1  \iff \frac{n}{\mathrm{gcd}(n,k)} = n  \iff \xi_{n,k} \in \mathrm{P}(n)}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{SetEq}\bd^{-1}\TYPE{}}{|\mathrm{P}(n)| = \varphi(n) }
+	\EndProof
+	\\
+	\Theorem{PrimitiveRootsDontIntersect}
+	{
+		\forall n,m \in \Nat \.  n \neq m \Imply \mathrm{P}(n) \cap \mathrm{P}(m) =\emptyset
+	}
+	\Assume{a}{\mathrm{P}(n)}
+	\Assume{b}{\mathrm{P}(m)}
+	\Say{[1]}{\bd \mathrm{P}(n,a)}{\min \{  k \in \Nat : a^k = 1 \} = n  }
+	\Say{[2]}{\bd \mathrm{P}(n,a)}{\min \{  k \in \Nat  : b^k = 1 \} = m  }
+	\Conclude{[a.*]}{I(\to,\#)[1][2]}{a \neq b}
+	\DeriveConclude{[*]}{\bd \TYPE{Intersection}}{\mathrm{P}(n) \cap \mathrm{P}(m) =\emptyset}
+	\EndProof
+	\\
+	\Theorem{RootsOfUnityDecomposition}
+	{
+		\forall n \in \Nat \.  \sqrt[n]{1}  = \bigsqcup_{k : n} \mathrm{P}(n)
+	}
+	\Assume{a}{\sqrt[n]{1}}
+	\Say{k}{\min \{  k \in \Nat : a^k = 1 \}}{n}
+	\Say{[1]}{\bd \sqrt[n]{1}\ByConstr k}{ k | n}
+	\Conclude{[a.*]}{\bd \mathrm{P}(k) \ByConstr k }{a \in \mathrm{P}(k)}
+	\DeriveConclude{[*]}{\THM{PrimitiveRootsDontIntersect}(\ldots)\THM{RootsOfUnityTruePower}(n)}
+	{
+		 \sqrt[n]{1}  = \bigsqcup_{k : n} \mathrm{P}(n)
+	}
+	\EndProof
+	\\
+	\Theorem{EulerTotientSum}{\sum_{k : n} \varphi(k) = n}
+	\Conclude{[*]}
+	{\THM{ComplexHasAllRoots}(n) \THM{RootsOfUnityDecomposition}(n) \THM{CardinalityOfDisjoinUnion}(\ldots)\NewLine\THM{PrimitiveRootsCardinality}(k)}
+	{n = \Big| \sqrt[n]{z} \Big| = \sum_{k:n} \Big| \mathrm{P}(k) \Big| =  \sum_{k:n} \varphi(k) }
+	\EndProof
+}\Page{
+	\Theorem{ComplexQuadraticSplits}
+	{
+		\forall P(x)  : \TYPE{Monic}(\Complex)
+		\forall [0] : \deg P = 2 \.
+		\exists a,b \in \Complex : 
+		P(x) = (x - a)(x - b)
+	}
+	\Say{\Big(\alpha,\beta,[1]\Big)}{[0]\bd \deg P \bd \TYPE{Monic}(\Complex)}
+	{
+		\sum \alpha,\beta \in \Complex \.
+		P(x) = x^2 + \alpha x + \beta
+	}
+	\Say{a}{\frac{-\alpha + \sqrt{\alpha^2 - 4\beta}}{2}}{\Complex}
+	\Say{b}{\frac{-\alpha - \sqrt{\alpha^2 - 4\beta}}{2}}{\Complex}
+	\Say{[2]}{\ByConstr a}{P(a) = 0}
+	\Say{[3]}{\ByConstr b }{P(b) = 0}
+	\Conclude{[4]}{\THM{RootNumber}[2][3]}{P(x) = (x-a)(x-b)}
+	\EndProof
+	\\
+	\Theorem{RealIrreducibleHasConjugateRoots}
+	{
+		\forall P(x) : \TYPE{Monic} \And \TYPE{Irreducible}(\Reals) \.
+		\forall [0] \deg P(x) = 2 \. \NewLine \.
+		\exists z \in \Complex \. 
+		P(x) = (x - z)(x  - \overline{z})
+	}
+	\Say{\Big( a, b, [1] \Big)}
+	{
+		\THM{ComplexQuadraticSplits}\Big( P, [0 \Big)]
+	}
+	{
+		\sum a,b \in \Complex \. P(x) = (x -a)(x-b)
+	}
+	\Say{[2]}{\bd \Complex [x](P(x)) [1]}
+	{
+		P(x) = (x - a)(x - b) = x^2  - (a + b)x  + ab
+	}
+	\Say{[3]}{\bd \Reals [x](P(x)) [2]}{a + b, ab \in \Reals}
+	\Say{[4]}{\bd \TYPE{Irreducible}(\Reals,P(x))[1] }{\Im a \neq 0 \neq \Im b}
+	\Say{[5]}{[2.1]\bd (\Im a,\Im b)}{\Im a = - \Im b}
+	\Say{[6]}{[2.2] \THM{ConjugationProductIsRealNoneg} \bd \Field(\Complex)}
+	{
+		 b \in \Reals \bar a
+	}
+	\Say{[7]}{\bd^{-1} \TYPE{ComplexConjugation}[5][6]}{b = \bar a}
+	\Conclude{[*]}{[7][1]}{P(x) = (x - a)(x -\bar a)}
+	\EndProof
+}
+\newpage
+\subsection{Circles}
+\Page{
+	\DeclareFunc{circle}{\Reals_{++} \times \Complex \to ?\Complex}
+	\DefineNamedFunc{circle}{c,r}{\mathbb{S}(c,r)}{\{ z \in \Complex : |z - c| = r  \}}
+	\\
+	\Conclude{\FUNC{circles}}{\S = \Sphere(\Complex,\Reals_{++})  }{??\Complex}
+	\\
+	\Theorem{CircleDiameter}
+	{
+		\forall c \in \Complex \. \forall r \in \Reals_{++} \. 
+		\sup_{x,y \in \Sphere(c,r)}  | x - y| =  2r
+	}
+	\Assume{x,y}{\Sphere(c,r)}
+	\Conclude{[\ldots*]}{\THM{TriangleIneq}(\Complex)\bd \Sphere(c,r,x \and y)}{
+		|x - y| \le  |x -  c| + |c - y|  = 2r
+	}
+	\DeriveConclude{[1]}{\THM{SupBound}(\Reals)}{ \sup_{x,y \in \Sphere(c,r)}  | x - y| \le  2r }
+	\Say{\Big(a,b,[2] \Big)}{\THM{ComplexAlgebraicPresentation}}{ \sum a,b \in \Reals \. z = a + \i b}
+	\Say{x}{   z = (a + r) + \i b }{\Complex}
+	\Say{y}{    z = (a - r) + \i b }{\Complex}
+	\Say{[3]}{[2] \ByConstr x}{ |c - x| = r}
+	\Say{[4]}{[2] \ByConstr y}{ |c - y| = r}
+	\Say{[5]}{\bd \Sphere(c,r)}{ x,y \in \Sphere(c,r)}
+	\Say{[6]}{\ByConstr x \ByConstr y}{| x - y| = 2 r}
+	\Conclude{[*]}{[1][2]\bd \FUNC{supremum}}{\sup_{x,y \in \Sphere(c,r)}  | x - y| =  2r}
+	\EndProof
+	\\
+	\Theorem{CircleIsUniquelyDefineded}{\TYPE{Injective}(\Complex \times \Reals_+ , ?\Complex,  \Sphere)}
+	\Assume{x,y}{\Complex}
+	\Assume{r,s}{\Reals_{++}}
+	\Assume{[1]}{\Sphere(x,r) = \Sphere(y,s)}
+	\Say{[2]}{\THM{circleDiameter}(\ldots)[1] I(\to,\#)}{ r  =  s  }
+	\Say{t}{|x - y|}{\Reals_{+}}
+	\Assume{[3]}{t \neq 0}
+	\Say{A}{  x   -  \frac{r}{t}(y - x) }{\Complex}
+	\Say{[4]}{\ByConstr A \ByConstr t}{ |A - x| = r}
+	\Say{[5]}{\bd \Sphere(c,r)[4]}{ A \in \Sphere(x,r)}
+	\Say{[6]}{E(=)[1][5][2]}{ A \in \Sphere(y,r)}
+	\Say{[7]}{\bd \Sphere(y,r) \ByConstr A \ByConstr t}
+	{
+		r = | A - y| =   \left|(1 + \frac{r}{t})(y - x) \right| =  r + t
+	}
+	\Say{[8]}{[7] - r}{t = 0}
+	\Conclude{[3.*]}{[3][8]}{\bot}
+	\Derive{[3]}{E(\bot)}{t = 0}
+	\Conclude{[\ldots*]}{\THM{AbsValueIsMetric}[3]\ByConstr t}{x = y}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Injective}}{\TYPE{Injective}(\Complex \times \Reals_+ , ?\Complex,  \Sphere)} 
+	\EndProof
+}
+\Page{
+	\DeclareFunc{center}{\S \to \Complex}
+	\DefineFunc{center}{\Sphere(c,r)}{c}
+	\\
+	\DeclareFunc{radius}{\S \to \Reals_{++}}
+	\DefineFunc{radius}{\Sphere(c,r)}{r}
+	\\
+	\DeclareType{HermitianMatrix}{\prod^\infty_{n=1} ?\Complex^{n \times n}}
+	\DefineNamedType{H}{HermitianMatrix}{H \in \Herm(n)}{\overline{H}^\top = H}
+	\\
+	\Theorem{HermitianMatrixDeterminesSelfAdjointOperator}
+	{
+		\forall n \in \Nat \. \forall H \in \Complex^{n \times n } \.  \NewLine \.
+		H \in \Herm(n) \iff \forall e : \TYPE{Orthonormal}(\Complex^n) \. \TYPE{SelfAdjoint}\Big(\Complex^n , H_{e,e} \Big)
+	}
+	\NoProof
+	\\
+	\Theorem{HermitianMatrixHasRealDiagonal}
+	{
+		\forall n \in \Nat \. \forall H \in \Herm(n) \. \mathrm{diag}\; H \in \Reals^n
+	}
+	\NoProof
+	\\
+	\Theorem{HermitianHasRealEigenvlues}{\forall n \in \Nat\. \forall H \in \Herm(n) \.\forall \lambda : \TYPE{Eigenvalue}(H) \. \lambda \in \Reals}
+	\Say{\Big( v, [1]\Big)}{\bd \TYPE{Eigenvalue}(H,\lambda)}{\sum v \in \Complex^n \. vH = \lambda v \And v \neq 0}
+	\Say{[2]}{\bd \TYPE{HermitianProduct} [1] \THM{HermitianMatrixDeterminesSelfAdjointOperator}(n,H) [1] \NewLine \bd \TYPE{HermitianProduct}}
+	{  \lambda \langle v, v \rangle   = \langle vH, v \rangle =  \langle v, vH \rangle  =  \overline{\lambda} \langle v,v \rangle}
+	\Say{[3]}{\frac{[2]}{\langle v,v\rangle}}{\lambda = \bar \lambda}
+	\Conclude{[*]}{\bd \FUNC{complexConjugation}[3]}{\lambda \in \Reals }
+	\EndProof
+	\\
+	\Theorem{HermitianMatrixDeterminant}{\forall n \in \Nat \. \forall H \in \Herm(n) \. \det H \in \Reals}
+	\Conclude{[*]}{\THM{DetBySpectre}(\Complex^n,H)\THM{HermitianHasRealEigenvalues}(n,H)}{\det H = \prod_{\lambda \in \Complex} \lambda^{\sigma_T(H)} \in \Reals}
+	\\
+	\DeclareFunc{realHermitianCircle}{\Herm(2) \to ?\C}
+	\DefineNamedFunc{realHermitianCircle}{H}{\Sphere_\Reals(H)}{\Big\{ z \in \Complex  : \langle vH_{e,e}, v \rangle = 0 \quad \where \quad v = (z,1)  \Big\}}
+}
+\Page{
+	\Theorem{EveryCircleIsHermitian}{\forall S \in \S \. \exists H \in \Herm(2) : S = \Sphere_\Reals(H)}
+	\Say{c}{\FUNC{center}(S)}{\Complex}
+	\Say{r}{\FUNC{radius}(S)}{\Reals_{++}}
+	\Say{H}{\left[\begin{array}{cc} 1 & -\overline{c} \\ -c  & |c|^2 - r^2 \end{array} \right] }{\Complex^{2 \times 2}}
+	\Say{[2]}{\ByConstr H}{H \in \Herm(2)}
+	\Assume{z}{\Complex}
+	\Say{v}{(z,1)}{\Complex^2}
+	\Say{[3]}{\ByConstr H \bd \FUNC{hermitianProduct}(\Complex^2) \bd^{-1} \FUNC{absValue}}
+	{
+		\langle vH, v \rangle = 
+		\Big\langle (z - \overline{c},  -zc + |c|^2 - r^2  ),(z,1)  \Big\rangle = \NewLine = 
+		z\overline{z} - \overline{c}\overline{z} - zc  + |c|^2 - r^2 = 
+		| z - c|^2 - r^2
+	}
+	\Conclude{[z.*]}{\sqrt{[3]}}{\langle vH, v \rangle = 0 \iff | z - c| = r}
+	\DeriveConclude{[*]}{\ByConstr r, \ByConstr c \bd \Sphere(H)}{ S = \Sphere(c,r) = \Sphere_\Reals(H)}
+	\EndProof
+	\\
+	\Conclude{\TYPE{GeneralizedCircels} = \S'}{\frac{\Herm(2) \setminus \{0\}}{\Reals^\times}}{\Type}
+	\\
+	\DeclareFunc{body}{\S' \to ?\Complex}
+	\DefineNamedFunc{body}{[H]}{[H]}{\S(H)}
+	\\
+	\DeclareFunc{discriminant}{\S' \to ?\Reals}
+	\DefineNamedFunc{discriminant}{[H]}{\Delta(H)}{\Reals^2 \det H}
+	\\
+	\DeclareFunc{orientability}{\S' \to ?\Reals}
+	\DefineNamedFunc{orientability}{[H]}{o(H)}{\Reals^\times H_{1,1}}
+	\\
+	\DeclareType{RealCircle}{?\S'}
+	\DefineNamedType{S}{RealCircle}{S \in \Re \S'}{\exists c \in \Complex : r \in \Reals : S =  \Sphere(c,r) }
+	\\
+	\DeclareType{ImaginablelCircle}{?\S'}
+	\DefineNamedType{S}{ImaginableCircle}{S \in \Im \S'}{ S =_{\SET}  \emptyset \And o(S) \neq 0 }
+	\\
+	\DeclareType{PointCircle}{?\S'}
+	\DefineType{S}{PoinCircle}{\exists z \in \Complex : S = \{ z \}}
+	\\
+	\DeclareType{LineCircle}{?\S'}
+	\DefineType{S}{LineCircle}{\exists a,b \in \Complex : S = a \vee_{\Reals} b}
+	\\
+	\DeclareType{InfinityCircle}{?\S'}
+	\DefineType{S}{InfinityCircle}{S =_{\SET} \emptyset \And o(S)  = 0}
+}
+\Page{
+	\Theorem{RealCircleCharacterization}
+	{
+		\forall S \in \S' \.  S \in \Re \S' \iff   \Delta(S) = -\Reals_{++} \And o(S) \neq \{0\}
+	}
+	\Assume{[1]}{ s \in \Re \S'}
+	\Say{\Big( c, r,[2]\Big)}{\bd \Re \S' [1]}
+	{
+		\sum c \in \Complex \. r \in \Reals_{++} \. S = \Sphere(c,r)
+	}
+	\Say{[3]}{\THM{EveryCircleIsHermitian}[2] }
+	{
+		S = \left[ \left[      
+		\begin{array}{cc}
+			1 & \overline{c} \\
+			c &     |c|^2 - r^2
+		\end{array}
+		\right] \right]
+	}
+	\Say{[1.*.1]}{\bd \Delta(S) \bd \det S [3] \THM{NoZeroSquarePositive}(\Reals) \THM{InversePositiveIsNegative}(\Reals)}
+	{
+		\NewLine :
+		\Delta(S) = \Reals^2 (\det S)   =  \Reals^2 (  |c|^2 - r^2 - |c|^2| =  - \Reals^2 r^2 < 0 
+	}
+	\Conclude{[1.*.2]}{\bd o(S) [3]  \bd \Reals^\times} {o(S) = \Reals^\times \neq \{0\} }
+	\Derive{[1]}{I(\Imply)}{S \in \Re S \Imply \Delta(S) = -\Reals^2   o(S) \neq \{0\}}
+	\Assume{[2]}{\Delta(S) = -\Reals^2   o(S) \neq \{0\}}
+	\Say{\Big( a,b,z, [3] \Big)}{\THM{HermitianHasRealDiagonal}(2,S)}
+	{
+		\exists a,b \in \Reals \.
+		\exists z \in \Complex \.
+		S = \left[ \left[      
+		\begin{array}{cc}
+			a & \overline{z} \\
+			z &     b
+		\end{array}
+		\right] \right]
+	}
+	\Say{[4]}{[2.2]\bd o(S) [3]}{a \neq 0}
+	\Say{c}{\frac{z}{a}}{\Complex}
+	\Say{[5]}{\bd \Delta(S)[2.1][3]}
+	{
+		0  <  \Delta(S) = \frac{b}{a} - |z|^2
+	}
+	\Say{r}{\sqrt{|z|^2 - \frac{b}{a}}}{\Reals_{++}}
+	\Conclude{[2.*]}{\ByConstr z \ByConstr [3]}{ S = \Sphere(c,r)}
+	\DeriveConclude{[*]}{I(\iff)[1]}{ S \in \Re \S' \iff   \Delta(S) = -\Reals_{++} \And o(S) \neq \{0\} }
+	\EndProof 
+	\\
+	\Theorem{ImaginableCircleCharacterization}
+	{
+		\forall S \in \S' \.  S \in \Im \S' \iff   \Delta(S) = \Reals_{++} 
+	}
+	\Say{\Big( a,b,z, [2] \Big)}{\THM{HermitianHasRealDiagonal}(2,S)}
+	{
+		\exists a,b \in \Reals \.
+		\exists z \in \Complex \.
+		S = \left[ \left[      
+		\begin{array}{cc}
+			a & \overline{z} \\
+			z &     b
+		\end{array}
+		\right] \right]
+	}
+	\Assume{[2]}{S \in \Im \S'}
+	\Say{[3]}{\bd \Im \S' (S)}{  S = \emptyset  }
+	\Say{[4]}{[1][3]}{\forall u \in \Complex  \.   a|u|^2  + u z + \overline{ uz} + b \neq 0 }	
+	\Say{[5]}{\bd \Im \S' [1]}{ a \neq 0}
+	\Say{c}{\frac{\bar z}{a}}{\Complex}
+	\Say{[6]}{[4][5]}{ \forall u \in \Complex \. | u + \bar c|^2  \neq  |c|^2 - \frac{b}{a}}
+	\Say{[7]}{[6] \bd \FUNC{absVsl}}{|c|^2 - \frac{b}{a} < 0}
+	\Conclude{[2.*]}{\bd \Delta(S) [1]}{\Delta(S) = \Reals_{++} \left(\frac{b}{a} - |c|^2\right) = \Reals_{++} }
+	\Derive{[2]}{I(\Imply)}{  S \in \Im \S' \Imply  \Delta(S) = \Reals_{++}}
+	\Assume{[3]}{\Delta(S) = \Reals_{++}}
+	\Say{[4]}{[3]\bd \Delta(S) [2]}
+	{
+	    \Reals_{++} =  \Delta(S) =  \Reals_{++} \Big(  ab  - |z|^2 \Big)
+	}
+	\Say{[5]}{\bd \Reals_{+=} [4]}{  ab - |z|^2 > 0 }
+	\Say{[6]}{\bd \FUNC{absValue}(\Complex)[5]}{a \neq 0 \neq b}
+	\Say{[7]}{\bd^{-1} o(S) [6]}{o(S) \neq \{0\}}
+	\Say{c}{\frac{\bar z}{a}}{\Complex}
+}\Page{
+	\Assume{u}{\Complex}
+	\Say{[8]}{\bd^{-1} \FUNC{absVal}(\Complex) [5]}
+	{
+		 |u|^2  + u \bar c + c \bar u + \frac{b}{a} =  
+		 |u + c|^2     + \frac{b}{a} - |c|^2 > 0 
+	}
+	\Conclude{[9]}{\THM{TrichtomyRule}[8]}
+	{
+		|u|^2  + u \bar c + c \bar u + \frac{b}{a} \neq 0
+	}
+	\Derive{[8]}{\bd^{-1} \Sphere(S)}
+	{
+		S = \emptyset
+	}
+	\Conclude{[3.*]}{\bd^{-1} \Im \S'}{S \in \Im \S'}
+	\DeriveConclude{[*]}{I(\iff)[2]}{  S \in \Im \S' \iff   \Delta(S) = \Reals_{++}}
+	\EndProof
+	\\
+	\Theorem{PointCircleCharacterization}
+	{
+		\forall S \in \S' \.  \TYPE{PointCircle}(S) \iff   \Delta(S) = 0 \And o(S) = \Reals^\times
+	}
+	\Say{\Big( a,b,z, [2] \Big)}{\THM{HermitianHasRealDiagonal}(2,S)}
+	{
+		\exists a,b \in \Reals \.
+		\exists z \in \Complex \.
+		S = \left[ \left[      
+		\begin{array}{cc}
+			a & \overline{z} \\
+			z &     b
+		\end{array}
+		\right] \right]
+	}
+	\Assume{[2]}
+	{
+		\TYPE{PointCircle}(S)
+	}
+	\Say{\Big( v, [3]}{\bd \TYPE{PointCircle}(S) }{ \sum v \in \Complex \. S = \{v\}}
+	\Say{[4]}{\bd \FUNC{hermitianSphere}[3][1]}
+	{
+		\forall u \in \Complex \. 
+			a|u|^2  + u z + \overline{ uz} + b = 0
+			\Imply
+			u = v
+	}
+	\Say{[5]}{[4]\ldots}{ a \neq 0}
+	\Say{c}{-\frac{\bar z}{a}}{\Complex}
+	\Say{[6]}{[4]\ByConstr c}
+	{
+		\forall u \in \Complex \. 
+			|u|^2  - u \bar c  -  \bar u c + \frac{b}{a} =      
+			|u -  c|^2  + \frac{b}{a} - |c|^2
+			=  0
+			\Imply
+			u = v
+	}
+	\Conclude{[7]}{[6]\ldots}
+	{
+		c = v \And   \frac{b}{a} - |c|^2  = 0 
+	}
+	\Conclude{[2.*]}{\bd^{-1} o(S) [4] \bd^{-1} \Delta(S) [7]}
+	{
+		 \Delta(S) = 0 \And o(S) = \Reals^\times
+	}
+	\Derive{[2]}{I(\Imply)}
+	{
+		\TYPE{PointCircle}(S) \Imply  \Delta(S) = 0 \And o(S) = \Reals^\times
+	}
+	\Assume{[3]}{\Delta(S) = 0 \And o(S) = \Reals^\times}
+	\Say{[4]}{\bd o(S)[1][3]}{a \neq 0}
+	\Say{v}{-\frac{\bar z}{a}}{\Complex}
+	\Say{[5]}{\bd \Delta(S)[1][3]\ByConstr v}{\frac{b}{a} - |v|^2 = 0}
+	\Assume{u}{S}
+	\Say{[5]}{ \bd S (u)  \bd \FUNC{absVal} [5]  }
+	{
+		0 = 
+		|u|^2  - u \bar c  -  \bar u c + \frac{b}{a} =      
+		|u -  c|^2  + \frac{b}{a} - |c|^2  = 
+		|u - c|^2
+	}
+	\Conclude{[u.*]}{\THM{AbsValueIsMetric}[6]}{u = v}
+	\DeriveConclude{[3.*]}{\bd^{-1} \TYPE{Singleton}}{S = \{v\}}
+	\DeriveConclude{[*]}{I(\iff)}{ \TYPE{PointCircle}(S) \iff   \Delta(S) = 0 \And o(S) = \Reals^\times  } 
+	\EndProof
+}
+\Page{
+	\Theorem{LineCircleCharacterization}
+	{
+		\forall S \in \S' \.  \TYPE{LineCircle}(S) \iff   \Delta(S) = -\Reals_{++} \And o(S) = 0
+	}
+	\Say{\Big( a,b,z, [2] \Big)}{\THM{HermitianHasRealDiagonal}(2,S)}
+	{
+		\exists a,b \in \Reals \.
+		\exists z \in \Complex \.
+		S = \left[ \left[      
+		\begin{array}{cc}
+			a & \overline{z} \\
+			z &     b
+		\end{array}
+		\right] \right]
+	}
+	\Assume{[2]}
+	{
+		\TYPE{LineCircle}(S)
+	}
+	\Say{\Big(u,v,[3]\Big)}{\bd \TYPE{LineCircle}(S)}{ \sum u,v \in \Complex \.  u \vee v = S}
+	\Say{f}{\Lambda w \in \Complex \.  \Big\langle S(w,1), (w,1) \Big\rangle }{\Complex \to \Reals}
+	\Say{[4]}{[3]\THM{AnalyticLineEquation}(\Reals,\Complex)\ByConstr f \bd S}{\TYPE{Affine}(\Complex,\Reals, f)}
+	\Say{[5]}{[1][4] \ByConstr f}{ a = 0 }
+	\Say{[2.*.1]}{\bd^{-1} o(S) [1][5]}{o(S) = 0}
+	\Conclude{[2.*.2]}{\bd^{-1} \Delta(S) \bd \det S [1][2.*.1]}{\Delta(S) = -\Reals_{++}}
+	\Derive{[2]}{I(\Imply)}{\TYPE{LineCircle}(S) \Imply   \Delta(S) = -\Reals_{++} \And o(S) = 0}
+	\Assume{[3]}{ \Delta(S) = -\Reals_{++} \And o(S) = 0 }
+	\Say{[4]}{\bd o(S)[1][3]}{a = 0}
+	\Assume{u}{S}
+	\Conclude{[5.*]}{ \bd S (u)  \bd \FUNC{absVal} [5]  }
+	{
+		0 = 
+		a|u|^2  +  u  z  +  \overline{ u z } +  b =      
+		 u  z  +  \overline{ u z } +  b  = 
+		2\Re u z    + b 
+	}
+	\DeriveConclude{[3.*]}{\bd \TYPE{AnalyticLineEquation}}{\TYPE{Line}(S,\Complex)}
+	\DeriveConclude{[*]}{I(\iff)[2]}{ \TYPE{LineCircle}(S) \iff   \Delta(S) = -\Reals_{++} \And o(S) = 0  }
+	\NoProof
+	\\
+	\Theorem{GeneralizedCirclesClassification}
+	{
+		\S' = \Re \S' \sqcup \Im \S' \sqcup \TYPE{PointCircle} \sqcup \TYPE{LineCircle} \sqcup \TYPE{InfinityCircle} 
+	}
+	\NoProof
+	\\
+	\Conclude{\TYPE{OriantableGeneralizedCircle} = \S''}{\frac{\S'}{\Reals_{++}}}{\Type}
+	\\
+	\DeclareFunc{forgetOrientation}{\S'' \to ?\Reals}
+	\DefineNamedFunc{forgetOrientation}{[H]}{[H]}{\pm [H]}
+	\\
+	\DeclareFunc{orientation}{\S'' \to S''}
+	\DefineNamedFunc{orientation}{[H]}{O[H]}{\If H_{1,1} \neq 0 \. \Reals_{++} H_{1,1} } 
+	\\
+	\DeclareFunc{pencil}{ \Big(\S' \times \S'\Big) \setminus \FUNC{diagonal}(\S') \to ?\S' }
+	\DefineNamedFunc{pencil}{[A],[B]}{\p\Big([A],[B]\Big)}{\Big\{ \big[ \alpha A + \beta B \big] \Big|  (\alpha,\beta) \in \Reals^2 \setminus \{0\}     \Big\}  }
+	\\
+	\DeclareFunc{crossDeterminant}{ \prod_{ R \in \mathsf{RNG} }  R^{2 \times 2} \times R^{2 \times 2} \to R}
+	\DefineNamedFunc{crossDeterminant}{A,B}{\det(A,B)}{A_{1,1} B_{2,2} +  A_{2,2} B_{1,1} - A_{1,2} B_{2,1} - A_{1,2} B_{2,1}}
+}\Page{
+	\Theorem{LinearCombinationDeterminant}{
+		\forall R \in \mathsf{RNG} \. 
+		\forall \alpha, \beta \in R \.  
+		\forall A,B \in R^{2 \times 2} \.
+		\NewLine \.
+		\det(\alpha A + \beta B) = 
+		\alpha^2 \det A  + \beta^2 \det B +  \alpha \beta \det( A,B) 
+	}
+	\NoProof
+	\\
+	\Theorem{RealCircleCrossDeterminant}
+	{
+		\forall A,B \in \Herm(2) \.
+		\forall [0] :  [A],[B] \in \Re \S' \. 
+		\det(A,B) = A_{1,1}A_{2,2}\Big( \delta^2 - r^2 - s^2 \Big)  
+		\NewLine \where  a = \FUNC{center}(A), b = \FUNC{center}(B), \delta = |a - b|, r = \FUNC{radius}(A), s = \FUNC{radius}(B)
+	}
+	\Say{[1]}{\bd \Re \S' [0]\THM{EveryCircleIsHermitian}(A)}
+	{
+		A =    A_{1,1}\left[      
+		\begin{array}{cc}
+			1 &  a  \\
+			\bar{a}  &  |a|^2 - r^2   
+		\end{array}
+		\right] 
+	}
+	\Say{[2]}{\bd \Re \S' [0]\THM{EveryCircleIsHermitian}(A)}
+	{
+		B =    B_{1,1}\left[      
+		\begin{array}{cc}
+			1 &  b  \\
+			\bar{b}  &  |b|^2 - s^2   
+		\end{array}
+		\right] 
+	}
+	\Conclude{[*]}{\bd \det(A,B)[1][2] \bd \FUNC{conjugation}(\Complex) \ByConstr^{-1} }
+	{   
+		\det(A,B)  =   
+		A_{1,1}B_{1,1}\Big(                     
+		|a|^2  - r^2   + |b|^2 - s^2     - a\bar b  - b \bar a                   
+		\Big)   = \NewLine \.
+		 A_{1,1}B_{1,1} \Big(  |a - b|^2   - r^2 - s^2 \Big) =
+		 A_{1,1}B_{1,1} \Big(  \delta^2   - r^2 - s^2 \Big)
+	}
+	\EndProof
+	\\
+	\DeclareFunc{affineWindingFunction}{ \Reals \S' \to  \pm 1 \to C^\infty\left( \Reals,\Complex \right)  }
+	\DefineNamedFunc{affineWindingFunction}{S,s}{w_{S,s}}{\Lambda t \in \Reals \. w(st) T \quad \where \quad T \in \Di_{\Reals}(\Complex) \And T\Sphere^1 = S}
+	\\
+	\DeclareType{IntersectingRealCircles}{  ?( \Re\S'' \times \Re \S'')   }
+	\DefineType{A,B}{IntersectingRealCircle}{ A \cap B \neq \emptyset }
+	\\
+	\DeclareFunc{intersectionAngle}{\TYPE{IntersectingCircles} \to \TYPE{Angle}(\Reals,\Complex)}
+	\DefineNamedFunc{intersectionAngle}{ A,B}{\omega(A,B)}{\angle \dot w_{A,a} |_t \dot w_{B,b} |_s
+		\NewLine
+		\where \quad
+		a = \mathrm{sign} \; O(A), b = \mathrm{sign} \; O(B),  t,s \in \Reals  :  w_{A,a}(t) = w_{B,b}(s)
+	}
+	\\
+	\Theorem{IntersectionAngleAnalyticExpression}
+	{
+		\forall A,B : \TYPE{IntersectingCircles} \.  \NewLine \.
+		\cos \omega(A,B) = \mp\frac{\det(A,B)}{2\sqrt{\det A \det B}}
+	}
+	\Say{\Big[t,s,[1]\Big]}{\bd \TYPE{IntersectingCircle}(A,B)\bd^{-1} w_A, w_B}{\sum t,s \in \Reals \. w_A(t) = w_B(s)}
+	\Say{p}{w_A(t)}{A \cap B}
+	\Say{a}{\FUNC{center}(A)}{\Complex}
+	\Say{b}{\FUNC{center}(B)}{\Complex}
+	\Say{\rho}{\FUNC{radius}(A)}{\Reals_{++}}
+	\Say{\sigma}{\FUNC{radius}(B)}{\Reals_{++}}
+	\Say{\delta}{|a - b|}{\Reals_+}
+	\Say{[2]}{\THM{CircleTangentIsOrthogonalToRadian}}{\vv{pa} \bot \dot w_{A} |_t  \And  \vv{pb} \bot \dot w_{B} |_s   }
+	\Say{\Big( \xi, \zeta, [3] \Big)}{\THM{ComplexMatrixReprezentation}[2]}{ \sum \xi, \zeta \in \{+1,-1\} \.  \vv{pa} = \rho \xi \i \dot w_{A} |_t \And \rho \vv{pb} = \sigma \zeta \i \dot w_{B} |_s   }
+	\Conclude{[*]}{\bd \omega(A,B) \THM{RotationPreservesCosine}[3] \THM{LawOfCosines}(\Reals,\Complex)\bd^{-1} \NewLine \THM{RealCircleCrossDeterminant}(A,B) \bd^{-1}\det A \det B}
+	{
+		\NewLine :
+		\cos \omega(A,B) = 
+		\cos  \angle \dot w_{A,a} |_t \dot w_{B,b} |_s  = 
+		\mp \cos  \vv{pa} \vv{pb}  =  
+		\mp \frac{\delta^2 - \rho^2 - \sigma^2}{2 \rho \sigma} = 
+		\mp \frac{\det(A,B)}{2\sqrt{\det A \det B}}
+	}
+	\EndProof
+}\Page{
+	\Conclude{\TYPE{NonsingularCircles} = \S_*}{\Re \S' \sqcup \Im \S' \sqcup \TYPE{LineCircle}}{?\S'}
+	\\
+	\DeclareFunc{commonInvariant}{  \S_* \times \S_* \to \Complex}
+	\DefineNamedFunc{commonInvariant}{A,B}{\Omega(A,B)}{ \frac{\det(A,B)}{2\sqrt{\det A \det B}}}
+	\\
+	\DeclareType{Orthogonal}{?(\S' \times \S')}
+	\DefineNamedType{A,B}{Orthogonal}{A \bot B}{\det(A,B) = 0}
+	\\
+	\DeclareType{KissingCircles}{?\Big(\Re \S'' \times \Re \S''\Big)}
+	\DefineType{A,B}{KissingCircles}{|\mathrm{conv} \; A \cap  \mathrm{conv} \; B| = 1 }
+	\\
+	\Theorem{KissingCirclesRadiCharacterization}
+	{
+		\forall A,B \in \Re \S' \.  \TYPE{KissingCircles}(A,B) \iff  \rho + \sigma = \delta \NewLine 
+		\where
+		\rho = \FUNC{radius}(A),
+		\sigma = \FUNC{radius}(B),
+		a =  \FUNC{center}(A),
+		b = \FUNC{center}(b),
+		\delta = |a - b|
+	}
+	\\
+	\Theorem{KissingCirclesCommonInvariant}
+	{
+		\forall  A,B \in \Re \S'' \.  \TYPE{KissingCircles}(A,B) \iff   \Omega(A,B) = \mp 1
+	}
+	\Say{a}{\FUNC{center}(A)}{\Complex}
+	\Say{b}{\FUNC{center}(B)}{\Complex}
+	\Say{\rho}{\FUNC{radius}(A)}{\Reals_{++}}
+	\Say{\sigma}{\FUNC{radius}(B)}{\Reals_{++}}
+	\Say{\delta}{|a - b|}{\Reals_+}
+	\Say{[1]}{\bd \Re \S' [0]\THM{EveryCircleIsHermitian}(A)}
+	{
+		A =    A_{1,1}\left[      
+		\begin{array}{cc}
+			1 &  a  \\
+			\bar{a}  &  |a|^2 - \rho^2   
+		\end{array}
+		\right] 
+	}
+	\Say{[2]}{\bd \Re \S' [0]\THM{EveryCircleIsHermitian}(A)}
+	{
+		B =    B_{1,1}\left[      
+		\begin{array}{cc}
+			1 &  b  \\
+			\bar{b}  &  |b|^2 - \sigma^2   
+		\end{array}
+		\right] 
+	}
+	\Assume{[3]}{\TYPE{KissingCircles}(A,B)}
+	\Conclude{[3.*]}{\bd \Omega(A,B) \THM{RealCircleCrossDeterminant}(A,B) \THM{BinomialExpansion}(\rho,\sigma) \NewLine \THM{KissingCirclesRadiCharacterization}(A,B)\bd \TYPE{Inverse}(A,B)}
+	{
+		\NewLine :
+		\Omega(A,B) =   
+		\mp \frac{\Delta(A,B)}{\sqrt{\det A \det  B}} =
+		\mp  \frac{\delta^2 - \rho^2 - \sigma^2 }{ 2\rho \sigma} =
+		\mp  \frac{\delta^2 - (\rho + \sigma)^2 + 2\rho\sigma}{ \rho \sigma} = 
+		\mp \frac{\delta^2 -  \delta^2 + 2\rho\sigma}{2\rho\sigma} = \mp 1  
+	}
+	\Derive{[3]}{I(\Imply)}{\TYPE{KissingCircles}(A,B) \Imply \Omega(A,B) = \mp 1}
+	\Assume{[4]}{\Omega(A,B) = \mp 1}
+	\Conclude{[5]}{ [4] \bd \Omega(A,B) \THM{RealCircleCrossDeterminant}(A,B)  }
+	{
+		\mp 1 = \Omega(A,B)   =          \mp \frac{\Delta(A,B)}{\sqrt{\det A \det  B}} =
+		\mp  \frac{\delta^2 - \rho^2 - \sigma^2 }{ 2 \rho \sigma}
+	}
+	\Say{[6]}{2 \rho \sigma [5] }{ 2\rho \sigma =  \delta^2 - \rho^2 - \sigma^2 }
+	\Say{[7]}{\Big([6] + \rho^2 + \sigma^2 \Big)\THM{BinomialExpansion}(\rho,\sigma)}{  \delta^2 = (\rho + \sigma)^2     }
+	\Conclude{[4.*]}{\sqrt{[7]}  \THM{KissingCirclesRadiCharacterization}(A,B)}{\TYPE{KissingCircles}(A,B)}
+	\DeriveConclude{[*]}{I(\iff)[3]}{ \TYPE{KissingCircles}(A,B) \iff   \Omega(A,B) = \mp 1}
+	\EndProof
+}
+\Page{
+	\DeclareType{CirclesTouchingInside}{?\Big(\Re \S'' \times \Re \S''\Big)}
+	\DefineType{A,B}{Circles}{|  A \cap   B| = 1  \And \IsNot \TYPE{KissingCircles}(A,B)}
+	\\
+	\Theorem{CirclesTouchingInsideRadiCharacterization}
+	{
+		\forall A,B \in \Re \S' \.  \TYPE{KissingCircles}(A,B) \iff  |\rho - \sigma| = \delta \NewLine 
+		\where
+		\rho = \FUNC{radius}(A),
+		\sigma = \FUNC{radius}(B),
+		a =  \FUNC{center}(A),
+		b = \FUNC{center}(b),
+		\delta = |a - b|
+	}
+	\\	
+	\Theorem{TouchingInsideCommonInvariant}
+	{
+		\forall  A,B \in \Re \S'' \.  \TYPE{CirclesTouchingInside}(A,B) \iff  \Omega(A,B) = \pm 1
+	}
+	\Say{a}{\FUNC{center}(A)}{\Complex}
+	\Say{b}{\FUNC{center}(B)}{\Complex}
+	\Say{\rho}{\FUNC{radius}(A)}{\Reals_{++}}
+	\Say{\sigma}{\FUNC{radius}(B)}{\Reals_{++}}
+	\Say{\delta}{|a - b|}{\Reals_+}
+	\Say{[1]}{\bd \Re \S' [0]\THM{EveryCircleIsHermitian}(A)}
+	{
+		A =    A_{1,1}\left[      
+		\begin{array}{cc}
+			1 &  a  \\
+			\bar{a}  &  |a|^2 - \rho^2   
+		\end{array}
+		\right] 
+	}
+	\Say{[2]}{\bd \Re \S' [0]\THM{EveryCircleIsHermitian}(A)}
+	{
+		B =    B_{1,1}\left[      
+		\begin{array}{cc}
+			1 &  b  \\
+			\bar{b}  &  |b|^2 - \sigma^2   
+		\end{array}
+		\right] 
+	}
+	\Assume{[3]}{ A =_{\S'} B  }
+	\Conclude{[3.*]}{\bd \Omega(A,B) \THM{RealCircleCrossDeterminant}(A,B) \THM{BinomialExpansion}(\rho,\sigma) \NewLine \THM{IdenticalCirclesRadiCharacterization}(A,B)\bd \TYPE{Inverse}(A,B)}
+	{
+		\NewLine :
+		\Omega(A,B) =   
+		\mp \frac{\Delta(A,B)}{\sqrt{\det A \det  B}} =
+		\mp  \frac{\delta^2 - \rho^2 - \sigma^2 }{ 2\rho \sigma} =
+		\mp  \frac{ (\rho + \sigma)^2 - 2\rho\sigma}{ \rho \sigma} = 
+		\mp \frac{ - 2\rho\sigma}{2\rho\sigma} = \pm 1  
+	}
+	\Derive{[3]}{I(\Imply)}{ A =_{\S'} B \Imply \Omega(A,B) = \pm 1}
+	\Assume{[3]}{\TYPE{KissingCircles}(A,B)}
+	\Conclude{[3.*]}{\bd \Omega(A,B) \THM{RealCircleCrossDeterminant}(A,B) \THM{BinomialExpansion}(\rho,\sigma) \NewLine \THM{KissingCirclesRadiCharacterization}(A,B)\bd \TYPE{Inverse}(A,B)}
+	{
+		\NewLine :
+		\Omega(A,B) =   
+		\mp \frac{\Delta(A,B)}{\sqrt{\det A \det  B}} =
+		\mp  \frac{\delta^2 - \rho^2 - \sigma^2 }{ 2\rho \sigma} =
+		\mp  \frac{\delta^2 - (\rho + \sigma)^2 + 2\rho\sigma}{ \rho \sigma} = 
+		\mp \frac{\delta^2 -  \delta^2 + 2\rho\sigma}{2\rho\sigma} = \mp 1  
+	}
+	\Derive{[3]}{I(\Imply)}{\TYPE{KissingCircles}(A,B) \Imply \Omega(A,B) = \mp 1}
+	\Assume{[4]}{\Omega(A,B) = \p, 1}
+	\Conclude{[5]}{ [4] \bd \Omega(A,B) \THM{RealCircleCrossDeterminant}(A,B)  }
+	{
+		\pm 1 = \Omega(A,B)   =          \mp \frac{\Delta(A,B)}{\sqrt{\det A \det  B}} =
+		\mp  \frac{\delta^2 - \rho^2 - \sigma^2 }{ 2 \rho \sigma}
+	}
+	\Say{[6]}{2 \rho \sigma [5] }{ -2\rho \sigma =  \delta^2 - \rho^2 - \sigma^2 }
+	\Say{[7]}{\Big([6] + \rho^2 + \sigma^2 \Big)\THM{BinomialExpansion}(\rho,\sigma)}{  \delta^2 = (\rho - \sigma)^2     }
+	\Conclude{[4.*]}{\sqrt{[7]}  \THM{TouchingInsideRadiCharacterization}(A,B)}{\TYPE{CirclesTouchingInside}(A,B)}
+	\DeriveConclude{[*]}{I(\iff)[3]}{ \TYPE{KissingCircles}(A,B) \iff   \Omega(A,B) = \mp 1}
+	\EndProof
+	\\
+	\Theorem{IdenticalCommonInvariant}
+	{
+		\forall  A,B \in \Re \S'' \.  A =_{\S'} B \Imply  \Omega(A,B) = \pm 1
+	}
+	\NoProof	
+}
+\Page{
+		\Theorem{IntersectingCircleCommonInvariant}
+		{
+			\forall  A,B \in \Re \S'' \. \TYPE{IntersectingCircles}(A,B) \iff \Big|  \Omega(A,B) \Big| \le 1
+		}
+		\Say{a}{\FUNC{center}(A)}{\Complex}
+		\Say{b}{\FUNC{center}(B)}{\Complex}
+		\Say{\rho}{\FUNC{radius}(A)}{\Reals_{++}}
+		\Say{\sigma}{\FUNC{radius}(B)}{\Reals_{++}}
+		\Say{\delta}{|a - b|}{\Reals_+}
+		\Say{[1]}{\bd \Re \S' [0]\THM{EveryCircleIsHermitian}(A)}
+		{
+			A =    A_{1,1}\left[      
+			\begin{array}{cc}
+				1 &  a  \\
+				\bar{a}  &  |a|^2 - \rho^2   
+			\end{array}
+			\right] 
+		}
+		\Say{[2]}{\bd \Re \S' [0]\THM{EveryCircleIsHermitian}(A)}
+		{
+			B =    B_{1,1}\left[      
+			\begin{array}{cc}
+				1 &  b  \\
+				\bar{b}  &  |b|^2 - \sigma^2   
+			\end{array}
+			\right] 
+		}
+		\Assume{[3]}{ \TYPE{IntersectingCircles}(A,B)  }
+		\Say{\Big(p, [4] \Big)}{\bd \TYPE{IntersectingCircles}(A,B)}{\sum p \in \Complex \. p \in A \cap B}
+		\Say{[5]}{\ByConstr \delta \THM{TriangleIneq}(\Complex)(a,b,p) \bd \TYPE{RealsCircle}(A \And B) \ByConstr \rho \ByConstr \sigma }
+		{  
+			\delta = | a - b | \le  | a - p| + |b - p| =  \rho + \sigma
+		}
+		\Say{[6]}{ \ByConstr \rho \ByConstr \sigma  \THM{InverseTriangleIneq}(\Complex,a,b,p) \ByConstr^{-1} \delta  }{   |\rho - \sigma| = \Big| |a -  p|  - |b - p| \Big| \le  | a - b | = \delta    }
+		\Say{[7]}{[6]^2}{ \rho^2 - 2\rho \sigma + \sigma^2 \le \delta^2}
+		\Assume{[8]}{\rho^2 + \sigma^2 - \delta^2  \ge 0}
+		\Conclude{[8.*]}{ \bd \Omega(A,B)  \THM{RealCircleCrossDeterminant}(A,B)[8][7] \bd \TYPE{Inverse}(\Reals,2\rho\sigma)   }
+		{
+			\NewLine =
+			| \Omega(A,B)| =   
+			\left|  \frac{\Delta(A,B)}{\sqrt{\det A \det  B}} \right|  =
+			\left|   \frac{\delta^2 - \rho^2 - \sigma^2 }{ 2\rho \sigma} \right| =
+			\frac{\rho^2 + \sigma^2 - \delta^2 }{ 2\rho \sigma}  \le
+			\frac{2\rho \sigma}{2 \rho \sigma} =
+			1
+		}
+		\Derive{[8]}{I(\Imply)}{ \rho^2 + \sigma^2 - \delta^2  \ge 0 \Imply \Big| \Omega(A,B) \Big| \le 1  }
+		\Assume{[9]}{\rho^2 + \sigma^2 - \delta^2  < 0}
+		\Conclude{[9.*]}{ \bd \Omega(A,B)  \THM{RealCircleCrossDeterminant}(A,B)[9][5] \bd \TYPE{Inverse}(\Reals,2\rho\sigma)   }
+		{
+			\NewLine =
+			| \Omega(A,B)| =   
+			\left|  \frac{\Delta(A,B)}{\sqrt{\det A \det  B}} \right|  =
+			\left|   \frac{\delta^2 - \rho^2 - \sigma^2 }{ 2\rho \sigma} \right| =
+			\frac{\delta^2 - \rho^2 - \sigma^2 }{ 2\rho \sigma}  =
+			\frac{ \delta^2 -  )(\rho - \sigma)^2}{ 2\rho \sigma} + \frac{2\rho \sigma}{2 \rho \sigma} \le 
+			1
+		}
+		\Derive{[9]}{I(\Imply)}{  \rho^2 + \sigma^2 - \delta^2  < 0 \Imply \Big| \Omega(A,B) \Big| \le 1  }
+		\Conclude{[3.*]}{E(|)[8][9]\THM{TrichtomyTHM}(\Reals)}{ \Big| \Omega(A,B) \Big| \le 1} 
+		\Derive{[3]}{I(\Imply)}{  \TYPE{IntersectingCircles}(A,B) \Imply   \Big| \Omega(A,B) \Big| \le 1}
+		\Assume{[-1]}{ |\Omega(A,B)| < 1   }
+		\Assume{[0]}{\delta^2 - \rho^2 - \sigma^2 \ge 0}
+		\Say{[4]}{ [-1]\bd \Omega(A,B)  \THM{RealCircleCrossDeterminant}(A,B)[0] \bd \TYPE{Inverse}(\Reals,2\rho\sigma)}
+		{
+			\NewLine :
+			1 \ge 
+			| \Omega(A,B)| =   
+			\left|  \frac{\Delta(A,B)}{\sqrt{\det A \det  B}} \right|  =
+			\left|   \frac{\delta^2 - \rho^2 - \sigma^2 }{ 2\rho \sigma} \right| =
+			\frac{\delta^2 - \rho^2 - \sigma^2 }{ 2\rho \sigma} =
+			1   + \frac{\delta^2 -  (\rho + \sigma)^2}{2\rho \sigma}
+		}
+		\Say{[5]}{\THM{PositiveSumIsGreater}[4]}{\delta  \le \rho + \sigma}
+		\Say{[6]}{[4]^2}{   - 2\rho \sigma   \le \rho^2 + \sigma^2 -  \delta^2  }
+		\Say{[7]}{\THM{BinomialExpansion}(\Reals,\rho,\sigma)[6][0] }
+		{
+			(\rho - \sigma)^2 =
+			\rho^2 - 2\rho \sigma + \sigma^2 \le
+			2\rho^2 + 2\sigma^2 - \delta^2 \le
+			\delta^2
+		}
+		\Conclude{[0.*]}{\THM{IntersectingCirclesRadiCharacterization}[5][7]}
+		{
+			\TYPE{IntersectingCircles}(A,B)
+		}
+		\Derive{[0]}{I(\Imply)}{ \delta^2 - \rho^2 - \sigma^2 \ge 0  \Imply \TYPE{IntersectingCircles}(A,B)  }
+		\Assume{[00]}{  \delta^2 - \rho^2 - \sigma^2  < 0 }
+		\Say{[4]}{ [-1] \bd \Omega(A,B)  \THM{RealCircleCrossDeterminant}(A,B)[00] \bd \TYPE{Inverse}(\Reals,2\rho\sigma)}
+		{
+			\NewLine :
+			1 \ge 
+			| \Omega(A,B)| =   
+			\left|  \frac{\Delta(A,B)}{\sqrt{\det A \det  B}} \right|  =
+			\left|   \frac{\delta^2 - \rho^2 - \sigma^2 }{ 2\rho \sigma} \right| =
+			\frac{\rho^2 + \sigma^2 - \delta^2 }{ 2\rho \sigma} =
+			\frac{(\rho + \sigma)^2 - \delta^2}{2\rho \sigma}  - 1
+		}
+}\Page{
+		\Say{[5]}{[4] 2 \rho \sigma - 4 \rho \sigma}
+		{
+			(\rho - \sigma)^2  \le \delta^2    
+		}
+		\Say{[6]}{[00]\THM{NonNegSumGreater}(2\rho\sigma) \THM{BinomialExapansion}(\Reals,\rho,\sigma)  }{\delta^2 \le \rho^2 + \delta^2 \le \rho^2 +2\rho\sigma +  \sigma^2 = (\rho + \sigma)^2 }
+		\Conclude{[00.*]}{\THM{IntersectingCirclesRadiCharacterization}[5][7]}
+		{
+			\TYPE{IntersectingCircles}(A,B)
+		}
+		\Derive{[00]}{I(\Imply)}{ \delta^2 - \rho^2 - \sigma^2 < 0  \Imply \TYPE{IntersectingCircles}(A,B)  }
+		\Conclude{[-1.*]}{I(|)[0][00]\THM{TrichomyTHM}}{  \TYPE{IntersectingCircles}(A,B)    }
+		\DeriveConclude{[*]}{I(\iff)[3][-1]}{ \TYPE{IntersectingCircles}(A,B) \iff \Big|  \Omega(A,B) \Big| \le 1}
+		\EndProof
+		\\
+		\DeclareType{Pencel}{??\S'}
+		\DefineType{P}{Pencel}{\exists A,B \in \S' : P = \p(A,B)}
+		\\
+		\Theorem{PencelInvariant}
+		{
+			\forall P : \TYPE{Pencel} \.
+			\forall A,B,C,D \in P \.
+			\forall [0] : [A] \neq [B] \And [C] \neq [D] \. \NewLine \. 
+			\Reals_{++} (\det A \det B + \frac{1}{4}{\det}^2(A,B)) = 
+			\Reals_{++} (\det C \det D + \frac{1}{4}{\det}^2(A,C))
+		}
+		\Say{\Big( \alpha,\beta, [1] \Big)}
+		{
+			\bd \TYPE{Pencel}(P,A,B,C)
+		}
+		{
+			\sum (\alpha,\beta) \in \Reals^2 \setminus \{0\} \.
+			C = \alpha A + \beta B
+		}
+		\Say{\Big( \gamma,\delta, [2] \Big)}
+		{
+			\bd \TYPE{Pencel}(P,A,B,D)
+		}
+		{
+			\sum (\gamma,\delta) \in \Reals^2 \setminus \{0\} \.
+			D = \gamma A + \delta B
+		}
+		\Say{q}{\left[\begin{array}{cc} \det A & \frac{\det(A,B)}{2} \\ \frac{\det(A,B)}{2} &  \det B  \end{array}\right]}
+		{
+			\Reals^{2 \times 2}
+		}
+		\Say{q'}{\left[\begin{array}{cc} \det C & \frac{\det(C,D)}{2} \\ \frac{\det(C,D)}{2} &  \det C  \end{array}\right]}
+		{
+			\Reals^{2 \times 2}
+		}
+		\Say{T}{\left[\begin{array}{cc} \alpha & \beta \\ \gamma &  \delta  \end{array}\right]}
+		{\GL(\Reals,2) }
+		\Say{[3]}{\THM{QuadraticFormChangeOfBasis}[1][2]}
+		{
+			q' =  T^\top q  T
+		}
+		\Conclude{[*]}{\THM{DetHomo}(\Reals,2)\THM{DetOfTranspose}(\Reals,2)[3]}{\det q' = (\det T)^2 \det q}
+		\EndProof
+		\\
+		\DeclareFunc{pencelDiscriminant}{\TYPE{Pencel} \to \frac{\Reals}{\Reals_{++}}}
+		\DefineNamedFunc{pencelDiscriminant}{P}{\Delta(P)}{ \Reals_{++}\det(A + B) \quad \where \quad [A],[B] \in P \And [A] \neq [B] }
+		\EndProof
+		\\
+		\DeclareType{EllipticPencel}{?\TYPE{Pencel}}
+		\DefineType{P}{EllipticPencel}{\Delta(P) > 0}
+		\\
+		\DeclareType{ParabolicPencel}{?\TYPE{Pencel}}
+		\DefineType{P}{ParabolicPencel}{\Delta(P) = 0}
+		\\
+		\DeclareType{HyperbolicPencel}{?\TYPE{Pencel}}
+		\DefineType{P}{HyperbolicPencel}{\Delta(P) < 0}
+}\Page{
+	\DeclareType{GeneralEllipticPencel}
+	{
+		??\S'
+	}
+	\DefineType{P}{GeneralEllipticPencel}
+	{ 
+		\exists a,b \in \Complex :
+		a \neq b \And \forall A,B \in \S' \. 
+		A \cap B = \{ a, b \} \iff
+		A,B \in P
+	}
+	\\
+	\Theorem{GeneralEllipticPencelIsEllipticPencel}
+	{
+		\forall P : \TYPE{GeneralEllipticPencel} \.
+		\TYPE{EllipticPencel}(P) 
+	}
+	\Say{\Big(a,b,[1]\Big)}
+	{ \bd \TYPE{GeneralEllipticPencel}(P) }
+	{ 
+		\sum a,b \in \Complex \. 
+		a \neq b \And 
+		\forall A,B \in \S' \. 
+			A \cap B = \{a,b\} \iff
+			A, B \in P
+	}
+	\Say{T}{\Lambda A \in \Complex^{2 \times 2} \. 
+		\left(\begin{array}{c}  
+			|a|^2 A_{1,1}  + a A_{1,2} + \bar a A_{2,1} + A_{2,2} \\
+			|b|^2 A_{1,1} + b A_{1,2} + \bar b A_{2,1} + A_{2,2}  
+			\end{array} \right)
+	}
+	{ \Complex^{2 \times 2} \Arrow{\Complex\hyph\mathcal{\AFF}} \Complex^2  }
+	\Say{[2]}{ \ByConstr T [1.1] \THM{VandermontDeterminantTHM}(\Complex,2)  }{\rank T = 2 }
+	\Say{[4]}{\THM{KerRankTHM}[2]}{ \dim \ker T = 2 }
+	\Say{[5]}{\ByConstr T [1.2] \bd \S' }{ P = \frac{T^{-1}(0) \cap \Herm(2)}{\Reals^\times}  } 
+	\Say{[6]}{[4][5]\THM{HermitianRealStucture}(2)\bd^{-1} \TYPE{Pencel}}{\TYPE{Pencel}(P)}
+	\Assume{A,B}{P \cap \Re \S'}
+	\Assume{[7]}{A \neq B}
+	\Say{[8]}{[1.2](A,B)}{A \cap B = \{a,b\}}
+	\Say{[9]}{ \THM{IntersectingCircleCommonInvariant}[8]  }
+	{
+		\left|\frac{\det(A,B) }{2\sqrt{\det A \det B}}\right| < 1
+	}
+	\Say{[10]}{[9]^2}{  \frac{{\det}^2(A,B)}{4\det A \det B} < 1  }
+	\Conclude{\Big[(A,B).*\Big]}{ \det A \det B - [10] \det A \det B  }
+	{
+		\det A \det B - {\det}^2(A,B)  > 0
+	}
+	\Derive{[7]}{\THM{PencelInvariant}(P)}{\Delta(P) > 0}
+	\Conclude{[*]}{\bd^{-1} \TYPE{EllipticPencel}[7]}
+	{
+		\TYPE{EllipticPencel}(P)
+	}
+	\EndProof
+	\\
+	\Theorem{IntersectingCirclesGenerateGeneralEllipticPencel}
+	{
+		\NewLine ::
+		\forall A,B \in \S_* \.
+		|A \cap B| = 2 \Imply
+		\TYPE{GeneralEllipticPencel}\Big( \p(A,B)  \Big)
+	}
+	\NoProof
+}
+\Page{
+	\DeclareType{SpecialEllipticPencel}
+	{
+		??\TYPE{LineCircle}
+	}
+	\DefineType{P}{SpecialEllipticPencel}
+	{
+		\exists z \in \Complex \.
+		\forall l,m : \TYPE{LineCircle} \.
+		l \cap  m = \{z\} \iff l,m \in P
+	}
+	\\
+	\Theorem{SpecialEllipticPencelIsEllipticPencel}
+	{
+		\forall P : \TYPE{SpecialEllipticPencel} \.
+		\TYPE{EllipticPencel}(P) 
+	}
+	\Say{\Big(z,[1]\Big)}
+	{ \bd \TYPE{SpecialEllipticPencel}(P) }
+	{ 
+		\sum z \in \Complex \.  
+		\forall l,m : \TYPE{LineCircle} \. 
+			l \cap m = \{z\} \iff
+			l, m \in P
+	}
+	\Say{T}{\Lambda A \in \Complex^{2 \times 2} \. 
+		\left(\begin{array}{c}  
+			|z|^2 A_{1,1}  + z A_{1,2} + \bar z A_{2,1} + A_{2,2} \\
+			A_{1,1}  
+			\end{array} \right)
+	}
+	{ \Complex^{2 \times 2} \Arrow{\Complex\hyph\mathcal{\AFF}} \Complex^2  }
+	\Say{[2]}{ \ByConstr T  }{\rank T = 2 }
+	\Say{[4]}{\THM{KerRankTHM}[2]}{ \dim \ker T = 2 }
+	\Say{[5]}{\ByConstr T [1] \bd \S' }{ P = \frac{T^{-1}(0) \cap \Herm(2)}{\Reals^\times}  } 
+	\Say{[6]}{[4][5]\THM{HermitianRealStucture}(2)\bd^{-1} \TYPE{Pencel}}{\TYPE{Pencel}(P)}
+	\Assume{l,m}{P}
+	\Assume{[7]}{l \neq m}
+	\Say{[8]}{[1.2](l,m)}{l \cap m = \{z\}}
+	\Say{\Big( v, \alpha, [9]\Big)}{\bd \TYPE{LineCircle}(l)}
+	{
+		\sum v \in \Complex^\times \.
+		\sum \alpha \in \Reals \.
+		l =
+		\left[ \left[ 
+			\begin{array}{cc}
+				1 & v \\
+				\bar v & \alpha
+			\end{array}
+		\right] \right]
+	}
+	\Say{\Big( u, \beta, [10]\Big)}{\bd \TYPE{LineCircle}(m)}
+	{
+		\sum u \in \Complex^\times \.
+		\sum \beta \in \Reals \.
+		m =
+		\left[ \left[ 
+			\begin{array}{cc}
+				1 & u \\
+				\bar u & \beta
+			\end{array}
+		\right] \right]
+	}
+	\Say{[11]}{\THM{EuclidsFithPostulate}(\Reals,\Complex)[8]}{l \not \parallel m}
+	\Say{[12]}{\bd \S'\bd \TYPE{Parallel} [11][9][8]}{\langle v \rangle \neq \langle u \rangle}
+	\Say{[13]}{\THM{StrictCauchySchwarzIneqCondition}[12]}
+	{
+		\| u  \| \| v \| > \Big| \langle u, v \rangle \Big| 
+	}
+	\Conclude{\Big[(l,m).*\Big]}{ 
+		\bd \det l [9] \bd \det m [10] \bd \det(A,B)[9][10]
+		\bd^{-1} \FUNC{EucleadenProduct}(\Complex)
+		[13]
+	}
+	{
+		\NewLine :
+		\det(l) \det(m) - \frac{1}{4}{\det}^2(l,m) =  
+		|u|^2|v|^2  -  \frac{1}{4}( -u \bar v - \bar u v  )^2 = 
+		\Big(\| u \| \| v \| \Big)^2  - \langle u, v \rangle^2 > 0
+	}
+	\Derive{[7]}{\THM{PencelInvariant}(P)}{\Delta(P) > 0}
+	\Conclude{[*]}{\bd^{-1} \TYPE{EllipticPencel}[7]} 
+	{
+		\TYPE{EllipticPencel}(P)
+	}
+	\EndProof
+	\\
+	\Theorem{IntersectingLinesGenerateGeneralEllipticPencel}
+	{
+		\NewLine ::
+		\forall l,m : \TYPE{LineCircle} \.
+		|l \cap m| = 1 \Imply
+		\TYPE{SpecialEllipticPencel}\Big( \p(l,m)  \Big)
+	}
+	\NoProof
+}
+\Page{
+	\DeclareFunc{pointCircle}{\Complex \ToBij \TYPE{PointCircle}}
+	\DefineNamedFunc{pointCircle}{z}{\mathrm{pt}(z)}
+	{
+		\left[ \left[
+			\begin{array}{cc}
+			1 & -z \\
+			- \bar z &  |z|^2 
+			\end{array}
+		\right] \right]
+	}
+	\\
+	\DeclareType{GeneralParabolicPencel}{?\TYPE{Pencel}}
+	\DefineType{P}{GeneralParabolicPencel}
+	{
+		\exists z \in \Complex \.
+		\mathrm{pt}(z) \in P \And
+		\forall A,B \in P \. 
+		A \cap B = \{z\}
+	}
+	\\
+	\Theorem{GeneralParabolicPencelIsParabolicPencel}
+	{
+		\forall P : \TYPE{GeneralParabolicPencel} \.
+		\TYPE{ParabolicPencel}(P) 
+	}
+	\Say{\Big(z,[1]\Big)}
+	{ \bd \TYPE{GeneralEllipticPencel}(P) }
+	{ 
+		\sum z \in \Complex \. 
+		\mathrm{pt}(z) \in P \And 
+		\forall A,B \in P \. 
+			A \cap B = \{z\} 
+	}
+	\Say{\Big(A,B,[2]\Big)}{\THM{SpecialEllipticPencelIsElliptic}[1]}
+	{
+		\sum A,B : \Re \S" \cap P \. A \neq B
+	}
+	\Say{[3]}{[1.2](A,B)}{A \cap B = \{z\}}
+	\Say{[4]}{ \THM{KissingCircleCommonInvariant}[3]  }
+	{
+		\left|\frac{\det(A,B) }{2\sqrt{\det A \det B}}\right| = 1
+	}
+	\Say{[5]}{[4]^2}{  \frac{{\det}^2(A,B)}{4\det A \det B} = 1  }
+	\Conclude{[6]}{ \det A \det B - [10] \det A \det B  }
+	{
+		\det A \det B - {\det}^2(A,B)  = 0
+	}
+	\Derive{[7]}{\THM{PencelInvariant}(P)[6]}{\Delta(P) = 0}
+	\Conclude{[*]}{\bd^{-1} \TYPE{ParabolicPencel}[7]}
+	{
+		\TYPE{ParabolicPencel}(P)
+	}
+	\EndProof
+	\\
+	\Theorem{KissingCirclesGenerateGeneralParabolicPencel}
+	{
+		\NewLine ::
+		\forall A,B \in \Re \S' \.
+		|A \cap B| = 1 \Imply
+		\TYPE{GeneralParabolicPencel}\Big( \p(A,B)  \Big)
+	}
+	\NoProof
+	\\
+	\Theorem{CirclesAndTangentLineGenerateGeneralParabolicPencel}
+	{
+		\NewLine ::
+		\forall A \in \Re \S' \.
+		\forall B : \TYPE{LineCircle} \.
+		|A \cap B| = 1 \Imply
+		\TYPE{GeneralParabolicPencel}\Big( \p(A,B)  \Big)
+	}
+	\NoProof
+	\\
+	\Theorem{CirclesAndPointOnGeneralGenerateParabolicPencel}
+	{
+		\NewLine ::
+		\forall A \in \Re \S_* \.
+		\forall z \in A \.
+		\TYPE{GeneralParabolicPencel}\big( \p(A,\mathrm{pt}(z)\big)  \Big)
+	}
+	\NoProof
+}
+\Page{
+	\DeclareFunc{infinityCircle}{\TYPE{InfinityCircle}}
+	\DefineNamedFunc{infinityCirlcle}{}{\mathrm{pt}(\infty)}
+	{
+		\left[\left[
+			\begin{array}{cc}
+			0 & 0 \\
+			0 & 1
+			\end{array}
+		\right]\right]
+	}
+	\\
+	\DeclareType{SpecialParabolicPencel}{?\TYPE{Pencel}}
+	\DefineType{P}{SpecialParabolicPencel}
+	{
+		\exists l : \TYPE{LineCircle} \cap P \.
+		\forall m : \TYPE{LineCircle} \.
+		m \parallel l \Imply m \in P
+	}
+	\\
+	\Theorem{SpecialParabolicPencelIsParabolicPencel}
+	{
+		\forall P : \TYPE{SpecialParabolicPencel} \.
+		\TYPE{ParabolicPencel}(P) 
+	}
+	\Say{\Big(l,[1]\Big)}
+	{ \bd \TYPE{SpecialParabolicPencel}(P) }
+	{ 
+		\sum l : \TYPE{LineCircle} \cap P \.  
+		\forall m : \TYPE{LineCircle} \. 
+			m \parallel l  \Imply
+			m \in l
+	}
+	\Say{\Big( v, \alpha, [2]\Big)}{\bd \TYPE{LineCircle}(l)}
+	{
+		\sum v \in \Complex^\times \.
+		\sum \alpha \in \Reals \.
+		l =
+		\left[ \left[ 
+			\begin{array}{cc}
+				1 & v \\
+				\bar v & \alpha
+			\end{array}
+		\right] \right]
+	}
+	\Say{m}{\tau_v(l)}{\TYPE{LineCircle}}
+	\Say{[3]}{\THM{TranslationIsDilation}\ByConstr m}{m \parallel l}
+	\Say{[4]}{[1][3]}{m \in P}
+	\Say{[5]}{\bd v \bd \S'[1]\ByConstr m}{m \neq l}
+	\Say{\Big( u, \beta, [6]\Big)}{\bd \TYPE{LineCircle}(m)}
+	{
+		\sum u \in \Complex^\times \.
+		\sum \beta \in \Reals \.
+		m =
+		\left[ \left[ 
+			\begin{array}{cc}
+				1 & u \\
+				\bar u & \beta
+			\end{array}
+		\right] \right]
+	}
+	\Say{[7]}{\bd \S'\bd \TYPE{Parallel} [2][3][6]}{\langle v \rangle = \langle u \rangle}
+	\Say{[8]}{\THM{StrictCauchySchwarzIneqCondition}[7]}
+	{
+		\| u  \| \| v \| = \Big| \langle u, v \rangle \Big| 
+	}
+	\Say{\Big[[10]\Big]}{ 
+		\bd \det l [9] \bd \det m [10] \bd \det(A,B)[9][10]
+		\bd^{-1} \FUNC{EucleadenProduct}(\Complex)
+		[13]
+	}
+	{
+		\NewLine :
+		\det(l) \det(m) - \frac{1}{4}{\det}^2(l,m) =  
+		|u|^2|v|^2  -  \frac{1}{4}( -u \bar v - \bar u v  )^2 = 
+		\Big(\| u \| \| v \| \Big)^2  - \langle u, v \rangle^2 = 0
+	}
+	\Derive{[11]}{\THM{PencelInvariant}(P)}{\Delta(P) = 0}
+	\Conclude{[*]}{\bd^{-1} \TYPE{ParabolicPencel}[7]} 
+	{
+		\TYPE{ParabolicPencel}(P)
+	}
+	\EndProof
+	\\
+	\Theorem{ParallelLinesGenerateGeneralParabolicPencel}
+	{
+		\NewLine ::
+		\forall l,m : \TYPE{LineCircle} \.
+		l \parallel m
+		\TYPE{SpecialEllipticPencel}\Big( \p(l,m)  \Big)
+	}
+	\NoProof
+	\\
+	\Theorem{LineAndInfinityGenerateGeneralParabolicPencel}
+	{
+		\NewLine ::
+		\forall l,m : \TYPE{LineCircle} \. 
+		\TYPE{SpecialEllipticPencel}\Big( \p\big(l,\mathrm{pt}(\infty)\big)  \Big)
+	}
+	\NoProof
+}
+\newpage
+\Page{
+	\Theorem{ImaginableCirclePencelInvariant}
+	{
+		\forall A,B \in \Im \S' \.
+		\forall [0] : A \neq B \.
+		\det A \det B - \frac{1}{4}{\det}^2(A,B) < 0
+	}
+	\Say{\Big(a, \rho, [1]\Big)}{\bd \S'}
+	{   
+		\sum a \in \Complex \.
+		\sum \rho \in \Reals_{++} \.
+		A = 
+		\left[\left[
+		\begin{array}{cc}
+		1 & a \\
+		\bar a & |a|^2 + \rho^2
+		\end{array}
+		\right]\right]
+	}
+	\Say{\Big(b, \sigma, [2]\Big)}{\bd \S'}
+	{   
+		\sum b \in \Complex \.
+		\sum \sigma \in \Reals_{++} \.
+		B = 
+		\left[\left[
+		\begin{array}{cc}
+		1 & b \\
+		\bar b & |b|^2 + \sigma^2
+		\end{array}
+		\right]\right]
+	}
+	\Conclude{[*]}
+	{
+		\bd \det A[1] 
+		\bd \det B [2] 
+		\bd \det(A,B)[1][2]\bd^{-1} 
+		\FUNC{absValue}(\Complex) \THM{BinomialExpansion}(\Complex)
+		[0]
+	}
+	{
+		\NewLine :
+		\det A \det B - \frac{1}{4} {\det}^2(A,B) = 
+		\rho^2 \sigma^2 - \frac{1}{4}\Big( |b|^2 + \sigma^2 + |a|^2 + \rho^2 - a \bar b - \bar a b\Big)^2 = 
+		\NewLine =
+		\rho^2 \sigma^2 - \frac{1}{4} \Big( \rho^2 + \sigma^2 + |a - b|^2\Big)^2 \le
+		\frac{1}{2} \rho^2 \sigma^2 - \frac{1}{4}\rho^4 - \frac{1}{4}\sigma^4 + \frac{1}{2}|a - b|^4   = 
+		-\frac{1}{4}(\rho^2 - \sigma^2)^2 - \frac{1}{4}|a - b|^4 < 0
+	}
+	\EndProof
+	\\
+	\Theorem{ImaginableCirclesExistInHyperbolicPencelsOnly}
+	{
+		\NewLine ::
+		\forall P : \TYPE{Pencel} \.
+		\forall A \in P \cap \Im \S' \.
+		\TYPE{HyperbolicPencel}(P)
+	}
+	\NoProof
+	\\
+	\Theorem{DifferentPointsGenerateHyperbolicPencel}
+	{
+		\NewLine ::
+		\forall a,b \in \Complex \. 
+		a \neq b \Imply
+		\TYPE{HyperbolicPencel}\Big(\p\big(\mathrm{pt}(a),\mathrm{pt}(b)\big)\Big)
+	}
+	\NoProof
+	\\
+	\Theorem{DisjointCirclesGenerateHyperbolicPencel}
+	{
+		\NewLine ::
+		\forall A,B \in \Re \S \. 
+		A \cap B = \emptyset \Imply
+		\TYPE{HyperbolicPencel}\Big(\p\big(A,B)\Big)
+	}
+	\NoProof
+	\\
+	\Theorem{DisjointCircleAndALineGenerateHyperbolicPencel}
+	{
+		\NewLine ::
+		\forall A \in \Re \S \. 
+		\forall B : \TYPE{LineCircle} \.
+		A \cap B = \emptyset \Imply
+		\TYPE{HyperbolicPencel}\Big(\p\big(A,B\big) \Big)
+	}
+	\NoProof
+	\\
+	\Conclude{\TYPE{CentredCircle}}{\Re \S' | \Im \S' | \TYPE{PointCircle}}{\Type}
+	\\
+	\DeclareFunc{center}{\TYPE{CentredCircle} \to \Complex}
+	\DefineFunc{center}{[A]}{-\frac{A_{1,2}}{A_{1,1}}}
+}\Page{
+	\DeclareType{Cocentric}{\Complex \to ?\TYPE{CentredCircle}}
+	\DefineType{A}{Cocentric}{\Lambda z \in \Complex \. \FUNC{center}(A) = z}
+	\\
+	\DeclareType{SpecialHyperbolicPencel}{?\TYPE{Pencel}}
+	\DefineType{P}{SpecialHyperbolicPencel}
+	{
+		\exists z \in \Complex : 
+		\forall A : \TYPE{Cocentric}(z) \.
+		A \in P
+	}
+	\\
+	\Theorem{SpecialHyperbolicPencelIsHyperbolicPencel}
+	{
+		\forall P : \TYPE{SpecialHyperbolicBundle} \.
+		\TYPE{HyperbolicPencel}(P)
+	}
+	\NoProof
+	\\
+	\Theorem{CocenticGenerateSpecialHyperbolicPencel}
+	{
+		\NewLine ::
+		\forall z \in \Complex \.
+		\forall A,B : \TYPE{Cocentric}(z) \.
+		\TYPE{SpecialHyperbolicPencel}\Big(\p(A,B)\Big)
+	}
+	\NoProof
+	\\
+	\Theorem{CentredAndInfinityGenerateSpecialHyperbolicPencel}
+	{
+		\NewLine ::
+		\forall A : \TYPE{CentredCircles} \.
+		\TYPE{SpecialHyperbolicPencel}\Big( \p\big(A,\mathrm{pt}(\infty)\big) \Big)
+	}
+	\NoProof
+	\\
+	\Conclude{\TYPE{GeneralHyperbolicPencel}}
+	{
+		\TYPE{HyperbolicPencel} 
+		\setminus
+		\TYPE{SpecialHyperbolicPencel}
+	}
+	{
+		?\TYPE{HyperbolicPencel}
+	}
+	\\
+	\Theorem{EllipticPencelClassification}
+	{
+		\TYPE{EllipticPencel} = 
+		\TYPE{GeneralEllipticPencel} | \TYPE{SpecialEllipticPencel}
+	}
+	\NoProof
+	\\
+	\Theorem{ParabolicPencelClassification}
+	{
+		\NewLine ::
+		\TYPE{ParabolicPencel} = 
+		\TYPE{GeneralParabolicPencel} | \TYPE{SpecialParabolicPencel}
+	}
+	\NoProof
+	\\
+	\Theorem{HyperbolicPencelClassification}
+	{
+		\NewLine ::
+		\TYPE{HyperbolicPencel} = 
+		\TYPE{GeneralHyperbolicPencel} | \TYPE{SpecialHyperbolicPencel}
+	}
+	\NoProof 
+	\\
+	\Theorem{PencelClassification}
+	{
+		\TYPE{Pencel} = 
+		\TYPE{EllipticPencel} | 
+		\TYPE{ParabolicPencel} |
+		\TYPE{HyperbolicPencel}
+	}
+	\NoProof
+}
+\newpage
+\subsection{Inversion}
+\Page{
+	\DeclareType{GeneralPositionWRTTheCircle}
+	{
+		\S' \to ?\Complex
+	}
+	\DefineType{z}{GeneralPositionWRTTheCircle}
+	{
+		\Lambda
+		A \in \S' \. 
+		z \not \in A \And \NewLine \And
+		\If \TYPE{CentredCircle}(A) \Then z \neq \FUNC{center}(A) \Else \top
+	}
+	\\
+	\Theorem{InversionExists}
+	{
+		\forall A \in \S_* \.
+		\forall z : \TYPE{GeneralPositionWRTTheCircle}(A) \.
+		\exists! z' \in \Complex : 
+		z' \neq z \And \NewLine \And 
+		\bigcap \{ B \in \S' : z \in B \And A \bot B  \} = \{z,z'\}
+	}
+	\Say{P}{\{ B \in \S' : z \in B \And A \bot B \}}{?\S'}
+	\Say{T}{ 
+		\Lambda B \in \Complex^{2 \times 2} \.
+		\left(
+		\begin{array}{c}
+			\det(A,B) \\
+			B((z,1))
+		\end{array}
+		\right)
+	}
+	{
+		\Complex^{2 \times 2} \Arrow{\Complex\hyph\mathsf{AFF}} \Complex^2
+	}
+	\Say{[1]}{\bd \S_*(A)}{A \IsNot \TYPE{PointCircle}}
+	\Say{[2]}{\ByConstr(T)[1]}{\rank T = 2}
+	\Say{[3]}{\THM{RankKerTHM}[2]}{\dim_{\Complex} \ker T = 2}
+	\Say{[4]}{\ByConstr T \ByConstr P }{ P  = \frac{\ker T \cap \Herm(2)}{\Reals^\times }}
+	\Say{[5]}{\ByConstr T \THM{HermitianRealStructure}[3]}
+	{
+		\dim_{\Reals} \ker T \cap \Herm(2)  = 2 
+	}
+	\Say{[6]}{\bd^{-1} \TYPE{Pencel}[5]}{\TYPE{Pencel}}
+	\Say{[7]}{\bd \TYPE{GeneralPositionWRTTheCircle}(A,z)\THM{PencelClassification}(P)\ByConstr P}
+	{ \TYPE{GeneralParabolicPencel}(P)}
+	\Conclude{[*]}{\bd \TYPE{GeneralParabolicPencel}}
+	{
+		z' \neq z \And 
+		\bigcap \{ B \in \S' : z \in B \And A \bot B  \} = \{z,z'\}	
+	}
+	\EndProof
+	\\
+	\DeclareFunc{inversion}{\S_* \to \hat \Complex \ToBij \hat \Complex}
+	\DefineNamedFunc{inversion}{l,\infty}{\Inv_l(\infty)}{\infty\quad \If \quad \TYPE{LineCircle}(l)}
+	\DefineNamedFunc{inversion}{A,\infty}{\Inv_A(\infty)}{\FUNC{center}(A)\quad\If\quad\TYPE{CentredCircle}(A)}
+	\DefineNamedFunc{inversion}{A,\FUNC{center}(A)}{\Inv_A\Big(\FUNC{center}(A)\Big)}
+	{ \infty\quad\If\quad \TYPE{CentredCircle}(A)}
+	\DefineNamedFunc{inversion}{A,z}{\Inv_A(z)}{z\quad\If\quad z \in A}
+	\DefineNamedFunc{inversion}{A,z}{\Inv_A(z)}
+	{\THM{InversionExists}(A,z)\quad\If\quad\TYPE{GeneralPositionWRTTheCircle}(A,z)}
+	\\
+	\Theorem{InversionIsInvolution}
+	{
+		\forall A \in \S_* \. \Inv^2_A = \id
+	}
+	\NoProof
+	\\
+	\Theorem{InversionAnalyticExpression}
+	{
+		\forall A \in \S_* \.
+		\forall z : \TYPE{GeneralPositionWRTTheCircle}(A) \.
+		\NewLine \.
+		\Inv_A(z) = - \frac{A_{2,1}\bar z + A_{2,2}}{A_{1,1}\bar z + A_{1,2}}
+	}
+	\Say{P}{\{ B \in \S' : z \in B \And A \bot B \}}{?\S'}
+	\Say{z'}{\Inv_A(z)}{\Complex}
+	\Say{T}{ 
+		\Lambda B \in \Complex^{2 \times 2} \.
+		\left(
+		\begin{array}{c}
+			\det(A,B) \\
+			B((z,1)) \\
+			B((z',1))
+		\end{array}
+		\right)
+	}
+	{
+		\Complex^{2 \times 2} \Arrow{\Complex\hyph\mathsf{AFF}} \Complex^3
+	}
+	\Say{[1]}{\ByConstr z' \bd \Inv_A \THM{InversionExists}(A,z)}
+	{
+		\rank T = 2
+	}
+}\Page{
+	\Say{B}
+	{
+		\left[
+		\begin{array}{cc}
+			1 & - \bar z \\
+			-z' & z' \bar z
+		\end{array}
+		\right]
+	}
+	{\Complex^{2 \times 2}}
+	\Say{[2]}{\ByConstr B }{B(z,1) = 0 = B(z',1)}
+	\Say{[3]}{\bd \rank [1][2] \bd \det(A,B)\ByConstr B}
+	{ 
+		0 = 
+		\det(A,B) =
+		A_{1,1} z'  \bar z + A_{2,2}  + A_{2,1} \bar z + A_{1,2} z' = 
+		\NewLine =
+		(A_{1,1} \bar z + A_{1,2}) z'  + A_{2,1} \bar z + A_{2,2} 
+	}
+	\Conclude{[*]}{\frac{[3] - A_{2,1} \bar z - A_{2,2}}{A_{1,1} \bar z + A_{1,2}}}
+	{
+		\Inv_A(z) = z' =  -\frac{A_{2,1}\bar z + A_{2,2}}{A_{1,1}\bar z + A_{1,2}}
+	}
+	\EndProof
+	\\
+	\DeclareType{Inversion}{?\TYPE{Bijection}(\hat \Complex)}
+	\DefineType{f}{Invesion}{\exists A \in \S_* \. f = \Inv_A}
+	\\
+	\DeclareType{EllipticInversion}{?\TYPE{Inversion}(\hat \Complex)}
+	\DefineType{f}{EllipticInvesion}{\exists A \in \Re \S' \. f = \Inv_A}
+	\\
+	\DeclareType{HyperbolicInversion}{?\TYPE{Inversion}(\hat \Complex)}
+	\DefineType{f}{HyperbolicInvesion}{\exists A \in \Im \S' \. f = \Inv_A}
+	\\
+	\Conclude{\TYPE{RealGeneralizedCircles} = \Re \S_*}{\TYPE{LineCircle}|\Re \S'}{?\S_*}
+	\\
+	\DeclareFunc{circlesDilation}{ \Di_\Reals(\Complex) \to \S' \to \S' }
+	\DefineNamedFunc{circlesDilation}{\phi,
+		\left[ \left[
+		\begin{array}{cc}
+		1 & -z \\
+		- \bar z & |z|^2 + \rho
+		\end{array}
+		\right]\right]
+	}
+	{ \phi^*  
+		\left[ \left[
+		\begin{array}{cc}
+		1 & -z \\
+		- \bar z & |z|^2 + \rho
+		\end{array}
+		\right]\right]	
+	}
+	{
+		\left[ \left[
+		\begin{array}{cc}
+		1 & -\phi(z) \\
+		- \overline{ \phi(z) } & \big|\phi(z)\big|^2 + \big(\mathrm{rat}(\phi)\big)^2\rho
+		\end{array}
+		\right]\right]	
+	}
+	\DefineNamedFunc{circlesDilation}{\phi,
+		\left[ \left[
+		\begin{array}{cc}
+		0 & n \\
+		\bar n & \alpha
+		\end{array}
+		\right]\right]
+	}
+	{ \phi^*  
+		\left[ \left[
+		\begin{array}{cc}
+		0 & n \\
+		\bar n z & \alpha
+		\end{array}
+		\right]\right]	
+	}
+	{
+		\left[ \left[
+		\begin{array}{cc}
+		0 & \mathrm{rat}(\phi)n \\
+		\mathrm{rat}(\phi)\bar n &  \mathrm{rat}^2(\phi)\alpha + 
+		2\mathrm{rat}(\phi)\langle n, v_\phi \rangle
+		\end{array}
+		\right]\right]	
+		\NewLine
+		\where 
+		\quad
+		n \in \Sphere^1
+	}
+	\\
+	\Theorem{DilationMappingOfTheCirclesConsistency}
+	{  
+		\forall \phi \in \Di_\Reals(\Complex) \.
+		\forall S \in \S' \.
+		\phi(S) =_{?\Complex} \phi^*(S)
+	}
+	\NoProof
+	\\
+	\Theorem{UnitCircleDilationIsBijective}
+	{
+		\forall S \in \Re \S' \.
+		\exists! \phi \in \Di_{\Reals}^+(\Complex) \.
+		S = \phi^* \Sphere^1
+	}
+	\NoProof
+	\\
+	\DeclareFunc{unitCircleCircleInversion}{ \S' \to \S'  }
+	\DefineNamedFunc{unitCircleCircleInversion}
+	{
+		\left[\left[
+		\begin{array}{cc}
+			\alpha & z \\
+			\bar z & \beta \\
+		\end{array}
+		\right]\right]
+	}
+	{
+		\Inv_{\Sphere^1}^*
+		\left[\left[
+		\begin{array}{cc}
+			\alpha & z \\
+			\bar z & \beta \\
+		\end{array}
+		\right]\right]
+	}
+	{
+		\left[\left[
+		\begin{array}{cc}
+			\beta & z \\
+			\bar z & \alpha 
+		\end{array}
+		\right]\right]	
+	}
+}
+\Page{
+	\Theorem{UnitCircleCircleInversionConsistency}
+	{  
+		\forall S = \left[\left[\begin{array}{cc}
+			\alpha & z \\
+			\bar z & \beta 
+			\end{array}\right]\right] \in S' \.
+		\Inv_{\Sphere^1}(S) =_{?\Complex}  \Inv_{\Sphere^1}^*(S)
+	}
+	\Assume{p}{\TYPE{In}(S \setminus \{0\}) }
+	\Say{[1]}{\bd \S'(S)\bd p}
+	{
+		\beta |p|^2 +  z \bar p + \bar z p  + \alpha = 0
+	}
+	\Say{[2]}{\bd \Field(\Complex)[1]}{
+		\frac{\alpha}{|p|^2} + \frac{z}{p} + \frac{\bar z}{\bar p} + \beta = 
+		\frac{\beta |p|^2 + z \bar p + \bar z p + \beta}{|p|^2} = 0
+	}
+	\Conclude{[p.*]}{\bd \Inv^*_{\Sphere^1}(S)[2]}
+	{
+		\Inv_{\Sphere^1}(z) \in \Inv^*_{\Sphere^1}(S)
+	}
+	\DeriveConclude{[*]}{\THM{InversionConvolution}}
+	{
+		\Inv_{\Sphere^1}(S) =_{?\Complex}  \Inv_{\Sphere^1}^*(S)
+	}
+	\EndProof
+	\\
+	\DeclareFunc{RealCircleCircleInversion}
+	{
+		\Re \S' \to \S'  \to \S'
+	}
+	\DefineNamedFunc{RealCircleCircleInversion}{A,S}
+	{
+		\Inv_{A}^*(S) 
+	}
+	{ 
+		\phi^{*} \Inv_{\Sphere^1}^* \phi^{-1*}(S) 
+		\quad
+		\where
+		\quad
+		\phi \in \Di^+_\Reals(\Complex) :
+		A = \phi^* \Sphere^1
+	}
+	\\
+	\Theorem{RealCircleCircleInversionConsistency}
+	{  
+		\forall A \in \Re \S' \.
+		\forall S  \in \S' \.
+		\Inv_{A}(S) =_{?\Complex}  \Inv_{A}^*(S)
+	}
+	\NoProof
+	\\\
+	\DeclareFunc{anticircle}{\Re \S' \ToBij \Im \S'}
+	\DefineNamedFunc{anticircle}
+	{
+		S = 
+		\left[ \left[ \begin{array}{cc}
+			1 & z \\
+			\bar z & |z|^2 - \rho \\
+		\end{array}\right]\right]
+	}
+	{
+		\hat S
+	}
+	{
+		\left[ \left[ \begin{array}{cc}
+			1 & z \\
+			\bar z & |z|^2 + \rho \\
+		\end{array}\right]\right]	
+	}
+	\\
+	\DeclareFunc{unitAnticircleCircleInversion}{ \S' \to \S'  }
+	\DefineNamedFunc{unitAnticircleCircleInversion}
+	{
+		\left[\left[
+		\begin{array}{cc}
+			\alpha & z \\
+			\bar z & \beta \\
+		\end{array}
+		\right]\right]
+	}
+	{
+		\Inv_{\hat \Sphere^1}^*
+		\left[\left[
+		\begin{array}{cc}
+			\alpha & z \\
+			\bar z & \beta \\
+		\end{array}
+		\right]\right]
+	}
+	{
+		\left[\left[
+		\begin{array}{cc}
+			\beta & -z \\
+			-\bar z & \alpha 
+		\end{array}
+		\right]\right]	
+	}
+	\\
+	\Theorem{UnitAnticircleCircleInversionConsistency}
+	{  
+		\forall S = \left[\left[\begin{array}{cc}
+			\alpha & z \\
+			\bar z & \beta 
+			\end{array}\right]\right] \in S' \.
+		\Inv_{\Sphere^1}(S) =_{?\Complex}  \Inv_{\Sphere^1}^*(S)
+	}
+	\Assume{p}{\TYPE{In}(S \setminus \{0\}) }
+	\Say{[1]}{\bd \S'(S)\bd p}
+	{
+		\beta |p|^2 +  z \bar p + \bar z p  + \alpha = 0
+	}
+	\Say{[2]}{\bd \Field(\Complex)[1]}{
+		\frac{\alpha}{|p|^2} + \frac{z}{p} + \frac{\bar z}{\bar p} + \beta = 
+		\frac{\beta |p|^2 + z \bar p + \bar z p + \beta}{|p|^2} = 0
+	}
+	\Conclude{[p.*]}{\bd \Inv^*_{\hat \Sphere^1}(S)[2]}
+	{
+		\Inv_{\hat \Sphere^1}(z) \in \Inv^*_{\hat \Sphere^1}(S)
+	}
+	\DeriveConclude{[*]}{\THM{InversionConvolution}}
+	{
+		\Inv_{ \hat \Sphere^1}(S) =_{?\Complex}  \Inv_{\hat \Sphere^1}^*(S)
+	}
+	\EndProof
+	\\
+	\DeclareFunc{imaginableCircleCircleInversion}
+	{
+		\Im \S' \to \S'  \to \S'
+	}
+	\DefineNamedFunc{imaginableCircleCircleInversion}{A,S}
+	{
+		\Inv_{A}^*(S) 
+	}
+	{ 
+		\phi^{*} \Inv_{\hat \Sphere^1}^* \phi^{-1*}(S) 
+		\quad
+		\where
+		\quad
+		\phi \in \Di_\Reals(\Complex) :
+		S = \phi^* \Sphere^1
+	}
+	\\
+	\Theorem{ImaginableCircleCircleInversionConsistency}
+	{  
+		\forall A \in \Re \S' \.
+		\forall S  \in \S' \.
+		\Inv_{A}(S) =_{?\Complex}  \Inv_{A}^*(S)
+	}
+	\NoProof
+}
+\Page{
+	\Theorem{LineToCircle}
+	{
+		\forall l : \TYPE{LineCircle} \.
+		\exists \phi \in \Di_\Reals(\Complex) :
+		\exists S \in \Re \S' :
+		l =  \phi^*\Inv_S^*(\Sphere^1)        
+	}
+	\NoProof
+	\\
+	\DeclareFunc{LineCircleCircleInversion}
+	{
+		\TYPE{LineCircle} \to \S'  \to \S'
+	}
+	\DefineNamedFunc{LineCircleCircleInversion}{A,S}
+	{
+		\Inv_{A}^*(S) 
+	}
+	{ 
+		\phi^{*} \Inv_S^* \Inv_{\Sphere^1}^*\Inv^{-1*}_S \phi^{-1*}(l) 
+		\quad
+		\where \NewLine \where
+		\quad
+		\phi \in \Di_\Reals(\Complex), S \in \Re \S :
+		l = \phi^* \Inv^*_S \Sphere^1
+	}
+	\\
+	\Theorem{LineCircleCircleInversionConsistency}
+	{  
+		\forall l : \TYPE{LineCircle} \.
+		\forall S  \in \S' \.
+		\Inv_{l}(S) =_{?\Complex}  \Inv_{l}^*(S)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{CircleInversion}
+	{
+		\S_* \to \S'  \to \S'
+	}
+	\DefineNamedFunc{CircleInversion}{A,S}
+	{
+		\Inv_{A}^*(S) 
+	}
+	{ 
+		\Inv_{A}^*(S)
+	}	
+	\\
+	\Theorem{CircleInversionConsistency}
+	{  
+		\forall A \in \S_*  \.
+		\forall S  \in \S' \.
+		\Inv_{A}(S) =_{?\Complex}  \Inv_{A}^*(S)
+	}
+	\NoProof
+	\\
+	\Theorem{CircleDilationPreservesDiscr}
+	{
+		\forall \phi \in \Di_{\Reals}(\Complex) \. 
+		\forall A,B \in \S' \.
+		\det\Big(\phi^*A,\phi^*B\Big) = \det(A,B)
+	}
+	\Assume{[1]}{\TYPE{CentredCircle}(A \And B)}
+	\Say{\Big(a,\rho,[2]\Big)}
+	{
+		\bd \TYPE{CentredCircle}(A)
+	}
+	{
+		\sum a \in \Complex \.
+		\sum \rho \in \Reals \.
+		A = 
+		\left[\left[
+		\begin{array}{cc}
+			1 & a \\
+			\bar a & |a|^2 + \rho
+		\end{array}
+		\right]\right]
+	}
+	\Say{\Big(b,\sigma,[3]\Big)}
+	{
+		\bd \TYPE{CentredCircle}(B)
+	}
+	{
+		\sum b \in \Complex \.
+		\sum \sigma \in \Reals \.
+		B = 
+		\left[\left[
+		\begin{array}{cc}
+			1 & b \\
+			\bar b & |b|^2 + \sigma
+		\end{array}
+		\right]\right]
+	}
+	\Conclude{[1.*]}
+	{
+		\bd \det(\phi^*A,\phi^*B) \bd \phi^* A \bd \phi^* B [2][3]
+		\bd^{-1} \FUNC{absValue}(\Complex) 
+		\NewLine :
+		\THM{ComplexNorm}\Big(\phi(a) - \phi(b)\Big)
+		\THM{DilationLipschitzConstant}(\phi,a,b)
+		\bd^{-1} \det(A,B) \bd \phi^* A \bd \phi^*
+	}
+	{
+		\NewLine :
+		\det(\phi^*A,\phi^*B) =
+		\Big|\phi(b)\Big|^2 +  \mathrm{rat}^2(\phi)\sigma	
+		\Big|\phi(a)\Big|^2 +  \mathrm{rat}^2(\phi)\rho
+		- \phi(a)\overline{\phi(b)} 
+		- \overline{\phi(a)}\phi(b) = \NewLine =
+		\Big| \phi(a) - \phi(b) \Big|^2 + \mathrm{rat}^2(\phi)(\sigma + \rho) =
+		\Big\| \phi(a) - \phi(b) \Big\|^2 + \mathrm{rat}^2(\phi)(\sigma + \rho) =
+		\Big(\mathrm{rat}(\phi)\Big)^2\Big( \| a- b \|^2 + \rho^2 + \sigma^2 \Big) = \NewLine = 
+		\mathrm{rat}^2(\phi) \det(A,B)  
+	}
+	\Derive{[1]}{I(\Imply)}
+	{
+		\TYPE{CentredCircle}(A \And B) 
+		\Imply
+		\det(\phi^*A,\phi^*B) = \det(A,B)
+	}
+	\Assume{[2]}{A,B \IsNot \TYPE{CentredCircle}}
+	\Say{\Big(v,\alpha,[3]\Big)}
+	{
+		\bd \TYPE{CentredCircle}(A)
+	}
+	{
+		\sum v \in \Complex \.
+		\sum \alpha \in \Reals \.
+		A = 
+		\left[\left[
+		\begin{array}{cc}
+			0 & v \\
+			\bar v &  \alpha
+		\end{array}
+		\right]\right]
+	}
+	\Say{\Big(u,\beta,[4]\Big)}
+	{
+		\bd \TYPE{CentredCircle}(B)
+	}
+	{
+		\sum b \in \Complex \.
+		\sum \beta \in \Reals \.
+		B = 
+		\left[\left[
+		\begin{array}{cc}
+			0 & u \\
+			\bar u & \beta
+		\end{array}
+		\right]\right]
+	}
+	\Conclude{[2.*]}
+	{
+		\bd \det(\phi^*A,\phi^*B) \bd \phi^* A \bd \phi^* B [2][3]
+		\bd^{-1} \det(A,B) \bd \phi^* A \bd \phi^*
+	}
+	{
+		\NewLine :
+		\det(\phi^*A,\phi^*B) =  
+		\mathrm{rat}^2(\phi) u \bar v + 
+		\mathrm{rat}^2(\phi)v \bar u = \mathrm{rat}^2(\phi) \det(A,B)  
+	}
+	\Derive{[2]}{I(\Imply)}
+	{
+		A,B \IsNot \TYPE{CentredCircle}
+		\Imply
+		\det(\phi^*A,\phi^*B) = \det(A,B)
+	}
+}\Page{
+	\Assume{[3]}
+	{
+		\TYPE{CentredCircle}(A) \And B \IsNot \TYPE{CentredCircle} 
+	}
+	\Say{\Big(a,\rho,[4]\Big)}
+	{
+		\bd \TYPE{CentredCircle}(A)
+	}
+	{
+		\sum a \in \Complex \.
+		\sum \rho \in \Reals \.
+		A = 
+		\left[\left[
+		\begin{array}{cc}
+			1 & a \\
+			\bar a &  |a|^2 + \rho
+		\end{array}
+		\right]\right]
+	}
+	\Say{\Big(u,\beta,[5]\Big)}
+	{
+		\bd \TYPE{CentredCircle}(B)
+	}
+	{
+		\sum u \in \Complex \.
+		\sum \beta \in \Reals \.
+		B = 
+		\left[\left[
+		\begin{array}{cc}
+			0 & u \\
+			\bar u & \beta
+		\end{array}
+		\right]\right]
+	}
+	\Conclude{[3.*]}
+	{
+		\bd \det(\phi^*A,\phi^*B)\bd \phi^*A \bd \phi^* B [4][5]
+		\THM{TangentSpaceDilation}(0,\phi)
+		\bd \TYPE{Bilinear}(\Complex)
+		\bd \det(A,B) [4][5]
+	}
+	{
+		\NewLine :
+		\det(\phi^*A,\phi^*B) =
+		\mathrm{rat}^2(\phi)\alpha - 
+		\mathrm{rat}(\phi)\phi(z)\bar u - 
+		\mathrm{rat}(\phi)\overline{\phi(z)} u  + 
+		2\mathrm{rat}(\phi)\langle u, v_\phi \rangle = \NewLine = 
+		\mathrm{rat}^2(\phi)\alpha 
+		+ 2\mathrm{rat}(\phi)\langle u, v_\phi\rangle +
+		- 2\mathrm{rat}(\phi)\Big\langle u, \mathrm{rat}(\phi) z + v_\phi  \Big\rangle  =
+		\mathrm{rat}^2(\phi) \Big(\alpha - 2\langle u, z\rangle \Big) =
+		\mathrm{rat}^2(\phi) \det(A,B)
+	}
+	\Derive{[3]}{I(\Imply)}
+	{
+		\TYPE{CentredCircle}(A) \And \TYPE{CentredCircle}(B) \Imply
+		\det(\phi^* A,\phi^* B) = \det(A,B)
+	}
+	\Conclude{[*]}{E(|)\ldots[1][2][3]}
+	{
+		\det(\phi^* A,\phi^* B) = \det(A,B)
+	}
+	\EndProof
+	\\
+	\Theorem{UnitCircleInversionPreservesDiscr}
+	{
+		\forall A,B \in \S' \. 
+		\det\Big( \Inv^*_{\Sphere^1}A,\Inv^*_{\Sphere^1} B \Big) = \det(A,B)
+	}
+	\NoProof
+	\\
+	\Theorem{CircleInversionPreservesDiscr}
+	{
+		\forall S \in \S_* \.
+		\forall A,B \in \S' \.
+		\det\Big( \Inv^*_{S}A,\Inv^*_{S} B \Big) = \det(A,B)
+	}
+	\NoProof
+	\\
+	\Theorem{InversionMapsLinesAndCirclesToLinesAndCircles}
+	{
+		\forall S \in \S_* \.
+		\Inv_S \Re \S_* = \Re \S_*
+	}
+	\NoProof
+}
+\newpage
+\subsection{Stereographic Projection}
+\Page{
+	\DeclareFunc{stereographicProjection}{\Sphere^2 \ToIso{\TOP} \hat \Complex}
+	\DefineNamedFunc{stereographicProjection}{0,0,1}{\Stg(0,0,1)}
+	{  \infty  }
+	\DefineNamedFunc{stereographicProjection}{p}{\Stg(p)}
+	{  \pi_{1,2}\bd\TYPE{Singleton}\Big( p \vee (0,0,1) \cap 0 \vee (1,0,0) \vee (0,1,0)  \Big)  }
+	\\
+	\Theorem{StereographicProjojectionAnalyticExpression}
+	{
+		\forall (x,y,z) \in \Sphere^2 \.
+		z \neq 1 \Imply
+		\Stg(x,y,z) = \frac{x }{1-z}  + \frac{\i y }{1 - z}
+	}
+	\Say{\Big(t,[1]\Big)}{\THM{LineParametrization}\;\Stg(x,y,z)}
+	{
+		\prod t \in \Reals \.
+		\Stg(x,y,z) = t(0,0,1) + (1 - t)(x,y,z)
+	}
+	\Say{[2]}{\bd \Stg(x,y,z)[1]}
+	{
+		tz + (1-t) = 0
+	}
+	\Say{[3]}{ [2]\bd \Field(\Reals)}
+	{
+		t = \frac{1}{1 - z}
+	}
+	\Conclude{[*]}{[1][3]}{ \Stg(x,y,z) = \frac{x}{1 - z} + \frac{\i y}{1 - z}}
+	\EndProof
+	\\
+	\Theorem{StereographicProjectionInversion}
+	{
+		\forall a + b \i \. 
+		\Stg^{-1}(a + b \i) =
+		\left(     
+		\frac{2a}{a^2 + b^2 +1}
+		, \frac{ 2b}{a^2 + b^2 + 1}
+		,\frac{a^2 + b^2 -1}{a^2 + b^2 + 1}
+		\right)
+	}
+	\Say{\Big(t,[1]\Big)}{\THM{LineParametrization}\;\Stg(x,y,z)}
+	{
+		\prod t \in \Reals \.
+		\Stg^{-1}(a + b \i) = t(0,0,1) + (1 - t)(a,b,0)
+	}
+	\Say{[2]}{\bd \Stg \bd \FUNC{EuclideanNorm}(\Reals^3)}
+	{
+		1 = \Big\| \Stg^{-1}(a + b \i) \Big\| = 
+		t^2  + (1 - t)^2a^2 + (1 - t)^2b^2
+	}
+	\Say{[3]}{\THM{BinomialExpansion}[2]-1}
+	{
+		0 = t^2(1+a^2 + b^2) -2(a^2 + b^2)t +(a^2 + b^2 - 1)
+	}
+	\Say{[4]}{\frac{[3]}{1 + a^2 + b^2}}
+	{
+		0 = t^2 - \frac{2(a^2 + b^2)}{1 +a^2 + b^2}t + \frac{a^2 + b^2 - 1}{a^2 + b^2 + 1}
+	}
+	\Say{[5]}{[1][4]}
+	{
+		0 = (t - 1)\left(t - \frac{a^2 + b^2 -1}{a^2 + b^2 + 1} \right)
+	}
+	\Say{[6]}{\bd \Stg}{\Stg^{-1}(a + b\i) \neq (0,0,1)}
+	\Say{[7]}{[5][6]}{t = \frac{a^2 + b^2 -1}{a^2 + b^2 + 1}}
+	\Conclude{[*]}{[7][1]}
+	{
+		\Stg^{-1}(a + b\i) = 
+		\left(     
+		\frac{2a}{a^2 + b^2 +1}
+		, \frac{ 2b}{a^2 + b^2 + 1}
+		,\frac{a^2 + b^2 -1}{a^2 + b^2 + 1}
+		\right)
+	}
+	\EndProof
+	\\
+	\Theorem{ExtendedComplexPlaneIsHomeomorphicToSphere}
+	{
+		\hat \Complex \cong_{\TOP} \Sphere^2
+	}
+	\NoProof
+	\\
+	\Conclude{\TYPE{SphereCircle} = \S\S}{\TYPE{Plane}(\Reals^3)}{?(\Sphere^{2*} \times \Reals)}
+	\\
+	\DeclareFunc{circleStereographicProjection}
+	{
+		\S\S \ToBij \S'
+	}
+	\DefineNamedFunc{circleStereographicProjection}{f,\alpha}
+	{
+		\Stg^*(f,\alpha)
+	}
+	{
+		\frac{1}{2}
+		\left[\left[
+			\begin{array}{cc}
+			\alpha - f_3 & f_1 + \i f_2 \\
+			f_1 - \i f_2 & \alpha + f_3
+			\end{array}
+		\right]\right]
+	}
+}
+\Page{
+	\Theorem{CircleStereographicProjectionConsistance}
+	{
+		\forall S \in \S\S \.
+		\Stg^*S =_{\SET} \Stg(S \cap \Sphere^2 )
+	}
+	\Say{\Big(f,\alpha, [1] \Big)}{\bd \S\S(S)}{\sum f \in \Sphere^{2*} \. \sum \alpha \in \Reals \. S = (f,\alpha) }
+	\Assume{(x,y,z)}{S \cap \Sphere^2}
+	\Say{[2]}{[1](x,y,z)}{f(x,y,z) = -\alpha}
+	\Say{[3]}{\THM{StereographicPojectionAnalyticExpression}(x,y,z)}
+	{
+		\Stg(x,y,z) = \frac{x}{1 - z} + \frac{y\i}{1 - z}
+	}
+	\Say{[4]}{\bd \Complex \bd \Sphere^{2} \bd \Sphere^{2*} [2]}
+	{
+		\NewLine :
+		\frac{(\alpha-f_3)(x^2 + y^2)}{2(1-z)^2} +
+		\frac{(f_1 + \i f_2)(x - y\i)}{2(1 - z)}  +
+		\frac{(f_1 - \i f_2)(x + y\i)}{2(1 - z)}  +
+		+ \frac{\alpha + f_3}{2} = \NewLine = 
+		\frac{ 
+			\alpha\Big(x^2 + y^2 + (1-z)^2 \Big) +
+			2f_1 x(1-z)  +
+			2f_2 y(1 - z) +
+			f_3 \Big( (1 - z)^2 - x^2 - y^2  \Big) 
+		}
+		{2(1-z)^2} 
+		= \NewLine = 
+		\frac{ 
+			2\alpha\Big( 1 - z  \Big) +
+			2f_1 x(1-z)  +
+			2f_2 y(1 - z) +
+			f_3 z\Big( 1 - z)   \Big) 
+		}
+		{2(1-z)^2} 
+		= \NewLine =  
+		\frac{\big(\alpha + f(x,y,z)\big)}{ 1 -  z} = 0
+	}
+	\Conclude{\Big[(x,y,z).*]}{\bd \S; [4]}{ \Stg(x,y,z) \in \Stg^*(S) }
+	\Derive{[2]}{\bd^{-1} \TYPE{Subset}}{\Stg(S \cap \Sphere^2) \subset \Stg^*(S)}
+	\Assume{u}{\Stg^*(S)}
+	\Say{\Big( (x,y,z), [3] \Big)}{\bd \TYPE{Inverible} \Stg \THM{StereographicProjectionAnalyticExpresion}}
+	{
+		\NewLine :
+		\sum x,y,z \in \Sphere^2 \.  u = \frac{x}{1-z} + \frac{y\i}{1-z} 
+	}
+	\Say{[4]}{\bd \S' \bd \Stg^*(S) [3]\bd \Complex \bd \Sphere^2 \bd \Sphere^{2*} }
+	{
+		\NewLine =
+		0 = (\alpha - f_3)|u|^2   - (f_1 + \i f_2)\bar u - (f_1 - \i f_2) u + \alpha + f_3 = 
+		\NewLine =
+		\frac{(\alpha-f_3)(x^2 + y^2)}{2(1-z)^2} +
+		\frac{(f_1 + \i f_2)(x - y\i)}{2(1 - z)}  +
+		\frac{(f_1 - \i f_2)(x + y\i)}{2(1 - z)}  +
+		+ \frac{\alpha + f_3}{2} = \NewLine = 
+		\frac{\big(\alpha + f(x,y,z)\big)}{ 1 -  z} 
+	}
+	\Say{[5]}{(1-z)[4]}{f(x,y,z) = -\alpha}
+	\Conclude{[u.*]}{\bd \S\S(S)}{u \in \Stg(S \cap \Sphere^2)}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Subset} \bd^{-1} \TYPE{SetEq} }
+	{
+		\Stg^*(S) = \Stg(S \cap \Sphere^2)
+	}
+	\EndProof
+	\\
+	\DeclareFunc{polarPlane}{\Reals^3 \setminus \{0\} \to \SS }
+	\DefineNamedFunc{polarPlane}{v}{\mathrm{pp}(v)}{[v^*;-1]}
+	\\
+	\DeclareType{PolarPlane}{?\SS}
+	\DefineType{S}{PolarPlane}{\exists v \in \Reals^3 \setminus \{0\} : S = \mathrm{pp}(v)}
+	\\
+	\DeclareFunc{pole}{\TYPE{PolarPlane} \to \Reals^3 \setminus \{0\}}
+	\DefineFunc{pole}{S}{\bd \TYPE{PolarPlane}}
+}
+\Page{
+	\Theorem{LawOfReciprocity}{ 
+		\forall S : \TYPE{PolarPlane} \.
+		\forall q \in S \. 
+		\FUNC{pole}(S) \in \mathrm{pp}(q)
+	}
+	\NoProof
+	\\
+	\DeclareType{NonSingularSphereCircle}{?\S\S}
+	\DefineNamedType{S}{NonSingularSphereCircle}{S \in \S\S_*}{ \Stg^*(S) \in \S_* }
+	\\
+	\DeclareFunc{sphericleCircleInversion}{\S\S_* \to \Sphere^2 \to \Sphere^2}
+	\DefineNamedFunc{sphericalCircleInversion}{S,s}{\Inv_S(s)}{s\Stg\;\Inv_{\Stg^* S}\; \Stg^{-1}}
+	\\
+	\Theorem{SphericalInversionTHM}
+	{
+		\forall S \in \S\S_* \And \TYPE{PolarPlane} \. 
+		\forall s \in \Sphere^2 \setminus S   \.
+		\Sphere^2 \cap \Big( s \vee \FUNC{polar}(S)  \Big) = \{\Inv_S(s),s \}
+	}
+	\Say{p}{\FUNC{polar}(S)}{\Reals^{3*}}
+	\Say{[1]}{\bd p \bd \FUNC{polar}(S)}{S = [p;-1]}
+	\Say{[2]}{\bd \Stg^* S [1]}
+	{
+		\Stg^* S = 
+		\frac{1}{2}\llbracket
+		\begin{array}{cc}
+			-p_1 - 1 & p_2 + \i p_3 \\
+			p_2 - \i p_3 & p_1 - 1
+		\end{array}
+		\rrbracket
+	}
+	\Say{z}{\Stg s}{\hat \Complex}
+	\Say{[3]}{\THM{StereographicProjectionAnalyticExpression}\bd z}
+	{
+		z = \frac{s_1 + s_2\i}{1 - s_3}
+	}
+	\Assume{s'}{ \Sphere^2 \cap s \vee p  }
+	\Assume{[4]}{s' \neq s}
+	\Say{\Big(t,[5]\Big)}{\THM{ParametricLineEquation}\bd s'}
+	{
+		\sum t \in \Reals \. s' = tp +(1-t)s
+	}
+	\Say{[6]}
+	{
+		\bd \Sphere^2(s') [5]
+		\bd \FUNC{productOfEuclid}
+	}
+	{
+		\NewLine :
+		1 = \|s'\|^2 =  
+		\Big\| tp + (1-t)s \Big\|^2 = 
+		t^2 \Big( \| p \|^2  -2\langle s,p \rangle +  \|s\|s^2 \Big)
+		+ 2 t \Big( \langle s,p\rangle + \|s\|^2 \Big) +
+		\|s\|^2
+	}
+	\Say{[7]}{\bd \Sphere^2(s) \Big([6] - 1\Big)}
+	{
+		0 = t^2  + \frac{2\langle s,p\rangle - 2}{\| p - s \|^2  }t  
+	}
+	\Say{[8]}{[7][5][4]}{t =  2\frac{1 - \langle s,p\rangle}{\|p-s\|^2} }
+	\Conclude{[s'.*]}{[5][8]}
+	{
+		s' = 2\frac{1 - \langle s, p\rangle}{\|p-s\|^2}p
+			+ \frac{\|p\|^2 - 1 }{\|p-s\|^2}s
+	}
+	\Derive{[4]}{\THM{AnalyticSolution}}
+	{
+		\Sphere^2 \cap (s \vee p) =
+		\left\{ s,  2\frac{1 - \langle s, p\rangle}{\|p-s\|^2}p + \frac{\|p\|^2 - 1 }{\|p-s\|^2}s\right\}
+	}
+	\Say{t}{ 2\frac{1 - \langle s,p \rangle}{\|p - s\|^2}  }
+	{
+		\Reals
+	}
+	\Say{z'}{\Stg\Big(tp +(1-t)s\Big)}{\hat \Complex}
+	\Say{[5.1]}{\ldots}{ 1 + |z|^2 = 1 + \frac{s_1^2 + s_2^2}{1- 2s_3 + s_3^2} = \frac{2}{1 - s_3}}
+	\Say{[5.2]}{\ldots}{ 
+		1 - |z|^2 = 
+		1 - \frac{s_1^2 + s_2^2}{1 - 2s_3 + s_3^2} = 
+		\frac{1 -2s_3 + s_3^2 - 1 + s_3^2}{(1-s^3)^2} = 
+		\frac{2 s_3}{1 - s^3}
+	}
+}\Page{
+	\Say{[5]}{\THM{StereographiProjectionAnalyticExpression}\bd z'}
+	{
+		\NewLine :
+		z_1 = 
+		\frac{(1-t)(s_1 +s_2\i) + t(p_1 + \i p_2)}{ 1 - (1-t)s_3 - t p_3  } =
+		\frac{
+			2 (1-t) z - 2t (\Stg^* S)_{1,2}( 1 + |z|^2)            
+		}
+		{
+			\left(1  + t \frac{(\Stg^* S)_{2,2}-(\Stg^* S)_{1,1}}{\tr \Stg^* S}  \right)(1 + |z|^2)
+			- (1 -t)(1 - |z|^2) 
+		}
+	}
+	\Say{[6]}
+	{
+		\bd t \bd \FUNC{productOfEuclid} \bd^{-1} \Stg^*S(z)	
+	}
+	{
+		\NewLine : 
+		t =  2\frac{1 - \langle s,p\rangle}{\|s - p^2\|^2} = 
+		\frac{ \frac{2}{1 - s_3}  + (\Stg^* S)_{1,2} z + (\Stg^* S)_{1,2} \bar z  - \frac{2p_3s_3}{1-s_3}}
+		{ (1 +|z|^2)(2 -2\langle s,p\rangle)  + (\|p\| - 1)(1 + |z|^2)   } 
+		=
+		\frac{\Stg^* S(z)}{\Stg^* S(z) - \det \Stg^* S (1 + |z|^2) }
+	}
+	\Say{[7]}
+	{
+		1 - [7]
+	}
+	{
+		1 - t = \frac{- \det \Stg^* S(1 + |z|^2)}{\Stg^* S(z) - \det \Stg^*(1 + |z^2)}
+	}
+	\Say{[8]}{[5][6][7]}
+	{
+		\NewLine :
+		z' = 
+		\frac{-2z\det \Stg^* S(1 +\|z|^2 ) - 2(\Stg^* S)_{1,2}\Stg^* S(z)(1 + |z|^2)} 
+		{
+			\left( 1 + \Stg^* S(z)((\Stg^* S)_{2,2} - (\Stg^* S)_{1,1}) \right)
+			(1 + |z|^2)
+			+ \det \Stg^* S (1 - |z|^4)
+		} =
+		\NewLine = 
+		\frac{-2z\det \Stg^* S - 2 (\Stg^* S)_{1,2}\Stg^* S(z)} 
+		{
+			\left( 1 + \Stg^* S(z)((\Stg^* S)_{2,2} - (\Stg^* S)_{1,1}) \right)
+			+ \det \Stg^* S (1 - |z|^2)
+		} =
+		\NewLine
+		=
+		-\frac{(\Stg^* S)_{2,1} \bar z + (\Stg^* S)_{2,2}}
+		{(\Stg^* S)_{1,1}\bar z + (\Stg^* S)_{1,2}} 
+		=
+		\Inv_{\Stg^* S}(z)
+	}
+	\\
+	\Theorem{OrthogonalityByPolarity}
+	{
+		\forall S,S' : \TYPE{PolarPlane} \.
+		\Stg^* \; S \bot \Stg^*\; S'
+		\iff
+		\FUNC{pole}(S) \in S'
+	}
+	\NoProof
+}
+\newpage
+\subsection{Circles on A Sphere }
+\Page{
+	\Theorem{UniqueOrthogonalPencel}
+	{
+		\forall P  : \TYPE{Pencel} \.
+		\exists! Q : \TYPE{Pencel} :
+		P \bot Q
+	}
+	\\
+	\DeclareFunc{bundleOfCircles}
+	{
+		\LI\Big(3,\Herm(2)\Big) \to ?\S'
+	}
+	\DefineNamedFunc{bundleOfCircles}
+	{
+		A
+	}
+	{
+		\mathbf{b}(A)
+	}
+	{
+		\frac{\Span(A)}{\Reals^\times}
+	}
+	\\
+	\DeclareType{Bundle}{?\S'}
+	\DefineType{B}{Bundle}{\exists A : \LI(3,\Herm(2)) : B = \mathbf{b}(A)}
+	\\
+	\Theorem{BundleOfPlanesTHM}
+	{
+		\forall B : \TYPE{Bundle} \.
+		\left| \bigcap_{S \in B} \Stg^* S \right| = 1  
+	}
+	\NoProof
+	\\
+	\DeclareFunc{centerOfBundle}{\TYPE{Bundle} \to \hat \Reals^3}
+	\DefineNamedFunc{centerOfBundle}{B}{O_B}{\bd \TYPE{Singleton} \bigcap_{S \in B} \Stg^* S}
+	\\
+	\Theorem{OrthogonalCircleOfBundle}
+	{
+		\forall B : \TYPE{Bundle} \. 
+		\exists! S \in \S' \.
+		S \bot B
+	}
+	\NoProof
+	\\
+	\DeclareFunc{orhogonalCircle}
+	{
+		\TYPE{Bundle} \to \S' 
+	}
+	\DefineNamedFunc{orthogonalCircle}{B}{B^\bot}{\THM{OrthogonalCircleOfBundle}}
+	\\
+	\Theorem{CenterAndOrthogonalRelation}
+	{
+		\forall B : \TYPE{Bundle} \.
+		O_B = \FUNC{pole} \; \Stg^* \; B^\bot
+	}
+	\NoProof
+	\\
+	\DeclareType{EllipticBundle}{ ?\TYPE{Bundle}  }
+	\DefineType{B}{EllipticBundle}{ O_B \in \mathbb{B}^2   }
+	\\
+	\DeclareType{ParabolicBundle}{ ?\TYPE{Bundle}  }
+	\DefineType{B}{ParaboliccBundle}{ O_B \in \Sphere^2   }
+	\\
+	\DeclareType{HyperbolicBundle}{ ?\TYPE{Bundle}  }
+	\DefineType{B}{HyperbolicBundle}{ O_B \in \mathbb{D}^{2\c}   }
+}
+\newpage
+\subsection{Cross Ratio}
+\Page{
+	\DeclareFunc{simpleRatio}{\hat \Complex^3 \to \hat \Complex }
+	\DefineNamedFunc{simpleRatio}{a,b,c}{\mathrm{sr}(a;b,c)}{\frac{a-b}{a - c}}
+	\\
+	\DeclareFunc{crossRatio}{\hat \Complex^4 \to \hat \Complex }
+	\DefineNamedFunc{crossRatio}{a,b,c,d}{\mathrm{cr}(a,b;c,d)}{\frac{\mathrm{sr}(a;c,d)}{\mathrm{sr}(b;c,d)}}
+	\\
+	\Theorem{CrossRatioCircleTheorem}
+	{
+		\forall a,b,c,d \in \hat \Complex^4 \.
+		\exists S \in \S' : a,b,c,d \in S 
+		\iff
+		\mathrm{cr}(a,b;c,d) \in \hat \Reals
+	}
+	\NoProof
+	\\
+	\Theorem{CrossRatioInversion}
+	{
+		\forall a,b,c,d \in \hat \Complex^4 \.
+		\mathrm{cr}\left( \Inv_{\Sphere^1} a, \Inv_{\Sphere^1} b, \Inv_{\Sphere^1} c, \Inv_{\Sphere^1} d  \right) 
+		=
+		\overline{\mathrm{cr}(a,b,c,d)}
+	}
+	\NoProof
+}
+\newpage
+\subsection{M\"obius Transform}
+\Page{
+	\DeclareFunc{transformOfM\ddot obius}{\GL(\Complex,2) \to \hat \Complex \to \hat \Complex}
+	\DefineNamedFunc{transformOfM\ddot obius}{A,z}{\mathbf{M}_A(z)}{\frac{A_{1,1}z + A_{1,2}}{A_{2,1}z + A_{2,2}}}
+	\\
+	\Theorem{M\ddot obiusTransformComposition}
+	{
+		\forall A,B \in \GL(\Complex,2) \.
+		\mathbf{M}_A \mathbf{M}_B = \mathbf{M}_{BA}
+	}
+	\Assume{z}{\hat \Complex}
+	\Conclude{[z.*]}
+	{
+		\bd \mathbf{M}_A(z)
+		\bd \mathbf{M}_B(z)
+		\bd \Field(\Complex)
+		\THM{MatrixMultInCoordinates}(\Complex^2,B,A)
+		\bd^{-1} \mathbf{M}_{BA}(z)
+	}
+	{
+		\NewLine :
+		z \mathbf{M}_A \mathbf{M}_B = 
+		\frac{A_{1,1} z + A_{1,2}}{A_{2,1} z + A_{2,2}} \mathbf{M}_B =
+		\frac{B_{1,1}\frac{A_{1,1} z + A_{1,2}}{A_{2,1} z + A_{2,2}} + B_{1,2}}
+		{B_{2,1} \frac{A_{1,1} z + A_{1,2}}{A_{2,1} z + A_{2,2}} + B_{2,2}} =
+		\frac{(A_{1,1}B_{1,1} + A_{2,1}B_{1,2})z + A_{1,2}B_{1,1} + A_{2,2}B_{1,2}}
+		{  (A_{1,1}B_{2,1} + A_{2,1}B_{2,2})z  + A_{1,2}B_{2,1} + A_{2,2}B_{2,2} } =
+		\NewLine = 
+		\frac{ (BA)_{1,1} z + (BA)_{1,2}  }{(BA)_{2,1}z + (BA)_{2,2} } = 
+		\mathbf{M}_{BA}(z)
+	}
+	\DeriveConclude{[z.*]}{I(=,\to)}
+	{
+		\mathbf{M}_A \mathbf{M}_B = \mathbf{M}_{BA}	
+	}
+	\EndProof
+	\\
+	\DeclareFunc{groupOfM\ddot obius}
+	{
+		\GRP
+	}
+	\DefineNamedFunc{groupOfM\ddot obius}{}
+	{\M}{\mathbf{M}_{\GL(\Complex,2)}}
+	\\
+	\Theorem{M\ddot obiusTronformFactorization}
+	{
+		\frac{\GL(2,\Complex)}{\mathbf{M}} 
+		\cong_{\TOP}
+		\frac{\GL(2,\Complex)}{\Complex^\times}
+	}
+	\NoProof
+	\\
+	\DeclareFunc{circleRotation}{\SO(\Reals,2) \to \S' \to \S'}
+	\DefineNamedFunc{circleRotation}{
+		T,
+		\llbracket
+		\begin{array}{cc}
+		1 & - z \\
+		- \bar z & |z|^2 + \rho
+		\end{array}
+		\rrbracket
+	}{
+		T^*
+		\llbracket
+		\begin{array}{cc}
+		1 & - z \\
+		- \bar z & |z|^2 + \rho
+		\end{array}
+		\rrbracket
+	}
+	{
+		\llbracket
+		\begin{array}{cc}
+		1 & - Tz \\
+		- \overline{Tz} & |Tz|^2 + \rho
+		\end{array}
+		\rrbracket	
+	}
+	\DefineNamedFunc{circleRotation}{
+		T,
+		\llbracket
+		\begin{array}{cc}
+		0 & v \\
+		\bar v & \alpha
+		\end{array}
+		\rrbracket
+	}{
+		T^*
+		\llbracket
+		\begin{array}{cc}
+		0 & v \\
+		\bar v & \alpha
+		\end{array}
+		\rrbracket
+	}
+	{
+		\llbracket
+		\begin{array}{cc}
+		0 & Tv \\
+		\overline{Tv} & \alpha
+		\end{array}
+		\rrbracket
+	}
+}\Page{
+	\Theorem{RotationsPreservesDisctiminant}
+	{
+		\forall A,B \in \S' \.
+		\forall T \in \SO(\Reals,2) \.
+		\det\big(T^*A,T^*B\big) = 
+		\det(A,B)
+	}
+	\Assume{[1]}{\TYPE{CentredCircle}(A \And B)}
+	\Say{\Big(a,\rho,[2]\Big)}
+	{
+		\bd \TYPE{CentredCircle}(A)
+	}
+	{
+		\sum a \in \Complex \.
+		\sum \rho \in \Reals \.
+		A = 
+		\left[\left[
+		\begin{array}{cc}
+			1 & a \\
+			\bar a & |a|^2 + \rho
+		\end{array}
+		\right]\right]
+	}
+	\Say{\Big(b,\sigma,[3]\Big)}
+	{
+		\bd \TYPE{CentredCircle}(B)
+	}
+	{
+		\sum b \in \Complex \.
+		\sum \sigma \in \Reals \.
+		B = 
+		\left[\left[
+		\begin{array}{cc}
+			1 & b \\
+			\bar b & |b|^2 + \sigma
+		\end{array}
+		\right]\right]
+	}
+	\Conclude{[1.*]}
+	{
+		\bd \det(\T^*A,\T^*B) \bd T^* A \bd T^* B [2][3]
+		\bd^{-1} \FUNC{absValue}(\Complex) 
+		\NewLine :
+		\THM{ComplexNorm}\Big(T(a) - T(b)\Big)
+		\bd \SO(\Reals,2)
+		\bd^{-1} \det(A,B) \bd 
+	}
+	{
+		\NewLine :
+		\det(T^*A,T^*B) =
+		\Big|T(b)\Big|^2 +  \sigma	
+		\Big|T(a)\Big|^2 +  \rho
+		- T(a)\overline{T(b)} 
+		- \overline{T(a)}T(b) = \NewLine =
+		\Big| T(a) - T(b) \Big|^2 + \sigma + \rho =
+		\Big\| T(a) - T(b) \Big\|^2 + (\sigma + \rho) =
+		\| a- b \|^2 + \rho + \sigma = \NewLine = 
+		\det(A,B)  
+	}
+	\Derive{[1]}{I(\Imply)}
+	{
+		\TYPE{CentredCircle}(A \And B) 
+		\Imply
+		\det(T^*A,T^*B) = \det(A,B)
+	}
+	\Assume{[2]}{A,B \IsNot \TYPE{CentredCircle}}
+	\Say{\Big(v,\alpha,[3]\Big)}
+	{
+		\bd \TYPE{CentredCircle}(A)
+	}
+	{
+		\sum v \in \Complex \.
+		\sum \alpha \in \Reals \.
+		A = 
+		\llbracket
+		\begin{array}{cc}
+			0 & v \\
+			\bar v &  \alpha
+		\end{array}
+		\rrbracket
+	}
+	\Say{\Big(u,\beta,[4]\Big)}
+	{
+		\bd \TYPE{CentredCircle}(B)
+	}
+	{
+		\sum b \in \Complex \.
+		\sum \beta \in \Reals \.
+		B = 
+		\llbracket
+		\begin{array}{cc}
+			0 & u \\
+			\bar u & \beta
+		\end{array}
+		\rrbracket
+	}
+	\Conclude{[2.*]}
+	{
+		\bd \det(T^*A,T^*B) \bd T^* A \bd T^* B [2][3]
+		\THM{InnerProductByConjugation}
+		\bd \SO(\Reals,2)
+		\bd^{-1} \det(A,B) \bd T^* A \bd T^*
+	}
+	{
+		\NewLine :
+		\det(T^*A,T^*B) =  
+		T(u) \overline{T(v)} + 
+		T(v) \overline{T(u)} = 
+		2\langle T(u) , T(v) \rangle =
+		2\langle u,v \rangle = 
+		\det(A,B)  
+	}
+	\Derive{[2]}{I(\Imply)}
+	{
+		A,B \IsNot \TYPE{CentredCircle}
+		\Imply
+		\det(T^*A,T^*B) = \det(A,B)
+	}
+	\Assume{[3]}
+	{
+		\TYPE{CentredCircle}(A) \And B \IsNot \TYPE{CentredCircle} 
+	}
+	\Say{\Big(a,\rho,[4]\Big)}
+	{
+		\bd \TYPE{CentredCircle}(A)
+	}
+	{
+		\sum a \in \Complex \.
+		\sum \rho \in \Reals \.
+		A = 
+		\left[\left[
+		\begin{array}{cc}
+			1 & a \\
+			\bar a &  |a|^2 + \rho
+		\end{array}
+		\right]\right]
+	}
+	\Say{\Big(u,\beta,[5]\Big)}
+	{
+		\bd \TYPE{CentredCircle}(B)
+	}
+	{
+		\sum u \in \Complex \.
+		\sum \beta \in \Reals \.
+		B = 
+		\left[\left[
+		\begin{array}{cc}
+			0 & u \\
+			\bar u & \beta
+		\end{array}
+		\right]\right]
+	}
+	\Conclude{[3.*]}
+	{
+		\bd \det(T^*A,T^*B)\bd T^*A \bd T^* B [4][5]
+		\THM{ConjugationInnerProduct}
+		\bd \SO(\Reals,2)
+		\bd \det(A,B) [4][5]
+	}
+	{
+		\NewLine :
+		\det(T^*A,T^*B) =
+		\alpha - 
+		T(z)\overline{ T(u)} - 
+		\overline{T(z)} T(u)  = \NewLine = 
+		\alpha - \Big\langle T(z), T(u) \Big\rangle = 
+		\alpha - \langle z,u \rangle =
+		\det(A,B)
+	}
+	\Derive{[3]}{I(\Imply)}
+	{
+		\TYPE{CentredCircle}(A) \And \TYPE{CentredCircle}(B) \Imply
+		\det(T^* A,T^* B) = \det(A,B)
+	}
+	\Conclude{[*]}{E(|)\ldots[1][2][3]}
+	{
+		\det(T^* A,T^* B) = \det(A,B)
+	}
+	\EndProof
+	\\
+	\DeclareFunc{basicInversion}
+	{
+		\hat \Complex \to \hat \Complex
+	}
+	\DefineNamedFunc{basicInversion}
+	{\infty}{\mathrm{inv}(\infty)}{0}
+	\DefineNamedFunc{basicInversion}
+	{0}{\mathrm{inv}(0)}{\infty}
+	\DefineNamedFunc{basicInversion}
+	{z}{\mathrm{inv}(z)}{z^{-1}}
+	\\
+	\DeclareFunc{basicCircleInversion}{\S' \to \S'}
+	\DefineNamedFunc{basicCircleInversion}
+	{
+		S
+	}
+	{
+		\mathrm{inv}^* S
+	}
+	{
+		\Inv_{\Reals}^*\Inv_{\Sphere^1}^*(S)
+	}
+}
+\Page{
+	\Theorem{M\ddot obiusTransformElementaryDecomposition}
+	{
+		\forall M \in \M \. 
+		\exists a,b \in \Complex :
+		\exists r \in \Reals^\times :
+		\exists R \in \SO(2) : \NewLine :
+		M = R \; \sigma_a \;\tau_a \; \mathrm{inv}\; \tau_b 
+	}
+	\Say{\Big(A,[1]\Big)}{\bd \mathcal(M)}
+	{
+		\sum A \in \GL(\Complex,2) \. M = \mathbf{M}_A
+	}
+	\Assume{[0]}{A_{2,1} \neq 0}
+	\Assume{z}{\hat \Complex}
+	\Say{[2]}{[1]\bd \mathbf{M}_A \bd \TYPE{Field}(\Complex)\bd^{-1} \det A}
+	{
+		M(z) = 
+		\mathbf{M}_A(z) =
+		\frac{A_{1,1}z + A_{1,2}}{A_{2,1}z + A_{2,2}} = 
+		\frac{A_{1,1}z + \frac{A_{1,1}}{A_{2,1}}A_{2,2}}
+		{ A_{2,1}z + A_{2,2} } 
+		+
+		\frac{A_{1,2} - \frac{A_{1,1}}{A_{2,1}} A_{2,2}}{ A_{2,1}z + A_{2,2}  }
+		= \NewLine = 
+		\frac{A_{1,1}}{A_{2,1}}   +
+		\frac{1}{
+			\frac{A_{2,1}}{A_{1,2} - \frac{A_{1,1}}{A_{2,1}}A_{2,2}}z
+			+
+			\frac{A_{2,2}}{A_{1,2} - \frac{A_{1,1}}{A_{2,1}}A_{2,2}}
+		} 
+		= 
+		\frac{A_{1,1}}{A_{2,1}}   -
+		\frac{1}{
+			\frac{A_{2,1}^2}{\det A}z
+			+
+			\frac{A_{2,2}A_{2,1}}{\det A}
+		} 
+	}
+	\Say{a}{-\frac{A_{2,2}A_{2,1}}{\det A}}{\Complex}
+	\Say{b}{\frac{A_{1,1}}{A_{2,1}}}{\Complex}
+	\Say{r}{\left| \frac{A^2_{2,1}}{\det A} \right|}{\Reals^\times}
+	\Say{R}{\mathrm{Arg}\left( \frac{A^2_{2,1}}{\det A} \right)}{\SO(2)}
+	\Conclude{[0.*]}{[2]\ldots}{M(z) = z \; R\;\sigma_r\; \tau_a\; \mathrm{inv}\;\tau_b}
+	\DeriveConclude{[*]}{\ldots}{M = R\;\sigma_r\;\tau_a \mathrm{inv}\; \tau_b}
+	\EndProof
+	\\
+	\DeclareFunc{circleM\ddot obiusTransform}
+	{
+		\M \to \S' \to \S'
+	}
+	\DefineNamedFunc{circleM\ddot obiusTransform}
+	{
+		M,S
+	}
+	{
+		M^*(S)
+	}
+	{
+		S \; R^* \; \sigma_r^* \;\tau_a^* \; \mathrm{inv}^* \; \tau_b^* \NewLine
+		\where \quad (a,b,r,R) = \THM{M\ddot obiusTransformElementaryDecomposition}(M)
+	}
+	\\
+	\Theorem{M\ddot obiusTransformPreservesDiscriminant}
+	{
+		\forall A,B \in \S' \.
+		\forall M \in \M \.
+		\det(M^* A,M^* B) = \det(A,B) 
+	}
+	\NoProof
+	\\
+	\Theorem{M\ddot obiusTransformMapsLinesAndCirclesToLinesAndCircles}
+	{
+		\forall M \in \M \. M^* \Re \S_* = \Re \S_*
+	}
+	\NoProof
+	\\
+	\DeclareType{CrossRatioInvariant}{?\Big( \hat \Complex \to \hat \Complex \Big) }
+	\DefineType{f}{CrossRatioInvariant}{
+		\forall a,b,c,d \in \Complex \.
+		\mathrm{cr}\Big(f(a),f(b),f(c),f(d)\Big) =
+		\mathrm{cr}(a,b,c,d)
+	}
+}\Page{
+	\Theorem{M\ddot obiusTransformIsCrossRatioInvariant}
+	{
+		\forall M \in \M \.
+		\TYPE{CrossRatioInvariant}(M)
+	}
+	\Assume{a,b,c,d}{\hat \Complex}		
+	\Assume{v}{\Complex}
+	\Conclude{[v.*]}{ 
+		\bd \mathrm{cr}(a + v,b + v;c + v,d +v) 
+		\THM{InverseCancelation}(\Complex,v)   
+		\bd \mathrm{cr}(a ,b ;c ,d ) 
+	}
+	{
+		\NewLine :
+		\mathrm{cr}(a+v,b+v;c+v,d+v) =
+		\frac{a + v - c - v}{a + v - d - v}
+		\frac{b + v - d - v}{b + v - c - v} =
+		\frac{a -c}{a -d} \frac{b - d}{b - c} =
+		\mathrm{cr}(a,b;c,d)
+	}
+	\Derive{[1]}{I(\forall)}
+	{
+		\forall v \in \Complex \. 
+		\mathrm{cr}(a+v,b+v;c+v,d+v) =
+		\mathrm{cr}(a,b;c,d)
+	}
+	\Assume{z}{\Complex}
+	\Conclude{[z.*]}{ 
+		\bd \mathrm{cr}(za ,zb;zc ,zd ) 
+		\THM{InverseCancelation}(\Complex,z)   
+		\bd \mathrm{cr}(a ,b ;c ,d ) 
+	}
+	{
+		\NewLine :
+		\mathrm{cr}(za,zb;zc,zd) =
+		\frac{za  - zc}{za  - zd}
+		\frac{zb  - zd}{zb  - zc } =
+		\frac{a -c}{a -d} \frac{b - d}{b - c} =
+		\mathrm{cr}(a,b;c,d)
+	}
+	\Derive{[2]}{I(\forall)}
+	{
+		\forall z \in \Complex \. 
+		\mathrm{cr}(za,zb;zc,zd) =
+		\mathrm{cr}(a,b;c,d)
+	}
+	\Say{[3]}{ \bd \mathrm{inv} \THM{CrossRatioInversion}(\ldots) \THM{ConugationInvolution}(\ldots)}
+	{
+		\NewLine :
+		\mathrm{cr}(\mathrm{inv}\;a,\mathrm{inv}\;b,\mathrm{inv}\;c,\mathrm{inv}\;d) = 
+		\overline{\overline{\mathrm{cr}(a,b,c,d)}} = 
+		\mathrm{cr}(a,b,c,d)
+	}
+	\Conclude{\Big[(a,b,c,d).*\Big]}{\THM{M\ddot obiusTransformElementaryDecomposition}(M)[1][2][3]}
+	{
+		\NewLine :
+		\mathrm{cr}(Ma,Mb,Mc,Md) =
+		\mathrm{cr}(a,b,c,d)
+	}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{CrossRatioInvariant}}
+	{
+		\TYPE{CrossRatioInvariant}(M)
+	}
+	\EndProof
+	\\
+	\Theorem{M\ddot obiusTransformIsDeterminedByThreePoints}{ 
+		\forall x,y : 3 \ToInj \hat\Complex \.
+		\exists! M \in \M : M(x) = y
+	}
+	\Say{(A,[1])}{\bd \M }{\sum A \in \GL(\Reals,2) \. M = \mathbf{M}_A}
+	\Assume{[2]}{M(x) = x}
+	\Say{[3]}{[2]\bd M(x) [1] \bd \mathbf{M}_A}
+	{
+		x = 
+		M(x) =
+		\mathbf{M}_A(x) = 
+		\frac{A_{1,1} x + A_{1,2}}
+		{A_{2,1} x  + A_{2,2}   } 
+	}
+	\Say{[4]}{[3]\Big( A_{2,1}x + A_{2,2} \Big)}
+	{
+		A_{2,1} x^2 + A_{2,2} x = A_{1,1} x + A_{1,2} 
+	}
+	\Say{[5]}{\bd x [4]}
+	{
+		A_{2,1} = 0 \And A_{2,2} = A_{1,1} \And A_{1,2} = 0
+	}
+	\Conclude{[2.*]}{[5][1]}{M = \id}
+	\Derive{[2]}{I(\Imply)}{ M(x) = x \Imply M = \id }
+	\Assume{[3]}{M(x) = (0,1,\infty)}
+	\Say{[4]}{[3][1]\bd 0}{A_{1,1}x_1 + A_{1,2} = 0}
+	\Say{[5]}{\frac{[4]}{x_1}}{  A_{1,1} = - \frac{A_{1,2}}{x_1}   }
+	\Say{[6]}{[3][1]\bd 1}{A_{1,1}x_2 + A_{1,2} = A_{2,1}x_2 + A_{2,2}}
+	\Say{[7]}{\frac{[6]}{x_2}}{A_{1,1} - A_{2,1} = \frac{A_{2,2}-A_{1,2}}{x_2}}
+	\Say{[8]}{[3][1]\bd \infty}{ A_{2,1} x_3 + A_{2,2} = 0  }
+	\Say{[9]}{\frac{[8]}{x_3}}{A_{2,1} = - \frac{A_{2,2}}{x_3}}
+	\Say{[10]}{[5][7][9]}
+	{
+		-\frac{A_{1,2}}{x_1} + \frac{A_{2,2}}{x_3} = 
+		\frac{A_{2,2}}{x_2} - \frac{A_{1,2}}{x_2}
+	}
+	\Say{[11]}{\bd \Field(\Complex)}
+	{
+		A_{1,2} = \frac{x_1(x_2-x_3)}{x_3(x_2-x_1)} A_{2,2}
+	}
+	\Conclude{[3.*]}{[11][5][7][1][3]}
+	{
+		A \cong_\M
+		\llbracket
+		\begin{array}{cc}
+		\frac{x_3 - x_2}{x_3(x_2-x_1)} & \frac{x_1(x_2-x_3)}{x_3(x_2-x_1)} \\
+		-\frac{1}{x_3}  & 1
+		\end{array}
+		\rrbracket
+	}
+}\Page{
+	\Derive{[3]}{I(\Rightarrow)}
+	{
+		M(x) = (0,1,\infty)
+		\Imply
+		A \cong_\M
+		\llbracket
+		\begin{array}{cc}
+		\frac{x_3 - x_2}{x_3(x_2-x_1)} & \frac{x_1(x_2-x_3)}{x_3(x_2-x_1)} \\
+		-\frac{1}{x_3}  & 1
+		\end{array}
+		\rrbracket
+	}
+	\Assume{[4]}{M(0,1,\infty) = y}
+	\Say{[5]}{[1][4]\bd 0}{\frac{A_{1,2}}{A_{2,2}} = y_1}
+	\Say{[6]}{A_{2,2}[5]}{A_{1,2} = y_1 A_{2,2}}
+	\Say{[7]}{[1][4]\bd 1}{\frac{A_{1,1} + A_{1,2}}{A_{2,1} + A_{2,2}} = y_2}
+	\Say{[8]}{[1][4]\bd \infty}{\frac{A_{1,1}}{A_{2,1}} = y_3}
+	\Say{[9]}{A_{1,2} [8]}{ A_{1,1} = y_3 A_{2,1}  }
+	\Say{[10]}{[9][7][6]}
+	{
+		y_3 A_{2,1} + y_1 A_{2,2} = A_{2,1} y_2 + A_{2,2} y_2 
+	}
+	\Say{[11]}{\bd \TYPE{Field}\Complex}{ A_{2,1} = \frac{y_2 - y_1}{y_3-y_2} A_{2,2}  }
+	\Conclude{[4.*]}{[11][6][9][4][1]}
+	{
+		A \cong_\M
+		\llbracket
+		\begin{array}{cc}
+		\frac{y_2-y_1}{y_3-y_2}y_3  & y_1\\
+		\frac{y_2-y_1}{y_3-y_2} & 1
+		\end{array}
+		\rrbracket
+	}
+	\Derive{[4]}{I(\Imply)}
+	{
+		M(0,1,\infty) = y
+		\Imply
+		A \cong_\M
+		\llbracket
+		\begin{array}{cc}
+		\frac{y_2-y_1}{y_3-y_2}y_3  & y_1\\
+		\frac{y_2-y_1}{y_3-y_2} & 1
+		\end{array}
+		\rrbracket	
+	}
+	\Say{[6]}{[3][4]}
+	{
+		\llbracket
+		\begin{array}{cc}
+		\frac{y_2-y_1}{y_3-y_2}y_3  & y_1\\
+		\frac{y_2-y_1}{y_3-y_2} & 1
+		\end{array}
+		\rrbracket	
+		\llbracket
+		\begin{array}{cc}
+		\frac{x_3 - x_2}{x_3(x_2-x_1)} & \frac{x_1(x_2-x_3)}{x_3(x_2-x_1)} \\
+		-\frac{1}{x_3}  & 1
+		\end{array}
+		\rrbracket
+		x =
+		y
+	}
+	\Conclude{[7]}{[6][2]\bd^{-1}\LOGIC{Unique}}
+	{
+		\exists! M \in \M : M(x) = y
+	}
+	\EndProof
+	\\
+	\Theorem{CrossRatioInvariantIsM\ddot obiusTransform}
+	{
+		\forall f : \TYPE{Bijection} \And \TYPE{CrossRatioInvariant}\left(\hat \Complex\right) \.
+		f \in \M
+	}
+	\Say{M}{\THM{M\ddot obiusTransformDeterminedByThreePoints}
+		\Big( (0,1,\infty), \big(f(0),f(1),f(\infty) \big)\Big)}{\M}
+	\Assume{z}{\hat \Complex}
+	\Say{[1]}{\bd \TYPE{CrossRatioInvariant}(f)}
+	{
+		\mathrm{cr}\Big(f(0),f(1);f(\infty),f(z)\Big)
+		=\mathrm{cr}(0,1;\infty,z) 
+	}
+	\Say{[2]}{\bd M}
+	{
+		M =_\M 
+		\llbracket
+		\begin{array}{cc}
+		\frac{f(1)-f(0)}{f(\infty) - f(1)}f(\infty) & f(0)\\
+		\frac{f(1) - f(0)}{f(\infty) - f(1)} & 1  
+		\end{array}
+		\rrbracket
+	}
+	\Say{[3]}{[1]\bd \mathrm{cr}}
+	{
+		\frac{z-1}{z} = 
+		\frac{f(0) - f(\infty)}{f(1)-f(\infty)} 
+		\frac{f(1) - f(z)}{f(0) -f(z)}
+	}
+	\Say{[4]}{z[3] + 1}
+	{
+		z = z
+		\frac{f(0) - f(\infty)}{f(1)-f(\infty)} 
+		\frac{f(1) - f(z)}{f(0) -f(z)}   
+		+ 1
+	}
+	\Say{[5]}{[4](f(0) - f(z)) }
+	{
+		z\Big(f(0) - f(z)\Big) = 
+		\frac{z(f(0)-f(\infty))(f(1) - f(z)) + (f(0) - f(z))(f(1) - f(\infty))  }
+		{f(1) - f(\infty)}
+	}
+	\Say{[6]}{\bd \Field \Complex [5]}
+	{
+		f(z)\left(  
+			    \frac{f(1) - f(0)}{f(1) - f(\infty)}z + 1  
+		 \right) =
+		 \frac{z(f(0) - f(1))f(\infty)  + f(0)(f(1)-f(\infty))}{f(1) - f(\infty)}
+	}
+	\Conclude{[z.*]}{[6][2]}
+	{
+			f(z) = M(z)
+	}
+	\DeriveConclude{[*]}{I(=,\to)}{ f = M  }
+	\EndProof
+}
+\Page{
+	\Theorem{M\ddot obiusTransformInvolutionCriterion}
+	{
+		\forall M \in \M \. 
+		M \neq \id 
+		\Imply
+		\TYPE{Involution}(M) \iff \tr M = 0
+	}
+	\Assume{[1]}{\tr M = 0}
+	\Say{\Big(a,[2]\Big)}{\THM{SpectralTrace}[1]}
+	{
+		\sum a \in \Complex^\times : 
+		M \sim_\M
+		\llbracket
+		\begin{array}{cc}
+		a &  \\
+		 & -a
+		\end{array}
+		\rrbracket
+	}
+	\Say{[4]}{[2] \THM{SimilarMatrixMult}\bd \M}
+	{
+		M^2 \sim_\M
+		\llbracket
+		\begin{array}{cc}
+		a^2 &  \\
+		 & a^2
+		\end{array}
+		\rrbracket 
+		=_\M
+		\llbracket
+		\begin{array}{cc}
+		 1 &  \\
+		 & 1
+		\end{array}
+		\rrbracket 
+	}
+	\Conclude{[1.*]}{\bd \M [4]}
+	{
+		M^2  = \id
+	}
+	\Derive{[1]}{I(\Imply)}
+	{
+		\tr M = 0 \Imply \TYPE{Involution}(M)
+	}
+	\Assume{[2]}{\TYPE{Involution}(M)}
+	\Say{[3]}{\bd \TYPE{Involution}(M)}{M^2 = \id}
+	\Say{[4]}{\bd \M [3]}{ 
+		M_{1,1}^2 + M_{1,2}M_{2,1} = 1 \And
+		M_{1,1} M_{1,2} + M_{1,2} M_{2,2} = 0 \And \NewLine \And
+		M_{2,2} M_{2,1} + M_{2,1} M_{1,1} = 0 \And
+		M_{2,2}^2  + M_{1,2} M_{2,1} = 1
+	}
+	\Assume{[5]}{\tr \M \neq 0}
+	\Say{[6]}{[5][4]}{M_{1,2} = 0  = M_{2,1}}
+	\Say{[7]}{[6][4]}{M_{1,1} = M_{2,2}}
+	\Conclude{[5.*]}{[7](M \neq \id)}{\bot}
+	\DeriveConclude{[2.*]}{E(\bot)}{\tr M = 0}
+	\DeriveConclude{[*]}{I(\iff)}
+	{
+		\tr M = 0 \iff \TYPE{Involution}(M) 
+	}
+	\EndProof
+	\\
+	\DeclareType{M\ddot obiusConjugate}{\M \to \hat \Complex^2}
+	\DefineNamedType{(z,z')}{M\ddot obiusConjugate}
+	{
+		\Lambda M \in \M \.  z \sim_M z'
+	}
+	{
+		\Lambda M \in \M \. M(z) = z' \And z' = M(z)
+	}
+	\\
+	\Theorem{InvolutionByConjugates}
+	{
+		\forall M \in \M \.
+		\TYPE{Involution}(M)
+		\iff
+		\exists \TYPE{ConjugatePair}(M)
+	}
+	\NoProof
+}
+\newpage
+\subsection{Applications to Projective Geometry}
+\section{Hypercomplex Numbers}
+\subsection{Dual and Double Numbers}
+\subsection{Dual Numbers as orientated Lines}
+\section{Gaussian Numbers}
+\end{document}

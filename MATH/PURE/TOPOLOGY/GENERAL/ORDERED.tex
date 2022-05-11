@@ -1,0 +1,381 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\Or}{\; \Big| \:}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+\newcommand{\Imply}{\Rightarrow}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cat}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\}
+\newcommand{\A}{\LOGIC{Assume} \;} 
+\newcommand{\Assume}[2]{& \A #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%SetTheory
+%Cats
+\newcommand{\SET}{\mathsf{SET}}
+%Ordered Fiels
+\newcommand{\OF}{\TYPE{OrderedField}}
+%Topology
+%General Topology
+%Types
+\newcommand{\TS}{\TYPE{TopologicalSpace}} 
+\newcommand{\LF}{\TYPE{LocallyFinite}}
+\newcommand{\PN}{\TYPE{PerfectlyNormal}}
+%FUNC
+\DeclareMathOperator*{\intx}{int}
+\DeclareMathOperator*{\cl}{cl} 
+\DeclareMathOperator*{\boundary}{\partial} 
+%CATS
+\newcommand{\TOP}{\mathsf{TOP}}
+%Symbols
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\U}{\mathcal{U}}
+\renewcommand{\O}{\mathcal{O}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\F}{\mathcal{F}}
+%\newcommand{\d}{\mathrm{d}}
+\author{Uncultured Tramp} 
+\title{Order Induced Topology}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Topology of Partial Order}
+\subsection{Types of Intervals}
+\Page{
+	\DeclareFunc{openInterval}{ \prod X : \TYPE{Poset} \. X \times X \to ?X  }
+	\DefineNamedFunc{openInterval}{a,b}{(a,b)}{\{ x \in X : a < x < b \}}
+	\\
+	\DeclareFunc{closedInterval}{ \prod X : \TYPE{Poset} \. X \times X \to ?X  }
+	\DefineNamedFunc{closedInterval}{a,b}{[a,b]}{ \{ x \in X : a \le x \le b \}  }
+	\\
+	\DeclareFunc{rightHalfInterval}{\prod X : \TYPE{Poset} \. X \times X \to ?X}
+	\DefineNamedFunc{rightHalfInterval}{a,b}{(a,b]}{ \{ x \in X : a < x \le b   \} }
+	\\
+	\DeclareFunc{leftHalfInterval}{\prod X : \TYPE{Poset} \. X \times X \to ?X}
+	\DefineNamedFunc{leftHalfInterval}{a,b}{[a,b)}{\{ x \in X : a \le x < b \}}
+	\\
+	\DeclareFunc{leftOpenRay}{\prod X : \TYPE{Poset} \. X \to ?X }
+	\DefineNamedFunc{leftOpenRay}{a}{  (-\infty, a)  }{ \{ x \in X : x < a  \} }
+	\\
+	\DeclareFunc{leftClosedRay}{\prod X : \TYPE{Poset} \. X \to ?X}
+	\DefineNamedFunc{leftClosedRay}{a}{ (-\infty,a] }{\{ x \in X : x \le a \}}
+	\\
+	\DeclareFunc{rightOpenRay}{\prod X : \TYPE{Poset} \. X \to ?X}
+	\DefineNamedFunc{rightOpenRay}{a}{ (a, \infty)  }{ \{ x \in X : x > a \} }
+	\\
+	\DeclareFunc{rightClosedRay}{\prod X : \TYPE{Poset} \. X \to ?X}
+	\DefineNamedFunc{rightClosedRay}{a}{[a, \infty)}{ \{ x \in X : x \ge a \}}
+	\\
+	\DeclareType{OpenInterval}{\prod X : \TYPE{Poset} \. ??X}
+	\DefineType{A}{OpenInterval}{ \exists a,b \in X : a \le b \And 
+		\Big(A = (a,b) \Or A = (a,\infty) \Or A = (-\infty,b) \Big) \Or A = \Reals }
+	\\
+	\DeclareType{ClosedInterval}{\prod X : \TYPE{Poset} \. ??X}
+	\DefineType{A}{ClosedInterval}{\exists a,b \in X : a \le b \And 
+		\Big( A = [a,b] \Or A = [a,\infty) \Or A = (-\infty,b] \Big) \Or A = \Reals }
+}
+\Page{
+	\Theorem{OpenIntersecton}{ \forall X : \TYPE{Toset} \. \forall (a,b),(c,d) : \TYPE{OpenInterval}(X) \. 
+		(a,b) \cap (c,d) \neq \emptyset \Rightarrow 
+		\NewLine
+		\Rightarrow (a,b) \cap (c,d)  : \TYPE{OpenInterval}(X)
+	}
+	\NoProof
+	\\
+	\Theorem{ClosedIntersection}{ \forall X : \TYPE{Toset} \. \forall [a,b],[c,d] : \TYPE{ClosedInterval}(X)
+		\. [a,b] \cap [c,d] \neq \emptyset \Rightarrow 
+		\NewLine
+		\Rightarrow[a,b] \cap [c,d] : \TYPE{ClosedInterval}(X) }
+	\NoProof
+	\\
+	\Theorem{OpenUnion}{\forall X : \TYPE{Toset} \. \forall (a,b), (c,d) : \TYPE{OpenInterval}(X)
+		\. (a,b) \cap (c,d) \neq \emptyset \Rightarrow 
+		\NewLine
+		\Rightarrow (a,b) \cup (c,d) : \TYPE{OpenInterval}(X)}
+	\NoProof
+	\\
+	\Theorem{ClosedUnion}{\forall X : \TYPE{Toset} \. \forall [a,b], [c,d] : \TYPE{ClosedInterval}(X)
+		\. [a,b] \cup [c,d] \neq \emptyset \Rightarrow 
+		\NewLine
+		\Rightarrow [a,b] \cup [c,d] : \TYPE{ClosedInteval}(X)}
+	\NoProof
+	}
+\newpage
+\subsection{Left And Right Topology}
+\Page{
+	\DeclareFunc{leftTopology}{\TYPE{Poset} \to \TOP}
+	\DefineFunc{leftTopology}{X}{ 
+		\Big\langle 
+			\{ (-\infty,x] | x \in X  \} 
+		\Big\rangle_\TOP  
+	}
+	\\
+	\DeclareFunc{rightTopology}{\TYPE{Poset} \to \TOP}
+	\DefineFunc{rightTopology}{X}{ 
+		\Big\langle 
+			\{ [x,+\infty) | x \in X  \} 
+		\Big\rangle_\TOP  
+	}
+	\\
+	\DeclareType{LeftGrounded}
+	{
+		\prod X : \TYPE{POSET} \.
+		?X
+	}
+	\DefineType{A}{LeftGrounded}{\forall a \in A \. \forall x \in X \. x \le a \Imply a \in X}
+	\\
+	\Theorem{LeftGroundedIntersect}
+	{
+		\forall X \in \TYPE{Poset} \.
+		\forall I : \SET \.
+		\forall A : I \to \TYPE{LeftGrounded}(X) \. 
+		\bigcap_{i \in I} A_i : \TYPE{LeftGrounded(X)}
+	}
+	\NoProof
+	\\
+	\Theorem{LeftGroundedUnion}
+	{
+		\forall X \in \TYPE{Poset} \.
+		\forall I : \SET \.
+		\forall A : I \to \TYPE{LeftGrounded}(X) \. 
+		\bigcup_{i \in I} A_i : \TYPE{LeftGrounded(X)}
+	}
+	\NoProof
+	\\
+	\Theorem{LeftTopologyOpenSet}
+	{
+		\forall X \in \TYPE{Poset} \.
+		\forall U \subset X \. 
+		U \in \T\Big(  \FUNC{leftTopology}(X)  \Big) \iff
+		U : \TYPE{LeftGounded}(X)
+	}
+	\Say{[1]}{\THM{LeftGroundedUnion}\bd\FUNC{leftTopology}}
+	{
+		\T\Big( \FUNC{leftTopology}(X) \Big) 
+		\subset \TYPE{LeftGrounded}(X)
+	}
+	\Assume{A}{\TYPE{LeftGrounded}(X)}
+	\Say{U}{\bigcup_{a \in A} (-\infty,a]}
+	{
+		\TYPE{Open} \; \FUNC{leftTopology} \; X
+	}
+	\Say{[2]}{\ByConstr (-\infty,a] \ByConstr U \bd^{-1} \TYPE{Subset} }{ A \subset U}
+	\Say{[3]}{\ByConstr (-\infty,a] \ByConstr U \bd^{-1} \bd \TYPE{LeftGrounded}(A) \TYPE{Subset} }{U \subset A}
+	\Conclude{[A.*]}{\bd^{-1} \TYPE{SetEq}[2][3]}{ U = A  }
+	\Derive{[2]}{I \TYPE{Subset}}{ \TYPE{LeftGrounded}(X) \subset \TYPE{Open} \; \FUNC{leftTopology} \; X  }
+	\Conclude{[*]}{I \TYPE{SetEq}[1][2]}{\TYPE{LeftGrounded}(X) = \TYPE{Open} \; \FUNC{leftTopology} \; X  }
+	\EndProof
+	\\
+	\Theorem{LowerIntersection}
+	{
+		\forall X : \TYPE{Poset} \.
+		\forall I : \TYPE{Set} \.
+		\forall U : I \to \T\Big(\TYPE{leftTopology}(X)\Big) \.
+		\NewLine \. 
+		\bigcap_{i \in I} U_i \in  \T\Big( \TYPE{leftTopology}(X)\Big)
+	}
+	\Conclude{[*]}{\THM{LeftGroundedIntersection}(X)\THM{LeftTopologyOpenSet}(X) }
+	{
+		\LOGIC{This}
+	}
+	\EndProof
+}\Page{
+	\DeclareFunc{leftOpenSets}
+	{
+		\prod X : \TYPE{Poset} \. \TYPE{Topology}(X)
+	}
+	\DefineNamedFunc{leftOpenSets}{}{L(X)}{ \FUNC{topology} \; \FUNC{leftToplogy}(X)  }
+	\\
+	\Theorem{LeftTopologyIsT0}
+	{
+		\forall X : \TYPE{Poset} \.
+		\Big(X, L(X)\Big) : \TYPE{T0}
+	}
+	\Assume{x,y}{X}
+	\Assume{[1]}{x \neq y}
+	\Say{[2]}{\THM{PosetQuadrohtomy}[1]}
+	{
+		x < y | y < x | y \# x
+	}
+	\Conclude{\Big[(x,y).*\Big]}{\bd \FUNC{leftOpenRay}[1][2]}
+	{
+	 	y \not\in (-\infty,x] | x \not \in (-\infty, y]
+	}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{T0}} 
+	{  \Big( \big(X, L(X)\big) : \TYPE{T0} \Big)  }
+	\EndProof
+	\\
+	\Theorem{ClosedPointsAreMaximal}
+	{
+		\forall X : \TYPE{Poset} \.
+		\forall x \in X \. 
+		\{x\} : \TYPE{Closed}\big(X, L(X)\big) \iff
+		x \in \max  X
+	}
+	\NoProof
+	\\
+	\Theorem{ClosedPointsAreMinimal}
+	{
+		\forall X : \TYPE{Poset} \.
+		\forall x \in X \. 
+		\{x\} : \TYPE{Open}\big(X, L(X)\big) \iff
+		x \in \min  X
+	}
+	\NoProof
+	\\
+	\Theorem{PointClosure}
+	{
+		\forall X : \TYPE{Poset} \.
+		\forall x \in X \. 
+		\overline{\{x\}} = [x,\infty)
+	}
+	\NoProof
+	\\
+	\DeclareType{IntersectionClosed}
+	{
+		?\TOP
+	}
+	\DefineType{X}{IntersectionClosed}{
+		\forall I \in \SET \. 
+		\forall U : I \to \T(X)  \.
+		\bigcap_{i \in I} U_i  \in \T(X)
+	}
+	\\	
+	\DeclareType{Leftable}
+	{
+		?\TOP
+	}
+	\DefineType{X}{Leftable}{
+		\exists o : \TYPE{Order}(X)  \. 
+		X \cong_{\TOP} \big( X,  L(X,o) \big)
+	}
+}\Page{
+	\Theorem{LeftableIffIC}
+	{
+		\forall X \in \TOP \. X : \TYPE{IntersectionClosed} \iff X : \TYPE{Leftable}
+	}
+	\Assume{[1]}{(X : \TYPE{IntersectionClosed})}
+	\Say{U}{\Lambda x \in X \. \bigcap_{U \in \U(x)} U}{X \to \T(X)}
+	\Say{o}{\Big\{  (x,y) \in X^2 :  U_x \subset U_y       \Big\}}{\TYPE{Order}(X)}
+	\Say{[2]}{\bd^{-1} \TYPE{Base}\ByConstr U}{ \Big( \im U : \TYPE{Base}(X) \Big)}
+	\Say{[3]}{\ByConstr U \bd \TYPE{leftClosedRay}(X,o)}{\forall x \in X \. U_x = (-\infty,x]_o}
+	\Conclude{[*]}{\bd^{-1}\TYPE{leftTopology}[3]\bd^{-1}\TYPE{Base}[2]}
+	{
+		X = \Big(X, L(X,o) \Big)
+	}
+	\EndProof
+}
+\newpage
+\section{Topology of Total Order}
+\subsection{Topology Induced by Intervals}
+\Page{
+	\Theorem{OpenIntervalsAreBase}{\forall X : \TYPE{Toset} \. \TYPE{OpenIntervals}(X) : \TYPE{Base}(X) }
+	\Say{(1)}{ \bd \TYPE{OpenInterval}(X) }{  X \in \TYPE{OpenInterval}(X)  }
+	\Assume{ A,B }{ \TYPE{OpenInterval}(X) }
+	\Assume{x}{\TYPE{In}(A \cap B)}
+	\Say{(2)}{ \bd \emptyset(\bd x)}{ A \cap B \neq \emptyset  }
+	\Say{(3)}{ \THM{OpenIntersection}(A,B) }{ A \cap B : \TYPE{OpenInterval}(x) }
+	\Conclude{(3)}{\bd x \THM{SetEq}^{-1}}{   x \in A \cap B \subset A \cap B   }
+	\Derive{(2)}{ I(\forall)I(\forall)I(\exists)(A \cap B)}
+	{ \forall A,B : \TYPE{OpenIntervals}(X) \. \forall x \in A \cap B \. \exists Z : \TYPE{OpenInterval} : 
+	x \in Z \subset A \cap B     }
+	\Conclude{(*)}{\bd^{-1} \TYPE{Base}(1)(2)}{ \Big( \TYPE{OpenIntervals}(X) : \TYPE{Base}(X)  \Big)}
+	\EndProof
+	\\
+	\DeclareFunc{orderTopology}{  \prod X : \TYPE{Toset} \. \TYPE{Topology}(X)   }
+	\DefineFunc{orderTopology}{}{ \FUNC{genTop}(\TYPE{OpenInterval}(X))}
+	\\
+	\DeclareFunc{synecdoche}{ \TYPE{Toset} \to \mathsf{TOP} }
+	\DefineFunc{synecdoche}{ X  }{ (X,  \FUNC{orderTopology}) }
+	\\
+	\DeclareType{OrderableTopologicalSpace }{ ? \mathsf{TOP}  }
+	\DefineType{X}{OrderableTopologicalSpace}
+	{ \exists R : \TYPE{TotalOrder}(X) \. \mathcal{T}(X,R) = \mathcal{T}(X)}
+	\\
+	\Theorem{TotallyOrderedSeparation}{ \forall X : \TYPE{Toset} \.  X : \TYPE{T4}  }
+	\NoProof
+}
+\newpage
+\end{document}

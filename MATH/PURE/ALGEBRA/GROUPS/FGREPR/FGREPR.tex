@@ -1,0 +1,3222 @@
+\documentclass[12pt]{scrartcl}% European-style article
+\usepackage{mathtools}%For basic mathimatical symbols
+\usepackage{amsmath}  %For basic mathimatical symbols
+\usepackage{amsfonts} %For mathematical fonts
+\usepackage{hyperref} %For clickable contents
+\usepackage{amssymb}  %For more mathematical symbol
+\usepackage{wasysym}  %For astronomic symbols
+\usepackage{accents}  %For accents
+\usepackage{graphicx} %For images
+\usepackage{scalerel} %For resizing operators
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+%To visually distinguish different things
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}% Types are things that have members
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}% Func are things that trandform typed values
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}% Logical elements are beyond the scope of the type theory
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}% Theorems are things, which need to be proven
+%META
+%Basic elements of the language
+\renewcommand{\.}{\; . \;} %to separate elements of quantified statements
+\newcommand{\de}{: \kern 0.1pc =} %to define values of objects
+\newcommand{\extract}{\LOGIC{Extract}} %produces a whitness of the existentionally typed object !Legacy! use E(\exists) instead
+\newcommand{\where}{\LOGIC{where}} % used to define values post-factum
+\newcommand{\If}{\LOGIC{if} \;} % A part of a famous trenary operator
+\newcommand{\Then}{ \; \LOGIC{then} \;} % A part of a famous trenary operator
+\newcommand{\Else}{\; \LOGIC{else} \;} % A part of a famous trenary operator
+\newcommand{\IsNot}{\; ! \;} % A negation for a compound type (Is not a member of the Type, but of the same essence)
+\newcommand{\Is}{ \; : \;}  % Type membership
+\newcommand{\DefAs}{\; :: \;} % Defuened ti be a membere of a Type (essence)
+\newcommand{\Act}[1]{\left( #1 \right)} % Func acts on an object  !Legacy?
+\newcommand{\Example}{\LOGIC{Example} \; } % Used to identify examples !Legacy! we don't have examples any more
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } % An environment for declaring and defining=prooving a theorem
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\}% An environment for declaring a type (name + essence)   
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\}% An environment for defining a type (member + name + defining Type )
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\}%An environment for defining a type (member +  name + symbol + defining Type ) 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}% An environment for declaring a func (name + type)   
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\}% An environment for defining a type (name + argument + value expression) 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\}% An environment for defining a type (name + argument + symbol + value expression)  
+\newcommand{\NewLine}{\\ & \kern 1pc}% A shorthand for breaking a line inside Page environment      
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}  }% An environment for writting this shit
+\newcommand{ \bd }{ \ByDef }% A shorthand                                                  
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}% An omission of the prove of the theorem
+\renewcommand{\And}{\; \& \;}% A typological and logical and
+\newcommand{\Type}{\TYPE{Type}}% A metatype of Types
+\newcommand{\Imply}{\Rightarrow}
+%%STD
+%Standard mathematical graphic
+\newcommand{\Int}{\mathbb{Z}}% Integers
+\newcommand{\NNInt}{\mathbb{Z}_{+}}% Positive Integers
+\newcommand{\Reals}{\mathbb{R}}% Real Numbers
+\newcommand{\Complex}{\mathbb{C}}% Complex Numbers
+\newcommand{\Quat}{\mathbb{H}}% Quaternions
+\newcommand{\Rats}{\mathbb{Q}}% Rational Numbres
+\newcommand{\Nat}{\mathbb{N}}% Natural Numbers
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}% Extended real Numbers
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}% Extended Real Plane
+\DeclareMathOperator*{\argmin}{arg\,min}% arg min
+\DeclareMathOperator*{\id}{id}% identity map
+\DeclareMathOperator*{\im}{Im}% an image of the function
+\DeclareMathOperator*{\supp}{supp}% a support of something
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}% An Equivalence Classes
+\newcommand{\Cat}{\TYPE{Category}}% Type of categories
+\newcommand{\Mor}{\mathcal{M}}% morphisms of the category
+\newcommand{\Obj}{\mathcal{O}}% objects of the category
+\newcommand{\Aut}{\mathrm{Aut}}% automorphisms of the object in the category
+\newcommand{\End}{\mathrm{End}}% automorphisms of the object in the category
+\mathchardef\hyph="2D % a hyphen for the use in the math mode 
+\newcommand{\ToInj}{\hookrightarrow} % An arrow for injective maps
+\newcommand{\ToSurj}{\twoheadrightarrow} % An arrow for the surjective maps
+\newcommand{\ToBij}{\leftrightarrow} % A arrow for the bijective maps
+\newcommand{\Set}{\TYPE{Set}} % Type of sets
+\newcommand{\du}{\; \triangle \;} % symmetric difference
+\renewcommand{\c}{\complement}% set-theoretic complement
+%%ProofWritting
+% Commands to write proofs
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\} % A Logical Statements (name + expression + type of the expression)
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}% A conclusion which ends a reflection (name with end pointer + expression + type of the expression )
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\} % A Result produced by conlcuding the reflection, must follow comclusion (name + post-reflection + type)         
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\} % Use to follow a conclusion by an another conclusion imedietely ( name with end pointer + post-reflection + type  )
+\newcommand{\Assume}[2]{& \LOGIC{Assume} \; #1 : #2, \\} %Starts a reflection (name + type)
+\newcommand{\As}{\; \LOGIC{as } \;} %An ambigous symbol (Legacy)
+\newcommand{\QED}{\; \square} %A symbol to end the prove
+\newcommand{\EndProof}{& \QED \\} %End of prove
+\newcommand{\ByDef}{\rotatebox[origin=c]{-180}{$D$}}%\text{\textthorn}}  %Extracts defining type statement from the type member, may be inverted  (T -> Type)
+\newcommand{\ByConstr}{\rotatebox[origin=c]{-180}{$C$}}%\text{\textopeno}} %Extract the defining statement from the defined value !Legacy! use \eth instead  
+\newcommand{\Alt}{\LOGIC{Alternative} \;} % Can be used to check multiple alterntives inside the prove !Undeveloped!
+\newcommand{\CL}{\LOGIC{Close} \;} % Was Intended for the use with the Alternative !Undeveloped!
+\newcommand{\More}{\LOGIC{Another} \;} % Was Intended for the use with the Alternative !Undeveloped! 
+\newcommand{\Proof}{\LOGIC{Proof} \; } % Begins a Prove
+%FOUND
+%Foundations of mathematics
+%CAT
+%Catgory Theory
+\newcommand{\Arrow}[1]{\xrightarrow{#1}}% an arrow representatition of the morphism
+\newcommand{\ToIso}[1]{\xleftrightarrow{#1}}% an arrow representation of the isomprphism
+%CategoryTheorey
+%Types
+\newcommand{\Cov}{\TYPE{Covariant}}% A type of Covariant functors
+\newcommand{\Contra}{\TYPE{Contravariant}}% A type of the Contravariant Functors
+\newcommand{\NT}{\TYPE{NaturalTransform}}% A type of the Natural Transormations
+\newcommand{\UMP}{\TYPE{UnversalMappingProperty}}% A type of catgories with the universal mapping property ?
+\newcommand{\CMP}{\TYPE{CouniversalMappingProperty}}% A type of categories with the couniversal mapping property ?
+\newcommand{\paral}{\rightrightarrows} %?
+%functions
+\newcommand{\op}{\mathrm{op}} %opposite cotegory
+\newcommand{\obj}{\mathrm{obj}} %objects?
+\DeclareMathOperator*{\dom}{dom} % domain
+\DeclareMathOperator*{\codom}{codom}% codomain
+\DeclareMathOperator*{\colim}{colim}% colimit
+%variable
+% Varianles for denoting categories
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\G}{\mathsf{G}}
+%Cats
+\newcommand{\CAT}{\mathsf{CAT}} % 2-Category of all Categories
+\newcommand{\SET}{\mathsf{SET}} % Category of Sets
+\newcommand{\PARALLEL}{\bullet \paral \bullet} % A parallel category
+\newcommand{\WEDGE}{\bullet \to \bullet \leftarrow \bullet} % Wedge category
+\newcommand{\VEE}{\bullet \leftarrow \bullet \to \bullet} % Vee Category
+%Algebra
+%Abstract Algebra
+%Groups
+%Group Theory
+%Types
+\newcommand{\Group}{\TYPE{Group}} % Type of groups
+\newcommand{\Abel}{\TYPE{Abelean}} % Type of abelean groups
+\newcommand{\Sgrp}{\subset_{\mathsf{GRP}}} % Subgroup as a subset
+\newcommand{\Nrml}{\vartriangleleft} % Normal Subgroup as a subset
+\newcommand{\FG}{\TYPE{FiniteGroup}} % Finite Groups
+\newcommand{\Stab}{\mathrm{Stab}}  % A stabilizer
+\newcommand{\FGA}{\TYPE{FinitelyGeneratedAbelean}} % A Finitely Generated abelean group
+\newcommand{\DN}{\TYPE{DirectedNormality}} % A noramal complex
+\newcommand{\GIS}{\TYPE{GroupInvariantSubspace}}
+\newcommand{\CR}{\TYPE{CompletelyReducible}}
+%Func
+\DeclareMathOperator{\tor}{tor} % torsion
+\DeclareMathOperator{\bool}{bool} % boolinization
+\DeclareMathOperator{\rank}{rank} % a rank
+%Cats
+\newcommand{\GRP}{\mathsf{GRP}} % A category of Groups
+\newcommand{\ABEL}{\mathsf{ABEL}} % a category of Abelean Groups
+\newcommand{\REPR}[2]{#1\hyph\mathsf{REPR}\left(#2\right)}
+%Ops
+\newcommand{\SDP}{\rightthreetimes} % A very special norm
+%LINEAR
+%Linear Algebra
+%Types
+\newcommand{\Basis}{\TYPE{Basis}} % Basis of the linear space
+\newcommand{\submod}[1]{\subset_{\LMOD{#1}}}% submodule as a subset
+\newcommand{\subvec}[1]{\subset_{\VS{#1}}}% vector subspace as a subset
+\newcommand{\FGM}{\TYPE{FinitelyGeneratedModule}}% Finitely generated module
+\newcommand{\LI}{\TYPE{LinearlyIndependent}}
+\newcommand{\LIS}{\TYPE{LinearlyIndependentSet}}
+\newcommand{\FM}{\TYPE{FreeModule}}
+\newcommand{\IBP}{\TYPE{InvariantBasisProperty}}
+\newcommand{\UTM}{\TYPE{UpperTriangularMatrix}}
+\newcommand{\LTM}{\TYPE{LowerTriangularMatrix}}
+\newcommand{\Diag}{\TYPE{DiagonalMatrix}}
+\newcommand{\FP }{\TYPE{FinitelyPresented}}
+\newcommand{\GL}{\mathbf{GL}}% General Linear Group
+\newcommand{\SL}{\mathbf{SL}}% Special Linear group
+\newcommand{\SO}{\mathbf{SO}}
+\newcommand{\SU}{\mathbf{SU}}
+\newcommand{\prsubvec}[1]{\subsetneq_{\VS{#1}}}	% poper vector subspace as a subset
+\newcommand{\LC}{\TYPE{LinearComplement}} 
+\newcommand{\IS}{\TYPE{InvariantSubspace}}
+\newcommand{\RP}{\TYPE{ReducingPair}}
+\newcommand{\RCF}{\TYPE{RationalCanonicalForm}}
+\newcommand{\JCF}{\TYPE{JordanCanonicalForm}}
+\newcommand{\Diagble}{\TYPE{Diagonalizable}}
+\newcommand{\UT}{\TYPE{UpperTriangulizable}}
+\newcommand{\LT}{\TYPE{LowerTriangulizable}}
+\newcommand{\IPS}{\TYPE{InnerProductSpace}}
+\newcommand{\OBasis}{\TYPE{OrthonormalBasis}}
+\newcommand{\FDIPS}{\TYPE{FiniteDimensionalInnerProductSpace}}
+\newcommand{\NO}{\TYPE{NormalOperator}}
+\newcommand{\NM}{\TYPE{NormalMatrix}}
+\newcommand{\SA}{\TYPE{SelfAdjoint}}
+\newcommand{\SSA}{\TYPE{SkewSelfAdjoint}}
+\newcommand{\PI}{\TYPE{Pseudoinverse}}
+\newcommand{\OVS}{\TYPE{OrthogonalVectorSpace}}
+\newcommand{\SVS}{\TYPE{SymplecticVectorSpace}}
+\newcommand{\MVS}{\TYPE{MetricVectorSpace}}
+\newcommand{\FDMVS}{\TYPE{FiniteDimensionalMetricVectorSpace}}
+\newcommand{\Sp}{\mathbf{Sp}}
+%Func
+\DeclareMathOperator{\Span}{span} % spann by subset
+\DeclareMathOperator{\Ann}{Ann}   % annihilator
+\DeclareMathOperator{\Ass}{Ass}   % associated primes
+\DeclareMathOperator{\diag}{diag} % diagonal
+\DeclareMathOperator{\adj}{adj}   % an adjoint matrix
+\DeclareMathOperator{\tr}{tr}     % trace
+\DeclareMathOperator{\codim}{codim} % codimension
+\DeclareMathOperator{\Cell}{\mathbf{C}} % a componion matrix
+\DeclareMathOperator{\JC}{\mathbf{J}}  % a Jordan cell
+\DeclareMathOperator{\bigboxplus}{\scalerel*{\boxplus}{\sum}} % a direct sum of operators in the sence of the reducing a pair
+\DeclareMathOperator{\Spec}{Spec} % Spectre
+\DeclareMathOperator{\bigbot}{\scalerel*{\bot}{\sum}} % an othogonal direct sum
+\DeclareMathOperator{\GS}{\mathbf{GS}} %Gramm-Smmidt process
+\DeclareMathOperator{\NGS}{\mathbf{NGS}} %Normalized Gramm-Smmidt process
+\DeclareMathOperator{\WI}{\mathrm{WI}} %Witt Index
+%Cats
+\newcommand{\VS}[1]{#1\hyph\mathsf{VS}} % a category of vector spaces (Field)
+\newcommand{\FDVS}[1]{#1\hyph\mathsf{FDVS}} % a category of finite-dimensional vector spaces (Field)
+\newcommand{\LMOD}[1]{#1\hyph\mathsf{MOD}} % a category of the left modules (Ring)
+\newcommand{\RMOD}[1]{\mathsf{MOD}\hyph#1} % a category of the right modules (Ring)
+\newcommand{\LLMAP}[1]{#1\hyph\mathsf{LMAP}} % a cagory of based linear maps with the left scalar multiplication (Ring)
+\newcommand{\LMAT}[1]{#1\hyph\mathsf{MAT}}  % a category of based matrices with the left scalar multiplication (Ring)
+\newcommand{\NMAT}[1]{#1\hyph\mathbb{N}} % a category of finite matrices (Field)
+%Symbols
+\renewcommand{\L}{\mathcal{L}}
+\renewcommand{\O}{\mathbf{O}}
+\newcommand{\U}{\mathbf{U}}
+\renewcommand{\S}{\mathbf{S}}
+%FIELDS
+\newcommand{\Field}{\TYPE{Field}}
+\newcommand{\ACF}{\TYPE{AlgebraicallyClosedField}}
+%RINGS
+%TYPE
+\newcommand{\Ring}{\TYPE{Ring}}
+%\newcommand{\CR}{\TYPE{CommutativeRing}}
+\newcommand{\Ideal}{\TYPE{Ideal}}
+\newcommand{\ID}{\TYPE{IntegralDomain}}
+\newcommand{\UFD}{\TYPE{UniqueFactorizationDomain}}
+\newcommand{\PID}{\TYPE{PrincipleIdealDomain}}
+\newcommand{\FGI}{\TYPE{FinitelyGeneratedIdeal}}
+\newcommand{\ER}{\TYPE{EuclideanRing}}
+\newcommand{\DVR}{\TYPE{DiscreteValuationRing}}
+\newcommand{\MoFT}{\TYPE{MonoidOfFiniteType}}
+%CATS
+\newcommand{\RING}{\mathsf{RING}} % A category of Rings
+\newcommand{\ANN}{\mathsf{ANN}} % A category of Commutative Rings
+%FUNCS
+\DeclareMathOperator{\lcd}{lcd} % least common devided 
+\DeclareMathOperator{\lc}{lc} % leading coefficient of the polynomial
+\DeclareMathOperator{\cont}{cont} % content of the polynomial
+\DeclareMathOperator{\antideg}{antideg} % antideree if the foramal power series
+%Symbols
+\newcommand{\F}{\mathcal{F}}
+%ALGEBRA
+\newcommand{\LALG}[1]{#1\hyph\mathsf{ALG}}% Left associative unital algebras (Ring)
+\newcommand{\RALG}[1]{\mathsf{ALG}\hyph#1}% Right associative unital  algebras (Rings)
+\newcommand{\LALGE}[1]{#1\hyph\mathsf{ALGE}}% Left associative unital algebras (Ring)
+\newcommand{\RALGE}[1]{\mathsf{ALGE}\hyph#1}% Right associative unital  algebras (Rings)
+\newcommand{\LCALGE}[1]{#1\hyph\mathsf{CALGE}}% Left commutative associative unital algebras (Ring)
+\newcommand{\RCALGE}[1]{\mathsf{CALGE}\hyph#1}% Right commutative associative unital  algebras (Rings)
+%Numbers
+%Integers
+%FUNCS
+\DeclareMathOperator{\divi}{div} % devide withou reminder
+\DeclareMathOperator{\remi}{rem} % reminder
+\DeclareMathOperator{\Frac}{Frac} % Field of fractions
+\title{Representation Of Finite Groups}
+\author{Uncultured Tramp}
+\begin{document}
+\maketitle
+\normalsize
+\newpage
+\tableofcontents
+\newpage
+\section{Classical Representation Theory}
+\subsection{Category Of Group Representations}
+\Page{
+	\DeclareFunc{groupRepresentationCategory}
+	{ \GRP \to \ANN \to \CAT }
+	\DefineNamedFunc{groupRepresentationCategory}
+	{G,A}{\REPR{A}{G}}
+	{
+		\NewLine \de
+		\bigg(  \sum V \in \LMOD{R} \. G \Arrow{\GRP} \GL(V) ,
+			\Lambda (V,\rho),(W,\rho') \. 
+			\sum T : V \Arrow{\LMOD{R}} W \.
+			\forall g \in G \. \rho(g)T = T\rho'(g),
+			\NewLine
+			,\id, \circ \bigg)    
+	}
+	\\
+	\DeclareFunc{zerothRepresentation}
+	{\prod G \in \GRP \. \prod A \in \ANN \. \REPR{A}{G}}
+	\DefineNamedFunc{zerothRepresentation}{G,R}
+	{0_{G,A}}{\Big(\{0\},g \mapsto \id\Big)}  
+	\\
+	\DeclareFunc{IdentityRepresentation}
+	{\prod G \in \GRP \. \prod A \in \ANN \. \REPR{A}{G}}
+	\DefineNamedFunc{IdentityRepresentation}{G,R}
+	{e_{G,A}}{\Big(A,g \mapsto \id\Big)} 
+	\\
+	\Theorem{ZerothRepresentationIsZeroObject}
+	{
+		\forall G \in \GRP \.
+		\forall A \in \ANN \.
+		0_{G,A} : \TYPE{Zero}\Big( \REPR{A}{G} \Big)  
+	}
+	\NoProof
+	\\
+	\DeclareFunc{degreeOfRepresentation}
+	{ 
+		\REPR{A}{G} \to \mathsf{CARD}
+	}
+	\DefineNamedFunc{degreeOfRepresentation}
+	{ V, \rho  }{ \deg (V,\rho) }{\rank_A V}
+	\\
+	\DeclareType{\GIS}
+	{
+		\prod (V,\rho) \in \REPR{A}{G} \. ? \TYPE{Submodule}(V)   
+	}
+	\DefineType{U}{\GIS}
+	{\forall g \in G \. \rho_g(U) = U}
+	\\
+	\DeclareFunc{directSumOfRepresentation}
+	{
+		\prod I \in \SET \.
+		\Big(I \to \REPR{A}{G} \Big)
+		\to \REPR{A}{G}   
+	}
+	\DefineNamedFunc{directSumOfRepresentations}
+	{ (V,\rho) }{ \bigoplus_{i \in I} \rho_i }
+	{
+		\left( 
+			\bigoplus{i \in I} V_i,
+			\Lambda g \in G \. \bigoplus_{i\in I} \rho_i(g)     
+		\right) 
+	}
+	\\
+	\Theorem{RepresentationCoproduct}
+	{
+		\forall A \in \ANN \.
+		\forall G \in \GRP \.
+		(\oplus,\iota) : \TYPE{Coproduct}
+		\Big( \REPR{A}{G} \Big)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{subrepresentation}
+	{
+		\prod (\rho,V) \in \REPR{A}{G} \. 
+		\GIS(\rho,V) \to \REPR{A}{G}
+	}
+	\DefineNamedFunc{subrepresentation}{U}
+	{ \rho_{|U}   }{ \Big(U , \Lambda g \in G \. \rho(g)_{|U} \Big) }
+}
+\Page{
+	\Theorem{SubrepresentationDirectSum}
+	{
+		\forall (\rho,V) : \REPR{A}{G} \.
+		\forall U,W : \GIS(\rho,V) \.
+		\NewLine \. 
+		\forall [0] : U \cap W = 0 \.
+		\rho_{|U} \oplus \rho_{|W} 
+		\cong_{\REPR{A}{G}} 
+		\rho_{|U \oplus W}
+	}
+	\NoProof
+	\\
+	\DeclareType{Irreducible}
+	{
+		?\REPR{A}{G}
+	}
+	\DefineType{(V,\rho)}
+	{Irreducible}{ \forall U : \GIS(V,\rho) \. U = V | U = 0} 
+	\\
+	\Theorem{DegreeOneIsIrreducible}
+	{
+		\forall k : \Field \.
+		\forall \rho : \REPR{k}{G} \.
+		\deg \rho = 1 \Imply \rho : \TYPE{Irreducible}(k,G)
+	}
+	\NoProof
+	\\
+	\Theorem{EigenvectorIrreducibilityCriterion}
+	{
+		\forall k : \Field \. 
+		\forall \rho : \REPR{k}{G} \.
+		\forall [0] ; \deg \rho = 2 \. \NewLine \. 
+		\rho : \TYPE{Irreducible}(k,G) \iff
+		\bigcap_{g \in G} \TYPE{Eigenvector}(\rho_g) = \emptyset
+	}
+	\\
+	\DeclareType{CompletelyReducible}
+	{
+		?\REPR{A}{G} 
+	}
+	\DefineType{(\rho,V)}{\CR}  
+	{
+		\exists I \in \SET : 
+		\exists U : I \to \TYPE{Submodule}(A,V) : \NewLine :
+		V = \bigoplus_{i \in I} U_i \And 
+		\forall i \in I \. \rho_{|U_i} : \TYPE{Irreducible}(A,G) 
+	}
+	\\
+	\DeclareType{Decomposable} 
+	{ ?\REPR{A}{G}  }
+	\DefineType{(\rho,V)}{Decomposable}
+	{
+		\exists U,W : \GIS(\rho,V) \. 
+		U,W \neq 0 \And V = U \oplus W 
+		\And \rho \neq 0_{A,G}
+	}
+	\\
+	\Theorem{kernelIsSubrepresentation}
+	{
+		\forall (V,\alpha),(W,\beta) : \REPR{A}{G} \.
+		\forall T : \alpha \Arrow{\REPR{A}{G}} \.
+		\NewLine \. \ker T : \GIS(\alpha)
+	}
+	\Assume{v}{\ker T}
+	\Assume{g}{G}
+	\Say{[1]}
+	{
+		\bd \REPR{A}{G}(\alpha,\beta)(T)
+		\bd \ker T
+		\THM{NeutralImage}(\beta_g)	
+	}
+	{ 
+		v \alpha_g T = 
+		v T \beta_g = 
+		0 \beta_g = 0
+	}
+	\Conclude{[v.*]}{\bd \ker T [1]}
+	{ v \alpha_g \in ker T   }
+	\DeriveConclude{[*]}{\bd^{-1} \GIS(\alpha)}
+	{
+		\Big(\ker T : \GIS(\alpha)\Big)
+	}
+	\EndProof
+	\\
+	\Theorem{RepresentationsMorphismsAreSubmodule}
+	{
+		\forall (V,\alpha),(W,\beta) : \REPR{A}{G} \.
+		\NewLine
+		\Big( \alpha \Arrow{\REPR{A}{G}} \beta \Big) 
+		\submod{A} 
+		\Big( V \Arrow{\LMOD{A}} W \Big)
+	}
+	\NoProof
+}\Page{
+	\Theorem{ImageIsSubrepresentation}
+	{
+		\forall (V,\alpha),(W,\beta) : \REPR{A}{G} \.
+		\forall T : \alpha \Arrow{\REPR{A}{G}} \.
+		\NewLine \. \im T : \GIS(\beta)
+	}
+	\Assume{w}{\im T}
+	\Say{\Big( v,[1]\Big)}
+	{
+		\bd \FUNC{image}(w)
+	}
+	{
+		\sum v \in V \. w = Tv
+	}
+	\Assume{g}{G}
+	\Say{[1]}
+	{
+		\bd \REPR{A}{G}(\alpha,\beta)(T)
+		\bd \ker T
+		\THM{NeatralImage}(\beta_g)	
+	}
+	{ 
+		w \beta_g  = 
+		v T \beta_g =
+		v \alpha_g T 
+	}
+	\Conclude{[v.*]}{\bd \im T [1]}
+	{ w \beta_g \in im T   }
+	\DeriveConclude{[*]}{\bd^{-1} \GIS(\beta)}
+	{
+		\Big(\im T : \GIS(\beta)\Big)
+	}
+	\EndProof
+	 \\
+	\Theorem{DecomposableByEquivalence}
+	{
+		\forall (V,\rho) \in \REPR{A}{G} \.
+		\forall (V',\rho') : \TYPE{Decomposable}(A,G) \.
+		\NewLine \. 
+	 	\forall [0] : \rho \cong_{\REPR{A}{G}} \rho' \. 
+		(V,\rho) : \TYPE{Decomposable}(A,G) 
+	}
+	\Say{\Big(T,[1]\Big)}{\bd \REPR{A}{G}[0]}
+	{
+		\sum T : V \ToIso{\LMOD{A}} V' \. 
+		\forall g \in G \. \rho_g T = T \rho'_g
+	}
+	\Say{\Big(U',W',[2]\Big)}{\bd \TYPE{Decomposable}(A,G)(V',\rho')}
+	{
+		\sum U',W' : \GIS(V',\rho') \. V = U' \oplus W'
+	}
+	\Say{[3]}{\bd T \bd \TYPE{Decomposable}(A,G)(V',\rho')}
+	{
+		(V,\rho) \neq 0_{A,G}
+	}
+	\Say{U}{T^{-1}U'}{\TYPE{VectorSubspace}(V)}
+	\Say{W}{T^{-1}W'}{\TYPE{VectorSubspace}(W)}
+	\Say{[4]}{\THM{DirectSumIsomorphism}\ByConstr V \ByConstr W}
+	{  V = U \oplus W   }
+	\Assume{u}{U}
+	\Assume{g}{G}
+	\Conclude{[u.*]}
+	{
+		\bd^{-1} \FUNC{inverse}(T) 
+		[1]
+		\ByConstr U
+		\bd \GIS(V',\rho')(U')
+		\ByConstr U 
+	}
+	{ 
+		u  \rho_g = 
+		u  T  T^{-1} \rho_g
+		u  T \rho'_g T^{-1} \in U  
+	}
+	\Derive{[5]}{\bd^{-1}\GIS}
+	{\Big( U : \GIS(V,\rho)  \Big)}
+	\Assume{w}{W}
+	\Assume{g}{G}
+	\Conclude{[w.*]}
+	{
+		\bd^{-1} \FUNC{inverse}(T) 
+		[1]
+		\ByConstr W
+		\bd \GIS(V',\rho')(W')
+		\ByConstr W 
+	}
+	{ 
+		w  \rho_g = 
+		w  T  T^{-1} \rho_g
+		w  T \rho'_g T^{-1} \in W  
+	}
+	\Derive{[6]}{\bd^{-1}\GIS}
+	{\Big( W : \GIS(V,\rho)  \Big)}
+	\Conclude{[*]}{\bd^{-1}\TYPE{Decomposable}[3][4][5][6]}
+	{\Big( (V,\rho) : \TYPE{Decomposable}(A,G) \Big)}
+	\EndProof
+	\\
+	\Theorem{IrreducibleByEquivalence} 
+	{
+		\forall (V,\rho) \in \REPR{A}{G} \.
+		\forall (V',\rho') : \TYPE{Irreducible}(A,G) \.
+		\NewLine \. 
+	 	\forall [0] : \rho \cong_{\REPR{A}{G}} \rho' \. 
+		(V,\rho) : \TYPE{Irreducible}(A,G) 
+	}
+	\NoProof
+	\\
+	\Theorem{CompletelyReducibleByEquivalence} 
+	{
+		\forall (V,\rho) \in \REPR{A}{G} \.
+		\forall (V',\rho') : \CR(A,G) \.
+		\NewLine \. 
+	 	\forall [0] : \rho \cong_{\REPR{A}{G}} \rho' \. 
+		(V,\rho) : \CR(A,G) 
+	}
+	\NoProof
+} 
+\newpage
+\subsection{Maschke's Theorem}
+\Page{
+	\DeclareType{OrthogonalRepresentation}
+	{
+		\prod k : \Field \.
+		?\REPR(k,G) 
+	}
+	\DefineType{ (\rho,V)  }
+	{
+		OrthogonalRepresentation
+	}
+	{
+	 V : \IPS(k) \And \rho(G) \subset \O(V)  
+	}
+	\\
+	\Theorem{OrthogonalRepresentationProperty}
+	{
+		\forall k : \Field \.
+		\forall (V,\rho) : \TYPE{OrhogonalRepresentation}(k,G) \.
+		\NewLine 
+		(V,\rho) : \TYPE{Irreducible}(k,G) 
+		\Big| 
+		(V,\rho) : \TYPE{Decomposable}(k,G)
+	}
+	\Assume{[0]}{V \IsNot \TYPE{Irreducible}(k,G)}
+	\Say{\Big(U,[1]\Big)}
+	{ 
+		\bd \TYPE{Irreducible}[0]
+	}
+	{
+		\sum U : \GIS(V,\rho) \.
+		U \neq 0 \And U \neq V
+	}
+	\Say{W}{U^\bot}{\TYPE{VectorSubspace}(V)}
+	\Say{[2]}{\THM{OrthogonalComplementDecomposition}(U) }
+	{ V = U \oplus W }
+	\Say{[3]}{\ByConstr W [1]}{ W \neq 0 \And W \neq V}
+	\Assume{w}{W}
+	\Assume{g}{G}
+	\Assume{u}{U}
+	\Say{\Big(u',[4]\Big)}
+	{
+		\bd \GIS(\rho,V)(U)(u)\bd \GL(V)(\rho_g)	
+	}
+	{
+		\sum_{u' \in U} u = u' \rho_g 
+	}
+	\Conclude{[u.*]}
+	{  [4] \bd \O(V)(\rho_g) \bd \TYPE{Orthogonal}(w,u')  }
+	{
+		\langle w \rho_g , u \rangle = 
+		\langle w \rho_g, u' \rho_g \rangle  = 
+		\langle w, u' \rangle = 
+		0
+	} 
+	\DeriveConclude{[w.*]}{
+		I(\forall)
+		\bd \TYPE{OrhogonalComplement}
+		\ByConstr W 
+	}
+	{w\rho_g \in W }
+	\DeriveConclude{[0.*]}{\bd^{-1} \GIS(k,G)}
+	{
+		\Big( W :  \GIS(k,G) \Big) 
+	}
+	\Derive{[1]}{I(\Imply)}
+	{
+		\Big((V,\rho) \IsNot \TYPE{Irreducible}(k,G)\Big)
+			\Imply 
+			(V,\rho) : \TYPE{Decomposable}(k,G)
+	} 
+	\Conclude{[*]}{\THM{NegativeLEM}[1]}
+	{
+		(V,\rho) : \TYPE{Irreducible}(k,G) |
+		(V,\rho) : \TYPE{Decomposable}(k,G)
+	}
+	\EndProof
+	\\
+	\Theorem{RepresentationOrthogonalization}
+	{
+		\forall G : \FG \.
+		\forall k : \Field \.
+		\forall (V,\rho) \in \REPR{k}{G} \. \NewLine \. 
+		\forall [0] : (V : \IPS(k)) \. .
+		\exists  (V',\rho') : \TYPE{OrthogonalRepresentation}(k,G) :
+		\rho \cong_{\REPR{k}{G}} \rho'
+	}
+	\Say{Q}{
+		\Lambda x,y \in V \. 
+		\sum_{g \in G} 
+		\langle x \rho_g, y \rho_g \rangle 
+	}
+	{ \TYPE{InnerProduct}(V) }
+	\Assume{f}{G}
+	\Assume{x,y}{V}
+	\Conclude{[f.*]}
+	{
+		\ByConstr Q
+		\bd \GRP\Big( G, \GL(V) \Big)(\rho)
+		\THM{GroupCyclingSum}(G)
+		\ByConstr^{-1} Q
+	}
+	{
+		\NewLine :
+		Q(x \rho_f,y \rho_f) = 
+		\sum_{g \in G} 
+		\langle x \rho_f \rho_g, y \rho_f \rho_g \rangle =
+		\sum_{g \in G}
+		\langle x \rho_{fg}, y \rho_{fg} \rangle
+		\sum_{g \in G}
+		\langle x \rho_{g}, y \rho_{g} \rangle =
+		Q(x,y)
+	}
+	\Derive{[1]}{\bd^{-1} \TYPE{OrghogonalRepresentation}}
+	{
+		\Big( 
+			\big( (V,Q),\rho\big) : 
+			\TYPE{OrhogonalRepresentation}(k,G) 
+		\Big) 
+	}
+	\Conclude{[*]}{\bd \REPR{k}{G}}
+	{
+			\big( V, \rho\big) \cong_{\REPR{k}{G}}
+			\big(V, \rho \big) 
+	}
+	\EndProof
+}
+\Page{
+	\Theorem{FiniteGroupRepresentationProperty}
+	{
+		\forall k : \Field \.
+		\forall G : \FG \.
+		\forall (V,\rho) \in \REPR{k}{G} \. \NewLine  
+		\forall Q : \TYPE{InnerProduct}(V) \.
+		(V,\rho) : \TYPE{Irreducible}(k,G) |
+		(V,\rho) : \TYPE{Decomposable}(k,G)
+	}
+	\NoProof
+	\\
+	\Theorem{AveragingLemma}
+	{
+		\forall A \in \ANN \.
+		\forall G : \FG \.
+		 \NewLine \. 
+		\forall (V,\rho),(V',\rho') \in \REPR{A}{G} \.  
+		\forall T : V \Arrow{\LMOD{A}} V' \.
+		\sum_{g \in G} \rho^{-1}_g T \rho_g : 
+		\rho \Arrow{\REPR{A}{G}} \rho'
+	}
+	\Say{T'}{\sum_{g \in G} \rho^{-1}_g T \rho_g}{V \Arrow{\LMOD{A}} V'}
+	\Assume{f}{G}
+	\Assume{v}{V}
+	\Conclude{[v.*]}
+	{
+		\ByConstr T'
+		\bd^{-1} \FUNC{inverse} (\rho_f)
+		\bd \GRP\Big(G,\GL(V)\Big)(\rho)
+		\bd \GRP\Big(G,\GL(V)\Big)(\rho')
+		\THM{GroupSumCycle}(G)
+		\ByConstr^{-1} T'
+	}
+	{  
+		\NewLine :
+		v T' \rho'_f = 
+		\sum_{g \in G} v\rho^{-1}_g T \rho_g\rho_f = 
+		\sum_{g \in G} v \rho_f \rho^{-1}_f\rho_g^{-1} T \rho_g\rho_f
+		= 
+		\sum_{g \in G} v \rho_f \rho^{-1}_{gf} T \rho_{gf} =
+		\sum_{g \in G} v \rho_f \rho^{-1}_{g} T \rho_{g} =
+		v \rho_f T'
+	}
+	\DeriveConclude{[f.*]}{I(=,\to)}{\rho_f T' = T' \rho'_f}
+	\DeriveConclude{[*]}{\bd \REPR{A}{G}}
+	{ \Big( T' : \rho \Arrow{\REPR{A}{G}} \rho' \Big)  }
+	\NoProof 
+	\\
+	\Theorem{FixedPointsDimensionByAveraging}
+	{
+		\forall G : \FG \.
+		\forall k : \Field \.
+		\forall [0] :|G| \neq_k 0 \. \NewLine \. 
+		\forall (V,\rho) : \REPR{k}{G} \. 
+		\forall [00] : \dim V < \infty \. 
+		\dim V^\rho = \frac{1}{|G|}\sum_{g \in G} \tr \rho_g
+	}
+	\Say{P}{\frac{1}{|G|} \sum_{g \in G} \rho_g}
+	{ \End_{\VS{k}}(V) }
+	\Say{[1]}{
+		\bd^{-1} V^\rho \THM{GroupSumCycle}
+	}{ \im P \subset V^\rho }
+	\Say{[2]}{\bd V^\rho \THM{ConstantSum} \bd \TYPE{Inverse}}
+	{
+	   \forall v \in V^\rho \. Pv = v
+	}
+	\Say{[3]}{[1][2] \bd \FUNC{image}}
+	{	
+		\im P = V^\rho
+	} 
+	\Say{[4]}{  [2]\bd \FUNC{kernel} }
+	{  \ker P \cap \im P = 0   }
+	\Say{[5]}{\THM{KernelRankTHM}(P)\bd \FUNC{rank}}
+	{
+		\dim \ker P + \dim \im P = \dim V
+	}
+	\Conclude{[6]}{[4][5]\THM{SumDimTHM}\bd^{-1}\TYPE{DirectSum}}
+	{
+		V = \ker P \oplus \im P
+	}
+	\Say{[7]}{\THM{StructureOfTheProjection}[2][6]}
+	{
+		\Big(
+			P : \TYPE{Projetor}(V) 
+		\Big) 
+	}
+	\Conclude{[*]}{
+		[3]
+		\THM{DimensionByProjectorsTrace}(P)
+		\ByConstr P
+		\bd VS{k}(V,k)(P)
+	}
+	{
+		\dim V^\rho =
+		\dim \im P =
+		\tr P =  
+		\frac{1}{|G|} \sum_{g \in G} \tr \rho_g
+	}
+	\EndProof
+}\Page{
+	\DeclareFunc{biaveraging}
+	{
+		\prod G : \FG \.
+		\prod (V,\alpha),(W,\beta) : \REPR{A}{G} \.
+		|G| \in A^* \to \NewLine \to 
+		(V \Arrow{\LMOD{A}} W) \Arrow{\LMOD{A}} 
+		(\alpha \Arrow{\REPR{A}{G}} \beta)
+	}
+	\DefineNamedFunc{biaveraging}{T}
+	{ \mathrm{avg} \; T}
+	{
+		\frac{1}{|G|}\sum_{g \in G} \alpha_g^{-1} T \beta_g                
+	}
+	\\
+	\Theorem{FiniteGroupRepresentationProperty2}
+	{
+		\forall k : \Field \.
+		\forall G : \FG \.
+		\forall [0] : |G| \neq_k 0 \. \NewLine \. 
+		\forall (V,\rho) \in \REPR{k}{G} \.  
+		(V,\rho) : \TYPE{Irreducible}(k,G) |
+		(V,\rho) : \TYPE{Decomposable}(k,G)
+	}
+	\Assume{[0]}{V \IsNot \TYPE{Irreducible}(k,G)}
+	\Say{\Big(U,[1]\Big)}
+	{ 
+		\bd \TYPE{Irreducible}[0]
+	}
+	{
+		\sum U : \GIS(V,\rho) \.
+		U \neq 0 \And U \neq V
+	}
+	\Say{\Big(W,[2]\Big)}
+	{ \THM{LinearComplementExists}(U) }
+	{
+		\sum W \subvec{k} V \. V = U \oplus W 
+	}
+	\Say{T}{\pi_{U,W}}{\End_{\VS{k}}(V)}             
+	\Say{T'}{\frac{1}{|G|}\sum_{g \in G} \rho_g^{-1} T \rho_g  }
+	{ \End_{\VS{k}}(V)}
+	\Assume{u}{U}
+	\Conclude{[u.*]}
+	{
+		\ByConstr T'
+		\bd \GIS(V,\rho)(U)
+		\ByConstr T
+		\bd \FUNC{projectionOnAlong}
+		\bd \FUNC{Inverse}
+		\NewLine
+		\THM{ConstantSum}(|G|,u)
+		\bd \FUNC{Inverse}[00]
+	}
+	{		
+		T'u = 
+		\frac{1}{|G|} \sum_{g \in G} u \rho_g^{-1} T \rho_g = 
+		\frac{1}{|G|} \sum_{g \in G} u \rho_g^{-1} \rho_g =
+		\frac{1}{|G|} \sum_{g \in G} u  =
+		u  
+	}
+	\Derive{[3]}{\ldots}{\im T' = U \and \ker T' \cap U = 0}
+	\Assume{w}{\ker  T'}
+	\Assume{f}{G}
+	\Say{[4]}
+	{
+		\THM{AveregingLemma}
+	}
+	{
+		\NewLine :
+		w \rho_f T' = 
+		w T' \rho_f = 0 
+	}
+	\Conclude{[w.*]}{\bd \FUNC{kernel}[5]}{w\rho_f \in \ker T' }
+	\Derive{[4]}{\bd \GIS}{\Big(\ker T' : \GIS(V,\rho)\Big)}
+	\Say{[5]}{\THM{kerImLemma}[3]}{V = U \oplus \ker T'}
+	\Conclude{[1.*]}{\bd \TYPE{Decomposable}[3][4]}
+	{\Big( (V,\rho) : \TYPE{Decomposable}(k,G)  \Big)   }
+	\Derive{[1]}{I(\Imply)}
+	{
+		\Big((V,\rho) \IsNot \TYPE{Irreducible}(k,G)\Big)
+			\Imply 
+			(V,\rho) : \TYPE{Decomposable}(k,G)
+	} 
+	\Conclude{[*]}{\THM{NegativeLEM}[1]}
+	{
+		(V,\rho) : \TYPE{Irreducible}(k,G) |
+		(V,\rho) : \TYPE{Decomposable}(k,G)
+	}
+	\EndProof
+}\Page{
+	\Theorem{MaschkeTHM}
+	{
+		\forall k : \Field \.
+		\forall G : \FG \.
+		\forall [00] : |G| \neq_k 0 \.
+		\forall (V,\rho) \in \REPR{k}{G} \. \NewLine 
+		\forall [0] : \dim V < \infty \.
+		\rho : \CR(k,G) 
+	}
+	\Say{\mars}{
+		\lambda n \in \Nat \. 
+		\forall (V,\rho) \in \REPR{k}{G}
+		\dim V \le n  
+		\Imply
+		\rho : \CR(k,G)  
+	}
+	{
+		\Nat \to \Type
+	}
+	\Say{[1]}{
+	\THM{DegreeOneIsIrreducible}
+		\bd^{-1}\CR(k,G)
+		\ByConstr^{-1}
+	}
+	{
+		\mars(1)
+	}
+	\Assume{n}{\Nat}
+	\Assume{[2]}{\mars(n)}
+	\Assume{(V,\rho)}{\REPR{k}{G}}
+	\Assume{[3]}{\dim V = n + 1}
+	\Say{[4]}{\THM{FiniteGroupRepresentationProperty}(V,\rho)}
+	{ 
+		\NewLine : 
+		\Big( 
+			(V,\rho) : \TYPE{Irreducible}(k,G) 
+			\Big|
+			(V,\rho) : \TYPE{Decomposable}(k,G)
+		\Big)
+	}
+	\Assume{[5]}{\Big( (V,\rho) : \TYPE{Irreducible}(k,G)\Big)}
+	\Conclude{[5.*]}
+	{
+		\bd^{-1} \CR(k,R)[5]
+	}
+	{
+		\Big(
+			(V,\rho) : \CR(k,R)
+		\Big)
+	}
+	\Derive{[5]}{I(\Imply)}
+	{
+		\Big( (V,\rho) : \TYPE{Irreducible}(k)  \Big)
+		\Imply
+		(V,\rho) : \CR(k,R)
+	}
+	\Assume{[6]}{\Big( (V,\rho) : \TYPE{Decomposable}(k,G)\Big)}
+	\Say{\Big( U,W, [7]\Big)}
+	{
+		\bd \TYPE{Decomposable}(k,G)(V,\rho) 
+	}
+	{
+		\NewLine :
+		\sum U,W : \GIS(V,\rho) \. U,W \neq 0 \And U \oplus W =V
+	}
+	\Say{[8]}{\bd^{-1} \dim [7][3]}{\dim U \le n \And \dim W \le n}
+	\Say{[9]}{\ByConstr \mars [2][8] (U)}{\Big(\rho_{|U} : \CR(k,G)\Big)}
+	\Say{[10]}{\ByConstr \mars [2][8] (W)}{\Big(\rho_{|W} : \CR(k,G)\Big)}
+	\Say{\Big(t,u,[11]\Big)}{\bd \CR(k,G)(\rho_{|U})}
+	{
+		\NewLine :
+		\sum t \in \Nat \.
+		\sum u : t \to \TYPE{Irreducible}(k,G) \. 
+		\rho_{|U} = \bigoplus^t_{i=1} u_i
+	}     
+	\Say{\Big(s,w,[12]\Big)}{\bd \CR(k,G)(\rho_{|W})}
+	{
+		\NewLine :
+		\sum s \in \Nat \.
+		\sum w : s \to \TYPE{Irreducible}(k,G) \. 
+		\rho_{|W} = \bigoplus^s_{i=1} w_i
+	}     
+	\Say{[13]}{[7][11][12]}
+	{ 
+		\rho = 
+		\bigoplus^t_{i=1} u_i 
+		\oplus
+		\bigoplus^s_{i=1} w_i
+	}
+	\Conclude{[6.*]}
+	{
+		\bd^{-1} \CR(k,R)[13]
+	}
+	{
+		\Big(
+			(V,\rho) : \CR(k,R)
+		\Big)
+	}
+	\Derive{[6]}{I(\Imply)}
+	{
+		\Big( (V,\rho) : \TYPE{Decomposeble}(k)  \Big)
+		\Imply
+		(V,\rho) : \CR(k,R)
+	}
+	\Conclude{[n.*]}{E(|)[4][5][6]}
+	{
+		\Big( (V,\rho) : \CR(k,R) \Big)
+	}
+	\DeriveConclude{[*]}{\ByConstr \mars \bd \Nat}{\LOGIC{This}}
+	\EndProof
+}
+\newpage
+\subsection{Schur's Lemma}
+\Page{	
+	\Theorem{SchurLemma}
+	{
+		\forall 
+		(\alpha,V),(\beta,W) : \TYPE{Irreducible}(A,G) \.
+		\forall T :\alpha \Arrow{\REPR{A}{G}} \beta \.
+		T = 0 | T : \alpha \ToIso{\REPR{A}{G}} \beta 
+	}
+	\Assume{T}{\alpha \Arrow{\REPR{A}{G}} \beta}
+	\Assume{[0]}{T \neq 0}
+	\Say{[1]}{\THM{kernelIsSubrepresentation}(T)}
+	{
+		\Big(\ker T : \GIS(\alpha)\Big)
+	}
+	\Say{[2]}{\bd \TYPE{Irreducible}(V)[1]}
+	{
+		\ker T = 0 | \ker T = V
+	}
+	\Say{[3]}{\THM{ImageIsSubrepresentation}(T)}
+	{
+		\Big(\im T : \GIS(\beta)\Big)
+	}
+	\Say{[4]}{\bd \TYPE{Irreducible}(W)[2]}
+	{
+		\im T = 0 | \im T = W
+	}
+	\Say{[5]}{[0][2][4] \THM{kerRankTHM}(T)\bd \TYPE{Isomorphic}}
+	{
+		\ker T = 0 \And \im T = W
+	}
+	\Conclude{[*]}{\bd^{-1}\TYPE{Bijection} \THM{KenelTHM}}
+	{\Big( T :  \alpha \ToIso{\REPR{A}{G}} \beta  \Big)}
+	\DeriveConclude{[5]}{\LOGIC{LEM}E(|)}
+	{
+		 \LOGIC{This}
+	}
+	\EndProof
+	\\
+	\Theorem{SchurLemma1}
+	{
+		(\alpha,V),(\beta,W) : \TYPE{Irreducible}(A,G) \.
+		\forall [0] :\alpha \not \cong_{\REPR{A}{G}} \.
+		\REPR{A}{G}(\alpha,\beta) = 0 
+	}
+	\NoProof
+	\\
+	\Theorem{SchurLemma2}
+	{
+		\forall k : \ACF \.	
+		\forall (\alpha,V) : \TYPE{Irreducible}(k,G) \.
+		\forall [0] : \dim V < \infty \.
+		\NewLine \.
+		\End_{\REPR{A}{G}}(\alpha) = k\id 
+	}
+	\Assume{T}{\End_{\REPR{A}{G}(\alpha)}}
+	\Say{\lambda}{\bd \TYPE{JordanCell}\THM{CanonicalJordanForm}(T)}
+	{
+		\Spec(T)
+	}
+	\Say{[1]}{
+		\THM{charPolynomialByDet}
+		\bd \FUNC{charPolinomial}
+	}
+	{
+		\det (\lambda \id - T) = 0
+	}
+	\Say{[2]}{\THM{RepresentationMorphismsIsSubmodule}(\ldots}
+	{\lambda \id - T \in \End_{\REPR{k}{G}}}
+	\Conclude{[T.*]}{
+		\THM{SchurLemma}\bd \GRP\Big( \End_{\VS{k}}(V), k^* \Big)
+		[1][2]
+	}
+	{
+		\lambda\id = T 
+	}
+	\DeriveConclude{[*]}{\bd \TYPE{SetEq}}
+	{\End_{\REPR{k}{G}}(T) = k \id}
+	\EndProof
+	\\
+	\Theorem{IrreducibleAbeleanRepresentation}
+	{
+		\forall k : \ACF \.
+		\forall G \in \ABEL \.
+		\NewLine \.
+		\forall \rho : \TYPE{Irreducible}(k,G) \.
+		\deg V = 1
+	}
+	\NoProof
+	\\
+}
+\Page{
+	\Theorem{RepresentationDiagonalization}
+	{
+		\forall k : \ACF \.
+		\forall G \in \ABEL \And \FG \.
+		\NewLine \.
+		\forall \rho : \TYPE{Irreducible}(k,G) \.
+		\forall [0] : |G| \neq_k 0 \.
+		\forall [00] : \dim V < \infty \.
+		\exists e : \Basis(V):
+		\forall g  \in G \. 
+		\rho_g^{e,e} : \TYPE{Diagonal}
+	}
+	\NoProof
+	\\
+	\Theorem{FiniteOrderDioganalizability}
+	{
+		\forall k : \ACF \.
+		\forall V \in \FDVS{k} \.
+		\forall n \in \Nat \. \NewLine \.  
+		\forall T : \End_{\VS{k}}(V) \.
+		\forall [0] : n \neq_k 0 \.
+		\forall [00] : T^n = \id \.
+		T : \TYPE{Diagonalizable}(V)
+	}
+	\NoProof
+}
+\newpage
+\subsection{Schur Orthogonality Relations}
+\Page{
+	\DeclareFunc{finiteGroupAlgebraInnerProduct}
+	{
+		\prod k : \TYPE{ConjugationField} \.
+		\prod G : \FG \.
+		\NewLine \. 
+		G \neq_k 0 \to \TYPE{InnerProduc}{kG}
+	}
+	\DefineNamedFunc{finitefroupAlgebraInnerProduct}
+	{p,q}{ \langle p, q \rangle_G   }
+	{
+	  \frac{1}{|G|} \sum_g p(g) \overline{q(g)}
+	}
+	\\
+	\Theorem{IrreducibleMorphismAveraging}
+	{
+		\forall k : \Field \.
+		\forall G : \FG \. \NewLine \.
+		\forall (V,\alpha),(W,\beta) : \TYPE{Irreducible}(k,G) \.
+		\forall T : V : \Arrow{\VS{k}} W \.
+		\forall [0] : |G| \neq_k 0 \.
+		\forall [00] \alpha \not \cong_{\REPR{k}{G}} \beta \.
+		\NewLine \.
+		\mathrm{avg}_{\alpha,\beta}\; T = 0
+	}
+	\NoProof
+	\\
+	\Theorem{IrreducibleEndorphismAveraging}
+	{
+		\forall k : \Field \.
+		\forall G : \FG \. \NewLine \.
+		\forall (V,\rho) : \TYPE{Irreducible}(k,G) \.
+		\forall T :  \End_{\VS{k}}(V)  \.
+		\forall [0] : |G| \neq_k 0 \.
+		\mathrm{avg}_{\rho,\rho}\; T =  \frac{\tr T}{\dim V} \id
+	}
+	\NoProof
+	\\
+	\Theorem{OrthogonalBasisAveraging}
+	{
+		\forall k : \Field \.
+		\forall G : \FG \. 
+		\forall [0] : |G| \neq_k 0 \.
+		\NewLine \.
+		\forall (V,\alpha),(W,\beta) : 
+		\TYPE{OrthogonalRepresentation}(k,G) \.
+		\NewLine \. 
+		\forall e : \Basis(V) \.
+		\forall f : \Basis(W) \. 
+		\forall i \in \dim V \.
+		\forall j \in \dim W \.
+		\mathrm{avg}_{\alpha,\beta} f_j \otimes e^i = 
+		\langle \beta_{s,j}^f,\alpha_{t,i}^e \rangle_G  
+		f_s \otimes e^t
+	}
+	\Conclude{[*]}{
+		\bd\FUNC{biaveraging}
+		\THM{MixedTensorAsMap}^2
+		\bd^{-1} \FUNC{finiteGroupAlgebraInnerProduct}
+	}
+	{
+		\NewLine : 
+		\mathrm{avg}_{\alpha,\beta} f_j \otimes e^i =	
+		\frac{1}{|G|} \sum_{g \in G} 
+		\alpha^{-1}_g (f_j \otimes e^i)  \beta_g  =
+		\frac{1}{|G|} \sum_{g \in G} 
+		\overline{\alpha(g)_{i,t}} (f_j \otimes e^t)  \beta_g  =
+		\NewLine = 
+		\frac{1}{|G|} \sum_{g \in G} 
+		\overline{\alpha(g)_{t,i}}\beta(g)_{s,j} f_s \otimes e^t)=
+		\langle \beta_{s,j} ,\alpha_{t,i}\rangle_G f_s \otimes e^t
+	}
+	\EndProof
+	\\
+	\Theorem{SchurOrthogonalityRelation}
+	{
+		\forall G : \FG \.
+		\forall k : \TYPE{ConjugationField} \. \NewLine \. 
+		\forall (V,\alpha),(W,\beta) : 
+		\TYPE{Irreducible} \And \TYPE{OrthogonalRepresntation}
+		(k,G) \.
+		\forall [0] : \alpha \not \cong_{\REPR{k}{G}} \beta  \.
+		\NewLine \. 
+		\forall e : \Basis(V) \.
+		\forall f : \Basis(W) \.
+		\forall i,j \in \dim V \.
+		\forall t,s \in \dim W \.
+		\langle \alpha_{i,j}^e, \beta_{t,s}^f \rangle_G = 0 
+	}
+	\Say{[1]}{\THM{IrreducibleEndomorphismAveraging}(e^j \otimes f_s)}
+	{ \mathrm{avg}_{\alpha,\beta} \;e^j \otimes f_s = 0  }
+	\Say{[2]}{\THM{OrthogonalBasisAveraging}(\alpha,\beta,e,f,j,s)}
+	{
+		\mathrm{avg}_{\alpha,\beta} \; e^j \otimes f_s =
+		\Big\langle \alpha_{i,j}^e, \beta_{t,s}^f  \Big\rangle_G 
+		e^i \otimes f_t
+	}
+	\Conclude{[*]}
+	{
+		[1][2]
+	}
+	{
+		\langle \alpha_{i,j}^e, \beta_{t,s}^f \rangle_G = 0
+	}
+	\EndProof
+}
+\Page{
+	\Theorem{SchurOrthogonalityRelation2}
+	{
+		\forall G : \FG \.
+		\forall k : \TYPE{ConjugationField} \. \NewLine \. 
+		\forall (V,\rho) : 
+		\TYPE{Irreducible} \And \TYPE{OrthogonalRepresntation}
+		(k,G) \.
+		\NewLine \. 
+		\forall e : \Basis(V) \.
+		\forall i,j,t,s \in \dim V \.
+		\langle \alpha_{i,j}^e, \beta_{t,s}^f \rangle_G = 
+		\frac{\delta^i_t \delta_j^s}{\dim V} 
+	}
+	\NoProof
+	\\
+	\Theorem{ShurOrthogonalSet}
+	{
+		\forall G : \FG \.
+		\forall k : \TYPE{ConjugationField} \. \NewLine \. 
+		\forall (V,\rho) : 
+		\TYPE{Irreducible} \And \TYPE{OrthogonalRepresntation}
+		(k,G) \.
+		\NewLine \.	
+		\forall e : \Basis(V) \.
+		\{ \alpha_{i,j}^e | i,j \in \dim V \} 
+		: \TYPE{Orthogonal}(kG) 
+	}
+	\NoProof	
+	\\
+	\Theorem{ShurOrthogonalSet2}
+	{
+		\forall G : \FG \.
+		\forall k : \TYPE{ConjugationField} \. \NewLine \. 
+		\forall e : 
+		\prod (V,\rho) : 
+		\TYPE{Irreducible} \And \TYPE{OrthogonalRepresntation}
+		(k,G) \.  \TYPE{Basis}(V)
+		\NewLine \.	
+		\{ \alpha_{i,j}^{e(\alpha)} | 
+		(V,\rho) : \TYPE{Irreducible} \And 
+		\TYPE{OrthogonalRepresentation}(k,G)
+		i,j \in \dim V \} 
+		: \TYPE{Orthogonal}(kG) 
+	}
+	\NoProof
+	\\
+	\Theorem{RepresentationNumberBound}
+	{
+		\forall G : \FG \.
+		\forall k : \TYPE{ConjugationField} \. \NewLine \.
+		\left| \TYPE{Irreducible}(k,G \right| \le
+		\sum  \rho : \TYPE{Irreducible}(k,G) \.
+		\deg^2 \rho    \le |G|
+	}
+	\NoProof	
+}
+\newpage
+\subsection{Character Theory}
+\Page{
+	\DeclareFunc{character}
+	{
+		\prod k : \Field \. 
+		\REPR{k}{G} \to kG
+	}
+	\DefineNamedFunc{character}{(V,\rho)}
+	{\chi_\rho}{ \tr \rho  }
+	\\
+	\DeclareType{IrreducibleCharacters}
+	{
+		\prod k : \Field \.
+		\prod G \in \GRP \.
+		?kG
+	}
+	\DefineType{f}{IrreducibleCharacter}
+	{
+		\exists \rho : \TYPE{Irreducible}(k,G) \.
+		f = \chi_\rho
+	}
+	\\
+	\Theorem{IdentityCharacter}
+	{
+		\forall k : \Field \. 
+		\forall (\rho,V) \in \REPR{k}{G} \.
+		\chi_\rho(e) = \dim  V
+	}
+	\NoProof
+	\\
+	\DeclareType{ClassFunction}
+	{
+		\prod G \in \GRP \.
+		\prod X \in \SET \.
+		?(X \to G)
+	}
+	\DefineType{f}{ClassFunction}
+	{
+		\forall g,h \in G \. f(hgh^{-1}) = f(g)
+	}
+	\\
+	\Theorem{CharactersAreClass}
+	{
+		\forall k : \Field \. 
+		\forall (\rho,V) \in \REPR{k}{G} \.
+		\chi_\rho : \TYPE{ClassFunction}(G,k)
+	}
+	\NoProof
+	\\
+	\Theorem{ClassFunctionIsSubspace}
+	{
+		\forall k : \Field \.
+		\forall G \in \GRP \.
+		\TYPE{ClassFunction}(G,k) \subvec{k} kG
+	}
+	\NoProof
+	\\
+	\Theorem{ClassFunctionDimension}
+	{
+		\forall k : \Field \.
+		\forall G \in \GRP \.
+		\dim \TYPE{ClassFunction}(G,k) =
+		\left| \frac{2^G}{\Gamma_G} \right|
+	}
+	\NoProof
+	\\
+	\Theorem{FirstOrhogonalityRelation}
+	{
+		\forall k : \Field \.
+		\forall G \in \GRP \.
+		\forall \alpha,\beta : \TYPE{Irreducible}(k,G) \. 
+		\langle \chi_\alpha, \chi_\beta \rangle_G = 
+		\delta^\alpha_\beta
+	}
+	\NoProof
+	\\
+	\Theorem{IrreducibleRepresentationClassBound}
+	{
+		\forall k : \Field \.
+		\forall G \in \GRP \.
+		\Big| \TYPE{Irreducible}(k,G) \Big| \le 
+		\left| \frac{2^G}{\Gamma_G} \right|
+	}
+	\NoProof
+}
+\Page{
+	\Theorem{SumOfCharacters}
+	{
+		\forall k : \Field \.
+		\forall G \in \GRP \.
+		\forall \alpha,\beta \in \REPR{k}{G} \.
+		\chi_{\alpha \oplus \beta} = \chi_\alpha + \chi_\beta
+	}
+	\NoProof
+	\\
+	\Theorem{CharacterMultiplicityDerivation}
+	{
+		\forall k : \TYPE{ConjugationField} \.
+		\forall G \in \GRP \.
+		\forall n \in \Nat \.
+		\NewLine \.
+		\forall \rho : n \ToInj \TYPE{Irreducible}(k,G) \.
+		\forall \varphi \in \REPR{k}{G} \.
+		\forall m : n \to \Int_+ \.
+		\NewLine \. 
+		\forall [0] : \varphi \cong \bigoplus^n_{i=1} m_i\rho_i \.
+		\forall i \in n \.
+		\langle \chi_{\rho_i},\chi_\varphi \rangle = m_i
+	}
+	\NoProof
+	\\
+	\Theorem{IrreducibleByNorm}
+	{
+		\forall k : \TYPE{ConjugationField} \.
+		\forall G \in \GRP \.
+		\forall \rho \in \REPR{k}{G} \.
+		\NewLine 
+		\rho : \TYPE{Irreducible}(k,G) \iff
+		\langle \chi_\rho, \chi_\rho \rangle = 1
+	}
+	\NoProof
+	\\
+	\DeclareFunc{regularRepresentation}
+	{
+		\prod R \in \ANN \.
+		\prod G \in \GRP \.
+		\REPR{R}{G}
+	}
+	\DefineNamedFunc{regularRepresentation}{}{L_G}
+	{
+		\Big(
+		RG, \lambda g \in G \. \Lambda f \in RG 
+		\Big)
+	}
+	\\
+	\Theorem{RegularRepresentationCharacter}
+	{
+		\forall G : \FG \.
+		\chi_{L_G} = |G|\mathrm{d}e 
+	}
+	\Assume{g}{G}
+	\Assume{[1]}{g \neq 1}
+	\Assume{f}{G}
+	\Conclude{[f.*]}
+	{
+		\bd L_G 
+		\THM{BijectiveGroupMultiplication}[1]
+		\bd \TYPE{Neutral}(G)(e)}
+	{
+		L_G(g)(f) = gf \neq ef = f 
+	}
+	\DeriveConclude{[g.*]}
+	{I(\forall)\bd^{-1} \FUNC{trace} \bd^{-1} \chi_L}
+	{
+		\chi_{L_G}(g) = \tr L_G(g) =  0
+	}
+	\Derive{[1]}{I(\forall)I(\Imply)}
+	{
+		\forall g \in G \.
+		g \neq e \Imply
+		\chi_{L_G}(g) = 0 	
+	} 
+	\Say{[2]}{
+		\bd \chi_{L_G}(e)
+		\bd \GRP \Big(G,\End_{\VS{k}}(V)\Big)
+	}
+	{
+		\chi_{L_G}(e) =  
+		\tr \id = 
+		\dim kG = 
+		|G|
+	}
+	\Conclude{[*]}
+	{
+		\bd^{-1} \mathrm{d}e [1][2]
+	}
+	{
+		\chi_{L_G} = |G|\mathrm{d}e
+	}
+	\EndProof
+}\Page{
+	\Theorem{RegularRepresentationStructure}
+	{
+		\forall G : \FG \.
+		\forall k : \TYPE{ConjugationField} \.
+		\forall n \in \Nat \. \NewLine \.
+		\forall [0] : |G| \neq_k 0 \. 
+		\forall \rho : n \ToIso{\SET} \TYPE{Irreducible}(k,G) \.
+		L_G \cong \bigoplus^n_{i=1} (\deg \rho_i)\rho_i 
+	}
+	\Say{[1]}{\THM{MaschkeTHM}[0]}{\Big( L_G : \CR(k,G)  \Big) }
+	\Say{\Big( m, [2] \Big)}
+	{ \bd \CR(k,G \bd \rho) }
+	{
+		\sum m : n \to \Nat \. 
+		L \cong \bigoplus^n_{i=1} m_i\rho_i
+	}		                           
+	\Assume{i}{n}
+	\Conclude{[i.*]}{
+		\THM{CharacterMulttiplicityDerivation}([2],i)
+		\bd \TYPE{finiteGroupAlgebraInnerProduct}(k,G)
+		\NewLine 
+		\THM{RegularRepresentationCharacter}(k,G)
+		\bd \chi_\rho(e)
+		\bd \FUNC{inverse}
+	}
+	{
+		\NewLine :
+		m_i = \langle\chi_L , \chi_{\rho_i}\rangle_G = 
+		\frac{1}{|G|}\sum_{g \in G} \chi_L(g)\overline{\chi_{\rho}(g)} =
+		\frac{|G|}{|G|}\overline{\chi_\rho(e)} =
+		\deg \rho_i
+	}
+	\Derive{[3]}{I(\forall)}{\forall i \in n \. m_i = \deg \rho_i}
+	\Conclude{[*]}{[3][2])}{L \cong_{\REPR{k}{G}} \bigoplus^n_{i=1} (\deg \rho_i)\rho_i}
+	\EndProof
+	\\
+	\Theorem{GroupSizeByIrreducibleDegrees}
+	{
+		\forall G : \FG \.
+		\forall k : \TYPE{ConjugationField} \.
+		\forall n \in \Nat \. \NewLine \.
+		\forall [0] : |G| \neq_k 0 \. 
+		\forall \rho : n \ToIso{\SET} \TYPE{Irreducible}(k,G) \.
+		|G| =\sum^n_{i=1} (\deg \rho_i)^2 
+	}
+	\NoProof
+	\\
+	\Theorem{SchurOrthogonalSet2}
+	{
+		\forall G : \FG \.
+		\forall k : \TYPE{ConjugationField} \. \NewLine \. 
+		\forall e : 
+		\prod (V,\rho) : 
+		\TYPE{Irreducible} \And \TYPE{OrthogonalRepresntation}
+		(k,G) \.  \TYPE{Basis}(V)
+		\NewLine \.	
+		\{ \alpha_{i,j}^{e(\alpha)} | 
+		(V,\rho) : \TYPE{Irreducible}(k,G) :
+		i,j \in \dim V \} 
+		: \TYPE{OrthogonalBasis}(kG) 
+	}
+	\NoProof
+	\\
+}\Page{
+	\Theorem{CharactersAreOrthogonalBasisOfClass}
+	{
+		\forall G : \FG \.
+		\forall k : \TYPE{ConjugationField} \.
+		 \NewLine \.
+		\forall [0] : |G| \neq_k 0 \. 
+		\{\chi_{\rho}| \rho : \TYPE{Irreducible}(k,G)\} :
+		\TYPE{OrhogonalBasis}\Big(\TYPE{ClassFunction}(k,G)\Big)
+	}
+	\Assume{f}{\TYPE{ClassFunction}(k,G)}
+	\Say{\Big( e,\alpha, [1] \Big)}{\THM{SchurOrthoginalSet2}}
+	{
+		\sum e : \prod (V,\rho) : \TYPE{Irreducible}(k,G) \. \Basis(V) \.
+		\NewLine \. 
+		\sum \alpha : \prod (V, \rho) : \TYPE{Irreducible}(k,G) \.   
+		f = \sum (V,\rho) : \TYPE{Irreducible}(k,G) \.  
+		\sum^{\dim V}_{i,j=1} \alpha_{i,j} \rho^{e,e(\rho,V)}_{i,j} 
+	}
+	\Assume{x}{G}
+	\Conclude{[x.*]}{
+		\bd \TYPE{ClassFunction}(k,G)
+		[1]
+		\bd \FUNC{coordinates}(e)
+		\bd \GRP\Big( G, \End_{\VS{k}}(V) \Big)(\rho)
+		\NewLine \. 
+		\bd^{-1} \FUNC{biaveraging}
+		\THM{EndomorpgismAveraging}
+		\bd^{-1}\FUNC{character}
+	}
+	{
+		\NewLine \.
+		f(x) =
+		\frac{1}{|G|}\sum_{g \in G} f(g^{-1}xg) =
+		\frac{1}{|G|}\sum_{g \in G}  \sum (V,\rho) : \TYPE{Irreducible}(k,G) \. \sum^{\dim V}_{i,j=1} \. 
+		\alpha_{\rho,i,j}\rho_{i,j}^{e,e(\rho,V)}(g^{-1}x g) = \NewLine = 
+		\sum (V,\rho) : \TYPE{Irreducible}(k,G) \. \sum^{\dim V}_{i,j=1}   
+		\frac{\alpha_{\rho,i,j}}{|G|} \sum_{g \in G}  	\Big( \rho^{-1}(g) \rho(x)\rho(g)\Big)_{i,j=1}^e =
+		\NewLine =
+		\sum (V,\rho) : \TYPE{Irreducible}(k,G) \. \sum^{\dim V}_{i,j=1} 
+		\frac{\alpha_{\rho,i,j}}{|G|}\Big( (\mathrm{avg} \; \rho(x)\Big)_{i,j}^e =
+		\NewLine = 
+		\sum (V,\rho) : \TYPE{Irreducible}(k,G) \. \sum^{\dim V}_{i,j=1} 
+		\alpha_{\rho,i,j}\left(  \frac{\tr \rho(x)}{\deg \rho} \id \right)_{i,j}^e 
+		= \NewLine = 
+		\sum (V,\rho) : \TYPE{Irreducible}(k,G) \. \sum^{\dim V}_{i=1} 
+		\frac{\alpha_{\rho,i,i}}{\deg \rho}\chi_\rho(x) 	
+	}
+	\DeriveConclude{[f.*]}{I(\to)}{
+		f = 
+		\sum (V,\rho) : \TYPE{Irreducible}(k,G) \. 
+		\sum^{\dim V}_{i=1}  \frac{\alpha_{\rho,i,i}}{\deg \rho} \chi_\rho
+	}
+	\Derive{[1]}{\bd^{-1}\TYPE{Generating}}
+	{
+		\Big(  \TYPE{Irreducible}(k,G) : \TYPE{Generating} \; \TYPE{ClassFunction}(k,G) \Big)
+	}
+	\Conclude{[*]}{\bd^{-1} \TYPE{Basis}[1]\THM{FirstOrhogonalityRelation}}
+	{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{NumberOfIrreducibleRepresentations}
+	{
+		\forall G : \FG \.
+		\forall k : \TYPE{ConjugationField} \.
+		\NewLine \.
+		\Big|\big\{ \rho : \TYPE{Irreducible}(k,G)\big \}\Big| = \left| \frac{G}{\Gamma_G} \right|
+	}
+	\NoProof
+}\Page{
+	\DeclareFunc{characterMatrix}
+	{
+		\prod G : \FG \.
+		\prod k : \TYPE{ConjugationField} \.
+    		\TYPE{Irreducible}(k,G) \times \frac{G}{\Gamma_G} \to k		
+	}
+	\DefineNamedFunc{charactecterMatrix}{\rho,A}{\mathbf{Ch}_{\rho,A}}
+	{
+		\chi_\rho(A)
+	}
+	\\
+	\Theorem{SecondOrthogonalityRelation}
+	{
+		\forall G : \FG \.
+		\forall k : \TYPE{ConjugationFiels} \. \NewLine \.
+		\mathbf{Ch}(G,k)\mathbf{Ch}^\top(G,k) 
+		= \FUNC{diagonal}\left(   \Lambda A \in \frac{G}{\Gamma_G} \. \frac{|G|}{|A|}   \right)
+	}
+	\Assume{A,B}{\frac{G}{\Gamma_G}}
+	\Say{[1]}
+	{
+		\bd^{-1} \TYPE{finiteGrpupAlgebraInnerProduct}
+		\Big(\THM{GrammSmidtProcess}(\chi)\Big)^2(\delta_a)(\delta_b)
+		\NewLine \,
+		\bd \TYPE{Orthonormal}(\chi)
+		\bd \delta_A \bd \delta_B
+		\bd^{-1} \mathbf{Ch}(G,k)
+	}
+	{
+		\NewLine : 
+		\delta_A^B = 
+		\frac{1}{|A|}\langle \delta_A, \delta_B  \rangle_G =  
+		\frac{1}{|A|}
+		\left\langle  \sum_\rho \langle \delta_A,\chi_\rho \rangle \chi_\rho  
+		, \sum_\rho \langle \delta_B, \chi_\rho \rangle \chi_\rho \right\rangle_G = \NewLine =       
+		\frac{1}{|A|} \sum_\rho \langle \chi_\rho, \delta_A \rangle \langle \chi_\rho, \delta_B\rangle_G =
+		\frac{1}{|A||G|} \sum_\rho \sum_{a \in A} \sum_{b \in B} 
+		\chi_\rho(a)\chi_\rho(b) =   
+		\frac{|B|}{|G|}  \Big(\mathbf{Ch}(G,k) \mathbf{Ch}(G,k)^\top\Big)_{A,B}
+	}
+	\Conclude{\Big[(A,B).*\Big]}
+	{
+		[1]\frac{|G|}{|B|}		
+	}
+	{
+		\Big(\mathbf{Ch}(G,k)\Big)_{A,B} =   \frac{|G|}{|B|} \delta^A_B            
+	}
+	\DeriveConclude{[*]}{I(\forall)\bd \FUNC{deltaOfKronecker}\bd^{-1} \FUNC{matrixMultiplication}}
+	{
+		\LOGIC{This}
+	}
+	\EndProof
+}
+\newpage
+\subsection{Finite Fourier Transform}
+\Page{
+	\DeclareFunc{finiteGroupFourierTransform}
+	{
+		\prod G : \FG  \. \prod k : \Field \.  \NewLine \. 
+		kG  \to \prod (V,\rho) : \TYPE{Irreducible}(G,k) \. \End_{\VS{k}}(V)
+	}
+	\DefineNamedFunc{finiteGroupFourierTransform}{f}{\widehat{f}}{  
+		\Lambda (V,\rho) : \TYPE{Irreducible}(k,G) \. 
+		\sum_{g \in G} f(g)\overline{\rho(g)}                    
+	}
+	\\
+	\DeclareFunc{inverseFiniteGroupFourierTransform}
+	{
+		\prod G : \FG  \. \prod k : \Field \.  \NewLine \. 
+		\left(\prod (V,\rho) : \TYPE{Irreducible}(k,G) \. \End_{\VS{k}}(V)\right) \to kG
+	}
+	\DefineNamedFunc{finiteGroupFourierTransform}{T}{\widehat{T}}{  
+		\Lambda g \in G \. 
+		\frac{1}{n} \sum (\rho,V) : \TYPE{Irreducible}(k,G) \.
+		(\dim V)  \langle T_{\rho}, \rho(g) \rangle   
+		\NewLine
+		\where \quad  n = \Big| G \Big|
+	}
+	\\
+	\Theorem{FourierInversion}
+	{
+		\forall G : \FG \.
+		\forall k : \Field \.
+		\forall f \in kG \.
+		\hat{ \hat f } = f
+	}
+	\Assume{g}{G}
+	\Conclude{[g.*]}{
+		\bd \FUNC{inverseFiniteGroupFourierTransform}(\hat f)
+		\bd \FUNC{finiteGroupFourierTransform}(f) \NewLine \.
+		\bd^{-1}  \TYPE{finiteGroupAlgebraInnerProduct}(k,G)
+		\THM{GrammSchmidtTHM}(f)
+	}
+	{
+		\NewLine 
+		\hat{ \hat f }(g) = 
+		\frac{1}{n}  \sum (\rho,V) : \TYPE{Irreducible}(k,G) \. (\dim V) \Big\langle {\hat f}(\rho), \rho(g) \Big\rangle =
+		\NewLine = 
+		\frac{1}{n}  \sum (\rho,v) : \TYPE{Irreducible}(k,G) \. (\dim V) \sum_{h \in G} f(h) 
+		\Big\langle \overline{\rho(h)},\rho(g) \Big\rangle = \NewLine = 
+		\sum \rho : \TYPE{Irreducible}(k,G) \.
+		(\dim V) \langle  f, \rho_{i,j} \rangle_G \rho_{i,j}(g) = 
+		f(g)
+	}
+	\DeriveConclude{[*]}{I(=,\to)}{\hat{\hat f} = f }
+	\EndProof
+	\\
+	\Theorem{FourierTransformInversion}
+	{
+		\forall G : \FG \.
+		\forall k : \TYPE{ConjugationField} \.
+		\forall [0] : |G| \neq_k 0 \. \NewLine \. 
+		\FUNC{finiteGroupFourierTransform} : kG \ToIso{\VS{k}} \prod (V,\rho) : \TYPE{Irreducible}(k,G) \. \End_{\VS{k}}(V)  
+	}
+	\NoProof
+}\Page{
+	\Theorem{WedderburnFourierTransformTheorem}
+	{
+		\forall G : \FG \.
+		\forall k : \Field \. \NewLine \. 
+		\FUNC{finiteGroupFourierTransform} : kG \ToIso{\LALGE{k}} \prod (V,\rho) : \TYPE{Irreducibke}(k,G) \. 
+		\End_{\VS{k}}(V)
+	}
+	\Assume{x,y}{kG}
+	\Assume{(\rho,V)}{\TYPE{Irreducible}(k,G)} 
+	\Conclude{\Big[(\rho,V).* \Big]}{
+		\bd \FUNC{finiteGroupFourierTransform}(x,y)
+		\bd kG 
+		\bd \GRP\Big(G, \End_{\VS{k}}(V)\Big)(\rho)
+		\bd \GRP G
+		\NewLine
+		\bd^{-2} \FUNC{finiteGroupFourierTransform}(x)(y) 
+	}
+	{
+		\NewLine : 
+		\widehat{xy}(\rho,V) = 
+		\sum_{g \in G} xy(g)\overline{\rho(g)} = 
+		\sum_{g \in G} \sum_{hf = g} x(h)y(f)\overline{\rho(g)} =
+		\sum_{g \in G} \sum_{hf = g} x(h)y(f)\overline{\rho(h)}\overline{\rho(f)} = \NewLine = 
+		\sum_{h,f \in G} \Big( x(h)\overline{\rho(h)}\Big)\Big( y(f) \overline{\rho(f)} \Big) =
+		\widehat{x}(\rho,V)\widehat{y}(\rho,V)
+	}
+	\DeriveConclude{\Big[(x,y).*\Big]}{I(=,\to)}
+	{
+		\widehat{xy} = \widehat{x}\widehat{y}   
+	}
+	\DeriveConclude{[*]}{\bd^{-1}\LALGE{k} \prod (\rho,V) : \TYPE{Irreducible}(k,G) \. \End_{\VS{k}}(V)}
+	{
+		\NewLine : 
+		\left( 
+			\FUNC{finiteGroupFourierTransform} : kG \Arrow{\LALGE{k}} 
+			\prod (\rho,V) : \TYPE{Irreducible}(k,G) \. \End_{\VS{k}}(V) 
+		\right) 
+	}
+	\EndProof
+	\\
+	\Theorem{AbeleanGroupAlgebraStructure}
+	{
+		\forall G : \FG \And \Abel \.
+		\forall k : \Field \.
+		kG \cong_{\LALGE{k}} k^{|G|}
+	}
+	\NoProof
+}
+\newpage
+\subsection{First Burnside's Theorem}
+\Page{
+	\Theorem{CharacterIsAlgebraicInteger}
+	{
+		\forall  G : \FG \.
+		\forall  \chi : \TYPE{Character}(\Complex, G) \.
+		\im \chi \subset \Int(\Complex)
+	}
+	\Say{\Big( (V,\rho), [1] \Big)}{\bd \TYPE{Character}(k,G)(\chi)}
+	{
+		\sum (V,\rho) \in \REPR{\Complex}{G} \. \chi = \chi_{\rho}                          
+	}
+	\Assume{g}{ G  }
+	\Say{n}{o(g)}{\Nat}
+	\Say{[2]}{  
+		\bd \GRP\Big( G, \End_{\LALGE{k}}(V) \Big)  
+		\ByConstr n
+		\bd \FUNC{order}(g)
+		\bd \GRP\Big( G, \End_{\LALGE{k}}(V) \Big)  
+	}
+	{ 
+		\rho^n(g) = 
+		\rho(g^n) = 
+		\rho(e) 
+		= \id 
+	}
+	\Say{[3]}{
+		\bd \TYPE{MinimalPolynomial} [2] 
+	}
+	{
+		m_{\rho(g)}(x) \Big| x^n - 1
+	}
+	\Say{[4]}{\THM{MinimalPolynomialTHM}(\rho(g))\bd \TYPE{AlgebraicInteger}}
+	{  \Spec \rho(g) \subset \Int(\Complex) }
+	\Conclude{[g.*]}{ [1]\bd \FUNC{charactrer} \THM{TraceBySpectre}[4]  }
+	{	
+		\chi(g) = 
+		\tr \rho(g) =  
+		\sum_{\lambda \in \Complex} \lambda \sigma_{\rho(g)}(\lambda) \in \Int(\Complex)
+	}
+	\Derive{[*]}{\bd^{-1} \TYPE{Subset} \bd^{-1} \FUNC{image}}
+	{
+		\im \chi \subset \Int(\Complex)
+	}
+	\EndProof
+	\\
+	\Theorem{IrreducibleCharacterIsAlgebraicInteger}
+	{
+		\forall  G : \FG \.
+		\forall  (V,\rho) : \TYPE{Irreducible}(\Complex, G) \. 
+		\NewLine \. 
+		\forall  g \in G \. 
+		\frac{|\gamma_G(g)|}{\deg \rho} \chi_\rho(g) \in \Int(\Complex)
+	}
+	\Say{T}{\lambda A \in \frac{G}{\gamma_G} \. \sum_{a \in A} \rho(a) }{\End_{\VS{\Complex}}(V)}
+	\Assume{A}{ \frac{G}{\gamma_G} }	
+	\Say{\Big(g,[0]\Big)}{\bd \frac{2^G}{\Gamma_G}}{\sum g \in G \. A = \gamma(g) } 
+	\Assume{h}{G}
+	\Conclude{[h.*]}{
+		\ByConstr T_A
+		\bd \LALGE{\Complex}(\End_{\VS{\Complex}}(V))
+		\bd \GRP\Big(G,\End_{\VS{\Complex}}(V)\Big)(\rho)
+		\THM{ConjugationClassSummation}(A)                                                             
+	}
+	{
+		\NewLine:
+		\rho^{-1}(h) T_A \rho(h) =
+		\rho^{-1}(h)\left( \sum_{a \in A} \rho(a)  \right)\rho(h) =
+		\sum_{a \in A}  \rho^{-1}(h)\rho(a) \rho(h) = 
+		\sum_{a \in A}  \rho\Big(hah^{-1}\Big) =
+		\sum_{a \in A}  \rho(a) = 
+		T_A
+	}
+	\Derive{[1]}
+	{
+		I(\forall)
+	}
+	{
+		\forall h \in G \. 
+		\rho^{-1}(h) T_A \rho(h) = T_A
+	}
+	\Say{[2]}{\bd^{-1} \FUNC{biaveraging}[1]\THM{EndomorphidmAveraging}(\rho)}
+	{ T_A = \mathrm{avg} \; T_A = \frac{\tr T_A}{\dim V} {\id}_V }
+	\Say{[3]}{ 
+		\ByConstr T_A \bd \VS{\Complex}\Big(\End_{\VS{\Complex}},\Complex\Big)(\tr)
+		\bd^{-1} \FUNC{character}
+		[0]
+	}
+	{
+		\tr T = 
+		\sum_{a \in A} \tr \rho(a) =
+		\sum_{a \in A} \chi_\rho(a) =
+		|A| \chi_\rho(g) 
+	}
+	\Conclude{[A.*]}{[2][3]}{T_A= \frac{|A|\chi_\rho(g)}{\dim V} \id}
+	\Derive{[1]}{I(\forall)}{\forall A \in \frac{G}{\gamma_G} \. T_A = \frac{|A|\chi_\rho(A)}{\dim V}}
+	\Assume{A,B}{\colim \gamma_G}
+	\Say{n}{\Lambda g \in G \. \Big|\big\{  (a,b) \in A \times B : g = ab \big\} \Big|}
+	{
+		G \to \Int
+	}
+	\Say{[2]}{ \ByConstr T \bd \GRP\left(G, \End_{\VS{\Complex}}(V) \right)(\rho)\ByConstr^{-1}(n)}
+	{
+		T_AT_B = 
+		\sum_{a \in A} \sum_{b \in B} \rho(a)\rho(b) =
+		\sum_{a \in A} \sum_{b \in B} \rho(ab) =
+		\sum_{g \in G} n_g \rho(g)
+	}
+}
+\Page{
+	\Assume{C}{\colim \gamma_G}
+	\Assume{h,f}{C}
+	\Say{\Big(x,[3]\Big)}{\bd \colim \gamma_G (C)(h,f)}{\sum x \in G \. f = xhx^{-1} }
+	\Assume{a}{A}
+	\Assume{b}{B}
+	\Assume{[4]}{ab = h}
+	\Conclude{[4.*]}{\bd \TYPE{Inverse}[4][3]}{xax^{-1}xbx^{-1} = xabx^{-1} = xhx^{-1} = f}
+	\Derive{[4]}{I(\Imply)}{ab = h \Imply xax^{-1}xbx^{-1} = f}  
+	\Assume{[5]}{ab = f}
+	\Conclude{[5.*]}{\bd \TYPE{Inverse}[5][3]}{x^{-1}axx^{-1}bx = x^{-1}abx = x^{-1}fx = h}
+	\DeriveConclude{[a.*]}{I(\Imply)}{ab = f \Imply x^{-1}axx^{-1}bx = h}  
+	\DeriveConclude{[C.*]}{\bd^{-1} n}{ n_h = n_f}
+	\Derive{[3]}{I^2(\forall)}{ \forall C \in \colim \gamma_G \. \forall h,f \in C \. n_h = n_f  }
+	\Conclude{\Big[(A,B).*\Big]}{[3][2]}{ T_AT_B = \sum_{C \in \colim \gamma_G} n_C T_C}
+	\Derive{[2]}{I(\forall)I(\exists)}
+	{
+		\forall A,B \in \colim \gamma_G \. 
+		\exists n : (\colim \gamma_G) \to \Int \.
+		T_AT_B = \sum_{C \in \colim \gamma_G} n_C T_C
+	}
+	\Conclude{[*]}{\THM{AlgebraicIntegerByIntegralSums}[1][2]}{\frac{|\gamma_G(g)|\chi_\rho(g)}{\dim V} \in \Int(\Complex)}
+	\EndProof
+	\\
+	\Theorem{DimensionTHM}
+	{
+		\forall G : \FG \.
+		\forall \rho : \TYPE{Irreducible}(\Complex, G) \.
+		\deg \rho \Big| |G|
+	}
+	\Say{[1]}{\THM{Orthonormal}(\chi_\rho)\bd \FUNC{finiteGroupAlgebraInnerProduct}}{
+		1 = 
+		\langle \chi_\rho,\chi_\rho \rangle_G =
+		\frac{\dim V}{|G|\dim V} \sum_{g \in G} \chi_\rho(g) \overline{\chi_\rho(g)}	
+	}
+	\Say{[2]}{ 
+		\frac{|G|}{\dim V} [1] 
+		\THM{DisjointConjugasyClasses} \bd \TYPE{ClassDunction}(\chi_\rho)
+		\NewLine 
+		\THM{CharacterIsAlgebraicInteger}(G)
+		\THM{IrreducibleCharacterIsAlgebraicInteger}(G)
+		\bd \ANN \Big(\Int(\Complex)\Big)
+	}
+	{
+		\NewLine : 
+		\frac{|G|}{\dim V} =
+		\frac{1}{\dim V} \sum_{g \in G} \chi_\rho(g) \overline{\chi_\rho(g)}  = 
+		\frac{1}{\dim V} \sum_{C \in \colim \gamma_G} |C| \chi_\rho(C) \overline{\chi_\rho(C)} =
+		\sum_{C \in \colim \gamma_G} \frac{|C|}{\dim V} \chi_\rho(C) \overline{\chi_\rho(C)} 
+		\in \Int(\Complex)
+	}
+	\Say{[3]}{\THM{RealAlgebraicInteger}[2]}
+	{
+		\frac{|G|}{\dim V} \in \Int
+	}
+	\Say{[4]}{\bd \TYPE{Divides} [3]\bd^{-1} \deg \rho}{\deg \rho \Big| |G|}
+	\EndProof
+}\Page{
+	\Theorem{DegreeOneRepresentationsNumber}
+	{
+		\forall G : \FG \.
+		\big\{ \rho \in \REPR{\Complex}{G} \big| \deg \rho = 1 \big\} 
+		\cong_{\SET} \frac{G}{[G,G]} 
+	}
+	\Assume{\rho}{\REPR{\Complex}{G}}
+	\Assume{[1]}{\deg \rho = 1}
+	\Say{[2]}{[1]\bd \deg \rho}{ \im \rho : \TYPE{Cyclic} }
+	\Say{[3]}{\THM{IsomorphismTHM}(\rho)}{\im \rho \cong_{\GRP} \frac{G}{\ker \rho} }
+	\Say{[4]}{\THM{AbeleanQuatient}[3]}{   [G,G] \subset \ker \rho  }
+	\Conclude{F(\rho)}{\Lambda [g] \in \frac{G}{[G,G]} \. [4](\rho(g))}{\TYPE{Irreducible}\Act{\Complex,\frac{G}{[G,G]}}}
+	\Derive{F}{I(\to)}{ \Big\{ \rho \in \REPR{\Complex}{G} \big| \deg \rho = 1 \Big\} \to 
+		\TYPE{Irreducible}\Act{\Complex, \frac{G}{[G,G]}}  
+	}
+	\Say{\Pi}{\Lambda \rho : \TYPE{Irreducible}\Act{\Complex,\frac{G}{[G,G]}} \. \pi_{[G,G]} \rho}
+	{
+		\TYPE{Irreducible}\Act{\Complex,\frac{G}{[G,G]}} \to 
+		\Big\{  \rho \in \REPR{\Complex}{G} \big| \deg \rho = 1     \Big\}
+	}
+	\Say{[1]}{\ByConstr F \ByConstr \Pi}{ \Pi = F^{-1}}
+	\Conclude{[*]}{
+		\bd \TYPE{isomorphic}[1]
+		\THM{GroupSizeIrreducibleByDegrees}\Act{ \frac{G}{[G,G]}, \Complex }
+		\NewLine :
+		\THM{IrreducibleAbeleanRepresentation}\Act{ \frac{G}{[G,G]}, \Complex }
+	}{
+		\NewLine :
+		\Big\{  \rho \in \REPR{\Complex}{G} \big| \deg \rho = 1  \Big\}
+		\cong_{\SET}
+		\TYPE{Irreducible}\Act{\Complex, \frac{G}{[G,G]}}
+		\cong_{\SET} 
+		\frac{G}{[G,G]}
+	}
+	\EndProof
+	\\
+	\Theorem{BurnsideScalarLemma}
+	{
+		\forall G : \FG \.
+		\forall A \in \colim \gamma_G \.
+		\forall (V,\rho) : \TYPE{irreducible}(\Complex,G) \.
+		\NewLine \. 
+		\forall [0] : \Big(|A|,\deg \rho \Big) : \TYPE{Coprime} \.
+		\Big( 
+			\exists \lambda \in \Complex \. \forall g \in A \. \rho(g) = \lambda \id    
+		\Big) \Big| \chi_\rho(C) = 0
+	}
+	\Assume{g}{A}
+	\Assume{[1]}{ \forall \lambda \in \Complex \. \rho(g) \neq \lambda \id }
+	\Say{\Big(a,b,[2]\Big)}{\THM{DivisionWithReminder}(|A|,\deg \rho,[0])}
+	{
+		\sum a,b \in \Int \.  a|A| + b \deg \rho = 1
+	}
+	\Say{c}{\frac{\chi_\rho(g)}{\deg \rho}}{\Complex} 
+	\Say{[3]}
+	{
+		\ByConstr c
+		[2]
+		\bd \FUNC{inverse}(\Rats)(\deg \rho)
+		\THM{CharacterIsAlgebraicInteger}(\rho)\NewLine 
+		\THM{IrreducibleCharacterIsIrreducibleInnteger}(\rho)
+		\bd \ANN \Int(\Complex)
+	}
+	{
+		\NewLine
+		c =
+		\frac{\chi_\rho(g)}{\deg \rho } = 
+		\frac{\Big( a|A| + b \deg \rho) \chi_\rho(g)  }{\deg \rho} =
+		a\frac{|A|}{\deg \rho} \chi_\rho(g) + b \chi_\rho(g) \in \Int(\Complex)
+	}
+	\Say{\Big(n, \lambda , e,[4]\Big)}{\THM{UnipotentStrucure}(\rho(g))}
+	{
+		\sum n \in \Nat \.
+		\sum \lambda : (\deg \rho) \to \TYPE{RootsOfUnity}(\Complex,n) \. \NewLine \. 
+		\sum e : \TYPE{Basis}(V) \.
+		\rho(g)^{e,e} = \mathrm{diag}(\lambda)
+	}
+	\Say{\Big(i,j,[5]\Big)}{[1][4]}{\sum i,j \in \deg \rho \. \lambda_i \neq \lambda_j}
+	\Say{[6]}{\bd \FUNC{character}(\rho,g)[4][5] \THM{IteratedTriangleInequality}(\lambda)}
+	{
+		\Big| \chi_\rho(g) \Big| = 
+		\left| \sum^{\deg \rho}_{i=1} \lambda_i \right| < \deg \rho_i
+	}
+	\Say{[7]}{[6]\ByConstr \alpha}{ |\alpha| < 1 }
+	\Say{[8]}{[5]\ByConstr \alpha}{ \alpha \in \Rats[\omega_n]  }
+}\Page{
+	\Assume{\sigma}{G(\omega_n)}
+	\Say{[*.1]}{\THM{GaloisActionPreservesAlgebraicInteger}}{ \sigma( \alpha) \in \Int(\Complex)  }
+	\Conclude{[*.2]}{ \ByConstr \alpha \bd G(\omega_n) \bd \lambda \THM{IteratedTriangleIneq}(\sigma(\lambda)) }
+	{|\sigma(\alpha)| < 1}
+	\Derive{[9]}{I(\forall)}
+	{
+		\forall \sigma \in G(\omega_n) \. 
+		\sigma(\alpha) \in \Int(\Complex) \And \Big|\sigma(\alpha)\Big| < 1                                                  
+	}
+	\Say{q}{\prod_{\sigma \in G(\omega_n)} \sigma(\alpha) }{\Int(\Complex)}
+	\Say{[10]}{
+		\Lambda \phi \in G(\omega_n) \. 
+		\ByConstr q
+		\bd \LALGE{\Complex}\Big( \Rats[\omega_n], \Rats[\omega_n] \Big)(\phi) 
+		\THM{GroupCyclingProduct}\Big( G(\omega_n) \Big) 
+		\ByConstr^{-1} q
+	}
+	{
+		\NewLine :
+		\forall \sigma \in G(\omega_n) \.
+		\phi(q) = 
+		\phi\Act{ \prod_{\sigma \in G(\omega_n)} \sigma(\alpha ) } =
+		\prod_{\sigma \in G(\omega_n)} \phi\sigma(\alpha) =
+		\prod_{\sigma \in G(\omega_n)} \sigma(\alpha) =
+		q
+	}
+	\Say{[11]}{\THM{GaloisInvariantIsBase}[10]}{q \in \Rats}
+	\Say{[12]}{\THM{RationalAlgebraicInteger}[11]}{q \in \Int}
+	\Say{[13]}{\THM{CauchySchwartzTHM}[9]}{|q|<1}
+	\Say{[14]}{ |12||13| }{ q = 0}
+	\Conclude{[1.*]}{\ByConstr q \bd G(\omega_n)[14]\ByConstr \alpha }{\chi_\rho(g) = 0}
+	\Derive{[1]}{I(\Imply)}
+	{
+		\Big( 
+			\forall \lambda \in \Complex \.
+			\rho(g) \neq \lambda \id
+		\Big) 
+		\Imply
+		\chi_\rho(g) = 0
+	}
+	\Assume{g,f}{A}
+	\Assume{\lambda}{\Complex}
+	\Assume{[1]}{ \rho(g) = \lambda \id }
+	\Say{\Big(x,[2]\Big)}{\bd \colim \gamma_G(A)(g,f)}{\sum x \in G \. xgx^{-1} = f}
+	\Conclude{ \Big[(g,f).*\Big] }{ [2]\bd \GRP\Big(G\,\End_{\VS{k}}(V)Big)[1]\bd \FUNC{inverse}}{ 
+		\NewLine :
+		\rho(f) =  
+		\rho(xgx^{-1}) = 
+		\rho(x)\rho(g)\rho^{-1}(x) =
+		\rho(x)\lambda \id \rho^{-1}(x) =
+		\lambda \id
+	}
+	\Derive{[2]}{I^3(\forall)I(\Imply)}
+	{
+		\forall g,f \in A \. \forall \lambda \in \Complex \. 
+		\rho(g) = \lambda \id \Imply \rho(f) = \lambda \id
+	}
+	\Say{[3]}{\bd \TYPE{ClassFunction}(\chi_\rho)}
+	{
+		\forall g,f \in A \. \chi_\rho(g) = 0 \Imply \chi_\rho(f) = 0 
+	}
+	\Conclude{[*]}{[1][2][3]}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{BurnsideComplexityLemma}
+	{
+		\forall G \in \FG \.
+		\forall A \in \colim \gamma_G \.
+		\forall p : \TYPE{Prime} \.
+		\forall n \in \Int_+ \.
+		\forall [0] : A \neq \{e\} \.
+		\NewLine \. 
+		\forall [00] : |A| = p^n   \.
+		\forall [000] : G \IsNot \Abel \.
+		G \IsNot \TYPE{Simple}
+	}
+	\Assume{[1]}{(G:\TYPE{Simple})}
+	\Say{\rho}{ \THM{NumberOfIrreducibleRepresentations}(G,\Complex)}
+	{
+		\colim \gamma_G  \ToBij \TYPE{Irreducible}(G,\Complex)
+	}
+	\Say{\Big(i,[1]\Big)}{ \THM{TrivialIsIrreducible}(\rho) }
+	{
+		\sum i \in \gamma_G \. \rho_i = e_{\Complex,G} 
+	}
+	\Say{ [3]}{ [1][2]\bd \TYPE{Injective}(\rho)\bd\TYPE{Simple}(G) }
+	{
+		\forall j \in \colim \gamma_G \. j \neq i \Imply \ker \rho_j = \{e\}
+	}
+	\Say{[4]}{\THM{AbeleanMorphism}[3]}
+	{
+		\forall j \in \{i\}^\c \. \deg \rho_j > 1
+	}
+	\Say{[5]}{\bd A \bd \TYPE{Simple}(G) \THM{CentrConjugacyClass}(G)}{ n > 0}
+	\Assume{g}{A}
+	\Assume{j}{\{i\}^\c}
+	\Say{X}{\{ x \in G : \exists \lambda \in \Complex : \rho_j(x) = \lambda \id  \}}{ ?G   }
+	\Say{H}{\{ \lambda {\id}_{\dom \rho_j(g)} | \lambda \in \Complex  \}}
+	{\TYPE{Normal}\Big( \GL\big( \dom \rho_j(g) \big)  \Big) }
+	\Say{[6]}{\ByConstr X \ByConstr H}{ X = \rho^{-1}_j(H)}
+}\Page{
+	\Say{[7]}{\THM{NormalPreimage}[6]}{X \Nrml G}
+	\Say{[8]}{\bd \TYPE{Simple}(G)[7]}{X = \{e\} | X = G}
+	\Say{[9]}{\THM{AbeleanInjection}[3](j)[8]}{ X = \{e\}  }
+	\Assume{[10]}{\Big( (\deg \rho_j, p) : \TYPE{Coprime}  \Big)}
+	\Conclude{[10.*]}{\THM{BurnsideScalarLemma}[10][9]\ByConstr(X)}{ \chi_{\rho_j}(A) = 0}
+	\DeriveConclude{[j.*]}{I(\Imply)}{ 
+		\Big((\deg \rho_j, p) : \TYPE{Coprime}\Big) 
+		\Imply
+		\chi_{\rho_j}(g) = 0
+	}
+	\Derive{[6]}{I(\forall)}{\forall j \in \{i\}^\c \. (\deg \rho_j,p) : \TYPE{Coprime} \Imply \chi_{\rho_j}(g) = 0}
+	\Say{[7]}{[0]\bd g}{g \neq e}
+	\Say{[8]}{
+		\THM{RegularRepresentationCharacter}(G)[7]
+		\THM{RegularRepresentationStrucure}(G)
+		\NewLine
+		\bd \FUNC{character}(L)(g)
+		[1]
+		[6]
+	}
+	{
+		\NewLine :
+		0 = \chi_L(g) = \sum_{k \in \colim \gamma_G} \deg \rho_k \chi_{\rho_k}(g) = 
+		1 + \sum_{k \in \{i\}^\c} \deg \rho_k \chi_{\rho_k}(g)  =
+		1 + \sum_{k : p | \deg \rho_k} \deg \rho_k \chi_{\rho_k}(g)
+	}
+	\Say{\Big([9],z\Big)}
+	{
+		\bd \TYPE{Divides} [8] \THM{CharacterIsAlgebraicInteger}(\rho,g)
+	}
+	{
+		\sum z \in \Int(\Complex) \. 0 = 1 + pz
+	}
+	\Say{[10]}{\frac{([9] - 1)}{p} }{-\frac{1}{p} = z}
+	\Conclude{[1.*]}{\THM{RationAlgebraicInteger}[10]}{\bot}
+	\DeriveConclude{[*]}{E(\bot) }{ \Big( G : \TYPE{Simple}  \Big)  }
+	\EndProof
+	\\
+	\Theorem{BurnsideFirstTheorem}
+	{
+		\forall G : \FG \.
+		\forall p,q : \TYPE{Prime} \.
+		\forall a,b \in \Nat \. \NewLine \.
+		\forall [0] : |G| = p^a q^b \.
+		G  \IsNot \TYPE{Simple}                              
+	}
+	\Assume{[1]}{\Big( G \in \ABEL \Big)}
+	\Conclude{[*]}{[0]\THM{AbeleanSimplicity}}{ \Big( G \IsNot \TYPE{Simple} \Big) }
+	\Derive{[1]}{I(\Imply)}{ G \in \ABEL \Imply  G \IsNot \TYPE{Simple}}
+	\Assume{[2]}{\Big( G \IsNot \Abel \Big)}
+	\Say{\Big(H,[3]\Big)}{\THM{SylowTHM1}[2]}{ \sum H \Sgrp G \. |H| = q^b   }
+	\Say{\Big(g,[4] \Big)}{\THM{PrimePowerHasNontrivialCentre}[3]}{\sum g \in Z(H) \. g \neq e}
+	\Say{[5]}{ \THM{ClassTHM}[4]  }{p^a = [G:H] = [G:N(g)][N(g):H]}
+	\Say{\Big(m,[6]\Big)}{\bd \TYPE{Divides}[5] }{ \sum m \in \Int_+ \. [G:N(g)] = p^m  }
+	\Say{[7]}{\bd^{-1} \gamma_G [6]}{ |\gamma_G(g)| = p^m}
+	\Conclude{[2.*]}{\THM{BurnsideComplexityLemma}[2][4][7]}
+	{
+		G \IsNot \TYPE{Simple}(G)
+	}
+	\Derive{[2]}
+	{
+		I(\Imply)
+	}
+	{
+		G \IsNot \Abel \Imply G \IsNot \TYPE{Simple}
+	}
+	\Conclude{[*]}
+	{
+		E(|)\LOGIC{LEM}(G : \Abel)[1][2]
+	}
+	{
+		G \IsNot \TYPE{Simple}
+	}
+	\EndProof
+}
+\newpage
+\subsection{Permutation Representation}
+\Page{
+	\DeclareFunc{orbitals}{ 
+		\prod X : \SET \. 
+		\prod G : \GRP \.
+		(G \Arrow{\GRP} S_X) \to ??(X \times X)
+	}
+	\DefineFunc{orbitals}{\alpha}{\colim (\alpha \times \alpha)}
+	\\
+	\DeclareFunc{rank}{\prod X : \SET \. \prod G : \GRP \. (G \Arrow{\GRP} S_X) \to \mathsf{CARD} }
+	\DefineNamedFunc{rank}{\alpha}{\rank \alpha}{ |\FUNC{orbitals}(G)| }
+	\\
+	\Theorem{DoubleTransitivityTHM}
+	{
+		\forall G : \GRP \.
+		\forall X : \SET \.
+		\forall \alpha : G \Arrow{\GRP} S_X \.
+		\NewLine
+		\alpha : 2\hyph\TYPE{Transitive}(G,X) \iff
+		\alpha : \TYPE{Transitive}(G,X) \And \rank \alpha = 2
+	}
+	\Assume{[1]}{\Big( \alpha : 2\hyph\TYPE{Transitive}(G,X) \Big)}
+	\Say{[2]}{
+		\bd \TYPE{Transitive}(\alpha) \bd^{-1} \Delta(X)	
+	}
+	{\Delta(X) \in \FUNC{orbitals}(\alpha)}
+	\Conclude{[*]}{
+		\bd 2\hyph\TYPE{Transitive}(\alpha) \bd^{-1} \Delta(X)
+	}
+	{
+		\Delta^\c(X) \in \FUNC{orbitals}(\alpha)
+	}
+	\Derive{[1]}{I(\Imply)}
+	{
+		\LOGIC{Left} \Imply \LOGIC{Right}
+	}
+	\Assume{[2]}{ \Big( \alpha : \TYPE{Transitive}(G,X) \Big) \And \rank \alpha = 2 } 
+	\Say{[3]}{\bd \TYPE{Transitive}(\alpha) \bd^{-1}\Delta(X)}{
+		\Delta(X) \in \FUNC{orbits}(\alpha)
+	}
+	\Say{[4]}{[3][2]}{\Delta^\c(X) \in \FUNC{orbits}(\alpha)}
+	\Conclude{[2.*]}{\bd^{-1}2\hyph\TYPE{Transitive}(G,X)}{ \Big( \alpha : \TYPE{Transitive}(G,X)  \Big)  }
+	\Derive{[2]}{I(\Imply)[1]I(\iff)}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{FixedSquare}
+	{
+		\forall G \in \GRP \.
+		\forall X \in \SET \. 
+		\forall \alpha : G \Arrow{\GRP} S_X \.
+		\forall g \in G \.
+		\mathrm{Fix}\Big(\alpha\times\alpha(g)\Big) = 
+		\mathrm{Fix}\Big(\alpha(g)\Big) \times \mathrm{Fix}\Big(\alpha(g)\Big)
+	}
+	& \textrm{Limits commute with limits.} \\                       
+	\EndProof
+	\\
+	\DeclareFunc{permutationRepresentation}
+	{
+		\prod G \in \GRP \.
+		\prod X \in \SET \.
+		\prod R \in \ANN \.
+		(G \Arrow{\GRP} X) \to \REPR{R}{G}
+	}
+	\DefineNamedFunc{permutationRepresentation}
+	{\alpha }{\widetilde{\alpha}}{\Big( R[X], \Lambda g \in G \. \Lambda  r_x x \in R[X] \. r_x \alpha_g(x) \Big)  }
+	\\
+	\Theorem{PermutationRepresentationIsOrthogonal}
+	{
+		\forall G \in \GRP \.
+		\forall X \in \SET \.
+		\forall k : \TYPE{Numeric} \. \NewLine \. 
+		\forall \alpha : G \Arrow{\GRP} S_X \.
+		\widetilde{\alpha} : \TYPE{OrthogonalRepresentation}(k,G)
+	}
+	\NoProof
+}
+\Page{
+	\Theorem{PermutationRepresentationCharacter}
+	{
+		\forall G \in \GRP \.
+		\forall X \in \SET \.
+		\forall k : \TYPE{Numeric} \. \NewLine \. 
+		\forall \alpha : G \Arrow{\GRP} S_X \.
+		\forall g \in G \.
+		\chi_{\widetilde{\alpha}}(g) = \Big|\mathrm{Fix}_{\alpha}(g)\Big|
+	}
+	\\
+	\Theorem{FixedSubsaceDimByInnerProduct}
+	{
+		\forall G \in \FG \.
+		\forall k : \TYPE{ConjugationField} \.
+		\forall (V,\rho) \in \REPR{k}{G} \. \NewLine \.
+		\dim \lim \rho  = \langle \chi_{e_{k,G}}, \chi_\rho \rangle_G		
+	}
+	\Conclude{[*]}{
+		\THM{FixedPointDimensionByAveraging}
+		\bd^{-1} \FUNC{character}{k,G} \NewLine
+		\bd^{-1} \FUNC{finiteGroupAlgebraInnerProduct}(k,G) 
+		\bd^{-1} e_{k,G}
+	}
+	{
+		\NewLine :
+		\dim \lim \rho = 
+		\frac{1}{|G|} \sum_{g \in G} \tr \rho(g)
+		\frac{1}{|G|} \sum_{g \in G} \chi_\rho(g) = 
+		\langle g \mapsto 1, \chi_\rho  \rangle_G =
+		\langle \chi_{e_{k,G}},\chi_\rho \rangle_G
+	}
+	\EndProof
+	\\
+	\Theorem{FixedSubsaceDimByOrbits}
+	{
+		\forall G \in \GRP \.
+		\forall X \in \SET \.
+		\forall k : \TYPE{Numeric} \. \NewLine \. 
+		\forall \alpha : G \Arrow{\GRP} S_X \.
+		\dim \lim \widetilde{\alpha} = \Big| \colim \alpha \Big|          
+	}
+	\Say{v}
+	{
+		\lambda A \in \colim \alpha \. \sum_{a \in A} a 
+	}
+	{
+		\colim \alpha \to \lim \widetilde{\alpha}
+	}
+	\Say{[1]}{\ByConstr(v)\THM{DisjointOrbits}(\alpha)}
+	{
+		\left(
+			v : \TYPE{Orthogonal}(\colim \widetilde{\alpha})
+		\right)
+	}
+	\Assume{x}{ \lim \widetilde{\alpha} }
+	\Assume{O}{ \colim \alpha  }
+	\Assume{o,o'}{O}
+	\Say{\Big[ g, [1] \Big]}{\bd \colim \alpha}
+	{
+		\sum g \in G \.  \alpha_g(o) = o'
+	}
+	\Say{[2]}{\bd \lim \widetilde{\alpha}(x)(g)}{\widetilde{\alpha}(x) = x }
+	\Conclude{[O.*]}{[1][2]}{ x_o = x_{o'}  }
+	\Derive{[1]}{ I^2(\forall) }
+	{ 
+		\forall O \in \colim \alpha \. 
+		\forall o, o' \in O \. 
+		x_o = x_{o'} 
+	}
+	\Conclude{[x.*]}{ [1]\ByConstr v   }
+	{
+		x = 
+		\sum_{O \in \lim \widetilde{\alpha} } x_O v_O 
+	}
+	\Derive{[1]}{\bd^{-1}\Basis(\lim \widetilde{\alpha})}
+	{
+		\Big( v : \Basis(\lim \widetilde{\alpha})      \Big)
+	}
+	\Conclude{[*]}{\bd^{-1 }\dim \ByConstr v [1]}
+	{
+		\dim \lim \widetilde{\alpha} = \Big| \colim \alpha \Big|
+	}
+	\EndProof
+	\\
+	\Theorem{BurnsideOrbitalLemma}
+	{
+		\forall G \in \GRP \.
+		\forall X : \TYPE{Finite} \.  
+		\forall \alpha : G \Arrow{\GRP} S_X \.
+		|\colim \alpha  | = \frac{1}{|G|} \sum_{g \in G} \Big| \mathrm{Fix}_\alpha(g) \Big| 
+	}
+	\Conclude{[(*)]}
+	{
+		\THM{FixedSubspaceDimByOrbits}(G,X,k)
+		\THM{FixedSubspaceDimByInnerProduct}(G,k,\widetilde{\alpha})
+		\NewLine
+		\bd \FUNC{finiteGroupAlgebraInnerProduct}(k,G)
+		\bd e_{k,G}
+		\THM{PermutationRepresentationCharacter}(G,X,k,\alpha)
+	}
+	{
+		\NewLine :
+		|\colim \alpha| =
+		\dim \lim \widetilde{\alpha} =
+		\langle \chi_{e_{k,G}}, \chi_{\widetilde{\alpha}} \rangle_G = 
+		\frac{1}{|G|} \sum_{g \in G} \chi_{\widetilde{\alpha}}(g) = 
+		\frac{1}{|G|} \sum_{g \in G} \Big| \mathrm{Fix}_\alpha(g) \Big|
+	}
+	\EndProof
+}\Page{
+	\Theorem{RankByRepresentation}
+	{
+		\forall G \in \GRP \.
+		\forall X \in \SET \.
+		\forall \alpha : \TYPE{Transitive}(G,X) \.
+		\rank \alpha = \langle \chi_{\widetilde{\alpha}},\chi_{\widetilde{\alpha}} \rangle_G
+	}
+	\Say{[1]}
+	{
+		\bd \rank \alpha
+		\THM{BurnsideOrbitalLemma}(G,X,\alpha \times \alpha)\THM{FixedSquare}(X,G) 
+		\NewLine 
+		\THM{PermutationRepresentationCharacter}(G,X,k,\alpha)
+		\bd^{-1} \FUNC{finiteGroupAlgebraInnerProduct}(k,G)
+	}
+	{
+		\NewLine : 
+		\rank \alpha =
+		|\colim \alpha \times \alpha  | = 
+		\frac{1}{|G|} \sum_{g \in G}  \Big| \mathrm{Fix}_\alpha(g)\Big|^2 =
+		\frac{1}{|G|} \sum_{g \in G}  \chi_{\widetilde{\alpha}}\overline{\chi_{\widetilde{\alpha}}}
+		= \langle \chi_{\widetilde{\alpha}},\chi_{\widetilde{\alpha}} \rangle_G	
+	}
+	\EndProof
+	\\
+	\DeclareFunc{traceOfAction}
+	{
+		\prod G \in \GRP \.
+		\prod R \in \ANN \.
+		\prod X : \TYPE{Finite} \.
+		\TYPE{Transitive}(G,X) \to \TYPE{Submodule}\Big(R[X]\Big) 
+	}
+	\DefineNamedFunc{traceOfAction}
+	{\alpha}
+	{\tr_R \alpha}
+	{
+		R\left( \sum_{x \in X} x \right)
+	}
+	\\
+	\DeclareFunc{augmentationOfAction}
+	{
+		\prod G \in \GRP \.
+		\prod X : \TYPE{Finite} \.
+		\TYPE{Transitive}(G,X) \to \REPR{\Complex}{G} 
+	}
+	\DefineNamedFunc{augmentationOfAction}
+	{\alpha}
+	{ \dot \alpha}
+	{
+		\Big( V, \widetilde{\alpha}_{|V}  \Big) 
+		\quad \where \quad  V = (\tr_{|\Complex} \alpha)^\bot
+	}
+	\\
+	\Theorem{AugmentationIrreducibleIfDoublyTransitive}
+	{	
+		\forall G \in \GRP \.
+		\forall X \in \SET \.
+		\forall \alpha : \TYPE{Transitive}(G,X) \.
+		\NewLine \.
+		\dot \alpha : \TYPE{Irreducible}(\Complex, G) \iff
+		\alpha : 2\hyph\TYPE{Transitive}(G,X)
+	}
+	\Assume{[1]}
+	{
+		\Big( 
+			\dot \alpha  : \TYPE{Irreducible}(\Complex,G) 
+		\Big)
+	}
+	\Say{[2]}{ 
+		\THM{RankByRepresentation}(G,X,\alpha)
+		\THM{OrthonormalIrreducibleCharacters}(\Complex,G)
+		\bd \dot \alpha [2]
+	}
+	{
+		\NewLine :
+		\rank \alpha = 
+		\langle \chi_{\widetilde{\alpha}},\chi_{\widetilde{\alpha}} \rangle_G  =
+		2
+	}
+	\Conclude{[1.*]}{\THM{DoubleTransitivityTHM}[2]}{\Big( \alpha : 2\hyph\TYPE{Transitive}(G,X)\Big)}
+	\Derive{[1]}{I(\Imply)}
+	{
+		\Big( \dot \alpha : \TYPE{Irreducible}(\Complex,G)  \Big)
+		\Imply
+		\Big( \alpha : 2\hyph\TYPE{Transitive}(G,X)  \Big)
+	}
+	\Assume{[2]}{ \Big( \alpha : 2\hyph\TYPE{Transitive}(G,X)  \Big) }
+	\Say{[3]}{\THM{DoublyTransitivityTHM}[2]}
+	{
+		\rank \alpha = 2
+	}
+	\Say{[4]}{ \THM{RankByRepresentation}[3] }{ 2 = 1 + \langle \chi_{\dot \alpha},\chi_{\dot \alpha}\rangle  }
+	\Say{[5]}{[4]-1}{1 = \langle \chi_{\dot \alpha},\chi_{\dot \alpha}\rangle_G}
+	\Conclude{[2.*]}{\THM{IrreducibleByNorm}[5]}
+	{
+		\Big(
+			\dot \alpha : \TYPE{Irreducible}(R,G) 
+		\Big)
+	}
+	\DeriveConclude{[*]}{I(\Imply)[1]I(\iff)}
+	{
+		\LOGIC{This}
+	}
+	\EndProof
+	\\
+	\DeclareFunc{centralizerAlgebra}
+	{
+		\prod X \in \SET \.
+		\prod G \in \GRP \.
+		(G \Arrow{\GRP} S_{X}) \to \LALGE{\Complex}
+	}
+	\DefineNamedFunc{centralizerAlgebra}{\alpha}{C(\alpha)}{\REPR{\Complex}{G}(\widetilde{\alpha},\widetilde{\alpha})}
+	\\
+	\DeclareFunc{conjugateMatrixRepresentation}
+	{
+		\prod X \in \SET \. 
+		\prod G \in \GRP \.
+		(G \Arrow{\GRP} S_X) \to \REPR{\Complex}{G}
+	}
+	\DefineNamedFunc{conjugateMatrixRepresentation}{\alpha}{ T^\alpha }
+	{\Big( \Complex^{|X|\times|X|}, \Lambda g \in G \. \Lambda A \in \Complex^{n \times n} \. 
+		 \widetilde{\alpha}^{X,X}(g) A \big( \widetilde{\alpha}^{X,X}(g)\big)^{-1}  \Big)  }
+}
+\Page{
+	\Theorem{CentralizerAlgebraIsFixedSubspace}
+	{
+		\forall X \in \SET \.
+		\forall G \in \GRP \.
+		\forall \alpha : (G \Arrow{\GRP} S_X) \.
+		\lim T^\alpha = C^{X,X}(\alpha)
+	}
+	\NoProof
+	\\
+	\Theorem{DoublePermutationRepresentationEquivalence}
+	{
+		\forall X \in \SET \.
+		\forall G \in \GRP \.
+		\forall \alpha : (G \Arrow{\GRP} S_X) \. \NewLine \. 
+		T^\alpha \cong_{\REPR{\Complex}{G}} \widetilde{\alpha}^2
+	}
+	\NoProof
+	\\
+	\DeclareFunc{orbitalMatrix}
+	{
+		\prod X \in \SET \. 
+		\prod G \in \GRP \.
+		\prod \alpha : (G \Arrow{\GRP} S_X) \.
+		\FUNC{orbital}(\alpha) 
+		\to \Complex^{|X|\times|X|}
+	}
+	\DefineNamedFunc{orbitalMatrix}{\Omega}{ M(\Omega) }
+	{\Lambda i,j \in |X| \.  \If (i,j) \in \Omega \Then 0 \Else 1}
+	\\
+	\Theorem{OrbitalMatricesAreBasisOfCentralizer}
+	{
+		\forall X : \TYPE{Finite} \.
+		\forall G \in \GRP \.
+		\forall \alpha : \TYPE{Transitive}(G,X) \. \NewLine \. 
+		\Big\{ M(\Omega) \Big| \Omega \in \FUNC{orbital}(\alpha) \Big\} : \Basis\Big(C(\alpha)\Big)
+	}
+	\Say{[1]}{\THM{FixedSubspaceDimByOrrbits}(G,X,\Complex,\alpha^2)}
+	{
+		\left\{ \sun_{a \in A} a | A : \TYPE{orbital}(\alpha)  \right\} : \TYPE{Basis}(\lim \alpha^2)
+	}
+	\Conclude{[*]}{
+		\THM{DoublePermutationRepresentationEquivalence}(X,G,\alpha)
+		\NewLine
+		\THM{CentralizerAlgebraIsFixedSubspace}(X,G,\alpha) 
+		\THM{IsomorphicBasis}
+	}
+	{
+		\NewLine :
+		\Big\{ M(\Omega) \Big| \Omega \in \FUNC{orbital}(\alpha) \Big\} : \Basis\Big(C(\alpha)\Big)
+	}
+	\EndProof
+	\\
+	\DeclareType{GelfandPair}
+	{
+		?\left(\sum G : \FG \. \TYPE{Subgroup}(G) \right)
+	}
+	\DefineType{(G,H)}{GelfandPair}{ C(\Lambda_{G,H}) \in \LCALGE{\Complex} }
+	\\
+	\DeclareType{MultiplicityFree}
+	{
+		\prod G : \FG \.
+		\prod k : \Field \.
+		? \REPR{k}{G}
+	}
+	\DefineType{\rho}{MultiplicityFree}
+	{
+		\exists n \in \Nat : \exists \alpha : n \ToInj \TYPE{Irreducible}(k,G) \.
+		\rho = \bigoplus^n_{i=1} \alpha_i
+	}
+	\\
+	\DeclareType{Symmetric}{\prod X \in \SET \. ?(X \times X)}
+	\DefineType{A}{Symmetric}{\FUNC{swap}(A) = A}
+	\\
+	\DeclareType{SymmetricGelfandPair}{ ?\left( \sum G : \FG \. \TYPE{Subgroup}(G) \right)}
+	\DefineType{(G,H)}{SymmeticGelfandPair}{\forall O \in \FUNC{orbital}(\Lambda_{G,H}) \. O : \TYPE{Symmetric}} 
+}
+\Page{
+	\Theorem{SymmetricGelfandPairIsGelfandPair}
+	{
+		\forall (G,H) : \TYPE{SymmetricGelfandPair} \.
+		(G,H) : \TYPE{GelfandPair}
+	}
+	\Say{[1]}{\THM{OrbitalsAreBasisOfCentralizer}\left( G, \frac{G}{H},\Lambda_{G,H} \right)}
+	{
+		\Big( M : \Basis\Big( C\big(\Lambda_{G,H}\big), \FUNC{orbitals}(\Lambda_{G,H}) \Big)
+	}
+	\Say{[2]}{\bd \TYPE{SymmetricGelfandPair}\bd^{-1} \TYPE{SymmetricMatrix}}
+	{
+		\im M \subset \TYPE{SymmetricMatrix}\left( \Complex, \left| \frac{G}{H} \right| \right)
+	}
+	\Say{[3]}{\bd \Basis [1][2]}
+	{
+		C(\Lambda_{G,H}) \subset \TYPE{SymmetricMatrix}\left( \Complex, \left| \frac{G}{H} \right| \right)
+	}
+	\Say{[4]}{  \THM{SymmectricAlgebraCommutetes}[3]   }
+	{
+		C(\Lambda_{G,H}) \in \LCALGE{\Complex} 
+	}
+	\Conclude{[*]}{\bd^{-1} \TYPE{GelfandPair}[4]}
+	{
+		\Big( (G,H) : \TYPE{GelfandPair} \Big)		
+	}
+	\EndProof
+}
+\newpage
+\subsection{Induced Representation}
+\Page{
+	\Theorem{ClassFunctionRestriction}
+	{
+		\forall R \in \ANN \.
+		\forall G \in \GRP \.
+		\forall H \Sgrp G \. \NewLine \.
+		\forall f : \TYPE{ClassFunction}(R,G) \.
+		f_{|H} : \TYPE{ClassFunction}(R,H)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{zeroClassExtension}{
+		\prod R \in \ANN \.
+		\prod G \in \GRP \.
+		\prod H \Sgrp G \. 
+		\NewLine \.
+		\TYPE{ClassFunction}(R,H) \Arrow{\LMOD{R}} (G \to R)
+	}
+	\DefineNamedFunc{zeroClassFunction}{f}{\dot f}
+	{
+		\Lambda g \in G \.
+		\If  g \in H \Then f(g) \Else 0
+	}
+	\\
+	\DeclareFunc{classInduction}
+	{
+		\prod k : \TYPE{Numeric} \.
+		\prod G : \FG \.
+		\prod H \Sgrp G \. \NewLine \. 
+		\TYPE{ClassFunction}(k, H) \Arrow{\VS{k}} \TYPE{ClassFunction} (k,G)
+	}
+	\DefineNamedFunc{classInduction}{f}{\mathrm{Ind}^G_H\;f}
+	{ \Lambda g \in G \. \frac{1}{|H|} \sum_{h \in G} \dot f(hgh^{-1})  }
+	\Assume{A}{\colim \gamma_G}
+	\Assume{a,a'}{ A  }
+	\Say{\Big(x,[1] \Big)}
+	{
+		\bd \colim \gamma_G (A)(a,a')
+	}
+	{
+		\sum x \in G \. a' = xax^{-1}
+	}
+	\Say{X}{\{g \in G : gag^{-1} \in H \}}{?X}
+	\Say{Y}{\{g \in G : ga'g^{-1} \in H \}}{?Y}
+	\Say{[2]}{\THM{ConjugateIsomorphism}[1](X,Y)}{ |Y| = |X|  }
+	\Conclude{[A.*]}{
+		\ByConstr \mathrm{Ind}^G_H(f)
+		\bd \dot f 
+		\bd \TYPE{ClassFunction}(f)
+		[2]
+		\bd \TYPE{ClassFunction}(f)
+		\bd^{-1} \dot f 
+		\ByConstr^{-1} \mathrm{Ind}^G_H(f)
+	}
+	{
+		\NewLine : 
+		\mathrm{Ind}^G_H(f)(a') = 
+		\frac{1}{|H|} \sum_{g \in G} \dot f\Big(ga'g^{-1}\Big) = 
+		\frac{1}{|H|} \sum_{g \in Y} f\Big(ga'g^{-1}\Big)  =
+		\frac{1}{|H|} \sum_{g \in Y} f\Big(A\Big) = \NewLine = 
+		\frac{1}{|H|} \sum_{g \in X} f\Big(A\Big) = 
+		\frac{1}{|H|} \sum_{g \in X} f\Big(gag^{-1}\Big) =  
+		\frac{1}{|H|} \sum_{g \in G} \dot f\Big(gag^{-1}\Big) = 
+		\mathrm{Ind}^G_H(f)(a)  
+	}
+	\Derive{[*]}{\bd^{-1} \TYPE{ClassFunction}}
+	{
+		\Big( \mathrm{Ind}^G_H(f)(a) : \TYPE{ClassFunction}(k,G) \Big)
+	}
+	\EndProof
+	\\
+	\Theorem{InductionRestriction}
+	{	
+		\forall k : \TYPE{Numeric}.
+		\forall G : \FG \.
+		\forall H \Sgrp G \. \NewLine \.
+		\forall f : \TYPE{ClassFunction}(k,G) \.
+		\Big(\mathrm{Ind}^G_H \; f\Big)_{|H} = f
+	}
+	\NoProof
+}\Page{
+	\Theorem{FrobeniusReciprocity}
+	{
+		\forall k : \TYPE{Numeric} \.
+		\forall G : \FG \.
+		\forall H \Sgrp G \. \NewLine \.
+		\forall w : \TYPE{ClassFunction}(k,G) \.
+		\forall v : \TYPE{ClassFunction}(k,H) \.
+		\langle w_{|H},v \rangle_{H} = \Big\langle w, \mathrm{Ind}^G_H(v) \Big\rangle_G
+	}
+	\Conclude{[*]}{	
+		\bd \FUNC{finiteGroupAlgebra}(k,H)
+		\bd \FUNC{restriciton}(G,H)
+		\bd \TYPE{ClassFunction}(w)
+		\bd^{-1} \FUNC{zeroClassExtension}(v) \NewLine 
+		\THM{ConjugationIsomorphism}(G)
+		\bd \ANN(k)
+		\bd^{-1} \FUNC{classInduction}(k,H)
+		\bd^{-1} \FUNC{finiteGroupAlgebra}(k,H)
+	}
+	{
+		\NewLine :
+		\langle w_{|H},v \rangle_H =  
+		\frac{1}{|H|} \sum_{h \in H} w(h) \overline{v(h)} =
+		\frac{1}{|H||G|} \sum_{h \in H} \sum_{g \in G} w(ghg^{-1}) \overline{ v\Big(h\Big)} =
+		\frac{1}{|H||G|} \sum_{g \in G} \sum_{h \in G} w(ghg^{-1}) \overline{ \dot v\Big(h\Big)} = \NewLine = 
+		\frac{1}{|H||G|} \sum_{g \in G} \sum_{h \in G} w(h) \overline{ \dot v\Big(g^{-1}hg\Big)} =
+		\frac{1}{|G|}  \sum_{h\in G} w(h) \frac{1}{|H|}\sum_{g \in G} \overline{ \dot v\Big(g^{-1}hg \Big) } =
+		\frac{1}{|G|} \sum_{h \in G} w(h)  \overline{\Big(\mathrm{Ind}^G_H} \; v\Big)(h)  = \NewLine =
+		\Big\langle w, \big(\mathrm{Ind}^G_H \; v\big)(h)  \Big\rangle_G
+	}
+	\EndProof
+	\\
+	\Theorem{InductionByCosets}
+	{
+		\forall k : \TYPE{Numeric} \.
+		\forall G : \FG \.
+		\forall H \Sgrp G \. \NewLine \.
+		\forall f : \TYPE{ClassFunction}(H,G) \. 
+		\forall n \in \Nat \.
+		\forall t : n \to G \.
+		\forall [0] : \Big(  t\pi_H : n \ToSurj GH^{-1} \Big) \. \NewLine \. 
+		\mathrm{Ind}^G_H(f) = \Lambda g \in G \. \sum^n_{i=1} \dot f\Big(t_igt_i^{-1}\Big)        
+	}
+	\Assume{a}{G}
+	\Conclude{[*.a]}{
+		\bd \FUNC{classInduction}(f)(a)
+		\THM{DisjointCosets}(G,H) 
+		\bd \ANN(k) 
+		\bd \dot f \bd \TYPE{ClassFunction}(f) 
+	}
+	{
+		\NewLine : 
+		\mathrm{Ind}^G_H f(a)  = 
+		\frac{1}{|H|} \sum_{g \in G} \dot f\Big(gag^{-1}\Big) =
+		\frac{1}{|H|} \sum^n_{i=1} \sum_{h \in H} \dot f\Big( h t_i a t^{-1}_i h^{-1} \Big) = 
+		\sum^n_{i=1} \frac{1}{|H|} \sum_{h \in H} \dot f\Big( h t_i a t^{-1}_i h^{-1}\Big) = \NewLine = 
+		\sum^n_{i=1} \dot f \Big( h t_i a t^{-1}_i h^{-1}\Big)
+	}
+	\DeriveConclude{[*]}{I(=,\to)}
+	{
+		\mathrm{Ind}^G_H(f) = \Lambda g \in G \. \sum^n_{i=1} \dot f\Big(t_igt_i^{-1}\Big)        	
+	}
+	\EndProof
+	\\
+	\DeclareFunc{zeroRepresentationExtension}{
+		\prod R \in \ANN \.
+		\prod G \in \GRP \.
+		\prod H \Sgrp G \. 
+		\NewLine \.
+		\prod (V,\rho) \in  \REPR{R}{H} \. 
+		G \to \End_{\LMOD{R}}(V)
+	}
+	\DefineNamedFunc{zeroClassFunction}{}{\dot \rho}
+	{
+			\Lambda g \in G \.
+			\If  g \in H \Then \rho(g) \Else 0
+	}
+	\\
+	\DeclareFunc{representationInduction}
+	{
+		\prod k : \TYPE{Numeric} \.
+		\prod G : \FG \.
+		\prod H \Sgrp G \. \NewLine \. 
+		\prod n \in \Nat \.
+		\prod t : n \to G \.
+		\prod [0] : \Big(  t\pi_H : n \ToSurj GH^{-1} \Big) \.  
+		\REPR{k}{G} \to \REPR{k}{G}
+	}
+	\DefineNamedFunc{representationInduction}{(V,\rho)}{\mathrm{Ind}^G_{H,t}\; \rho}
+	{ 
+		\Big(
+			V^{\oplus[G:H]}	,
+			\Lambda g \in G \.
+			\Lambda i,j \in [G:H] \. 
+			\dot \rho_{t_i^{-1} g t_j}
+		\Big)
+	}
+}\Page{
+	\Theorem{InducedCharacter}
+	{
+		\forall k : \TYPE{Numeric} \.
+		\forall G : \FG \.
+		\forall H \Sgrp G \. \NewLine \.
+		\forall n \in \Nat \.
+		\forall t : n \to G \.
+		\forall [0] : \Big(  t\pi_H : n \ToSurj GH^{-1} \Big) \.
+		\forall \rho \in \REPR{k}{G} \.
+		\chi_{\mathrm{Ind}^G_H \;\rho } = \mathrm{Ind}^G_H \; \chi_\rho
+	}
+	\Conclude{[*]}
+	{
+		\bd \FUNC{character} 
+		\bd \FUNC{representationInduction}
+		\bd^{-1} \FUNC{charactet}
+		\THM{InductionByCosets}
+	}{
+		\NewLine : 
+		\chi_{\mathrm{Ind}^G_H \; \rho} = 
+		\tr \; \Big( \mathrm{Ind}^G_H \;\rho\Big) = 
+		\sum^n_{i=1} \gamma_G(t_i) \tr  \dot \rho =
+		\sum^n_{i=1} \gamma_G(t_i) \dot \chi_\rho = 
+		\mathrm{Ind^G_H} \dot \chi_\rho
+	}
+	\EndProof
+	\\
+	\DeclareType{DisjointRepresentation}
+	{
+		\prod R \in \ANN \.
+		\prod G \in \GRP \.
+		?\REPR{R}{G}^2
+	}
+	\DefineNamedType{(\alpha,\beta)}{DisjointRepresentation}
+	{
+		\alpha \bot \beta 
+	}
+	{
+		\forall \rho : \REPR{R}{G} \. 
+		\NewLine \. 
+		\deg \rho \neq 0 \Imply
+		\Big( \big(\exists \rho' : \alpha \cong_{\REPR{R}{G}} \rho \oplus \rho'\big) 
+		\Imply
+		\forall \rho'' \in \REPR{R}{G} \. \beta \not \cong_{\REPR{R}{G}} \rho \oplus \rho''
+		\Big)
+	}
+	\\
+	\Theorem{DisjointAsOrthogonal}{   
+		\forall k : \TYPE{ConjugationField} \.
+		\forall G : \FG \. 
+		\forall \alpha,\beta \in \REPR{k}{G} \. \NewLine \. 
+		\langle \chi_\alpha, \chi_\beta \rangle = 0 \iff \alpha \bot \beta
+	}
+	\NoProof
+	\\
+	\Theorem{MackeyCrossinductionLemma}{
+		\forall G : \FG \.
+		\forall H,K \Sgrp G \.
+		\forall S \in ?G \. \NewLine \. 
+		\forall [0] : \Big(\pi_{H,K|S} : S \ToIso{\SET} H^{-1} G K^{-1}\Big) \.
+		\forall f : \TYPE{ClassFunction}(\Complex,K) \.
+		\NewLine \. 
+		\Big( \mathrm{Ind}^G_K \; f \Big)_{|H} = 
+		\sum_{s \in S} \mathrm{Ind}^H_{H \cap sKs^{-1}} \;  (\gamma_s f)_{|H \cap sKs^{-1}}
+	}
+	\Say{V}
+	{
+		\Lambda s \in S \. 
+		H ( H \cap sKs^{-1})^{-1}  
+	}
+	{
+		S \to ??H
+	}
+	\Assume{s}{S}
+	\Say{[1]}{ \bd \FUNC{leftCosets}\ByConstr V_s}
+	{
+		  \bigcup_{[v] \in V_s} v( H \cap sks^{-1} )
+	}
+	\Say{[2]}{ [1] \bd \GRP (sKs^{-1}) \bd \TYPE{Cosets}[0]\ByConstr V_s \bd^{-1} \TYPE{DisjointUnion}  }
+	{
+		\NewLine : 
+		HsK = 
+		HsKs^{-1}s =
+		\bigcup_{[v] \in V_s} 
+		v\Big(H \cap sKs^{-1} \Big)sKs^{-1} s =  
+		\bigcup_{[v] \in V_s } vsK    
+	}
+	\Assume{[v],[v']}{V_s}
+	\Assume{[3]}{ vsK = v'K   }
+	\Say{[4]}{[3]\bd \FUNC{leftCosets}(G,K)}
+	{
+		s^{-1}v^{-1} v' s \in K 
+	}
+	\Say{[5]}{s[3]s^{-1}}{  v^{-1} v' \in s K s^{-1} }	
+	\Say{[6]}{ \bd^{-1} \FUNC{leftCosts}(H,H \cap s K s^{-1})   }
+	{
+		v (H \cap s K s^{-1}) = v' ( H \cap s K s^{-1} )                                 
+	}
+	\Conclude{\Big[\big([v],[v']\big).*\Big]}
+	{
+		\ByConstr V [6]
+	}
+	{
+		[v] = [v']
+	}
+	\DeriveConclude{[s.*]}{[2]\bd^{-1} \TYPE{DisjointUnion}}
+	{
+		Hsk = \bigsqcup_{v \in V_s} vsK
+	}
+	\Derive{[1]}{I(\forall)}
+	{
+		\forall s \in S \. Hsk = \bigsqcup_{v \in V_s} vsK
+	}
+	\Say{T}{\Lambda s \in S \. \{ vs | [v] \in V_s \}}
+	{
+		?G
+	}
+}
+\Page
+{
+	\Say{A}{\bigsqcup_{s \in S} T_s}{?G}
+	\Assume{s,s'}{S}
+	\Assume{[v],[v']}{V}
+	\Assume{[2]}{ vs = v's' }
+	\Say{[3]}{[2] \bd \FUNC{doubleCosets}}
+	{
+		HsK = Hs'K
+	}
+	\Say{[4]}{[0][3]}{s = s'}
+	\Conclude{\Big[ (s,s').* \Big]}{ \ByConstr V [4][2] }{[v] = [v']}
+	\Derive{[2]}{\bd^{-1} \TYPE{DisjointUnion}}{A = \bigsqcup_{s \in S} T_s}
+	\Say{[3]}{
+		\THM{DisjointCosets}[0]
+		[1]
+		\ByConstr^{-1} T [2]
+		\ByConstr^{-1} A
+	}
+	{
+		G = 
+		\bigsqcup_{s \in S} HsK  =
+		\bigsqcup_{s \in S} \bigcup_{[v] \in V_s} vsK =
+		\bigsqcup_{s \in S} \bigcup_{t \in T_s} tK =
+		\bigsqcup_{t \in A}  tK
+	}
+	\Say{[4]}{\THM{DisjointCosets}[3]}{ \Big(  \pi_{K|T} : T \ToIso{\SET} GK^{-1} \Big)  }
+	\Assume{h}{H}
+	\Conclude{[h.*]}{ 
+		\THM{InductionByCosets}(G,K,f,A)[4]
+		\ByConstr A
+		\ByConstr T
+		\bd^{-1} \gamma
+		\bd \dot f
+		\bd^{-1} \FUNC{restriction}
+		\THM{InductionByCosets}
+	}
+	{
+		\NewLine :
+		\mathrm{Ind}^G_H \; f(h) = 
+		\sum_{t \in A} \dot f\Big(t^{-1}ht\Big) =
+		\sum_{s \in S} \sum_{t \in T_s} \dot f\Big( t^{-1}h t \Big) =
+		\sum_{s \in S} \sum_{[v] \in V_s} \dot f\Big( s^{-1} v^{-1} h v s \Big) =  
+		\sum_{s \in S} \sum_{[v] \in V_s} (\gamma_s \dot f)\Big( v^{-1} h v  \Big) =  \NewLine = 
+		\sum_{s \in S} \sum_{[v] \in V_s,} (\gamma_s f)\Big( v^{-1} h v  \Big) 
+		[ v^{-1} h v \in sKs^{-1} ] = 
+		\sum_{s \in S} \sum_{[v] \in V_s,} \gamma_s (f)_{|H \cap sKs^{-1} }\Big( v^{-1} h v  \Big) 
+		[ v^{-1} h v \in sKs^{-1} ] = \NewLine =   
+		\left(
+			\sum_{s \in S} \mathrm{Ind}^H_{H \cap sKs^{-1}} \;  \gamma_s (f)_{|H \cap sKs^{-1}} 
+		\right)(h)
+	}	
+	\DeriveConclude{[*]}{I(=,\to)}
+	{
+		\LOGIC{This}
+	}
+	\EndProof
+	\\
+	\Theorem{MackeyIrreducibilityTHM}
+	{
+		\forall G : \FG \.
+		\forall H \Sgrp G \.
+		\forall k : \TYPE{ConjugationField} \. \NewLine \. 
+		\forall \rho \in \REPR{k}{H} \.
+		\mathrm{Ind}^G_{H} \; \rho : \TYPE{Irreducible}(K,G) \iff \NewLine \quad \iff 
+		\rho : \TYPE{Irreducible}(k,H)
+		\And
+		\forall s \in H^\c \.
+		\rho_{|H \cap sHs^{-1}} \bot \gamma_s \rho_{|H \cap sHs^{-1}}
+	}
+	\Say{\Big(S,[1]\Big)}
+	{
+		\THM{DoubleCosetsRepresentativesExists}(G,H,H)
+	}
+	{
+		\sum S \subset G \.
+		e \in S \And \pi_{H,H|S} : S \ToIso{\SET} G
+	}
+	\Say{S'}{S \setminus \{e\}}{?G}
+	\Say{[2]}{\THM{MackeyCrossinductionTHM}[1]\ByConstr^{-1} S'}
+	{
+		\Big(\mathrm{Ind}^G_H \; \chi_\rho\Big)_{|H} =
+		\chi_\rho + \sum_{s \in S'}  \mathrm{Ind}^H_{H\cap sHs^{-1}} \sigma_s f_{|H \cap sHs^{-1}}
+	}
+	\Say{[3]}
+	{
+		\THM{FrobeniusReciprocity}
+		\bd \L( H, H ; k  )\Big(\FUNC{finiteGroupAlgebraInnerproduct}(H)\Big) 
+		\THM{FrobeniusReciprocity}
+	}{
+		\NewLine : 
+		\langle \mathrm{Ind}^G_H \; \chi_\rho, \mathrm{Ind}^G_H \; \chi_\rho \rangle_G =
+		\Big\langle  \big(\mathrm{Ind}^G_H \; \chi_\rho\big)_H, \chi_\rho \rangle_H = 
+		\langle \chi_\rho, \chi_\rho \rangle_H 
+		+ \sum_{s \in S'}  \Big\langle \mathrm{Ind}_{H \cap sHs^{-1}}^H (\gamma_{s} \chi)_{|H \cap sHs^{-1}}, 
+		\chi \Big\rangle_H = \NewLine = 
+		\langle \chi_\rho, \chi_\rho \rangle_H 
+		+ \sum_{s \in S'}  \Big\langle  (\gamma_{s} \chi)_{|H \cap sHs^{-1}}, 
+		\chi_{H \cap sHs^{-1}} \Big\rangle_{|H \cap sHs^{-1}}
+	}
+	\Conclude{[*]}{\THM{IrreducibleByNorm}[1]}
+	{
+		\LOGIC{This}
+	}
+	\EndProof
+}
+\newpage
+\subsection{Second Burnside's Theorem}
+\Page{
+	\Theorem{CharacterConjugation}
+	{
+		\forall k : \TYPE{ConjugateField} \.
+		\forall G : \FG \.
+		\forall \rho \in \REPR{k}{G} \.
+		\overline{\chi_\rho} = \chi_{\rho^*} 
+	}
+	\NoProof
+	\\
+	\DeclareType{RealCharacter}
+	{
+		\prod k : \TYPE{ConjugateField} \.
+		\prod G : \FG \.
+		? \TYPE{Character}(k,G)                         
+	}
+	\DefineType{\chi}{RealCharacters}
+	{
+		\overline{\chi} = \chi 
+	}
+	\\
+	\Theorem{InverseConjugation}
+	{
+		\forall k : \TYPE{ConjugateField} \.
+		\forall G : \FG \.
+		\forall \chi : \TYPE{Character}(k,G) \.
+		\forall g \in G \. \NewLine \. 
+		\chi\big(g^{-1}\big) = \overline{\chi(g)}
+	}
+	\Say{\Big((V,\rho),[1]\Big)}{ 
+		\bd \TYPE{Character} 
+		\THM{RepresentationOrthogonalization}
+	}{
+		\NewLine : 
+		\sum (V,\rho) : \TYPE{UnitaryRepresentation}(k,G) \. 
+		\chi = \chi_\rho
+	}
+	\Conclude{[*]}{[1]\bd \FUNC{character} \bd \GRP \Big( G, \U(V) \Big)(\rho)\bd \U(V) \THM{characterConjugation}(k,G,\rho)}
+	{
+		\NewLine : 
+		\chi\big(g^{-1}\big) = 
+		\tr \rho\big(g^{-1}\big) = 
+		\tr \rho^{-1}(g) =
+		\tr  \rho^*(g) =
+		\overline{\chi}(g)
+	}
+	\EndProof
+	\\
+	\DeclareType{RealConjugacyClass}
+	{
+		\prod G \in \GRP \. ?(\colim \gamma_G)
+	}
+	\DefineType{A}{RealConjugacyClass}{A = A^{-1}}
+	\\
+	\Theorem{RealConjugacyClassMotivation}
+	{
+		\forall G \in \GRP \.
+		\forall \chi : \TYPE{Character}(\Complex,G) \.
+		\forall A : \TYPE{RealConjugacyClass}(G) \. 
+		\NewLine \. 
+		\chi(A) \in \Reals
+	}
+	\EndProof
+	\\
+	\Theorem{BurnsideRealityTHM}
+	{
+		\forall G : \FG \.
+		\# \TYPE{RealsCharacter} \And \TYPE{IrreducibleCharacter}(\Complex,G) = 
+		\NewLine = \# \TYPE{RealConjugacyClass}(G)   
+	}
+	\Say{\Big(n,\chi,C\Big)}
+	{
+		\THM{NumberOfIrreducibleRepresentations}(\Complex,G)
+	}
+	{
+		\NewLine : 
+		\sum n \in \Nat \.
+		\sum \chi : n \ToSurj \TYPE{Irreducible}(\Complex,G) \.
+		\sum C : n \ToSurj (\colim \gamma_G)
+	}
+	\Say{(\alpha,[1])}{ \THM{IrreducibleByNorm}(\overline{\chi})\bd^{-1} S_n   }
+	{
+		\sum \alpha \in S_n \. \forall i \in n \.  \chi_{\alpha(i)} = \overline(\chi_i)
+	}
+	\Say{(\beta,[2]}{\THM{ConjugacyClassInversion}(\overline{\beta})\bd^{-1} S_n }
+	{
+		\sum \beta \in S_n \. 
+		\forall i \in n \. 
+		C_{\beta(i)} = C_i^{-1}
+	}
+	\Say{[3]}{\bd^{-1} \FUNC{fixedPoints}\bd^{-1}\FUNC{cardinality}(\alpha)}
+	{
+		|\mathrm{Fix}(\alpha)| =  
+		\# \TYPE{RealsCharacter} \And \TYPE{IrreducibleCharacter}(\Complex,G) 
+	}
+	\Say{[4]}{\bd^{-1} \FUNC{fixedPoints}\bd^{-1}\FUNC{cardinality}(\beta)}
+	{
+		|\mathrm{Fix}(\beta)| =  
+		\# \TYPE{RealConjugacyClass}(G)  
+	}
+	\Say{[7]}{\THM{PermutationRepresentationCharacter}(\alpha)}{\chi_{\widetilde{\id}}(\alpha) = |\mathrm{Fix}(\alpha)|  }
+	\Say{[8]}{\THM{PermutationRepresentationCharacter}(\beta)}{\chi_{\widetilde{\id}}(\alpha) = |\mathrm{Fix}(\beta)| }
+	\Say{[9]}{ \THM{PermutationMatrixMult}(\alpha) \bd \alpha \bd \mathbf{Ch}(G)  \bd \beta \THM{InverseConjugation} }{   
+		\NewLine : 
+		\mathbf{Ch}(G,\Complex) \alpha = 
+		\overline{\mathbf{Ch}}(G,\Complex) =    
+		\beta \mathbf{Ch}(G,\Complex)
+	}
+}\Page{	
+	\Say{[10]}{\THM{SecondOrthogonalityRelation}[9]}
+	{
+		\alpha =  \mathbf{Ch}(G,\Complex) \beta \mathbf{Ch}^{-1}(G,\Complex)
+	}
+	\Conclude{[*]}{ 
+		[3]
+		[7] 
+		\bd \FUNC{character} 
+		[10] 
+		\THM{ShiftInTrace} 
+		\bd^{-1} 
+		\FUNC{character} 
+		[8][4] 
+	}
+	{
+		\NewLine : 
+		\# \TYPE{RealsCharacter} \And \TYPE{IrreducibleCharacter}(\Complex,G) =  
+		 | \mathrm{Fix}(\alpha) |  = 
+		\chi_{\widetilde{\id}}(\alpha) = 
+		\tr \alpha   = \NewLine = 
+		\tr \mathbf{Ch}(G,\Complex) \beta \mathbf{Ch}^{-1}(G,\Complex) =
+		\tr \beta =
+		\chi_{\widetilde{\id}}(\alpha) = 
+		= 
+		| \mathrm{Fix}(\beta) |  = 
+		\# \TYPE{RealConjugacyClass}(G)   
+	}
+	\EndProof
+	\\
+	\Theorem{Oddity}
+	{
+		\forall G : \FG \.
+		\forall [0] : \Big( |G| : \TYPE{Odd}\Big) \.
+		\forall \rho : \TYPE{RealsCharacter} \And \TYPE{IrreducibleCharacter}(\Complex,G) \.\NewLine \.  
+		\rho = e_{k,G}
+	}
+	\Assume{A}{\TYPE{RealConjugacyClass}}
+	\Assume{a}{A}
+	\Assume{[1]}{a \neq e}
+	\Say{\Big(h,[2] \Big) }{\bd \TYPE{RealConjugacyClass}(A)(a)}
+	{
+		\sum h \in G \.  hah^{-1} = a^{-1}
+	}
+	\Say{[3]}{[2]\THM{ProductInverse}[2]}{ 
+		h^2 g h^{-2}  = 
+		h g^{-1} h^{-1} = 
+		(hgh^{-1})^{-1} = 
+		g    
+	}
+	\Say{[4]}{\bd^{-1} \TYPE{Normalizer}[3]}{h^2 \in N(a) }
+	\Assume{[5]}{h \in \langle h^2 \rangle}
+	\Say{[6]}{[5][4]}{ h \in N(a)}
+	\Say{[7]}{[2]\bd N(a)[6]}{ a^{-1} = hah^{-1} = a  }
+	\Say{[8]}{\bd^{-1}\FUNC{order}[1]\THM{OrderDivides}}
+	{
+		|G| : \TYPE{Even}
+	}
+	\Conclude{[4.*]}{\THM{OddEven}[0][8]}{\bot }
+	\Derive{[4]}{\bd^{-1}\FUNC{complement}}{h \in \langle h^2 \rangle^\c}
+	\Say{[5]}{\THM{GeneratorsByCoprime}(h)[4]}{o(h) : \TYPE{Even}}
+	\Say{[6]}{\THM{OrderDivides}}
+	{
+		|G| : \TYPE{Even}
+	}
+	\Conclude{[A.*]}{\THM{OddEven}[0][8]}{\bot }
+	\Derive{[1]}{I(\forall)}{ \forall A : \TYPE{RealConjugacyClass} \.  A = \{e\}  }
+	\Conclude{[*]}{\THM{BurnsideRealsityTHM}[1]}{[*]}
+	\EndProof
+	\\
+	\Theorem{SecondBurnsideTHM}
+	{
+		\forall G : \FG \.
+		\forall [0] : \Big( |G| : \TYPE{Odd} \Big) \.
+		|G| =_{Z_{16}} | \colim \gamma_G |
+	}
+	\Say{\Big(n,d,[1]\Big) }
+	{
+		\THM{GroupSizeByIrreducibleRepresentation}(G)
+		\THM{Oddity}[0]
+	}
+	{
+		\NewLine : 
+		\sum n \in \Nat \. \sum d : n \to \Nat \. 
+		\big(\forall i \in n \, \exists \rho : \TYPE{Irreducible}(\Complex,G) : d_i = \deg \rho  \big) 
+		\And |G| = 1 + \sum^n_{i=1} 2d_i^2
+	}
+	\Say{\Big(m,[2]\Big)}
+	{
+		\THM{DimensionTHM}(G)[1] \bd \ANN(\Int)
+	}
+	{
+		\sum m : \Nat \to \Int_+ \.
+		|G| = \NewLine =  
+		1 + \sum^n_{i=1} 2(2m_i + 1)^2 = 
+		1 + 2n  + \sum^n_{i=1} 8 (m_i^2 + m_i =
+		1 + 2n + 8 \sum^n_{i=1}  m_i(m_i + 1)
+	}
+	\Conclude{[*]}{ [2] \THM{IrreducibleRepresentationNumber}(G)\THM{NextProductIsEven} \bd^{-1} Z_16 }
+	{  |G| =_{Z_{16}} 1 + 2n    }
+	\EndProof
+}
+\newpage
+\subsection{Artin and Brauer Theorems}
+\section{Semisimple Representation}
+\section{Modular Representation}
+\section{Block Theory}
+\end{document}

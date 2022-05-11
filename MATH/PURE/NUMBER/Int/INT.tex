@@ -1,0 +1,1709 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\DeclareMathOperator*{\supp}{supp}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cat}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\}
+\newcommand{\Assume}[2]{& \LOGIC{Assume} \; #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;}
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%SET
+%CAT
+\newcommand{\Arrow}[1]{\xrightarrow{#1}}
+\newcommand{\ToIso}[1]{\xleftrightarrow{#1}}
+%CategoryTheorey
+%Types
+\newcommand{\Cov}{\TYPE{Covariant}}
+\newcommand{\Contra}{\TYPE{Contravariant}}
+\newcommand{\NT}{\TYPE{NaturalTransform}}
+\newcommand{\UMP}{\TYPE{UnversalMappingProperty}}
+\newcommand{\CMP}{\TYPE{CouniversalMappingProperty}}
+\newcommand{\paral}{\rightrightarrows}
+%functions
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\obj}{\mathrm{obj}}
+\DeclareMathOperator*{\dom}{dom}
+\DeclareMathOperator*{\codom}{codom}
+\DeclareMathOperator*{\colim}{colim}
+%variable
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\R}{\mathrm{R}}
+\newcommand{\G}{\mathsf{G}}
+%Cats
+\newcommand{\CAT}{\mathsf{CAT}}
+\newcommand{\SET}{\mathsf{SET}}
+\newcommand{\PARALLEL}{\bullet \paral \bullet}
+\newcommand{\WEDGE}{\bullet \to \bullet \leftarrow \bullet}
+\newcommand{\VEE}{\bullet \leftarrow \bullet \to \bullet}
+%Algebra
+%Groups
+%Types
+\newcommand{\Group}{\TYPE{Group}}
+\newcommand{\Abel}{\TYPE{Abelean}}
+\newcommand{\Sgrp}{\subset_{\mathsf{GRP}}}
+\newcommand{\Nrml}{\vartriangleleft}
+\newcommand{\FG}{\TYPE{FiniteGroup}}
+\newcommand{\Stab}{\mathrm{Stab}}
+\newcommand{\FGA}{\TYPE{FinitelyGeneratedAbelean}}
+\newcommand{\DN}{\TYPE{DirectedNormality}}
+%Func
+\DeclareMathOperator{\tor}{tor}
+\DeclareMathOperator{\bool}{bool}
+\DeclareMathOperator{\rank}{rank}
+%Cats
+\newcommand{\GRP}{\mathsf{GRP}}
+\newcommand{\ABEL}{\mathsf{ABEL}}
+%Ops
+\newcommand{\SDP}{\rightthreetimes}
+%LINEAR
+%Types
+\newcommand{\Basis}{\TYPE{Basis}}
+%Cats
+\newcommand{\VS}{\mathsf{VS}}
+%FIELDS
+\newcommand{\Field}{\mathbb{F}}
+%Numbers
+%Integers
+%FUNC
+\DeclareMathOperator{\divi}{div}
+\DeclareMathOperator{\remi}{rem}
+\DeclareMathOperator{\Frac}{Frac}
+\title{Integeral Arithmetics}
+\author{Uncultured Trump}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Natural Numbers}
+\subsection{Peano Axioms}
+\Page{
+	\DeclareType{NaturalSet}{?\sum N \in \SET \. N \times (N \ToInj N) }
+	\DefineType{(N,1,\sigma)}{NaturalSet}{  
+		\forall n \in N \. \sigma(n) \neq 1 \And \NewLine \And
+		\forall P \subset N \. \Big(1 \in P \And \forall n \in P \. \sigma(n) \in P  \Big)
+		\Rightarrow P = N
+	}
+	\\
+	\DeclareFunc{NaturalSetAsSet}{ \TYPE{NaturalSet} \to \SET}
+	\DefineNamedFunc{NaturalSetAsSet}{ N,1,\sigma  }{(N,1,\sigma)}{ N }
+	\\
+	\DeclareFunc{first}{\prod N : \TYPE{NaturalSet} \. N} 
+	\DefineNamedFunc{first}{N,1,\sigma}{1_{N,1,\sigma}}{1}
+	\\
+	\DeclareFunc{next}{\prod N : \TYPE{NaturalSet} \. N \ToInj N}
+	\DefineNamedFunc{next}{(N,1,\sigma),n}{n+ 1}{\sigma(n)}    
+	\\
+	\DeclareType{Succesors}{  \prod N : \TYPE{NaturalSet} \. ?N  }
+	\DefineType{m}{Succesors}{ \exists n \in N \. m = \sigma(n) }
+	\\
+	\Theorem{StuctureOfNat}{\forall N : \TYPE{NaturalSet} \. N = \{1_N\} \sqcup \TYPE{Succesors}(N)}
+	\Say{(1)}{\bd \TYPE{NaturalSet}(N)}{ \{1_N\} \cap \TYPE{Succesors}(N) = \emptyset}
+	\Say{P}{ \{1_N\} \sqcup \TYPE{Succesors}(N)  }{?N}
+	\Assume{n}{P}
+	\Say{(2)}{\bd \TYPE{Succesors}(N)}{\sigma(n) \in \TYPE{Succesors}(N)}
+	\Conclude{()}{\bd P(2)}{\sigma(n) \in P }
+	\Derive{(2)}{I(\forall)}{\forall n \in P \. \sigma(n) \in P}
+	\Say{(3)}{\bd P(1_N)}{1_N \in P}
+	\Conclude{(*)}{\bd N(2,3)}{N = P}
+	\EndProof
+	\\
+	\Theorem{PrimitiveRecursiveDefinition}{ 
+		\forall N : \TYPE{NaturalSet} \. \forall X \in \SET \. \forall x \in X \. \forall g : X \times X \to N \. 
+		 \NewLine \.   \exists! f : N \to X : f(1) = x \And \forall n \in N \. f(\sigma(n)) = g(f(n))                                 
+		}
+	\NoProof
+	\\
+	\DeclareFunc{rec}{\prod N : \TYPE{NaturalSet} \. \prod X \in \SET \. X \times (X  \to N ) \to (N \to X) }
+	\DefineFunc{rec}{x,g}{\THM{PrimitiveRecursiveDefinition}}
+	\\
+	\DeclareFunc{primPart}{\prod N : \TYPE{NaturalSet} \. N \to ?N}
+	\DefineNamedFunc{primPart}{ }{n}{\FUNC{rec}\Big(\{1\}.\Lambda M \in  ?N \. \sigma(M) \sqcup \{1\} \Big)}       
+}\Page{
+	\Theorem{StructureOfNat2}{\forall N : \TYPE{NaturalSet} \. N = \bigcup_{n \in N} n }
+	\Say{P}{\bigcup_{n \in N} n }{?N }
+	\Say{(1)}{\bd \FUNC{singleton}(1_N)}{1_N \in \{1_N\}}
+	\Say{(2)}{\bd \TYPE{promPart}(1_N)(1_N)}{1_N \in 1_N}
+	\Say{(3)}{\bd P(2)}{1_N \in P}
+	\Assume{n}{P}
+	\Say{(m,4)}{\bd P(n)}{\sum m \in N \. n \in m}
+	\Say{(5)}{ \LOGIC{Map}(4)(\sigma)  }{\sigma(n) \in \sigma(\FUNC{primPart}(m))}
+	\Say{(6)}{\bd \FUNC{primPart}(5)}{\sigma(n) \in \FUNC{primPart}(\sigma(m))}
+	\Conclude{()}{\bd P (6)}{\sigma(n) \in P}
+	\Derive{(4)}{I(\forall)}{\forall n \in P \. \sigma(n) \in P}
+	\Conclude{(*)}{\bd N(3,4)}{N = P}
+	\EndProof
+	\\
+	\Theorem{SelfContainment}{\forall N : \TYPE{NaturalSet} \. \forall n \in N \. n \in n}
+	\Say{P}{\{ n \in N : n \in n  \}}{?N}
+	\Say{(1)}{\bd \TYPE{primPart}(1_N)}{1_N \in P}
+	\Assume{n}{P}
+	\Say{(2)}{\bd P(n)}{ n \in \FUNC{primPart}(n)}
+	\Say{(3)}{\bd \FUNC{primPart}(\sigma(n))}{\FUNC{primPart}(\sigma(n)) = \sigma(\FUNC{primPart})}
+	\Say{(4)}{\sigma(2)}{\sigma(n) \in \sigma(\FUNC{primPart}(n))}
+	\Say{(5)}{(3)(4)}{\sigma(n) \in \FUNC{primPart}(\sigma(n))}
+	\Conclude{()}{\bd P(5)}{\sigma(n) \in P}
+	\Derive{(2)}{I(\forall)}{ \forall n \in P \. \sigma(n) \in P }
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(1,2)}{P = N}
+	\EndProof
+	\\
+	\Theorem{PrimitiveSetNonEmpty}{\forall N : \TYPE{NaturalSet} \. \forall n \in N \. n \neq \emptyset}
+	\NoProof
+}\Page{
+	\Theorem{PrimitiveSetInjective}{  \forall N : \TYPE{NataturalSet} \. \FUNC{primPart}(N) : N \ToInj ?N}
+	\Say{P}{\{ n \in \Nat : \forall m \in \Nat \.  \FUNC{primPart}(m) = \FUNC{primPart}(n) \Rightarrow m = n\}}{?N}
+	\Assume{m}{N}
+	\Assume{(1) }{m = \{1\}}
+	\Say{(2)}{ \THM{SelfContaiment}(1)  }{ m \in \{1\}  }
+	\Conclude{(3)}{\bd\TYPE{Singleton}(2)}{ m = 1 }
+	\Derive{(4)}{I(\forall)I(\Rightarrow)\bd P}{1 \in P }
+	\Assume{n}{P}
+	\Assume{m}{N}
+	\Assume{(2)}{\FUNC{primPart}(\sigma(n)) = \FUNC{primPart}(m)}
+	\Say{(3)}{\bd \FUNC{primPart}(\sigma(n))}{\sigma\big(\FUNC{primPart}(n)\big) \subset \FUNC{primPart}(\sigma(n))}
+	\Say{(4)}{(2)(3)\THM{Selfcontainment} }{ \sigma(n) \in \FUNC{primPart}(m)  }
+	\Say{(k,5)}{ \THM{StructureOfNat}\bd \FUNC{primPart}(4)}{\sum k \in N \. \sigma(k) = m}
+	\Say{(6)}{\bd \TYPE{NaturalSet}(5)(2)}{ \FUNC{primPart}(k) = \FUNC{primPart}(m) }
+	\Say{(7)}{\bd P (6)}{k = n}
+	\Conclude{(8)}{\sigma(7)(5)}{ \sigma(n) = m  }
+	\Derive{(2)}{ \bd P I(\forall))}{\forall n \in P \. \sigma(n) \in P }
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(N)(1,2)}{N = P}
+	\EndProof
+	\\
+	\Theorem{PrimitiveSetIsFinite}{\forall N : \TYPE{NaturalSet} \. \forall n \in \Nat \. |\FUNC{primPart}(n)| < \infty}
+	\Say{P}{\{ n \in N : |n| < \infty  \}}{?N}
+	\Say{(1)}{\THM{SingletonFinite}(1_N)\bd P}{1 \in P}
+	\Assume{n}{P}
+	\Say{(2)}{\bd P(n)}{ |n| < \infty  }
+	\Say{(3)}{\THM{CardImage}(n,\sigma)(2)}{|\sigma \; FUNC{primPart}(n)| < \infty}
+	\Say{(4)}{\THM{SingleTonFinite}(1_N)}{ |\{1_N\}| < \infty }
+	\Say{(5)}{\bd \FUNC{primPart}\THM{FiniteUnion}(3)(4)}
+	{ |\FUNC{primPart}(\sigma(n))| = |\sigma \; \FUNC{PrimPart}(n) \cap \{1_N\}| < \infty}
+	\Conclude{()}{\bd P (5)}{ \sigma(n) \in n }
+	\Derive{(2)}{I(\forall)}{\forall n \in P \. \sigma(n) \in P}
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(N)(1,2)}{N = P}
+	\EndProof
+}\Page{
+	\Theorem{AllNatsAreIso}{\forall N,M : \TYPE{NaturalSet} \. N \cong_\SET M} 
+	\Say{f}{\FUNC{rec}(N,M)(1_M, \Lambda m \in M \. \sigma_{M}(m))}{ N \to M  }
+	\Say{(1)}{\bd f (1_M) }{ 1_M \in \im f}
+	\Assume{m}{\im f}
+	\Say{(n,2)}{\bd \im f}{\sum n \in N \. f(n) = m}
+	\Say{(3)}{ \bd f(2) }{f(\sigma(n)) = \sigma(f(n)) = \sigma(m)}
+	\Conclude{()}{\bd^{-1} \im (3)}{ \sigma(m) \in \im f}
+	\Derive{(2)}{I(\forall)}{\forall m \in \im f \. \sigma(m) \in \im f}
+	\Say{(3)}{\bd  \TYPE{NaturalSet}(M) (1,2)}{\im f = M}
+	\Say{(4)}{\bd^{-1} \TYPE{Surjection}(f)(3)}{\Big[ f : N \ToSurj M \Big]}
+	\Say{ P  }{  \{ m \in M :  |f^{-1}(m)| = 1 \}   }{?M}
+	\Say{ (5) }{\THM{StructureOfNat}(M)\bd f}{1_M \in P}
+	\Assume{m}{P}
+	\Say{(n,6)}{(3)(m)}{\sum n \in N \. f(n) = m}
+	\Assume{k}{N}
+	\Assume{(7)}{f(k) = \sigma(m)}
+	\Assume{(8)}{ k = 1_N  }
+	\Say{(9)}{\bd f (8)(7)}{ \sigma(m) = f(k) = f(1_N) = 1_M    }
+	\Say{(10)}{\bd^{-1} \TYPE{Succesor}(M)(10)}{1_M \in \TYPE{Succesor}(M)}
+	\Conclude{()}{\THM{StructureOfNat}(M)(11)}{\bot}
+	\Derive{(8)}{E(\bot)}{k \neq 1_N}
+	\Say{(9)}{\THM{StructureOfNat}(N)(8)}{ k \in \TYPE{Succesor}(N)  }
+	\Say{(l,10)}{\bd \TYPE{Succesor}(N)(9)}{\sum l \in N \. k = \sigma(l)}
+	\Say{(11)}{\bd f (10) }{  \sigma(m) =  f(k) = \sigma(f(l))  }
+	\Say{(12)}{ \bd \TYPE{Injection}(\sigma)(11)}{  f(l)  = m    }
+	\Say{(13)}{\bd P (12,6))}{l = n}
+	\Conclude{()}{\sigma(13)(10)}{ k = \sigma(n)  }
+	\Derive{(7)}{I(\forall)\bd^{-1} |f^{-1}\{\sigma(m)\}|}{ |f^{-1}\{\sigma(m)\}| = |\{\sigma(n)| = 1   }
+	\Conclude{()}{\bd P(7)}{\sigma(m) \in P}
+	\Derive{(6)}{I(\forall)}{\forall m \in P \. \sigma(m) \in P}
+	\Say{(7)}{\bd \TYPE{NaturalSet}(M)(1,2)}{ P = M }
+	\Say{(8)}{\bd^{-1} \TYPE{Bijection}(4)\bd^{-1}\TYPE{Injection}(5)(7)\bd P}{ \Big[ f : N \ToBij M \Big]  }
+	\Conclude{(*)}{\bd^{-1}\TYPE{Isomorphic}(\SET)(8)}{N \cong_\SET M}
+	\EndProof
+	\\
+	\Assume{\Nat}{\TYPE{NaturalSet}}
+}
+\subsection{Finite Induction}
+\Page{  
+	\DeclareType{LinearlyInductive}{?\sum A : \SET \. \sum P,S : ?A \. P \times (P \to S)}
+	\DefineType{(A,P,S,1,\sigma)}{LinearltInductive}{\forall B \subset A \. 
+		\Big(1 \in B \And \forall b \in B \cap P \. \sigma(b) \in B \Big) \Rightarrow B = A }
+	\\
+	\Theorem{HasFirst}{\forall n \in \Nat \. 1 \in n}
+	\NoProof
+	\\
+	\Theorem{FiniteInductionIsWellDefined}{\forall n \in \Nat \. \forall m \in n \. m \neq n \Rightarrow m + 1 \in n }
+	\Say{P}{\{ n \in \Nat : \forall m \in n \. m \neq n \Rightarrow m + 1 \in n\}}{?\Nat}
+	\Assume{m}{1}
+	\Assume{(1)}{m \neq 1_\Nat}
+	\Say{(2)}{\THM{NotInSingleton}(1_\Nat)(1)}{m \not \in 1_\Nat}
+	\Say{(3)}{I(\bot)(1)(2)}{\bot}
+	\Conclude{(4)}{E(\bot)(\sigma(m) \in 1_\Nat)}{m + 1 \in 1_\Nat}
+	\Derive{(1)}{I(\forall)\bd^{-1}(P)}{1 \in P}
+	\Assume{n}{P}
+	\Assume{m}{n + 1}
+	\Assume{(2)}{m \neq n + 1}
+	\Assume{(3)}{m = 1_\Nat}
+	\Say{(4)}{\THM{HasFirst}(n)}{ 1_\Nat \in n  }
+	\Conclude{()}{(3)\bd \FUNC{primSet}(n+1)(4)}{ m + 1  \in n + 1   }
+	\Derive{(2)}{I(\Rightarrow)}{m = 1_\Nat \Rightarrow m + 1 \in n + 1}
+	\Assume{(3)}{m \in \Nat + 1}
+	\Say{(k,4))}{\bd \TYPE{Succesors}(\Nat)(m)}{\sum k \in \Nat \. k + 1 = m}
+	\Say{(5)}{\bd \FUNC{primSet}(n + 1)(m)(3)(4)}{ k \in n}
+	\Say{(6)}{\bd \TYPE{Injective}(\sigma)(2)(4)}{k  \neq n}
+	\Say{(7)}{\bd P (6)(4) }{ m = k + 1 \in n }
+	\Conclude{(*)}{\bd \FUNC{primSet}(n + 1)(7)}{ m + 1 \in n + 1  }
+	\Derive{(3)}{I(\forall)}{m \in \Nat + 1 \Rightarrow m + 1 \in n + 1}
+	\Conclude{()}{\THM{StructureOfNat}(\Nat)E(|)(2)(3)}{m + 1 \in n + 1}
+	\Derive{(2)}{\bd^{-1} P I(\forall)}{\forall n \in P \. n + 1 \in P}
+	\Conclude{(3)}{\bd^{-1} \TYPE{NaturalSet}(\Nat)(1)(2)}{\Nat = P}
+	\EndProof
+}\Page{
+	\Theorem{OverflowLemma}{\forall n \in \Nat \. n + 1 \not \in n}
+	\Say{P}{n \in \Nat : n + 1 \not \in n}{?\Nat}
+	\Say{(2)}{\bd \TYPE{NaturalSet}(\Nat)}{1 + 1 \neq 1}
+	\Say{(3)}{  \THM{NotInSingleton}(1)(2)}{1 + 1 \not \in 1}
+	\Assume{n}{P}
+	\Say{(4)}{\bd P(n)}{n + 1 \not \in P}
+	\Assume{(5)}{n + 1 + 1 \in n + 1 }
+	\Say{(6)}{\bd \TYPE{NaturalSet}(n + 1 + 1)}{ n + 1 + 1 \neq 1}
+	\Say{(7)}{\bd \TYPE{primPart}(n + 1)(5,6) }{n + 1 \in n}
+	\Conclude{()}{(7)(4)}{\bot}
+	\Derive{(5)}{E(\bot)}{n + 1 + 1 \not \in n + 1}
+	\Conclude{(6)}{\bd P (5)}{n + 1 \in P}
+	\Derive{(4)}{I(\forall)}{\forall n \in P \. n  + 1 \in P}
+	\Conclude{(*)}{\bd \TYPE{NaturalNumbers}(\Nat)(3,4)}{P = N}
+	\EndProof
+	\\
+	\Theorem{PrimHasPreds}{\forall n \in \Nat \. \forall m + 1 \in n \. m \in n}
+	\Say{P}{\{ n \in \Nat : \forall m + 1 \in n \. m \in n   \}}{?\Nat}
+	\Assume{m + 1}{1}
+	\Say{(1)}{\bd \TYPE{NaturalSet}(\Nat)(m+1)}{ m + 1 \neq 1}
+	\Say{(2)}{\THM{NotInSingleti} \Big(\FUNC{primSet}(1)\Big)(1)}{m + 1 \not \in 1}
+	\Say{(3)}{(2)(m + 1)}{\bot}
+	\Conclude{()}{E(\bot)}{m \in 1}
+	\Derive{(1)}{I(\forall)\bd P}{1 \in P}
+	\Assume{n}{P}
+	\Assume{m + 1}{n + 1}
+	\Assume{(2)}{m = 1}
+	\Conclude{()}{\THM{HasFirst}(n + 1)(2)}{m \in n + 1}
+	\Derive{(2)}{I(\Rightarrow)}{ m = 1 \Rightarrow m \in n + 1 }
+	\Assume{(3)}{m \in \Nat + 1}
+	\Say{(k,4)}{  \bd \TYPE{Succesor}(\Nat)(m) }{ \sum k \in \Nat \. m = k + 1   }
+	\Say{(5)}{\bd \FUNC{primPart}(n + 1)(m + 1)}{m \in n}
+	\Say{(6)}{ \bd P (n)(5)(4) }{ k \in n   }
+	\Conclude{()}{ \bd \FUNC{primPart}(n + 1)(6)(4) }{ m \in n  }
+	\Derive{(2)}{\THM{StructureOfNat}(\Nat)E(|)(2) }{ \forall  n \in P \. n + 1 \in P  }
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(1)(2) }{ \Nat = P}
+	\EndProof
+}\Page{
+	\Theorem{FiniteInduction}{\forall n \in \Nat \. (n,n \setminus \{n\},n \setminus \{1\},1,\sigma) : \TYPE{LinearlyInductive}}
+	\Assume{B}{?n}
+	\Assume{(2)}{1 \in B}
+	\Assume{(3)}{\forall m \in n \. m \neq n \Rightarrow m + 1 \in B }
+	\Say{B'}{B \cup n^\c}{?\Nat}
+	\Say{(4)}{(2)\bd\FUNC{union}}{ 1 \in B'}
+	\Assume{m}{B'}
+	\Assume{(5)}{m \in n}
+	\Assume{(6)}{m \neq n}
+	\Say{(7)}{(3)(5)(6)(m)}{m + 1 \in B}
+	\Conclude{()}{\bd B' \bd \FUNC{union}(7)}{m + 1 \in B'}
+	\Derive{(6)}{I(\Rightarrow)}{m \neq n \Rightarrow m \in B'}
+	\Assume{(7)}{m = n}
+	\Say{(8)}{\THM{overflowLemma}(n)}{n + 1 \not \in n}
+	\Say{(9)}{\bd \FUNC{complement}(\Nat)(n)(8)}{n + 1 \in n^\c}
+	\Conclude{()}{ \bd B' \bd \FUNC{union}(9)(7)  }{m + 1 \in B' }
+	\Derive{(7)}{I(\Rightarrow)}{  m = n  \Rightarrow m + 1 \in B'  }
+	\Conclude{()}{\THM{AllButOne}(n,n)E(|)(6,7)}{ m + 1 \in B'}
+	\Derive{(5)}{I(\Rightarrow)}{ m \in n \Rightarrow m + 1 \in B' }
+	\Assume{(6)}{m \in n^\c}
+	\Assume{(7)}{ m + 1 \in n  }
+	\Say{(8)}{\THM{PrimHasPreds}(7)}{ m \in n  }
+	\Conclude{()}{(6)(8)}{ \bot   }
+	\Derive{(7)}{E(\bot)}{m + 1 \in n^\c}
+	\Conclude{()}{\bd B' \bd \FUNC{union}}{m + 1 \in B'}
+	\Derive{(6)}{I(\Rightarrow)}{m \in n^\c \Rightarrow m + 1 \in B' }
+	\Conclude{()}{\THM{FullAlternative}(\Nat)(n)E(|)(5,6)}{ m + 1 \in B'  }
+	\Say{(5)}{I(\forall)}{\forall m \in \Nat \. m + 1 \in B'}
+	\Say{(6)}{\bd \TYPE{NaturalSet}(4,5)}{B' = \Nat}
+	\Conclude{()}{(6)\THM{UniversumIntersect}(n)(6)\THM{UnionCancelation}(B,n^\cap)\THM{SubsetUntersect}(B,n)}
+	{ \NewLine :n = B' \cap n = ( B  \cup n^\cap) \cap n = B \cap n = n  }
+	\DeriveConclude{(*)}{I(\forall)I(\Rightarrow)\bd^{-1}\TYPE{LinearlyInductive}}
+	{\Big[ (n, n \setminus \{n\}, n \setminus \{1\},1,\sigma) : \TYPE{LinearlyInductive} \Big]}
+	\EndProof
+}
+\newpage
+\subsection{Order Structure}
+\Page{
+	\DeclareType{NaturalOrder}{?(\Nat \times \Nat) }
+	\DefineType{(n,m)}{NaturalOrder}{n \subset m}
+	\\
+	\Theorem{NaturalOrderIsOrder}{  \TYPE{NaturalOrder} : \TYPE{Order}}
+	& \text{ Use the fact that subsets of $N$ are poset and the injectivity of the primitive sets} \\
+	\EndProof
+	\\
+	\DeclareFunc{orderedNaturalNumbers}{ \TYPE{Poset} }
+	\DefineNamedFunc{orderedNaturalNumbers}{\Nat}{(\Nat,\le)}{(\Nat,\TYPE{NaturalOrder})}
+	\\	
+	\Theorem{FirstIsLowerBound}{ 1 : \TYPE{LowerBound}(\Nat)}
+	\Assume{m}{\Nat}
+	\Say{(1)}{\bd \THM{StructureOfNat}(\Nat)(m)}{ m = 1 | m \in \TYPE{Succesors}(\Nat)}
+	\Assume{(2)}{m = 1}
+	\Conclude{()}{\bd \TYPE{Reflexive}(\TYPE{NaturalOrder})(m,1)(1)}{1 \le m}
+	\Derive{(2)}{ I(\Rightarrow) }{ m = 1 \Rightarrow 1 \le m  }
+	\Assume{(3)}{\Big[m : \TYPE{Succesor}(\Nat)\Big] }
+	\Say{(k,4)}{ \bd \TYPE{Succesor}(\Nat)(m) }{ \sum k \in \Nat \. m = \sigma(k)}
+	\Say{(5)}{\bd \FUNC{primSet}(m)(4)}{\FUNC{primSet}(m) = \sigma(\FUNC{primSet}{k}) \cup \{1\} }
+	\Say{(6)}{\bd \FUNC{union}(5)\bd^{-1}1 }{1 \in m }
+	\Say{(7)}{\THM{SingletonSubset}(6)}{\{1\} \subset m}
+	\Conclude{()}{\bd^{-1} \TYPE{NaturalOrder}(7)}{ 1 \le m  }
+	\Derive{(3)}{I(\rightarrow)}{m \in \Nat + 1 \Rightarrow 1 \le m}
+	\Conclude{()}{E(|)(1,2,3)}{1 \le m }
+	\DeriveConclude{(*)}{\bd^{-1} \TYPE{LowerBound}}{\Big[1 : \TYPE{LowerBound}(\Nat)\Big]}
+	\EndProof
+        \\
+}\Page{	
+	\Theorem{NextIsGreater}{\forall n \in \Nat \. n < n + 1}
+	\Say{(1)}{\THM{OverflowLemma}(n )}{n  + 1 \not \in n  }
+	\Say{(2)}{\THM{SelfContainment}(n + 1 )}{ n  + 1 \in n + 1  }
+	\Say{(3)}{\THM{IneqSets}(1)(2)I(\#,\to)(\FUNC{primPart})}{ n  \neq_{\Nat} n + 1   }
+	\Say{(4)}{\THM{HasOne}^{2}(n + 1 )(n)\bd \FUNC{intersect}(n,n +1)}{ 1 \in n \cap n + 1  }
+	\Assume{m}{n \cap n + 1 }
+	\Assume{(5)}{ m \neq n  }
+	\Say{(6)}{\THM{FiniteInductionIsWellDefined}(n+1,m,(5))}{ m + 1 \in n }
+	\Say{(7)}{\bd \FUNC{primPart}(n+1)(m)}{ m + 1 \in n + 1   }
+	\Conclude{()}{ \bd \FUNC{intersect}(n,n+1)(7,8)}{m + 1 \in n \cap n + 1}
+	\Derive{(5)}{I(\Rightarrow)I(\forall)}{\forall m \in n \cap n + 1 \. m \neq n \Rightarrow m + 1 \in n \cap n + 1 }
+	\Say{(4)}{\bd \TYPE{LinearlyInductive}(n)(4,5)}{n = n \cap n + 1}
+	\Say{(5)}{\THM{IntersectSubset}(4)}{n \subset n + 1}
+	\Say{(6)}{\bd \TYPE{NaturalOrder}(5)}{n \le n +1}
+	\Conclude{(*)}{\bd \TYPE{StrictLess}(3,5)}{n < n + 1}
+	\EndProof
+	\\
+	\DeclareFunc{after}{\Nat \to ?\Nat}
+	\DefineFunc{after}{n}{\{m \in \Nat \. m > n \}}
+	\\
+	\Theorem{AfterDisjoint}{\forall n \in \Nat \. n \cap \FUNC{after}(n) = \emptyset}
+	\Assume{m}{ n}
+	\Assume{(1)}{m = n}
+	\Conclude{()}{\bd \FUNC{after}(n)\bd \TYPE{StrictlyGreater}(1)}{m \not \in \FUNC{after}(n)}                      
+	\Derive{(1)}{ I(\Rightarrow)}{m = n \Rightarrow m \not \in \FUNC{after}(n)}
+	\Assume{(0)}{m \neq n}
+	\Say{(2) }{\THM{FiniteInductionIsWellDefined}(n,m)(0)}{m + 1 \in n}
+	\Say{(3)}{\THM{OverflowLemma}(m)}{m + 1 \not \in m}
+	\Say{(4)}{\bd \TYPE{NaturalOrder}(2,3)}{ n \not \le m }
+	\Conclude{()}{\bd \FUNC{after}(n)(4)}{m \not \in \FUNC{after}(n)}
+	\Derive{(5)}{I(\Rightarrow)}{m \neq n \Rightarrow m \not \in \FUNC{after}(n)}
+	\Conclude{()}{\THM{EqAlternative}(m,n)E(|)(5,4)}{ m \not \in \FUNC{after}(n)}
+	\DeriveConclude{(*)}{\bd \FUNC{intersct}(n,\FUNC{after}(n))}{n \cap \FUNC{after}(n) = \emptyset}
+	\EndProof
+}\Page{
+	\Theorem{NaturalShift}{\forall n \in \Nat \. (\FUNC{after}(n),n+1,\sigma) : \TYPE{NaturalSet}}
+	\Assume{m}{\FUNC{after}(n)}
+	\Assume{(1)}{n + 1 = m + 1}
+	\Say{(2)}{\bd \TYPE{NaturalSet}(1)}{n = m}  
+	\Say{(4)}{\bd \FUNC{after}(n) \bd \TYPE{SrictlyGreater}(2)}{m \not \in \TYPE{after}(n)}
+	\Conclude{()}{(4)(m)}{\bot}
+	\Derive{(1)}{E(\bot)I(\forall)}{\forall m \in \FUNC{after}(n)\. m + 1 \neq n + 1}
+	\Assume{P}{?\FUNC{after}(n)}
+	\Assume{(2)}{n+1 \in P}
+	\Assume{(3)}{\forall m \in P \. m + 1 \in P}
+	\Say{P'}{n \cup P}{?\Nat}
+	\Say{(4)}{\bd P' \bd \FUNC{union}(n,P)\THM{HasFirst}(n)}{1 \in P'}
+	\Assume{m}{P'}
+	\Assume{(5)}{m \in n}
+	\Assume{(6)}{m \neq n}
+	\Say{(7)}{\THM{FiniteInductionIsWellDefined}}{m + 1 \in n}
+	\Conclude{(8)}{\bd P' \bd \FUNC{union}(n,P)(7)}{m + 1 \in P'}
+	\Derive{(6)}{I(\forall)}{m \neq n \rightarrow m + 1 \in P'}
+	\Assume{(7)}{m = n}
+	\Say{(8)}{(7)(2)}{m + 1 \in P'}
+	\Derive{(7)}{I(\Rightarrow)}{m =n \Rightarrow m + 1 \in P'}
+	\Conclude{()}{\THM{AllButOne}(n,n)E(|)(6,7)\bd P' \FUNC{union}(n,P)}{ m + 1 \in P'}
+	\Derive{(5)}{I(\Rightarrow)}{m \in n \Rightarrow n \in P' }
+	\Assume{(6)}{m \in P'}
+	\Conclude{()}{(3)(6)\bd P' \FUNC{union}(n,P)}{m + 1 \in P'}
+	\Derive{(6)}{I(\Rightarrow)}{ m \in P \rightarrow m + 1 \in P' }
+	\Conclude{()}{\bd P' \bd \FUNC{union}E(|)(5)(6)}{ m + 1 \in n }
+	\Derive{(5)}{ I(\forall)}{\forall m \in P' \. m + 1 \in P'}
+	\Say{(6)}{\bd \TYPE{NaturalSet}(\Nat)(4,5)}{P'= \Nat}
+	\Say{(7)}{\THM{AfterDisjoint}}{n \cap \FUNC{after}(n) = \emptyset}
+	\Conclude{(*)}{ (6)\THM{DisjointCompletion}(n,\FUNC{after}(n),P)(7)}{P = \FUNC{after}(n)}
+	\Derive{(n)}{I(\Rightarrow)I(\forall)\bd^{-1}\TYPE{NaturalSet}}
+	{\Big[(\FUNC{after}(n),n + 1,\sigma) : \TYPE{NaturalSet}\Big]   }
+	\EndProof
+	\\
+	\Theorem{StructureOfNat3}{\forall n \in \Nat \. \Nat = n \sqcup \TYPE{after}(n)}
+	\EndProof
+}\Page{
+	\Theorem{ShiftReflectsOrder}{
+		\forall n \in \Nat \. \forall m \in \FUNC{after}(n) \. 
+		  n + 1 \le_{\Nat} m
+	}
+	\Say{P}{\{m \in \FUNC{after}(n) \. n + 1 \le_{\FUNC{after}(n)} m \Rightarrow n + 1 \le_{\Nat} m\}}{?\TYPE{after}(n)}
+	\Say{(1)}{\bd \TYPE{Reflexive}(\TYPE{NaturalOrder})\bd P }{n + 1 \in P}
+	\Assume{m}{P}
+	\Say{(2)}{\THM{NextIsGreater}(\Nat)(m)}{m <_{\Nat} m + 1}
+	\Say{(3)}{\THM{FirstIsLowerBound}(\FUNC{after}(n))(m)}{n + 1 \le m }
+	\Say{(4)}{\bd P(4)}{n + 1 \le_{\Nat} m}
+	\Conclude{()}{(2)(4)}{n + 1 \le m + 1 }
+	\Derive{(2)}{I(\forall)\bd P }{\forall m \in P \. m + 1 \in P}
+	\Conclude{(3)}{\bd \TYPE{NaturalSet}(\FUNC{after}(n))(1)(2)}{P = \FUNC{after}(n)}
+	\EndProof
+	\\
+	\Theorem{NaturalOrderIsTotal}{\TYPE{NaturalOrder} : \TYPE{Total}}
+	\Say{P}{\{n \in \Nat : \forall m \in \Nat \. n \le m | m \le n\}}{?\Nat}
+	\Say{(1)}{\THM{FirstIsLowerBound}\bd \TYPE{LowerBound}(Nat)\bd P}{1 \in P}
+	\Assume{n}{P}
+	\Say{(2)}{\THM{StructureOfNat3}(n)\bd P}{n = \{ m \in \Nat : m \le n\}}
+	\Say{(3)}{\THM{NextIsGreater}(n)}{ n < n + 1  }
+	\Assume{m}{\Nat}
+	\Assume{(4)}{m \in n}
+	\Conclude{()}{(2)(3)}{m < n + 1}
+	\Derive{(4)}{I(|)I(\Rightarrow)}{m \in n \Rightarrow n + 1 \le m | m \le n + 1 }
+	\Assume{m}{\FUNC{after}(n)}
+	\Say{(5)}{\THM{NaturalShift}(n)\THM{FirstIsLowerBound}}{[n+1 : \TYPE{LowerBound}(\FUNC{after}(n))]}
+	\Conclude{()}{\bd \TYPE{LowerBound}(n+1)(m)\THM{ShiftReflectsOrder}(n)}{m \le n + 1}
+	\Derive{(5)}{I(|)I(\Rightarrow)}{ m \in \FUNC{after}(n) \Rightarrow  n +1 \le m | m \le n +1  }
+	\Conclude{()}{\THM{StructureOfNat3}E(|)(4,5)}{n+1\le m| m \le n + 1} 
+	\Derive{(2)}{ I(\forall) \bd P I(\forall)}{\forall n \in P \. n +1 \in P}
+	\Say{(3)}{\bd \TYPE{NaturalSet}((1),(2))}{P = \Nat}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Total}(3)}{\Big[\TYPE{NaturalOrder} : \TYPE{Total}\Big]}
+	\EndProof
+}\Page{
+	\Theorem{NextRespectsOrder}{\forall a,b \in \Nat \.  a \le b \iff a + 1 \le b + 1}
+	\Assume{(1)}{a \le b}
+	\Assume{(2)}{a = b}
+	\Say{(3)}{I(=,\to)(\sigma)(2)}{a + 1 = b + 1}
+	\Conclude{()}{\bd^{-1}\TYPE{Reflexive}\TYPE{NaturalOrder}(\Nat)(3)}{a + 1 \le b + 1 }
+	\Derive{(2)}{I(\Rightarrow)}{a = b \Rightarrow a + 1 \le b + 1}
+	\Assume{(3)}{a < b}
+	\Say{(4)}{\THM{NextIsGreater}(b)}{b < b + 1}
+	\Say{(5)}{\THM{FirstIsLowerBound}\bd^{-1}\FUNC{after}(a)((3),b)}{a + 1 \le b}
+	\Conclude{()}{(4)(5)}{a + 1 < b + 1}
+	\Derive{(3)}{ I(\Rightarrow)}{ a < b \Rightarrow a + 1 \le b + 1 }
+	\Conclude{()}{\THM{Dichtotmy}(1)E(|)((2),(3))}{a + 1 \le b + 1}
+	\Derive{(1)}{I(\Rightarrow)}{ a \le b \Rightarrow a + 1 \le b + 1}
+	\Assume{(2)}{a + 1 \le b + 1}
+	\Assume{(3)}{a +1  = b + 1}
+	\Say{(4)}{\bd \TYPE{NaturalSet}(\Nat)(2)}{a  = b}
+	\Conclude{()}{\bd^{-1}\TYPE{Reflexive}\TYPE{NaturalOrder}(\Nat)}{a + 1 \le b + 1 }
+	\Derive{(3)}{I(\Rightarrow)}{a + 1 = b + 1 \Rightarrow a  \le b }
+	\Assume{(4)}{a + 1 < b + 1}
+	\Assume{(5)}{a > b}
+	\Say{(6)}{(1)(a,b)(7)}{a + 1 \le b + 1}
+	\Conclude{()}{\THM{Trichtomy}(\Nat)(7)(8)}{\bot}
+	\DeriveConclude{(7)}{E(\bot)}{a \le b}
+	\Derive{(3)}{ I(\Rightarrow)}{ a + 1 < b + 1 \Rightarrow a  \le b  }
+	\Conclude{()}{\THM{Dichtotmy}(1)E(|)((2),(3))}{a  \le b}
+	\DeriveConclude{(*)}{I(\iff)(1)I(\Rightarrow)}{ a \le b \iff a + 1 \le b + 1}
+	\EndProof
+}
+\Page{
+	\Theorem{NatIsWellOrdered}{\Nat : \TYPE{WellOrdered}}
+	\Assume{A}{\TYPE{HasNoMinimal}(\Nat}
+	\Say{P}{\{ n \in \Nat : n < A  \}}{ ?\Nat}
+	\Say{(1)}{\THM{FirstLowerBound}(\Nat)(A)}{1 \le A}
+	\Say{(2)}{\bd \TYPE{HasNoMinimal}(A)(1)}{1 < A}
+	\Say{(3)}{\bd P(2)}{1  \in P}
+	\Assume{(4)}{n \in P}
+	\Say{(5)}{\bd P(n)\bd^{-1} \FUNC{after}(n)}{ A \subset \FUNC{after}(n)}
+	\Say{(6)}{\THM{firstLowerBound}(\FUNC{after}(n))(A)\THM{ShiftReflectsOrder}(n)}{ n + 1 \le A }
+	\Say{(7)}{ \bd \TYPE{HasNoMinimal}(A)(6) }{n + 1 < A}
+	\Conclude{()}{\bd P(7) }{n + 1 \in P}
+	\Derive{(4)}{I(\forall)}{\forall n \in  P \. n + 1 \in \Nat }
+	\Say{(5)}{\bd \TYPE{NaturalSet}((3),(4))}{P = \Nat}
+	\Say{(6)}{ \bd P \bd \TYPE{StrictlyLess} \bd^{-1} \TYPE{Disjoint} \THM{DisjointSubset}(A,P)(5)\THM{UiversalCompliment}  }
+	{A \subset P^\c = \emptyset}
+	\Say{()}{\THM{EmptySubset}(6)}{A = \emptyset}
+	\Derive{(1)}{I(\forall)}{\forall A : \TYPE{HasNoMinimal}(\Nat) \. A = \emptyset}
+	\Conclude{(*)}{\bd^{-1} \TYPE{WellOrdered}(1)}{\LOGIC{This}}
+	\EndProof
+}
+\newpage
+\subsection{Natural Objects}
+\Page{
+	\DeclareType{NaturalObject}{ \prod \C : \TYPE{WithTerminal} \. ? \sum X \in \C \.  1_\C \Arrow{\C} X \times X \Arrow{\C}  }
+	\DefineType{(X,u,\sigma)}{NaturalObject}{
+		\forall A \in \C \. \forall I : 1_\C \Arrow{\C} A \. \forall g : X \Arrow{\C} X \.  \NewLine \.   
+		\exists! f : X \Arrow{\C} A \. uf = I  \And Ig = u\sigma f \And \sigma f =  fg 	
+	}
+}G
+\subsection{More Inductions and Recursions}
+\Page{
+	\Theorem{FullInduction}{ \forall N : \TYPE{NaturalSet} \. \forall A : ?N \. \forall (0) : 0 \in A \. 
+		\forall (00) : \forall n \in P \. n + 1 \in A \. P = N  \NewLine \where \NewLine 
+		P = \{ n \in N : \forall k \in n \. k \in A \}
+	}
+	\NoProof
+	\\
+	\DeclareFunc{hardRecursion}{ \prod N : \TYPE{NaturalSet} \. \prod X : \SET \. \Big( X \times \big((N \times X) \to X\big)\Big) \to N \to X  }
+	\DefineNamedFunc{hardRecutsion}{(a,f)}{\FUNC{rec2}(a,f)}{\Big(\FUNC{rec}\big((\sigma(1),a),\Lambda (n,x) \in N \times X \. (\sigma(n),f(n,x))\big)\Big)_2}
+}
+\newpage
+\section{Integers}
+\subsection{Arithmetics with the Zero}
+\Page{
+	\Conclude{\Nat}{(\Nat,1,\sigma)}{\TYPE{NaturalSet}}
+	\\
+	\Conclude{\Int_+}{(\Int_+,0,\sigma)}{\TYPE{NaturalSet}}
+	\\
+	\DeclareFunc{naturalEmbedding}{\Nat \to \Int_+}
+	\DefineNamedFunc{naturalEmbedding}{}{\FUNC{implicit}}{\FUNC{rec}(0+1, \sigma)}
+	\\
+	\DeclareFunc{add}{\Int_+ \to \Int_+ \to \Int_+}
+	\DefineNamedFunc{add}{}{(+)}{ \FUNC{rec}( \mathrm{id}, \FUNC{compose}(\sigma))  }
+	\\
+	\Theorem{ZeroIsNeutral}{0 : \TYPE{Neutral}(+)}
+	\Say{(1)}{\bd \FUNC{add}(0)\bd \mathrm{id}}{\forall n \in \Int_+ \. 0 + n = n}
+	\Say{P}{\{ n \in \Int_+ : n + 0 = 0 \}}{?\Int_+}
+	\Say{(2)}{(1)(0)}{ 0 + 0 = 0}
+	\Say{(3)}{\bd P(2)}{0 \in P}
+	\Assume{n}{P}
+	\Say{(4)}{\bd \FUNC{add}(n + 1)\bd P \bd^{-1} n + 1}{  n + 1  + 0 =  \sigma(n + 0) = \sigma(n) = n + 1  }
+	\Conclude{()}{\bd P (4)}{n + 1 \in P}
+	\Derive{(4)}{I(\forall)}{\forall n \in P \. n + 1 \in P}
+	\Say{(5)}{\bd \TYPE{NaturalSet}(\Int_+)(4,5)}{ P = \Int_+ }
+	\Conclude{(*)}{\bd^{-1} \TYPE{Neutral}\Big((1),(5)\Big)}{\Big[ n : \TYPE{Neutral}(+) \Big]}
+	\EndProof
+	\\
+	\Theorem{OneCommutes}{\forall n,k \in \Int_+ \. (+)(n)(+)(1)(k) = (+)(1)(+)(n)(k)}
+	\Say{P}{\{ n \in \Int_+ : \forall k \in \Nat \. (n + (1 + k)) = (1 + (n + k))  \}}{?\Int_+}
+	\Assume{k}{\Int_+ }
+	\Conclude{()}{\THM{ZeroIsNeutral}}{(+)(0)(+)(1)(k) = (+)(1)(k) = (+)(1)(+)(0)(k)}
+	\Derive{(1)}{\bd P I(\forall)}{0 \in P}
+	\Assume{n}{P}
+	\Assume{k}{\Nat}
+	\Conclude{ (2)    }{ \bd^3 \FUNC{add}   }
+	{                           
+		(1 + n) + k     =
+		\sigma(n)  + k    = 
+		\sigma( n + k)  =
+		1  + ( n + k)
+	}
+	\Conclude{()}{ \bd \FUNC{add} \bd n \bd P (2) \bd \FUNC{add}     }
+	{	 
+		\NewLine :
+		\sigma(n)  + (1 + k) =  
+		 \sigma(n + (1 + k) )
+		 \sigma(1  +  (n  + k)) =
+		 1   +  ( 1 + (n + k ) ) = 
+                 1   +  ((1 + n ) + k )  =
+		 1  + (\sigma(n) + k)  
+	}
+	\Derive{(2)}{I(\forall)\bd P I(\forall)}{ \forall n \in P \. P +1 \in n }
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}((1),(2))}{P = \Int_+}
+	\EndProof
+	}\Page{
+	\Theorem{NextIsAddition}{\forall n \in \Int_+ \. (+)(n)(1) = \sigma(n)}
+	\Say{P}{\{ n \in \Int_0 : (+)(n)(1) \}}{?\Int_+}
+	\Say{(1) }{ \bd \FUNC{add}(0)\bd\FUNC{naturalEmbedding}(1)}{(+)(0)(1) = 1 = \sigma(0) }
+	\Say{(2)}{ \bd P(1)}{0 \in P}
+	\Assume{n}{P}
+	\Conclude{()}{\bd^{-1} \FUNC{add}(+)(1) \THM{OneCommutes}\bd n\bd P \bd \FUNC{add}(+)(1) }
+	{ \NewLine :  
+	(+)(\sigma(n))(1) = (+)(n)(+)(1)(1) = (+)(1)(+)(n)(1) = (+)(1)(\sigma(n)) = \sigma\sigma(n)  } 
+	\Derive{(3)}{I(\forall)}{\forall n \in P \. n + 1 \in P}
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(\Int_+)}{ \Int_+ = 0   }
+	\EndProof
+	\\
+	\Theorem{NextIsAssoc}{\forall n,m \in \Int_+ \. (n + m) + 1 = n + (m + 1)}
+	\Say{P}{\{ n \in \Int_+ : (n + m) + 1 = n + (m + 1) \}}{?\Int_+}
+	\Assume{m}{\Int_+}
+	\Conclude{()}{\THM{ZeroIsNeutral}}
+	{(0 + m) + 1 =  m + 1 = 0 + (m + 1)   }  
+	\Derive{(1)}{I(\forall)\bd P }{ 0 \in P}
+	\Assume{k}{P}
+	\Assume{m}{\Int_+}
+	\Conclude{()}{\bd \FUNC{add}(k + 1) \THM{NextIsAdd} \bd k \bd P \THM{NextIAdd} \bd \FUNC{add}  } 
+	{ 
+		\NewLine:
+		((k+1) + m) + 1 = 
+		\sigma(k + m) + 1 = 
+		((k + m) + 1) + 1 = 
+		(k + (m + 1)) + 1 =  
+		\sigma(k + (m+1)) = 
+		k + 1 + (m + 1) 
+	}
+	\Derive{(2)}{I(\forall)\bd P I(\forall)}{\forall k \in P \. k + 1 \in P}
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(\Int_0)\big((1),(2)\big)}{P = \Int_0}
+	\EndProof
+	\\
+	\Theorem{AdditionIsAssoc}{(+) : \TYPE{Associative}(\Int_+)}
+	\Say{P}{\{ k : \forall n, m \in \Int_+ \.  (n + m) + k = n + (m + k)   \}}{?\Int_+}
+	\Assume{n,m}{\Nat}
+	\Conclude{()}{\THM{ZeroIsNeutral}^2(n + m)(m)}{ (n + m) + 0 = n + m = n + (m + 0) }
+	\Derive{(1)}{I(\forall)}{\forall n,m \in \Int_+ \. (n + m) + 0 = n + (m + 0)}
+	\Say{(2)}{\bd P(1)}{0 \in P}
+	\Assume{k}{P}
+	\Assume{n,m}{\Nat}
+	\Conclude{()}{ \THM{NextIsAssoc}(n +m,k)\bd P(k) \THM{NextIsAssoc}(n,m +k) \THM{NextIsAddition}(m,k) }
+	{ \NewLine : (n +m) + (k +1) = ((n + m) + k) + 1 = (n + (m + k)) +1 = n + (( m + k) + 1) = n + (m + k + 1)}
+	\Derive{(3)}{I(\forall)}{\forall n,m \in \Int_+ \. (n + m) + k + 1 = n + (m + k + 1)}
+	\Conclude{()}{\bd P(3)}{k + 1 \in P}
+	\Derive{(3)}{I(\forall)}{\forall k \in P\. k + 1 \in P}
+	\Conclude{()}{\bd\TYPE{NaturalSet}(\Int_+)}{P = \Int_+}
+	\EndProof
+}
+\Page{
+	\Theorem{AdditionCommutes}{(+) : \TYPE{Commutative}(\Int_+)}
+	\Say{P}{ \{ n \in \Int_+ : \forall m \in \Int_+ \. n + m = m + n \}   }{?\Int_+}
+	\Say{(1)}{\bd P \THM{ZeroIsNeutral}}{0 \in P}
+	\Assume{n}{P}
+	\Assume{m}{\Int_0}
+	\Conclude{()}{\bd \FUNC{add} \bd n \bd P \THM{OneCommute} }{(n +1) + m = 1 + (n + m ) = 1 + (m + n) =  m + (n + 1)}
+	\Derive{(2)}{I(\forall)\bd P I(\forall)}{\forall n \in P \. n + 1 \in P}
+	\Conclude{(3)}{\bd \TYPE{NatalSet}(\Int_+)}{P = \Int_+}
+	\EndProof
+	\\
+	\Theorem{NaturalNumbersFormMonoid}{ (\Int_+,+,0) : \TYPE{CommutativeMonoid}}
+	\NoProof	
+	\\
+	\DeclareFunc{mult}{\Nat \to \Nat \to \Nat}
+	\DefineNamedFunc{mult}{}{(\cdot)}{\FUNC{rec}(\FUNC{const}(0),\Lambda f : \Int_+ \to \Int_+ \. \Lambda n \in \Int_+ \. f(n) + n)}
+	\\
+	\Theorem{ZeroMult}{\forall n \in \Nat \. 0n = n0 = 0}
+	\Assume{n}{\Int_+}
+	\Conclude{()}{\bd \FUNC{mult}(0)}{0n = 0}
+	\Derive{(1)}{I(\forall) }{\forall n \in \Nat \. 0n = 0}
+	\Say{P}{\{ n \in \Int_+ n0 = 0  \}}{?\Int_+}
+	\Say{(2)}{((1))(0)}{0 \in P}
+	\Assume{n }{P}
+	\Conclude{()}{\bd \FUNC{mult}(n + 1)}{(n + 1)0 = n0 + 0 = 0 + 0 = 0}
+	\Derive{(3)}{I(\forall)\bd P}{ \forall n \in P \. n + 1 \in P}
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(\Int_+)(P)(2,3)}{P = \Int_+}
+	\EndProof
+	\\
+	\Theorem{UnitIsNeutral}{\forall n \in \Nat \. 1n = n1 = n}
+	\Assume{n}{\Int_+}
+	\Conclude{()}{\bd \FUNC{mult}(1)(n)}{1n = n}
+	\Derive{(1)}{I(\forall)}{\forall n \in \Nat \. 1n =n}
+	\Say{P}{\{ n \in \Nat \. n1 = n \}}{?\Int_+}
+	\Say{(2)}{\THM{ZeroMult}\bd P}{1 \in P}
+	\Assume{n}{P}
+	\Conclude{()}{ \bd \FUNC{mult} \bd P \THM{NextIsAddition}   }{ (n +1)1 = n1 + 1 = n + 1 }
+	\Derive{(3)}{I(\forall) \bd P}{\forall n \in P \. n + 1 \in P} 
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(\Int_+)}{P = \Int_+}
+	\EndProof
+}
+\Page{
+	\Theorem{MultDistributive}{ ((\cdot),(+)) : \TYPE{Distributive}(\Int_+)}
+	\Say{P}{\{ n \in \Int_+ : \forall k,m \in \Int_+ \. n(m + k) = (nm) + (nk) \}}{?\Int_+}
+	\Assume{m,k}{\Int_+}
+	\Conclude{()}{\THM{ZeroMult}^3 \THM{ZeroNeutral}}{ 0(m + k) = 0 = 0 + 0 = (0m) + (0k) }
+	\Derive{(1)}{\bd P I(\forall)}{0 \in P}
+	\Assume{n}{P}
+	\Assume{k,m}{\Int_+}
+	\Conclude{()}{\bd \FUNC{mult}(n + 1) \bd P \bd n \bd \TYPE{Commutative}(\Int_+)(+)(nk,m)\bd^{-2} \FUNC{mult}(n + 1) }{ 
+		\NewLine:
+		(n + 1)(m + k) = 
+		n(m + k) + (m + k) = 
+		nm + nk + m + k = 
+		nm + m + nk +k = 
+		(n +1)m + (n + 1)k
+		}
+	\Derive{(2)}{I(\forall)PI(\forall)}{ \forall n \ P \. n + 1 \in P   }
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(\Int_+)(P)((1),(2))}{P = \Int_+}
+	\EndProof
+	\\
+	\Theorem{BackMult}{\forall n,m \in \Int_+ \. n(m + 1) = nm + n}
+	\Conclude{(*)}{\THM{NextIsAddition}(n)\THM{MultDistributive}(n,m,1)\THM{UnitIsNeutral}}{n(m + 1) = nm + n1 = nm + n}
+	\EndProof
+	\\
+	\Theorem{MultCommutes}{(\cdot) : \TYPE{Commutative}(\Int_+)}
+	\Say{P}{\{ n \in \Int_+ : \forall m \in \Int_+ \. nm = mn \} }{?\Int_+}
+	\Say{(1)}{\THM{ZeroMult}\bd P}{0 \in O}
+	\Assume{n}{P}
+	\Assume{m}{\Int_+}
+	\Conclude{}{\bd \FUNC{mult}(n + 1) \bd P \THM{BackMult} }{ (n + 1)m = nm + m = mn + m = m(n + 1) }
+	\Derive{(2)}{I(\forall)\bd P I(\forall)}{ \forall n \in P \. n + 1 \in P }
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(\Int_+)(P)((1),(2))}{ P = \Int_+  }                                         
+	\EndProof
+}
+\Page{
+	\Theorem{MultIsAssoc}{(\cdot) : \TYPE{Associative}(\Int_+)}
+	\Say{P}{\{ n \in \Int_+ \. \forall m,k \in \Int_+ \. (n m) k = n (m  k) \}}{\Int_+}
+	\Assume{m,k}{\Int_+}                    
+	\Conclude{()}{\THM{ZeroMult}^3}{(0 m) k = 0 k = 0 = 0 (m k)}
+	\Derive{(1)}{I^2(\forall)\bd P}{0 \in P}
+	\Assume{n}{P}
+	\Say{Q}{\{ m \in \Int_+ \. \forall k \in \Int_+ \. ((n + 1)m)k  = (n + 1)(mk) \}}{\Int_+}
+	\Assume{k}{\Int_+}
+	\Conclude{()}{\THM{ZeroMult}^4}{((n + 1)0)k = 0k = 0 = (n + 1)(0) = (n+1)(0k) }
+	\Derive{(2)}{I(\forall \bd Q)}{0 \in Q}
+	\Assume{m}{Q}
+	\Say{K}{\{k \in \Int_+ : ((n + 1)(m + 1))k = (n + 1)((m + 1)k)  \}}{\Int_+}
+	\Say{(3)}{\THM{ZeroMult}^3 }{ ((n + 1)(m + 1))0 = 0 = (n +1 )0 = (n + 1)((m + 1)0)    }
+	\Say{(4)}{\bd  K (3)}{0 \in K}
+	\Assume{k}{K}
+	\Conclude{()}{\THM{BackMult}\bd K \bd k \THM{MultDistributive}\bd k \THM{BackMult}}
+	{ 
+		\NewLine :
+		((n + 1)(m + 1))(k + 1) =  
+		((n + 1)(m + 1) )k  +   (n + 1)(m + 1) = 
+		\NewLine =
+		(n + 1)((m + 1)k) + (n + 1)(m + 1)  =
+		(n + 1)( (m + 1)k + (m + 1)) =
+		(n + 1)((m + 1)(k +1))
+	}
+	\Derive{(5)}{I(\forall}{\forall k \in K \. k + 1 \in K}
+	\Say{(6)}{\bd \TYPE{NaturalSet}(\Int_+)(K)((4),(5))}{K = \Int_+}
+	\Conclude{()}{\bd K \bd Q (m + 1)}{m + 1 \in Q}
+	\Derive{(5)}{I(\forall) }{ \forall m \in Q \.m + 1 \in Q}
+	\Say{(6)}{\bd \TYPE{NaturalSet}(\Int_+)(Q)((2),(5))}{Q = \Int_+}
+	\Conclude{(3)}{\bd Q \bd P (n + 1)}{n + 1 \in P}
+	\Say{(*)}{\bd \TYPE{NaturalSet}(\Int_+)(Q)((2),(5))}{P = \Int_+}
+	\EndProof
+}
+\Page{
+	\Theorem{TotalAddition}{\forall n \in \Int_+ \. \forall m \in \FUNC{after}(n) \. \exists t \in \Int_+ \. n + t = m }
+	\Say{P}{\{ n \in \Int_+ \. \forall m \in \FUNC{after}(n) \. \exists t \in \Int_+ \. n + t = m  \}}{?\Int_+}
+	\Assume{m}{\FUNC{after}(0)}
+	\Conclude{()}{\THM{NeutralZero}(m)}{0 + m = m}
+	\Derive{(1)}{\bd I(\forall)}{0 \in P}
+	\Assume{n}{P}
+	\Assume{m}{\FUNC{after}(n + 1)}
+	\Say{(2)}{\bd \FUNC{after}(n +1)(m)}{ m > n + 1}
+	\Say{(3)}{(2)\THM{NextIsGreater}(n)}{m > n}
+	\Say{(t,4)}{\bd P(n)(3) }{\sum t \in \Int_+ \. n + t = m}
+	\Assume{(5)}{t = 0}
+	\Say{(6)}{\THM{NeutralZero}(n)(5)}{ m = n + t = n}
+	\Say{(7)}{\bd \TYPE{StrictlyGreater}(3)}{m \neq n}
+	\Conclude{()}{I(\bot)}{\bot}
+	\Derive{(5)}{E(\bot)(t=0)}{t \neq 0}
+	\Say{(6)}{\THM{StructureOfNat}(\Int_+)(5)}{[t : \TYPE{Succesor}(\Int_+)]}
+	\Say{(s,7)}{\bd \TYPE{Succesor}(\Int_+)(t)}{\sum s \in \Int_+ \. t = s + 1}
+	\Conclude{()}{\THM{NextIsAddition}(n)\bd \TYPE{Associative}(\Int_+)(+)(7)(5)}{(n + 1) + s = n + (1 + s) = n + t = m}
+	\Derive{(2)}{I(\forall)\bd PI(\forall)}{ \forall n \in P \. n + 1 \in P}
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(\Int_+)(P)((1),(2)}{ \Int_+  = P  }
+	\EndProof
+	\\ 
+	\Theorem{PositiveAddition}{\forall n \in \Nat \. \forall m \in \Int_+ \. m + n > m}
+	\Say{P}{\{ n \in \Nat : \forall m \in \Int_+ \. m + n > m  \}}{?\Nat}
+	\Assume{m}{\Int_+}
+	\Conclude{()}{\THM{NextIsAddition}\THM{NextIsGreater}}{ m + 1 = \sigma(m) > m  }
+	\Derive{(1)}{I(\forall)\bd P}{ 1 \in P}
+	\Assume{n}{P}
+	\Assume{m}{\Int_+}
+	\Conclude{()}{\THM{NextIsAdditon}\bd \TYPE{Commutative}(\Int_+)(+)(n,1)\bd \TYPE{Associative}(\Int_+)(+)(m,1,n)\bd P(n)\THM{NextIsGreater}}
+	{  \NewLine :  m + (n + 1) = (m +1) + n > m + 1 > m   }
+	\Derive{(2)}{I(\forall)\bd P I(\forall)}{\forall n \in P \. n + 1 \in P}
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(\Nat)(P)((1),(2))}{P = \Int_+}
+	\EndProof
+	\\
+	\Theorem{NonnegativeAddition}{\forall n \in \Int_+ \. \forall m \in \Int_+ \. m + n > m}
+	\NoProof
+}
+\newpage
+\subsection{Negative Numbers}
+\Page{
+	\DeclareFunc{Integers}{\TYPE{CommutativeMonoid}}
+	\DefineNamedFunc{Integers}{}{\Int}{\frac{\Int_+ \times \Int_+}{\FUNC{diag}(\Int_+\times\Int_+)}}
+	\\
+	\DeclareFunc{asInteger}{\Int_+ \to \Int}
+	\DefineNamedFunc{asInteger}{n}{\FUNC{implicit}}{[n,0]}
+	\\
+	\DeclareFunc{negative}{\Int_+ \to \Int}
+	\DefineNamedFunc{negative}{n}{-n}{[0,n]}
+	\\
+	\DeclareFunc{negate}{\Int \to \Int}
+	\DefineNamedFunc{negate}{[n,m]}{-[n,m]}{[m,n]}
+	\\
+	\DeclareType{Natural}{?\Int}
+	\DefineType{z}{Natural}{\exists n \in \Int_+ \. z = n}
+	\\
+	\DeclareType{Negative}{?\Int}
+	\DefineType{n}{Negative}{\exists n \in \Nat \. z = -n }
+	\\
+	\Theorem{AbeleanIntegers}{(\Int,+) : \TYPE{Abelean}}
+	\NoProof
+	\\
+	\DeclareFunc{groupOfIntegers}{\TYPE{Abelean}}
+	\DefineNamedFunc{groupOfIntegers}{()}{\Int}{(\Int,+)}
+	\\
+	\Theorem{InverseNumbers}{\forall a : \TYPE{Natural} \. -a = 0 | -a : \TYPE{Negative}}
+	\NoProof
+	\\
+	\Theorem{InverseNumbers2}{\forall a : \TYPE{Negative} \. -a : \TYPE{Natural}}
+	\EndProof
+}\Page{
+	\Theorem{IntStructure}{\Int = \TYPE{Natural} \sqcup \TYPE{Negative}}
+	\Assume{z}{\TYPE{Natural} \And \TYPE{Negative}}
+	\Say{(1,n)}{\bd \TYPE{Natural}}{ \sum n \in \Int_+ \. z = [n,0] }
+	\Say{(2,m)}{\bd \TYPE{Negative}}{\sum m \in \Nat \. z = [0,z] }
+	\Say{(3,t,s)}{\bd \TYPE{Eq}(\Int)((1)(2))}{ \sum t,s \in \Int_+ : n + t = s \And m + s = t }
+	\Say{(4)}{\THM{NonnegativeAdd}(t,n)(3)}{ t \le n + t = s  }
+	\Say{(5)}{\THM{PositiveAdd}(s,m)(3)}{s < s + m = t }
+	\Conclude{(5)}{\THM{StrictAntisimmetry}((4),(5))}{\bot}
+	\Derive{(1)}{\bd \TYPE{Empty}(\Int)}{ \TYPE{Natural} \And \TYPE{Negative} = \emptyset}
+	\Assume{[n,m]}{\Int}
+	\Assume{(2)}{n = m}
+	\Say{(3)}{\bd \Int(2)}{[n, m] = 0}
+	\Say{(4)}{ \bd \TYPE{Natural}(3)  }{ \Big[ [n,m] : \TYPE{Natural} \Big] }
+	\Conclude{(5)}{I(|)(\TYPE{Negative})}{ \Big[ [n,m] :  \TYPE{Negative} | \TYPE{Natural} \Big]     }
+	\Derive{(2)}{I(\Rightarrow)}{ n = m \Rightarrow [n,m] : \TYPE{Negative} | \TYPE{Natural} }
+	\Assume{(3)}{ n \neq m}
+	\Say{(4)}{ \bd \TYPE{Natural}  }{ n < m | m < n  }
+	\Assume{(5)}{n < m}
+	\Say{(t,6)}{\THM{TotalAddition}(5)}{ \sum t \in \Int_+ \. n + t = m    }
+	\Say{(7)}{ (6)\bd \Int  }{ [n,m] = [n,n + t] = [0,t]  }
+	\Conclude{()}{ \bd^{-1} \TYPE{Negative}(7)  }{ \Big[(n,m) : \TYPE{Negative}\Big]   }
+	\Derive{(5)}{I(\Rightarrow)}{ n < m  \Rightarrow [n,m] : \TYPE{Negative} | \TYPE{Natural}}
+	\Assume{(6)}{n > m}
+	\Say{(7,t)}{\THM{TotalAddition}(5)}{\sum t \in \Int_+ \. m + t = n}
+	\Say{(8)}{ (7)\bd \Int }{ [n,m] = [m+t,m] = [t,0] }
+	\Conclude{(9)}{\bd^{-1} \TYPE{Natural}(8)}{ \Big[  [n,m] : \TYPE{Natural} \Big] }
+	\Derive{(6)}{ I(\Rightarrow)I(|)}{  n > m \Rightarrow [n,m] : \TYPE{Negative} | \TYPE{Natural}}
+	\Conclude{(7)}{E(|)((4),(5),(6))}{  \Big[ [n,m] : \TYPE{Negative} | \TYPE{Natural} \Big]     }
+	\Derive{(3)}{I(\Rightarrow)}{ n \neq m \Rightarrow [n,m] : \TYPE{Negative} | \TYPE{Natural}    }
+	\Conclude{()}{ \THM{LEM}(n,m)E(|)((2),(3))}{ [n,m] \in \TYPE{Negative} \sqcup \TYPE{Natural} }
+	\DeriveConclude{()}{\bd^{-1}\TYPE{Universe}}{\Int = \TYPE{Negative} \sqcup \TYPE{Natural}}
+	\EndProof
+}
+\newpage
+\subsection{Order Structure}
+\Page{
+	\DeclareType{GreaterInt}{?(\Int \times \Int) }
+	\DefineNamedType{(a,b)}{GreaterInt}{a \ge b }{a - b : \TYPE{Natural}}
+	\\
+	\Theorem{GreaterIntReflexive}{\TYPE{GreaterInt} : \TYPE{Reflexive}(\Int)}
+	\Assume{a}{\Int}
+	\Conclude{()}{\bd \TYPE{Inverse}(a) \bd^{-1} \TYPE{Natural}}{  a - a = 0 : \TYPE{Natural}}
+	\Derive{()}{\bd^{-1}\TYPE{Reflexive}I(\forall)\bd^{-1}\TYPE{GreateInt}}{[\TYPE{GreaterInt}: \TYPE{Reflexive}]}
+	\EndProof
+	\\
+	\Theorem{GreaterIntAntisymmetric}{\TYPE{GreaterInt} : \TYPE{Antysymmetric}(\Int)}
+	\Assume{a,b}{\Int}
+	\Assume{(1)}{a \ge b}
+	\Assume{(2)}{b \ge a}
+	\Say{(3)}{\bd \TYPE{GreaterInt}(1)}{[a - b : \TYPE{Natural}]}
+	\Say{(4)}{\bd \TYPE{GreaterInt}(2)}{[b - a : \TYPE{Natural}]}
+	\Say{(5)}{\THM{InverseNumbers}(3)}{b - a = 0 |b - a : \TYPE{Negative}}
+	\Say{(6)}{\THM{StructureOfInt}(4,5)}{ b - a = 0  }
+	\Conclude{(7)}{\THM{UniqueInverse}(6)}{b=a}
+	\DeriveConclude{(8)}{\bd^{-1} \TYPE{Antisymmetric}I(\forall) }{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{GreaterIntTransitive}{\TYPE{GreaterInt} : \TYPE{Transive}(\Int)}
+	\Assume{a,b,c}{\Int}
+	\Assume{(1)}{a \ge b}
+	\Assume{(2)}{b \ge c}
+	\Say{(3,n)}{\bd \TYPE{GreaterInt}(1)}{\sum n \in \Int_+ \. a  - b =  [0,n]}
+	\Say{(4,m)}{\bd \TYPE{GreaterInt}(2)}{\sum m \in \Int_+ \. b - c = [0,m]}
+	\Conclude{()}{ \bd \TYPE{Inverse}(-b)(a - c)\bd \TYPE{Associative}(\Int)(+)(3)(4)\bd \Int \bd \TYPE{Natural}  }
+	{  \NewLine :
+		a - c = 
+		a + (-b + b) - c = 
+		(a - b) + (b - c) = 
+		[0,n] + [0,m] = 
+		[0,n + m] : \TYPE{Natural}   
+	}
+	\DeriveConclude{(1)}{\bd^{-1} \TYPE{Transitive}I(\forall)}{(*)}
+	\EndProof
+	\\
+	\Theorem{IntOrder}{\TYPE{GreaterInt} :\TYPE{Order}(\Int)}
+	\NoProof
+	\\
+	\DeclareFunc{orderedInt}{\TYPE{Poset}}
+	\DefineNamedFunc{orderedInt}{}{\Int}{(\Int,\TYPE{GreaterInt})}
+	\\
+}
+\Page{
+	\Theorem{IntOrderIsTotal}{\TYPE{GreaterInt} : \TYPE{Total}}
+	\Assume{a,b}{\Int}
+	\Say{(1)}{\THM{IntStructure}(a - b)}{ \Big[ a - b : \TYPE{Natural} | a - b :   \TYPE{Negative} \Big]}
+	\Assume{(2)}{ [a - b : \TYPE{Natural}]}
+	\Conclude{()}{\bd^{-1} \TYPE{GreaterInt}}{ a \ge b} 
+	\Derive{(2)}{I(\Rightarrow)I(|)}{a - b : \TYPE{Natural}  \Rightarrow a \ge b | b \ge a}
+	\Assume{(3)}{[a-b : \TYPE{Negative}]}
+	\Say{(4)}{\THM{InverseNumbers}(2)(3)}{[b-a : \TYPE{Natural}]}
+	\Conclude{()}{\bd^{-1} \TYPE{GreaterInt}}{b \ge a}               
+	\Derive{(3)}{I(\rightarrow)I(|)}{a -b : \TYPE{Negative} \Rightarrow a \ge b | b \ge a}
+	\Conclude{()}{E(|)((1),(2),(3))}{a \ge b | b \ge a}
+	\DeriveConclude{(*)}{\bd^{-1}\TYPE{Total}}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{NatOrdersAgrees}{\forall n,m \in \Int_+ \. n \ge_{\Int_+} m \iff n \ge_{\Int} m}
+	\Assume{(1)}{n \ge_{\Int_+} m}
+	\Say{(2)}{\bd \Int(n-m)}{ n - m =  [n, m] }
+	\Say{(t,3)}{\bd \THM{TotalAddition}(1)}{\sum t \in \Int_+ \. n = m + t}
+	\Say{(4)}{ (2)(3)\bd \Int\bd^{-1} \TYPE{Natural} }{ n - m = [m + t,m] = [t,0] : \TYPE{Natural}  }
+	\Conclude{ () }{ \bd \TYPE{GreaterInt} }{ n \ge_{\Int} m}
+	\Derive{(1)}{I(\Rightarrow)}{ n \ge_{\Int_+} m \Rightarrow n \ge_{\Int} m  }
+	\Say{(2)}{\THM{UroborousLemma}(1)}{ n \ge_{\Int} m \Rightarrow n \ge_{\Int_+} m  }
+	\Conclude{(*)}{I(\iff)((1)(2))}{\LOGIC{This}}
+	\EndProof
+	\\
+	\Theorem{AdditionRespectsOrder}{\forall n,m,t \in \Int \. \forall (0) : n \ge m \. n + t \ge m + t}
+	\Say{(1)}{\bd \TYPE{Abelean}(\Int, +)\bd \TYPE{Inverse}(t)\bd \TYPE{GreaterInt}(0)}{ n + t - m - t = n -m : \TYPE{Natural} }
+	\Conclude{(*)}{\bd^{-1} \TYPE{GreaterInt}(1) }{ n + t \ge m + t  }
+	\EndProof
+	\\
+	\Theorem{PositiveAddition}{\forall a \in \Int \. \forall n \in \Nat \. a + n > n}
+	\NoProof
+	\\
+	\Theorem{NonnegativAddition}{\forall a \in \Int \. \forall n \in \Int_+ \. a + n \ge n}
+	\NoProof
+}
+\newpage
+\subsection{Algebraic Structure}
+\Page{
+	\DeclareFunc{multInt}{ \Int \to \Int \to \Int}
+	\DefineNamedFunc{multInt}{ [a,b],[c,d] }{[a,b][c,d]}{[ac + bd, ad + cd]}
+	\Assume{[a,b],[c,d]}{\Int}
+	\Assume{s,t}{\Int_+}
+	\Conclude{\LOGIC{WellDefined}}{\bd \FUNC{mult}\bd \TYPE{Distributive}(\Int_+)(\cdot,+)\bd\ldots \bd^{-1}\FUNC{mult}}
+	{
+		\NewLine :
+		[a + t,b + t][c + s,d + s] = 
+		\Big[ (a + t)(c + s) + (b + t)(d + s) , (a + t)(d + s) + (b + t)(c + s)  \Big] = \NewLine =
+		\Big[  ac + tc + as + bd + bs + dt + st, ad + as + td + ts + bc + bs + tc + ts \Big] = \NewLine =
+		\Big[ (ac + bd)  + (tc + as + bs + dt + st), (ad + bc) + (tc + as + bd + tc + ts) \Big] = 
+		[ac + bd, ad + bc] 
+	}
+	\EndProof
+	\\
+	\Theorem{MultiplicationDistributive}{(\cdot) : \TYPE{Distributive}(\Int,+)}
+	\Assume{[a,b],[c,d],[e,f]}{ \Int  }
+	\Conclude{(*)}{\ldots}
+	{  
+		[a,b]\Big( [c,d] + [e,f] \Big) =  
+		[a,b][c + e, d + f] = \NewLine =
+		\Big[ a(c + e) + b(d + f), a(d + f) + b(c + e) \Big] =  
+		\Big[ ac + ae + bd + bf, ad + af + bc + be   \Big] =  \NewLine =
+		 [ac + bd, ad + bc  ] + [ ae + bf, af + be    ] = 
+		[a,b][c,d] + [a,b][e,f]
+	}
+	\\
+	\Theorem{MultiplicationCommutative}{(\cdot) : \TYPE{Commutative}(\Int,+)}
+	\NoProof
+	\\
+	\Theorem{MultiplicationAssociative}{(\cdot) : \TYPE{Associative}(\Int,+)}
+	\EndProof
+	\\
+	\Theorem{OneMultNeutral}{ \forall a \in \Int 1a = A}
+	\Assume{[n,m]}{\Int}
+	\Conclude{(*)}{\ldots}{ [1,0][n,m] = [n,m] }
+	\EndProof
+	\\
+	\Theorem{IntegerRing}{(\Int,+,\cdot) : \TYPE{CommutativeRing}}
+	\NoProof
+}\Page{
+	\Theorem{MultPresevesNat}{\forall n,m : \TYPE{Natural} \. nm : \TYPE{Natural}}
+	\Conclude{(*)}{\ldots}{[n,0][m,0] = [nm,0] : \TYPE{Natural}}
+	\EndProof
+	\\
+	\Theorem{PositiveNat}{\forall n : \TYPE{Natural} \. \forall a,b \in \Int \. \forall (0) : a \ge b \. na \ge nb}
+	\Say{(1)}{\bd \TYPE{IntegerOrder}(0)}{a - b : \TYPE{Natural} }
+	\Say{(2)}{\bd \TYPE{Distributive}(\Int,+)(\cdot)(n,a,-b)\THM{MulPreservesNat}(n,a-b)(1)}
+	{  na - nb = n(a - b) : \TYPE{Natural}  }
+	\Conclude{(*)}{\bd^{-1} \TYPE{IntegerOrder}(2)}{na \ge nb}
+	\EndProof
+	\\
+	\Theorem{IntegerOrderedRing}{(\Int,+,\cdot) : \TYPE{OrderedRing}}
+	\EndProof
+	\\
+	\Theorem{NaturalNumbers}{\Int_+ = \TYPE{Natural}}
+	\EndProof
+	\\
+	\Theorem{PositiveNumber}{\Int_{++} =_{2^\Int} \Nat}
+	\EndProof
+	\\
+	\Theorem{NegativeNumbers}{ \Int_{--} = \TYPE{Negative}}
+	\EndProof
+	\\
+	\Theorem{NonDecreasingMult}{\forall a \in \Int_{+} \. \forall b \in \Int_{++} \. a \le ab }
+	\Say{(1)}{\THM{PositiveNumber}\;\THM{FirstIsMinimal}(\Int_++)}{1 \le b}
+	\Conclude{(*)}{\THM{PositiveNat}(a,1,b)(1)}{a \le ab}
+	\EndProof
+	\\
+	\Theorem{IncreasingMult}{\forall a,b \in \Int_{++} \. \forall (0) : b > 1 \. ab > a  }
+	\Say{(n,1)}{\bd \TYPE{IntegerGreater}(0)}{\sum n \in \Int_{++} \. b = n + 1}
+	\Conclude{(*)}{(1)(ab)\bd \TYPE{Associative}(\Int)(\cdot)(a,n,1)\THM{PositiveAdd}(a)\THM{NonDecreasingMult}(a,n)  }
+	{ : \NewLine ab = a(n + 1) = an + a > an \ge a   }
+	\EndProof
+}
+\Page{
+	\DeclareType{UnitInteger}{?\Int}
+	\DefineNamedFunc{UnitIntrger}{\mathbb{S}^0}{\{-1,1\}}
+	\\
+	\DeclareFunc{absVal}{\Int \to \Int_+}
+	\DefineNamedFunc{absVal}{z}{|z|}{\max z\mathbb{S}^0}
+	\\
+	\DeclareFunc{pow}{\Int_+ \to \Int \to \Int}
+	\DefineFunc{pow}{}{\FUNC{rec}(\FUNC{const}(1),\Lambda f : \Int \to \Int \. \Lambda n \in \Int \. f(n)n)}
+	\DefineFunc{pow}{n,z}{z^n}
+	\\
+	\Theorem{PowerOfOne}{\forall n \in \Int_++ \. 1^n = 1}
+	\NoProof
+	\\
+	\Theorem{PowerOfZero}{\forall n \in \Int_+ \. 0^n = 0}
+	\NoProof
+	\\
+	\Theorem{Exponentiation}{\forall a \in \Int \. \forall n,m \in \Int_+ \. a^{n + m} = a^n a^m}
+	\Say{P}{\{ m \in \Int_+ : \forall n \in \Int_+ \. \forall a \in \Int  a^{n + m} = a^n a  \}}{?\Int_+}
+	\Assume{a}{\Int}
+	\Assume{n}{\Int_+}
+	\Conclude{()}{\ldots}{ a^n = a^n \cdot 1 =  a^n \cdot a^0 }
+	\Derive{(2)}{\bd P \; I(\forall)}{0 \in P}
+	\Assume{m}{P}
+	\Assume{n}{\Int_+}
+	\Assume{a}{\Int}
+	\Conclude{()}{ \bd \TYPE{Abelean}(\Int,+) \bd P(m) \bd \FUNC{pow} \bd \TYPE{CommutativeRing}(\Int,+,\cdot) \bd^{-1} \FUNC{pow}}
+	{ a^{n + m + 1 } = a^{(n +1) + m} = a^{n + 1} a^m = a^n a a^m = a^n a^m a = a^n a^{m + 1}  }
+	\Derive{(3)}{I(\forall)\bd P I(\forall)}{\forall m \in P \. m + 1 \in P }
+	\EndProof
+	\\
+	\Theorem{SignGroup}{(\mathbb{S}^0,\cdot) : \TYPE{Abelean}}
+	\NoProof
+}
+\newpage
+\subsection{Divisibility}
+\Page{
+	\Theorem{SignNumberDecomposition}{\forall a \in \Int \. \exists s \in \mathbb{S}^0 : \exists n \in \Int_+ \. a = sn}
+	\Say{(0)}{\THM{IntStructure}(a)}{a : \TYPE{Natural} | a : \TYPE{Negative}}
+	\Assume{(1)}{[a : \TYPE{Natural}]}
+	\Conclude{()}{I(=)(a)}{a = a}
+	\Derive{(1)}{I(\Rightarrow)}{ [a : \TYPE{Natural}] \Rightarrow \LOGIC{This}(1,a)}
+	\Assume{(2)}{[a : \TYPE{Negative}]}
+	\Say{(3)}{\bd \TYPE{Negative}}{ - a \in \Int_+ }
+	\Conclude{()}{\bd \TYPE{Ring}(\Int_+)(3)}{ a = (-1)(-a)  }
+	\Derive{(2)}{I(\Rightarrow)}{[a : \TYPE{Negative}] \Rightarrow \LOGIC{This}(-1,-a)}
+	\Conclude{(*)}{E(|)(0)((2),(3))}{\LOGIC{This}}
+	\NoProof
+	\\
+	\Theorem{NoZeroDivizors}{\forall a, b \in \Int \. \forall (0) : ab = 0 \. a = 0 | b = 0}
+	\Say{(s,n,1)}{\THM{SignNumberDecomposition}(a)}{ \sum s \in \mathbb{S}^0 \. \sum n \in \Int_{+} \. a = sn }
+	\Say{(z,m,2)}{\THM{SignNumberDecomposition}(b)}{ \sum z \in \mathbb{S}^{0} \. \sum m \in \Int_{+} \. b = zm}
+	\Conclude{(3)}{(1)(2)(3)}{0 = ab = snzm = (sz)(nm)}
+	\Say{(4)}{\THM{ZeroAbsValue}(3)}{ \Big| (sz)(nm) \Big| = 0  }
+	\Say{(5)}{\THM{SignPreservesAbsValue}(4)\THM{NonegativeMult}(m,n)\THM{PositiveAbsValue}}{ nm = \Big| nm  \Big| = 0}
+	\Say{(6)}{\THM{NonegativeMult}\bd n \bd m(5)}{ n = 0 | m = 0}
+	\Conclude{(*)}{(1)(2)(6)}{a = 0 | b = 0}
+	\EndProof
+	\\
+	\DeclareType{Divizors}{\Int \to ?\Int}
+	\DefineType{b}{Divisors}{\Lambda a \in \Int \. \exists c \in \Int \. a = bc}
+	\\
+	\Theorem{UniqueDivizor}{\forall a \in \Int  \. \forall b : \TYPE{Divizor}(a) \. \exists! c \in \Int \. a = bc }
+	\Say{(c,1)}{\bd \TYPE{Divisors}(a)(b)}{\sum c \in \Int \. a = bc}
+	\Assume{c'}{\Int}
+	\Assume{(2)}{a = bc'}
+	\Say{(3)}{(2)(1)}{bc = bc'}
+	\Say{(4)}{(3) - bc' \bd \TYPE{Ring}(\Int)}{0 = b(c - c')}
+	\Conclude{(*)}{\THM{NoZeroDivizors}(4)}{c = c' }
+	\EndProof
+	\\
+	\DeclareFunc{division}{\sum a \in \Int \. \TYPE{Divizors}(a) \to \TYPE{Divizors}(a)}
+	\DefineNamedFunc{division}{b}{\frac{a}{b}}{\THM{UniqueDivizors}(a,b)}
+}
+\Page{
+	\DeclareType{Divides}{?(\Int \times \Int)}
+	\DefineNamedType{(a,b)}{Divides}{a | b}{\TYPE{Divizors}(a) \subset \TYPE{Divizors}(b)}
+	\\
+	\Theorem{DividesIsPreorder}{\TYPE{Divides} : \TYPE{Preorder}(\Int)}
+	\NoProof
+	\\
+	\Theorem{DivisorDivides}{\forall a \in \Int \. \forall b \in \TYPE{Divizors}(a) \. b | a}
+	\NoProof
+	\\
+	\Theorem{DividesOrder}{\TYPE{Divides} : \TYPE{Order}(\Int_+)}
+	\Assume{n,m}{\Int_+}
+	\Assume{(1)}{n|m}
+	\Assume{(2)}{m|n}
+	\Say{(a,b,3)}{\bd \TYPE{Divides}(n,m)}{ \sum a,b \in \Int \. am = n \And bn = m  }
+	\Assume{(4)}{m = 0 }
+	\Say{(5)}{\THM{ZeroMult}(4)(3)}{n = 0}
+	\Conclude{()}{(4)(5)}{m = 0}
+	\Derive{(4)}{I(\Rightarrow)}{m = 0|n = 0 \Rightarrow m = n}             
+	\Assume{(5)}{ m,n \in \Int_{++} }
+	\Say{(6)}{(3)_1(3)_2}{  m = abm   }
+	\Say{(7)}{\THM{MultSign}(3)(5)}{ a,b \in \Int_{++} }
+	\Say{(8)}{\THM{IncreasingMult}(6)(7)}{ab = 1}
+	\Say{(10)}{(9)\THM{IncreasingMult}(7)(8)\THM{FirstIsMinimal}(\Int_++)}{a,b = 1}
+	\Conclude{()}{\bd \TYPE{Ring}(\Int,+,\cdot)(3)(10)}{m = n}
+	\Derive{(4)}{I(\Rightarrow)}{m,n \in \Int_{++} \Rightarrow m = n}
+	\Conclude{()}{\THM{StructureOfNat}(\Int_+)(3,4)}{ n = m }
+	\Derive{(1)}{I(\forall)\bd^{-1} \TYPE{Antisymmetric}}{\Big[ \TYPE{Divides} : \TYPE{Antisymmetric}(\Int_+) \Big]}
+	\Conclude{(*)}{\bd^{-1} \TYPE{Order}(\THM{DividesIsPreorde},1)}{\Big[\TYPE{Divides} : \TYPE{Order}(\Int_+)\Big]}
+	\EndProof
+	\\
+	\Theorem{EucleadeanProperty}{\forall a,b \in \Int \. \forall (0) :  b \neq 0 \. |a| \le |ab|}
+	\NoProof 
+	\\
+	\Theorem{DivizorsOfZero}{\TYPE{Divisors}(0) = \Int }
+	\NoProof
+}\Page{
+	\Theorem{UnitDivizors}{\forall s \in \mathbb{S}^0 \. \TYPE{Divizors}(s) = \mathbb{S}^0 }
+	\NoProof
+	\\
+	\Theorem{ArchimedeanProperty}{\forall a \in \Int_+ \. \forall b \in \Int_{++} \. \exists n \in \Int_{++} \. nb > a}
+	\Say{P}{\{ a \in \Int_+ : \forall b \in \Int_{++} \. \exists n \in \Int_{++} \. ab > a   }{?\Int_{+}}
+	\Say{(1)}{\bd \Int_{++}}{\forall b \in \Int_{++} \. b > 0}
+	\Conclude{(2)}{\bd P (1)}{0 \in P}
+	\Assume{a}{P}
+	\Assume{b}{\Int_{++}}
+	\Say{(n,3)}{\bd P(a)(b)}{\sum n \in \Int_{++} \. nb \ge a}
+	\Say{(4)}{\THM{FirstIsMinimal}(\Int_{++})(b)}{b \ge 1}
+	\Conclude{(*)}{\bd \TYPE{Ring}(\Int)(3)(4)}{(n + 1)b = nb + b \ge a + b \ge a + 1}
+	\Derive{(3)}{I(\forall)\bd P I(\forall)I(\exists)(n + 1)}{ \forall a \in P \. a + 1 \in P    }
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(\Int_+)}{P = \Int_+}
+	\EndProof
+	\\
+	\DeclareFunc{divideWithReminder}{\Int_+ \to \Int_++ \to \Int_+}
+	\DefineNamedFunc{divideWethReminder}{a,b}{\div(a,b)}{ \max \{ n \in \Int_+ : nb \le a \}}
+	\\
+	\DeclareFunc{reminder}{\Int_+ \to \Int_{++} \to \Int_+}
+	\DefineNamedFunc{reminder}{a,b}{\remi(a,b)}{a - \div(a,b)}
+	\\
+	\DeclareFunc{eucledeanAlgorithm}{ \Int_+ \to \Int_+ \to \TYPE{List}(\Int_{+} \times \Int_{++} \times \Int_{++})  }
+	\DefineNamedFunc{eucledeanAlgorithm}{a,0}{\FUNC{EA}(a,0)}{[]}
+	\Conclude{\FUNC{EA}(a,b)}{  \Big(\div(a,b), \remi(a,b),b\Big)}{\FUNC{EA}(b,\remi(a,b))}
+	\\
+	\DeclareFunc{greatestCommonDivisor}{\Int_{++} \to \Int_{++} \to \Int_{++}}
+	\DefineNamedFunc{greateslCommonDivisor}{a,b}{\gcd(a,b)}{\max \TYPE{Divizor}(a) \cap \TYPE{Divizor}(b) \cap \Int_{++}}
+	\\
+	\Theorem{DivizorIsLess}{\forall a \in \Int_{++} \. \TYPE{Divizors} \cap \Int_{++} \le a}
+	\NoProof
+}\Page{
+	\Theorem{SumDivisibile}{\forall a,b,c,d \in \Int \. \forall (0) :  d | a \And d | c \. \forall (00) : c = a + b \. d | b }
+	\Say{(a',(1))}{\bd \TYPE{Divisible}(0)}{\sum a' \in \Int \. a = a'd}
+	\Say{(c',(2))}{\bd \TYPE{Divisible}(0)}{\sum c' \in \Int \. c = c'd}
+	\Say{(3)}{(00)(1)(2)}{  c'd = a'd +   b}
+	\Say{(3)}{ (3) - a'd\bd \TYPE{Ring}(\Int)}{  b = c'd - a'd = (c' - a')d  }
+	\Conclude{(*)}{\bd^{-1}\TYPE{Devisible}(3)}{d | b}
+	\\
+	\Theorem{ReminderBounds}{\forall a \in \Int_{+} \. \forall b \in \Int_{++} \. \remi(a,b) < b}
+	\Say{r}{\remi(a,b)}{\Int_+}
+	\Say{(1)}{\bd \remi(a,b)(r)}{ a = b \div(a,b) + r }
+	\Assume{(2)}{ r \ge b}
+	\Say{(k,3)}{\bd \TYPE{IntGreater}(2)}{ \sum k \in \Int_+ \. r = b + k  }
+	\Say{(4)}{\bd \TYPE{Ring}(\Int)(3)(1)}{ a = b \div(a,b) + b +  k = b(\div(a,b) + 1) + k \ge b(\div(a,b) + 1)   }
+	\Say{(5)}{\THM{NextIsGreater}(\div(a,b))}{\div(a,b) + 1 > \div(a,b)}
+	\Conclude{()}{\bd \div(a,b)(4)(5)}{\bot}
+	\DeriveConclude{(*)}{E(\bot)}{r < b}
+	\EndProof
+	\\
+	\Theorem{DivisionDecrease}{\forall n \in \Int_{++} \. \forall m : \TYPE{Divizor}(n) \. \forall (0) : m \ge 2 \. \frac{n}{m} < n}
+	\Say{(1)}{\bd \FUNC{divide}(n,m)}{m \frac{n}{m} = n}
+	\Conclude{(*)}{\THM{IncreasingMult}(1)}{\frac{n}{m} < n}
+}
+\subsection{Prime Decomposition}
+\Page{
+	\DeclareType{Prime}{?\Int_{++}}
+	\DefineType{p}{Prime}{ \# \TYPE{Divizors}(p) \cap \Int_{++} = 2  }
+	\\
+	\DeclareFunc{two}{\Int}
+	\DefineNamedFunc{two}{}{2}{1 + 1}
+	\\
+	\Theorem{TwoIsPrime}{2 : \TYPE{Prime}}
+	\NoProof
+	\\
+	\Theorem{PrimeDivizorExists}{\forall n \in \Int_{++} \. \TYPE{Prime} \cap \TYPE{Divizor}(n) \neq \emptyset }
+	\Say{P}{\{ n \in \Int_{++} : \forall m \in \Int_{++} : 2 \le m \le n : \TYPE{Prime} \cap \TYPE{Divizor}(n) \neq \emptyset  \}}{?\Int_{++}}
+	\Say{(1)}{\THM{TeoIsPrime\bd P}}{2 \in P}
+	\Assume{n}{n \in P}
+	\Assume{(2)}{\forall m \in \Int_{++} \. \forall () : 2 \le m < n + 1 \. m \not | n}
+	\Say{(3)}{\bd^{-1} \TYPE{Prime}(2)}{ [n + 1 : \TYPE{Prime}]  }
+	\Conclude{()}{\bd \TYPE{Divizor}(n + 1)^2(3)}{\TYPE{Divizor}(n + 1) \cap \TYPE{Prime} \neq \emptyset}
+	\Derive{(2)}{I(\Rightarrow)}{\ldots \Rightarrow \ldots}
+	\Assume{m}{\Int_{++}}
+	\Assume{(3)}{ 2 \le m < n + 1 }
+	\Assume{(4)}{ m | n + 1  }
+	\Say{(5)}{\THM{FirstIsMinimal}(\FUNC{after}(m-1))(3)}{m \le n }
+	\Say{(p,6)}{\bd P(n)(5)}{\sum p : \TYPE{Prime} \. p | m  }
+	\Conclude{()}{(4)(6)}{p|n + 1}
+	\Derive{(2)}{ \LOGIC{LEM}(\ldots)(2)I(\forall)}{ \forall n \in P \. n+1 \in P   }
+	\Conclude{(*)}{\THM{FullInduction}(\FUNC{after}(1))(1,2)}{  \LOGIC{This}   }
+	\EndProof
+	\\
+	\DeclareFunc{primeFactorization}{\Int_{++} \to \TYPE{List}(\TYPE{Prime})}
+	\DefineNamedFunc{primeFactorization}{1}{\FUNC{PF}(1)}{[]}
+	\Conclude{\FUNC{PF}(n)}{ p}{\FUNC{PF}\left(\frac{n}{p}\right)  \NewLine  \where \quad p = \min \TYPE{Prime} \cap \TYPE{Divizor}(n) }
+	\\
+}\Page{
+	\Theorem{EucleadeanAlgorithmTerminates}{\forall a,b \in \Int_+ \. \FUNC{len} \; \FUNC{EA}(a,b) < \infty}
+	\Say{P}{ { b \in \Int_+ : \forall a \in \Int_+ \. \forall t \in b \. \FUNC{len} \; \FUNC{EA}(a,t) < \infty }}{?\Int_+}
+	\Assume{a}{\Int_+}
+	\Say{(1)}{\bd \FUNC{EA}(a,0)}{\FUNC{EA}(a,0) = []}
+	\Conclude{()}{ (1)\bd \FUNC{len} []\THM{EmptyIsFinite}}{ \bd\FUNC{len} \FUNC{E,A}(a,0) = 0 < \infty  }	
+	\Derive{(1)}{I(\forall)\bd P }{0 \in P}
+	\Assume{b}{P}
+	\Assume{a}{\Int_+}
+	\Say{(2)}{ \bd \FUNC{EA}(a,b + 1)  }{  \FUNC{EA}(a,b + 1) = (\div(a,b + 1), \remi(a,b + 1), b + 1) : \FUNC{EA}\Big( b + 1, \remi(a,b + 1)  \Big)}
+	\Say{r}{\remi(a,b+1)}{\Int_+}
+	\Say{(3)}{ \THM{ReminderBounds}(a,b + 1)}{ 0 \ge r  < b + 1}
+	\Say{(5)}{ \THM{FirstIsMinimal}(\FUNC{after}(r-1))(b)  }{r \le b}
+	\Say{(6)}{\bd P (b) (5)}{\FUNC{len} \; \FUNC{EU}(b+1,r) < \infty }
+	\Conclude{()}{\bd \FUNC{len}(2)(6)}{ \FUNC{EA}(a,b +1) < \infty}
+	\Derive{(2)}{I(\forall)}{\forall b \in P \. b + 1 \in P}
+	\Conclude{(*)}{\THM{FullInduction}(1)(2)}{\Int_+ = P}
+	\EndProof
+	\\
+	\Theorem{PrimeFactorizationTerminates}{\forall a \in \Int_++ \. \FUNC{len} \; \FUNC{PF}(a) < \infty }
+	\NoProof
+	\\
+	\DeclareFunc{primeFacotization2}{\Int_{++} \to \prod n : \Int_+ \. \TYPE{Nondecreasing}(n, \TYPE{Prime}) }
+	\DefineNamedFunc{primeFactorization2}{a}{\FUNC{PF2}(a)}{ \FUNC{listAsFunc} \; \FUNC{PF}(a)}
+	\\
+	\DeclareFunc{primeFactorization3}{\Int_{++} \to \prod n : \Int_{+} \. \TYPE{Increasing}(n,\TYPE{Prime}) \And n \to \Int_{++}}
+	\DefineNamedFunc{primeFactorization3}{a}{\FUNC{PF3}(a)}{\FUNC{count} \; \FUNC{PF}(a)}
+	\\
+	\Theorem{PrimeFactorization}{\forall a \in \Int_{++} \. a = \prod^n_{i=1} p_i \quad \where \quad (n,p) = \FUNC{PF2}(a)}
+	\NoProof
+	\\
+	\Theorem{PrimeFactorization2}{\forall a \in \Int_{++} \. a = \prod^n_{i=1} p_i^{k_i} \quad \where \quad (n,p,k) = \FUNC{PF3}(a) }
+	\NoProof
+}\Page{
+	\Theorem{EucleadeanAlgorithmComputesGCD}{\forall a,b \in \Int_{++} \. \gcd(a,b) = (\FUNC{head} \; \FUNC{reverse} \; \FUNC{EA}(a,b)))_3}
+	\Say{(n,s,r,d)}{\FUNC{listAsFunc}\; \FUNC{EA}(a,b)}{\sum n \in \Nat \. n \to \Int_+^2 \times \Int_{++}}
+	\Assume{(1)}{n = 1}
+	\Say{(2)}{\bd (n,s,r,d)(1)\bd\FUNC{EA}(a,b)}{a = s_1b}
+	\Say{(3)}{\bd \gcd(a,b)(2)}{\gcd(a,b) = b}
+	\Conclude{(4)}{\bd (n,s,r,d)(3)}{d_n = \gcd(a,b)}
+	\Derive{(1)}{I(\Rightarrow)}{n = 1 \Rightarrow d_n = \gcd(a,b)}
+	\Assume{(2)}{n > 1}
+	\Say{(3)}{\bd(n,s,r,d)}
+	{\NewLine :\forall i \in (n-1) \. d_{i} = d_{i + 1}s_{i + 1} + r_{i + 1} \And d_{i+1} = r_i \And r_n = 0 \And a = d_1s_1 + r_1 \And b = d_1 }
+	\Say{(4)}{\bd \TYPE{Reflecive}(|)(d_n)}{d_n | d_n}
+	\Say{(5)}{\THM{ZeroDivizors}(d_n) }{d_n| 0}
+	\Assume{i}{n}
+	\Assume{(6)}{1 < i < n}
+	\Assume{(7)}{d_n | d_i \And d_n | r_i}
+	\Say{()_1}{(3)_1(i-1) \THM{SummDivisible}(7)}{d_n| d_{i-1}}
+	\Conclude{()_2}{(3)_2(7)}{d_n | r_{i-1}}
+	\Derive{(6)}{I(\forall)I(\forall) I(\Rightarrow)}
+	{\NewLine:\forall i \in n \. \forall () 1 < i < n \. d_n | d_i \And d_n | r_i \Rightarrow d_n | d_{i-1} \And d_n | r_{i-1}}
+	\Say{(7)}{\THM{ReverseFiniteInduction}(n)((4),(5),(6))}{\forall i \in n \. d_n | d_1 \And d_n | r_i}
+	\Say{(8)}{(3)_1(1)(7)(1)(3)_4\bd\TYPE{divides}}{d_n | a\And d_n | b}
+	\Say{(9)}{\bd \gcd(a,b)(8)}{d_n | \gcd(a,b)}
+	\Say{(10)}{\THM{SumDivisible}(3)_4(\gcd(a,b))}{\gcd(a,b)| r_1}
+	\Assume{i}{n}
+	\Assume{(11)}{1 < i < n}
+	\Assume{(12)}{\gcd(a,b)| d_i \And \gcd(a,b) | r_i}
+	\Conclude{()_1}{(3)_2(i)(12)_2}{\gcd(a,b) | r_{i + 1}}
+	\Conclude{()_2}{\THM{SumDivisible}(3)_1(i)()_2}{ \gcd(a,b) | d_{i + 1}  }
+	\Derive{(11)}{I(\forall)I(\forall)I(\Rightarrow)}
+	{ \NewLine :\forall i \in n \. \forall () : 1 < i < n \. \gcd(a,b) | d_i \And \gcd(a,b) | r_i \Rightarrow \gcd(a,b) | d_{i+1} \And \gcd(a,b) | r_{i+1} }
+	\Say{(12)}{\THM{FiniteInduction}(n)((3)_5,(10),(1))}{\forall i \in n \. \gcd(a,b) | d_i \And \gcd(a,b) | r_i}
+	\Say{(13)}{(12)_1(n)}{\gcd(a,b)|d_n}
+	\Conclude{()}{\bd \TYPE{Antisymmetric}(9)(13)}{\gcd(a,b) = d_n}
+	\Derive{(*)}{E(|)\THM{StructureOfNat}(n)(1)}{\gcd(a,b) = d_n}
+	\EndProof
+}
+\Page{
+	\Theorem{BezuatIdentity}{\forall a,b \in \Int_{++} \. \forall z \in \Int \. \exists u,v \in \Int \. ua + vb = z\gcd(a,b)}
+	\Say{(n,s,r,d)}{\FUNC{EA}(a,b)}{\sum n \in \Nat \. n \to \Int^2_+ \times \Int_{++}}
+	\Say{(1)}{\bd(n,s,r,d)}
+	{\NewLine :\forall i \in (n-1) \. d_{i} = d_{i + 1}s_{i + 1} + r_{i + 1} \And d_{i+1} = r_i \And r_n = 0 \And a = d_1s_1 + r_1 \And b = d_1 }	
+	\Say{I}{\TYPE{idealGen}(\Int)(a,b)}{\TYPE{Ideal}(\Int)}
+	\Say{(3)}{\bd I(b,(1)_5)}{d_1 \in I}
+	\Say{(4)}{\bd \TYPE{Ideal}(1)_4\bd I(a)}{r_1 \in I}
+	\Assume{i}{n}
+	\Assume{(5)}{1 < i < n}
+	\Assume{(6)}{r_i \in I \And d_i \in I}
+	\Say{()_1}{ (1)_2(i)(6)}{d_{i +1} \in I}
+	\Conclude{()_2}{\bd \TYPE{Ideal}(1)_1(i)()_1(r_{i + 1})}{  r_{i + 1} \in I  }
+	\Derive{(5)}{I(\forall)I(\forall)I(\Rightarrow)}
+	{ \NewLine :\forall i \in n \. \forall () : 1 < i < n \.  d_i \in I \And  r_i \in I \Rightarrow \gcd(a,b) | d_{i+1} \And \gcd(a,b) | r_{i+1} }
+	\Say{(6)}{\THM{FiniteInduction}(n)(3,4,5)}{\forall i \in n \. d_i,r_i \in I}
+	\Say{(7)}{(6)(n)\THM{EuclideanAlgorithComputesGCD}(a,b)}{\gcd(a,b) \in I}
+	\Say{(8)}{\bd I(7)}{\exists v,u \in \Int \. va + ub = \gcd(a,b)}
+	\Conclude{(*)}{k(8)}{kva + kub = \gcd(a,b)}
+	\EndProof
+	\\
+	\Theorem{EuclidsLemma}{\forall a,b \in \Int_{++} \. \forall p : \TYPE{Prime} \. \forall (0) p | ab \. p|a \Big|  p|b}
+	\Assume{(1)}{\gcd(p,b) = 1}
+	\Say{(u,v,2)}{\THM{BezautIdentity}(p,b,1)(1)}{\sum u,v \in \Int \. ub + vp = 1}
+	\Say{(3)}{a(2)}{uab + vpb = 1}
+	\Conclude{()}{\THM{DividibleSum}(3)(0)}{p|a}
+	\Derive{(1)}{I(\Rightarrow)}{\gcd(p,b) = 1 \Rightarrow p|a \Big| p|b}
+	\Assume{(2)}{\gcd(p,b) \neq}
+	\Conclude{()}{\bd \TYPE{Prime}(p)(2)\bd^{-1}\TYPE{Divisible}}{p|b}
+	\Derive{(2)}{I(\rightarrow)}{\gcd(p,b)\neq 1 \Rightarrow p|a \Big| p|b}
+	\Conclude{(*)}{E(|)\THM{StructureOfNat}(\gcd(p,b))(1)(2)}{ p|a \Big| p|b }
+	\EndProof
+}\Page{
+	\Theorem{IterattedEuclidsLemma}{\forall n \in \Nat \. \forall a : n \to \Int_{++} \. \forall p : \TYPE{Prime} \. \forall (0) : p | \prod^n_{i=1} a \. 
+		\exists i \in n : p | a_i}
+	\Say{P}{\{ n \in \Nat : \forall p : \TYPE{Prime} \. \forall a : n \to \Int_{++} \. \forall () : p| \prod^n_{i=1} a \. \exists i \in n : p | a_i \}}
+	{?\Nat}
+	\Say{(1)}{\bd P(1)}{1 \in P}
+	\Assume{n}{P}
+	\Assume{a}{n + 1 \to \Int_{++}}
+	\Assume{p}{\TYPE{Prime}}
+	\Assume{(0)}{p | \prod^{n+1}_{i=1} a_i}
+	\Say{(2)}{ \THM{EuclidsLemma}(0)  }{ p | a_{n + 1} \Big| p | \prod^{n}_{i=1} a_i }
+	\Conclude{()}{\bd P(n)(2)}{\exists i \in n + 1 \. p | a_i}
+	\Derive{(2)}{I(\forall)\bd P I^3(\forall)}{\forall n \in P \. n + 1 \in P}
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(\Nat)\Big((1),(2)\Big)}{ \Nat = P   }
+	\EndProof
+	\\
+	\DeclareFunc{length}{\Int_{++} \to \Int_+}
+	\DefineNamedFunc{length}{a}{L(a)}{\FUNC{len} \; \FUNC{PD2}(a)}
+	\\
+	\DeclareType{Coprime}{?\Int_{++} \times \Int_{++}}
+	\DefineType{a,b}{Coprime}{\gcd(a,b) = 1}
+	\\
+	\DeclareType{CoprimeSet}{??\Int_{++}}
+	\DefineType{A}{CoprimeSet}{\forall a,b \in A \. a \neq b \Rightarrow (a,b) : \TYPE{Coprime}}
+	\\
+	\Theorem{ChineseReminder}{\forall A : \TYPE{CoprimeSet} \And \TYPE{Finite} \. \forall n : \prod a \in A \. (a - 1)_{\Int_+} \. 
+	 	\NewLine \exists! N \in \prod_{a \in A} a : \forall a \in A \. \remi(N,a) = n_a }
+	\NoProof
+	\\
+	\Theorem{MainTheoremOfArithmetics}{\forall a \in \Int_{++} \. \forall n \in \Int_+ \. \forall p : \TYPE{Nondecreasing}(n,\TYPE{Prime})
+	   \NewLine	\. \forall (0) : a = \prod^n_{i=1} p_i \.  p = \FUNC{PD2}(a) }
+	\Say{P}{\{ l \in \Int_+ : \forall a \in \Int_{++} \. L(a) = l \Rightarrow \LOGIC{This}(a)  \}}{?\Int_++}
+	\Assume{a}{\Int_{++}}
+	\Assume{(1)}{L(a) = 0}
+	\Say{(2)}{\bd L(a)(1)}{a = 1}
+	\Assume{n}{\Int_+}
+	\Assume{p}{\TYPE{Nondecreasing}(n,\TYPE{Prime})}
+}\Page{	
+	\Assume{(3)}{a = \prod^n_{i=1} p_i}
+	\Assume{(4)}{n \neq 0}
+	\Say{(5)}{(2)\bd \TYPE{Divides}(3)(p_1)}{ p_1 | 1 }
+	\Say{(6)}{\THM{UnitDivizors}(5)}{p_1 \in \mathbb{S}^0}
+	\Conclude{()}{\THM{UnitDivizors}(6)\bd \TYPE{Prime}(p_1)}{\bot}
+	\Derive{(4)}{E(\bot)}{n = 0}
+	\Conclude{()}{(2)\bd\FUNC{PF2}(1)(4)\bd \FUNC{emptyFunc}}{p = \FUNC{PF2}(a)}
+	\Derive{(1)}{\bd P}{0 \in P}
+	\Assume{l}{P}
+	\Assume{a}{\Int_{++}}
+	\Assume{(2)}{L(a) = l + 1}
+	\Say{q}{\FUNC{PF2}(a)_2}{\TYPE{Nondecreasing}(l+1,\TYPE{Prime})}
+	\Assume{n}{\Int_+}
+	\Assume{p}{\TYPE{Nondecreasing}(n,\TYPE{Prime})}
+	\Assume{(3)}{a = \prod^n_{i=1} p_i}
+	\Say{(4)}{ \THM{PrimeFactorization}(a)  }{a = \prod^{l+1}_{i=1} q_i}
+	\Say{(5)}{\bd \TYPE{divides}(3)(4)(q_1)}{ q_1 | \prod^{n}_{i=1} p_i  }
+	\Say{(i,6)}{\THM{IteratedEuclidsLemma}(5)}{  \sum i \in n  \. q_1 | p_i  }
+	\Say{(7)}{\bd^2 \TYPE{Prime}(q_1,p_i)(6)}{q_1 = p_i}
+	\Say{(8)}{\bd \TYPE{divides}(4)(3)(p_1)}{ p_1 | \prod^{l+1}_{i=1} q_i  }
+	\Say{(j,9)}{\THM{IteratedEuclidsLemma}85)}{  \sum j \in l+1  \. p_1 | q_j  }
+	\Say{(10)}{\bd^2 \TYPE{Prime}(q_j,p_1)(9)}{q_1 = p_i}
+	\Say{(11)}{\bd^2 \TYPE{Nondecreasing}(p,q)}{ p_i = q_1 \le q_j = p_1 \le p_i \And q_j = p_1 \le p_i = q_1 \le p_j }
+	\Say{(12)}{\THM{DoubleIneq}(10,11)}{ i = 1 = j}
+	\Say{(13)}{\bd L\left( \frac{a}{q_1} \right) }{L\left(\frac{a}{q_1}\right) = l}
+	\Say{(14)}{ \frac{(3)}{q_1}(12)}{\frac{a}{q_1} = \prod^n_{i=2} p_i}
+	\Say{(15)}{\bd P(l)(13)(14)}{ l = n-1 \And q_{+1} = p_{+1} }
+	\Conclude{()}{ (2)\bd q (15)(12) }{ \FUNC{PF2}(a) = (l+1,q) = (n,p)}
+	\Derive{(2)}{\bd P}{\forall l \in P \. l +1 \in P}
+	\Conclude{(*)}{\bd \TYPE{NaturalSet}(\Int_+)(P)(1,2) }{P = \Int_+}
+	\EndProof
+}
+\newpage
+\subsection{Factorial Function}
+\Page{
+	\DeclareFunc{factorial}{\Int_+ \to \Int_{++}}
+	\DefineNamedFunc{factorial}{n}{n!}{\FUNC{rec2}(1,\Lambda (n,f) \in \Int_+ \times \Int_{++} \. nf)}
+	\\
+	\Theorem{factorialIsDivisible}{\forall n \in \Int_{++} \. \forall k \in n \. k| n!}
+	\NoProof
+}
+\newpage
+\section{Rational Numbers}
+\subsection{The Field of Fractions}
+\Page{
+	\DeclareFunc{MultPart}{\TYPE{IntegralDomain} \to \SET}
+	\DefineNamedFunc{MultPart}{Z}{Z^\times}{Z \setminus \{0\}}
+	\\
+	\DeclareFunc{FieldOfFrac}{\TYPE{IntegralDomain} \to \SET }
+	\DefineNamedFunc{FieldOfFrac}{Z}{ \Frac(Z)}{\frac{ Z \times Z^\times}{\Big\{ \big((a,b),(c,d)\big) | a,c \in Z; b,d \in Z^\times : ad = cb \Big\}}}
+	\Say{R}{\{\big((a,b)),(c,d)\big) | a,c \in Z ; b,d \in Z^* : ad = bc \Big \}}{?(Z \times Z^\times)}
+	\Assume{(a,b)}{Z \times Z^*}
+	\Say{(1)}{I(+)(ab)}{ab = ab}
+	\Conclude{(2)}{ \bd R(1)}{(a,b) \in R}
+	\Derive{(1)}{I(\forall)\bd^{-1} \TYPE{Reflexive}(R)}{ [R : \TYPE{Reflexive}(Z \times Z^\times) ]}
+	\Assume{\Big((a,b),(c,d)\Big)}{R}
+	\Say{(2)}{\bd R\Big((a,b),(c,d)\Big)}{ ad = cb }
+	\Say{(3)}{Q(=)(2)}{bc = cb  }
+	\Conclude{()}{\bd R(3)}{\Big((c,d),(a,b) \Big) \in R}
+	\Derive{(2)}{I(\forall)I\TYPE{Symmetric}}{[R : \TYPE{Symmetric}(Z \times Z^\times)]}
+	\Assume{(a,b),(c,d),(f,g)}{Z \times Z^*}
+	\Assume{(3)}{\Big((a,b),(c,d)\Big),\Big( (a,b),(c,d) \Big)\in R }
+	\Say{(4)}{\bd R\Big( (a,b),(c,d) \Big)}{ ad = cb }
+	\Say{(5)}{\bd R\Big( (c,d),(f,g) \Big)}{ cg = fd}
+	\Say{(6)}{(4)g}{adg =cbg}
+	\Say{(7)}{(5)b}{cbg = fdb}
+	\Say{(8)}{(6)(7)}{ adg = fdb  }
+	\Say{(9)}{(8) - fdb \bd \TYPE{CommutativeRing}(Z) }{0 = adg - fdb = d(ag - fb) }
+	\Say{(10)}{\bd \TYPE{IntegralDomain}(Z)(9) }{ag = fb}
+	\Conclude{()}{\bd R(10)}{\Big((a,b),(g,f)\Big) \in R}
+	\Derive{(3)}{\bd^{-1}\TYPE{Transitive}}{[R : \TYPE{Transitive}(Z \times Z^\times)]}
+	\Conclude{(4)}{\bd^{-1}(\TYPE{Equivalence})}{[R : \TYPE{Equivalence}(Z \times Z^\times)]}
+	\EndProof
+}
+\newpage
+\Page{
+	\DeclareFunc{fraction}{\prod Z : \TYPE{IntegralDomain} \. Z \times Z^\times \to \Frac(Z)}
+	\DefineNamedFunc{fraction}{a,b}{\frac{a}{b}}{[a,b]}
+	\\
+	\DeclareFunc{fracMult}{ \prod Z : \TYPE{IntegralDomain} \. \Frac(Z) \to \Frac(Z) \to \Frac(Z) }
+	\DefineNamedFunc{fracMult}{\frac{a}{b},\frac{c}{d}}{\frac{a}{b}\frac{c}{d}}{\frac{ac}{bd}} 
+	\Assume{n,m}{Z^\times}
+	\Conclude{(*)}{\bd \FUNC{fracMult} \bd \TYPE{CommutativeRing}(Z) \bd \Frac(Z) \bd^{-1} \FUNC{fracMult} }
+	{  \NewLine :
+		\frac{na}{nb}\frac{mc}{md} = \frac{namc}{nbmd} = \frac{nmac}{nmbd} = \frac{ac}{bd} = \frac{a}{c}\frac{b}{d}   
+	}
+	\EndProof
+	\\
+	\DeclareFunc{fracAdd}{\prod Z : \TYPE{IntegralDomain} \. \Frac(Z) \to \Frac(Z) \to \Frac(Z)}
+	\DefineNamedFunc{fracAdd}{\frac{a}{b},\frac{c}{d}}{\frac{a}{b} + \frac{c}{d}}{\frac{ad + cb}{bd}}
+	\Assume{n,m}{Z^\times}
+	\Conclude{(*)}{\bd \FUNC{fracAdd} \bd \TYPE{CommutativeRing}(Z) \bd \Frac(Z) \bd^{-1} \FUNC{FracAdd}}
+	{ \NewLine :
+		\frac{na}{nb} + \frac{mc}{md} = \frac{namd + mcnb}{nbmd} = 
+		\frac{nm(ad + cb)}{nmbd} = \frac{ad + cb}{bd} = \frac{a}{b} + \frac{c}{d}
+	}
+	\\
+	\Theorem{FracAddAssoc}{\forall Z : \TYPE{IntegralDomain} \. \FUNC{fracAdd}(Z) : \TYPE{Associative}\Big(\Frac(Z)\Big)}
+	\Assume{\frac{a}{b}, \frac{c}{d},\frac{f}{g}}{\Frac(Z)}
+	\Conclude{(*)}{ \bd^2 \FUNC{fracAdd} \bd \TYPE{CommutativeRing}(Z) \bd^{-2} \FUNC{fracAdd}  }
+	{
+		 \NewLine :
+		\left( \frac{a}{b} + \frac{c}{d} \right) + \frac{f}{g} = \frac{ad + cb}{bd} + \frac{f}{g} =
+		\frac{(ad + cb)g  + fbd}{bdg} =  
+		\frac{adg + cbg + fbd }{bdg} =  \NewLine = 
+		\frac{ adg  + b(cg + fd)}{bdg} =
+		\frac{a}{b} + \frac{cg + fd}{dg} = 
+		\frac{a}{b}  +\left( \frac{c}{d} + \frac{f}{g} \right)              
+	}
+	\EndProof
+	\\
+	\Theorem{FracAddCommute}{\forall Z : \TYPE{IntergralDomain} \. \FUNC{fracAdd}(Z) : \TYPE{Commutative}\Big(\Frac(Z)\Big) }
+	\NoProof
+	\\
+	\Theorem{FracAddNeutral}{\forall Z : \TYPE{IntegralDomain} \. \forall n \in Z^\times \. \frac{0}{n} : \TYPE{Neutral}\Big( \Frac(Z),+ \Big) }
+	\NoProof 
+}\Page{
+	\Theorem{FractionsAbeleanGroupByAddition}{\forall Z : \TYPE{IntegralDomain} \. (\Frac(Z),+) : \TYPE{Abelean}}
+	\NoProof
+	\\
+	\Theorem{FracMultAssoc}{\forall Z : \TYPE{IntegralDomain} \. \FUNC{fracMult} : \TYPE{Associative}\Big(\Frac(Z)\Big)}
+	\NoProof
+	\\
+	\Theorem{FracMultCommutes}{\forall Z : \TYPE{IntegralDomain} \. \FUNC{fracMult} : \TYPE{Commutative}\Big(\Frac(Z)\Big)}
+	\NoProof
+	\\
+	\Theorem{FracMultDistributesOverFracAdd}{\forall Z : \TYPE{IntegralDomain} \. \FUNC{fracMult} : \TYPE{Distributive}\Big(\Frac(Z),+ \Big)}
+	\Assume{\frac{a}{b},\frac{c}{d},\frac{f}{g}}{\Frac(Z)}
+	\Conclude{(*)}{ \bd \FUNC{fracAdd} \bd \FUNC{fracMult} \bd \Frac(Z) \bd^{-1} \FUNC{fracAdd}\bd^{-1}\FUNC{fracMult} }{
+		\NewLine :
+		\frac{a}{b}\left( \frac{c}{d} + \frac{f}{g} \right) =
+		\frac{a}{b} \frac{cg + fd}{dg} = 
+		\frac{acg + afd}{dbg} =
+		\frac{bacg + bafd}{db^2g} = 
+		\frac{ac}{db} + \frac{af}{bg} = 
+		\frac{a}{c}\frac{d}{b} + \frac{a}{b}\frac{f}{g}
+	}
+	\EndProof
+	\\
+	\Theorem{FracMultNeutral}{\forall Z : \TYPE{IntegralDomain}  \.   \frac{1}{1} : \TYPE{Neutral}\Big( \Frac(Z), \cdot \Big)     }
+	\NoProof
+	\\
+	\Theorem{FracIsAField}{\forall Z : \TYPE{IntegralDomain} \. \Big( \Frac(Z),+,\cdot\Big) : \TYPE{Field} }
+	\NoProof 
+	\\
+	\DeclareFunc{rationalNumbers}{\TYPE{Field}}
+	\DefineNamedFunc{rationalNumbers}{}{\mathbb{Q}}{\Frac \Int}
+}
+\newpage
+\subsection{Order And Topological Structure}
+\Page{
+	\Theorem{CanonicalFractionRepresentation}{\forall \frac{a}{b} \in \Rats \. \exists c \in \Int : \exists n \in \Nat : \frac{a}{b} = \frac{c}{n}}
+	\Say{(1)}{\bd \Rats \left(\frac{a}{b}\right)}{b \neq 0}
+	\Say{(s,n,2)}{\THM{IntegerRepresentation}(b)}{\sum s \in \mathbb{S}^0 \. \sum n \in \Int_+ \. b = sn}
+	\Say{(3)}{\THM{NatIsPositive}(1,2)}{n \in \Nat}
+	\Conclude{(*)}{(2)\bd \Rats \bd \mathbb{S}^0(s)}{ \frac{a}{b} = \frac{a}{sn} = \frac{sa}{s^2 n} = \frac{sa}{n}   }
+	\EndProof
+	\\
+	\DeclareType{GreaterRat}{?(\Rats \times \Rats)}
+	\DefineNamedType{\frac{a}{n},\frac{b}{m}}{GreaterRat}{\frac{a}{n} \ge \frac{b}{m}}{am \ge bn \NewLine \where \NewLine n,m \in \Nat}
+	\Assume{k,l}{\Nat}
+	\Say{(1)}{\THM{PositiveMult}(k,l)}{kl>0}
+	\Assume{(2)}{\frac{a}{n} \ge \frac{b}{m}}
+	\Say{(3)}{\bd \TYPE{GreaterRat}(2)}{am \ge bn}
+	\Say{(4)}{ \bd\TYPE{Field}(\Rats)\THM{MultIneq}(1)(3)\bd \TYPE{Field}}{ kalm = klam \ge klbn = lbkn}
+	\Conclude{()}{ \bd^{-1} \TYPE{GreaterRat}(4) }{\frac{ka}{kn} \ge \frac{lb}{lm}}
+	\Derive{(2)}{I(\Rightarrow)}{ \frac{a}{n} \ge \frac{b}{m} \Rightarrow \frac{ka}{kn} \ge \frac{lb}{lm}  }
+	\Assume{(3)}{ \frac{ka}{kn} \ge \frac{lb}{lm}  }
+	\Say{(4)}{\bd \TYPE{Field}(\Rats) \bd \TYPE{GreaterRat}(3) \bd \TYPE{Field}(\Rats)}{ klam = kalm \ge lbkn = klbn  }
+	\Say{(5)}{\THM{MultIneq}(1)(4)}{ am \ge bn}
+	\Conclude{()}{\bd^{-1}\TYPE{GreaterRat}(5)}{\frac{a}{n} \ge \frac{b}{n}}
+	\DeriveConclude{(3)}{ I(\forall)I(\iff)I(\Leftarrow)  }{ \forall l,k \in \Nat \.  \frac{a}{n} \le \frac{b}{m} \iff \frac{ak}{nk} \le \frac{bl}{ml}}            
+	\EndProof
+	\\
+}\Page{
+	\Theorem{GreaterRatIsAntisymmetric}{\TYPE{GreaterRat} : \TYPE{Antisymmetric}(\Rats)}
+	\Assume{\frac{a}{n},\frac{b}{m}}{\Rats}
+	\Assume{(1)}{\frac{a}{n} \ge \frac{b}{m}}
+	\Assume{(2)}{\frac{b}{n} \ge \frac{a}{n}}
+	\Say{(3)}{\bd \TYPE{GreaterRat}(1)}{am \ge bn}
+	\Say{(4)}{\bd \TYPE{GreaterRat}(2)}{bn \ge am}
+	\Say{(5)}{\bd \TYPE{Antisymmetric}(\Int)(3,4)}{ am = bn  }
+	\Conclude{(6)}{  \bd \Rats(4)   }{\frac{a}{n} = \frac{b}{m}}
+	\EndProof
+	\\
+	\Theorem{GreaterRatIsTransitive}{ \TYPE{GreaterRat} : \TYPE{Transitive}(\Rats)}
+	\Assume{\frac{a}{n},\frac{b}{m},\frac{c}{k} }{\Rats}
+	\Assume{(1)}{\frac{a}{n} \ge \frac{b}{m}}
+	\Assume{(2)}{\frac{b}{m} \ge \frac{c}{k}}
+	\Say{(3)}{  \bd \TYPE{GreaterRat}(1)}{ am \ge bn}
+	\Say{(4)}{ \bd \TYPE{GreaterRat}(2) }{ bk \ge cm}
+	\Say{(5)}{ k(3)}{ amk \ge bnk}
+	\Say{(6)}{ n(4)}{ bnk \ge cmn }
+	\Say{(7)}{ (5)(6)  }{amk \ge cmn}
+	\Say{(8)}{\THM{MultIneq}(7)(k) }{ak \ge cn}
+	\Conclude{(*)}{\bd^{-1} \TYPE{MultIneq}}{ \frac{a}{n} \ge \frac{c}{k}} 
+	\EndProof
+	\\
+	\Theorem{GreaterRatIsOrder}{\TYPE{GreaterRat} : \TYPE{Order}(\Rats)}
+	\NoProof
+	\\
+	\Theorem{GreaterRatIsTotal}{\TYPE{GreaterRat} : \TYPE{Total}(\Rats)}
+	\NoProof
+	\\
+	\DeclareFunc{orderedRationalNumbers}{\TYPE{OrderedSet}}
+	\DefineNamedFunc{orderedRationNumbers}{}{\Rats}{(\Rats,\TYPE{GreaterRat})}
+	\\
+	\DeclareFunc{topologicalRationalNumbers}{\TYPE{OrderedSet}}
+	\DefineNamedFunc{topologicalRationalNumbers}{}{\Rats}{(\Rats,\FUNC{order}(\Rats))}
+}
+\newpage
+\subsection{Cardinality}
+\Page{
+	\Theorem{CardinalityOfRats}{ |\Rats| = \aleph_0}
+	\Say{(1)}{\THM{CardinalityOfInt}}{|\Int| = \aleph_0}
+	\Say{f}{ \Func{fraction}(\Int)  }{\Int \times \Int^\times \to \Rats}
+	\Say{g}{\Lambda n \in \Int \. \frac{n}{1}}{\Int \to \Rats}
+	\Say{(2)}{\bd \Rats \bd f}{[f :  \Int \times \Int^\times \ToSurj \Rats}
+	\Say{(3)}{\bd \Rats \bd g}{[g : \Int \ToInj \Rats] }
+	\Say{(4)}{\THM{InfCardProduct}}{|\Int \times \Int^\times| = \aleph_0}
+	\Say{(5)}{\THM{SurjCard}(2)(4Z) }{|\Rats| \le \aleph_0}
+	\Say{(6)}{\THM{InjCard}(3)}{|\Rats| \ge \aleph_0}
+	\Conclude{(*)}{\THM{CardDoubleIneq}(5)(6)}{|\Rats| = \aleph_0}
+	\EndProof
+	\\
+	\Theorem{OpenRatsSubsetIsInfinite}{\forall U : \TYPE{Open}(\Rats) \. \forall (0) : U \neq \emptyset \. |U| = \aleph_0}
+	\NoProof
+	\\
+}
+\newpage
+\subsection{Additional Algebraic Properties} 
+\Page{
+	\DeclareFunc{ratsPower}{ \Nat \times \Rats \to \Rats  } 
+	\DefineNamedFunc{ratsPower}{n,\frac{a}{b}}{\left( \frac{a}{b} \right)^n}{\frac{a^n}{b^n}}
+	\\
+	\DeclareFunc{ratsPower2}{\Int \times \Rats^\times \to \Rats^\times}
+	\DefineNamedFunc{ratsPower2}{[n,m],\frac{a}{b}}{\left( \frac{a}{b} \right)^{[n,m]}}{\frac{a^n b^m}{a^m b^n}}
+	\Assume{k}{\Int_+}
+	\Conclude{(*)}
+	{
+		\bd \FUNC{ratsPower2}
+		\THM{Exponentiation}^4
+		(a,n,k)(a,m,k)
+		(b,n,k)(b,m,k)
+		\bd \Rats
+		\bd^{-1} \FUNC{ratsPower2}
+	}
+	{ \NewLine :\left( \frac{a}{b} \right)^{[n + k,m + k]} = 
+		\frac{a^{n + k}b^{m + k}}{a^{m+k}b^{n + k}} =
+		\frac{a^nb^m a^k b^k}{a^m b^n a^k b^k} = 
+		\frac{a^n b^m}{a^m b^n} =
+		\left( \frac{a}{b} \right)^{[n,m]}
+	}
+	\\
+	\Theorem{Exponentiation}{ \forall n,m \in \Int \. \forall \frac{a}{b} \in \Rats \. \left( \frac{a}{b} \right)^{n + m} = 
+		\left(\frac{a}{b}\right)^n\left(\frac{a}{b}\right)^m  }
+	\NoProof
+}
+
+\end{document}

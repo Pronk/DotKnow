@@ -1,0 +1,210 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\Cat}{\TYPE{Category}}
+\newcommand{\Mor}{\mathcal{M}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\}
+\newcommand{\A}{\LOGIC{Assume} \;} 
+\newcommand{\Assume}[2]{& \A #1 : #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%SetTheory
+%Cats
+\newcommand{\SET}{\mathsf{SET}}
+%Analysis
+%Real
+%Types
+\newcommand{\IPP}{\TYPE{IntermidiatePointProperty}}
+\newcommand{\LUB}{\TYPE{LowerUpperBound}}
+\newcommand{\ULB}{\TYPE{UpperLowerBound}}
+\author{Uncultured Tramp} 
+\title{Abstract Algebra}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{General Concepts}
+\subsection{Equation Algebra}
+\Page{
+	&  X,Y,Z : \TYPE{Set}(T)    \\
+	\\
+	\Theorem{EquationRightMultiplication}{\forall \odot :  X \times Y \to Z \. \forall a,b \in X \. \forall c \in Y \. 
+	a = b \Rightarrow a \odot c = b \odot c 
+	}
+	\Say{ (1)  }{  I(=,\times)(a,b,c)   }{(a,c) = (b,c)}
+	\Say{ (2)  }{  I(=)(\cdot)}{ \cdot = \cdot}
+	\Conclude{ (*)  }{   E(=,\to)(\cdot,\cdot)(2)((a,c),(b,x))(1)  }{  a \cdot c = b \cdot c   }
+	\EndProof
+	\\
+	\DeclareFunc{rightEquationMult}{\prod \odot : X \times Y \to Z \. \prod a, b \in X \.
+		\prod c \in Y \. a = b \to a \odot c = b \odot c
+	}
+	\DefineNamedFunc{rightEquationMult}{(1)}{(1) \odot c }{ \THM{EquationRightMultiplication} }
+	\\
+	\Theorem{EquationLeftMultiplication}{\forall \odot :  X \times Y \to Z \. \forall a,b \in Y \. \forall c \in X \. 
+	a = b \Rightarrow c \odot a = c \odot b 
+	}
+	\Say{ (1)  }{  I(=,\times)(a,b,c)   }{(c,a) = (c,b)}
+	\Say{ (2)  }{  I(=)(\cdot)}{ \cdot = \cdot}
+	\Conclude{ (*)  }{   E(=,\to)(\cdot,\cdot)(2)((c,a),(c,b)(1)  }{  c \cdot a = c \cdot b   }
+	\EndProof
+	\\
+	\DeclareFunc{leftEquationMult}{\prod \odot : X \times Y \to Z \. \prod a, b \in Y \.
+		\prod c \in X \. a = b \to a \odot c = b \odot c
+	}
+	\DefineNamedFunc{leftEquationMult}{(1)}{(1) \odot c }{ \THM{EquationRightMultiplication} }
+}
+\newpage
+\subsection{Binary Operations}
+\Page{
+	\DeclareType{Commutative}{ ?(X \times X \to X)}
+	\DefineType{ \odot }{Commutative}{ \forall x,y \in X \. x \odot y = y \odot x    }
+	\\
+	\DeclareType{Associative}{?(X \times X \to X)}
+	\DefineType{\odot}{Associative}{\forall x,y,z \in X \. x \odot (y \odot z) = (x \odot y) \odot z}
+	\\
+	\DeclareType{LeftDistributive}{?\Big((X \times X \to X) \times (X \times X \to X)\Big) }
+	\DefineType{\odot,\oplus}{LeftDistributive}{  \forall x,y,z \in X \. x \odot (y \oplus z) = 
+		(x \odot y) \oplus ( x \odot z)  }
+	\\
+	\DeclareType{RightDistributive}{?\Big((X \times X \to X) \times (X \times X \to X)\Big)}
+	\DefineType{\odot,\oplus}{RighDistributive}{\forall x,y,z \in X \. (x \oplus y) \odot z =
+		= (x \odot z) \oplus (y \odot z) 
+	}
+	\\
+	\DeclareType{Idempotent}{?(X \times X \to X)}
+	\DefineType{\odot}{Idempotent}{\forall x \in X \. x \odot x = x}
+}
+\newpage
+\subsection{Identity And Inverse}
+\Page{
+	\DeclareType{Identity}{ \Big((X \times X) \to X\Big) \to ?X  }
+	\DefineType{e}{Identity}{ \Lambda \odot : (X \times X) \to X \. 
+		\forall x \in X \. x \odot e = x = e \odot x    }
+	\\
+	\Theorem{IdentityIsUnique}{ \forall \odot : (X \times X) \to X \. \forall e, f : \TYPE{Identity}(X)(\odot) 
+		\. e = f
+	}
+	\Say{(1)}{ \bd \TYPE{Identity}(X)(\odot)(e)}{ e \odot f = f }
+	\Say{(2)}{\bd \TYPE{Identity}(X)(\odot)(f)}{e \odot f = e }
+	\Conclude{(*)}{(1)(2)}{f = e}
+	\EndProof
+	\\
+	\DeclareType{Inverse}{ \Big( (X \times X) \to X \Big) \to X \to ?X }
+	\DefineType{a}{Inverse}{ \Lambda \odot :\Big((X \times X) \to X \Big) 
+		\. \Lambda x \in X \.  x \odot a : \TYPE{Identity}(X) \And a \odot x : \TYPE{Identity}(X)   }
+	\\
+	\Theorem{IverseIsUnique}{\forall \odot : (X \times X) \to X \. \forall x \in X \. 
+		\forall a, b : \TYPE{Inverse}(X)(\odot)(x) \. a = b}`
+	\Say{(1)}{\bd \TYPE{Inverse}(X)(\odot)(x)(a) \THM{UniqueIdentity} \bd \TYPE{Inverse}(X)(\odot)(x)(b) }
+	{ a \odot x = b \odot x  }
+	\Say{(2)}{ \bd_1 \TYPE{Inverse}(X)(\odot)(x)(a) }{  xa : \TYPE{Identity}  }
+	\Say{(*)}{ (1) \odot a \bd \TYPE{Identity}(X)(\odot)(xa)  }{a = b}
+	\EndProof
+}
+\newpage
+\subsection{Magmas, Semigroups and Monoids}
+\Page{
+	& \TYPE{Magma} = \sum X : \TYPE{Set}(T) \. X \times X \to X \\ 
+	\\
+	\DeclareFunc{synecdoche}{ \TYPE{Magma} \to \TYPE{Set}(T) }
+	\DefineFunc{synecdoche}{M,\cdot}{M}
+	\\
+	\DeclareFunc{operation}{ \prod (X, \odot) : \TYPE{Magma} \. (X \times X) \to X }
+	\DefineNamedFunc{operation}{   }{\cdot_{(X,\odot)}}{\odot}
+	\\
+	\DeclareType{Semigroup}{?\TYPE{Magma}(T)} 
+	\DefineType{X}{Semigroup}{ \cdot_X : \TYPE{Associative}(X) }
+	\\
+	\DeclareType{Monoid}{?\TYPE{Semigroup}(T)}
+	\DefineType{X}{Monoid}{\exists \TYPE{Unity}(X)(\cdot_X)}
+	\\
+	\DeclareFunc{unity}{\prod X : \TYPE{Monoid} \. \TYPE{Unity}(X)(\cdot_X)}
+	\DefineNamedFunc{unity}{}{e_X}{ \bd \TYPE{Monoid}}
+	\\
+	\DeclareFunc{iteratedProduct}{ \prod X : \TYPE{Monoid} \. \prod n \in \NNInt \. (n \to X) \to X}
+	\DefineNamedFunc{iteratedProduct}{\emptyset}{\prod^0_{i = 1}}{e_X}
+	\DefineNamedFunc{iteratedProduct}{ x }{ \prod^n_{i = 1} x_i }{  x_n\prod^{n-1}_{i = 1} x_{|n-1 ,i}  }
+}
+\end{document}
