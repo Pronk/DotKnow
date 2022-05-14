@@ -8,6 +8,7 @@
 \usepackage{amssymb}
 \usepackage{ wasysym }
 \usepackage{ upgreek }
+\usepackage{scalerel}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[a4paper,top=5mm, bottom=20mm, left=10mm, right=2mm]{geometry}
 \renewcommand\pagemark{{\usekomafont{pagenumber}\thepage\ }}
@@ -342,6 +343,7 @@
 \DeclareMathOperator{\lin}{lin}
 \DeclareMathOperator{\core}{core}
 \DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\cone}{cone}
 \DeclareMathOperator{\cconv}{\overline{conv}}
 \DeclareMathOperator{\CCONV}{\mathsf{CCONV}}
 \renewcommand{\H}{\mathrm{H}}
@@ -406,11 +408,14 @@
 %Convex Analysis
 %TYPE
 \newcommand{\Concave}{\TYPE{Concave}}
+\newcommand{\PCF}{\TYPE{ProperConvexFunction}}
 \newcommand{\PHomog}{\TYPE{PositivelyHomogeneous}}
 \newcommand{\Conic}{\TYPE{Conic}}
 %FUNC
-\newcommand{\D}{\mathbf{D}}
 \DeclareMathOperator{\epi}{epi}
+\DeclareMathOperator*{\bigsquare}{\scalerel*{\square}{\textstyle\sum}}
+%Differential Analysis
+\newcommand{\D}{\mathbf{D}}
 \author{Uncultured Tramp}
 \title{Convex Analysis}
 \begin{document}
@@ -696,7 +701,7 @@
 		\forall V : \VS{\Reals} \.
 		\Convex(V) \to \Convex(V,V)
 	}
-	\DefineNamedFunc{convexIndicator}{C}{\Lambda x \in V \. \chi(x|A)}{
+	\DefineNamedFunc{convexIndicator}{C}{\Lambda x \in V \. \chi(x|C)}{
 			\Lambda x \in V \.  \infty\big[x \in C^\c\big]
 	}
 	\\
@@ -705,7 +710,7 @@
 		\forall V : \Reals\hyph\mathsf{HIL} \.
 		\Convex(V) \to \Convex(V,V)
 	}
-	\DefineNamedFunc{supportFunction}{C}{\Lambda x \in V \. \chi^*(x|A)}{
+	\DefineNamedFunc{supportFunction}{C}{\Lambda x \in V \. \chi^*(x|C)}{
 			\sup_{y \in C} \langle x,y \rangle
 	}
 	\\
@@ -714,8 +719,8 @@
 		\forall V : \VS{\Reals} \.
 		\Convex(V) \to \Convex(V,V)
 	}
-	\DefineNamedFunc{gauge}{C}{\Lambda x \in V \. \gamma(x|A)}{
-			\Lambda x \in V \. \inf \{ \lambda \in \Reals_{++} | x \in \lambda C \}
+	\DefineNamedFunc{gauge}{C}{\Lambda x \in V \. \gamma(x|C)}{
+			\Lambda x \in V \. \inf \Big\{ \lambda \in  \Reals_{++} \Big| x \in \lambda C \Big\}
 	}
 	\\
 	\Theorem{ConvexFunctionHasConvexLevelSets}
@@ -848,7 +853,7 @@
 		$}
 	\EndProof
 	\\
-	\Theorem{ConicIsLinearIffsymmetric}
+	\Theorem{ConicIsLinearIffSymmetric}
 	{
 		\forall V \in \VS{\Reals} \.
 		\forall f \in \Conic(f) \.
@@ -876,6 +881,233 @@
 }
 \newpage
 \subsection{Convexity Preserving Operations}
+\Page{
+	\Theorem{ConvexComposition}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall D \subset V
+		\forall f : \Convex(V,D) \.
+		\forall \phi : \Convex \And \TYPE{Increasing}(\Reals,\Reals) \.
+		\Convex(V,D,\phi \circ f)
+	}
+	\Explain{ Assume $x,y \in \dom f, \lambda \in [0,1]$}
+	\Explain{
+		Then $\phi\Big( f\big( \lambda x + (1-\lambda) y \big)\Big) \le \phi\Big( \lambda f(x) + (1-\lambda) f(y)\Big)
+		\le \lambda \phi \circ f(x) + (1-\lambda) \phi \circ f(y)$}
+	\EndProof
+	\\
+	\Theorem{ConvexFunctionFromSet}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall C : \Convex(V \oplus \Reals) \.
+		\Convex\Big(V,V, \Lambda v \in V \. \inf \big\{t|(v,t)\in C \big\}\Big)
+	}
+	\Explain{
+	This is function has cinvex epigraph}
+	\EndProof	
+	\\
+	\\
+	\Theorem{InfimalConvolutionIsConvex}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall n \in \Nat \.
+		\forall f : \{1,\ldots,n\} \to \PCF(V) \. \NewLine \.
+		\Convex\left( V, V, \Lambda x \in V \. \inf \left\{ \sum^n_{k=1} f_k(v_k) \Bigg| v \in V^n, 
+			\sum^n_{k=1} v_k = x \right\} \right)
+	}
+	\Explain{
+		Let $g = \inf \left\{ \sum^n_{k=1} f_k(v_k) \Bigg| v \in V^n, 
+			\sum^n_{k=1} v_k = x \right\}$}
+	\Explain{$C = \sum^n_{k=1} \epi f_k$ is convex}
+	\ExplainFurther{ 
+		A tuple $(x,\phi) \in C$ if there is a sequence $(v,\psi) \in (V\oplus\Reals)^n$
+		such that $x = \sum^n_{k=1} v_k,\phi = \sum^n_{k=1} \psi_k$}
+	\Explain{		
+		 and 
+		$f(v_k) \le \psi_k$ for every $k \in \{1,\ldots,n\}$}
+	\Explain{
+		Thus $\phi = \sum^n_{k=1} \psi_k \ge \sum^n_{k=1} f(v_k) \ge  g(x)$,
+		so $(x,\phi) \in \epi g$}
+	\Explain{ Then $g$ can be constructed from set $C$}
+	\EndProof
+	\\
+	\DeclareFunc{infimalConvolution}{\prod_{V \in \VS{\Reals}} \prod^\infty_{n=1} 
+		\Big(\{1,\ldots,n\} \to \PCF(V) \Big) \to \Convex(V,V)  }
+	\DefineNamedFunc{infimalConvolution}{f}{\bigsquare^n_{k=1} f_i}
+	{
+		\inf \left\{ \sum^n_{k=1} f_k(v_k) \Bigg| v \in V^n, \sum^n_{k=1} v_k = x \right\} 
+	}
+	\\
+	\DeclareFunc{ConvexDelta}{\prod_{V \in \VS{\Reals}}  V \to \PCF(V)  }
+	\DefineNamedFunc{convexDelta}{a}{\delta_a}
+	{
+		\Lambda x \in V \. \If x = a \Then 0 \Else +\infty 
+	}
+}\Page{
+	\Theorem{GraphTranslationByInfimalConvolution}
+	{		
+		\forall V \in \VS{\Reals} \.
+		\forall f : \PCF(V) \.		
+		\forall a,v \in V \.
+		(\delta_a \square f)(v) = f(v - a)
+	}
+	\Explain{ Clearly $(\delta_a \square f)(v) = \min \Big\{ f(v-a),+\infty \Big\}$ }
+	\EndProof
+	\\
+	\Theorem{InfimalConvolutionDomain}
+	{		
+		\forall V \in \VS{\Reals} \.
+		\forall f : \PCF(V) \.		
+		\forall a,v \in V \.
+		\dom ( f \square g) = \dom f + \dom g
+	}
+	\Explain{ Obvious }
+	\EndProof
+	\\
+	\Theorem{DistanceExpression}
+	{
+		\forall V : \TYPE{NormedSpace}(\Reals) \.
+		\forall C : \Convex(V) \.
+		d_V(C,\bullet) = \| \bullet \|  \square \chi( \bullet | C)
+	}
+	\EndProof
+	\\
+	\Theorem{InfimalConvolutionDefinesCommutativeMonoid}
+	{
+		\NewLine ::		
+		\forall V \in \VS{\Reals} \. \NewLine \.
+		\TYPE{CommutativeMonoid}\Big( 
+			\Convex(V,V), 
+			\Lambda f,g \in \Convex(V,V) \.
+			\Lambda x \in  V \. \inf \Big\{ \phi \Big| (v,\phi) \in (\epi f + \epi g)  \Big\}  			
+			 \Big)
+	}
+	\Explain{ $\delta_0$ is a neutral element, comutativity and associativity is almost obvious}
+	\EndProof
+	\\
+	\DeclareFunc{rightScalarMultiplication}
+	{
+		\prod_{V \in \VS{\Reals}} \.
+		\Convex(V,V) \to \Reals_+ \to \Convex(V,V)
+	}
+	\DefineNamedFunc{rightScalarMultiplication}{f,\lambda}{f\lambda}
+	{
+		\THM{ConvexFunctionFromSet}(V,\lambda \epi f)
+	}
+	\\
+	\Theorem{RightScalarMultiplicationExpression}
+	{
+		\NewLine ::		
+		\forall V \in \VS{\Reals} \. \forall f : \Convex(V,V) \.
+		\forall \lambda \in \Reals_{++} \.
+		\forall x \in X \.
+		f\lambda(x) =\lambda f(\lambda^{-1}x)
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Theorem{RightScalarMultiplicationByZero}
+	{
+		\forall V \in \VS{\Reals} \. \forall f : \Convex(V,V) \.
+		f0(x) = \delta(0)
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Theorem{ConicityByRightMultiplication}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall f : \Convex(V,V) \.
+		\Conic(V,f)
+		\iff
+		\forall \lambda \in \Reals_{++} \. f\lambda = f
+	}
+	\Explain{ Follows from the expression for right multiplication}
+	\EndProof
+}\Page{
+	\DeclareFunc{conicClosure}
+	{
+		\prod_{ V \in \VS{\Reals} }
+		 \CF(V) \to \Conic(V)
+	}
+	\DefineFunc{conicClosure}{\cone f }{\THM{ConvexFunctionFromSet}\Big(V. \cone \epi f\Big)}
+	\\
+	\Theorem{GaugeExpression}
+	{
+		\forall V \in \VS{\Reals} \. 
+		\forall C : \Convex \And \TYPE{NonEmpy}(V) \.
+		\gamma(\bullet|C) = \cone \Big( \chi(\bullet|C) + 1  \Big)
+	}
+	\Explain{ $(x,\phi) \in \epi \gamma(\bullet|C)$ iff $x \in \lambda C$ and $0 < \lambda \le \phi $}
+	\Explain{This means that $(x,\lambda) \in \cone C \times \{1\} \subset \cone \epi\Big( \chi(\bullet|C) + 1  \Big)$}
+	\Explain{ So $(x,\phi) \in \cone C \times \{ \phi/\lambda \} \subset
+		\cone \epi \Big( \chi(\bullet|C) + 1  \Big) =  \epi \cone \Big( \chi(\bullet|C) + 1  \Big)$}
+	\Explain{
+		On the other hand id $(x,\psi) \in \epi \cone \Big( \chi(\bullet|C) + 1$ then there
+		exists $\lambda \in \Reals_{++}$ such that $\lambda x \in C$ and $\lambda \psi \ge 1$
+	}
+	\Explain{  
+		But this means that $\psi \ge \lambda^{-1} \ge \gamma(x|C)$}
+	\Explain{
+			Thus $(x,\psi) \in \gamma(\bullet|C)$		
+	}
+	\Explain{
+		And both functions are equal by equality of epigraphs}
+	\EndProof
+	\\
+	\Theorem{SupremumIsConvex}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall I \in \SET \.
+		\forall f : I \to \CF(V) \.
+		\CF(V,\sup_{i \in I} f_i)
+	}
+	\Explain{ 
+		$\epi \sup_{i \in I} f_i = \bigcap_{i \in I} \epi f_i$ is convex}
+	\\
+	\DeclareFunc{convexHull}
+	{
+		\prod_{V \in \VS{\Reals}} \prod_{I \in \SET} 
+		\Big(I \to V \to \EReals) \to \CF(V)
+	}
+	\DefineNamedFunc{convexHull}{f}{\conv_{i \in I} f_i}
+	{
+		\THM{ConvexFunctionFromSet}\left(V, \conv \bigcup_{i \in \I} \epi f_i\right)	
+	}
+	\\
+	\Theorem{ConvexHullExpression}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall I \in \SET \.
+		\forall f : I \to V \to (-\infty,+\infty] \.
+		\forall v \in V \. \NewLine \.
+		\conv_{i \in I} f_i(x) =
+		\inf \left\{  \sum_{i \in I} \lambda_if_i(v_i) \Bigg| \lambda \in \Reals_+^{\oplus I}, v : I \to V,
+		\sum_{i \in I} \lambda_i = 1, \sum_{i \in I} \lambda_i v_i = x \right\}
+	}
+	\Explain{ This follows from the thorough  examination of the definition}
+	\\
+	\DeclareFunc{convexPullback}
+	{
+		\prod V,W \in \VS{\Reals} \.
+		\VS{\Reals}(V,W) \to \CF(W) \to \CF(V)
+	}
+	\DefineNamedFunc{convexPullback}{f,T}{fT}
+	{
+		f \circ T
+	}
+	\\
+	\DeclareFunc{convexPushforward}
+	{
+		\prod V,W \in \VS{\Reals} \.
+		\VS{\Reals}(V,W) \to \CF(V) \to \CF(W)
+	}
+	\DefineNamedFunc{convexPullback}{f,T}{T_* f}
+	{
+		\Lambda w \in W \. \inf \{ f(v) | w = Tv \}
+	}
+}
+\newpage
 \subsection{Closures}
 \subsection{Continuity}
 \section{Duality}
