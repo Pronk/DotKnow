@@ -328,7 +328,6 @@
 \newcommand{\Convex}{\TYPE{Convex}}
 \newcommand{\CB}{\TYPE{ConvexBody}}
 \newcommand{\CC}{\TYPE{ConvexCone}}
-\newcommand{\CF}{\TYPE{ConvexFunction}}
 \newcommand{\Mink}{\TYPE{MinkowskySpace}}
 \newcommand{\Euc}{\TYPE{EucledeanSpace}}
 \newcommand{\Cone}{\TYPE{Cone}}
@@ -407,15 +406,25 @@
 %Analysis
 %Convex Analysis
 %TYPE
+\newcommand{\CF}{\TYPE{ConvexFunction}}
 \newcommand{\Concave}{\TYPE{Concave}}
 \newcommand{\PCF}{\TYPE{ProperConvexFunction}}
 \newcommand{\PHomog}{\TYPE{PositivelyHomogeneous}}
 \newcommand{\Conic}{\TYPE{Conic}}
+\newcommand{\SCF}{\TYPE{StrictConvexFunction}}
+\newcommand{\ClF}{\TYPE{ClosedFunction}}
+\newcommand{\PClF}{\TYPE{ProperClosedFunction}}
 %FUNC
 \DeclareMathOperator{\epi}{epi}
 \DeclareMathOperator*{\bigsquare}{\scalerel*{\square}{\textstyle\sum}}
+%Linear
+\newcommand{\BAN}[1]{#1\hyph\mathsf{BAN}}
+\newcommand{\HIL}[1]{#1\hyph\mathsf{HIL}}
 %Differential Analysis
 \newcommand{\D}{\mathbf{D}}
+%Real Analysis
+\newcommand{\LsC}{\TYPE{LowerSemicontinuous}}
+\newcommand{\UsC}{\TYPE{LowerSemicontinuous}}
 \author{Uncultured Tramp}
 \title{Convex Analysis}
 \begin{document}
@@ -878,6 +887,30 @@
 	\Explain{
 		But as $x$ and $y$ were arbitrary $f$ must be additive and hence linear}
 	\EndProof
+	\\
+	\DeclareType{StrictlyConvexFunction}{\prod V : \VS{\Reals} \. ?\PCF(V)}
+	\DefineType{f}{StrictlyConvexFunction}
+	{
+		\NewLine \iff		
+		\forall \lambda \in [0,1] \.
+		\forall x,y \in V \.
+		\forall \aleph : x \neq y \.
+		f\Big(\lambda x + (1-\lambda)y \Big) < \lambda f(x) + (1-\lambda)f(y)
+	}
+	\\
+	\Theorem{SquareNoremIsStrictlyConvex}
+	{
+		\forall V : \TYPE{NormedSpace}(\Reals) \. \SCF\Big( V, \|\bullet\|^2 \Big)
+	}
+	\ExplainFurther{
+		$\forall x,y \in V, \lambda \in (0,1) \. 
+				\Big\| \lambda x + (1 - \lambda) y \Big\|^2 \le    
+				\Big( \lambda \|x\| + (1-\lambda) \|y\| \Big)^2  <
+				\lambda^2\|x\|^2 + (1-\lambda)^2\|y\|^2 <$}
+		\Explain{
+				$ < \lambda \|x\|^2 + (1-\lambda)\|y\|^2 
+		$}
+	\EndProof
 }
 \newpage
 \subsection{Convexity Preserving Operations}
@@ -1108,13 +1141,394 @@
 	}
 }
 \newpage
+\subsection{Metric and Topological Properties}
+\Page{
+	\Theorem{SphericalBound}
+	{
+		\NewLine ::		
+		\forall V \in \mathsf{BAN}(\Reals) \.
+		\forall f : \PCF(V) \. 
+		\forall c \in \dom f \.
+		\forall \rho \in \Reals_{++} \.
+		\forall \aleph : \eta < + \infty \.
+		\forall \alpha \in (0,1) \. \NewLine \.
+		\forall x \in \Cell_V(c,\alpha\rho) \.
+		\Big| f(x) - f(c) \big| \le \alpha\Big( \eta  - f(c)  \Big) \NewLine 
+		\quad \where \quad \eta = \sup f\Big(\Cell_V(c,\rho)\Big)
+	}
+	\Explain{
+		By convexity
+		$f(x) - f(c) =
+			f\left(  (1-\alpha)c + \alpha\left(\frac{x - (1-\alpha)c}{\alpha}\right)\right) - f(c) \le	
+			\alpha \left( f\left(c + \frac{x-c}{\alpha}\right) - f(c) \right)	
+		$}
+	\Explain{
+		If $x \in \Cell_V(c,\alpha\rho)$ then $c + \frac{x-c}{\alpha} \in \Cell_V(c,\rho)$
+	}
+	\Explain{
+		So $f(x) - f(c) \le \alpha\Big( \eta - f(c)\Big)$}
+	\ExplainFurther{
+		On the other hand
+		$f(c) - f(x) =
+			f\left(  \frac{x}{1+\alpha} + \frac{\alpha}{1-\alpha} \frac{(1+\alpha)c-x}{\alpha}\right) - f(x) \le$}
+	\Explain{$	
+			\le \frac{\alpha}{1+\alpha} \left( f\left(c + \frac{c-x}{\alpha}\right) - f(x) \right)	
+			\le  \frac{\alpha}{1+\alpha} ( \eta - f(x)) = 
+			\frac{\alpha}{1+\alpha} \Big(\eta  - f(c)\Big) +   \frac{\alpha}{1+\alpha} \Big(f(c)  - f(x)\Big)
+		$}
+	\Explain{
+		So by rearanging inequalities one gets
+		$ f(c) - f(x) \le \alpha \Big(\eta - f(x)\Big)$}
+	\\
+	\Theorem{
+		LocalLipschitzContinuity
+	}
+	{
+		\NewLine ::		
+		\forall V \in \mathsf{BAN}(\Reals) \.
+		\forall f : \PCF(V) \. 
+		\forall c \in \dom f \.
+		\forall \rho \in \Reals_{++} \.
+		\forall \aleph : \delta < + \infty \. \NewLine \ .
+		\left(\frac{\delta}{\rho}\right)\hyph\Lip\Big( \Cell(c,\rho),\Reals, f_{|\Cell(c,\rho)} \Big)
+		\NewLine		
+		\quad \where \quad \eta = \diam f\Big(\Cell_V(c,\rho)\Big)
+	}
+	\Explain{
+		Assume $x,y \in \Cell_V(c,\rho)$ sych that $x \neq y$}
+	\Explain{
+		Let $\alpha=\frac{\|x-y\|}{\|x-y\| + \rho} < \frac{\|x-y\|}{\rho}$	and 
+		$z = x + \frac{1-\alpha}{\alpha}(x - y)) $}
+	\Explain{
+		Then, $\| z - c \| \le \|z - x\| + \| x - c\| \le \frac{1-\alpha}{\alpha}\|x-y\|  + \rho \le 2\rho$,
+		so $z \in \Cell_V(c,2\rho)$}
+	\Explain{
+		Thus, by convexity
+		$
+			f(x) = 
+			f\Big( \alpha z + (1 - \alpha)y \Big) \le
+		 	f(y)  + \alpha( f(z) - f(y ) \le 
+		 	f(y) + \alpha \delta \le 
+		 	f(y) + \frac{\delta}{\rho} \| x - y \| 
+		$
+	}
+	\Explain{ From symmetry
+		$	
+			|f(x) - f(y)| \le \frac{\delta}{\rho} \|x - y\|
+		$ 
+	}
+	\EndProof
+}\Page{
+	\Theorem{ContinuityByBound}
+	{
+		\NewLine ::		
+		\forall V \in \mathsf{BAN}(\Reals) \.
+		\forall f : \PCF(V) \.
+		\forall x \in V \.
+		\forall U \in \U(x) \. \NewLine \.
+		\forall \aleph : \TYPE{Bounded}(V,U,f_{|U}) \.
+		\intx \dom f \Arrow{f_{|\intx \dom f}} \Reals : \TOP
+	}
+	\Explain{ 
+		Assume $v \in U \cap \rint \dom f$}
+	\ExplainFurther{
+		As $v$ belongs to relative intrior there are $w \in \dom f, \rho \in Reals_+, \lambda \in (0,1)$}
+	\Explain{
+		such that $v \in \lambda\Cell(x,\rho) + (1-\lambda)w$
+		and $\Cell(x,\rho) \subset U$}
+	\ExplainFurther{
+		Then $f(x) \le \lambda f(y) + (1-\lambda)f(w) \le \lambda \beta + (1-\lambda)f(w)$,}
+	\Explain{
+		where $x \in \lambda\Cell(x,\rho) + (1-\lambda)w,y \in \Cell(y,\rho)$ and $\beta$
+		is the bound for $U$}
+	\ExplainFurther{
+		So by the previous theorem $f$ is locally Lipshitz and continuous on $\rint \dom f$}
+	\Explain{ 
+		and so $f$ is actually continuous on $\rint \dom f$}
+	\EndProof
+	\\
+	\Theorem{ContinuityByFiniteDimension}
+	{
+		\NewLine ::		
+		\forall V \in \Euc \.
+		\forall f : \PCF(V) \. 
+		\intx \dom f \Arrow{f_{|\intx \dom f}} \Reals : \TOP
+	}
+	\Explain{
+		Let $n = \dim V$}
+	\Explain{
+		Assume  $x \in V$ and $\rho \in \Reals_{++}$ such that $\Cell(x,\rho) \subset \dom f$}
+	\Explain{
+		Then there exists a simplicital set  $\{v_1, \ldots, v_{n+1}\}$ such that
+		$\Cell(x,\rho) \subset \conv(v_1,\ldots,v_{n+1}) \subset \dom f $}
+	\Explain{
+		But this means that $\sup f\Big( \Cell(x,\rho)\Big) \le \max_{i=1,\ldots,n+1} f(v_i) $
+	}
+	\ExplainFurther{
+		So by the previous theorem $f$ is locally Lipshitz and continuous on $\rint \dom f$}
+	\Explain{ 
+		and so $f$ is actually continuous on $\rint \dom f$}
+	\EndProof
+	\\
+	\Theorem{NonEmptyInteriorCondition}
+	{
+		\forall V \in \mathsf{BAN}(\Reals) \.	
+		\forall f : \PCF(V) \.
+		\forall x \in V \.
+		\forall U \in \U(x) \. \NewLine \.
+		\forall \aleph : \TYPE{Bounded}(V,U,f_{|U}) \.
+		\intx \epi f \neq \emptyset
+	}
+	\Explain{
+		We can find radius $\rho$ Lipschitz constant $\beta$ such that
+		$\Big| f(v) - f(w)\Big| \le \beta \| v - w \| \le \beta \rho$
+		for every  $v,w \in \Cell(x,\rho)$}
+	\Explain{
+		Select $\delta \in (2\beta\rho,+\infty)$
+		and	set $\gamma = \min(\rho,\delta/2) > 0$}
+	\Explain{
+		And let $(y,\phi) \in V \oplus \Reals$ such that 
+		$\Big\| \big(y,\phi\big) - \big(x,f(x)+\rho\big)\Big\|^2 \le \gamma^2$ }
+	\Explain{
+		Then $\| y - x \| \le \gamma \le \rho$ and
+		$\Big|\phi - \big( f(x) + \delta\big)\Big| \le \gamma \le \delta/2$}
+	\Explain{
+		So,
+		$
+			f(y) < f(x) + \delta/2 = f(x) + \delta - \delta/2 \le f(x) + \delta - \gamma \le \phi
+		$
+	}
+	\Explain{ 
+		Thus $(y,\phi) \in \epi f$}
+	\Explain{ 
+		As $(y,\phi)$ was arbitrary, the whole sphere is a subset of $\epi f$}
+	\Explain{
+		So $\intx \epi f \neq \emptyset$
+	}
+	\EndProof
+}\Page{
+	\Theorem{InteriorLevelSet}
+	{
+		\NewLine ::		
+		\forall V : \BAN{\Reals} \.
+		\forall f : \UsC\Big(V,(-\infty,+\infty]\Big) \.
+		\forall x \in V \.
+		\forall \aleph : f(x) < 0 \.
+		x \in \intx f^{-1}(-\infty, 0]
+	}
+	\NoProof
+	\\
+	\Theorem{ConvexLevelSetInterior}
+	{
+		\forall V : \BAN{\Reals} \.
+		\forall f : \CF(V) \.
+		\forall x  \in V \.
+		\forall \aleph : f(x) < 0 \. \NewLine \.
+		\intx f^{-1}(-\infty, 0] \subset f^{-1}(-\infty,0)
+	}
+	\NoProof
+	\\
+	\Theorem{ConvexUsCLevelSetInteriorEq}
+	{
+		\NewLine \. 		
+		\forall V : \BAN{\Reals} \.
+		\forall f : \CF(V) \.
+		\forall \aleph : \UsC\Big(f_{|f^{-1}(-\infty,0)},(-\infty,0)\Big) \. \NewLine \.
+		\intx f^{-1}(-\infty,0] = \intx f^{-1}(-\infty,0)
+	}
+	\NoProof
+	\\
+	\Theorem{ConvexEucLevelSetInteriorEq}
+	{
+		\NewLine \. 		
+		\forall V \in \Euc \.
+		\forall f : \CF(V) \.
+		\forall \aleph : \dom f \in \T(V) \.
+		\intx f^{-1}(-\infty,0] = \intx f^{-1}(-\infty,0)
+	}
+	\NoProof
+}
+\newpage
 \subsection{Closures}
-\subsection{Continuity}
+\Page{
+	\Theorem{LowerSemicontinuityByEpigraph}
+	{
+		\forall V \in \Euc \.
+		\forall f : V \to \TOPVS{\Reals} \.
+		\NewLine 
+		\LsC(V,\EReals,f)
+		\iff
+		\Closed(V\oplus \Reals, \epi f)
+	}
+	\Explain{
+		If $f$ is lower semicontinuous then $\lim \inf_{x \to v} f(x) = f(v)$}
+	\Explain{
+		So the epigraph must be closed}
+	\Explain{
+		Thus, result is basically obvious}
+	\\
+	\DeclareFunc{closure}
+	{
+		\prod_{V \in \TOPVS{\Reals}} \CF(V) \to \Big(\CF(V) \And \LsC(V,\Reals)\Big)
+	}
+	\DefineNamedFunc{closure}{f}{\cl f}
+	{
+		\If  f > -\infty \Then \THM{FunctionFromSet}(V,\cl \epi f) \Else -\infty
+	}
+	\\
+	\DeclareType{ClosedFunction}{\prod V \in \TOPVS{\Reals} \. ?\CF(V) }
+	\DefineType{f}{ClosedFunction}{\cl f = f}
+	\\
+	\Theorem{ImproperDomain}
+	{
+		\forall V \in \TOPVS{\Reals} \.
+		\forall f : \CF(V) \. \NewLine \.
+		\forall \aleph : -\infty \in \im f \.
+		\forall x \in \rint \dom f \.
+		f(x) = -\infty
+	}
+	\Explain{
+		If there is a point $p \in V$ such that $f(p) = -\infty$ then $p \in \dom f$}
+	\Explain{
+		Also assume that $u \in \rint \dom f$		
+	}
+	\Explain{
+		By propertirs of relative interiot there exists $x \in \dom f$ suxh that $u \in (p,x)$}
+	\Explain{
+		So there is $\lambda \in (0,1)$ suxh that $u = \lambda u + (1-\lambda)x$
+	}
+	\Explain{
+		But $(p,\alpha) \in \epi f$ for any  arbitrary $\alpha \in \Reals$}
+	\Explain{
+		Thus $\Big( u, \lambda \alpha + (1-\lambda)f(x) \Big) \in \epi f$ fo any $\alpha$
+	}
+	\Explain{
+		And by taking the limit $\alpha \to -\infty$ we see that it must be the case
+		that $f(u) = -\infty$
+	}
+	\EndProof
+	\\
+	\Theorem{ContinuityByClosedness}
+	{
+		\NewLine ::		
+		\forall V \in \mathsf{BAN}(\Reals) \.
+		\forall f : \ClF(V) \. 
+		\intx \dom f \Arrow{f_{|\intx \dom f}} \Reals : \TOP
+	}
+	\NoProof
+	\\
+	\Theorem{ConvexLsCLevelSetInteriorEq}
+	{
+		\NewLine \. 		
+		\forall V \in \Euc \.
+		\forall f : \ClF(V) \.
+		\forall \aleph : \dom f \in \T(V) \. \NewLine \.
+		\intx f^{-1}(-\infty,0] = \intx f^{-1}(-\infty,0)
+	}
+	\NoProof
+}\Page{
+	\Theorem{ClosedFunctionSupremum}
+	{
+		\forall V \in \TOPVS{\Reals} \.
+		\forall I \in \SET \.
+		\forall f : I \to \ClF(V) \. \NewLine \.
+		\sup f  \in \ClF(V)  
+	}
+	\Explain{
+		The epigraph of the supremum is the intersection of epigraphs}
+	\Explain{
+		Then use the fact that intersection of closed sets is closed}
+	\EndProof	
+	\\
+	\Theorem{ClosedFunctionSum}
+	{
+		\NewLine \. 		
+		\forall V \in \TOPVS{\Reals} \.
+		\forall f, g \in \ClF \And \PCF(V) \. \NewLine \.
+		f + g \in  \ClF \And \PCF(V)
+	}
+	\NoProof
+	\\
+	\Theorem{ClosedFunctionSum2}
+	{
+		\NewLine \. 		
+		\forall V \in \TOPVS{\Reals} \.
+		\forall I \in \SET \.
+		\forall f : \Nat \to \ClF(V) \. \NewLine \.
+		\forall \aleph :  \inf_{i \in I} f_i \ge 0 \.
+		\sum_{i \in I} f_i  \in  \ClF(V)
+	}
+	\NoProof
+	\\
+	\Theorem{DegenerateClosedForm}
+	{
+		\NewLine \.
+		\forall V \in \TOPVS{\Reals} \.
+		\forall f : \ClF(V) \.
+		\forall \aleph : -\infty \in \im f \.
+		\im f = \{-\infty, +\infty\} 
+	}
+	\NoProof
+	\\
+	\Theorem{ClosureLevelSets}
+	{
+		\NewLine:
+		\forall V \in \TOPVS{\Reals} \.
+		\forall f : \CF(V)  \.
+		\cl \Big( f^{-1}(-\infty,0) \Big) = \cl \Big(  f^{-1}(-\infty,0] \Big) =
+		\Big( \cl f\Big)^{-1}(-\infty,0) 
+	}
+	\NoProof
+	\\
+	\Conclude{\PClF}{\PCF \And \ClF}{\TOPVS{\Reals} \to \Type}
+	\\
+	\Theorem{ConvexLimit}
+	{
+		\forall V \in \TOPVS{\Reals} \. 
+		\forall f : \PClF(V) \.
+		\forall x \in \dom f \.
+		\forall y \in V \. 
+		\lim_{\lambda \downarrow 0} g(\lambda) = f(y)
+		\NewLine
+		\quad \where \quad
+		g = \Lambda \lambda \in [0,1] \. f\Big(\lambda x  + (1-\lambda)y \Big)
+	}
+	\Explain{
+			In $  f\Big(\lambda x  + (1-\lambda)y \Big) \le \lambda f(x) + (1 - \lambda) f(y) $
+			the majorant is continuous in $lambda$}
+	\Explain{ 
+		So in  $f(x) \le \lim_{\lambda \to \infty} f\Big(\lambda x  + (1-\lambda)y \Big) \le f(x)$   holds}
+	\EndProof
+}\Page{
+	\Theorem{ProperConvexContinuity}
+	{
+		f \in \PClF(\Reals) \.
+		f_{|\cl \dom f} \in \TOP\Big(\cl \dom f ,\EReals\Big)
+	}
+	\Explain{Use convex limits as above}
+	\EndProof
+	\\
+	\Theorem{ConvexExtension}
+	{
+		\NewLine		
+		\forall V \in \TOPVS{\Reals} \.
+		\forall f,g \in \PClF(V \oplus \Reals) \. \NewLine \. 
+		\forall \aleph : \dom f \cup \dom g \subset V \oplus \Reals_+ \.
+		\forall \beth :  f_{|V \times \Reals_{++}} = g_{|V \times \Reals_{++}} \.
+		f = g
+	}
+	\NoProof
+}
+\newpage
+\subsection{Affine Minorization}
+\subsection{Recession}
 \section{Duality}
 \section{(Sub)differential Calculus}
 \section{From Optimization to Convex Algebra}
 \section*{Sources}
 \begin{enumerate}
 \item Convex Analysis --- R. T. Rockaffeler  1972
+\item Convex Analysis  and Monotone Operator Theory in Hilbert Spaces -- H. H. Bauschke, P. L. Combetes 2010
+
 \end{enumerate}
 \end{document}
