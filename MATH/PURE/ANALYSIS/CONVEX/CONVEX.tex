@@ -1520,15 +1520,184 @@
 	\NoProof
 }
 \newpage
-\subsection{Affine Minorization}
 \subsection{Recession}
+\newpage
 \section{Duality}
+\subsection{Conjugate Functions}
+\Page{
+			\DeclareFunc{conjugateFunction}
+			{
+				\prod V \in \TOPVS{\Reals}  \.
+				\Big(V \to \EReals\Big) \to \Big(V^* \to \EReals\Big)
+			}
+			\DefineNamedFunc{conjugateFunction}{\phi}{\phi^*}
+			{
+				\Lambda f \in V^* \. \sup_{x \in V} \; f(x) - \phi(x)			
+			}
+			\\
+			\Theorem{ConjugationIneq}
+			{
+				\forall V \in \TOPVS{\Reals} \.
+				\forall \phi : V \to \EReals \.
+				\forall x \in V \.
+				\forall f \in V^* \.
+				\phi(x) + \phi^*(f) \ge  f(x)   
+			}
+			\Explain{
+				Just note that
+				$\phi(x) + \phi^*(f) = \phi(x) + \sup_{y \in V} \; f(y) - \phi(y) \ge f(x)$
+			}
+			\EndProof
+			\\
+			\Theorem{DualOfIndicatorIsSupport}
+			{
+				\forall V \in \TOPVS{\Reals} \.
+				\forall C : \Convex(V) \.
+				\Big(\chi(\bullet|C) \Big)^* = \chi^*(\bullet|C)
+			}
+			\Explain{
+				$
+				\Big(\chi(\bullet|C) \Big)^*(f) =   
+				\sup_{x \in V}  f(x)  -  \chi(x|C) =
+				\sup_{x \in C} f(x) =  \chi^*(f|C)$}
+			\EndProof
+			\\
+			\Theorem{PolarBySupportExpression}
+			{
+				\forall V \in \TOPVS{\Reals} \.
+				\forall C  : \Convex(V) \.
+				C^{\wedge} = \{ f \in V^* : \chi^*(f|C) \le 1   \}
+			}
+			\Explain{
+				See convex geometry or consider this a definition}
+			\EndProof
+			\\
+			\Theorem{ConjugateIsConvex}
+			{
+				\forall V \in \TOPVS{\Reals} \.
+				\forall \phi : V \to \EReals \.
+				\ClF\Big((V,\mathbf{w}_V^*),\phi^*\Big)				 
+			}
+			\Explain{
+				$\phi^*(f) = \sup_{x \in V} f(x) - \phi(x)$ which is supremum of affine functions in $f$}
+			\Explain{
+				So, $\phi^*$ must be continuous}
+			\Explain{
+				Clearly, the weakest topology there each $f(x)$ is continuous is weak-star topology}
+			\EndProof
+			\\
+			\Theorem{DoubleConjugateIneq}
+			{
+				\forall V \in \TOPVS{\Reals} \.
+				\forall \phi : V \to \EReals \.
+				\phi^{**}_{|V} \le \phi
+			}
+			\Explain{
+				Assume $x \in V$}
+			\ExplainFurther{
+				$
+					\phi^{**}(x) = 
+					\sup_{f \in V^*} f(x)  - \phi^*(x) =
+					\sup_{f \in V^*} \inf_{y \in V} f(x) - f(y) + \phi(y) =
+					\sup_{f \in V^*} \inf_{y \in V} f(x - y) + \phi(y) \le $}
+			\Explain{ 
+				$ \le 
+					\sup_{f \in V^*} f(x - x) + \phi(x) = 
+					\sup_{f \in V^*} \phi(x) = \phi(x) 
+				$}
+			\EndProof
+}\Page{
+		\Theorem{ConjugateIneq}
+		{
+			\forall V \in \TOPVS{\Reals} \.
+			\forall \phi,\psi : V \to \EReals \.
+			\forall \aleph : \phi \le \psi \.
+			\phi^* \ge \psi^*
+		}
+		\Explain{ $\phi^*(f) = \sup_{x \in V} f(v) - \phi(x) \ge \sup_{x \in V} f(v) - \psi(x) = \psi^*(f)$}
+		\EndProof
+		\\
+		\Theorem{EvenConjugatePowerStability}
+		{
+			\forall V \in \TOPVS{\Reals} \.
+			\forall \phi : V \to \EReals \. 
+			\forall n : \TYPE{Even} \.
+			\phi^{n*}_{|V} =  \phi^{**} 
+		}
+		\Explain{
+			Write $n = 2m$ for $m \in \Nat$}
+		\Explain{
+			From previous results $f^{2m*}_{|V} \le f^{2(m-1)*}_{|V} \le \ldots \le   f^{**}_{|V} \le f$}
+		\Explain{
+			And also  $f^{(2m-1)*}_{|V^*} \le f^{(2m-3)*}_{|V^*} \le \ldots \le   f^{*} $}
+		\Explain{
+			But Taking the dual of the last inequelity gives
+			$f^{2m*}_{|V} \ge f^{**}$}
+		\Explain{
+			So the equality holds $f^{2m*}_{|V} = f^{**}$}
+		\EndProof	
+		\\
+		\Theorem{OddConjugatePowerStability}
+		{
+			\forall V \in \TOPVS{\Reals} \.
+			\forall \phi : V \to \EReals \. 
+			\forall n : \TYPE{Odd} \.
+			\phi^{n*}_{|V} =  \phi^{*} 
+		}
+		\Explain{
+			Write $n = 2m-1$ for $m \in \Nat$}
+		\Explain{
+			From previous results $f^{2(m-1)*}_{|V} \le f^{2(m-2)*}_{|V} \le \ldots \le   f^{**}_{|V} \le f$}
+		\Explain{
+			And also  $f^{(2m-1)*}_{|V^*} \le f^{(2m-3)*}_{|V^*} \le \ldots \le   f^{*} $}
+		\Explain{
+			But Taking the dual of the first inequelity gives
+			$f^{(2m-1)*}_{|V} \ge f^{*}$}
+		\Explain{
+			So the equality holds $f^{n*}_{|V} = f^{*}$}
+		\EndProof					
+}
+\newpage
+\subsection{Affine Minorization}
+\Page{
+	\Theorem{AffineMinorization}
+	{
+		\NewLine ::		
+		\forall V : \TYPE{LocallyConvexSpace}(\Reals) \.
+		\forall \phi :  \PClF(V) \. 
+		\forall v \in V \. \NewLine \.
+		\phi(v) = \sup \Big\{ A(v) | A \in \mathsf{TAFF}(\Reals,V,\Reals), A \le \phi  \Big\}
+	}
+	\Explain{ 
+		As $\phi$ is proper we may assume that there is some $v \in V$ such that $\phi(v) \neq +\infty$}
+	\Explain{
+		So $v \in \dom \phi$ so $\Big(v,\phi(v) - \varepsilon\Big) \not \in \epi \phi$, so we may 
+		apply Hahn-Banach theorem	
+	}
+	\Explain{
+		So there exists a support hyperplane $H$ for $\epi \phi$ at  $\Big( v, \phi(v) \Big)$
+		such that $H = \ker A $ and $A(x,\alpha) = B(x) + \alpha \beta$}
+	\Explain{
+		Then for any $x \in V$ it holds that $B(x) + \beta \phi(x) \ge 0$}
+	\Explain{
+		$\beta$ must be nonnegative, otherwise the affine hyperplane $H$ will intersect $\epi f$}
+	\Explain{
+		Thus, $ -\frac{1}{\beta}B(x) \le \phi(x)$}
+	\Explain{
+		So $-\frac{1}{\beta}B(x)$ is the affine minorant
+	}
+	\EndProof
+}
+\newpage
 \section{(Sub)differential Calculus}
 \section{From Optimization to Convex Algebra}
 \section*{Sources}
 \begin{enumerate}
 \item Convex Analysis --- R. T. Rockaffeler  1972
+\item Convex Functions, Monotone Operators and Differentiability -- R. R. Phelps 1993
+\item An Invitation to Convex Functions Theory --  C. P. Niculescu 2001
+\item Fundamentals of Convex Analysis -- J-B Hiriar-Urruty, C. Lemarechal 2004 
 \item Convex Analysis  and Monotone Operator Theory in Hilbert Spaces -- H. H. Bauschke, P. L. Combetes 2010
-
+\item Convexity and Optimization in Banach Spaces -- V. Barbu, T. Precupanu 2012
 \end{enumerate}
 \end{document}
