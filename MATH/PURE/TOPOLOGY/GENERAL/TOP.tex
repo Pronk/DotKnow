@@ -40,6 +40,9 @@
 \newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
 \newcommand{ \bd }{ \ByDef }
 \newcommand{\NoProof}{ & \ldots \\ \EndProof}
+\newcommand{\Explain}[1]{& \text{#1.} \\}
+\newcommand{\ExplainFurther}[1]{& \text{#1} \\}
+\newcommand{\Exclaim}[1]{& \text{#1!} \\}
 %LOGIC
 \renewcommand{\And}{\; \& \;}
 \newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
@@ -72,7 +75,7 @@
 \newcommand{\Aut}{\mathrm{Aut}}
 \newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
 \mathchardef\hyph="2D
-\newcommand{\Surj}[2]{\TYPE{Surjective}\left( #1, #2 \right)}
+\newcommand{\Surj}{\TYPE{Surjective}}
 \newcommand{\ToInj}{\hookrightarrow}
 \newcommand{\ToMono}{\xhookrightarrow}
 \newcommand{\ToSurj}{\twoheadrightarrow}
@@ -129,9 +132,16 @@
 %Topology
 %General Topology
 %Types
+\newcommand{\Topology}{\TYPE{Topology}} 
+\newcommand{\Closed}{\TYPE{Closed}} 
+\newcommand{\Open}{\TYPE{Open}} 
+\newcommand{\Net}{\TYPE{Net}} 
+\newcommand{\Filter}{\TYPE{Filter}} 
 \newcommand{\TS}{\TYPE{TopologicalSpace}} 
 \newcommand{\LF}{\TYPE{LocallyFinite}}
 \newcommand{\PN}{\TYPE{PerfectlyNormal}}
+\newcommand{\QM}{\TYPE{QuotientMap}}
+\newcommand{\Compact}{\TYPE{Compact}}
 %FUNC
 \DeclareMathOperator*{\intx}{int}
 \DeclareMathOperator*{\cl}{cl} 
@@ -145,11 +155,14 @@
 \newcommand{\CG}{\mathsf{CG}}
 %Symbols
 \newcommand{\T}{\mathcal{T}}
+\newcommand{\N}{\mathcal{N}}
 \newcommand{\U}{\mathcal{U}}
 \renewcommand{\O}{\mathcal{O}}
 \renewcommand{\d}{\mathrm{d}}
 \newcommand{\F}{\mathcal{F}}
 \newcommand{\X}{\mathcal{X}}
+\newcommand{\W}{\mathcal{W}}
+\renewcommand{\S}{\mathcal{S}}
 %\newcommand{\d}{\mathrm{d}}
 \author{Uncultured Tramp} 
 \title{General Topology}
@@ -158,8 +171,9 @@
 \newpage
 \tableofcontents
 \newpage
-\section{Topological Sets}
-\subsection{Topology and Topological Spaces}
+\section{Basics}
+\subsection{Topological Sets}
+\subsubsection{Topology and Topological Spaces}
 \Page{
 	\DeclareType{Topology}
 	{ \prod X \in \SET \. ???X }
@@ -254,17 +268,30 @@
 		U = \bigcup_{i \in I} B_i
 	}
 	\\
-	\DeclareFunc{neighbourhood}
+	\DeclareFunc{oprnNeighbourhood}
 	{
 		\prod X : \TS \. X \to ?\T(X)
 	}
-	\DefineNamedFunc{neighbourhood}
+	\DefineNamedFunc{openNeighbourhood}
 	{ x }
 	{
 		\U(x)
 	}
 	{
 		\{ U \in \T(X) | x \in U  \}
+	}
+	\\
+	\DeclareFunc{neighbourhood}
+	{
+		\prod X : \TS \. X \to ?X
+	}
+	\DefineNamedFunc{neighbourhood}
+	{ x }
+	{
+		\N(x)
+	}
+	{
+		\Big\{ A \subset  X | \exists U \in \U(x) \.  U \subset A  \Big\}
 	}
 	\\
 	\Theorem{BasisEqDef}
@@ -591,7 +618,7 @@
 	}
 	\EndProof
 }
-\subsection{Closure and Interior}
+\subsubsection{Closure and Interior}
 \Page{
 	\DeclareFunc{closure}
 	{
@@ -1169,7 +1196,7 @@
 	\EndProof
 }
 \newpage
-\subsection{Open and Closed Domains}
+\subsubsection{Open and Closed Domains}
 \Page{
 	\DeclareType{OpenDomain}{\prod X : \TS \. ?X }
 	\DefineType{A}{OpenDomain}{A = \intx \overline{A}}
@@ -1505,7 +1532,7 @@
 	\NoProof
 }
 \newpage
-\subsection{Boundary Operator}
+\subsubsection{Boundary Operator}
 \Page{
 	\DeclareFunc{boundary}{
 		\prod X : \TS \.
@@ -1744,7 +1771,7 @@
 	\NoProof
 }
 \newpage
-\subsection{Accumulation and Isolated Points}
+\subsubsection{Accumulation and Isolated Points}
 \Page{
 	\DeclareFunc{derivedSet}
 	{
@@ -1815,7 +1842,7 @@
 	\NoProof
 }
 \newpage
-\subsection{Dense Sets}
+\subsubsection{Dense Sets}
 \Page{
 	\DeclareType{Dense}{\prod X : \TS \. ??X}
 	\DefineType{A}{Dense}{\overline{A} = X}
@@ -2063,8 +2090,403 @@
 	\EndProof
 }
 \newpage
-\section{Category of Topological Spaces}
-\subsection{Continuous Morphisms}
+\subsection{Convergence}
+\subsubsection{Convergence in Nets}
+\Page{
+	\Conclude{\TYPE{Net}}{\prod D : \TYPE{DirectedSet} \. \prod X : \TOP \. D \to X }
+	{
+		\TYPE{DirectedSet} \to \TOP \to \SET
+	}
+	\\
+	\DeclareType{Limit}{ \prod X : \TOP \. \prod D : \TYPE{DirectedSet} \. \TYPE{Net}(D,X) \to ?X}
+	\DefineNamedType{L}{Limit}{ x \mapsto  L = \lim_{n \in D} x_n}
+	{
+		x \mapsto
+		\forall U \in \U(L) \.
+		\exists N \in D : 
+		\forall n : \TYPE{NotLessThen}(N) \.
+		x_n \in U
+	}
+	\\
+	\DeclareType{Cluster}{ \prod X : \TOP \. \prod D : \TYPE{DirectedSet} \. \TYPE{Net}(D,X) \to ?X}
+	\DefineNamedType{C}{Cluster}{ x \mapsto  C = \overline{x}}
+	{
+		x \mapsto
+		\forall U \in \U(L) \.
+		\forall N \in D : 
+		\exists n : \TYPE{NotLessThan}(N) \.
+		x_n \in U
+	}
+	\\
+	\DeclareType{Finer}{
+		\prod X : \TOP \. 
+		\prod D,D' : \TYPE{DirectedSet}  \. 
+		?\Big( \TYPE{Net}(X,D) \And \TYPE{Net}(X,D') \Big)
+	}
+	\DefineNamedType{x,y}{Finer}{x \to y}
+	{
+		\exists \phi : D \to D' : 
+		\Big(\forall N' \in D' \. \exists N \in D : \forall n : \TYPE{NotLessThen}(N) \. \NewLine \.
+			\phi(n) : \TYPE{NotLessThan} N'\Big) \And \NewLine \And 
+		\forall n \in D \.  x_n = y_{\phi(n)} 
+	}
+	\\
+	\Theorem{ClusterOfFiner}
+	{
+		\forall X : \TOP \.
+		\forall D,D' : \TYPE{DirectedSet}(X) \.
+		\forall  x \Arrow{D,D'} y \.
+		\forall C = \overline{x} \.
+		C = \overline{y}
+	}
+	\Say{\Big(\phi, [1] \Big)}{ \bd \TYPE{Finer}(x,y) }
+	{
+		\sum \phi : D \to D' : 
+		\Big(\forall N' \in D' \. \exists N \in D : \forall n : \TYPE{NotLessThen}(N) \. \NewLine \.
+			\phi(n) : \TYPE{NotLessThan} N'\Big) \And 
+		\forall n \in D \.  x_n = y_{\phi(n)} 
+	}
+	\Assume{U}{\U(C)}
+	\Say{[2]}{\bd \TYPE{Cluser}(x)(C) }
+	{
+		\forall N \in D \. \exists n : \TYPE{NotLessThen}(N) \. x_n \in U
+	}
+	\Assume{N'}{D'}
+	\Say{\Big(N,[3]\Big)}{[1](N')}{
+		\sum N \in D \.  \Big( 
+		\forall n : \TYPE{NotLessThen}(N) \. 
+		\phi(n) \ge N'
+	}
+	\Say{\Big(n,[4]\Big)}{[2](N)}
+	{
+		\sum n \in D \. n \ge N  \And x_n \in U
+	}
+	\Say{[5]}{[3](n)}{\phi(n) \ge N'}
+	\Say{[6]}{[1](n)}{  y_{\phi(n)} = x_n   }
+	\Conclude{[N.*]}{[4][6]}{  y_{\phi(n)} \in U  }
+	\DeriveConclude{[U.*]}{ I(\forall) }{ 
+		\forall N' \in D' \.
+		\exists n' \ge N' \. y_{n'} \in U
+	}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Cluster}}{C = \overline{y}}
+	\EndProof
+}\Page{
+	\Theorem{LimitOfMeager}
+	{
+		\forall X : \TOP \.
+		\forall D,D' : \TYPE{DirectedSet}(X) \.
+		\forall  x \Arrow{D,D'} y \.
+		\forall L = \lim_{n \in D} x_n \.
+		L = \lim_{n \in D'} y_n
+	}
+	\Say{\Big(\phi, [1] \Big)}{ \bd \TYPE{Finer}(x,y) }
+	{
+		\sum \phi : D \to D' : 
+		\Big(\forall N' \in D' \. \exists N \in D : \forall n : \TYPE{NotLessThen}(N) \. \NewLine \.
+			\phi(n) : \TYPE{NotLessThan} N'\Big) \And 
+		\forall n \in D \.  x_n = y_{\phi(n)} 
+	}
+	\Assume{U}{\U(L)}
+	\Say{\Big( N'. [2]\Big)}{\bd \TYPE{Limit}(y)(L) }
+	{
+		\sum N' \in D' \. \forall n' \ge N' \. y_n \in U   
+	}
+	\Say{\Big(N,[3]\Big)}{[1](N')}{
+		\sum N \in D \.  \Big( 
+		\forall n \ge N  \. 
+		\phi(n) \ge N'
+	}
+	\Assume{n}{D}
+	\Assume{[4]}{n \ge N}
+	\Say{[5]}{[3][4]}{\phi(n) \ge N'}
+	\Say{[6]}{[1](n)}{  y_{\phi(n)} = x_n   }
+	\Say{[7]}{ [2][5]}{  y_{\phi(n)} \in U  }
+	\Conclude{[n.*]}{[6][7]}{ x_n \in U  }
+	\DeriveConclude{[U.*]}{ I(\forall) }{ 
+		\forall n \ge N \. x_n \in U
+	}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Limit}}{L = \lim_{n \in D} x_n}
+	\EndProof
+	\\
+	\Theorem{FromClusterToLimit}
+	{
+		\forall X : \TOP \.
+		\forall D : \TYPE{DirectedSet} \.
+		\forall x : \TYPE{Net}(X, D) \.
+		\forall C = \overline{x} \. \NewLine \.
+		\exists D' : \TYPE{DirectedSet} :
+		\exists y  : \TYPE{Net}(X,D) : 
+		C = \lim_{n \in D} y_n \And y \to x 
+	}
+	\Say{D'}{ \Big\{ (n,U) \in D \times \U_{\ge}(C) : x_n \in U \Big\}}
+	{
+		\TYPE{PartiallyOrderedSet}
+	}
+	\Assume{ (n,U),(m,V)  }{D'}
+	\Say{W}{U \cap V}{ \U(C) }
+	\Say{\Big(k,[1]\Big)}{\bd \TYPE{Cluster}(x)(C)\Big(W,\max(n,m)\Big)}
+	{
+		\sum k \in D \. k \ge \max \And x_k \in W
+	}
+	\Conclude{[\ldots*]}{\ByConstr D' \ByConstr W \THM{IntersectionSubset}(U,V) \ByConstr k[1]}
+	{ (k,W) \ge (n,U) \And  (k,W) \ge (m,V)  }
+	\Derive{[1]}{\bd^{-1} \TYPE{DirectedSet}}
+	{
+		\Big( D' : \TYPE{DirectedSet} \Big)   
+	}
+	\Say{\phi}{ \Lambda (n,U) \in D' \. n  }{D' \to D}
+	\Say{y}{\Lambda (n,U) \in D' \. x_n }{\TYPE{Net}(D',X)}
+	\Say{[2]}{\ByConstr y \ByConstr \phi}{ y \to x}
+	\Assume{U}{\U(C)}
+	\Say{N}{\bd \TYPE{NonEmpty}(D)}{D}
+	\Say{\Big(N',[3]\Big)}{\bd \TYPE{Cluster}(x)(C)(U,N)}
+	{
+		\sum N' \in D \. N' \ge N \And x_{N'} \in U  
+	}
+	\Assume{(n,V)}{D'}
+	\Assume{[4]}{(n,V) \ge (N',U)}
+	\Say{[5]}{\ByConstr D' [4]}{  V \subset U  }
+	\Conclude{[U.*]}{\ByConstr D' \THM{SubsetTransitivity}[5]\ByConstr y_{(n,V)}}
+	{  y_{(n,V)} \in U  }
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Limit}}
+	{
+		\lim_{n \in D'} y = C
+	}
+	\EndProof
+}\Page{
+	\Theorem{ClosureByConvergence}
+	{
+		\forall X \in \TOP \.
+		\forall A \subset X \.
+		\forall p \in \overline{A} \.
+		\exists x : \TYPE{Net}(D,X) :
+		p = \lim_{n \in D} x_n \And \forall n \in D \. x_n \in A
+	}
+	\Say{D}{\U(p)}{\TYPE{DirectedSet}}
+	\Assume{U}{D}
+	\Say{[1]}{\THM{ClosureEquivalent}(A)(x)(U)}{ U \cap A \neq \emptyset}
+	\Conclude{x_U}{\THM{NonEmpty}}{ U \cap A  }
+	\Derive{x}{I(\to)}{\TYPE{Net}(D,X)}
+	\Say{[1]}{\ByConstr x \THM{IntersectSubset} \bd \TYPE{Subset}}{ \forall n \in D \. x_n \in A  }
+	\Assume{U}{\U(p)}
+	\Say{N}{U}{D}
+	\Assume{n}{D}
+	\Assume{[2]}{n \ge N}
+	\Say{[3]}{\ByConstr D[2]}{n \subset N}
+	\Conclude{[U.*]}{\ByConstr x \bd \TYPE{Subset} [2] \THM{IntersectSubset} \bd \TYPE{Subset}\ByConstr N}
+	{
+		x_n \in U                                 
+	}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{Limit}}{p = \lim_{n \in D} x_n }
+	\EndProof
+	\\
+	\Theorem{ClosedByLimits}
+	{
+		\forall X \in \TOP \.
+		\forall A \subset X \.
+		A : \TYPE{Closed}(X) 
+		\iff \NewLine \iff
+		\forall x : \TYPE{Net}(D,X) \. x(D) \subset A \Imply  \forall L = \lim_{n \in D} x_n \. L \in A
+	}
+	\NoProof
+	\\
+	\Theorem{DerivedSetByConvergence}
+	{
+		\forall X \in \TOP \.
+		\forall A \subset X \.
+		\forall p \in A^\d \.
+		\exists x : \TYPE{Net}(D,X) :
+		p = \lim_{n \in D} x_n \And 
+		\NewLine \And
+		\forall n \in D \. x_n \in A \And x_n \neq p
+	}
+	\NoProof
+	\\
+	\Theorem{ClusterAsIntersect}
+	{
+		\forall X : \TOP \.
+		\forall x : \TYPE{Net}(D,X) \. 
+		\overline{x} = \bigcap_{N \in D} \overline{\{ x_n | n \ge N \}}
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Filters}
+\Page{
+	\DeclareType{IntersectionClosed}{\prod X : \SET \. ???X}
+	\DefineType{\A}{IntersectionClosed}{\forall A,B \in \A \. A \cap B \in \A}
+	\\
+	\DeclareType{Filter}{\prod X : \SET \. \prod \A : \TYPE{IntersectionClosed}(X) \. ??\A}
+	\DefineType{\F}{Filter}{
+		\F \neq \emptyset \And 
+		\emptyset \not\in \F \And 
+		\forall A,B \in \F \. A \cap B \And
+		\forall A \in \F \. \forall B \in \A \. A \subset B \Imply B \in \F
+	}
+	\\
+	\DeclareType{Ultrafilter}{\prod X : \SET \. \prod \A : \TYPE{IntersectionClosed}(X) \. ?\TYPE{Filter}(\A)}
+	\DefineType{\F}{Ultrafilter}{
+		\forall \F' : \TYPE{Filter}(\A) \.  \F \subset \F'  \Imply \F = \F'
+	}
+	\\
+	\DeclareType{FilterBase}{\prod X : \SET \. \prod \A : \TYPE{IntersectionClosed}(X) \. ??\A}
+	\DefineType{\B}{FilterBase}{
+		\B  \neq \emptyset \And \emptyset \not \in \B \And \forall A,B \in \B \. \exists C \in \B : C \subset A \cap B
+	}
+	\\
+	\DeclareFunc{generateFilter}{ 
+		\prod X : \SET \. 
+		\prod \A : \TYPE{IntersectionClosed}(X) \. 
+		\TYPE{FilterBase}(\A) \to \TYPE{Filter}(\A) 
+	}
+	\DefineNamedFunc{generateFilter}{\B }{\langle \B \rangle}
+	{
+		\{ A \in \A : \exists B \in \B : B \subset A \}
+	}
+	\\
+	\DeclareType{FilterLimit}{\prod X : \TOP \. \TYPE{Filter}\;\T(X) \to ?X}
+	\DefineNamedType{L}{FilterLimit}{\F \mapsto  L = \lim \F}
+	{ \F \mapsto \U(L) \subset \F }
+	\\
+	\DeclareType{FilterBaseLimit}{\prod X : \TOP \. \TYPE{FilterBase}\;\T(X) \to ?X}
+	\DefineNamedType{L}{FilterLimit}{\B \mapsto  L = \lim \B}
+	{ \B \mapsto L = \lim \langle \B \rangle  }
+	\\
+	\DeclareType{FilterCluster}{\prod X : \TOP \. \TYPE{Filter}\;\T(X) \to ?X}
+	\DefineNamedType{C}{FilterCluster}{\F \mapsto  C= \overline{\F}}
+	{ \F \mapsto \forall U \in \F \. C \in \overline{U} }
+	\\
+	\DeclareType{FilterBasCluster}{\prod X : \TOP \. \TYPE{FilterBase}\;\T(X) \to ?X}
+	\DefineNamedType{C}{FilterBaseCluster}{\B \mapsto  C = \overline{\B}}
+	{ \B \mapsto C = \overline{\langle \B \rangle} }
+	\\
+	\DeclareType{Finer}{\prod X : \TOP \. \Big( \TYPE{Filter} \T(X) \times \TYPE{Filter} \T(X)  \Big)}
+	\DefineType{(\F,\F')}{Finer}{\F' \subset \F}
+	\\
+	\DeclareFunc{netAsFilter}
+	{
+		\prod X : \TOP \. \TYPE{Net}(D,X) \to \TYPE{Filter}\; \T(X)
+	}
+	\DefineNamedFunc{netAsFilter}{x}{\F_x}
+	{
+		\Big\{  U \in \T(X) : \exists N \in D : \forall n \ge N \. x_n \in U  \Big\}
+	} 
+	\\
+	\DeclareFunc{filterAsNet}
+	{
+		\prod X : \TOP \. \TYPE{Net}(D,X) \to \TYPE{Filter}\; \T(X)
+	}
+	\DefineNamedFunc{filterAsNet}{\F}{x^\F}
+	{
+		\Lambda (x,U) \in D \. x \in  
+		\quad 
+		\where 
+		\quad
+		D = \Big\{ (x,U) \Big| x \in X , U \in F : x \in U \Big\}
+	} 
+}
+\newpage
+\Page{
+	\Theorem{FilterNetLimitsEquivalence}
+	{
+		\forall X \in \TOP \. 
+		\forall x : \TYPE{Net}(D,X) \.
+		\lim_{n \in D} x_n = \lim \F_x
+	}
+	\NoProof
+	\\
+	\Theorem{NetFilterLimitsEquivalence}
+	{
+		\forall X \in \TOP \. 
+		\forall \F : \TYPE{Filter}\; \T(X) \.
+		\lim_{n \in D} x_n^\F  = \lim \F
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Sets with Convergent Sequences}
+\Page{
+	\DeclareType{Subsequence}{\prod X \in \SET \. (\Nat \to X) \to ?(\Nat \to X)}
+	\DefineNamedType{y}{Subsequence}{\Lambda x : \Nat \to X \. y \subset x}
+	{
+		\Lambda x : \Nat \to X \. \exists k : \TYPE{Increasing}(\Nat,\Nat) \. y = x_k
+	}
+	\\
+	\DeclareType{WithConvergent}
+	{
+		?\Big( \sum X \in \SET \. \sum \C : ?(\Nat \to X) \. \C \to X  \Big)
+	}
+	\DefineType{(X,\C,L)}
+	{
+		\TYPE{WithConvergent}
+	}
+	{
+		\Big( \forall x \in X \. 
+		(\Lambda n \in \Nat \. x) \in \C \And  L(\cdot \mapsto x) = x \Big) \And \NewLine \And
+		\Big( 
+			\forall x \in \C \. \forall y \subset x \. y \in \C \And L(x) = L(y)
+		\Big) \And \NewLine \And
+		\Big(
+			\forall x \not \in \C \. \exists y \subset x : \forall z \subset y \. z \not \in \C
+		\Big)
+	}
+	\\
+	\DeclareFunc{closure}{\prod (X,\C,L) : \TYPE{WithConvergent} \. ?X \to ?X}
+	\DefineNamedFunc{closure}{A}{\overline{A}}{\{ x \in X : \exists a \in \C : \im a \subset A \And L(a) = x \}}
+	\\
+	\Theorem{PropertiesOfClosure}
+	{
+		\forall (X,\C,L) : \TYPE{WithConvergent} \.
+		\overline{\emptyset} = \emptyset \And
+		\forall A,B \subset X \. 
+		A \subset \overline{A} \And
+		\overline{A \cup B} = \overline{A} \cup \overline{B}
+	}
+	\NoProof
+	\\
+	\DeclareType{DiagonalProperty}
+	{
+		? \TYPE{WithConvergent}(X)
+	}
+	\DefineType{(X,\C,L)}{DiagonalProperty}
+	{
+		\forall x \in \C \. 
+		\forall y : \Nat \to \C \.
+		\Big( \forall n \in \Nat \. L(y_n) = x_n  \Big) \Imply \NewLine \Imply 
+		\exists i,j : \TYPE{Increasing}(\Nat,\Nat) : 
+		L( y_{i,j} ) = L(x)
+	}
+	\\
+	\Theorem{ClosureAndDiagonalProperty}
+	{
+		\forall (X,\C,L) : \TYPE{WithConvergent} \. 
+		(X,\C,L) : \TYPE{DiagonalProperty} \iff \NewLine \iff
+		\forall A \subset X \. \overline{\overline{A}} = \overline{A}
+	}
+	\NoProof
+	\\
+	\DeclareFunc{topologyOfFrechet}
+	{
+		\prod (X,\C,L) : \TYPE{DiagonalProperty} \.
+		\TYPE{Topology}(X)
+	}
+	\DefineNamedFunc{topologyOfFrechet}{}{F(X,\C,L)}{ \Big\langle \FUNC{closure}(X,\C,L)  \Big\rangle_\TOP}
+	\\
+	\DeclareFunc{withDiagonalPropertyAsTopologicalSpace}{ \TYPE{DiagonalProperty} \to \TOP  }
+	\DefineNamedFunc{withDiagonalPropertyAsTopologicalSpace}{X,\C,L}
+	{ \FUNC{synecdoche} }{ \Big( X, F(X,\C,L) \Big)  }
+	\\
+	\Theorem{FrechetConvergenceConsistancy}
+	{
+		\forall (X,\C,L) : \TYPE{DiagonalProperty} \. 
+		\forall x : \TYPE{Convergent}(\Nat,X) \. \NewLine \.  
+		x \in \C \And \lim_{n \to \infty} x_n = L(x)
+	}
+	\NoProof
+}
+\newpage
+\subsection{Category of Topological Spaces}
+\subsubsection{Continuous Morphisms}
 \Page{
 	\DeclareType{ContinuousMap}
 	{
@@ -2184,54 +2606,41 @@
 		f^{-1}(U) \in \U(x)
 	}
 	\\
-	\DeclareFunc{generateTopologyByMaps}
-	{
-		\prod X,I : \SET \. 
-		\prod Y : I \to \TOP \.
-		\left( \prod_{i \in I} X \to Y_i \right) \to \TOP
-	}
-	\DefineNamedFunc{generateTopologyByMaps}{f}
-	{ \langle f \rangle_\TOP  }
-	{  
-		\bigg\langle \bigg\langle \Big\{ f_i^{-1}(U) \Big|  i \in I, U \in \T(Y_i)
-			\Big\} \bigg\rangle \bigg\rangle_\TOP    
-	}
-	\\
-	\Theorem{ContinuousInTopologyDefinedByMaps}
-	{
-		\forall X,I \in \SET \.
-		\forall Y : I \to \TOP \.
-		\forall f :  \prod_{i \in I} X \to Y_i  \.
-		\NewLine \.
-		\forall Z \in \TOP \.
-		\forall g : Z \to  X \.
-		g : C\Big( Z, \langle f \rangle_\TOP \Big) \iff
-		\forall i \in I \. gf_i :C\Big( Z, X_i \Big)
-	}
-	\NoProof
-	\\
-	\Theorem{ContinuousInTopologyDefinedByMaps}
-	{
-		\forall X,I \in \SET \.
-		\forall Y : I \to \TOP \.
-		\forall f :  \prod_{i \in I} X \to Y_i  \.
-		\NewLine \.
-		\forall Z \in \TOP \.
-		\forall g : Z \to  X \.
-		g : C\Big( Z, \langle f \rangle_\TOP \Big) \iff
-		\forall i \in I \. gf_i :C\Big( Z, X_i \Big)
-	}
-	\NoProof
-	\\
-	\Theorem{DensityByContinuousMaps}
+	\Theorem{ContinuousImageOfLimits}
 	{
 		\forall X,Y \in \TOP \.
 		\forall f : X \Arrow{\TOP} Y \.
-		(f : X \ToSurj Y) 
-		\Imply
-		d(Y) \le d(X)
+		\forall x : \TYPE{Net}(D,X) \.
+		f\Big( \lim_{n \in D}  x_n\Big) \subset
+		\lim_{n \in D } f(x_n)
 	}
-	\NoProof
+	\Assume{B}{f(\lim_{n \in D} x_n)}
+	\Say{\Big(A,[1]\Big)}{\bd \FUNC{image}}
+	{
+		\sum A = \lim_{n \in D} x_n\. f(A) = B
+	}
+	\Assume{U}{\U(B)}
+	\Say{V}{f^{-1}(U)}{\U(A)}
+	\Say{\Big(N,[2]\Big)}
+	{
+		\bd \TYPE{Limit}(A)
+	}
+	{
+		\sum N \in D \. \forall n \ge N \. x_n \in V
+	}
+	\Conclude{[U.*]}{\ByConstr V \bd \FUNC{preimage}[2]}
+	{
+		\forall n \ge N \. f(x_n) \in U
+	}
+	\DeriveConclude{[B.*]}{\bd^{-1}\TYPE{Limit}}
+	{
+		B = \lim_{n \in D} f(x_n)
+	}
+	\DeriveConclude{[*]}{I\TYPE{Subset}}
+	{
+		f(\lim_{n \in D} x_n) \subset \lim_{n \in D} f(x_n)
+	}
+	\EndProof
 }
 \Page{
 	\Theorem{SeparableByContinuousMap}
@@ -2523,7 +2932,7 @@
 	\NoProof
 }
 \newpage
-\subsection{Subspaces}
+\subsubsection{Subspaces}
 \Page{
 	\DeclareFunc{subspaceTopology}{\prod X \in \SET \. \prod Y \subset X \. \TYPE{Topology}(X) \to \TYPE{Topology}(Y)}
 	\DefineFunc{subspaceTopology}{T}{\{ U \cap Y | U \in T  \}}
@@ -2726,7 +3135,7 @@
 	\EndProof
 }
 \Page{
-	\Theorem{DiscreteSibsetBound}
+	\Theorem{DiscreteSubsetBound}
 	{
 		\forall X : \TYPE{T4} \And \TYPE{Separable} \.
 		\forall A : \TYPE{Discrete} \And \TYPE{Closed}(X) \. 
@@ -2745,7 +3154,7 @@
 	\DefineNamedFunc{combination}{}{\combo_{j \in J} f_j}{\Lambda x \in \bigcup_{j \in J} S_j \. f_j(x) 
 		\quad  \where \quad x \in S_j} 
 	\\
-	\Theorem{ContinuousOpemCombination}
+	\Theorem{ContinuousOpenCombination}
 	{
 		\forall X,Y \in \TOP \. \forall I \in \SET \.
 		\forall U : \TYPE{OpenCover}(I,X) \. 
@@ -2832,17 +3241,268 @@
 	\EndProof
 }
 \newpage
-\subsection{Sums}
+\subsubsection{Weak and Strong Topology}
+\Page{
+	\DeclareFunc{supTopology}
+	{
+		\prod_{X,I \in \SET} \Big(I \to \Topology(X)\Big) \to  \Topology(X)
+	}
+	\DefineNamedFunc{supTopolgy}
+	{\tau}{\bigvee_{i \in I} \tau_i }{\left( X  ,\left\langle \bigcup_{i \in I} \tau_i  \right\rangle_\TOP\right)}
+	\\
+	\Theorem{SupPoperty}
+	{
+		\forall X,I \in \SET \.
+		\forall \tau : I \to \Topology(X) \.
+		\forall \sigma : \Topology(X) \.
+		\forall \aleph : \forall i \in I \. \tau_i \subset \sigma \.
+		\bigvee_{i \in I} \tau_i \subset \sigma 
+	}
+	\Explain{
+		Every open set $V \in \bigvee_{i \in I} \tau_i $ can be represented as
+		$V = \bigcup_{j \in J} \bigcap^{n_j}_{k=1} U_{j,k}$, where each 
+		$U_{j,k} \in \bigcup_{i \in I} \tau_i$ and $n_j \in \Int_+$}
+	\Explain{
+		But each $U_{j,k} \in \sigma$, so also $V \in \sigma$
+		by definition of topology}
+	\EndProof
+	\\
+	\Theorem{SupTopologyConvergenceInNets}
+	{
+		\NewLine ::		
+		\forall X,I \in \SET \.
+		\forall \tau : I \to \Topology(X) \.
+		\forall (\Delta,x) : \Net(X) \.
+		\forall L \in X \. \NewLine \.
+		\lim_{\delta \in \Delta} x_\delta  =_{X,\bigvee_{i \in I} \tau_i} L 
+		\iff 
+		\forall i \in I \. \lim_{\delta \in \Delta} x_\delta  =_{X,\tau_i} L 
+	}
+	\Explain{
+		$(\Rightarrow):$
+		This implication is obvious as $\bigcup_{i \in I} \tau_i \subset \bigvee_{i \in I} \tau_i$ }
+	\Explain{ $(\Leftarrow):$
+		Assume that $U \in \U(L)$ in $\bigvee_{i \in I} \tau_i$ topology
+	}
+	\ExplainFurther{
+		Then there exists a number $n \in \Nat$ and an index $i :\{1,\ldots,n\} \to I$
+		such that $L \in \bigcap^{n}_{k=1} V_k \subset U$,}
+	\Explain{ where each $V_k \in \tau_{i_k}$}
+	\ExplainFurther{
+		By convergence hypothesis we can find a collection of elements $\delta : \{1,\ldots,n\} \to \Delta$}
+	\Explain{ such tat $x_\alpha \in V_k$ for any $\alpha \ge \delta_k$}
+	\Explain{
+		As $\Delta$ is directed set there is some $\gamma$ such that $\gamma \ge \delta_k$
+		for any $k  \in \{1,\ldots,n\}$}
+	\Explain{
+		Thus, $x_\alpha \in U$ for any $\alpha \ge \gamma$}
+	\Explain{
+		As $U$ was arbitrary this means that the sequence converges in sup topology.
+	}
+	\EndProof
+	\\
+	\Theorem{SupTopologyConvergenceInFilters}
+	{
+		\NewLine ::		
+		\forall X,I \in \SET \.
+		\forall \tau : I \to \Topology(X) \.
+		\forall \F : \Filter(X) \.
+		\forall L \in X \. \NewLine \.
+		\lim \F  =_{X,\bigvee_{i \in I} \tau_i} L 
+		\iff 
+		\forall i \in I \. \lim \F  =_{X,\tau_i} L 
+	}
+	\Explain{
+		This is true as convergence in nets and filters is equivalent}
+	\EndProof
+}\Page{
+	\DeclareFunc{infTopology}
+	{
+		\prod_{ X,I \in \SET } \Big(I \to \Topology(X)\Big) \to \Topology(X)
+	}
+	\DefineNamedFunc{infTopology}{\tau}{\bigwedge_{i \in I} \tau_i}
+	{  \bigvee \Big\{ \sigma : \Topology(X), \forall i \in I \.  \sigma \subset \tau_i    \Big\}   }
+	\\
+	\Theorem{InfTopologyExpression}
+	{
+		\forall X,I \in \SET \.
+		\forall \tau : I \to \Topology(X) \.
+		\bigwedge_{i  \in I} \tau_i =  \bigcap_{i \in I} \tau_i
+	}
+	\Explain{
+		Write 
+		$ \Big\{ \sigma : \Topology(X), \forall i \in I \.  \sigma \subset \tau_i    \Big\} 
+		= \Upsilon		
+		$, then 
+		$\bigwedge_{i  \in I} \tau_i = \bigvee \Upsilon$}
+	\Explain{
+		Then each $\sigma \subset \bigcap_{i \in I} \tau_i$ for each  $\sigma \in \Upsilon$}
+	\Explain{
+		So, by sup property $\bigwedge_{i \in I} \tau_i \subset \bigcap_{i \in I} \tau_i$
+	}
+	\Explain{
+		But, note that $\bigcap_{i \in I} \tau_i \in \Upsilon$,
+		so $\bigcap_{i \in I} \tau_i = \bigwedge_{i \in I} \tau_i$}
+	\EndProof
+	\\
+	\DeclareFunc{weakTopology}
+	{
+		\prod_{X,I \in \SET} 
+		\left(I \to \sum_{Y_i \in \TOP} \SET(X,Y_i)\right)  \to \Topology(X)
+	}
+	\DefineNamedFunc{weakTopology}{Y,f}{\W_X(I,Y,f)}
+	{
+		\bigwedge \Big\{ \tau : \Topology(X), \forall i \in I \. f_i \in \TOP\big( (X,\tau),Y_i\big) \Big\}	
+	}
+	\\
+	\DeclareFunc{strongTopology}
+	{
+		\prod_{Z,I \in \SET} 
+		\left(\prod_{i \in I} \sum_{Y_i \in \TOP} \SET(Y_i, Z)\right)  \to \Topology(Z)
+	}
+	\DefineNamedFunc{strongTopology}{Y,f}{\S_Z(I,Y,f)}
+	{
+		\bigvee \Big\{ \tau : \Topology(Z), \forall i \in I \. f_i \in \TOP\big( Y_i, (Z,\tau)\big) \Big\}	
+	}
+	\\
+	\Theorem{WeakTopologyConvergenceInNets}
+	{
+		\NewLine ::		
+		\forall X, I \in \SET \.
+		\forall (Y,f) : \prod_{i \in I} \sum_{Y_i \in \TOP }  X \Arrow{f_i} Y_i : \SET \. \NewLine \.
+		\forall (\Delta,x) : \Net(X) \.
+		\forall L \in X \.
+		\lim_{\delta \in \Delta} x_\delta =_{X,\W(Y,f)} L
+		\iff
+		\forall i \in I \. \lim_{\delta \in \Delta} f_i(x_\delta) =  f_i(L)	
+	}
+	\ExplainFurther{
+		write $
+			\W(Y,f) = 
+			\bigwedge \Big\{ \tau : \Topology(X), \forall i \in I \. f_i \in \TOP\big( (X,\tau),Y_i\big) \Big\} =$}
+	\ExplainFurther{ $ =
+			\bigvee  \bigg\{ 
+			\sigma : \Topology(X) ,			
+			\forall \tau : \Topology(X)\.  \Big(\forall i \in I \. f_i \in \TOP\big( (X,\tau),Y_i\big) \Big)
+			\Imply \sigma \subset \tau 
+		\bigg\}=$}
+	\Explain{
+		$=\bigvee_{i \in I} f^{-1}_i\Big(\T(Y_i)\Big) $}
+	\Explain{
+		So we need to proof the result for the case $I=\{i\}$}
+	\Explain{
+		$(\Rightarrow)$ follows from the continuity of $f_i$ in weak topology}
+	\Explain{
+		$(\Leftarrow):$ Let $U$ be an open neighborhood of $L$ in weak topology.}
+	\Explain{
+		Then there are $V \in \T(Y_i)$ such that  $U = f^{-1}(V)$.
+	}
+	\ExplainFurther{
+		As $V$ is an open neighborhood of $f_i(L)$,
+		by convergence hypothesis there is $\gamma \in \Delta$}
+	\Explain{ 
+		such that $f(x_\delta) \in V$ for each $\delta \ge \gamma$}
+	\Explain{
+		So $x_\delta \in U$ for each $\delta \ge \gamma$}
+	\Explain{
+		And as $U$ was arbitrary the convergence holds}
+	\EndProof
+}
+\newpage
+\Page{
+	\Theorem{WeakTopologyConvergenceInNets}
+	{
+		\NewLine ::		
+		\forall X, I \in \SET \.
+		\forall (Y,f) : \prod_{i \in I} \sum_{Y_i \in \TOP }  X \Arrow{f_i} Y_i : \SET \. \NewLine \.
+		\forall \F : \Filter(X) \.
+		\forall L \in X \.
+		\lim \F =_{X,\W(Y,f)} L
+		\iff
+		\forall i \in I \. \lim f_i(\F) =  f_i(L)	
+	}
+	\Explain{ 
+		By equivalence of convergence in nets and in filters}
+	\EndProof
+	\\
+	\Theorem{WeakTopologyContinuity}
+	{
+		\NewLine ::
+		\forall X,I \in \SET \.
+		\forall  (Y,f) : \prod_{i \in I} \sum_{Y_i \in \TOP }  X \Arrow{f_i} Y_i : \SET \. \NewLine \.
+		\forall Z \in \TOP \.
+		\forall g : Z \to X  \.
+		g \in \TOP\Big( Z,\big( X, \W(Y,f) \big) \Big) 
+		\iff
+		\forall i \in I \. gf_i \in \TOP(Z,Y_i) 
+	}
+	\Explain{
+		$(\Rightarrow):$ This follows from continuous composition}
+	\Explain{  
+		$(\Leftarrow):$ Let $U$ be an open in the weak topology  
+	}
+	\Explain{
+		We can assume that $U = \bigcap^{n}_{k=1}f_{i_k}^{-1}(V_k)$,
+		where $i : \{1,\ldots,n\} \to I$ and each $V_k$ is open in $Y_{i_k}$}
+	\Explain{
+		Then $g^{-1}(U) = \bigcap^{n}_{k=1} \big(gf_{i_k}\big)^{-1}(V_k)$ is open
+	}
+	\Explain{
+		As sets of this form generate weak topology $g$ must be continuous}
+	\EndProof
+	\\
+	\Theorem{StrongTopologyContinuity}
+	{
+		\NewLine ::
+		\forall Y,I \in \SET \.
+		\forall  (X,f) : \prod_{i \in I} \sum_{X_i \in \TOP }  X_i \Arrow{f_i} Y : \SET \. \NewLine \.
+		\forall Z \in \TOP \.
+		\forall g : Y \to Z  \.
+		g \in \TOP\Big(\big( Y, \W(Y,f) \big), Z \Big) 
+		\iff
+		\forall i \in I \. f_ig \in \TOP(X_i,Z) 
+	}
+	\Explain{
+		$(\Rightarrow):$ This follows from continuous composition}
+	\Explain{  
+		$(\Leftarrow):$ Let $U$ be open in $Z$  
+	}
+	\Explain{
+		Then $(f_ig)^{-1}(U)$ is open in $X_i$}
+	\Explain{
+		But this means  that $g^{-1}(U)$ has open preimage under $f_i$ for  each $i \in I$}
+	\Explain{
+		But this means that $U$ is open in strong topology}
+	\Explain{
+		As set $U$ was arbitrary $g$ must be continuous}
+	\EndProof
+}
+\newpage
+\subsubsection{Sums}
 \Page{
 	\DeclareFunc{sumTopology}
 	{
 		\prod I \in \SET \. 
 		( I \to \TOP) \to \TOP 
 	}
-	\DefineNamedFunc{sumTopology}{X}{\coprod_{i \in I} X_i}{ \left\langle \bigsqcup_{i \in I} \T(X_i)  \right\rangle_{\TOP}} 
+	\DefineNamedFunc{sumTopology}{X}{\coprod_{i \in I} X_i}
+	{
+		\left( \bigsqcup_{i \in I} X_i,
+			\S(X,\iota)		
+		\right)
+	} 
 	\\
 	\Theorem{SumIsCoproduct}{\Big(\FUNC{sumTopology} : \TYPE{Coproduct}(X)\Big)}
-	\NoProof
+	\Explain{ 
+		Let $Y\in \TOP$ and $f_i \in \TOP(X_i,Y)$ }
+	\Explain{
+		Then by universal property in $\SET$ 
+		there is unique $h : \coprod_{i \in I} X_i \to Y$
+		such that $\iota_i h = f_i$}
+	\Explain{
+		But as each $f_i$ is continuous the $h$ also mut be cintinuous
+	}
+	\EndProof
 	\\
 	\Theorem{SumIsCompatibleWithSubspace}
 	{
@@ -2851,28 +3511,34 @@
 		\forall i \in I \. 
 		X_i \cong_{\TOP} \iota_{X,i}(X_i)
 	}
-	\NoProof
+	\Explain{ 
+		From the definition each $\iota_i$ is injective}
+	\Explain{
+		So $\iota^{-1}_i \iota_i(A) = A$}
+	\Explain{
+		But with strong topology this means that $\iota_i$ is an open mapping}
+	\Explain{
+		As it both open and continuous (by definition) $\iota_i$ is a homeomorphic
+		embedding}
+	\EndProof
 	\\
 	\Theorem{ClopenSummands}
 	{
 		\forall I \in \SET \.
 		\forall X : I \to \TOP \.
 		\forall i \in I \.
-		\iota_{X,i}(X_i) : \TYPE{Clopen}\left( \coprod_{i \in I}  X_i \right) 
+		\TYPE{Clopen}\left( \coprod_{i \in I}  X_i, \iota_{X,i}(X_i) \right) 
 	}
-	\NoProof
-	\\
-	\Theorem{SumPreservesSeparation}
-	{
-		\forall I \in \SET \.
-		\forall n \in \{1,\ldots,6\} \.
-		\forall X : I \to \TYPE{T}n \. 
-		\coprod_{i \in I} X_i  : \TYPE{T}n
-	}
-	\NoProof
+	\Explain{ By definition of strong topology each $X_i$ is open in $\coprod_{i \in I} X_i$}
+	\Explain{
+		But its complement $X_i^\c = \bigcup_{j \neq I} X_j$ is also open as union
+		of open sets (each open by simmilar considirations)}
+	\Explain{
+		So $X_i$ must be clopen}
+	\EndProof
 }
 \newpage
-\subsection{Products}
+\subsubsection{Products}
 \Page{
 	\DeclareFunc{productTopology}
 	{
@@ -2880,13 +3546,22 @@
 		(I \to \TOP) \to \TOP
 	}
 	\DefineNamedFunc{productTopology}{X}{\prod_{i \in I} X_i}
-	{ \Big\langle ( \pi_{X,i} )_{i \in I} \Big\rangle_{\TOP}  }
+	{ \left( \prod_{i \in I} X_i, \W(X,\pi)  \right) }
 	\\
 	\Theorem{ProductOfTopologicalSpaces}
 	{
 		\Big( \FUNC{productTopology} : \TYPE{Product}(\TOP)  \Big) 
 	}
-	\NoProof
+	\Explain{ 
+		Let $Y\in \TOP$ and $f_i \in \TOP(Y,X_i)$ }
+	\Explain{
+		Then by universal property in $\SET$ 
+		there is unique $h : Y \to \prod_{i \in I} X_i$
+		such that $ h \pi_i = f_i$}
+	\Explain{
+		But as each $f_i$ is continuous the $h$ also mut be cintinuous
+	}
+	\EndProof
 	\\
 	\Theorem{ProductTopologyBase}
 	{
@@ -2897,16 +3572,9 @@
 			\Big|\{ i \in I : U_i \neq X_i\}\Big| <\infty    
 		\right\} : \TYPE{Base}\left( \prod_{i \in I} X_i \right)
 	}
-	\NoProof
-	\\
-	\Theorem{ProductClosure}
-	{
-		\forall I \in \SET \.
-		\forall X : I \to \TOP \.
-		\forall A : \prod_{i \in I} ?X_i \.
-		\overline{\prod_{i\in I} A_i} = \prod_{i \in I} \overline{A_i}
-	}
-	\NoProof
+	\Explain{
+		This follows from the definition of the weak topology}
+	\EndProof
 	\\
 	\Theorem{ProductOfClosedSets}
 	{
@@ -2916,7 +3584,61 @@
 		\prod_{i \in I} A_i : \TYPE{Closed}\left( \prod_{i \in I} X_i\right) \iff 
 		\forall i \in I \.  A_i : \TYPE{Closed}(X_i) 
 	}
-	\NoProof
+	\Explain{
+		Firstly assum that if  $A$ is closed in $X_i$
+	}
+	\Explain{
+		Then 
+		$\left(
+				\prod_{j\in \{i\}} A \times \prod_{j \in \{i\}^\c} X_j
+		 \right)^\c = 
+				\prod_{j \in \{i\}} A^\c \times \prod_{j \in \{i\}^\c} X_j
+		$
+		is open by the product  topology base.
+	}
+	\Explain{
+		So  
+		$
+				\prod_{j \in \{i\}} A \times \prod_{j \in \{i\}^\c} X_j
+		$
+		is closed}
+	\Explain{
+		Now let $A : \prod_{i \in I} \Closed(X_i)$ be a family of closed set}
+	\Explain{
+		Then $\prod_{i\in I} A_i = \bigcap_{i \in I} \prod_{j \in \{i\}} A \times \prod_{j \in \{i\}^\c} X_j$
+		is closed as an intersections of closed sets}
+	\EndProof
+}\Page{
+	\\
+	\Theorem{ProductClosure}
+	{
+		\forall I \in \SET \.
+		\forall X : I \to \TOP \.
+		\forall A : \prod_{i \in I} ?X_i \.
+		\overline{\prod_{i\in I} A_i} = \prod_{i \in I} \overline{A_i}
+	}
+	\Explain{
+		By previous theorem $ \prod_{i \in I} \overline{A_i}$ is closed
+		and evedently $\prod_{i\in I} A_i \subset  \prod_{i \in I} \overline{A_i}$}
+	\Explain{
+		So $\overline{\prod_{i\in I} A_i} \subset \prod_{i \in I} \overline{A_i}$
+	}
+	\Explain{
+		Assume $p \in \prod_{i \in I} \overline{A_i}$
+		And Let $U = \prod_{i \in I} V_i$ to be a base
+		neighborhood of $p$ with $V_i \in \T(X_i)$}
+	\Explain{
+		Then each $V_i$ is a neighborhood of $\pi_i(p) \in \overline{A_i}$, 
+		so $V_i \cap A_i \neq \emptyset$ by alternative definition of closure}
+	\Explain{
+		Thus, $U \cap \prod_{i \in I} A_i \neq \emptyset$}
+	\Explain{
+		As $p$ and $U$ was arbitrary by alternative definition of closure
+		$\prod_{i \in I} \overline{A_i} \subset  \overline{\prod_{i\in I} A_i}$}
+	\Explain{
+		Hence $\overline{\prod_{i\in I} A_i} = \prod_{i \in I} \overline{A_i}$
+	}
+	\EndProof
 	\\
 	\Theorem{ProjectionIsOpen}
 	{
@@ -2925,7 +3647,18 @@
 		\forall i \in I \.
 		\pi_{X,i} : \TYPE{Open}\left( \prod_{i \in I} X_i, X_i \right)
 	}
-	\NoProof
+	\Explain{ Asumme $U$ is open in $\prod_{i \in I} X_i$}
+	\Explain{
+		Then it can be represented as
+		$U = \bigcup_{j \in J} \prod_{i \in I} V_{j,i}$,
+		where each $V_{j,i}$ is open $X_i$}
+	\Explain{
+		We have
+		$
+			\pi_i(U) = \bigcap_{j \in J}	 V_{j,i} 	
+		$
+		which must be open as union of open sets}
+	\EndProof
 	\\
 	\DeclareFunc{diagonalProduct}
 	{
@@ -2942,16 +3675,7 @@
 	{
 		\forall I \in \SET \.
 		\forall X : I \to \TYPE{T2} \.
-		\diag \; \prod_{i \in I} X_i :\TYPE{Closed}\left( \prod_{i \in I} X_i \right)
-	}
-	\NoProof
-	\\
-	\Theorem{ProductPreservesSeparation}
-	{
-		\forall I \in \SET \.
-		\forall n \in \{1,\ldots, 6\} \.
-		\forall X : I \to \TYPE{T}n \And \TYPE{NonEmpty} \. 
-		\prod^n_{i=1} X_i : \TYPE{T}n
+		\TYPE{Closed}\left( \prod_{i \in I} X_i, \diag \; \prod_{i \in I} X_i : \right)
 	}
 	\NoProof
 	\\
@@ -2986,27 +3710,6 @@
 		\prod_{i \in I} X_i : P 
 	}
 	\\
-	\Theorem{ProductWeight}{ 
-			\forall I \in \SET \.
-			\forall X :  I \to \TOP \.
-			\forall k : \TYPE{InfiniteCardinal} \.
-			\forall [0] : |I| \le k \. \NewLine \. 
-			\forall [00] :\forall i \in I \. w(X_i) \le k \.
-			w\left( \prod_{n \in i} X_i \right) \le k
-	}
-	\NoProof
-	\\
-	\\
-	\Theorem{ProductDegree}{ 
-			\forall I \in \SET \.
-			\forall X :  I \to \TOP \.
-			\forall k : \TYPE{InfiniteCardinal} \.
-			\forall [0] : |I| \le k \. \NewLine \. 
-			\forall [00] :\forall i \in I \. \chi(X_i) \le k \.
-			\chi\left( \prod_{n \in i} X_i \right) \le k
-	}
-	\NoProof
-}\Page{
 	\Theorem{CountabilityIsCountablyMultiplicative}
 	{
 		\TYPE{FirstCountable}, \TYPE{SecondCountable} : \aleph_0\hyph\TYPE{Multiplicative }  
@@ -3016,17 +3719,6 @@
 	\Theorem{CountabilityIsCountablyMultiplicative}
 	{
 		\TYPE{FirstCountable}, \TYPE{SecondCountable} : \aleph_0\hyph\TYPE{Multiplicative }  
-	}
-	\NoProof
-	\\
-	\Theorem{HewettPondiczeryTheorem}
-	{
-		\forall I \in \SET \.
-		\forall X : I \to \TOP \.
-		\forall k : \TYPE{InfiniteCardinal} \.
-		\forall [0] : |I| \le \exp(k) \.
-		\forall [00] : \forall i \in I \. d(X_i) \le k \.
-		d\Act{\prod_{i\in I} X_i} \le k
 	}
 	\NoProof
 	\\
@@ -3035,18 +3727,7 @@
 		\TYPE{Separable} : \exp(\aleph_0) \hyph \TYPE{Multiplicative}
 	}
 	\NoProof
-	\\
-	\Theorem{DensityProductProperty}
-	{
-		\forall I \in \SET \.
-		\forall X : I \to \TOP \.
-		\forall k : \TYPE{InfiniteCardinal} \/
-		\forall [0] : \forall i \in I \.  d(X_i) \le k \. \NewLine \.
-		\forall U : \TYPE{Disjoint} \Act{ \T\Act{\prod_{i \in I} U_i }} \.
-		|U| \le k 
-	}
-	\NoProof
-	\\
+}\Page{
 	\DeclareType{SeparatePoints}
 	{
 		\prod X \in \TOP \.
@@ -3070,7 +3751,7 @@
 		\exists i,j \in I \. 
 		f_i(x) \not \in \overline{f_j(A)}  
 	}
-}\Page{
+	\\
 	\Theorem{SPaCIsEmbedding}
 	{
 		\forall X,Y \in \TOP \.
@@ -3124,7 +3805,7 @@
 		\diag(X^n) \cong_\TOP X
 	}
 	\NoProof
-	\\
+}\Page{
 	\Theorem{GraphHomeo}
 	{
 		\forall X,Y \in \TOP \.
@@ -3141,129 +3822,83 @@
 		G(f) : \TYPE{Closed}(X \times Y)
 	}
 	\NoProof
-}
-\Page{
-	\DeclareFunc{universal}
-	{
-		??\TOP \to ??\TOP
-	}
-	\DefineFunc{universal}{P}{\Lambda X : P \. \forall Y : P \. \exists \TYPE{HomeomorphicEmbedding}(Y,X)}
 	\\
-	\Theorem{TychonoffCubeIsUniversal}
-	{
-		\forall n : \TYPE{InfiniteCardinal} \.
-		I^n : \FUNC{universal} \;  \Lambda X : \TYPE{Tychonoff}(X) \. w(X) =  n 
+	\Theorem{TopologicalSpacesAreComplete}{\TYPE{Bicomplete}(\TOP)}
+	\Explain{
+		Construct limits or colimits in $\SET$}
+	\Explain{
+		Then endow it with weak or strong topology respectively 
 	}
-	\NoProof
-	\\
-	\DeclareFunc{spaceOfAlexanroff}
-	{
-		\TOP
-	}
-	\DefineNamedFunc{spaceOfAlexadroff}{}{F}{\Big( \{0,1\},  \big\{ \emptyset, \{0\}, \{0,1\} \big\}  \Big)}
-	\\
-	\Theorem{AlexandroffCubeIsUniversal}
-	{
-		\forall n : \TYPE{InfiniteCardinal} \.
-		F^n : \FUNC{universal} \;  \Lambda X : \TYPE{T1}(X) \. w(X) = n 
-	}
-	\NoProof
-	\\
-	\Theorem{ProductNetConvergence}
-	{
-		\forall I \in \SET \. 
-		\forall X : I \to \TOP \.
-		\forall D : \TYPE{DirectrdSet} \.
-		\forall x : \TYPE{Net}\Act{D, \prod_{i \in I}  X_i} \.
-		 \NewLine \. 
-		\forall L \in \prod_{i \in I} X_i \.
-		L \in \lim_{i \in D} x_i \iff \forall i \in I \. \pi_i(L) \in \lim_{i \in D} \pi_i(x_i)
-	}
-	\NoProof
-	\\
-	\Theorem{ProductNetConvergence}
-	{
-		\forall I \in \SET \. 
-		\forall X : I \to \TOP \.
-		\forall \F : \TYPE{Filter}\Act{ \prod_{i \in I}  X_i} \.
-		 \NewLine \. 
-		\forall L \in \prod_{i \in I} X_i \.
-		L \in \lim \F \iff \forall i \in I \. \pi_i(L) \in \lim \pi_i(\F)
-	}
-	\NoProof
-	\\
-	\Theorem{TopologicalSpacesAreComplete}{\TOP : \TYPE{Complete}}
-	\NoProof
+	\EndProof
 }
 \newpage
-\subsection{Quotients}
+\subsubsection{Quotients}
 \Page{
 	\DeclareFunc{quotientSpace}{\prod X \in \TOP \. \TYPE{Equivalence}(X) \to \TOP}
-	\DefineNamedFunc{quotinentSpace}{\sim}{\frac{X}{(\sim)}}{\Act{\frac{X}{(\sim)},
-		\left\{ U \subset \frac{X}{(\sim)} : \pi^{-1}_\sim (U) \in \T(X) \right\}}
+	\DefineNamedFunc{quotinentSpace}{\sim}{\frac{X}{(\sim)}}{
+		\Act{\frac{X}{(\sim)}, \S(X,\pi_\sim)}
 	}
 	\\
-	\Theorem{TopologicalSpacesAreComplete}
-	{
-		\TOP : \TYPE{Cocomplete}
+	\DeclareType{QuotientMap}{ 
+		\prod X,Y \in \TOP \.    ?\Big(\TOP \And \Surj(X,Y)\Big)
 	}
-	\NoProof
+	\DefineType{f}{QuotientMap}{Y \cong_\TOP \frac{X}{\sim_f}}
+	\\
+	\Theorem{OpenSurjectiveMapIsQuotient}
+	{
+		\NewLine :: 
+		\forall X,Y \in \TOP \.
+		\forall f : \Surj \And \TOP \And \Open(X,Y) \.
+		\QM(X,Y)	
+	}
+	\Explain{
+		Assume $U$ is open in $Y$}
+	\Explain{
+		Then $f^{-1}(U)$ is open in $X$ by continuity of $f$}
+	\Explain{
+		Now assume that $U \subset Y$ is such that $f^{-1}(U)$ is open in $X$}
+	\Explain{
+		Then $ff^{-1}(U)$ is open in $Y$ as $f$ is open}
+	\Explain{
+		But $ff^{-1}(U)  = U$ as $f$ is surjective,
+		so $U$ is open}
+	\EndProof
+	\\
+	\Theorem{ClosedSurjectiveMapIsQuotient}
+	{
+		\NewLine :: 
+		\forall X,Y \in \TOP \.
+		\forall f : \Surj \And \TOP \And \Closed(X,Y) \.
+		\QM(X,Y)	
+	}
+	\Explain{
+		Assume $U$ is open in $Y$}
+	\Explain{
+		Then $f^{-1}(U)$ is open in $X$ by continuity of $f$}
+	\Explain{
+		Now assume that $U \subset Y$ is such that $f^{-1}(U)$ is open in $X$}
+	\Explain{
+		Then $\Big(f^{-1}(U)\Big)^\c$ is closed in $Y$ }
+	\Explain{
+		So  $f\Big( f^{-1}(U) \Big)^\c = \Big( ff^{-1}(U)\Big)^\c = U^\c$ is closed
+		as $f$ is surjective}
+	\Explain{
+		Thus, $U$ is open}
+	\EndProof
+	\\
+	\Theorem{QuotientContinuity}
+	{
+		\forall X,Y,Z \in \TOP \.
+		\forall f : \QM(X,Y) \.
+		\forall g : Y \to Z \.
+		fg \in \TOP(X,Z) \iff g \in \TOP(Y,Z)
+	}
+	\Explain{ This Follows from the definition of strong topology}
+	\EndProof
 }
 \newpage
-\subsection{Directed Limits}
-\Page{
-	\DeclareFunc{initialTopology}
-	{
-		\prod D : \TYPE{Directed} \. 
-		\TYPE{DirectesSystem}(D,\TOP) \to \TOP
-	}
-	\DefineFunc{initialTopology}{(X,f)}{
-		\Act{ (\SET) \; \lim_{\to} (X,f)  , 
-		\Big\{ U \subset \lim_{\to} (X,f) : \forall i \in D \. \iota_i^{-1}(U) \in \T(X_i)   \Big\}   }  
-	}
-	\\
-	\DeclareFunc{FinalTopology}
-	{
-		\prod D : \TYPE{Directed} \. 
-		\TYPE{DirectesSystem}(D,\TOP) \to \TOP
-	}
-	\DefineFunc{FinalTopology}{(X,f)}{
-		\Act{ (\SET) \; \lim_{\leftarrow} (X,f)  , 
-		\bigg\langle \Big\{ \pi_i^{-1}(U) | i \in D, U \in \T(X_i)  \Big\} \bigg\rangle_\TOP  }  
-	}
-}
-\newpage
-\subsection{Exponential Objects}
-\Page{
-	\DeclareFunc{pointwiseConvergense}{\TOP \to \TOP \to \TOP}
-	\DefineNamedFunc{pointwiseConvergennce}
-	{X,Y}{Y^X}{\prod_{x \in X} Y}
-	\\
-	\DeclareType{Proper}{?(\TOP \times \TOP)}
-	\DefineNamedType{(X,Y)}{Proper}{ Y^X : \TYPE{Proper} }
-	{
-		\forall Z \in \TOP \. 
-		\forall f \in Y^{Z \times X} \. 
-		\Lambda z \in Z \. \Lambda x \in X \. f(z,x) \in (Y^Z)^X
-	}
-	\\
-	\DeclareType{Admissible}{?(\TOP \times \TOP)}
-	\DefineNamedType{(X,Y)}{Admissible}{Y^X : \TYPE{Admissible}}
-	{
-		\forall Z \in \TOP \.
-		\forall f \in   (Y^X)^Z \. \NewLine \. 
-		\Lambda (z,x) \in Z \times X \. f(z,x) : Y^(Z \times X)
-	}
-	\\
-	\DeclareType{Acceptable}{?(\TOP \times \TOP)}
-	\DefineNamedType{(X,Y)}{Acceptable}{Y^X : \TYPE{Acceptable}}
-	{
-		Y^X : \TYPE{Admiddible} \And \TYPE{Proper} 
-	}
-}
-\newpage
-\section{Regularity}
-\subsection{Separation Axioms}
+\subsection{Regularity}
+\subsubsection{Separation Axioms}
 \Page{
 	\DeclareType{T0}{?\TOP}
 	\DefineType{X}{T0}
@@ -3878,8 +4513,33 @@
 		\exists U : \TYPE{Disjoint} \Big( I, \U(A) \Big) 
 	}
 	\NoProof
+	\\
+	\Theorem{SumPreservesSeparation}
+	{
+		\forall I \in \SET \.
+		\forall n \in \{1,\ldots,6\} \.
+		\forall X : I \to \TYPE{T}n \. 
+		\coprod_{i \in I} X_i  : \TYPE{T}n
+	}
+	\NoProof
+	\\
+	\Theorem{HausdorffByLimits}
+	{
+		\forall X : \TOP \.
+		X : \TYPE{T2} \iff \forall x : \TYPE{Net}(D,X) \. |\lim_{n \in D} x_n| \le 1
+	}
+	\NoProof
+	\\
+	\Theorem{ProductPreservesSeparation}
+	{
+		\forall I \in \SET \.
+		\forall n \in \{1,\ldots, 6\} \.
+		\forall X : I \to \TYPE{T}n \And \TYPE{NonEmpty} \. 
+		\prod^n_{i=1} X_i : \TYPE{T}n
+	}
+	\NoProof
 }
-\subsection{Functional Separation}
+\subsubsection{Functional Separation}
 \Page{
 	\DeclareType{Tychonoff}{?\TYPE{T1}}   
 	\DefineType{X}{Tychonoff}{ 
@@ -4091,7 +4751,7 @@
 	\NoProof
 }
 \newpage
-\subsection{Perfectly Normal Spaces}
+\subsubsection{Perfectly Normal Spaces}
 \Page{
 	\DeclareType{\PN}{?\TYPE{T4}}
 	\DefineType{X}{\PN}{\forall A : \TYPE{Closed}(X) \. A \in G_\delta(X)}
@@ -4150,7 +4810,7 @@
 	\NoProof
 }
 \newpage
-\subsection{Normally Placed Sets}
+\subsubsection{Normally Placed Sets}
 \Page{
 	\DeclareType{NormallyPlaced}{\prod X : \TOP \. ??X}
 	\DefineType{A}{NormallyPlaced}
@@ -4231,7 +4891,7 @@
 	\Assume{U}{\U_A(B)}
 }
 \newpage
-\subsection{Urysohn and Semiregular Spaces}
+\subsubsection{Urysohn and Semiregular Spaces}
 \Page{
 	\DeclareType{Urysohn}{?\TOP}
 	\DefineType{X}{Urysohn}
@@ -4255,150 +4915,14 @@
 	}
 	\NoProof
 	\\
-	\Theorem{Se,iregularSeparationHierarchy}
+	\Theorem{SemiregularSeparationHierarchy}
 	{
 		\TYPE{T2} \subset \TYPE{Semiregular} \subset \TYPE{T3}
 	}
 	\NoProof
 }
 \newpage
-\subsection{Cardinal-Valued Functions}
-\Page{
-	\DeclareFunc{cellurality}
-	{
-		\mathrm{Groupoid}(\TOP) \Arrow{\CAT} \mathsf{CARD}
-	}
-	\DefineNamedFunc{cellurality}{X}{c(X)}
-	{
-		\max \Big( \aleph_0, \inf \big\{ k \in \mathsf{CARD} : 
-			\forall U : \TYPE{Disjoint} \; \T(X) : \. |U| \le k  \big\} \Big)
-	}
-	\\
-	\DeclareType{SouslinProperty}{?\TOP}
-	\DefineType{X}{SouslinProperty}{c(X) = \aleph_0}
-	\\
-	\DeclareFunc{spread}
-	{
-		\mathrm{Groupoid}(\TOP) \Arrow{\CAT} \mathsf{CARD}
-	}
-	\DefineNamedFunc{spread}{X}{hc(X)}
-	{
-		\max \Big( \aleph_0, \inf \big\{ k \in \mathsf{CARD} : 
-			\forall A \subset X : \. A \subset A \setminus A^\d \Imply |A| \le k  \big\} \Big)
-	}
-	\\
-	\DeclareFunc{extent}
-	{
-		\mathrm{Groupoid}(\TOP) \Arrow{\CAT} \mathsf{CARD}
-	}
-	\DefineNamedFunc{extent}{X}{e(X)}
-	{
-		\max \Big( \aleph_0, \inf \big\{ k \in \mathsf{CARD} : 
-			\forall A : \TYPE{Closed}(X) : \. A \subset A \setminus A^\d \Imply |A| \le k  \big\} \Big)
-	}
-	\\
-	\Theorem{SpreadExtentInequality}
-	{
-		\forall X \in \TOP \. hc(X) \ge e(X)
-	}
-	\NoProof
-	\\
-	\Theorem{SpreadCelluralityInequality}{ 
-		\forall X \in \TOP \.
-		hc(X) \ge c(X)
-	}
-	\NoProof
-	\\
-	\Theorem{DensityCelluralityInequality}
-	{
-		\forall X \in \TOP \.
-		d(X) \ge c(X)
-	}
-	\NoProof
-	\\
-	\Theorem{WeightSpreadInequality}
-	{
-		\forall X \in \TOP \.
-		w(X) \ge hc(X) 
-	}
-	\NoProof
-	\\
-	\Theorem{ContinuousImageOfCellurality}
-	{
-		\forall X,Y \in \TOP \.
-		\forall X \Arrow{\TOP} Y \.
-		c(X) \ge c\Big( f(X) \Big)
-	}
-	\NoProof
-	\\
-	\Theorem{ContinuousImageOfSpread}
-	{
-		\forall X,Y \in \TOP \.
-		\forall X \Arrow{\TOP} Y \.
-		hc(X) \ge hc\Big( f(X) \Big)
-	}
-	\NoProof
-}\Page{
-	\Theorem{ContinuousImageOfExtent}
-	{
-		\forall X,Y \in \TOP \.
-		\forall X \Arrow{\TOP} Y \.
-		X : \TYPE{T1} \Imply
-		e(X) \ge e\Big( f(X) \Big)
-	}
-	\NoProof
-	\\
-	\Theorem{ExtentDensityInequality}
-	{
-		\forall X : \TYPE{T4} \.
-		e(X) \le \exp d(X) 
-	}
-	\NoProof
-	\\
-	\Theorem{ExtentDensityInequality}
-	{
-		\forall X : \TYPE{T4} \.
-		e(X) \le \exp d(X) 
-	}
-	\NoProof
-	\\
-	\DeclareFunc{tightnessAtAPoint}
-	{
-		\prod X : \TOP \.
-		X \to  \mathsf{CARD}
-	}
-	\DefineNamedFunc{tightnessAtAPoint}{x}
-	{ \tau(x)  }{ \max\Big( \aleph_0, 
-			\min\big\{ k \in \mathsf{CARD} : 
-			\forall A \subset X : x \in A \Imply \NewLine \Imply
-			\exists B \subset A : x \in \overline{B} \And |B| \le k 
-			\big\} \Big)
-	}
-	\\
-	\DeclareFunc{tightness}
-	{
-		\mathrm{Groupoid}(\TOP) \Arrow{\CAT} \mathsf{CARD}
-	}
-	\DefineNamedFunc{tightness}{X}{\tau(X)}{\sup_{x \in X} \tau(x)}
-	\\
-	\Theorem{TightnessDegreeInequelity}
-	{
-		\forall X : \TOP \.  \tau(X) \le \chi(X)
-	}
-	\NoProof
-	\\
-	\Theorem{EquivalentInequality}
-	{
-		\forall X : \TOP \.
-		\tau(X) = \max\Big( \aleph, \NewLine ,  
-		\inf \big\{ k \in \mathsf{CARD} : \forall A \IsNot \TYPE{Closed}(A), 
-			\exists B \subset A : |B| \le k \overline{B} \setminus A \neq \emptyset\big\}
-		\Big)
-	}
-	\NoProof
-}
-\newpage
-\subsection{Semicontinuous Functions}
+\subsubsection{Semicontinuous Functions}
 \Page{
 	\DeclareType{UpperSemicontinuous}
 	{
@@ -4663,524 +5187,9 @@
 	\NoProof
 }
 \newpage
-\section{Convergence}
-\subsection{Convergence in Nets}
-\Page{
-	\Conclude{\TYPE{Net}}{\prod D : \TYPE{DirectedSet} \. \prod X : \TOP \. D \to X }
-	{
-		\TYPE{DirectedSet} \to \TOP \to \SET
-	}
-	\\
-	\DeclareType{Limit}{ \prod X : \TOP \. \prod D : \TYPE{DirectedSet} \. \TYPE{Net}(D,X) \to ?X}
-	\DefineNamedType{L}{Limit}{ x \mapsto  L = \lim_{n \in D} x_n}
-	{
-		x \mapsto
-		\forall U \in \U(L) \.
-		\exists N \in D : 
-		\forall n : \TYPE{NotLessThen}(N) \.
-		x_n \in U
-	}
-	\\
-	\DeclareType{Cluster}{ \prod X : \TOP \. \prod D : \TYPE{DirectedSet} \. \TYPE{Net}(D,X) \to ?X}
-	\DefineNamedType{C}{Cluster}{ x \mapsto  C = \overline{x}}
-	{
-		x \mapsto
-		\forall U \in \U(L) \.
-		\forall N \in D : 
-		\exists n : \TYPE{NotLessThan}(N) \.
-		x_n \in U
-	}
-	\\
-	\DeclareType{Finer}{
-		\prod X : \TOP \. 
-		\prod D,D' : \TYPE{DirectedSet}  \. 
-		?\Big( \TYPE{Net}(X,D) \And \TYPE{Net}(X,D') \Big)
-	}
-	\DefineNamedType{x,y}{Finer}{x \to y}
-	{
-		\exists \phi : D \to D' : 
-		\Big(\forall N' \in D' \. \exists N \in D : \forall n : \TYPE{NotLessThen}(N) \. \NewLine \.
-			\phi(n) : \TYPE{NotLessThan} N'\Big) \And \NewLine \And 
-		\forall n \in D \.  x_n = y_{\phi(n)} 
-	}
-	\\
-	\Theorem{ClusterOfFiner}
-	{
-		\forall X : \TOP \.
-		\forall D,D' : \TYPE{DirectedSet}(X) \.
-		\forall  x \Arrow{D,D'} y \.
-		\forall C = \overline{x} \.
-		C = \overline{y}
-	}
-	\Say{\Big(\phi, [1] \Big)}{ \bd \TYPE{Finer}(x,y) }
-	{
-		\sum \phi : D \to D' : 
-		\Big(\forall N' \in D' \. \exists N \in D : \forall n : \TYPE{NotLessThen}(N) \. \NewLine \.
-			\phi(n) : \TYPE{NotLessThan} N'\Big) \And 
-		\forall n \in D \.  x_n = y_{\phi(n)} 
-	}
-	\Assume{U}{\U(C)}
-	\Say{[2]}{\bd \TYPE{Cluser}(x)(C) }
-	{
-		\forall N \in D \. \exists n : \TYPE{NotLessThen}(N) \. x_n \in U
-	}
-	\Assume{N'}{D'}
-	\Say{\Big(N,[3]\Big)}{[1](N')}{
-		\sum N \in D \.  \Big( 
-		\forall n : \TYPE{NotLessThen}(N) \. 
-		\phi(n) \ge N'
-	}
-	\Say{\Big(n,[4]\Big)}{[2](N)}
-	{
-		\sum n \in D \. n \ge N  \And x_n \in U
-	}
-	\Say{[5]}{[3](n)}{\phi(n) \ge N'}
-	\Say{[6]}{[1](n)}{  y_{\phi(n)} = x_n   }
-	\Conclude{[N.*]}{[4][6]}{  y_{\phi(n)} \in U  }
-	\DeriveConclude{[U.*]}{ I(\forall) }{ 
-		\forall N' \in D' \.
-		\exists n' \ge N' \. y_{n'} \in U
-	}
-	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Cluster}}{C = \overline{y}}
-	\EndProof
-}\Page{
-	\Theorem{LimitOfMeager}
-	{
-		\forall X : \TOP \.
-		\forall D,D' : \TYPE{DirectedSet}(X) \.
-		\forall  x \Arrow{D,D'} y \.
-		\forall L = \lim_{n \in D} x_n \.
-		L = \lim_{n \in D'} y_n
-	}
-	\Say{\Big(\phi, [1] \Big)}{ \bd \TYPE{Finer}(x,y) }
-	{
-		\sum \phi : D \to D' : 
-		\Big(\forall N' \in D' \. \exists N \in D : \forall n : \TYPE{NotLessThen}(N) \. \NewLine \.
-			\phi(n) : \TYPE{NotLessThan} N'\Big) \And 
-		\forall n \in D \.  x_n = y_{\phi(n)} 
-	}
-	\Assume{U}{\U(L)}
-	\Say{\Big( N'. [2]\Big)}{\bd \TYPE{Limit}(y)(L) }
-	{
-		\sum N' \in D' \. \forall n' \ge N' \. y_n \in U   
-	}
-	\Say{\Big(N,[3]\Big)}{[1](N')}{
-		\sum N \in D \.  \Big( 
-		\forall n \ge N  \. 
-		\phi(n) \ge N'
-	}
-	\Assume{n}{D}
-	\Assume{[4]}{n \ge N}
-	\Say{[5]}{[3][4]}{\phi(n) \ge N'}
-	\Say{[6]}{[1](n)}{  y_{\phi(n)} = x_n   }
-	\Say{[7]}{ [2][5]}{  y_{\phi(n)} \in U  }
-	\Conclude{[n.*]}{[6][7]}{ x_n \in U  }
-	\DeriveConclude{[U.*]}{ I(\forall) }{ 
-		\forall n \ge N \. x_n \in U
-	}
-	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Limit}}{L = \lim_{n \in D} x_n}
-	\EndProof
-	\\
-	\Theorem{FromClusterToLimit}
-	{
-		\forall X : \TOP \.
-		\forall D : \TYPE{DirectedSet} \.
-		\forall x : \TYPE{Net}(X, D) \.
-		\forall C = \overline{x} \. \NewLine \.
-		\exists D' : \TYPE{DirectedSet} :
-		\exists y  : \TYPE{Net}(X,D) : 
-		C = \lim_{n \in D} y_n \And y \to x 
-	}
-	\Say{D'}{ \Big\{ (n,U) \in D \times \U_{\ge}(C) : x_n \in U \Big\}}
-	{
-		\TYPE{PartiallyOrderedSet}
-	}
-	\Assume{ (n,U),(m,V)  }{D'}
-	\Say{W}{U \cap V}{ \U(C) }
-	\Say{\Big(k,[1]\Big)}{\bd \TYPE{Cluster}(x)(C)\Big(W,\max(n,m)\Big)}
-	{
-		\sum k \in D \. k \ge \max \And x_k \in W
-	}
-	\Conclude{[\ldots*]}{\ByConstr D' \ByConstr W \THM{IntersectionSubset}(U,V) \ByConstr k[1]}
-	{ (k,W) \ge (n,U) \And  (k,W) \ge (m,V)  }
-	\Derive{[1]}{\bd^{-1} \TYPE{DirectedSet}}
-	{
-		\Big( D' : \TYPE{DirectedSet} \Big)   
-	}
-	\Say{\phi}{ \Lambda (n,U) \in D' \. n  }{D' \to D}
-	\Say{y}{\Lambda (n,U) \in D' \. x_n }{\TYPE{Net}(D',X)}
-	\Say{[2]}{\ByConstr y \ByConstr \phi}{ y \to x}
-	\Assume{U}{\U(C)}
-	\Say{N}{\bd \TYPE{NonEmpty}(D)}{D}
-	\Say{\Big(N',[3]\Big)}{\bd \TYPE{Cluster}(x)(C)(U,N)}
-	{
-		\sum N' \in D \. N' \ge N \And x_{N'} \in U  
-	}
-	\Assume{(n,V)}{D'}
-	\Assume{[4]}{(n,V) \ge (N',U)}
-	\Say{[5]}{\ByConstr D' [4]}{  V \subset U  }
-	\Conclude{[U.*]}{\ByConstr D' \THM{SubsetTransitivity}[5]\ByConstr y_{(n,V)}}
-	{  y_{(n,V)} \in U  }
-	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Limit}}
-	{
-		\lim_{n \in D'} y = C
-	}
-	\EndProof
-}\Page{
-	\Theorem{ClosureByConvergence}
-	{
-		\forall X \in \TOP \.
-		\forall A \subset X \.
-		\forall p \in \overline{A} \.
-		\exists x : \TYPE{Net}(D,X) :
-		p = \lim_{n \in D} x_n \And \forall n \in D \. x_n \in A
-	}
-	\Say{D}{\U(p)}{\TYPE{DirectedSet}}
-	\Assume{U}{D}
-	\Say{[1]}{\THM{ClosureEquivalent}(A)(x)(U)}{ U \cap A \neq \emptyset}
-	\Conclude{x_U}{\THM{NonEmpty}}{ U \cap A  }
-	\Derive{x}{I(\to)}{\TYPE{Net}(D,X)}
-	\Say{[1]}{\ByConstr x \THM{IntersectSubset} \bd \TYPE{Subset}}{ \forall n \in D \. x_n \in A  }
-	\Assume{U}{\U(p)}
-	\Say{N}{U}{D}
-	\Assume{n}{D}
-	\Assume{[2]}{n \ge N}
-	\Say{[3]}{\ByConstr D[2]}{n \subset N}
-	\Conclude{[U.*]}{\ByConstr x \bd \TYPE{Subset} [2] \THM{IntersectSubset} \bd \TYPE{Subset}\ByConstr N}
-	{
-		x_n \in U                                 
-	}
-	\DeriveConclude{[*]}{\bd^{-1} \TYPE{Limit}}{p = \lim_{n \in D} x_n }
-	\EndProof
-	\\
-	\Theorem{ClosedByLimits}
-	{
-		\forall X \in \TOP \.
-		\forall A \subset X \.
-		A : \TYPE{Closed}(X) 
-		\iff \NewLine \iff
-		\forall x : \TYPE{Net}(D,X) \. x(D) \subset A \Imply  \forall L = \lim_{n \in D} x_n \. L \in A
-	}
-	\NoProof
-	\\
-	\Theorem{DerivedSetByConvergence}
-	{
-		\forall X \in \TOP \.
-		\forall A \subset X \.
-		\forall p \in A^\d \.
-		\exists x : \TYPE{Net}(D,X) :
-		p = \lim_{n \in D} x_n \And 
-		\NewLine \And
-		\forall n \in D \. x_n \in A \And x_n \neq p
-	}
-	\NoProof
-	\\
-	\Theorem{ContinuousImageOfLimits}
-	{
-		\forall X,Y \in \TOP \.
-		\forall f : X \Arrow{\TOP} Y \.
-		\forall x : \TYPE{Net}(D,X) \.
-		f\Big( \lim_{n \in D}  x_n\Big) \subset
-		\lim_{n \in D } f(x_n)
-	}
-	\Assume{B}{f(\lim_{n \in D} x_n)}
-	\Say{\Big(A,[1]\Big)}{\bd \FUNC{image}}
-	{
-		\sum A = \lim_{n \in D} x_n\. f(A) = B
-	}
-	\Assume{U}{\U(B)}
-	\Say{V}{f^{-1}(U)}{\U(A)}
-	\Say{\Big(N,[2]\Big)}
-	{
-		\bd \TYPE{Limit}(A)
-	}
-	{
-		\sum N \in D \. \forall n \ge N \. x_n \in V
-	}
-	\Conclude{[U.*]}{\ByConstr V \bd \FUNC{preimage}[2]}
-	{
-		\forall n \ge N \. f(x_n) \in U
-	}
-	\DeriveConclude{[B.*]}{\bd^{-1}\TYPE{Limit}}
-	{
-		B = \lim_{n \in D} f(x_n)
-	}
-	\DeriveConclude{[*]}{I\TYPE{Subset}}
-	{
-		f(\lim_{n \in D} x_n) \subset \lim_{n \in D} f(x_n)
-	}
-	\EndProof
-}
-\Page{
-	\Theorem{HausdorffByLimits}
-	{
-		\forall X : \TOP \.
-		X : \TYPE{T2} \iff \forall x : \TYPE{Net}(D,X \. |\lim_{n \in D} x_n| \le 1
-	}
-	\NoProof
-	\\
-	\Theorem{ClusterAsIntersect}
-	{
-		\forall X : \TOP \.
-		\forall x : \TYPE{Net}(D,X) \. 
-		\overline{x} = \bigcap_{N \in D} \overline{\{ x_n | n \ge N \}}
-	}
-	\NoProof
-}
-\newpage
-\subsection{Filters}
-\Page{
-	\DeclareType{IntersectionClosed}{\prod X : \SET \. ???X}
-	\DefineType{\A}{IntersectionClosed}{\forall A,B \in \A \. A \cap B \in \A}
-	\\
-	\DeclareType{Filter}{\prod X : \SET \. \prod \A : \TYPE{IntersectionClosed}(X) \. ??\A}
-	\DefineType{\F}{Filter}{
-		\F \neq \emptyset \And 
-		\emptyset \not\in \F \And 
-		\forall A,B \in \F \. A \cap B \And
-		\forall A \in \F \. \forall B \in \A \. A \subset B \Imply B \in \F
-	}
-	\\
-	\DeclareType{Ultrafilter}{\prod X : \SET \. \prod \A : \TYPE{IntersectionClosed}(X) \. ?\TYPE{Filter}(\A)}
-	\DefineType{\F}{Ultrafilter}{
-		\forall \F' : \TYPE{Filter}(\A) \.  \F \subset \F'  \Imply \F = \F'
-	}
-	\\
-	\DeclareType{FilterBase}{\prod X : \SET \. \prod \A : \TYPE{IntersectionClosed}(X) \. ??\A}
-	\DefineType{\B}{FilterBase}{
-		\B  \neq \emptyset \And \emptyset \not \in \B \And \forall A,B \in \B \. \exists C \in \B : C \subset A \cap B
-	}
-	\\
-	\DeclareFunc{generateFilter}{ 
-		\prod X : \SET \. 
-		\prod \A : \TYPE{IntersectionClosed}(X) \. 
-		\TYPE{FilterBase}(\A) \to \TYPE{Filter}(\A) 
-	}
-	\DefineNamedFunc{generateFilter}{\B }{\langle \B \rangle}
-	{
-		\{ A \in \A : \exists B \in \B : B \subset A \}
-	}
-	\\
-	\DeclareType{FilterLimit}{\prod X : \TOP \. \TYPE{Filter}\;\T(X) \to ?X}
-	\DefineNamedType{L}{FilterLimit}{\F \mapsto  L = \lim \F}
-	{ \F \mapsto \U(L) \subset \F }
-	\\
-	\DeclareType{FilterBaseLimit}{\prod X : \TOP \. \TYPE{FilterBase}\;\T(X) \to ?X}
-	\DefineNamedType{L}{FilterLimit}{\B \mapsto  L = \lim \B}
-	{ \B \mapsto L = \lim \langle \B \rangle  }
-	\\
-	\DeclareType{FilterCluster}{\prod X : \TOP \. \TYPE{Filter}\;\T(X) \to ?X}
-	\DefineNamedType{C}{FilterCluster}{\F \mapsto  C= \overline{\F}}
-	{ \F \mapsto \forall U \in \F \. C \in \overline{U} }
-	\\
-	\DeclareType{FilterBasCluster}{\prod X : \TOP \. \TYPE{FilterBase}\;\T(X) \to ?X}
-	\DefineNamedType{C}{FilterBaseCluster}{\B \mapsto  C = \overline{\B}}
-	{ \B \mapsto C = \overline{\langle \B \rangle} }
-	\\
-	\DeclareType{Finer}{\prod X : \TOP \. \Big( \TYPE{Filter} \T(X) \times \TYPE{Filter} \T(X)  \Big)}
-	\DefineType{(\F,\F')}{Finer}{\F' \subset \F}
-	\\
-	\DeclareFunc{netAsFilter}
-	{
-		\prod X : \TOP \. \TYPE{Net}(D,X) \to \TYPE{Filter}\; \T(X)
-	}
-	\DefineNamedFunc{netAsFilter}{x}{\F_x}
-	{
-		\Big\{  U \in \T(X) : \exists N \in D : \forall n \ge N \. x_n \in U  \Big\}
-	} 
-	\\
-	\DeclareFunc{filterAsNet}
-	{
-		\prod X : \TOP \. \TYPE{Net}(D,X) \to \TYPE{Filter}\; \T(X)
-	}
-	\DefineNamedFunc{filterAsNet}{\F}{x^\F}
-	{
-		\Lambda (x,U) \in D \. x \in  
-		\quad 
-		\where 
-		\quad
-		D = \Big\{ (x,U) \Big| x \in X , U \in F : x \in U \Big\}
-	} 
-}
-\newpage
-\Page{
-	\Theorem{FilterNetLimitsEquivalence}
-	{
-		\forall X \in \TOP \. 
-		\forall x : \TYPE{Net}(D,X) \.
-		\lim_{n \in D} x_n = \lim \F_x
-	}
-	\NoProof
-	\\
-	\Theorem{NetFilterLimitsEquivalence}
-	{
-		\forall X \in \TOP \. 
-		\forall \F : \TYPE{Filter}\; \T(X) \.
-		\lim_{n \in D} x_n^\F  = \lim \F
-	}
-	\NoProof
-}
-\newpage
-\subsection{Sequential Spaces}
-\Page{
-	\DeclareFunc{limitOfSequences}
-	{
-		\prod X : \TOP \. 
-		(X \to \Nat) \to ?X
-	}
-	\DefineNamedFunc{limitOfSequences}
-	{ x }{ \lim_{n \to \infty} x_n  }{\lim_{n \in \Nat} x_n}
-	\\
-	\DeclareType{SequentialSpace}
-	{
-		?\TOP
-	}
-	\DefineType{X}{SequentialSpace}
-	{
-		\forall A \subset X \.
-		A : \TYPE{Closed} \iff 
-		\forall x : \TYPE{Net}(\Nat, X) \. x_{\Nat} \subset A \Imply \overline{x} \subset A
-	}
-	\\
-	\DeclareType{FrechetSpace}
-	{
-		?\TOP
-	}
-	\DefineType{X}{FrechetSpace}
-	{
-		\forall A \subset X \.
-		\forall p \in \overline{A} \.
-		\exists x : \TYPE{Net}(\Nat,X) : x_\Nat \subset A : p = \lim_{n \to \infty} x_n
-	}
-	\\
-	\Theorem{FirstCountableIsFrechetSpace}
-	{
-		\forall X : \TYPE{FirstCounable} \.
-		X : \TYPE{FrechetSpace} 
-	}
-	\NoProof
-	\\
-	\Theorem{FrechetSpaceIsSequential}
-	{
-		\forall X : \TYPE{FrechetSpace} \.
-		X : \TYPE{SequentialSpace} 
-	}
-	\NoProof
-	\\
-	\Theorem{ContinuousByLimits}
-	{
-		\forall X : \TYPE{SequentialSpace} \.
-		\forall Y \in \TOP \.
-		\forall f : X \to Y  \.
-		f \in C(X,Y)
-		\iff \NewLine \iff
-		\forall x : \Nat \to X \.
-		\lim_{n \to \infty} f(x_n) = f\Big( \lim_{n \to \infty} x_n \Big)
-	}
-	\NoProof
-	\\
-	\Theorem{T1ByLimitNumber}
-	{
-		\forall X \in \TOP \.
-		\forall [0] : \forall x : \Nat \to X \. 
-		\Big|\lim_{n \to \infty} x_n\Big| \le 1 \.
-		X : \TYPE{T1}
-	}
-	\NoProof
-	\\
-	\Theorem{T2ByLimitNumber}
-	{
-		\forall X : \TYPE{FirstCountable} \.
-		X : \TYPE{T2} 
-		\iff
-		\forall x : \Nat \to X \. \Big| \lim_{n\to\infty} x_n \Big| \le 1
-	}
-	\NoProof
-}
-\newpage
-\subsection{Sets with Convergent Sequences}
-\Page{
-	\DeclareType{Subsequence}{\prod X \in \SET \. (\Nat \to X) \to ?(\Nat \to X)}
-	\DefineNamedType{y}{Subsequence}{\Lambda x : \Nat \to X \. y \subset x}
-	{
-		\Lambda x : \Nat \to X \. \exists k : \TYPE{Increasing}(\Nat,\Nat) \. y = x_k
-	}
-	\\
-	\DeclareType{WithConvergent}
-	{
-		?\Big( \sum X \in \SET \. \sum \C : ?(\Nat \to X) \. \C \to X  \Big)
-	}
-	\DefineType{(X,\C,L)}
-	{
-		\TYPE{WithConvergent}
-	}
-	{
-		\Big( \forall x \in X \. 
-		(\Lambda n \in \Nat \. x) \in \C \And  L(\cdot \mapsto x) = x \Big) \And \NewLine \And
-		\Big( 
-			\forall x \in \C \. \forall y \subset x \. y \in \C \And L(x) = L(y)
-		\Big) \And \NewLine \And
-		\Big(
-			\forall x \not \in \C \. \exists y \subset x : \forall z \subset y \. z \not \in \C
-		\Big)
-	}
-	\\
-	\DeclareFunc{closure}{\prod (X,\C,L) : \TYPE{WithConvergent} \. ?X \to ?X}
-	\DefineNamedFunc{closure}{A}{\overline{A}}{\{ x \in X : \exists a \in \C : \im a \subset A \And L(a) = x \}}
-	\\
-	\Theorem{PropertiesOfClosure}
-	{
-		\forall (X,\C,L) : \TYPE{WithConvergent} \.
-		\overline{\emptyset} = \emptyset \And
-		\forall A,B \subset X \. 
-		A \subset \overline{A} \And
-		\overline{A \cup B} = \overline{A} \cup \overline{B}
-	}
-	\NoProof
-	\\
-	\DeclareType{DiagonalProperty}
-	{
-		? \TYPE{WithConvergent}(X)
-	}
-	\DefineType{(X,\C,L)}{DiagonalProperty}
-	{
-		\forall x \in \C \. 
-		\forall y : \Nat \to \C \.
-		\Big( \forall n \in \Nat \. L(y_n) = x_n  \Big) \Imply \NewLine \Imply 
-		\exists i,j : \TYPE{Increasing}(\Nat,\Nat) : 
-		L( y_{i,j} ) = L(x)
-	}
-	\\
-	\Theorem{ClosureAndDiagonalProperty}
-	{
-		\forall (X,\C,L) : \TYPE{WithConvergent} \. 
-		(X,\C,L) : \TYPE{DiagonalProperty} \iff \NewLine \iff
-		\forall A \subset X \. \overline{\overline{A}} = \overline{A}
-	}
-	\NoProof
-	\\
-	\DeclareFunc{topologyOfFrechet}
-	{
-		\prod (X,\C,L) : \TYPE{DiagonalProperty} \.
-		\TYPE{Topology}(X)
-	}
-	\DefineNamedFunc{topologyOfFrechet}{}{F(X,\C,L)}{ \Big\langle \FUNC{closure}(X,\C,L)  \Big\rangle_\TOP}
-	\\
-	\DeclareFunc{withDiagonalPropertyAsTopologicalSpace}{ \TYPE{DiagonalProperty} \to \TOP  }
-	\DefineNamedFunc{withDiagonalPropertyAsTopologicalSpace}{X,\C,L}
-	{ \FUNC{synecdoche} }{ \Big( X, F(X,\C,L) \Big)  }
-	\\
-	\Theorem{FrechetConvergenceConsistancy}
-	{
-		\forall (X,\C,L) : \TYPE{DiagonalProperty} \. 
-		\forall x : \TYPE{Convergent}(\Nat,X) \. \NewLine \.  
-		x \in \C \And \lim_{n \to \infty} x_n = L(x)
-	}
-	\NoProof
-}
-\newpage
-\section{Compacta}
-\subsection{Compact Sets}
+
+\subsection{Concepts}
+\subsubsection{Compact Sets}
 \Page{
 	\DeclareType{Compact}{ \prod X \in \TOP \.  ??X  }
 	\DefineType{K}{Compact}{
@@ -5491,9 +5500,271 @@
 	\DeriveConclude{[2.*]}{\THM{CompampByFiniteIntersection}}{\Big( X : \TYPE{Compact}  \Big)}
 	\DeriveConclude{[*]}{I(\Imply)I(\iff)[1]}{\LOGIC{THIS}}
 	\EndProof
+	\\
+	\Theorem{CompactQuotientMap}
+	{
+		\NewLine ::		
+		\forall X : \Compact \.
+		\forall Y : \TYPE{T2} \.
+		\forall f \in \TOP \And \Surj(X,Y) \.
+		\QM(X,Y,f)
+	}
+	\Explain{Mapping  $f$ must be closed, so it is a quotient map}
+	\EndProof
 }
 \newpage
-\subsection{Category of Compact Spaces}
+\subsubsection{Connected Spaces}
+\Page{
+	\DeclareType{Connected}{?\TOP}
+	\DefineType{X}{Connected}{\TYPE{Clopen}(X) = \{ \emptyset, X \}}
+	\\
+	\Theorem{ConnectedProduct}{\forall I \in \SET \. \forall X : I \to \TYPE{Connected} \. \prod_{i \in I} X_i }
+	\Assume{U}{\TYPE{Clopen}(X)}
+	\Assume{i}{I}
+	\Assume{p}{\prod_{j \in \{i\}^\c} X_j}
+	\Say{[1]}{\THM{ProjectionHomeo}(I,X,i,p)}{ \{p\} \times X_i \cong_{\TOP} X_i  }
+	\Say{[2]}{\bd  }{ U \cap \{p\} \times X_i  : \TYPE{Clopen}(X)  }
+	\Conclude{[i.*]}{  }{ U \cap \{p\} \times X_i  = \emptyset |  U \cap \{p\} \times X_i  = \{p\} \times X_i  }
+	\Derive{[1]}{I(\forall)}{ \forall i \in I \. \exists E \subset  \prod_{j \in \{i\}^\c} X_j \.  U = X_i \times E  }
+	\Conclude{[U.*]}{\LOGIC{Choice}(X)}{ U = \prod_{i \in I} X_i  | U = \emptyset}
+	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Connected}}{\TYPE{Connected}\left(\prod_{i \in I} X_i\right)}
+	\EndProof
+	\\
+	\Theorem{MainTheoremOfConnectedSpace}{\forall X : \TYPE{Connected} \. \forall Y \in \TOP \. \forall f \in C(X,Y) \. \TYPE{Connected}(Y)}
+	\NoProof
+	\\
+	\Theorem{ConnectedAltDef}{\forall X \in \TOP \. \TYPE{Connected}(X) \iff \forall f \in C(X,2) \.  \TYPE{Constant}(X,2,f)}
+	\NoProof
+	\\
+	\DeclareType{ConnectedSubset}{\prod X : \TOP \. ??X}
+	\DefineNamedType{A}{ConnectedSubset}{\TYPE{Connected}(X,A)}{\TYPE{Connected}(A)}
+	\\
+	\Theorem{ConnectedUnion1}{\forall X \in \TOP \. \forall I \in \SET \. \forall A : I \to \TYPE{Connected}(X) \. \NewLine \TYPE{PairwiseIntersecting}(X,I,A) \Imply \TYPE{Connected}\left(X,\bigcup_{i \in I} A_i \right)}
+	\NoProof
+}
+\Page{
+	\Theorem{ConnectedUnion2}{\forall X \in \TOP \. \forall I \in \SET \. \forall A : I \to \TYPE{Connected}(X) \. \NewLine (\exists i \in I \. \forall j \in I \. A_i \cap A_j \neq \emptyset ) \Imply \TYPE{Connected}\left(X,\bigcup_{i \in I} A_i \right)}
+	\NoProof
+	\\
+	\Theorem{IntermidiateValueTheorem}{\forall X : \TYPE{Connected} \.  \forall f  \in C(X) \. a,b \in X \. f(a) < 0 \And f(b) > 0 \Imply \NewLine \Imply \exists c \in X : f(c) = 0 }
+	\NoProof
+	\\
+	\Theorem{ClosureOfConnectedIsConnected}{\forall X \in \TOP \. \forall A : \TYPE{Connected}(X) \. \cl A : \TYPE{Connected} }
+	\Assume{f}{C(\cl A, 2)}
+	\Say{[1]}{\THM{ContinuousRestriction}\Big(f,A,\THM{ClosureIsSuper}(A)\Big)}{f_{|A} \in C(A, 2) }
+	\Say{[2]}{\THM{AltConnectedDef}(A,f)}{ \TYPE{Constant}(X,2,f_{|A})}
+	\Conclude{[3]}{\bd \TYPE{Constant}(X,2,f)\THM{ClosureContinuation}}{\TYPE{Constant}(\cl A,2)}
+	\DeriveConclude{[*]}{\THM{AltConnectedDef}}{\TYPE{Connected}(X,\cl A)}
+	\NoProof
+	\\
+	\DeclareFunc{connectedComponents}{\prod X \in \TOP \. ??X}
+	\DefineNamedFunc{connectedComponents}{}{CC(X)}{\sup \Big\{  A \subset X : \TYPE{Connected}(X)   \Big\}}
+	\\
+	\Theorem{ConnectedComponentsAreClosed}{\forall X \in \TOP \.  \forall A \in CC(X) \. \TYPE{Closed}(X,A)}
+	\NoProof
+	\\
+	\Theorem{ConnectedComponentsDisjointCover}{\forall X \in \TOP \. \bigsqcup_{A \in CC(X)} A = X}
+	\NoProof
+	\\
+	\DeclareFunc{connectedComponentsOf}{\prod X \in \TOP \. x \to  CC(X)}
+	\DefineNamedFunc{connectedComponentsOf}{x}{CC(x)}{\THM{ConnectedComponentsDisjointCover}(X,A}
+}
+\Page{
+	\Theorem{LocallyConnectededConnctedComponentsAreClopen}{\forall X : \TYPE{Locally}\;\TYPE{Connected} \. \forall A \in CC(X) \. \NewLine \. \TYPE{Clopen}(X,A)}
+	\NoProof
+}
+\newpage
+\subsubsection{Path-Connected Spaces}
+\Page{
+	\DeclareFunc{pathSpace}{\prod X \in \TOP \.  X^2 \to ?C\Big([0,1],X\Big)}
+	\DefineNamedFunc{pathSpace}{x,y}
+	{\Omega(x,y)}{\bigg\{ \gamma \in C\Big([0,1], X \Big)  \bigg\}}
+	\\
+	\DeclareFunc{joinPaths}
+	{\prod  X \in \TOP \. \prod x,y,z \in X \. \Omega(x,y)\times \Omega(y,z) \to \Omega(x,z)}
+	\DefineNamedFunc{joinPaths}{\alpha, \beta}{\alpha \beta}
+	{\Lambda t \in [0,1] \. \If t \le \frac{1}{2} \Then \alpha(2t) 
+		\Else  \beta\left(  2t -  1 \right)}
+	\\
+	\DeclareFunc{pathCategory}{\TOP \to \mathsf{SCAT}}
+	\DefineNamedFunc{pathCategory}{X}{ \omega(X,X) }
+	{ \Big(  X, \Omega, \FUNC{joinPaths}, \FUNC{constant}\big([0,1], X\big)   \Big)}            
+	\\
+	\DeclareFunc{reversePath}
+	{\prod X \in \TOP \. \prod x,y \in X \. \uparrow\Omega(x,y) \to \uparrow\Omega(y,x) }
+	\DefineNamedFunc{reversePath}{\gamma}
+	{\gamma^\curvearrowleft}{\Lambda t \in [0,1] \. \gamma(1 - t)}
+	\\
+	\DeclareType{Subpath}{\prod X \in \TOP \. \uparrow \Omega(X,X) \to ?\uparrow\Omega(X,X)}
+	\DefineNamedType{\alpha}{Subpath}
+	{\Lambda \gamma \in \Omega(X,X) \. \alpha \subset \gamma }
+	{
+		\Lambda \gamma \in \Omega(X,X) \. 
+		\exists \phi : \TYPE{Nondeacrizing}\Big([0,1],[0,1]\Big) \.
+		\alpha = \phi\gamma
+	}
+	\\
+	\DeclareFunc{pathMesh}{ \prod X \in \TOP \.\uparrow \Omega(X,X) \to \SET}
+	\DefineNamedFunc{pathMesh}{\gamma}
+	{M(\gamma)  }{  \left\{ (n,\alpha) : \TYPE{Chain}\; \Omega(X,X)  : 
+		\prod^n_{i=1} \alpha_i = \gamma  \right\}}	
+	\\
+	\DeclareType{PathMeshLess}{\prod X \in \TOP \. \prod \gamma \in \uparrow \Omega(X,X) \.
+		?\Big( M(\omega) \times M(\omega) \Big)}
+	\DefineNamedType{(n,\alpha),(m,\beta)}{PathMeshLess}
+	{ (n,\alpha) \le (m,\beta)}{\forall i \in n \. \exists j \in m : \alpha_i \subset \beta_j }
+}\Page{
+	\Theorem{PathMeshIsDirected}{\forall X \in \TOP \. \forall \gamma \in \uparrow \Omega(X,X)
+	\. M(\gamma) : \TYPE{DirectedSet}}
+	\Assume{(n,\alpha),(m,\beta)}{M(\gamma)}
+	\Say{[1]}{\bd M(\gamma)(n,\alpha)}{ \forall i \in n \. \alpha_i \subset \gamma}
+	\Say{[2]}{\bd M(\gamma)(m,\beta)}{ \forall i \in m \. \beta_i \subset \gamma}
+	\Say{\Big(\phi,[3]\Big)}{\bd \TYPE{Subpath}[1]}
+	{ \prod^n_{i=1} \sum_{\phi : [0,1]\uparrow [0,1]} \. \alpha = \phi_i \gamma }  
+	\Say{\Big(\psi,[4]\Big)}{\bd \TYPE{Subpath}[2]}
+	{ \prod^m_{i=1} \sum_{\phi : [0,1]\uparrow [0,1]} \. \beta = \psi_i \gamma }
+	\Say{T}{\phi(n)(0) \cup \phi(n)(1) \cup \psi(m)(0) \cup \psi(m)(1)}{?[0,1]}
+	\Say{(N,t)}{\FUNC{sort}(T)}{\sum_{N=2}^\infty t : \TYPE{Increasing} \And \TYPE{Bijection}(N,T)}
+	\Say{M}{N-1}{\Nat}
+	\Say{\omega}{\Lambda i \in M \. \Lambda \lambda \in [0,1] \. 
+		\gamma\Big((1 - \lambda)t_i + \lambda t_{i+1}\Big) }{M(\omega)}
+	\Conclude{[\ldots.*]}{\ByConstr \omega}
+	{(M,\omega) \le (n,\alpha) \And (M,\omega) \le (m,\beta)}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{DirectedSet}}
+	{\TYPE{DirectedSet}\Big(M(\omega),\TYPE{PathMehLess}(\omega)\Big)}
+	\EndProof
+	\\
+	\DeclareType{PathConnected}{?\TOP}
+	\DefineType{X}{PathConnected}{\forall x,y \in X \. \Omega(x,Y) \neq \emptyset}
+	\\
+	\Theorem{PathConnectedIsConnected}{\forall X : \TYPE{PathConnected} \. \TYPE{Connected}(X)}
+	\NoProof
+	\\
+	\DeclareType{PathConnectedSubset}{\prod X \in \TOP \. ?\TYPE{Connected}(X)}
+	\DefineNamedType{A}{PathConnectedSubset}{A : \TYPE{PathConnected}(X)}
+	{  \Big( A, \FUNC{subsetTopology}(X,A)\Big) : \TYPE{PathConected} } 
+	\\
+	\Theorem{MainPathConnectedSpaceTHM}{ 
+		\forall X : \TYPE{PathConnected} \.
+		\forall Y \in \TOP \. 
+		\forall f \in C(X,Y) \.
+		\TYPE{PathConnected}(Y,f(X))
+	}
+	\NoProof
+	\\
+	\DeclareType{PathConnectedPair}{\prod X \in \TOP \. ?(X \times X) }
+	\DefineType{(x,y)}{PathConnectedPair}{\Omega(x,y) \neq \emptyset}
+	\\
+	\Theorem{PathConnectedPairIsEquivalence}{\forall X \in \TOP \. 
+		\TYPE{PathConnectedPairIsEquivalence}(X)}
+	\NoProof
+}
+\Page{
+	\DeclareFunc{pathConnectedComponents}{\prod X \in \TOP \. ??X}
+	\DefineNamedFunc{pathConnectedComponents}{}{\mathrm{PCC}(X)}
+	{ \FUNC{classes} \; \TYPE{PathConnectedPair}(X)  }
+	\\
+	\Theorem{LocallyPathConnectedProperty}
+	{
+		\forall X : \TYPE{Locally} \TYPE{PathConnected} \.
+		\forall U \in \mathrm{PCC}(X) \. U : \TYPE{Clopen}(X)
+	}
+	\NoProof	
+}
+\newpage
+\subsubsection{Totally Disconected Spaces}
+\Page{
+	\DeclareType{TotallyDisconected}{?\TOP}
+	\DefineType{X}{TotallyDisconnectedSpace}
+	{ \forall A \in \mathrm{CC}(X) \. A : \TYPE{Singleton} }
+	\\
+	\Theorem{TottalyDisconectesByBase}
+	{
+		\forall X \in \TOP \.
+		\langle \TYPE{CLopen}(X) \rangle_{\TOP} = X \iff
+		\TYPE{TotallyBounded}(X)
+	}
+}
+\subsubsection{Sequential Spaces}
+\Page{
+	\DeclareFunc{limitOfSequences}
+	{
+		\prod X : \TOP \. 
+		(X \to \Nat) \to ?X
+	}
+	\DefineNamedFunc{limitOfSequences}
+	{ x }{ \lim_{n \to \infty} x_n  }{\lim_{n \in \Nat} x_n}
+	\\
+	\DeclareType{SequentialSpace}
+	{
+		?\TOP
+	}
+	\DefineType{X}{SequentialSpace}
+	{
+		\forall A \subset X \.
+		A : \TYPE{Closed} \iff 
+		\forall x : \TYPE{Net}(\Nat, X) \. x_{\Nat} \subset A \Imply \overline{x} \subset A
+	}
+	\\
+	\DeclareType{FrechetSpace}
+	{
+		?\TOP
+	}
+	\DefineType{X}{FrechetSpace}
+	{
+		\forall A \subset X \.
+		\forall p \in \overline{A} \.
+		\exists x : \TYPE{Net}(\Nat,X) : x_\Nat \subset A : p = \lim_{n \to \infty} x_n
+	}
+	\\
+	\Theorem{FirstCountableIsFrechetSpace}
+	{
+		\forall X : \TYPE{FirstCounable} \.
+		X : \TYPE{FrechetSpace} 
+	}
+	\NoProof
+	\\
+	\Theorem{FrechetSpaceIsSequential}
+	{
+		\forall X : \TYPE{FrechetSpace} \.
+		X : \TYPE{SequentialSpace} 
+	}
+	\NoProof
+	\\
+	\Theorem{ContinuousByLimits}
+	{
+		\forall X : \TYPE{SequentialSpace} \.
+		\forall Y \in \TOP \.
+		\forall f : X \to Y  \.
+		f \in C(X,Y)
+		\iff \NewLine \iff
+		\forall x : \Nat \to X \.
+		\lim_{n \to \infty} f(x_n) = f\Big( \lim_{n \to \infty} x_n \Big)
+	}
+	\NoProof
+	\\
+	\Theorem{T1ByLimitNumber}
+	{
+		\forall X \in \TOP \.
+		\forall [0] : \forall x : \Nat \to X \. 
+		\Big|\lim_{n \to \infty} x_n\Big| \le 1 \.
+		X : \TYPE{T1}
+	}
+	\NoProof
+	\\
+	\Theorem{T2ByLimitNumber}
+	{
+		\forall X : \TYPE{FirstCountable} \.
+		X : \TYPE{T2} 
+		\iff
+		\forall x : \Nat \to X \. \Big| \lim_{n\to\infty} x_n \Big| \le 1
+	}
+	\NoProof
+}
+\newpage
+\section{Compacta}
+\subsection{Compact Spaces and their Genera}
+\subsubsection{Category of Compact Spaces}
 \Page{
 	\DeclareFunc{CategoyOfCompacta}{\CAT}
 	\DefineNamedFunc{CategoryOfCompacta}{}{\HC}{ \Big( \TYPE{Compact} \And \TYPE{T2}, C, \circ, \id \Big)  } 
@@ -5643,7 +5914,7 @@
 	\NoProof
 }
 \newpage
-\subsection{Locally Compact Spaces}
+\subsubsection{Locally Compact Spaces}
 \Page{
 	\DeclareType{LocallyCompact}{?\TYPE{TOP}}
 	\DefineType{X}{LocallyCompact}{\forall x \in X \. \exists U \in \U(x) : \overline{U} : \TYPE{Compact}(X) }
@@ -5725,7 +5996,7 @@
 	\NoProof
 }
 \newpage
-\subsection{Compactly Generated Spaces}
+\subsubsection{Compactly Generated Spaces}
 \Page{
 	\DeclareType{CompactlyGenerated}{?\TYPE{T2}}
 	\DefineType{X}{CompactlyGenerated}{\exists Q : \TYPE{LocallyCompact} : \exists \pi : \TYPE{QuotientMapping}(\TOP,Q,X)}
@@ -5841,7 +6112,7 @@
 	\DefineNamedFunc{kaonizationFunctor}{}{k }{ (\FUNC{spaceKaonization}, \id) } 
 } 
 \newpage
-\subsection{Compact-Open Topology}
+\subsubsection{Compact-Open Topology}
 \Page{
 	\DeclareFunc{DomainImageSet}{ \prod X,Y \in \TOP \. ?X \to ?Y \to ?C(X,Y)}
 	\DefineNamedFunc{DomainImageSet}{A,B}{M(A,B)}{\Big\{f \in C(X,Y) : f(A) \subset B \Big\}}
@@ -5994,6 +6265,7 @@
 }
 \newpage
 \subsection{Compactifications}
+\subsubsection{Subject}
 \Page{
 	\DeclareType{Compactification}
 	{
@@ -6141,7 +6413,7 @@
 	\NoProof
 }
 \newpage
-\subsection{Stone-\v{C}ech Functor}
+\subsubsection{Stone-\v{C}ech Functor}
 \Page{
 	\DeclareType{StoneCechSpace}{\prod X \in \TOP \. \sum \Omega : \HC \.  X \Arrow{\TOP} \Omega }
 	\DefineType{(\Omega,\varphi)}{StoneCechSpace}
@@ -6270,7 +6542,7 @@
 	\NoProof
 }
 \newpage
-\subsection{Wallman Extension}
+\subsubsection{Wallman Extension}
 \Page{  
 	\Theorem{FilterDisownesEmptySet}
 	{
@@ -6368,7 +6640,7 @@
            \NoProof
 }
 \newpage
-\subsection{Perfect Mappings}
+\subsubsection{Perfect Mappings}
 \Page{
 	\DeclareType{Perfect}{\prod X : \TYPE{T2} \. \prod Y \in \TOP \. ?\TYPE{Closed}(X,Y) }
 	\DefineType{f}{Perfect}{\forall y \in Y \. f^{-1}(y) : \TYPE{Compact}}
@@ -6463,7 +6735,7 @@
 	\NoProof
 }
 \newpage
-\subsection{Lindel\"of Spaces}
+\subsubsection{Lindel\"of Spaces}
 \Page{   
 	\DeclareType{Lindelof}
 	{
@@ -6477,7 +6749,7 @@
 	}
 }
 \newpage
-\subsection{Abstract Baire Theory}
+\subsubsection{Abstract Baire Theory}
 \Page{
 	\DeclareType{CechCompleteSpace}{?\TYPE{Tychonoff}}
 	\DefineType{X}{CechCompleteSpace}{\forall (K,\gamma) \in \mathcal{K}(X) \. \rem \gamma : F_\sigma(K)}
@@ -6492,19 +6764,20 @@
 	\NoProof
 }
 \newpage
-\subsection{Sequentially Compact Spaces }
+\subsection{Further Generalizations}
+\subsubsection{Sequentially Compact Spaces }
 \Page{
 	\DeclareType{SequentiallyCompact}{?\TOP}
 	\DefineType{X}{SequentiallyCompact}{\forall x : \Nat \to X \. \exists y \subset x : y : \TYPE{Convergent}(X)}
 }
 \newpage
-\subsection{Countably Compact Spaces}
+\subsubsection{Countably Compact Spaces}
 \Page{
 	\DeclareType{CountablyCompact}{?\TOP}
 	\DefineType{X}{CountablyCompact}{\forall \mathcal{O} : \TYPE{OpenCover}(X) \. |\mathcal{O}| \le \aleph_0 \Imply \exists \mathcal{O}' \subset \mathcal{O} : |\mathcal{O}| < \infty \And \mathcal{O} : \TYPE{OpenCover}(X) }
 }
 \newpage
-\subsection{Pseudocompact Spaces}
+\subsubsection{Pseudocompact Spaces}
 \Page{
 	\DeclareFunc{boundedFunctions}{\TOP \to \SET}
 	\DefineNamedFunc{boundedFunctions}{X}{C_b(X)}{\Big\{ f \in C(X) : \exists a,b \in \Reals : f(X) \subset [a,b] \Big\}}
@@ -6513,185 +6786,11 @@
 	\DefineType{X}{Pseudocompact}{ C(X)  = C_b(X)}
 }
 \newpage
-\subsection{Realcompact Spaces}
+\subsubsection{Realcompact Spaces}
 \Page{
 	\DeclareType{Realcompact}{?\TOP}
 	\DefineType{X}{Realcompact}{\exists \kappa \in \mathsf{CARD} : \exists A : \TYPE{Closed}(\Reals^\kappa) : \exists \varphi : \TYPE{HomeomorphicEmbedding}(X,A)}
 }
 \newpage
-\section{Connectednes}
-\subsection{Connected Spaces}
-\Page{
-	\DeclareType{Connected}{?\TOP}
-	\DefineType{X}{Connected}{\TYPE{Clopen}(X) = \{ \emptyset, X \}}
-	\\
-	\Theorem{ConnectedProduct}{\forall I \in \SET \. \forall X : I \to \TYPE{Connected} \. \prod_{i \in I} X_i }
-	\Assume{U}{\TYPE{Clopen}(X)}
-	\Assume{i}{I}
-	\Assume{p}{\prod_{j \in \{i\}^\c} X_j}
-	\Say{[1]}{\THM{ProjectionHomeo}(I,X,i,p)}{ \{p\} \times X_i \cong_{\TOP} X_i  }
-	\Say{[2]}{\bd  }{ U \cap \{p\} \times X_i  : \TYPE{Clopen}(X)  }
-	\Conclude{[i.*]}{  }{ U \cap \{p\} \times X_i  = \emptyset |  U \cap \{p\} \times X_i  = \{p\} \times X_i  }
-	\Derive{[1]}{I(\forall)}{ \forall i \in I \. \exists E \subset  \prod_{j \in \{i\}^\c} X_j \.  U = X_i \times E  }
-	\Conclude{[U.*]}{\LOGIC{Choice}(X)}{ U = \prod_{i \in I} X_i  | U = \emptyset}
-	\DeriveConclude{[*]}{\bd^{-1}\TYPE{Connected}}{\TYPE{Connected}\left(\prod_{i \in I} X_i\right)}
-	\EndProof
-	\\
-	\Theorem{MainTheoremOfConnectedSpace}{\forall X : \TYPE{Connected} \. \forall Y \in \TOP \. \forall f \in C(X,Y) \. \TYPE{Connected}(Y)}
-	\NoProof
-	\\
-	\Theorem{ConnectedAltDef}{\forall X \in \TOP \. \TYPE{Connected}(X) \iff \forall f \in C(X,2) \.  \TYPE{Constant}(X,2,f)}
-	\NoProof
-	\\
-	\DeclareType{ConnectedSubset}{\prod X : \TOP \. ??X}
-	\DefineNamedType{A}{ConnectedSubset}{\TYPE{Connected}(X,A)}{\TYPE{Connected}(A)}
-	\\
-	\Theorem{ConnectedUnion1}{\forall X \in \TOP \. \forall I \in \SET \. \forall A : I \to \TYPE{Connected}(X) \. \NewLine \TYPE{PairwiseIntersecting}(X,I,A) \Imply \TYPE{Connected}\left(X,\bigcup_{i \in I} A_i \right)}
-	\NoProof
-}
-\Page{
-	\Theorem{ConnectedUnion2}{\forall X \in \TOP \. \forall I \in \SET \. \forall A : I \to \TYPE{Connected}(X) \. \NewLine (\exists i \in I \. \forall j \in I \. A_i \cap A_j \neq \emptyset ) \Imply \TYPE{Connected}\left(X,\bigcup_{i \in I} A_i \right)}
-	\NoProof
-	\\
-	\Theorem{IntermidiateValueTheorem}{\forall X : \TYPE{Connected} \.  \forall f  \in C(X) \. a,b \in X \. f(a) < 0 \And f(b) > 0 \Imply \NewLine \Imply \exists c \in X : f(c) = 0 }
-	\NoProof
-	\\
-	\Theorem{ClosureOfConnectedIsConnected}{\forall X \in \TOP \. \forall A : \TYPE{Connected}(X) \. \cl A : \TYPE{Connected} }
-	\Assume{f}{C(\cl A, 2)}
-	\Say{[1]}{\THM{ContinuousRestriction}\Big(f,A,\THM{ClosureIsSuper}(A)\Big)}{f_{|A} \in C(A, 2) }
-	\Say{[2]}{\THM{AltConnectedDef}(A,f)}{ \TYPE{Constant}(X,2,f_{|A})}
-	\Conclude{[3]}{\bd \TYPE{Constant}(X,2,f)\THM{ClosureContinuation}}{\TYPE{Constant}(\cl A,2)}
-	\DeriveConclude{[*]}{\THM{AltConnectedDef}}{\TYPE{Connected}(X,\cl A)}
-	\NoProof
-	\\
-	\DeclareFunc{connectedComponents}{\prod X \in \TOP \. ??X}
-	\DefineNamedFunc{connectedComponents}{}{CC(X)}{\sup \Big\{  A \subset X : \TYPE{Connected}(X)   \Big\}}
-	\\
-	\Theorem{ConnectedComponentsAreClosed}{\forall X \in \TOP \.  \forall A \in CC(X) \. \TYPE{Closed}(X,A)}
-	\NoProof
-	\\
-	\Theorem{ConnectedComponentsDisjointCover}{\forall X \in \TOP \. \bigsqcup_{A \in CC(X)} A = X}
-	\NoProof
-	\\
-	\DeclareFunc{connectedComponentsOf}{\prod X \in \TOP \. x \to  CC(X)}
-	\DefineNamedFunc{connectedComponentsOf}{x}{CC(x)}{\THM{ConnectedComponentsDisjointCover}(X,A}
-}
-\Page{
-	\Theorem{LocallyConnectededConnctedComponentsAreClopen}{\forall X : \TYPE{Locally}\;\TYPE{Connected} \. \forall A \in CC(X) \. \NewLine \. \TYPE{Clopen}(X,A)}
-	\NoProof
-}
-\newpage
-\subsection{Path-Connected Spaces}
-\Page{
-	\DeclareFunc{pathSpace}{\prod X \in \TOP \.  X^2 \to ?C\Big([0,1],X\Big)}
-	\DefineNamedFunc{pathSpace}{x,y}
-	{\Omega(x,y)}{\bigg\{ \gamma \in C\Big([0,1], X \Big)  \bigg\}}
-	\\
-	\DeclareFunc{joinPaths}
-	{\prod  X \in \TOP \. \prod x,y,z \in X \. \Omega(x,y)\times \Omega(y,z) \to \Omega(x,z)}
-	\DefineNamedFunc{joinPaths}{\alpha, \beta}{\alpha \beta}
-	{\Lambda t \in [0,1] \. \If t \le \frac{1}{2} \Then \alpha(2t) 
-		\Else  \beta\left(  2t -  1 \right)}
-	\\
-	\DeclareFunc{pathCategory}{\TOP \to \mathsf{SCAT}}
-	\DefineNamedFunc{pathCategory}{X}{ \omega(X,X) }
-	{ \Big(  X, \Omega, \FUNC{joinPaths}, \FUNC{constant}\big([0,1], X\big)   \Big)}            
-	\\
-	\DeclareFunc{reversePath}
-	{\prod X \in \TOP \. \prod x,y \in X \. \uparrow\Omega(x,y) \to \uparrow\Omega(y,x) }
-	\DefineNamedFunc{reversePath}{\gamma}
-	{\gamma^\curvearrowleft}{\Lambda t \in [0,1] \. \gamma(1 - t)}
-	\\
-	\DeclareType{Subpath}{\prod X \in \TOP \. \uparrow \Omega(X,X) \to ?\uparrow\Omega(X,X)}
-	\DefineNamedType{\alpha}{Subpath}
-	{\Lambda \gamma \in \Omega(X,X) \. \alpha \subset \gamma }
-	{
-		\Lambda \gamma \in \Omega(X,X) \. 
-		\exists \phi : \TYPE{Nondeacrizing}\Big([0,1],[0,1]\Big) \.
-		\alpha = \phi\gamma
-	}
-	\\
-	\DeclareFunc{pathMesh}{ \prod X \in \TOP \.\uparrow \Omega(X,X) \to \SET}
-	\DefineNamedFunc{pathMesh}{\gamma}
-	{M(\gamma)  }{  \left\{ (n,\alpha) : \TYPE{Chain}\; \Omega(X,X)  : 
-		\prod^n_{i=1} \alpha_i = \gamma  \right\}}	
-	\\
-	\DeclareType{PathMeshLess}{\prod X \in \TOP \. \prod \gamma \in \uparrow \Omega(X,X) \.
-		?\Big( M(\omega) \times M(\omega) \Big)}
-	\DefineNamedType{(n,\alpha),(m,\beta)}{PathMeshLess}
-	{ (n,\alpha) \le (m,\beta)}{\forall i \in n \. \exists j \in m : \alpha_i \subset \beta_j }
-}\Page{
-	\Theorem{PathMeshIsDirected}{\forall X \in \TOP \. \forall \gamma \in \uparrow \Omega(X,X)
-	\. M(\gamma) : \TYPE{DirectedSet}}
-	\Assume{(n,\alpha),(m,\beta)}{M(\gamma)}
-	\Say{[1]}{\bd M(\gamma)(n,\alpha)}{ \forall i \in n \. \alpha_i \subset \gamma}
-	\Say{[2]}{\bd M(\gamma)(m,\beta)}{ \forall i \in m \. \beta_i \subset \gamma}
-	\Say{\Big(\phi,[3]\Big)}{\bd \TYPE{Subpath}[1]}
-	{ \prod^n_{i=1} \sum_{\phi : [0,1]\uparrow [0,1]} \. \alpha = \phi_i \gamma }  
-	\Say{\Big(\psi,[4]\Big)}{\bd \TYPE{Subpath}[2]}
-	{ \prod^m_{i=1} \sum_{\phi : [0,1]\uparrow [0,1]} \. \beta = \psi_i \gamma }
-	\Say{T}{\phi(n)(0) \cup \phi(n)(1) \cup \psi(m)(0) \cup \psi(m)(1)}{?[0,1]}
-	\Say{(N,t)}{\FUNC{sort}(T)}{\sum_{N=2}^\infty t : \TYPE{Increasing} \And \TYPE{Bijection}(N,T)}
-	\Say{M}{N-1}{\Nat}
-	\Say{\omega}{\Lambda i \in M \. \Lambda \lambda \in [0,1] \. 
-		\gamma\Big((1 - \lambda)t_i + \lambda t_{i+1}\Big) }{M(\omega)}
-	\Conclude{[\ldots.*]}{\ByConstr \omega}
-	{(M,\omega) \le (n,\alpha) \And (M,\omega) \le (m,\beta)}
-	\DeriveConclude{[*]}{\bd^{-1} \TYPE{DirectedSet}}
-	{\TYPE{DirectedSet}\Big(M(\omega),\TYPE{PathMehLess}(\omega)\Big)}
-	\EndProof
-	\\
-	\DeclareType{PathConnected}{?\TOP}
-	\DefineType{X}{PathConnected}{\forall x,y \in X \. \Omega(x,Y) \neq \emptyset}
-	\\
-	\Theorem{PathConnectedIsConnected}{\forall X : \TYPE{PathConnected} \. \TYPE{Connected}(X)}
-	\NoProof
-	\\
-	\DeclareType{PathConnectedSubset}{\prod X \in \TOP \. ?\TYPE{Connected}(X)}
-	\DefineNamedType{A}{PathConnectedSubset}{A : \TYPE{PathConnected}(X)}
-	{  \Big( A, \FUNC{subsetTopology}(X,A)\Big) : \TYPE{PathConected} } 
-	\\
-	\Theorem{MainPathConnectedSpaceTHM}{ 
-		\forall X : \TYPE{PathConnected} \.
-		\forall Y \in \TOP \. 
-		\forall f \in C(X,Y) \.
-		\TYPE{PathConnected}(Y,f(X))
-	}
-	\NoProof
-	\\
-	\DeclareType{PathConnectedPair}{\prod X \in \TOP \. ?(X \times X) }
-	\DefineType{(x,y)}{PathConnectedPair}{\Omega(x,y) \neq \emptyset}
-	\\
-	\Theorem{PathConnectedPairIsEquivalence}{\forall X \in \TOP \. 
-		\TYPE{PathConnectedPairIsEquivalence}(X)}
-	\NoProof
-}
-\Page{
-	\DeclareFunc{pathConnectedComponents}{\prod X \in \TOP \. ??X}
-	\DefineNamedFunc{pathConnectedComponents}{}{\mathrm{PCC}(X)}
-	{ \FUNC{classes} \; \TYPE{PathConnectedPair}(X)  }
-	\\
-	\Theorem{LocallyPathConnectedProperty}
-	{
-		\forall X : \TYPE{Locally} \TYPE{PathConnected} \.
-		\forall U \in \mathrm{PCC}(X) \. U : \TYPE{Clopen}(X)
-	}
-	\NoProof	
-}
-\newpage
-\subsection{Totally Disconected Spaces}
-\Page{
-	\DeclareType{TotallyDisconected}{?\TOP}
-	\DefineType{X}{TotallyDisconnectedSpace}
-	{ \forall A \in \mathrm{CC}(X) \. A : \TYPE{Singleton} }
-	\\
-	\Theorem{TottalyDisconectesByBase}
-	{
-		\forall X \in \TOP \.
-		\langle \TYPE{CLopen}(X) \rangle_{\TOP} = X \iff
-		\TYPE{TotallyBounded}(X)
-	}
-}
-\newpage
-\section{Dimension}
+\section{Cardinal Functions}
 \end{document}

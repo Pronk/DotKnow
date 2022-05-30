@@ -40,6 +40,9 @@
 \newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
 \newcommand{ \bd }{ \ByDef }
 \newcommand{\NoProof}{ & \ldots \\ \EndProof}
+\newcommand{\Explain}[1]{& \text{#1.} \\}
+\newcommand{\ExplainFurther}[1]{& \text{#1} \\}
+\newcommand{\Exclaim}[1]{& \text{#1!} \\}
 %LOGIC
 \renewcommand{\And}{\; \& \;}
 \newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
@@ -152,6 +155,8 @@
 \newcommand{\X}{\mathcal{X}}
 %\newcommand{\d}{\mathrm{d}}
 %Metic Topology
+%TYPE
+\newcommand{\Mable}{\TYPE{Metrizable}}
 %FUNC
 \DeclareMathOperator{\diam}{diam}
 %CATS
@@ -465,7 +470,7 @@
 	}
 	\NoProof
 	\\
-	\Theorem{ConvergenceByDenceSubset}
+	\Theorem{ConvergenceByDenseSubset}
 	{
 		\forall X \in \SMS \. \forall A : \TYPE{Dense}(X) \. \forall L \in X \.  \forall D : \TYPE{DirectedSet} \. 
 		\forall x  : \TYPE{Net}(D,X) \. \NewLine \. \lim_{n \in D} x_n = L \iff \forall a \in A \. \lim_{n \in D} d(x_n,a) = d(L,a)
@@ -1503,6 +1508,7 @@
 }
 \newpage
 \section{Metrization}
+\subsection{Metrization Theorems}
 \Page{
 	\DeclareType{Metrizable}{?\TOP}
 	\DefineType{X}{Metrizable}{\exists d : \TYPE{Metric}(X) \. (X,d) \cong_{\TOP} X}
@@ -1639,240 +1645,22 @@
 	\NoProof
 }
 \newpage
-\section{Uniform Spaces}
-\subsection{Uniform Topology}
+\subsection{Metrization Preserving Operations}
 \Page{
-	\DeclareType{Connector}{\prod_{ X \in \SET} ?(X \to 2^X)}
-	\DefineType{U}{Connector}{\forall x \in X \. x \in U_x }
-	\\
-	\DeclareFunc{connectorSet}{\prod_{X \in \SET}  \TYPE{Connector}(X) \to ?(X \times X)}
-	\DefineNamedFunc{connectorSet}{U}{U}{\{  (x,y)  | x \in X, y \in U(x)  \}}
-	\\
-	\DeclareFunc{swap}{\prod_{X \in \SET}   ?(X \times X) \to ?(X \times X)}
-	\DefineNamedFunc{swap}{U}{U^{-1}}{\{  (y,x)  | (x,y) \in U  \}}
-	\\
-	\DeclareFunc{connectorComposition}{\prod X \in \SET \. \TYPE{Connector}(X) \times \TYPE{Connector}(X)}
-	\DefineNamedFunc{connectorComposition}{A,B}{AB = B \circ A}{\Lambda x \in X \. \bigcup_{a \in A(x)} B(a)}
-	\\
-	\DeclareType{Uniformity}{\prod X \in \SET \. \TYPE{Filter}(X \times X)}
-	\DefineType{\U}{Uniformity}{ \forall U \in \U \. \Delta \; X \subset U \And U^{-1} \in \U \And \exists V \in \U : VV \subset U }
-	\\
-	\Conclude{\TYPE{UniformSpace}}{\sum_{ X \in \SET}   \TYPE{Unifomity}(X) }{\Type}
-	\\
-	\DeclareType{BaseOfUniformity}{\prod X \in \SET \. \TYPE{FilterBase}(X \times X)}
-	\DefineType{\B}{BaseOfUniformity}{ \forall U \in \B \. \Delta \; X \subset U \And \exists V \in \U : U^{-1} \subset V \And \exists V \in \U :VV \subset U }
-	\\
-	\Theorem{UniformityGeneration}{\forall X \in \SET \. \forall \B : \TYPE{BaseOfUniformity}(X) \. \TYPE{Uniformity}(X,\F\;\B)}
-	\NoProof
-	\\
-	\DeclareType{ConnectorOfSpace}{\prod (X,\U) : \TYPE{UniformSpace} \. ?(X \to 2^X)}
-	\DefineNamedType{U}{ConnectorOfSpace}{\TYPE{Connector}\Big((X,\U),U\Big)}{U \in \U}
-	\\
-	\DeclareFunc{metricUniformity}{\prod_{X \in \SET} (\TYPE{Metric} \to \TYPE{Uniformity})(X)}
-	\DefineNamedFunc{metricUniformity}{d}{\U_d}{\Big\{  \big\{  (x,y) \in X \times X :  d(x,y) < r  \big\} \Big| r \in \Reals_{++} \Big\}}
-	\\
-	\DeclareFunc{metricAsUniform}{\SMS \to \TYPE{UniformSpace}}
-	\DefineNamedFunc{metricAsUniform}{X,d}{(X,d)}{ (X,\U_d)}
-}\Page{
-	\DeclareFunc{uniformTopology}{\prod_{X \in \SET}(\TYPE{Uniformity} \to \TYPE{Topology})(X)}
-	\DefineNamedFunc{uniformTopology}{\U}{\T_\U}{\Big\langle \big\{  U(x) \big| U : \TYPE{SpaceConnector}(X,\U)    \big\} \big\rangle_{\TOP}}
-	\\
-	\DeclareFunc{uniformAsTopology}{\SMS \to \TYPE{UniformSpace}}
-	\DefineNamedFunc{uniformAsTopology}{X,\U}{(X,\U)}{ (X,\T_\U)}
-	\\
-	\DeclareFunc{uniformity}{\prod (X,\U) : \TYPE{UniformSpace} \. \TYPE{Uniformity}(X)}
-	\DefineNamedFunc{uniformity}{}{\U_{(X,\U)}}{\U}
-	\\
-	\DeclareType{Symmetric}{\prod_{X \in \SET} ??(X \times X)}
-	\DefineNamedType{A}{Symmetric}{A = A^{-1}}
-	\\
-	\DeclareType{UniformityGeneratingBase}{\prod_{X \in \SET} \TYPE{Uniformity}(X) \to ?\TYPE{BaseOfUniformity}(X)}
-	\DefineNamedType{\B}{UniformityGeneratingBase}{\Lambda \U : \TYPE{Uniformity}(X) \. \F \B = \U}
-	\\
-	\Theorem{SymmetricConnectorsBase}{\forall X : \TYPE{UniformSpace} \. \exists \B : \TYPE{UniformityGeneratingBase}(X) : \NewLine : \forall U \in \B \. \TYPE{Symmetric}(X,U)}
-	\NoProof
-	\\
-	\DeclareFunc{uniformityElementAsConnector}{\prod X : \TYPE{UniformSpace} \. \U_X \to \TYPE{Connector}(X)}
-	\DefineNamedFunc{uniformityElementAsConnector}{U}{U}{\Lambda x \in X \.   \{  y \in X : (x,y) \in U \}}
-	\\
-	\Theorem{UniformSpaceClosure}{\forall X : \TYPE{UniformSpace} \. \forall A \subset X \. \overline{A} = \bigcap_{U \in \U_X} \bigcup_{a \in A} U(a)}
-	\NoProof
-}\Page{
-	\Theorem{UniformSpaceIsRegular}{\forall X : \TYPE{UniformSpace} \. \TYPE{Regular}(X)}
-	\Assume{A}{\TYPE{Closed}(X)}
-	\Assume{x}{X}
-	\Assume{[1]}{x \not \in X}
-	\Say{\Big( U, [2] \Big)}{\bd \FUNC{closure}(X)\THM{UniformSpaceClosure}(X,A) \bd \TYPE{intersection}(X)}{\sum U \in \U \. x \not \in \bigcup_{a \in A} U(a)}
-	\Say{\Big(V,[3]\Big)}{\bd \TYPE{Uniformity}(\U)(U)}{ \sum V \in \U \. V \circ V \subset U \And }
-	\Say{[5]}{\THM{UniformSpaceClosure}\left(X, \bigcup_{a \in A} V(a) \right)}{   \overline{\bigcup_{a \in A} V(a)} = \bigcap_{U \in \U} \bigcup_{v \in \bigcup_{a \in A} V(a)}  U(v) }
-	\Assume{[6]}{x \in  \overline{\bigcup_{a \in A} V(a)} }
-	\Say{[7]}{\bd \TYPE{Intersection}[6][5]}{  x \in \bigcup_{v \in \bigcup_{a \in A} V(a)}  V(v)   }
-	\Say{\Big(v,[8]\Big)}{\bd \TYPE{Connector}[7]}{ \sum v \in \bigcup_{a \in A} V(a) \. (v,x) \in  V}
-	\Say{\Big(a,[9])}{\bd \TYPE{Connector}[8]}{\sum a \in A \. (a,v) \in V}
-	\Say{[10]}{[3,8,9]}{(a,x) \in U}
-	\Say{[11]}{\bd \TYPE{Union}(U)\bd \TYPE{Connector}[10]}{  x \in \bigcup_{a \in A} U(a)}
-	\Conclude{[6.*]}{[11][2]}{\bot}
-	\Derive{[6]}{\bd \TOP(X) \bd \FUNC{uniformAsTopological}[2]}{ x \not \in \overline{\bigcup_{a \in A} V(a)}}                  
-	\Conclude{[A.*]}{\bd \FUNC{uniformAsTopological}(X)}{\bigcup_{a \in A} V(a) \in \T(X)}
-	\DeriveConclude{[*]}{\bd^{-1} \TYPE{Regular}}{}
-	\EndProof
-	\\
-	\Theorem{UniformSpaceT3Criterion}{\forall X : \TYPE{UniformSpace} \. \bigcap \U_X = \Delta \; X \iff \TYPE{T3}(X) }
-	\NoProof
-}\Page{
-	\Theorem{ClosedConnectorTHM}{\forall X : \TYPE{UniformSpace} \.  \forall U \in \U_X \.  VUV =  \bigcap \Big\{ VUV \Big| V : \TYPE{Symmetric}(\U)    \Big\} }
-	\Assume{(x,y)}{\TYPE{In}\;\overline{U}^\c}
-	\Say{\Big( O, [1] \Big)}{\THM{ClosureAltDef}(U)(x,y)}{O \in \U(x,y) \. O \cap U = \emptyset}
-	\Say{\Big(V,[2] \Big)}{\THM{UniformSymmetricBase}(X)\THM{ProductTopologyByBase}}{\sum V : \TYPE{Symmetric}(\U_X) \.  V(x) \times V(y)  \subset  O }
-	\Assume{[3]}{(x,y) \in   VUV }
-	\Say{\Big(a,b,[4] \Big)}{\bd \FUNC{connectorComposition}(V,U,V)[3]}{\sum (a,b) \in U \. (x,a),(b,y) \in V }
-	\Say{[5]}{\bd \TYPE{Symmetric}(V)[4][2]}{(a,b) \in U \cap O}
-	\Conclude{[3.*]}{[6][1]}{\bot}
-	\DeriveConclude{[1.*]}{E(\bot)}{(x,y) \in (VUV)^\c}
-	\Derive{[1]}{\bd^{-1}\TYPE{Subset}}{ \overline{U}^\c \subset \bigcap_{V} (VUV)^\c }
-	\Say{[2]}{\THM{ComplementSubset}}{ \bigcap_{V} VUV \subset \overline{U} }
-	\Assume{(x,y)}{\TYPE{In}(\overline{U})}
-	\Say{[3]}{\THM{ClosureAltDef}\Big(U,(x,y)\Big)}{\forall V \in \U(x,y) \.  V \cap U \neq \emptyset}
-	\Assume{V}{\TYPE{Symmetric}(\U_X)}
-	\Say{[4]}{\bd \FUNC{productTopology}(X,X)[1](V(x) \times V(y))}{V(x) \times V(y) \cap U \neq \emptyset}
-	\Say{\Big( (a,b), [5]  \Big)}{\bd \TYPE{Connector}[4]}{\sum (a,b) \in U \. (x,a) \in V(x) \And (y,b) \in V(y) }
-	\Conclude{[V.*]}{[1]\bd \FUNC{connectorComposition}\bd \TYPE{Symmetric}(\U_X)}{(x,y) \in VUV}
-	\DeriveConclude{[(x,y).*]}{\bd^{-1} \TYPE{Intersection}}{(x,y) \in \bigcap_V VUV}
-	\DeriveConclude{[*]}{\bd^{-1} \TYPE{SetEq}}{\overline{U} =\bigcap_V VUV}
-	\EndProof
-	\\
-	\Theorem{ClosedConnectorBase}{\forall X : \TYPE{UniformSpace} \. \exists \B : \TYPE{BaseOfUniformity}(X) : \forall V \in \B \. \NewLine \. \Big(\TYPE{Symmetric}(X) \And \TYPE{Closed}(X \times X)\Big)(V)  }
-	\NoProof
-}
-\newpage
-\subsection{Uniform Category} 
-\Page{
-	\DeclareType{UniformContinuity}{\prod X,Y \in \TOP \.  ?(X \Arrow{\TOP} Y)}
-	\DefineNamedType{f}{UniformContinuity}{f \in \mathrm{UC}(X)}{\forall V \in \U_Y \. \exists U \in \U_X :  (f\times f)(U) \subset V}
-	\\
-	\DeclareFunc{uniformCategory}{\CAT}
-	\DefineNamedFunc{uniformCategory}{}{\UNI}{\Big( \TYPE{UniformSpace} , \mathrm{UC}, \circ, \id  \Big)}
-	\\
-	\DeclareFunc{uniformSeparatedCategory}{\CAT}
-	\DefineNamedFunc{uniformCategory}{}{\UNIS}{\Big( \TYPE{UniformSpace} \And \TYPE{T3} , \mathrm{UC}, \circ, \id  \Big)}
-	\\
-	\DeclareType{UniformCover}{\prod_{X \in \UNI} ?\TYPE{Cover}(X)}
-	\DefineType{\A}{UniformCover}{\exists U \in \U_X : \forall  x \in X \. \exists A \in \A  : U(x) \subset A }
-	\\
-	\Theorem{UniformContinuityByUniformCover}{
-		\forall X,Y \in \UNI \. 
-		\forall f : X \Arrow{\TOP} Y \. 
-		f : X \Arrow{\UNI} Y \iff \NewLine \iff \forall V \in \U_Y \. 
-		\TYPE{UniformCover}\Big( X, \big\{ f^{-1}\; V(x)  \big| x \in X \big\} \Big) 
+	\Theorem{MetrizationIsPreservedBySupTopology}
+	{
+		\NewLine :		
+		\forall  X \in \SET \.
+		\forall \tau : \Nat \to \Mable(X) \.
+		\Mable\left(X, \bigvee_{n \in \Nat} \tau_n \right) 
 	}
-	\NoProof
-	\\
-	\Theorem{EveryOpenCoverIsUniformForACompactSpace}{
-		\forall X \in \UNI \. 
-		\TYPE{Compact}(X) \Imply \NewLine \Imply
-		\forall \mathcal{O} : \TYPE{OpenCover}(X) \.
-		\TYPE{UniformCover}(X,\mathcal{O})
-	}
-	\Assume{x}{\TYPE{In}\;X}
-	\Say{\Big( O_x, [1] \Big)}{\bd \TYPE{Cover}(O,X)(x)}{\sum O_x \in \mathcal{O} \. x \in O_x}
-	\Say{\Big(U_x,[2]\Big)}{\bd \FUNC{connectorTopology}(X)(O_x)}{U_x \in \U_X\.  U_x(x) \subset O_x}
-	\Conclude{\Big( V_x,[x.*] \Big)}{\THM{UniformSymmetricBase}}{\sum V : \TYPE{Symmetric}(\U_X) \. V_x \circ V_x \subset U_x}
-	\Derive{\Big(O,U,V,[1]\Big)}{I\Act{\prod}}{ \sum  (O,U,V) : X \to \mathcal{O}\times \U_X \times \TYPE{Symmetric}(\U_X) \. \forall x \in X \.   U_x(x) \subset O_x \And VV \subset U }
-	\Say{\Big(n ,x,[2] \Big)}{\bd \TYPE{Compact}(X)\big(V_{\bullet}(\bullet)\big)}{\sum_{n=1}^\infty\. \sum_{x : n \to X} \TYPE{OpenCover}(X,V_x(x))  }
-	\Say{V'}{\bigcup^n_{i=1} V_{x_i}}{\U_X }
-	\Assume{y}{X}
-	\Say{\Big(i,[3]\Big)}{\bd \TYPE{OpenCover}(X,U_x(x))}{\sum_{i=1}^n y \in  V_{x_i}(x_i)}
-	\Conclude{[y.*]}{[3]\bd^{-1}\TYPE{connectorComposition}(V,V')\THM{IntersectionSubset}(V)}{V'(y) \subset V_{x_i}V'(x_i) \subset V_{x_i}V_{x_i}(x_i) \subset U_{x_i}(x_i) \subset O_{x_i}}
-	\DeriveConclude{[*]}{\bd^{-1}\TYPE{UniformCover}}{\TYPE{UniformCover}(X,O)}
+	\Explain{
+		Let $\rho_n$ be a metrizing distance metric for topology $\tau_n$}
+	\Explain{
+		Then the metric $d = \sum^\infty_{n=1} \frac{1}{2^n} \frac{\rho_n}{1 + \rho_n}$
+		metrizes $\bigvee_{n \in \Nat} \tau_n$ by considerations of convergence}
 	\EndProof
 }
-\Page{
-\Theorem{UniforlmyContinuousByCompact}{\forall X,Y \in \UNI \. \forall f : X \Arrow{\TOP} Y \.  \TYPE{Comcpact}(X) \Imply X \Arrow{\UNI} Y}
-\NoProof
-\\
-\Theorem{CompactsUniformlyIsomorphic}{\forall X \in \SET \. \forall \U,\mathcal{V} : \TYPE{Uniformity}(X) \. \TYPE{Compact}(X,\U) \And \TYPE{Compact}(X,\mathcal{V}) \Imply \NewLine \Imply (X,\U) \cong_{\UNI} (X,\mathcal{V})}
-\NoProof
-}
-\newpage
-\subsection{Complete Uniform Spaces}
-\Page{
-	\DeclareType{CauchyFilterbase}{\prod_{X \in \UNI} \. ?\TYPE{Filterbase} }
-	\DefineType{\F}{CauchyFilterbase}{\forall U \in \U_X \. \exists A \in \F : \exists x \in X : A \times A \subset U  }
-	\\
-	\Theorem{ConvergingFilterbaseIsCaouchy}{\forall X \in \UNI \. \forall \F : \TYPE{ConvergingFilterbase}(X) \. \NewLine \. \TYPE{CauchyFilterbase}(X,\F)}
-	\NoProof
-	\\
-	\Theorem{UCPreservesCauchyFilterbase}{\forall X,Y \in \UNI \. \forall  \F : \TYPE{CauchyFilterbase}(X) \. \forall f : X \Arrow{\UNI} Y \. \NewLine f\; \F : \TYPE{CauchyFilterbas}(Y)  }
-	\NoProof
-	\\
-	\DeclareType{Complete}{  ?\UNI}
-	\DefineType{X}{Complete}{ \forall \F : \TYPE{CauchyFilterbase}(X) \.  \TYPE{ConvergingFilterbase}(X,\F)    }
-	\\
-	\DeclareType{CauchySequance}{  \prod_{X \in \UNI} ?(\Nat \to X)}
-	\DefineType{x}{CauchySequance}{ \TYPE{CauchyFilterbase}\bigg( X,\Big\{  \big\{  x_{n+m} \big| n \in \Nat  \big\} \Big| m \in \Nat   \Big\} \bigg)    }
-	\\
-	\DeclareType{SequentiallyComplete}{  ?\UNI}
-	\DefineType{X}{SequentiallyComplete}{ \forall x : \TYPE{CauchySequence}(X) \.  \TYPE{Convergent}(X,x)    }
-	\\
-	\DeclareType{UniformEmbedding}{\prod_{X,Y \in \UNI} ?(X \Arrow{\UNI} Y)}
-	\DefineType{f}{UnifrormEmbedding}{f_{|f(X) :} X \ToIso{\UNI} Y}
-	\\
-	\Theorem{UniformImagePreservesCompletenes}{
-		\forall X,Y \in \UNI \. 
-		\forall f : X \Arrow{\UNI} Y \. \NewLine \.
-		\TYPE{Complete}(X) \And \TYPE{UniformEmbedding}(X,Y,f)  
-	}
-	\NoProof
-}\Page{
-	\Theorem{WeakerIsComplete}{\forall X \in \SET \. \forall \U,\mathcal{V} : \TYPE{Uniformity}(X) \. \U \subset \mathcal{V}  \And (X,\U) \cong_{\TOP} (X,\mathcal{V}) \Imply \NewLine 
-		\Imply \Big( \TYPE{Complete}(X,\U) \Imply \TYPE{Complete}(X,\mathcal{V}) \Big) }
-	\NoProof
-	\\
-	\Theorem{WeakerIsSequentiallyComplete}{\forall X \in \SET \. \forall \U,\mathcal{V} : \TYPE{Uniformity}(X) \. \U \subset \mathcal{V} \And (X,\U) \cong_{\TOP} (X,\mathcal{V}) \Imply 
-		\NewLine \Imply \Big( \TYPE{SequantiallyComplete}(X,\U) \Imply \TYPE{SequentiallyComplete}(X,\mathcal{V}) \Big) }
-	\NoProof
-	\\
-	\Theorem{CauchyCluster}{\forall X \in \UNI \. \forall \F : \TYPE{CauchyClasterbase} \. \forall x : \TYPE{Cluster}(X,\mathcal{F}) \.  x = \lim \mathcal{F}}
-	\NoProof
-	\\
-	\Theorem{UniformExtension}{\forall X,Y \in \UNIS \. \forall A : \TYPE{Dense}(X) \. \forall f : A \Arrow{\UNI} Y \. \TYPE{Complete}(Y) \Imply \NewLine \Imply \exists F : X \Arrow{\UNI} Y \. F_{|A} = f }
-	\Assume{x}{X}
-	\Say{\Big((D,u),[1]\Big)}{\THM{DenseLimit}(X,A,x)}{\sum (D,u) : \TYPE{Net}(A) \. \lim_{n \in D} u_n = X }
-	\Say{[2]}{\THM{ConvengNetIsConvergingFilterbase}}{\TYPE{ConvergingFilterBase}\Big(A ,  \F(D,u)  \Big)}
-	\Say{[3]}{\THM{ConvergingIsCauchy}[2]}{\TYPE{CauchyFilterBase}\Big(A, \F(D,u) \Big)}
-	\Say{[4]}{\THM{UCPreservesCauchy}(A,Y,f)[3]}{\TYPE{CauchyFilterBase}\Big(Y, f \; \F(D,U)\Big)}
-	\Say{[5]}{\bd^{-1}\TYPE{Complete}(Y)[4]}{\TYPE{ConvergingFilterBase}\Big(Y, f \; \F(D,U) \Big)}
-	\Conclude{F(x)}{\lim f \; \F(D,U)}{Y}
-	\Derive{F}{I(\to)}{X \to Y}
-	\Say{[*.1]}{\THM{ContinuousPreserveLimits}(A,Y,f)\ByConstr F}{F_{|A} = f}
-	\Assume{V}{\U_Y}
-	\Say{\Big(V',[2])  }{\THM{ClosedSymmetricUniformityBase}}{\sum V' \in \U_Y \. \TYPE{Closed}(V',Y \times T) \And V' \subset V}
-	\Say{\Big(U', [3] \Big)}{\bd \mathrm{UC}(A,Y)(f)}{\sum U' \in \U_A \. (f \times f)(U') \subset V' }
-	\Say{\Big(U,[4]\Big)}{\bd \TYPE{UniformSubset}(X,A)(U')}{\sum  U \in \U_X \. U' = (A \times A) \cap U}
-	\Conclude{[V.*]}{ \THM{ClosedContainsLimits}(Y,V') F [4][3][2]}{ (F \times F)( U) \subset \overline{(f \times f) (U')} \subset V' \subset V  }
-	\DeriveConclude{[*.2]}{\bd^{-1} \mathrm{UC}}{F \in \mathrm{UC}(X,Y)}
-	\EndProof
-}
-\Page{
-	\DeclareType{TotallyBounded}{\prod_{X \in \UNI} ??X}
-	\DefineType{A}{TotallyBounded}{\forall U \in \mathcal{U} \. \exists  F : \TYPE{FiniteCover}(X,A) : \forall S \in F \. \exists x \in X : S \subset U(x)}
-	\\
-	\DeclareType{TotallyBoundedAltDef1}{\forall {X \in \UNI}  \. \forall A \subset X \. \TYPE{TotallyBounded}(X) \iff \NewLine \iff  \forall U \in \mathcal{U} \. \exists n \in \Nat : \exists x : n \to X : A \subset \bigcup^n_{i=1} U(x_i)}
-	\NoProof
-	\\
-	\DeclareType{TotallyBoundedAltDef2}{\forall {X \in \UNI}  \. \forall A \subset X \. \TYPE{TotallyBounded}(X) \iff \NewLine \iff  \forall U \in \mathcal{U} \. \exists n \in \Nat : \exists a : n \to A : A \subset \bigcup^n_{i=1} U(a_i)}
-	\NoProof
-	\\
-	\Theorem{TotallyBoundedByUltrafilters}{\forall {X \in \UNI} \. \TYPE{TotallyBounded}(X) \iff \NewLine \iff \forall \F : \TYPE{Ultrafilter}(X) \. \TYPE{CauchyFilter}(X)}
-	\NoProof
-	\\
-	\Theorem{CompactIffCompleteAndTotallyBounded}{\forall X \in \UNI \. \TYPE{Compact}(X) \iff \TYPE{Complete}\And\TYPE{TotallyBounded}(X) }
-	\NoProof
-}
-\newpage
-\subsection{Uniformization}
-\subsection{Metrization of a Uniform Space}
-\subsection{Completion of a Uniform Space}
 \newpage
 \section{Metric Dimension}
 \subsection{Covering Dimension}
