@@ -135,6 +135,7 @@
 \newcommand{\Topology}{\TYPE{Topology}} 
 \newcommand{\Closed}{\TYPE{Closed}} 
 \newcommand{\Open}{\TYPE{Open}} 
+\newcommand{\Cluster}{\TYPE{Cluster}}
 \newcommand{\Net}{\TYPE{Net}} 
 \newcommand{\Filter}{\TYPE{Filter}} 
 \newcommand{\TS}{\TYPE{TopologicalSpace}} 
@@ -142,6 +143,9 @@
 \newcommand{\PN}{\TYPE{PerfectlyNormal}}
 \newcommand{\QM}{\TYPE{QuotientMap}}
 \newcommand{\Compact}{\TYPE{Compact}}
+\newcommand{\Lindelof}{\TYPE{Lindel\ddot{o}f}}
+\newcommand{\CCompact}{\TYPE{CountableCompact}}
+\newcommand{\CR}{\TYPE{Tychonoff}}
 %FUNC
 \DeclareMathOperator*{\intx}{int}
 \DeclareMathOperator*{\cl}{cl} 
@@ -153,6 +157,7 @@
 \newcommand{\TOP}{\mathsf{TOP}}
 \newcommand{\HC}{\mathsf{HC}}
 \newcommand{\CG}{\mathsf{CG}}
+\newcommand{\FILT}{\mathsf{F}}
 %Symbols
 \newcommand{\T}{\mathcal{T}}
 \newcommand{\N}{\mathcal{N}}
@@ -2089,6 +2094,632 @@
 	\Conclude{[*]}{\bd^{-1} \TYPE{DenseInItself}[1]}{ \Big( \overline{A} : \TYPE{DensInItself} \Big)}
 	\EndProof
 }
+\subsubsection{Separation Axioms}
+\Page{
+	\DeclareType{T0}{?\TOP}
+	\DefineType{X}{T0}
+	{
+		\forall a,b \in X \. \exists U \in \T(X) \.
+		\Big|U \cap \{a, b \}\Big| = 1 
+	}
+	\\
+	\Theorem{T0CardinalityBound}
+	{
+		\forall X : \TYPE{T0} \.
+		|X| \le \exp w(X)
+	}
+	\Say{\Big(\B,[1]\Big)}
+	{
+		\bd \FUNC{weight}
+	}
+	{
+		\sum \B : \TYPE{Base}(X) \. w(X) = |\B|
+	}
+	\Say{\A}{\Lambda x \in X \. \U(X) \cap \B}
+	{
+		X \to ?\B
+	}
+	\Assume{x,y}{X}
+	\Assume{[2]}{(x \neq y)}
+	\Say{\Big(U,[3]\Big)}
+	{
+		\bd \TYPE{T0}(X)(x,y)[2]
+	}
+	{
+		\sum U \in \T(X) \. \Big|U \cap \{x,y\}\Big| =  1
+	}
+	\Say{[4]}{\bd \U [3]}
+	{
+		\Big( \exists V  \in \U(x) : y \not \in V \big|
+		\exists V  \in \U(y) : x \not \in V \Big)
+	}
+	\Say{[5]}{\bd \TYPE{Base}(X)(\B) \ByConstr^{-1} \A [4]}
+	{
+		\Big( \exists V  \in \A(x) : y \not \in V \big|
+		\exists V  \in \A(y) : x \not \in V \Big)
+	}
+	\Conclude{[*]}{\ByConstr \A [5]}
+	{
+		\A(x) \neq \A(y)
+	}
+	\Derive{[2]}{\bd^{-1} \TYPE{Injection}}
+	{
+		\A : X \ToInj ?\B
+	}
+	\Conclude{[*]}{\THM{CardinalityInjectionBound}[2]}
+	{ 
+	  |X| \le  \exp w(X)
+	}
+	\EndProof
+	\\
+	\DeclareType{T1}{?\TOP}
+	\DefineType{X}{T1}
+	{
+		\forall a,b \in X \.  \exists U \in \T(a) \.
+		b \not \in U 
+	}
+	\\
+	\Theorem{T1Singelton}
+	{
+		\forall X : \TYPE{T1} \. \forall x \in X \. 
+		\{ x \} \in G_\delta(X)
+	}
+	\NoProof
+	\\
+	\Theorem{T1BySingeltons}
+	{
+		\forall X \in \TOP \.
+		X : \TYPE{T1} \iff
+		\forall x \in X \.
+		\{x\} : \TYPE{Closed}(X)
+	}
+	\NoProof
+	\\
+	\Theorem{SeparationHierarchy1}
+	{
+		\TYPE{T0} \subsetneq \TYPE{T1}
+	}
+	\NoProof
+	\\
+	\DeclareType{Separated}
+	{
+		\prod X \in \TOP \.
+		?X \times ?X
+	}
+	\DefineType{(A,B)}{Separated}
+	{
+		\exists U,V \in \T(X) \. A \subset U \And B \subset V \And U \cap V = \emptyset
+	}
+	\\
+	\DeclareType{T2}{?\TOP}
+	\DefineNamedType{x}{T2}{x : \TYPE{Hausdorff}}
+	{
+		\forall x,y \in X \.
+		x \neq y \Imply 
+		\exists U \in \U(x) : 
+		\exists V \in \U(x) :
+		U \cap V = \emptyset
+	}
+}
+\Page{
+	\Theorem{SeparationHierarchy2}
+	{
+		\TYPE{T1} \subsetneq \TYPE{T2}
+	}
+	\NoProof
+	\\
+	\Theorem{T2BySingletons}
+	{
+		\forall X \in \TOP \.
+		X : \TYPE{T2} \iff 
+		\forall x \in X \. 
+		\{x\} = \bigcap_{U \in \U(x)} \overline{U}
+	}
+	\NoProof
+	\\
+	\Theorem{T2CardinalityBound1}
+	{
+		\forall X : \TYPE{T2} \.
+		|X| \le \exp \exp d(X)
+	}
+	\Say{\Big(D,[1]\Big)}{\bd d(X)}{\sum D : \TYPE{Dense}(X) \. |D| = d(X)  }
+	\Say{\A}{\Lambda x \in X \. \{ U \cap D | U \in \U(x)  \} }
+	{
+		X \to ??D
+	}
+	\Say{[2]}{\bd \TYPE{Dense}(X)(D)\ByConstr A \THM{T2BySingletons}(X)}
+	{
+		\forall x \in X \. \bigcap_{A \in \A(x)} \overline{A} = \{ x \}
+	}
+	\Say{[3]}{\THM{InjectiveByMapping}[2]}
+	{
+		\Big( \A : X \ToInj ??D \Big)
+	}
+	\Conclude{[*]}{\THM{CardinalityByInjectionBound}[2][3]}
+	{
+		|X| \le \exp \exp d(X)                              
+	}
+	\EndProof
+	\\
+	\Theorem{T2CardinalityBound2}
+	{
+		\forall X : \TYPE{T2} \.
+		|X| \le \Big(\chi(X)\Big)^{d(X)}
+	}
+	\NoProof
+	\\
+	\Theorem{ClosedEqualityInT2Space}
+	{
+		\forall X \in \TOP \.
+		\forall Y : \TYPE{T2} \.
+		\forall f,g : X \Arrow{\TOP} Y \.
+		\Big\{ x \in X : f(x) = g(x) \Big\} : \TYPE{Closed}(X)
+	}
+	\Assume{x}{X}
+	\Assume{[1]}{f(x) \neq g(x)}
+	\Say{\Big(U,V, [2]\Big)}{\bd \TYPE{T2}\Big( f(x),g(x)\Big)[1]}
+	{
+		\sum U \in \U\Big(f(x)\Big) \. 
+		\sum V \in \U\Big(g(x)\Big) \. 
+		U \cap V = \emptyset
+	}
+	\Say{W_x}{f^{-1}(U) \cap g^{-1}(W)}
+	{
+		\U(x)
+	}
+	\Conclude{[x.*]}{[2]\bd \FUNC{preimage}\ByConstr W_x}{\forall w \in W_x \. f(w) \neq g(w)} 
+	\Derive{W}{I\Act{\prod}}
+	{
+		\prod_{x \in X} f(x) \neq g(x) \to \sum U \in \U(x) \. \forall u \in U \. f(u) \neq g(u) 
+	}
+	\Say{[1]}{\bd W}{  \big\{x \in X : f(x) = g(x) \big\}^\c = \bigcup W}
+	\Conclude{[*]}{\bd^{-1} \TYPE{Closed}[1]}{ \Big( \big\{ x \in X : f(x) = g(x) \big\}^\c : \TYPE{Closed}(X)  \Big) }
+	\EndProof
+}
+\Page{
+	\DeclareFunc{setNeighborhood}{\prod_{X \in \TOP} \. ?X \to ?\T(X)}
+	\DefineNamedFunc{setNeighborhood}{A}{\U(A)}{\Big\{ U \in \T(X) : A \subset U  \Big\}}
+	\\
+	\DeclareType{T3}{?\TYPE{T1}}
+	\DefineNamedType{X}{T3}{X : \TYPE{Regular}}
+	{
+		\forall A : \TYPE{Closed}(X) \.
+		\forall x \in X \.
+		\exists U \in \U(A) :
+		\exists V \in \U(x) :
+		V \cap U
+	}
+	\\
+	\Theorem{RegularityCriterion}{   
+		\forall X \in \T1 \.
+		X : \TYPE{T3} \iff 
+		\forall x \in X \. \forall V \in \U(x) \. 
+		\exists U \in \U(x) : \overline{U} \subset V
+	}
+	\Assume{[1]}{(X : \TYPE{T3})}
+	\Assume{x}{X}
+	\Assume{V}{\U(x)}
+	\Say{\Big( U,W,[2] \Big)}{\bd \TYPE{T3}(x,V^\c)}
+	{
+		\sum U \in \U(x) \. \sum W \in \U(V^\c) \. W \cap U = \emptyset
+	}
+	\Conclude{ [1.*] }
+	{
+		\bd \FUNC{closure}(X)[2]\bd \U(V^\c) \THM{ComplementSubset}
+	}
+	{
+		\overline{U} \subset W^\c \subset V
+	}
+	\Derive{ [1] }
+	{ I(\Imply)  }{\LOGIC{Left} \Imply \LOGIC{Right}}
+	\Assume{[2]}{   
+		\forall x \in X \. \forall V \in \U(x) \. 
+		\exists U \in \U(x) : \overline{U} \subset V	
+	}
+	\Assume{A}{\TYPE{Closed}(X)}
+	\Assume{x}{A^\c}
+	\Say{\Big( U, [3]\Big)}{[2](A^\c)}
+	{
+		\sum U \in \U(x) \. \overline{U} \subset A^\c
+	}
+	\Say{V}{\overline{U}^\c}{\U(A)}
+	\Conclude{[A.*]}{\ByConstr(V)}{V \cap U = \emptyset} 
+	\DeriveConclude{[4]}{\bd^{-1} \TYPE{T3}}{(X : \TYPE{T3})}
+	\EndProof
+	\\
+	\Theorem{SeparationHierarchy3}
+	{
+		\TYPE{T2} \subsetneq \TYPE{T3}
+	}
+	\NoProof
+	\\
+	\Theorem{T3WeightBound}
+	{
+		\forall X : \TYPE{T3} \.
+		w(X) \le \exp d(X)
+	}
+	\NoProof
+	\\
+	\DeclareType{T4}{?\TYPE{T1}}
+	\DefineNamedType{X}{T4}{X : \TYPE{Normal}}
+	{
+		\forall A,B : \TYPE{Closed}(X) \.
+		A \cap B = \emptyset 
+		\Imply
+		\exists U \in \U(A) :
+		\exists V \in \U(B) :
+		U \cap V = \emptyset
+	}
+	\\
+	\Theorem{SeparationHierarchy4}
+	{
+		\TYPE{T3} \subsetneq \TYPE{T4}
+	}
+	\NoProof
+}
+\Page{
+	\Theorem{T4ByOpenCover}
+	{
+		\forall X : \TYPE{T1} \.
+		\forall [0] :
+		\forall A : \TYPE{Closed}(X) \.
+		\forall U \in \U(A) \.
+		\NewLine : 
+		\exists W : \Nat \to \T(X) : 
+		A \subset \bigcup_{i \in I} W_i  \And 
+		\forall i \in \Nat \. 
+		\overline{W_i} \subset  U \.
+		X : \TYPE{T4}
+	}
+	\Assume{A,B}{\TYPE{Closed}(X)}
+	\Assume{[1]}{A \cap B = \emptyset}
+	\Say{\Big(W,[2]\Big)}{[0](A,B^\c)}
+	{ 
+		\sum_{W : \Nat \to \T(X)} 
+		A \subset \bigcup_{i \in I} W_i 
+		\And
+		\forall i \in \Nat \. \overline{W_i} \subset B^\c
+	}
+	\Say{\Big(V,[3]\Big)}{[0](B,A^\c)}
+	{ 
+		\sum_{V : \Nat \to \T(X)} 
+		B \subset \bigcup_{i \in I} V_i 
+		\And
+		\forall j \in \Nat \. \overline{V_i} \subset A^\c
+	}
+	\Say{H}{
+		\Lambda i \in \Nat \. W_i \setminus \bigcup_{j=1}^{i} \overline{V_i}  
+	}{ \Nat \to \T(X)  }
+	\Say{G}{
+		\Lambda i \in \Nat \. V_i \setminus \bigcup_{j=1}^{i} \overline{W_i}  
+	}{ \Nat \to \T(X)  }
+	\Say{[4]}{\ByConstr H [3]}
+	{
+		A \subset \bigcup^\infty_{n=1} H_n
+	}
+	\Say{[5]}{\ByConstr G [2]}
+	{
+		B \subset \bigcup^\infty_{n=1} G_n
+	}
+	\Say{O}{ \bigcup^\infty_{n=1} H_n }{\U(A)}
+	\Say{Q}{\bigcup^\infty_{n=1} G_n}{\U(B)}
+	\Say{[6]}{\ByConstr G \ByConstr H}{\forall i \in \Nat \. \forall j \in i \. H_i \cap G_j = \emptyset }
+	\Say{[7]}{\ByConstr H \ByConstr G}{\forall i \in \Nat \. \forall j \in i \. G_i \cap H_j = \emptyset }
+	\Say{[8]}{ [6][7] }{\forall i,j \in \Nat \. H_i \cap G_j = \emptyset}  
+	\Conclude{\Big[(A,B).*\Big]}{ \ByConstr O \ByConstr Q [8]}{ O \cap Q = \emptyset}
+	\Derive{[*]}{\bd^{-1}\TYPE{T4} }{ (X : \TYPE{T4}) }
+	\EndProof
+	\\
+	\Theorem{SecondCountableRegularIsNormal}
+	{
+		\forall X : \TYPE{T3} \And \TYPE{SecondCountable} \. X : \TYPE{T4}
+	}
+	\NoProof
+	\\
+	\Theorem{CountableRegularIsNormal}
+	{
+		\forall X : \TYPE{T3} \. |X| \le  \aleph  \Imply X : \TYPE{T4}
+	}
+	\NoProof
+}
+\Page{
+	\DeclareType{Cover}{\prod_{X \in \TOP} ???X  }
+	\DefineType{\A}{Cover}{\bigcup \A = X}
+	\\
+	\DeclareType{OpenCover}{\prod_{X \in \TOP} ??\T(X)  }
+	\DefineType{\mathcal{O}}{OpenCover}{\bigcup \mathcal{O} = X}	
+	\\
+	\DeclareType{PointFiniteCover}{\prod_{X \in \TOP} ?\TYPE{OpenCover}(X)  }
+	\DefineType{\mathcal{O}}{PointFiniteCover}
+	{\forall x \in X \. \Big|\big\{ O \in \mathcal{O} : x \in O \}\Big| < \infty }
+	\\
+	\Theorem{NormalPointFiniteCoverRefinement}
+	{
+		\forall X :\TYPE{T4} \.
+		\forall \mathcal{O} : \TYPE{PointFiniteCover}(X)
+		\exists \mathcal{V} : \TYPE{OpenCover}(X) : 
+		\NewLine \. 
+		\exists V : \mathcal{O} \ToBij \mathcal{V} :
+		\forall O \in \mathcal{O} \.
+		\overline{V_O} \subset O
+	}
+	\Say{\mathcal{G}}
+	{
+		\Big\{
+			V : \mathcal{O} \to \T(X) : \forall O \in \mathcal{O} \. V_O = O | \overline{V_O}  \subset O  \And
+			\bigcup_{O \in \O} V_O = X
+		\Big\}
+	}
+	{
+		?\Big(\O \to \T(X)\Big)
+	}
+	\Say{[1]}{\ByConstr \mathcal{G}}{\O \in \mathcal{G} }
+	\Say{[2]}{\bd \TYPE{NonEmpty}[1]}{ \mathcal{G} \neq \emptyset}
+	\Assume{G}{\mathcal{G}}
+	\Assume{O}{\O}
+	\Assume{[3]}{G_O = O}
+	\Say{U}{\bigcup_{V \in \O : V \neq O} O}{\T(X)}
+	\Say{A}{U^\c}{\TYPE{Closed}(X)}
+	\Say{\Big( W,[4]\Big)}{\THM{NormalCriterion}(A,O)}
+	{
+		\sum  W \in \T(X) \.
+		A \subset \overline{W} \subset O
+	}
+	\Say{[5]}{[4]\bd \FUNC{ReplaceValue} }{\widehat{G}_O(W) \in \mathcal{G}}
+	\Conclude{[G.*]}{\bd \le_\mathcal{G} [4][5]}{ \widehat{G}_O(W) \le G  }
+	\Derive{[4]}{I(\forall)}
+	{
+		\forall  G \in \mathcal{G} \. \forall O \in \O \.
+		G_O \Imply \exists G' \in \mathcal{G} : G' \le G
+	}
+	\Assume{\mathcal{G}'}{\TYPE{Chain}(\mathcal{G}')}
+	\Say{G}{\Lambda O \in \O \. \bigcap_{G' \in \mathcal{G}} G'_O}
+	{
+		\O \to ?X
+	}
+	\Say{[5]}{\ByConstr \mathcal{G} }{\forall O \in \O \. G_O = O | \overline{G_O} \subset O}
+	\Assume{x}{X}
+	\Say{\O'}{\{ O \in \O : x \in O  \}}{\TYPE{Finite}(\O)}  
+	\Say{\Big(O, [6]\Big)}{\THM{PigionholePrinciple}\bd \TYPE{Chain}(\mathcal{G}')\ByConstr \O'}
+	{
+		\sum O \in \O' \. x \in \bigcap_{G' \in \mathcal{G}'} G'_O
+	}
+	\Conclude{[x.*]}{ [6] \THM{UnionSubset}}{ x \in \bigcup_{O \in \O} G_O}
+	\Derive{[6]}{ I \TYPE{Subset}  }{ X =  \bigcup_{O \in \O} G_O    }
+	\Say{[7]}{\THM{LocallyFiniteClosedUnion}\ByConstr }
+	{  \forall O  \in \O \. G_O \in \T(X)  }
+	\Say{[8]}{\ByConstr \mathcal{G} [7][6][5]}
+	{
+		G \in \mathcal{G}
+	}
+}
+\Page{
+	\Conclude{[\mathcal{G}'.*]}{ \ByConstr G }{\forall G' \in \mathcal{G'} \. G \le G'}
+	\Derive{\Big( G,[5]\Big)}{\THM{ZornLemma}[2]}
+	{
+		\sum G \in \mathcal{G} \. G = \min \mathcal{G}
+	}
+	\Conclude{[*]}{[4][5]}{ \forall O \in \O \. \overline{G_O} \subset O }
+	\EndProof
+	\\
+	\Theorem{T1Invariance}
+	{
+		\forall X :  \TYPE{T1} \.
+		\forall Y \in \TOP \.
+		\forall f : \TYPE{Closed}(X,Y) \.
+		f(X) : \TYPE{T1}
+	}
+	\NoProof
+	\\
+	\Theorem{T4Invariance}
+	{
+		\forall X :  \TYPE{T4} \.
+		\forall Y \in \TOP \.
+		\forall f : \TYPE{Closed}(X,Y) \.
+		f(X) : \TYPE{T4}
+	}
+	\NoProof
+	\\
+	\Theorem{T0BySingletonClosures}
+	{
+		\forall X \in \TOP \.
+		X : \TYPE{T0} \iff
+		\forall x,y \in X \.
+		x \neq y \Imply 
+		\overline{\{x\}} \neq \overline{\{y\}}
+	}
+	\NoProof
+	\\
+	\Theorem{T1DoubleDerivedSet}
+	{
+		\forall X : \TYPE{T1} \.
+		\forall A \subset X \.
+		A^{\d\d} \subset A^{\d}
+	}
+	\Assume{x}{A^{\d\d}}
+	\Say{[1]}{\bd \FUNC{derivedSet}(x,A^{\d\d})}
+	{  x \in \overline{\A^\d \setminus \{x\}} }
+	\Say{[2]}{\THM{ClosureEquivalent}[1]}
+	{
+		\forall U \in \U(x) \.
+		U \cap   (A^\d \setminus \{ x\}) \neq \emptyset
+	}
+	\Say{[3]}{\bd \FUNC{derivedSet}[2]}
+	{
+		\forall U \in \U(x) \.
+		\exists y \in U  : 
+		y \in  \overline{A \setminus \{y\}} \setminus \{x\} 
+	}
+	\Say{[4]}{\THM{ClosureEquivalent}[3]}
+	{
+		\forall U \in \U(x) \.
+		\exists y \in U  : 
+		\forall V \in \U(y) \. V \cap  A \setminus \{y\} \neq \emptyset \And y \neq x
+		\neq \emptyset
+	}
+	\Assume{U}{\U(x)}
+	\Say{\Big( y,[5] \Big)}{[4](U)}
+	{
+		\sum y \in U \. \forall V \in \U(y) \. V \cap A \setminus \{y\}  \neq \emptyset \And y \neq x
+	}
+	\Say{[6]}{\bd \TYPE{T1}(X)[5]}{ 
+		\forall V \in U(y) \. V \cap A \setminus \{y\} \setminus \{ x \} \neq \emptyset
+	}
+	\Say{[7]}{[6](U)}{U \cap A \setminus \{y\} \setminus \{x\} \neq \emptyset}
+	\Conclude{[U.*]}{\THM{DecreasingSetminus}(A,\{y,x\},\{x\})\THM{MonotonicIntersect}[7]}
+	{  
+		U \cap  (A \setminus \{x\} ) \neq \emptyset                                     
+	}
+	\Derive{[5]}{\THM{ClosureEquivalent}}
+	{
+		x \in \overline{A  \setminus \{x\}}  
+	}
+	\Conclude{[x.*]}{\bd^{-1} \TYPE{derivedSet}}{x \in A^\d}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{Subset}}{A^{\d\d} \subset A^\d}
+	\EndProof
+}\Page{
+	\Theorem{T1DerivedSetIsClosed}
+	{
+		\forall X : \TYPE{T1} \.
+		\forall A \subset X  \.
+		A^{\d} : \TYPE{Closed}(A)
+	}
+	\Assume{x}{A^{\d\c}}
+	\Assume{[1]}{\forall U \in \U(x) \. U \cap A^{\d} \neq \emptyset }
+	\Say{[2]}{\bd \FUNC{derivedSet}[1]}
+	{
+		\forall U \in \U(x) \.
+		\exists y \in U : y \in \overline{A \setminus \{x\}}
+	}
+	\Say{[3]}{\LOGIC{ByAnalogy}(\LOGIC{proof} \; \THM{T1DoubleDerivedSet})[2]}
+	{
+		x \in A^{\d}
+	}
+	\Conclude{[4]}{\THM{InAndNotIn}[3]}
+	{
+		\bot
+	}
+	\Derive{[1]}{\THM{OpenByInnerCover}}{A^{\d\C} \in \T(X)}
+	\Conclude{[*]}{\bd^{-1} \TYPE{Closed}}{A^{\d} \in \T(X)}
+	\EndProof
+	\\
+	\Theorem{T1DerivedSetClosure}
+	{
+		\forall X : \TYPE{T1} \.
+		\forall A \subset X  \.
+		\overline{A}^\d = A^\d
+	}
+	\Say{[1]}{\bd \TYPE{PotentialClosure}(\cl_X)(A)}
+	{	
+		A \subset \overline{A}
+	}
+	\Say{[2]}{ \THM{DervivedSetIsMonotonic}[1]}
+	{
+		A^d \subset \overline{A}^\d
+	}
+	\Assume{x}{\overline{A}^\d}
+	\Say{[1]}{\bd \FUNC{derivedSet}}
+	{
+		x \in \overline{\overline{A} \setminus \{x\}}
+	}
+	\Say{[2]}{\THM{EquivalentClosure}[1]}
+	{
+		\forall U \in \U(x) \.
+		U \cap \overline{A} \setminus \{x\} \neq \emptyset
+	}
+	\Say{[3]}{\THM{ClosureEquivalent}[2]}
+	{
+		\forall U \in \U(x) \.
+		\exists y \in U  : 
+		\forall V \in \U(y) \. V \cap  A  \neq \emptyset \And y \neq x
+		\neq \emptyset
+	}
+	\Assume{U}{\U(x)}
+	\Say{\Big(y,[4]\Big)}{[3](U)}
+	{
+	   \sum y \in U \. \forall V \in \U(y) \. V \cap A \neq \emptyset \And y \neq x
+	}
+	\Say{[5]}{[4](U)}
+	{
+		U \cap A \neq \emptyset 
+	}
+	\Conclude{[U.*]}{\bd \TYPE{T1} [5][4]}{ U \cap A \setminus \{x\} \neq \emptyset}
+	\Derive{[4]}{\THM{EquivalentClosure}[3]}
+	{
+		x \in \overline{A \setminus \{x\}}
+	}
+	\Conclude{[x.*]}{\bd^{-1} A^\d}
+	{
+		x \in A^\d 
+	}
+	\Derive{[3]}{\bd^{-1} \TYPE{Subset}}{\overline{A}^\d \subset A^\d}
+	\Conclude{[*]}{\bd^{-1} \TYPE{SetEq}[2][3]}
+	{
+		\overline{A}^\d = A^\d
+	}
+	\EndProof
+	\\
+	\Theorem{T1FiniteDerivedSet}
+	{
+		\forall  X : \TYPE{T1} \.
+		\forall  A : \TYPE{Finite}(X) \.
+		A^\d = \emptyset
+	}
+	\NoProof
+	\\
+	\DeclareType{Retraction}
+	{
+		\prod X : \TS \.
+		?\End_{\TOP}(X) \.
+	}
+	\DefineType{f}{Retractrion}{f^2 = f}
+	\\
+	\DeclareType{Retract}
+	{
+		\prod X : \TS \.
+		??X
+	}
+	\DefineType{R}{Retract}{
+		\exists f : \TYPE{Retraction}(X) \.
+		f(X) = R
+	}
+}
+\Page{ 
+	\Theorem{HausdorfRetractIsClosed}
+	{
+		\forall X : \TYPE{T2} \.
+		\forall R : \TYPE{Retract}(X)  \.
+		R : \TYPE{Closed}(X)
+	}
+	\Say{\Big(f,[1]\Big)}{\bd \TYPE{Retract}}
+	{
+		\sum f : \TYPE{Retraction}(X) \. f(X) = R
+	}
+	\Say{[2]}{\bd \TYPE{Retraction}(f)[1]}{R = \{ x \in X : f(x) = x\}}
+	\Conclude{[*]}{\THM{ClosedEqualityInT2Space}}
+	{
+		R : \TYPE{Closed}(X)
+	}
+	\EndProof
+	\\
+	\Theorem{NormalIteration}
+	{
+		\forall X : \TYPE{T4} \.
+		\forall I : \TYPE{Finite} \.
+		\forall A : \TYPE{Disjoint} \Big( I, \TYPE{Closed}(X) \Big) \.
+		\exists U : \TYPE{Disjoint} \Big( I, \U(A) \Big) 
+	}
+	\NoProof
+	\\
+	\Theorem{HausdorffIteration}
+	{
+		\forall X : \TYPE{T4} \.
+		\forall I : \TYPE{Finite} \.
+		\forall A : \TYPE{Disjoint} \Big( I, \TYPE{Finite}(X) \Big) \.
+		\exists U : \TYPE{Disjoint} \Big( I, \U(A) \Big) 
+	}
+	\NoProof
+}
 \newpage
 \subsection{Convergence}
 \subsubsection{Convergence in Nets}
@@ -2109,7 +2740,7 @@
 	}
 	\\
 	\DeclareType{Cluster}{ \prod X : \TOP \. \prod D : \TYPE{DirectedSet} \. \TYPE{Net}(D,X) \to ?X}
-	\DefineNamedType{C}{Cluster}{ x \mapsto  C = \overline{x}}
+	\DefineNamedType{C}{Cluster}{ x \mapsto  C \in \overline{x}}
 	{
 		x \mapsto
 		\forall U \in \U(L) \.
@@ -2307,6 +2938,13 @@
 		\forall X : \TOP \.
 		\forall x : \TYPE{Net}(D,X) \. 
 		\overline{x} = \bigcap_{N \in D} \overline{\{ x_n | n \ge N \}}
+	}
+	\NoProof
+	\\
+	\Theorem{HausdorffByLimits}
+	{
+		\forall X : \TOP \.
+		X : \TYPE{T2} \iff \forall x : \TYPE{Net}(D,X) \. |\lim_{n \in D} x_n| \le 1
 	}
 	\NoProof
 }
@@ -3536,6 +4174,15 @@
 	\Explain{
 		So $X_i$ must be clopen}
 	\EndProof
+	\\
+	\Theorem{SumPreservesSeparation}
+	{
+		\forall I \in \SET \.
+		\forall n \in \{1,\ldots,6\} \.
+		\forall X : I \to \TYPE{T}n \. 
+		\coprod_{i \in I} X_i  : \TYPE{T}n
+	}
+	\NoProof
 }
 \newpage
 \subsubsection{Products}
@@ -3830,6 +4477,15 @@
 		Then endow it with weak or strong topology respectively 
 	}
 	\EndProof
+	\\
+	\Theorem{ProductPreservesSeparation}
+	{
+		\forall I \in \SET \.
+		\forall n \in \{1,\ldots, 6\} \.
+		\forall X : I \to \TYPE{T}n \And \TYPE{NonEmpty} \. 
+		\prod^n_{i=1} X_i : \TYPE{T}n
+	}
+	\NoProof
 }
 \newpage
 \subsubsection{Quotients}
@@ -3897,648 +4553,7 @@
 	\EndProof
 }
 \newpage
-\subsection{Regularity}
-\subsubsection{Separation Axioms}
-\Page{
-	\DeclareType{T0}{?\TOP}
-	\DefineType{X}{T0}
-	{
-		\forall a,b \in X \. \exists U \in \T(X) \.
-		\Big|U \cap \{a, b \}\Big| = 1 
-	}
-	\\
-	\Theorem{T0CardinalityBound}
-	{
-		\forall X : \TYPE{T0} \.
-		|X| \le \exp w(X)
-	}
-	\Say{\Big(\B,[1]\Big)}
-	{
-		\bd \FUNC{weight}
-	}
-	{
-		\sum \B : \TYPE{Base}(X) \. w(X) = |\B|
-	}
-	\Say{\A}{\Lambda x \in X \. \U(X) \cap \B}
-	{
-		X \to ?\B
-	}
-	\Assume{x,y}{X}
-	\Assume{[2]}{(x \neq y)}
-	\Say{\Big(U,[3]\Big)}
-	{
-		\bd \TYPE{T0}(X)(x,y)[2]
-	}
-	{
-		\sum U \in \T(X) \. \Big|U \cap \{x,y\}\Big| =  1
-	}
-	\Say{[4]}{\bd \U [3]}
-	{
-		\Big( \exists V  \in \U(x) : y \not \in V \big|
-		\exists V  \in \U(y) : x \not \in V \Big)
-	}
-	\Say{[5]}{\bd \TYPE{Base}(X)(\B) \ByConstr^{-1} \A [4]}
-	{
-		\Big( \exists V  \in \A(x) : y \not \in V \big|
-		\exists V  \in \A(y) : x \not \in V \Big)
-	}
-	\Conclude{[*]}{\ByConstr \A [5]}
-	{
-		\A(x) \neq \A(y)
-	}
-	\Derive{[2]}{\bd^{-1} \TYPE{Injection}}
-	{
-		\A : X \ToInj ?\B
-	}
-	\Conclude{[*]}{\THM{CardinalityInjectionBound}[2]}
-	{ 
-	  |X| \le  \exp w(X)
-	}
-	\EndProof
-	\\
-	\DeclareType{T1}{?\TOP}
-	\DefineType{X}{T1}
-	{
-		\forall a,b \in X \.  \exists U \in \T(a) \.
-		b \not \in U 
-	}
-	\\
-	\Theorem{T1Singelton}
-	{
-		\forall X : \TYPE{T1} \. \forall x \in X \. 
-		\{ x \} \in G_\delta(X)
-	}
-	\NoProof
-	\\
-	\Theorem{T1BySingeltons}
-	{
-		\forall X \in \TOP \.
-		X : \TYPE{T1} \iff
-		\forall x \in X \.
-		\{x\} : \TYPE{Closed}(X)
-	}
-	\NoProof
-	\\
-	\Theorem{SeparationHierarchy1}
-	{
-		\TYPE{T0} \subsetneq \TYPE{T1}
-	}
-	\NoProof
-	\\
-	\DeclareType{T2}{?\TOP}
-	\DefineNamedType{x}{T2}{x : \TYPE{Hausdorff}}
-	{
-		\forall x,y \in X \.
-		x \neq y \Imply 
-		\exists U \in \U(x) : 
-		\exists V \in \U(x) :
-		U \cap V = \emptyset
-	}
-}
-\Page{
-	\Theorem{SeparationHierarchy2}
-	{
-		\TYPE{T1} \subsetneq \TYPE{T2}
-	}
-	\NoProof
-	\\
-	\Theorem{T2BySingletons}
-	{
-		\forall X \in \TOP \.
-		X : \TYPE{T2} \iff 
-		\forall x \in X \. 
-		\{x\} = \bigcap_{U \in \U(x)} \overline{U}
-	}
-	\NoProof
-	\\
-	\Theorem{T2CardinalityBound1}
-	{
-		\forall X : \TYPE{T2} \.
-		|X| \le \exp \exp d(X)
-	}
-	\Say{\Big(D,[1]\Big)}{\bd d(X)}{\sum D : \TYPE{Dense}(X) \. |D| = d(X)  }
-	\Say{\A}{\Lambda x \in X \. \{ U \cap D | U \in \U(x)  \} }
-	{
-		X \to ??D
-	}
-	\Say{[2]}{\bd \TYPE{Dense}(X)(D)\ByConstr A \THM{T2BySingletons}(X)}
-	{
-		\forall x \in X \. \bigcap_{A \in \A(x)} \overline{A} = \{ x \}
-	}
-	\Say{[3]}{\THM{InjectiveByMapping}[2]}
-	{
-		\Big( \A : X \ToInj ??D \Big)
-	}
-	\Conclude{[*]}{\THM{CardinalityByInjectionBound}[2][3]}
-	{
-		|X| \le \exp \exp d(X)                              
-	}
-	\EndProof
-	\\
-	\Theorem{T2CardinalityBound2}
-	{
-		\forall X : \TYPE{T2} \.
-		|X| \le \Big(\chi(X)\Big)^{d(X)}
-	}
-	\NoProof
-	\\
-	\Theorem{ClosedEqualityInT2Space}
-	{
-		\forall X \in \TOP \.
-		\forall Y : \TYPE{T2} \.
-		\forall f,g : X \Arrow{\TOP} Y \.
-		\Big\{ x \in X : f(x) = g(x) \Big\} : \TYPE{Closed}(X)
-	}
-	\Assume{x}{X}
-	\Assume{[1]}{f(x) \neq g(x)}
-	\Say{\Big(U,V, [2]\Big)}{\bd \TYPE{T2}\Big( f(x),g(x)\Big)[1]}
-	{
-		\sum U \in \U\Big(f(x)\Big) \. 
-		\sum V \in \U\Big(g(x)\Big) \. 
-		U \cap V = \emptyset
-	}
-	\Say{W_x}{f^{-1}(U) \cap g^{-1}(W)}
-	{
-		\U(x)
-	}
-	\Conclude{[x.*]}{[2]\bd \FUNC{preimage}\ByConstr W_x}{\forall w \in W_x \. f(w) \neq g(w)} 
-	\Derive{W}{I\Act{\prod}}
-	{
-		\prod_{x \in X} f(x) \neq g(x) \to \sum U \in \U(x) \. \forall u \in U \. f(u) \neq g(u) 
-	}
-	\Say{[1]}{\bd W}{  \big\{x \in X : f(x) = g(x) \big\}^\c = \bigcup W}
-	\Conclude{[*]}{\bd^{-1} \TYPE{Closed}[1]}{ \Big( \big\{ x \in X : f(x) = g(x) \big\}^\c : \TYPE{Closed}(X)  \Big) }
-	\EndProof
-}
-\Page{
-	\DeclareFunc{setNeighborhood}{\prod_{X \in \TOP} \. ?X \to ?\T(X)}
-	\DefineNamedFunc{setNeighborhood}{A}{\U(A)}{\Big\{ U \in \T(X) : A \subset U  \Big\}}
-	\\
-	\DeclareType{T3}{?\TYPE{T1}}
-	\DefineNamedType{X}{T3}{X : \TYPE{Regular}}
-	{
-		\forall A : \TYPE{Closed}(X) \.
-		\forall x \in X \.
-		\exists U \in \U(A) :
-		\exists V \in \U(x) :
-		V \cap U
-	}
-	\\
-	\Theorem{RegularityCriterion}{   
-		\forall X \in \T1 \.
-		X : \TYPE{T3} \iff 
-		\forall x \in X \. \forall V \in \U(x) \. 
-		\exists U \in \U(x) : \overline{U} \subset V
-	}
-	\Assume{[1]}{(X : \TYPE{T3})}
-	\Assume{x}{X}
-	\Assume{V}{\U(x)}
-	\Say{\Big( U,W,[2] \Big)}{\bd \TYPE{T3}(x,V^\c)}
-	{
-		\sum U \in \U(x) \. \sum W \in \U(V^\c) \. W \cap U = \emptyset
-	}
-	\Conclude{ [1.*] }
-	{
-		\bd \FUNC{closure}(X)[2]\bd \U(V^\c) \THM{ComplementSubset}
-	}
-	{
-		\overline{U} \subset W^\c \subset V
-	}
-	\Derive{ [1] }
-	{ I(\Imply)  }{\LOGIC{Left} \Imply \LOGIC{Right}}
-	\Assume{[2]}{   
-		\forall x \in X \. \forall V \in \U(x) \. 
-		\exists U \in \U(x) : \overline{U} \subset V	
-	}
-	\Assume{A}{\TYPE{Closed}(X)}
-	\Assume{x}{A^\c}
-	\Say{\Big( U, [3]\Big)}{[2](A^\c)}
-	{
-		\sum U \in \U(x) \. \overline{U} \subset A^\c
-	}
-	\Say{V}{\overline{U}^\c}{\U(A)}
-	\Conclude{[A.*]}{\ByConstr(V)}{V \cap U = \emptyset} 
-	\DeriveConclude{[4]}{\bd^{-1} \TYPE{T3}}{(X : \TYPE{T3})}
-	\EndProof
-	\\
-	\Theorem{SeparationHierarchy3}
-	{
-		\TYPE{T2} \subsetneq \TYPE{T3}
-	}
-	\NoProof
-	\\
-	\Theorem{T3WeightBound}
-	{
-		\forall X : \TYPE{T3} \.
-		w(X) \le \exp d(X)
-	}
-	\NoProof
-	\\
-	\DeclareType{T4}{?\TYPE{T1}}
-	\DefineNamedType{X}{T4}{X : \TYPE{Normal}}
-	{
-		\forall A,B : \TYPE{Closed}(X) \.
-		A \cap B = \emptyset 
-		\Imply
-		\exists U \in \U(A) :
-		\exists V \in \U(B) :
-		U \cap V = \emptyset
-	}
-	\\
-	\Theorem{SeparationHierarchy4}
-	{
-		\TYPE{T3} \subsetneq \TYPE{T4}
-	}
-	\NoProof
-}
-\Page{
-	\Theorem{T4ByOpenCover}
-	{
-		\forall X : \TYPE{T1} \.
-		\forall [0] :
-		\forall A : \TYPE{Closed}(X) \.
-		\forall U \in \U(A) \.
-		\NewLine : 
-		\exists W : \Nat \to \T(X) : 
-		A \subset \bigcup_{i \in I} W_i  \And 
-		\forall i \in \Nat \. 
-		\overline{W_i} \subset  U \.
-		X : \TYPE{T4}
-	}
-	\Assume{A,B}{\TYPE{Closed}(X)}
-	\Assume{[1]}{A \cap B = \emptyset}
-	\Say{\Big(W,[2]\Big)}{[0](A,B^\c)}
-	{ 
-		\sum_{W : \Nat \to \T(X)} 
-		A \subset \bigcup_{i \in I} W_i 
-		\And
-		\forall i \in \Nat \. \overline{W_i} \subset B^\c
-	}
-	\Say{\Big(V,[3]\Big)}{[0](B,A^\c)}
-	{ 
-		\sum_{V : \Nat \to \T(X)} 
-		B \subset \bigcup_{i \in I} V_i 
-		\And
-		\forall j \in \Nat \. \overline{V_i} \subset A^\c
-	}
-	\Say{H}{
-		\Lambda i \in \Nat \. W_i \setminus \bigcup_{j=1}^{i} \overline{V_i}  
-	}{ \Nat \to \T(X)  }
-	\Say{G}{
-		\Lambda i \in \Nat \. V_i \setminus \bigcup_{j=1}^{i} \overline{W_i}  
-	}{ \Nat \to \T(X)  }
-	\Say{[4]}{\ByConstr H [3]}
-	{
-		A \subset \bigcup^\infty_{n=1} H_n
-	}
-	\Say{[5]}{\ByConstr G [2]}
-	{
-		B \subset \bigcup^\infty_{n=1} G_n
-	}
-	\Say{O}{ \bigcup^\infty_{n=1} H_n }{\U(A)}
-	\Say{Q}{\bigcup^\infty_{n=1} G_n}{\U(B)}
-	\Say{[6]}{\ByConstr G \ByConstr H}{\forall i \in \Nat \. \forall j \in i \. H_i \cap G_j = \emptyset }
-	\Say{[7]}{\ByConstr H \ByConstr G}{\forall i \in \Nat \. \forall j \in i \. G_i \cap H_j = \emptyset }
-	\Say{[8]}{ [6][7] }{\forall i,j \in \Nat \. H_i \cap G_j = \emptyset}  
-	\Conclude{\Big[(A,B).*\Big]}{ \ByConstr O \ByConstr Q [8]}{ O \cap Q = \emptyset}
-	\Derive{[*]}{\bd^{-1}\TYPE{T4} }{ (X : \TYPE{T4}) }
-	\EndProof
-	\\
-	\Theorem{SecondCountableRegularIsNormal}
-	{
-		\forall X : \TYPE{T3} \And \TYPE{SecondCountable} \. X : \TYPE{T4}
-	}
-	\NoProof
-	\\
-	\Theorem{CountableRegularIsNormal}
-	{
-		\forall X : \TYPE{T3} \. |X| \le  \aleph  \Imply X : \TYPE{T4}
-	}
-	\NoProof
-}
-\Page{
-	\DeclareType{Cover}{\prod_{X \in \TOP} ???X  }
-	\DefineType{\A}{Cover}{\bigcup \A = X}
-	\\
-	\DeclareType{OpenCover}{\prod_{X \in \TOP} ??\T(X)  }
-	\DefineType{\mathcal{O}}{OpenCover}{\bigcup \mathcal{O} = X}	
-	\\
-	\DeclareType{PointFiniteCover}{\prod_{X \in \TOP} ?\TYPE{OpenCover}(X)  }
-	\DefineType{\mathcal{O}}{PointFiniteCover}
-	{\forall x \in X \. \Big|\big\{ O \in \mathcal{O} : x \in O \}\Big| < \infty }
-	\\
-	\Theorem{NormalPointFiniteCoverRefinement}
-	{
-		\forall X :\TYPE{T4} \.
-		\forall \mathcal{O} : \TYPE{PointFiniteCover}(X)
-		\exists \mathcal{V} : \TYPE{OpenCover}(X) : 
-		\NewLine \. 
-		\exists V : \mathcal{O} \ToBij \mathcal{V} :
-		\forall O \in \mathcal{O} \.
-		\overline{V_O} \subset O
-	}
-	\Say{\mathcal{G}}
-	{
-		\Big\{
-			V : \mathcal{O} \to \T(X) : \forall O \in \mathcal{O} \. V_O = O | \overline{V_O}  \subset O  \And
-			\bigcup_{O \in \O} V_O = X
-		\Big\}
-	}
-	{
-		?\Big(\O \to \T(X)\Big)
-	}
-	\Say{[1]}{\ByConstr \mathcal{G}}{\O \in \mathcal{G} }
-	\Say{[2]}{\bd \TYPE{NonEmpty}[1]}{ \mathcal{G} \neq \emptyset}
-	\Assume{G}{\mathcal{G}}
-	\Assume{O}{\O}
-	\Assume{[3]}{G_O = O}
-	\Say{U}{\bigcup_{V \in \O : V \neq O} O}{\T(X)}
-	\Say{A}{U^\c}{\TYPE{Closed}(X)}
-	\Say{\Big( W,[4]\Big)}{\THM{NormalCriterion}(A,O)}
-	{
-		\sum  W \in \T(X) \.
-		A \subset \overline{W} \subset O
-	}
-	\Say{[5]}{[4]\bd \FUNC{ReplaceValue} }{\widehat{G}_O(W) \in \mathcal{G}}
-	\Conclude{[G.*]}{\bd \le_\mathcal{G} [4][5]}{ \widehat{G}_O(W) \le G  }
-	\Derive{[4]}{I(\forall)}
-	{
-		\forall  G \in \mathcal{G} \. \forall O \in \O \.
-		G_O \Imply \exists G' \in \mathcal{G} : G' \le G
-	}
-	\Assume{\mathcal{G}'}{\TYPE{Chain}(\mathcal{G}')}
-	\Say{G}{\Lambda O \in \O \. \bigcap_{G' \in \mathcal{G}} G'_O}
-	{
-		\O \to ?X
-	}
-	\Say{[5]}{\ByConstr \mathcal{G} }{\forall O \in \O \. G_O = O | \overline{G_O} \subset O}
-	\Assume{x}{X}
-	\Say{\O'}{\{ O \in \O : x \in O  \}}{\TYPE{Finite}(\O)}  
-	\Say{\Big(O, [6]\Big)}{\THM{PigionholePrinciple}\bd \TYPE{Chain}(\mathcal{G}')\ByConstr \O'}
-	{
-		\sum O \in \O' \. x \in \bigcap_{G' \in \mathcal{G}'} G'_O
-	}
-	\Conclude{[x.*]}{ [6] \THM{UnionSubset}}{ x \in \bigcup_{O \in \O} G_O}
-	\Derive{[6]}{ I \TYPE{Subset}  }{ X =  \bigcup_{O \in \O} G_O    }
-	\Say{[7]}{\THM{LocallyFiniteClosedUnion}\ByConstr }
-	{  \forall O  \in \O \. G_O \in \T(X)  }
-	\Say{[8]}{\ByConstr \mathcal{G} [7][6][5]}
-	{
-		G \in \mathcal{G}
-	}
-}
-\Page{
-	\Conclude{[\mathcal{G}'.*]}{ \ByConstr G }{\forall G' \in \mathcal{G'} \. G \le G'}
-	\Derive{\Big( G,[5]\Big)}{\THM{ZornLemma}[2]}
-	{
-		\sum G \in \mathcal{G} \. G = \min \mathcal{G}
-	}
-	\Conclude{[*]}{[4][5]}{ \forall O \in \O \. \overline{G_O} \subset O }
-	\EndProof
-	\\
-	\Theorem{T1Invariance}
-	{
-		\forall X :  \TYPE{T1} \.
-		\forall Y \in \TOP \.
-		\forall f : \TYPE{Closed}(X,Y) \.
-		f(X) : \TYPE{T1}
-	}
-	\NoProof
-	\\
-	\Theorem{T4Invariance}
-	{
-		\forall X :  \TYPE{T4} \.
-		\forall Y \in \TOP \.
-		\forall f : \TYPE{Closed}(X,Y) \.
-		f(X) : \TYPE{T4}
-	}
-	\NoProof
-	\\
-	\Theorem{T0BySingletonClosures}
-	{
-		\forall X \in \TOP \.
-		X : \TYPE{T0} \iff
-		\forall x,y \in X \.
-		x \neq y \Imply 
-		\overline{\{x\}} \neq \overline{\{y\}}
-	}
-	\NoProof
-	\\
-	\Theorem{T1DoubleDerivedSet}
-	{
-		\forall X : \TYPE{T1} \.
-		\forall A \subset X \.
-		A^{\d\d} \subset A^{\d}
-	}
-	\Assume{x}{A^{\d\d}}
-	\Say{[1]}{\bd \FUNC{derivedSet}(x,A^{\d\d})}
-	{  x \in \overline{\A^\d \setminus \{x\}} }
-	\Say{[2]}{\THM{ClosureEquivalent}[1]}
-	{
-		\forall U \in \U(x) \.
-		U \cap   (A^\d \setminus \{ x\}) \neq \emptyset
-	}
-	\Say{[3]}{\bd \FUNC{derivedSet}[2]}
-	{
-		\forall U \in \U(x) \.
-		\exists y \in U  : 
-		y \in  \overline{A \setminus \{y\}} \setminus \{x\} 
-	}
-	\Say{[4]}{\THM{ClosureEquivalent}[3]}
-	{
-		\forall U \in \U(x) \.
-		\exists y \in U  : 
-		\forall V \in \U(y) \. V \cap  A \setminus \{y\} \neq \emptyset \And y \neq x
-		\neq \emptyset
-	}
-	\Assume{U}{\U(x)}
-	\Say{\Big( y,[5] \Big)}{[4](U)}
-	{
-		\sum y \in U \. \forall V \in \U(y) \. V \cap A \setminus \{y\}  \neq \emptyset \And y \neq x
-	}
-	\Say{[6]}{\bd \TYPE{T1}(X)[5]}{ 
-		\forall V \in U(y) \. V \cap A \setminus \{y\} \setminus \{ x \} \neq \emptyset
-	}
-	\Say{[7]}{[6](U)}{U \cap A \setminus \{y\} \setminus \{x\} \neq \emptyset}
-	\Conclude{[U.*]}{\THM{DecreasingSetminus}(A,\{y,x\},\{x\})\THM{MonotonicIntersect}[7]}
-	{  
-		U \cap  (A \setminus \{x\} ) \neq \emptyset                                     
-	}
-	\Derive{[5]}{\THM{ClosureEquivalent}}
-	{
-		x \in \overline{A  \setminus \{x\}}  
-	}
-	\Conclude{[x.*]}{\bd^{-1} \TYPE{derivedSet}}{x \in A^\d}
-	\DeriveConclude{[*]}{\bd^{-1} \TYPE{Subset}}{A^{\d\d} \subset A^\d}
-	\EndProof
-}\Page{
-	\Theorem{T1DerivedSetIsClosed}
-	{
-		\forall X : \TYPE{T1} \.
-		\forall A \subset X  \.
-		A^{\d} : \TYPE{Closed}(A)
-	}
-	\Assume{x}{A^{\d\c}}
-	\Assume{[1]}{\forall U \in \U(x) \. U \cap A^{\d} \neq \emptyset }
-	\Say{[2]}{\bd \FUNC{derivedSet}[1]}
-	{
-		\forall U \in \U(x) \.
-		\exists y \in U : y \in \overline{A \setminus \{x\}}
-	}
-	\Say{[3]}{\LOGIC{ByAnalogy}(\LOGIC{proof} \; \THM{T1DoubleDerivedSet})[2]}
-	{
-		x \in A^{\d}
-	}
-	\Conclude{[4]}{\THM{InAndNotIn}[3]}
-	{
-		\bot
-	}
-	\Derive{[1]}{\THM{OpenByInnerCover}}{A^{\d\C} \in \T(X)}
-	\Conclude{[*]}{\bd^{-1} \TYPE{Closed}}{A^{\d} \in \T(X)}
-	\EndProof
-	\\
-	\Theorem{T1DerivedSetClosure}
-	{
-		\forall X : \TYPE{T1} \.
-		\forall A \subset X  \.
-		\overline{A}^\d = A^\d
-	}
-	\Say{[1]}{\bd \TYPE{PotentialClosure}(\cl_X)(A)}
-	{	
-		A \subset \overline{A}
-	}
-	\Say{[2]}{ \THM{DervivedSetIsMonotonic}[1]}
-	{
-		A^d \subset \overline{A}^\d
-	}
-	\Assume{x}{\overline{A}^\d}
-	\Say{[1]}{\bd \FUNC{derivedSet}}
-	{
-		x \in \overline{\overline{A} \setminus \{x\}}
-	}
-	\Say{[2]}{\THM{EquivalentClosure}[1]}
-	{
-		\forall U \in \U(x) \.
-		U \cap \overline{A} \setminus \{x\} \neq \emptyset
-	}
-	\Say{[3]}{\THM{ClosureEquivalent}[2]}
-	{
-		\forall U \in \U(x) \.
-		\exists y \in U  : 
-		\forall V \in \U(y) \. V \cap  A  \neq \emptyset \And y \neq x
-		\neq \emptyset
-	}
-	\Assume{U}{\U(x)}
-	\Say{\Big(y,[4]\Big)}{[3](U)}
-	{
-	   \sum y \in U \. \forall V \in \U(y) \. V \cap A \neq \emptyset \And y \neq x
-	}
-	\Say{[5]}{[4](U)}
-	{
-		U \cap A \neq \emptyset 
-	}
-	\Conclude{[U.*]}{\bd \TYPE{T1} [5][4]}{ U \cap A \setminus \{x\} \neq \emptyset}
-	\Derive{[4]}{\THM{EquivalentClosure}[3]}
-	{
-		x \in \overline{A \setminus \{x\}}
-	}
-	\Conclude{[x.*]}{\bd^{-1} A^\d}
-	{
-		x \in A^\d 
-	}
-	\Derive{[3]}{\bd^{-1} \TYPE{Subset}}{\overline{A}^\d \subset A^\d}
-	\Conclude{[*]}{\bd^{-1} \TYPE{SetEq}[2][3]}
-	{
-		\overline{A}^\d = A^\d
-	}
-	\EndProof
-	\\
-	\Theorem{T1FiniteDerivedSet}
-	{
-		\forall  X : \TYPE{T1} \.
-		\forall  A : \TYPE{Finite}(X) \.
-		A^\d = \emptyset
-	}
-	\NoProof
-	\\
-	\DeclareType{Retraction}
-	{
-		\prod X : \TS \.
-		?\End_{\TOP}(X) \.
-	}
-	\DefineType{f}{Retractrion}{f^2 = f}
-	\\
-	\DeclareType{Retract}
-	{
-		\prod X : \TS \.
-		??X
-	}
-	\DefineType{R}{Retract}{
-		\exists f : \TYPE{Retraction}(X) \.
-		f(X) = R
-	}
-}
-\Page{ 
-	\Theorem{HausdorfRetractIsClosed}
-	{
-		\forall X : \TYPE{T2} \.
-		\forall R : \TYPE{Retract}(X)  \.
-		R : \TYPE{Closed}(X)
-	}
-	\Say{\Big(f,[1]\Big)}{\bd \TYPE{Retract}}
-	{
-		\sum f : \TYPE{Retraction}(X) \. f(X) = R
-	}
-	\Say{[2]}{\bd \TYPE{Retraction}(f)[1]}{R = \{ x \in X : f(x) = x\}}
-	\Conclude{[*]}{\THM{ClosedEqualityInT2Space}}
-	{
-		R : \TYPE{Closed}(X)
-	}
-	\EndProof
-	\\
-	\Theorem{NormalIteration}
-	{
-		\forall X : \TYPE{T4} \.
-		\forall I : \TYPE{Finite} \.
-		\forall A : \TYPE{Disjoint} \Big( I, \TYPE{Closed}(X) \Big) \.
-		\exists U : \TYPE{Disjoint} \Big( I, \U(A) \Big) 
-	}
-	\NoProof
-	\\
-	\Theorem{HausdorffIteration}
-	{
-		\forall X : \TYPE{T4} \.
-		\forall I : \TYPE{Finite} \.
-		\forall A : \TYPE{Disjoint} \Big( I, \TYPE{Finite}(X) \Big) \.
-		\exists U : \TYPE{Disjoint} \Big( I, \U(A) \Big) 
-	}
-	\NoProof
-	\\
-	\Theorem{SumPreservesSeparation}
-	{
-		\forall I \in \SET \.
-		\forall n \in \{1,\ldots,6\} \.
-		\forall X : I \to \TYPE{T}n \. 
-		\coprod_{i \in I} X_i  : \TYPE{T}n
-	}
-	\NoProof
-	\\
-	\Theorem{HausdorffByLimits}
-	{
-		\forall X : \TOP \.
-		X : \TYPE{T2} \iff \forall x : \TYPE{Net}(D,X) \. |\lim_{n \in D} x_n| \le 1
-	}
-	\NoProof
-	\\
-	\Theorem{ProductPreservesSeparation}
-	{
-		\forall I \in \SET \.
-		\forall n \in \{1,\ldots, 6\} \.
-		\forall X : I \to \TYPE{T}n \And \TYPE{NonEmpty} \. 
-		\prod^n_{i=1} X_i : \TYPE{T}n
-	}
-	\NoProof
-}
+\subsection{Regularity as Separation}
 \subsubsection{Functional Separation}
 \Page{
 	\DeclareType{Tychonoff}{?\TYPE{T1}}   
@@ -5188,7 +5203,7 @@
 }
 \newpage
 
-\subsection{Concepts}
+\subsection{Properties Preserved by Continuous Transformations}
 \subsubsection{Compact Sets}
 \Page{
 	\DeclareType{Compact}{ \prod X \in \TOP \.  ??X  }
@@ -5678,7 +5693,7 @@
 	\DefineType{X}{TotallyDisconnectedSpace}
 	{ \forall A \in \mathrm{CC}(X) \. A : \TYPE{Singleton} }
 	\\
-	\Theorem{TottalyDisconectesByBase}
+	\Theorem{TotallyDisconectesByBase}
 	{
 		\forall X \in \TOP \.
 		\langle \TYPE{CLopen}(X) \rangle_{\TOP} = X \iff
@@ -5763,158 +5778,181 @@
 }
 \newpage
 \section{Compacta}
-\subsection{Compact Spaces and their Genera}
-\subsubsection{Category of Compact Spaces}
-\Page{
-	\DeclareFunc{CategoyOfCompacta}{\CAT}
-	\DefineNamedFunc{CategoryOfCompacta}{}{\HC}{ \Big( \TYPE{Compact} \And \TYPE{T2}, C, \circ, \id \Big)  } 
+In the previous chapter I itroduced compactness on the elementary rather. 
+The chapter is fully devoted to developing these chapters to the level required 
+by advanced abstract analysis. 
+Three sections of this chapter are independent on conceptual level, 
+but latter fragments may reference earlier ones ocasionally.
+\subsection{Genera}
+As well as the separation axioms, 
+the compactness may be introduced as a form o regularity, 
+a property which makes space easy to handle.
+As it was shown during our previous encounter with compacts, 
+they, indeed, may have nice properties.
+However, being compact is too restrictive,
+as many common natural spaces like real numbers $\Reals$ are not compact.
+In this section I investigate some other predicates which in may ways simmilar to compactness,
+in the sence of making spaces into handy stuctures of comprehandable size, 
+on the other hand still far more common then the compactness itself. 
+\subsubsection{Lindel\"of Spaces}
+First of all I investigate Lindel\"of spaces. 
+Which are spaces which are more general than compacts as only countable
+subcovers may be extracted from the arbitrary covers. It is obvious that compact spaces are Lindel\"of.
+Also as with compacts I show that this properties is inhereted by all closed sets. In difference with compactness which allows elvating $\TYPE{T2}$ to $\TYPE{T4}$ separation axioms, the Lindel\"of property allows only elevating $\TYPE{T3}$ to $\TYPE{T4}$.
+\Page{   
+	\DeclareType{Lindel\ddot{o}f}
+	{
+		?\TOP
+	}
+	\DefineType{X}{Lindel\ddot{o}f}
+	{
+		\forall \mathcal{O} : \TYPE{OpenCover}(X) \. 
+		\exists \mathcal{O}' \subset \mathcal{O} \.
+		|\mathcal{O}'| \le \aleph_0 \And \mathcal{O}' : \TYPE{OpenCover}(X)
+	}
 	\\
-	\Theorem{CompactExtensionCriterion}
+	\Theorem{CompactIsLindel\ddot{o}f}
 	{
-		\forall X \in \TOP \.
-		\forall Y \in \HC \. 
-		\forall D : \TYPE{Dense}(X) \.
-		\forall f : D \Arrow{\TOP} X \.
-		\NewLine \. 
-		\Big(\exists F : X \Arrow{\TOP} Y  : F_{|D} = f \Big)    
-		\iff
-		\forall A,B : \TYPE{Closed}(Y) \.  
-		A \cap B= \emptyset \Imply
-		\Big(\cl_x f^{-1}(A)\Big) \cap \Big( \cl_y f^{-1}(B) \big) = \emptyset 
+		\forall X : \Compact \. \Lindelof(X)
 	}
-	\Assume{F}{X \Arrow{\TOP} Y}
-	\Assume{[1]}{F_{|D} = f }
-	\Assume{A,B}{\TYPE{Closed}(Y)}
-	\Assume{[2]}{A \cap B = \emptyset}
-	\Say{[3]}{[1]\THM{ClosedContainsLimits}}{\cl_X f^{-1}(A) = F^{-1}(A) }
-	\Say{[4]}{[2]\THM{ClosedContainsLimits}(B)}{\cl_X f^{-1}(B) = F^{-1}(B)}
-	\Say{[F.*]}{\THM{DisjointPreimage}[2][3][4]}{ \cl_X f^{-1}(A) \cap \cl_X f^{-1}(B) = \emptyset }
-	\Derive{[1]}{I(\Imply)}{\LOGIC{LEFT} \Imply \LOGIC{RIGHT}}
-	\Assume{[2]}{\LOGIC{Right}}
-	\Assume{x}{X}
-	\Assume{a,b}{\TYPE{Net}\Big(\U_X(x),D\Big)}
-	\Assume{[3]}{\forall  U \in \U_X(x) \.  a_U,b_U \in U}
-	\Assume{A}{\TYPE{Cluster}\Big(f(a)\Big)}
-	\Assume{B}{\TYPE{Cluster}\Big( f(b)\Big)}
-	\Assume{[4]}{A \neq B}
-	\Say{[5]}{\THM{CompactIsNormal}(Y)}{\Big( Y : \TYPE{T4}\Big)}
-	\Say{\Big( U,V, [6] \Big)}
-	{
-		\bd \TYPE{Urysohn}(Y)(A,B)[4][5] 
-	}
-	{
-		\sum U \in \U(A) \. \sum V \in \U(B) \. 
-		\overline{U} \cap \overline{B} = \emptyset 
-	}
-	\Say{[7]}{[2][6]}{\cl_X f^{-1}\overline{U} \cap \cl_X f^{-1}\overline{V} = \emptyset}
-	\Say{[8]}{\THM{MonotonicClosure}}{\cl_X f^{-1}(U) \cap \cl_X f^{-1}(V) = \emptyset}
-	\Say{[9]}{[8](x)}{x \not \in \cl_X f^{-1}(U) \Big| x \not \in \cl_X f^{-1}(V) }
-	\Say{[10]}{\bd \TYPE{Cluster}(f(a))(A)(U)[3]\THM{ClosureEqual}(X)}{x \in \cl_X f^{-1}(U)}
-	\Say{[11]}{\bd \TYPE{Cluster}(f(b))(B)(V)[3]\THM{ClosureEqual}(X)}{x \in \cl_X f^{-1}(V)}
-	\Conclude{[(a,b).*]}{[9][10][11]}{\bot}
-	\DeriveConclude{[3]}{I(\forall)I(\Imply)I(\forall)E(\bot)}
-	{
-		\forall a,b : \TYPE{Net}(\U_X(x),D) \.
-		\Big( \forall U \in \U_X(x) \. a_U,b_U \im U) \Imply 
-		\forall A : \TYPE{Cluster}\Big( f(a)\Big) \.
-		\forall B : \TYPE{Cluster}\Big( f(b) \Big) \.
-		A = B
-	}
-	\Say{\Big(a,[4]\Big)}{  \bd \TYPE{Dense}(X)(D)}{ \sum a : \TYPE{Net}(\U_X(x),D) \. \forall U \in \U(x) \. a_U \in U   }
-	\Conclude{F(x)}{\lim_{U \in \U(x)} f(a_U)}{Y}
-	\Derive{F}{I(\to)}{X \to Y}
-	\Say{[3]}{\ByConstr F}{F_{|D} = f}
-}\Page{
-	\Assume{A}{\TYPE{Closed}(Y)}
-	\Say{[4]}{\ByConstr F(A)}{F^{-1}(A) = \cl_X f^{-1}(A)}
-	\Conclude{[*.A]}{\bd \cl_X [4]}{ F^{-1}(A) : \TYPE{Closed}(X) }
-	\DeriveConclude{[2.*]}{\bd^{-1} C}{F \in C(X,Y)}
-	\Conclude{[*]}{I(\iff)[1]I(\Imply)}{\LOGIC{This}}
+	\Explain{Obvious}
 	\EndProof
 	\\
-	\Theorem{CompactCoproduct}
+	\Theorem{SecondCountableIsLindel\ddot{o}f}
 	{
-		\forall I \in \SET \.
-		\forall X : I \to \TOP \.
-		\coprod_{i \in I} X_i \in \HC  
-		\iff
-		\im X \subset \HC \And I : \TYPE{Finite}
+		\forall X : \TYPE{SecondCountable} \.
+		\Lindelof(X)
 	}
-	\NoProof
+	\Explain{ 
+		Let $\B$ be a countable base for $X$}
+	\Explain{
+		As $\O$ is a cover of $X$ it is possible to construct a function
+		$O : X \to \O$ such that $x \in O_x$}
+	\Explain{
+		By definition of the base it must be possible to construct a function
+	    $B : X \to \B$ such that $x \in B_x \subset O_x$}
+	\Explain{
+		Then $\im B \subset \B$ must be countable}
+	\Explain{
+		Then  for each $U \in \im B$ select $O'_U$ with $U \subset O'_U$,
+		which is possible for by construction of $B$}
+	\Explain{
+		Then $\im O'$ must be countable as an image of countable set}
+	\Explain{
+		$x \in U_x$ for any $x \in X$, so 
+		$x \in O'_{U_x}$
+	}
+	\Explain{
+		Thus, $\im O'$ forms a countable subcover of $\O$}
+	\EndProof
 	\\
-	\Theorem{TychonoffTheorem}
-	{
-		\forall I \in \SET \.
-		\forall X : I \to \TOP \.
-		\prod_{i \in I} X_i \in \HC \iff \im X \subset \HC   
+	\Theorem{
+		ClosedLindel\ddot{o}fSubspaceIsLindel\ddot{o}f
 	}
-	\NoProof
+	{
+		\forall X : \Lindelof \.
+		\forall F : \Closed(X) \.
+		\Lindelof(F)
+	}
+	\Explain{
+		Assume $\O$ is an open cover of $F$}
+	\Explain{
+		Then $\O'= \Big\{O\cup F^\c \Big|O \in \O \Big\}$ is an open cover of $X$}
+	\Explain{
+		Select a countable subcover $\C$ of $\O'$ by Lindel\"of property}
+	\Explain{
+		Then $\C' = \{ O \cap F  | O \in \C \}$ is a countable subcover of $\O$}
+	\EndProof
+}\Page{
+	\Theorem{CoverSeparationLemma}
+	{
+		\NewLine ::		
+		\forall X \in \TOP \.
+		\forall A,B  \subset X \.
+		\forall V,W : \Nat \to \T(X) \.
+		\forall \aleph :  A \subset \bigcup^\infty_{n=1} V_n \.
+		\forall \beth : \forall n \in \Nat \. \overline{V} \cap B = \emptyset \. \NewLine \.
+		\forall \gimel : B \subset \bigcup^\infty_{n=1} W_n \.
+		\forall \daleth :  \forall n \in \Nat \. \overline{W} \cap A = \emptyset \.
+		\TYPE{Separated}(X,A,B)
+	}
+	\Explain{
+		Without loss of generality assume that $V$ and $W$ are increasing}
+	\Explain{
+		Otherwise construct $V'_n = \bigcup^n_{k=1} V_k$ and 
+		$W'_n = \bigcup^n_{k=1}  W_k$}
+	\Explain{
+		Clearly, these constructions inherit propertirs $\aleph',\beth',\gimel',\daleth'$}
+	\Explain{
+		Also without loss of generality assume that $V_n \cap \overline{W}_n = \emptyset$
+		and $W_n \cap \overline{V}_n = \emptyset$}
+		\Explain{
+		Otherwise construct $V'_n = V_n \setminus \overline{W}_n$ and 
+		$W'_n =  W_n \setminus \overline{V}_n$}
+	\Explain{
+		Clearly, these constructions inherit propertirs $\aleph',\beth',\gimel',\daleth'$}
+	\Explain{
+		Define open sets $G = \bigcap^\infty_{n=1} V_n$ and $H = \bigcap^\infty_{n=1} W_n$}
+	\Explain{
+		Then $A \subset G$ and $B \subset H$ by $\aleph$ and $\gimel$}
+	\Explain{
+		Take any $x \in G \cap H$} 
+	\Explain{
+		Then there exists some $n,m \in \Nat$ such that $x \in V_n \cap W_n$}
+	\Explain{
+		Take $k = \max(m,n)$}
+	\Explain{
+		Then $x \in V_k \cap W_k$ as both $V$ and $W$ are increasing}
+	\Exclaim{
+		But $V_k \cap \overline{W}_k = \emptyset$, so this is a contradiction}
+	\Explain{
+		Thus, $H \cap G = \emptyset$ and $H$ and $G$ provide the separation of
+		$A$ and $B$}
+	\EndProof
 	\\
-	\Theorem{TychonoffUniversality}
+	\Theorem{Lindel\ddot{o}fRegularity}
 	{
-		\forall \kappa : \TYPE{InfiniteCardinal} \. 
-		[0,1]^\kappa : \TYPE{Universal} \;  \Big\{ X \in \HC : w(X) = \kappa \Big\}
+		\forall X : \Lindelof \And \TYPE{T3} \.
+		\TYPE{T4} \And \CR(X)
 	}
-	\NoProof
+	\Explain{
+		Assume $A$ and $B$ are both closed sets in $X$}
+	\Explain{
+		As $X$ is $\TYPE{T3}$ for every $a \in A$ it must be possible
+		to select open $U_a$ such that $a \in U_a$ and  $\overline{U}_a \cap B = \emptyset$}
+	\Explain{
+		As $A$ itself is Lindel\''of it must be possible to select a countable subcover
+		$\U$ from $U_A$}
+	\Explain{
+		By the simmilar process we may select a countable cover $\mathcal{V}$ for $B$}
+	\Explain{
+		But this leads us to open separation lemma, so $A$ and $B$ 
+		can be separated}
+	\Explain{
+		Thus $X$ is $\TYPE{T4}$ and hence $\TYPE{T3.5}$ or Tychonoff}
+	\EndProof
 	\\
-	\Theorem{TychonoffCriterion}
+	\Theorem{Lindel\ddot{o}fFSigmaIsLinelof}
 	{
-		\forall X  \in \TOP \.
-		X : \TYPE{Tychonoff} 
-		\iff
-		\exists K \in \HC : \exists \TYPE{HomeomorphicEmbedding}(X,K)
+		\forall X : \Compact \. 
+		\forall A \in F_\sigma(X) \.
+		\Lindelof(A)
 	}
-	\NoProof
-	\\
-	\Theorem{WallaceTheorem}
-	{
-		\forall I \in \SET \.
-		\forall X : I \to \TOP  \. 
-		\forall K : \prod_{i \in I} \HC \And \TYPE{Subspace}(X_i) \.
-		\forall W : \TYPE{Open} \; \prod_{i \in I} X_i \. \NewLine \. 
-		\forall [0] : \prod_{i \in I} K_i \subset W \.
-		\exists U : \prod_{i \in I} \TYPE{Open}(X_i) :
-		\prod_{i \in I} K_i \subset \prod_{i \in I} U_i \subset W \And
-		\Big|\{ i \in I : U_i \neq X_i\}\Big| < \infty
-	}
-	\NoProof
-	\\
-	\Theorem{AlexandroffTheorem}
-	{
-		\forall X \in \HC \.
-		\forall E : \TYPE{Equivalence}(X) \.
-		E : \TYPE{Closed} \iff 
-		\exists Y : \TYPE{T2} :
-		\exists f : X \Arrow{\TOP} Y :
-		\NewLine :
-		\frac{X}{E} \cong_{\TOP} \frac{X}{f}
-	}
-	\NoProof
-}
-\Page{
-	\Theorem{DiniTheorem}
-	{
-		\forall X : \TYPE{Compact} \.
-		\forall f : \TYPE{Monotonic}( C(X) ) \.
-		\forall F : X \to \Reals \. \NewLine
-		\Big(
-			\forall x \in X \.
-			\lim_{n \to \infty} f_i(x) = F(x) \.
-		\Big) \Imply
-		f \rightrightarrows F
-	}
-	\NoProof
-	\\
-	\Theorem{StoneWeierstassTheorem}
-	{
-		\forall X : \TYPE{Compact} \.
-		\forall P : \TYPE{Subalgebra}\Big( \Reals, C(X) \Big) \. \NewLine \.
-		\TYPE{SeparatesPoints}(X)(P) \Imply  P : \TYPE{Dense}\Big( C(X), \FUNC{uniformTopology}(X,\Reals) \Big)
-	}
-	\NoProof
+	\Explain{ 
+		Repesent $A = \bigcup^\infty_{n=1} C_n$, where each $C_n$ is closed}
+	\Explain{
+			Then each $C_n$ is Lindel\"of, and if $\O$ is an open cover for $A$, then $\O$ is open cover for
+			each $C_n$} 
+	\Explain{ 
+			Hence open countable subcovers $\O'_n$ can be selected for  each $C_n$}
+	\Explain{
+			Then $\O'' = \bigcup^\infty_{n=1} \O'_n$ is still countable and is a cover of $A$}
+	\EndProof
 }
 \newpage
 \subsubsection{Locally Compact Spaces}
+Another intuitive approach on how the niceness of compactness can be extended to the broader class of
+spaces is the Locall Compactness. So, not the whole space is comprehandable anymore, but every point has a comprehandable neighborhood. In this case a $\TYPE{T2}$ separation axiom can only be lifted to the separation axiom $\TYPE{T3.5}$. 
 \Page{
 	\DeclareType{LocallyCompact}{?\TYPE{TOP}}
 	\DefineType{X}{LocallyCompact}{\forall x \in X \. \exists U \in \U(x) : \overline{U} : \TYPE{Compact}(X) }
@@ -5996,7 +6034,532 @@
 	\NoProof
 }
 \newpage
+\subsubsection{Countably Compact Spaces}
+The predicate dual to being Lindel\"of is countable compactness. This duality is present in the sense that both combined form true compactness. The duality suggest that countable compactness allows elevating $\TYPE{T2}$ separation axiom to $\TYPE{T3}$ if the space is first countable.
+\Page{
+	\DeclareType{CountablyCompact}{?\TOP}
+	\DefineType{X}{CountablyCompact}{
+			\forall \O : \TYPE{OpenCover}(X) \. 
+			|\O| \le \aleph_0 \Imply \exists \O' \subset \O : |\O'| < \infty \. 
+			\And \O' : \TYPE{OpenCover}(X) 
+		}
+	\\
+	\Theorem{CompactnessDecomposition}
+	{
+		\forall X \in \TOP \.
+		\forall \CCompact \And \Lindelof(X) 
+		\iff
+		\Compact(X)
+	}
+	\Explain{This is obvious}
+	\EndProof
+	\\
+	\DeclareType{CondensationPoint}
+	{
+		\prod_{ X \in \TOP }
+		?X \to ?X
+	}
+	\DefineType{x}{CondensationPoint}
+	{
+		\Lambda A \subset X \. \forall U \in \U(x) \. |A \cap U| = \infty 
+	}
+	\\
+	\Theorem{CountableCompactAltDef}
+	{
+		\NewLine ::		
+		\forall X \in \TOP \.
+		\CCompact(X)
+		\iff  \NewLine \iff
+	 	\forall x : \Nat \to X \. \exists \Cluster(X,x)
+	 	\iff \NewLine \iff
+	 	\forall  A : \TYPE{Infinite}(X) \. \exists \TYPE{CondensationPoint}(X,A)
+	}
+}
+\newpage
+\subsubsection{Sequentially Compact Spaces }
+As it is now evident that countably compact need to be first countable to lift 
+$\TYPE{T2}$ to $\TYPE{T3}$. 
+The first countable countably compact space is in fact sequetially compact.
+So this concept seems to be more wholesome as convergnece is an such 
+important part of analysis. 
+\Page{
+	\DeclareType{SequentiallyCompact}{?\TOP}
+	\DefineType{X}{SequentiallyCompact}{\forall x : \Nat \to X \. \exists y \subset x : y : \TYPE{Convergent}(X)}
+}
+\newpage
+\subsubsection{Pseudocompact Spaces}
+An important property of compacts is that every continuous function is bounded. 
+Spaces which share this property are called pseudocompact.
+\Page{
+	\DeclareFunc{boundedFunctions}{\TOP \to \SET}
+	\DefineNamedFunc{boundedFunctions}{X}{C_b(X)}{\Big\{ f \in C(X) : \exists a,b \in \Reals : f(X) \subset [a,b] \Big\}}
+	\\
+	\DeclareType{Pseudocompact}{?\TOP}
+	\DefineType{X}{Pseudocompact}{ C(X)  = C_b(X)}
+}
+\newpage
+\subsection{Category of Compact Spaces}
+Compactness can be studied in two distinct ways.
+Firstly, it is possible to look at compact subsets of general topological sets.
+On the other hand, one  may investigate how compact sets interact with each other.
+The later topic leads to the language of category theory naturally.
+\subsubsection{Filters in categories}
+One way to apply this lanuage in the smart way is the use of the filter monad.
+Deep study of this subject is leading to the area known as monoidal topology.
+However, here I only scrath the surface with the basic results and definitions.
+Note, that there some complications in the interpretation of
+$\FILT(\C)(\F,\mathfrak{F})$
+\Page{
+	\DeclareFunc{filterFunctor}{\Cov(\SET,\SET)}
+	\DefineNamedFunc{filterFunctor}{X}{\FILT(X)}{\TYPE{Filter}(X)}
+	\DefineNamedFunc{filterFunctor}{X,Y,f}{\FILT_{X,Y}(f)}{
+		\Lambda \F \in \Filter(X) \. \{  f(A) | A \in \F    \}	
+	}
+	\Explain{
+		Obviosly, as $\F \neq \emptyset$ then $\FILT_{X,Y}(f)(\F) \neq \emptyset$}
+	\Explain{
+		Also, as $\emptyset \not \in \F$ then $f \not \in \FILT_{X,Y}(f)(\F)$}
+	\Explain{
+		All this is true as an image non-emptyset can't be empty}
+	\Explain{
+		Now assume $f(A),f(B) \in \FILT_{X,Y}(f)(\F)$
+	}
+	\Explain{
+		Then there is $\emptyset \neq C \in \F$
+		such that   $C \subset A \cap B$}
+	\Explain{
+		Thus  $f(C) \subset f(A \cap B) \subset f(A) \cap f(B)$}
+	\Explain{ 
+		And $f(C) \in \FILT_{X,Y}(f)(\F)$, so
+		$\FILT_{X,Y}(f)(\F)$ is a filterbase}
+	\EndProof
+	\\
+	\DeclareFunc{pointFilter}{\prod_{X \in \SET} X \to \FILT(X)}
+	\DefineNamedFunc{pointFilter}{x}{\dot x}{\{ A \subset X : A(x) \}}
+	\\
+	\DeclareFunc{sumOfKowalsky}{\prod_{X \in \SET} \FILT^2(X) \to \FILT(X)}
+	\DefineNamedFunc{sumOfKovalsky}{\mathfrak{F}}{m_X(\mathfrak{F})}
+	{
+		\Big\{ A \subset X :  \{ \F \in \FILT(X) | A \in \F  \} \in \langle\mathfrak{F}\rangle  \Big\}
+	}
+	\Explain{
+		As $\emptyset \not \in \F$ for any 
+		$\F \in \FILT(X)$ it follows that
+		$\emptyset \not \in m_X(\mathfrak{F})$}
+	\Explain{
+		Also note that 
+		$\{ \F \in \FILT(X) | X \in \F  \} = \FILT(X)$
+	}
+	\Explain{
+		And $\FILT(X) \in \mathfrak{F}$,
+		so $X \in m_X(\mathfrak{F})$}
+	\Explain{
+		Whence $m_X(\mathfrak{F})\neq \emptyset$}
+	\Explain{
+		If $A,B \in m_X(\mathfrak{F})$ 
+		then
+		$\{ \F \in \FILT(X) | A \in \F  \},\{ \F \in \FILT(X) | B \in \F  \} \in \mathfrak{F}$}
+	\Explain{
+		But
+		$
+			\{ \F \in \FILT(X) | A \in \F  \} \cap \{ \F \in \FILT(X) | B \in \F  \}
+			=
+			\{   \F \in \FILT(X) | A \in \F, B \in \F \} 
+			=
+			\{ \F \in \FILT(X) |  A \cap B \in \F  \} \in \mathfrak{F}
+		$}
+	\Explain{
+		Hence $A \cap B \in m_X(\mathfrak{F})$}
+	\Explain{
+		Now assume that $A \in m_X(\mathfrak{F})$
+		and $A \subset B$
+	}
+	\Explain{
+		Then $\{ \F \in \FILT(X) | A \in \F  \}\in \mathfrak{F}$
+	}
+	\Explain{
+		Also by property of filters being upward closed
+		$
+			\{ \F \in \FILT(X) | A \in \F  \} \subset
+			\{ \F \in \FILT(X) | B \in \F  \}
+		$
+	}
+	\Explain{
+		But as $\mathfrak{F}$ is also filter,
+		then $\{ \F \in \FILT(X) | B \in \F  \} \in \mathfrak{F}$
+		and hence $B \in \mathfrak{F}$}
+	\Explain{
+		And hence $m_X(\mathfrak{F})$ is a filter}
+	\EndProof
+}\Page{
+	\DeclareType{FilterConvergence}
+	{
+		\prod_{X \in \SET} ?\Big(X \times \FILT(X)\Big)
+	}
+	\DefineType{\C}{FilterConvergence}
+	{
+		\forall x \in X \. \C\Big(x,\dot x\Big)
+		\And  \NewLine \And
+		\forall \mathfrak{F} \in \FILT^2(X) \.
+		\exists \F \in \FILT(X) \.
+		\FILT(\C)(\F,\mathfrak{F}) \And  
+		\C(x,\F) 
+		\Imply
+		\C\Big( x,  m_X(\mathfrak{F}) \Big)
+	}
+	\\
+	\Theorem{FilterConvergneceIsTopology}
+	{
+		\NewLine ::		
+		\forall X \in \SET \.
+		\forall  \C : \TYPE{FilterConvergence}(X) \.
+		\exists! \tau : \Topology(X) \. 
+		\forall (x,\F) \in X \times \FILT(X) \. \NewLine \.
+		(x,\F) \in \C \iff  x \in \lim_{(X,\tau)} \F	
+	}
+	\Explain{ 
+		Let $\C$ be a filter convergence in the sense defined above}
+	\Explain{
+		Define $\tau = 
+			\Big\{
+					U \subset X : 
+					\forall (x,\F) \in \C \. 
+					U(x) \Imply \langle\F\rangle(U)
+			\Big\}		
+		$}
+	\Explain{
+		Then $\emptyset$ is trivally in $\tau$}
+	\Explain{
+		If  $(x,\F) \in \C$, 
+		then $\F \neq \emptyset$ so there are $A \subset \F$}
+	\Explain{
+		This means that $A \subset X \in \F$ as $\langle \F \rangle$ must be upward closed}
+	\Explain{
+		Assume $U:I \to \tau$ is the collection of sets,
+		and $(x,\F) \in \C$ is such that $\bigcup_{i \in I} U_i(x)$}
+	\Explain{
+		Then there is $i \in I$ such that $U_i(x)$, so $\langle \F \rangle(U_i)$}
+	\Explain{
+		But as  $\langle \F \rangle$ is upwards closed 
+		$\langle \F \rangle\left( \bigcup_{i \in I} U_i \right)$}
+	\Explain{ 
+		Thus  $\bigcup_{i \in I} U_i \in \tau$}
+	\Explain{
+		Now take $n \in \Nat$ and
+		$U : \{1,\ldots,n\} \to \tau$ and also $(x,\F) \in C$ such that $\bigcap^n_{i=1}U_i(x)$
+	}
+	\Explain{
+		Then $U_i(x)$ for any $i \in \{1,\ldots,n\}$, so $\langle \F \rangle(U_i)$}
+	\Explain{
+		But $\langle \F \rangle$	is intersection closed, so
+		$\langle \F \rangle \left(\bigcap_{i=1}^n U_i\right)$}
+	\Explain{
+		Thus $\bigcup_{i \in I} U_i \in \tau$
+		and we proved that $\tau$ is topology}
+	\Explain{
+		Then by construction
+		$(x,\F) \in \C \Imply  x \in \lim_{(X,\tau)} \F$}
+	\Explain{
+		Now take $(x,\F) \in X \times \FILT(X)$, such that $x \in \lim_{(X,\tau)} \F$}
+	\Explain{
+		This means that $\F(U)$  for all $U \in \U(x)$}
+	\Explain{
+		The idea is to show that $\F = m_X(\mathfrak{F})$ for some filter of filters $\mathfrak{F}$
+		and $\FILT(\C)(\dot x, \mathfrak{F})$}
+	\Explain{
+		So define $\mathfrak{F} = 
+			\Big\{ 
+				\big\{ \langle \mathcal{G} \rangle \big|\mathcal{G} \in \FILT(X), A \in \mathcal{G} \big\} 
+				\Big| 
+					A \in \F			
+			\Big\}$} 
+	\Explain{
+		$\mathfrak{F}$ is a filterbase: it is nonempty as $\F$ is and any element of $\mathfrak{F}$
+		conatains $\F$}
+	\ExplainFurther{
+		It is also closed by intersections as}
+	\ExplainFurther{
+		$
+		\big\{ \langle \mathcal{G} \rangle \big|\mathcal{G} \in \FILT(X), A \in \mathcal{G} \big\} 
+		\cap		
+		\big\{ \langle \mathcal{G} \rangle \big|\mathcal{G} \in \FILT(X), B \in \mathcal{G} \big\}
+		=
+		\big\{ \langle \mathcal{G} \rangle \big|\mathcal{G} \in \FILT(X), A \cap B \in \mathcal{G} \big\}  		
+		$}
+	\Explain{
+		as filters are upward and intersection closed}
+	\Explain{	 
+	 	Then $\F \subset m_x(\mathfrak{F})$}
+}
+\newpage
+\Page{
+	\Explain{
+	 	Assume $A \in  m_x(\mathfrak{F})$ 
+	 }
+	 \Explain{
+	 	Then there is $B \in \F$ such that 
+	 	$
+	 		\big\{ \langle \mathcal{G} \rangle \big|\mathcal{G} \in \FILT(X), B \in \mathcal{G} \big\}
+	 		\subset  
+	 		\big\{ \langle \mathcal{G} \rangle \big|\mathcal{G} \in \FILT(X), A \in \mathcal{G} \big\}
+	 	$
+	 }
+	 \Explain{ But this means that $A \in \langle \F \rangle$ }
+	 \Explain{ So we may say that $m_x(\mathfrak{F}) = \langle\F\rangle$ as filter}
+	 \Explain{
+		By construction 
+		$
+		\dot x \in \big\{ \langle \mathcal{G} \rangle \big|\mathcal{G} \in \FILT(X), N \in \mathcal{G} \big\} 
+		\in 	
+		\mathfrak{F}$
+		for every $N \in \N_\tau(x)$}
+	\Explain{
+		This must be enough to shaw that $\FILT(\C)(\dot x, \mathfrak{F})$}
+	\Explain{
+		And as $\C(x,\dot x)$ by definition, it follows that $\C(x,\F)$
+	}
+	\Explain{
+		If  $\sigma$ and $\tau$ are two topologies with the desired property, 
+		then $\N_\tau(x) = \N_\sigma(x)$ for all $x \in X$}
+	\Explain{
+		So $\tau = \sigma$}
+	\EndProof
+	\DeclareFunc{convergenceAsTopology}
+	{
+		\prod_{X \in \SET} \TYPE{FilterConvergnce}(X) \to \Topology(X)
+	}
+	\DefineNamedFunc{convergenceAsTopology}{\C}{\tau_\C}
+	{
+		\THM{FilterConvergenceIsTopology}
+	} 
+	\EndProof
+	\\
+	\Theorem{CompactTopologyByConvergenve}
+	{
+		\NewLine ::		
+		\forall X \in \SET \.
+		\forall \C : \TYPE{FilterConvergence}(X) \.
+		\Compact(X,\tau_\C) 
+		\iff
+		\NewLine
+		\iff
+		\forall \F : \TYPE{Ultrafilter}(X) \.
+		\exists x \in X \.
+		(x,  \F) \in \C	
+	}
+	\Explain{ 
+		$(\Imply)$
+		Firstly, assume that $(X,\tau_\C)$ is compact}
+	\Explain{
+		Take some $\F \in \FILT(X)$}
+	\Explain{
+		If $\F$ has no limits, then for any $x \in X$ we may select
+		$U \in \U(x)$ such that $U \not \in \F$		
+	}
+	\Explain{
+		Then there exists a finite subcover $\O$
+		of $\im U$}
+	\Explain{
+		There is a set $A \in \F$ as $\F$ 
+		is a filter}
+	\Explain{
+		But as $\O$ is a cover
+		there must be $O \in \O$ such that
+		$O \cap A \in \F$
+	}
+	\Explain{
+		Furthermore, as $\F$ is upward closed,
+		$O \in \F$, which produces a contradiction}
+	\Explain{
+		$(\Leftarrow)$ Now assume that condion on $\C$ holds}
+	\Explain{
+		Then every ultrafilter has a limit}
+	\Explain{
+		But this also means that every net has a convergent subnet
+	}
+	\Explain{
+		But by $\THM{CompactLimitTHM}$ this means that
+		$(X,\tau_\C)$ is compact
+	}
+	\EndProof
+	\\
+	\Theorem{HausdorffTopologyByConvergenve}
+	{
+		\NewLine ::		
+		\forall X \in \SET \.
+		\forall \C : \TYPE{FilterConvergence}(X) \.
+		\TYPE{Hausdorff}(X,\tau_\C) 
+		\iff
+		\NewLine
+		\iff
+		\forall \F : \TYPE{Ultrafilter}(X) \.
+		\Big|\Big\{ 
+			\exists x \in X \.
+			(x,  \F) \in \C	
+		\Big\}\Big| \le 1
+	}
+	\Explain{
+		$(\Imply)$ Assume $x,y \in X$ are two distinct limits of the ultrafilter $\F$}
+	\Explain{
+		Then there are disjoint $U \in \U(x)$ and $V \in \U(y)$}
+	\Explain{
+		But then $U,V \in \F$ but $U \cap V = \emptyset \in \F$,
+		which is a contradiction}
+	\Explain{
+		$(\Leftarrow)$ For $x,y \in X$ there are filters
+		$\N(x),\N(y) \in \FILT(X)$
+		such that $x = \lim \N(x)$ and $y = \lim \N(y)$}
+	\Explain{
+		There are ultrafilters $\F_x,\F_y$ such that
+		$\N(x) \subset \F_x$ and $\N(y) \subset \F_y$}
+	\Explain{ 
+		If for any pair of open neighborhoods
+		$(U,V) \in \U(x) \times \U(y)$,
+		then $U \in \N(y)$ and $V \in \N(x)$}
+	\Explain{
+		But this means that $x,y \in \lim \F_x$ 
+		and $x,y \in \lim \F_y$,
+		which contradicts the assumption}
+	\EndProof
+}
+\subsubsection{Compact Hausdorff Spaces}
+In Last section it was shown that the $\TYPE{FilterConvergence}$ relation $\C$
+becomes a function $\lim:\mathsf{UF}(X) \to X$ if and only if
+the space $(X,\tau_\C)$ is compact and Hausdorff.  
+Thus, it makes compact Hausdorff spaces of a particular interst as a category.
+In particular in this category any invertible continuous bijection will have a 
+continuous inverse.
+Here I aslo prove the Tychonoff theorem, which is a very important result
+such that any product of compacts is compact.
+\Page{
+	\DeclareFunc{CategoyOfCompacta}{\CAT}
+	\DefineNamedFunc{CategoryOfCompacta}{}{\HC}{ \Big( \TYPE{Compact} \And \TYPE{T2}, C, \circ, \id \Big)  } 
+	\\
+	\Theorem{CompactExtensionCriterion}
+	{
+		\forall X \in \TOP \.
+		\forall Y \in \HC \. 
+		\forall D : \TYPE{Dense}(X) \.
+		\forall f : D \Arrow{\TOP} X \.
+		\NewLine \. 
+		\Big(\exists F : X \Arrow{\TOP} Y  : F_{|D} = f \Big)    
+		\iff
+		\forall A,B : \TYPE{Closed}(Y) \.  
+		A \cap B= \emptyset \Imply
+		\Big(\cl_x f^{-1}(A)\Big) \cap \Big( \cl_y f^{-1}(B) \big) = \emptyset 
+	}
+	\Assume{F}{X \Arrow{\TOP} Y}
+	\Assume{[1]}{F_{|D} = f }
+	\Assume{A,B}{\TYPE{Closed}(Y)}
+	\Assume{[2]}{A \cap B = \emptyset}
+	\Say{[3]}{[1]\THM{ClosedContainsLimits}}{\cl_X f^{-1}(A) = F^{-1}(A) }
+	\Say{[4]}{[2]\THM{ClosedContainsLimits}(B)}{\cl_X f^{-1}(B) = F^{-1}(B)}
+	\Say{[F.*]}{\THM{DisjointPreimage}[2][3][4]}{ \cl_X f^{-1}(A) \cap \cl_X f^{-1}(B) = \emptyset }
+	\Derive{[1]}{I(\Imply)}{\LOGIC{LEFT} \Imply \LOGIC{RIGHT}}
+}\Page{
+	\Assume{[2]}{\LOGIC{Right}}
+	\Assume{x}{X}
+	\Assume{a,b}{\TYPE{Net}\Big(\U_X(x),D\Big)}
+	\Assume{[3]}{\forall  U \in \U_X(x) \.  a_U,b_U \in U}
+	\Assume{A}{\TYPE{Cluster}\Big(f(a)\Big)}
+	\Assume{B}{\TYPE{Cluster}\Big( f(b)\Big)}
+	\Assume{[4]}{A \neq B}
+	\Say{[5]}{\THM{CompactIsNormal}(Y)}{\Big( Y : \TYPE{T4}\Big)}
+	\Say{\Big( U,V, [6] \Big)}
+	{
+		\bd \TYPE{Urysohn}(Y)(A,B)[4][5] 
+	}
+	{
+		\sum U \in \U(A) \. \sum V \in \U(B) \. 
+		\overline{U} \cap \overline{B} = \emptyset 
+	}
+	\Say{[7]}{[2][6]}{\cl_X f^{-1}\overline{U} \cap \cl_X f^{-1}\overline{V} = \emptyset}
+	\Say{[8]}{\THM{MonotonicClosure}}{\cl_X f^{-1}(U) \cap \cl_X f^{-1}(V) = \emptyset}
+	\Say{[9]}{[8](x)}{x \not \in \cl_X f^{-1}(U) \Big| x \not \in \cl_X f^{-1}(V) }
+	\Say{[10]}{\bd \TYPE{Cluster}(f(a))(A)(U)[3]\THM{ClosureEqual}(X)}{x \in \cl_X f^{-1}(U)}
+	\Say{[11]}{\bd \TYPE{Cluster}(f(b))(B)(V)[3]\THM{ClosureEqual}(X)}{x \in \cl_X f^{-1}(V)}
+	\Conclude{[(a,b).*]}{[9][10][11]}{\bot}
+	\DeriveConclude{[3]}{I(\forall)I(\Imply)I(\forall)E(\bot)}
+	{
+		\forall a,b : \TYPE{Net}(\U_X(x),D) \. \NewLine \.
+		\Big( \forall U \in \U_X(x) \. a_U,b_U \im U) \Imply 
+		\forall A : \TYPE{Cluster}\Big( f(a)\Big) \.
+		\forall B : \TYPE{Cluster}\Big( f(b) \Big) \.
+		A = B
+	}
+	\Say{\Big(a,[4]\Big)}{  \bd \TYPE{Dense}(X)(D)}{ \sum a : \TYPE{Net}(\U_X(x),D) \. \forall U \in \U(x) \. a_U \in U   }
+	\Conclude{F(x)}{\lim_{U \in \U(x)} f(a_U)}{Y}
+	\Derive{F}{I(\to)}{X \to Y}
+	\Say{[3]}{\ByConstr F}{F_{|D} = f}
+	\Assume{A}{\TYPE{Closed}(Y)}
+	\Say{[4]}{\ByConstr F(A)}{F^{-1}(A) = \cl_X f^{-1}(A)}
+	\Conclude{[*.A]}{\bd \cl_X [4]}{ F^{-1}(A) : \TYPE{Closed}(X) }
+	\DeriveConclude{[2.*]}{\bd^{-1} C}{F \in C(X,Y)}
+	\Conclude{[*]}{I(\iff)[1]I(\Imply)}{\LOGIC{This}}
+	\EndProof
+}\Page{
+	\Theorem{CompactCoproduct}
+	{
+		\forall I \in \SET \.
+		\forall X : I \to \TOP \.
+		\coprod_{i \in I} X_i \in \HC  
+		\iff
+		\im X \subset \HC \And I : \TYPE{Finite}
+	}
+	\NoProof
+	\\
+	\Theorem{TychonoffTheorem}
+	{
+		\forall I \in \SET \.
+		\forall X : I \to \TOP \.
+		\prod_{i \in I} X_i \in \HC \iff \im X \subset \HC   
+	}
+	\NoProof
+	\\
+	\Theorem{TychonoffUniversality}
+	{
+		\forall \kappa : \TYPE{InfiniteCardinal} \. 
+		[0,1]^\kappa : \TYPE{Universal} \;  \Big\{ X \in \HC : w(X) = \kappa \Big\}
+	}
+	\NoProof
+	\\
+	\Theorem{TychonoffCriterion}
+	{
+		\forall X  \in \TOP \.
+		X : \TYPE{Tychonoff} 
+		\iff
+		\exists K \in \HC : \exists \TYPE{HomeomorphicEmbedding}(X,K)
+	}
+	\NoProof
+	\\
+	\Theorem{WallaceTheorem}
+	{
+		\forall I \in \SET \.
+		\forall X : I \to \TOP  \. 
+		\forall K : \prod_{i \in I} \HC \And \TYPE{Subspace}(X_i) \.
+		\forall W : \TYPE{Open} \; \prod_{i \in I} X_i \. \NewLine \. 
+		\forall [0] : \prod_{i \in I} K_i \subset W \.
+		\exists U : \prod_{i \in I} \TYPE{Open}(X_i) :
+		\prod_{i \in I} K_i \subset \prod_{i \in I} U_i \subset W \And
+		\Big|\{ i \in I : U_i \neq X_i\}\Big| < \infty
+	}
+	\NoProof
+	\\
+	\Theorem{AlexandroffTheorem}
+	{
+		\forall X \in \HC \.
+		\forall E : \TYPE{Equivalence}(X) \.
+		E : \TYPE{Closed} \iff 
+		\exists Y : \TYPE{T2} :
+		\exists f : X \Arrow{\TOP} Y :
+		\NewLine :
+		\frac{X}{E} \cong_{\TOP} \frac{X}{f}
+	}
+	\NoProof
+}
 \subsubsection{Compactly Generated Spaces}
+One issue with compact Hausdorff spaces is that it do not have all categorical limits and colimits.
+This problem may be overcomed by introducing notion of compactly generated spaces.
 \Page{
 	\DeclareType{CompactlyGenerated}{?\TYPE{T2}}
 	\DefineType{X}{CompactlyGenerated}{\exists Q : \TYPE{LocallyCompact} : \exists \pi : \TYPE{QuotientMapping}(\TOP,Q,X)}
@@ -6113,6 +6676,13 @@
 } 
 \newpage
 \subsubsection{Compact-Open Topology}
+Here we try to set some notion of exponential objects for topological spaces.
+The problem comes from the fact that in case of pointwise topology,
+the currying operation is not continuous.
+The compact-open topology is acceptable in the sense,
+that currying is continuous.
+It turns out that compact-open topology is a generalization of uniform convergence.
+So many familiar results hold here, including Ascoli-theorem.
 \Page{
 	\DeclareFunc{DomainImageSet}{ \prod X,Y \in \TOP \. ?X \to ?Y \to ?C(X,Y)}
 	\DefineNamedFunc{DomainImageSet}{A,B}{M(A,B)}{\Big\{f \in C(X,Y) : f(A) \subset B \Big\}}
@@ -6260,6 +6830,27 @@
 		\forall K : \TYPE{Compact}(X) \. F_{|K} : \TYPE{EvenlyContinuous}K,Y )  \And  
 		\forall [0] : \forall x \in X \. \overline{F(x)} : \TYPE{Compact}(Y) \iff
 		F : \TYPE{Compact}\Big( \C(X,Y)\Big)
+	}
+	\NoProof
+	\\
+	\Theorem{DiniTheorem}
+	{
+		\forall X : \TYPE{Compact} \.
+		\forall f : \TYPE{Monotonic}( C(X) ) \.
+		\forall F : X \to \Reals \. \NewLine
+		\Big(
+			\forall x \in X \.
+			\lim_{n \to \infty} f_i(x) = F(x) \.
+		\Big) \Imply
+		f \rightrightarrows F
+	}
+	\NoProof
+	\\
+	\Theorem{StoneWeierstassTheorem}
+	{
+		\forall X : \TYPE{Compact} \.
+		\forall P : \TYPE{Subalgebra}\Big( \Reals, C(X) \Big) \. \NewLine \.
+		\TYPE{SeparatesPoints}(X)(P) \Imply  P : \TYPE{Dense}\Big( C(X), \FUNC{uniformTopology}(X,\Reals) \Big)
 	}
 	\NoProof
 }
@@ -6735,19 +7326,7 @@
 	\NoProof
 }
 \newpage
-\subsubsection{Lindel\"of Spaces}
-\Page{   
-	\DeclareType{Lindelof}
-	{
-		?\TYPE{T3}
-	}
-	\DefineType{X}{Lindelof}
-	{
-		\forall \mathcal{O} : \TYPE{OpenCover}(X) \. 
-		\exists \mathcal{O}' \subset \mathcal{O} \.
-		|\mathcal{O}'| \le \aleph_0 \And \mathcal{O}' : \TYPE{OpenCover}(X)
-	}
-}
+
 \newpage
 \subsubsection{Abstract Baire Theory}
 \Page{
@@ -6762,28 +7341,6 @@
 	\\
 	\Theorem{DualBaireProperty}{\forall X : \TYPE{BaireSpace} \. \forall U : \Nat \to \T \And \TYPE{Dense}(X) \. \bigcap^\infty_{i=1} U_i : \TYPE{Dense}(X)}
 	\NoProof
-}
-\newpage
-\subsection{Further Generalizations}
-\subsubsection{Sequentially Compact Spaces }
-\Page{
-	\DeclareType{SequentiallyCompact}{?\TOP}
-	\DefineType{X}{SequentiallyCompact}{\forall x : \Nat \to X \. \exists y \subset x : y : \TYPE{Convergent}(X)}
-}
-\newpage
-\subsubsection{Countably Compact Spaces}
-\Page{
-	\DeclareType{CountablyCompact}{?\TOP}
-	\DefineType{X}{CountablyCompact}{\forall \mathcal{O} : \TYPE{OpenCover}(X) \. |\mathcal{O}| \le \aleph_0 \Imply \exists \mathcal{O}' \subset \mathcal{O} : |\mathcal{O}| < \infty \And \mathcal{O} : \TYPE{OpenCover}(X) }
-}
-\newpage
-\subsubsection{Pseudocompact Spaces}
-\Page{
-	\DeclareFunc{boundedFunctions}{\TOP \to \SET}
-	\DefineNamedFunc{boundedFunctions}{X}{C_b(X)}{\Big\{ f \in C(X) : \exists a,b \in \Reals : f(X) \subset [a,b] \Big\}}
-	\\
-	\DeclareType{Pseudocompact}{?\TOP}
-	\DefineType{X}{Pseudocompact}{ C(X)  = C_b(X)}
 }
 \newpage
 \subsubsection{Realcompact Spaces}
