@@ -21,16 +21,11 @@
 %META
 \renewcommand{\.}{\; . \;}
 \newcommand{\de}{: \kern 0.1pc =}
-\newcommand{\extract}{\LOGIC{Extract}}
 \newcommand{\where}{\LOGIC{where}}
 \newcommand{\If}{\LOGIC{if} \;}
 \newcommand{\Then}{ \; \LOGIC{then} \;}
 \newcommand{\Else}{\; \LOGIC{else} \;}
-\newcommand{\IsNot}{\; ! \;}
-\newcommand{\Is}{ \; : \;}
-\newcommand{\DefAs}{\; :: \;}
 \newcommand{\Act}[1]{\left( #1 \right)}
-\newcommand{\Example}{\LOGIC{Example} \; }
 \newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
 \newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
 \newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
@@ -42,6 +37,9 @@
 \newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
 \newcommand{ \bd }{ \ByDef }
 \newcommand{\NoProof}{ & \ldots \\ \EndProof}
+\newcommand{\Explain}[1]{& \text{#1.} \\}
+\newcommand{\ExplainFurther}[1]{& \text{#1} \\}
+\newcommand{\Exclaim}[1]{& \text{#1!} \\}
 %LOGIC
 \renewcommand{\And}{\; \& \;}
 \newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
@@ -103,7 +101,6 @@
 \newcommand{\DeriveConcludeIn}[3]{& \leadsto #1 \de #2 \in #3 ; \\} 
 \newcommand{\Assume}[2]{& \LOGIC{Assume} \; #1 : #2, \\}
 \newcommand{\AssumeIn}[2]{& \LOGIC{Assume} \; #1 \in #2, \\}
-\newcommand{\Explain}[1]{& \text{#1.} \\}
 \newcommand{\As}{\; \LOGIC{as } \;} 
 \newcommand{\Intro}{\LOGIC{I}}
 \newcommand{\Elim}{\LOGIC{E}}
@@ -349,6 +346,7 @@
 \newcommand{\Transversal}{\TYPE{Transversal}}
 \newcommand{\SBG}{\TYPE{StandardBorelGroup}}
 \newcommand{\Polishable}{\TYPE{Polishable}}
+\newcommand{\SIN}{\TYPE{SIN}}
 %FUNC
 \newcommand{\inv}{\mathrm{inv}}
 %\CAT
@@ -4910,6 +4908,20 @@ Topological groups are uniform spaces and, hence completely regular.
 		\Closed( G  ,xA \And Ax )
 	}
 	\NoProof
+	\\
+ 	\Theorem{InverseIsUniformlyContinuousLR}
+ 	{
+ 		\forall G \in \TGRP \.
+ 		\mathrm{inv}_G \in \UNI\Big( (G,\L), (G,\R) \Big)
+ 	}
+ 	\NoProof
+ 	\\
+ 	\Theorem{InverseIsUniformlyContinuousRL}
+ 	{
+ 		\forall G \in \TGRP \.
+ 		\mathrm{inv}_G \in \UNI\Big( (G,\R), (G,\L) \Big)
+ 	}
+ 	\NoProof
 }\Page{
 	\Theorem{ClosureOfSubgroup}
 	{
@@ -5100,12 +5112,141 @@ Topological groups are uniform spaces and, hence completely regular.
  	\\
  	\Theorem{DoubleClosureExpession}
  	{
- 		\forall X \in \TOP \.
- 		\forall A \subset X \.
- 		\forall B : \Compacts(X) \.
+ 		\forall G \in \TGRP \.
+ 		\forall A \subset G \.
+ 		\forall B : \Compacts(G) \.
  		\overline{AB} = \bigcap_{U \in \U(e)} AUB
  	}
  	\NoProof
+}
+\newpage
+\subsubsection{SIN Groups and Uniform Continuity}
+\Page{
+	\DeclareFunc{LowerTwoSidedUniformity}{\prod_{G \in \TGRP} \Unif(G)}
+	\DefineNamedFunc{LowerTwoSidedUniformity}{}{\S_G^\wedge}
+	{ \R_G \wedge \L_G  }
+	\\
+	\DeclareType{SinGroup}{?\TGRP}
+	\DefineNamedType{G}{SinGroup}{\TYPE{SIN}(G)}
+	{
+		\forall U \in \U_G(e) \.
+		\exists V \in \U_G(e) \.
+		\forall g \in G \.
+		gVg^{-1} = V \subset U
+	}
+	\\
+	\Theorem{SINThm}
+	{
+		\forall G \in \TGRP \. 
+		\TYPE{SIN}(G) \iff \L_G = \R_G
+	}
+	\Explain{$(\Leftarrow)$ 
+		By the hypothesis there is $V \in \U(e)$
+		such that $V_L \subset U_R$ for every $U \in \U(e)$}
+	\Explain{
+		This means that $ gV \subset Ug $ for any $g \in G$}
+	\Explain{
+		But this can be rewritten as $gVg^{-1} \subset U$}
+	\Explain{
+		$W = \bigcup_{g \in G} gVg^{-1}$ is invariant}
+	\Explain{
+		And as $U$ was arbitraty then $G$ is SIN
+	}
+	\Explain{
+	$(\Rightarrow)$ 
+	Use simmilar derivation, but in the inverse directions}
+	\EndProof
+	\\
+	\Theorem{AbelianIsSIN}
+	{
+		\forall G \in \TGRP \. G \in \ABEL \Imply \TYPE{SIN}(G) 
+	}
+	\NoProof
+	\\
+	\Theorem{CompactIsSIN}
+	{
+		\forall G \in \TGRP \. \Compact(G) \Imply \TYPE{SIN}(G) 
+	}
+	\NoProof
+	\\
+	\Theorem{DiscreteIsSIN}
+	{
+		\forall G \in \TGRP \. \TYPE{Discrete}(G) \Imply \TYPE{SIN}(G) 
+	}
+	\NoProof
+	\\
+	\Theorem{CodiscreteIsSIN}
+	{
+		\forall G \in \TGRP \. \TYPE{Codiscrete}(G) \Imply \TYPE{SIN}(G) 
+	}
+	\NoProof
+}\Page{
+	\Theorem{UniformlyContinuousMult}
+	{
+		\forall G \in \TGRP \. 
+		 (\cdot_G) \in \UNI\Big( (G,\L)\times(G,\R). (G,\L \wedge \R) \Big)
+	}
+	\NoProof
+	\\
+	\Theorem{SINByIdUniformContinuityLeft}
+	{
+		\forall G \in \TGRP \.
+		\SIN(G) \iff {\id}_G \in \UNI\Big( (G,\L), (G,\R) \Big)
+	}
+	\NoProof
+	\\
+	\Theorem{SINByInvUniformContinuityRight}
+	{
+		\forall G \in \TGRP \.
+		\SIN(G) \iff {\id}_G \in \UNI\Big( (G,\R), (G,\L) \Big)
+	}
+	\NoProof
+	\\
+	\Theorem{SINByInvUniformContinuityLeft}
+	{
+		\forall G \in \TGRP \.
+		\SIN(G) \iff {\mathrm{inv}}_G \in \UNI\Big( (G,\L), (G,\L) \Big)
+	}
+	\NoProof
+	\\
+	\Theorem{SINByInvUniformContinuityRight}
+	{
+		\forall G \in \TGRP \.
+		\SIN(G) \iff {\mathrm{inv}}_G \in \UNI\Big( (G,\R), (G,\R) \Big)
+	}
+	\NoProof
+	\\
+	\Conclude{\FUNC{typicalUniformity}}
+	{
+		\Lambda G \in \TGRP \.  \mathbb{U}_G = 
+		\L_G | \R_G | \L_G \vee \R_G | \L_G \wedge \R_G
+	}{\prod G \in \TGRP \.  \Unif(G) }
+	\\
+	\Theorem{SinByCommutativeConvergence}
+	{
+		\NewLine ::		
+		\forall G : \TGRP \.
+		\Big( \forall x,y : \Nat \to G \. \lim_{n \to \infty} x_ny_n = e \iff \lim_{n \to \infty} y_nx_n = e \Big)
+		\iff
+		\SIN(G) 
+	}
+	\Explain{
+		$(\Leftarrow):$ 
+			Assume that $\lim_{n \to \infty} x_ny_n =e$ and take $U \in \U_G(e)$}
+	\Explain{
+		 	Then as $G$ is SIN there is neighborhood $V \subset U$ of $e$ 
+		 	such that $gVg^{-1} = V$ for every $g \in G$}
+	\Explain{
+		   There is $N \in \Nat$ such that $x_ny_n \in V$ for
+		   all $n \ge N$}
+	\Explain{
+			This means that $y_nx_n \in y_n V y^{-1}_n = V \subset U$ for all $n \ge N$,
+			so $\lim_{n \to \infty} y_n x_n = e$ as $U$ was arbitrary}
+	\Explain{ 
+		The reverse deduction for $y_n x_n$ is trivially the same}
+	\Explain{ 
+		$(\Rightarrow):?$ }
+	\NoProof
 }
 \newpage
 \subsubsection{Меtrics for Twosided Uniformities}
@@ -5686,6 +5827,30 @@ Sometimes our basic expectations fail.
 		(\Int,\T_{+\infty})	\not \in \TGRP
 	}
 	\EndProof
+}\Page{
+	\Conclude{G}{\mathbf{GL}(\Reals,2)}{\TGRP}
+	\\
+	\Conclude{x}{\left( \begin{array}{cc} \dfrac{1}{n} & \dfrac{1}{n^2} \\ 0 & 1 \end{array}  \right)}
+	{
+		\Nat \to G
+	}
+	\\
+	\Conclude{x}{\left( \begin{array}{cc} n & 1 \\ 0 & 1 \end{array}  \right)}
+	{
+		\Nat \to G
+	}
+	\\
+	\Explain{  
+		$x_n y_n =  \left( \begin{array}{cc} 
+			1 & \dfrac{1}{n} +\dfrac{1}{n^2} \\
+			 0 & 1 \end{array}  \right) \to  \left( \begin{array}{cc} 1 & 0 \\ 0 & 1 \end{array}  \right)$}
+	\\
+	\Explain{
+		$ y_n x_n = \left( 
+			\begin{array}{cc}
+			 1 & \dfrac{1}{n} + 1 \\
+			 0 & 1	
+			\end{array} \right) \to \left( \begin{array}{cc} 1 & 1 \\ 0 & 1 \end{array}  \right)$}
 }
 \newpage
 \subsection{Further Topological Properties}
@@ -6859,7 +7024,7 @@ In 1993 Agaev published a proof, which uses representation of topological groups
 Almost metrizable spaces are those where every compact admits a countable system of neighborhood. Almost metrizable groups are of some esoteric interest. 
 \newpage
 \section{Polish Groups}
-\subsection{Basisc}
+\subsection{Basics}
 \subsubsection{Definition and Examples}
 \Page{
 	\Conclude{\PG}{\TGRP \And \Polish}{\Type}
@@ -7131,8 +7296,9 @@ Almost metrizable spaces are those where every compact admits a countable system
 	}
 	\EndProof
 }
+\newpage
 \subsubsection{Baire Groups Redux}
-Polish groups are bair, so bair properties will be useful.
+Polish groups are Baier, so Baire property will be useful.
 \Page{
 	\Theorem{PettisBPTheorem}
 	{
