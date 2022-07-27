@@ -143,6 +143,7 @@
 %Topology
 %General Topology
 %Types
+\newcommand{\Top}{\TYPE{Topology}}
 \newcommand{\TS}{\TYPE{TopologicalSpace}} 
 \newcommand{\NbhdBase}{\TYPE{NeighborhoodBase}}
 \newcommand{\LF}{\TYPE{LocallyFinite}}
@@ -349,6 +350,7 @@
 \newcommand{\SIN}{\TYPE{SIN}}
 %FUNC
 \newcommand{\inv}{\mathrm{inv}}
+\DeclareMathOperator{\perm}{\mathrm{perm}}
 %\CAT
 \newcommand{\TGRP}{\mathsf{TGRP}}
 \newcommand{\PGRP}{\mathsf{PGRP}}
@@ -6671,7 +6673,7 @@ Being Baire and topological group structure interplay nicely.
 	\\
 	\Conclude{\BG}{\TGRP \And \Bair}{\Type}
 	\\
-	\Theorem{DenseGdeltaSugGroupsAreUnique}
+	\Theorem{DenseGdeltaSubFGroupsAreUnique}
 	{
 		\forall G : \BG \.
 		\forall H \Sgrp G \.
@@ -6994,28 +6996,733 @@ Theis shows that they don't have corresponding group completions.
 	\NoProof
 }
 \newpage
-\subsection{Further Group Properties[0]} 
-This chapter will include topics such 
-initial and final construcures,
-quotients, 
-group action,
-free groups.
-It will be written on demand in a first return.
+\subsection{Further Group Properties}
+ \subsubsection{Initial and Final  Structure} 
+ \Page{ 		
+ 		\DeclareFunc{initialGroupTopology}
+ 		{
+ 			\prod G \in \GRP \. 
+ 			\prod  I \in \SET \.
+ 			\left( \prod_{i \in I} \sum_{H _i\in \TGRP} \GRP(G,H_i)  \right) \to \Group\Top(G) 
+ 		}
+ 		\DefineNamedFunc{initialGroupTopology}{H,\phi}{\W_G(I,H,\phi)}{\W_G(I,H,\phi)}
+ 		\Explain{Define function 
+ 			$q : G\times G \to G$ by $q(a,b) = ab^{-1}$}
+ 		\Explain{
+ 			Then $\phi_i \circ q(a,b) = \phi_i(ab^{-1}) = \phi_i(a)\phi^{-1}_i(b)$ 
+ 			is continuous for all $i \in I$}
+ 		\Explain{
+ 			So $q$ also must be continuous by properties of the topological group}
+ 		\Explain{  
+ 			Thus, $(G,\I_G(I,H,\phi))$ is a topological group}
+ 		\EndProof
+ 		\\
+ 		\Theorem{LeftUniformityInitialization}
+ 		{
+			\NewLine :: 			
+ 			\forall G \in \GRP \.
+ 			\forall I \in \SET \.
+ 			\forall \prod_{i \in \I} (H_i,\phi_i) \sum_{H_i \in \TGRP} \GRP(G,H_i) \.
+ 			\L_{(G,\W(I,H,\phi))} = \I\Big(I,(H,\L),\phi\Big)
+ 		}
+ 		\NoProof
+ 		\\
+ 		\Theorem{LeftUniformityInitialization}
+ 		{
+			\NewLine :: 			
+ 			\forall G \in \GRP \.
+ 			\forall I \in \SET \.
+ 			\forall \prod_{i \in \I} (H_i,\phi_i) \sum_{H_i \in \TGRP} \GRP(G,H_i) \.
+ 			\R_{(G,\W(I,H,\phi))} = \I\Big(I,(H,\R),\phi\Big)
+ 		}
+ 		\NoProof
+ 		\\
+ 		\Theorem{UpperUniformityInitialization}
+ 		{
+			\NewLine :: 			
+ 			\forall G \in \GRP \.
+ 			\forall I \in \SET \.
+ 			\forall \prod_{i \in \I} (H_i,\phi_i) \sum_{H_i \in \TGRP} \GRP(G,H_i) \.
+ 			\S^\vee_{(G,\W(I,H,\phi))} = \S^\vee\Big(I,(H,\L),\phi\Big)
+ 		}
+ 		\NoProof
+ 		\\
+ 		\Theorem{SinTopologyIsInitializedBySin}
+ 		{
+ 			\NewLine ::
+ 			\forall G \in \GRP \.
+ 			\forall I \in \SET \. 
+ 			\forall \prod_{i \in I} (H_i,\phi_i) \sum_{H_i : \SIN} \GRP(G,H_i) \.
+ 			\SIN(G,W(I,H,\phi))
+ 		}
+ 		\Explain{
+ 			Use the fact that
+ 			$
+ 				\L_{(G,\W(I,H,\phi))} = \I\Big(I,(H,\L),\phi\Big) =
+ 				\I\Big(I,(H,\R),\phi\Big) = \R_{(G,\W(I,H,\phi))}
+ 			$ 
+ 		}
+ 		\EndProof
+ 		\\
+ }\Page{
+ 	\Theorem{TGRPSubgroupIsTGRP}
+ 	{
+ 		\forall G \in \TGRP \.
+ 		\forall H \subset_GRP  G \.
+ 	    H \in \TGRP
+ 	}
+ 	\NoProof
+ 	\\
+ 	\Theorem{TGRPSupIsTGRP}
+ 	{
+ 		\forall G \in \GRP \.
+ 		\forall I \in \SET \.
+ 		\forall \tau : I \to \Group\Top(G) \.
+ 	    \left(G, \bigvee_{i \in I} \tau_i \right) \in \TGRP
+ 	}
+ 	\NoProof
+ 	\\
+ 	\Theorem{TGRPProductIsTGRP}
+ 	{
+ 		\forall I \in \SET \.
+ 		\forall G : I \to \TGRP(G) \.
+ 	    \prod_{i \in I} G_i \in \TGRP
+ 	}
+ 	\NoProof
+ 	\\
+  	\DeclareFunc{finalGroupTopology}
+ 	{
+ 			\prod G \in \GRP \. 
+ 			\prod  I \in \SET \.
+ 			\left( \prod_{i \in I} \sum_{H _i\in \TGRP} \GRP(H_i, G)  \right) \to \Group\Top(G) 
+ 	}
+ 	\DefineNamedFunc{finalGroupTopology}{H,\phi}{\S_G(I,H,\phi)}{
+		\bigvee  \Big\{ \tau : \Group\Top(G), \forall i \in I \. \phi_i \in \TOP(H_i,G \Big)\} 	
+ 	}
+ 	\\
+ 	\DeclareFunc{approximateGroupTopology}
+ 	{
+ 			\prod G \in \GRP \. 
+ 			\Top(G) \to \Group\Top(G) 
+ 	}
+ 	\DefineNamedFunc{approximateGroupTopology}{\tau}{\tau_0}{
+		\bigvee  \Big\{ \sigma : \Group\Top(G), \sigma \subset \tau\} 	
+ 	}
+ 	\\
+ 	\DeclareFunc{sinGroupTopology}
+ 	{
+ 			\prod G \in \GRP \. 
+ 			\Top(G) \to \Group\Top(G) 
+ 	}
+ 	\DefineNamedFunc{approximateGroupTopology}{\tau}{\tau_0}{
+		\bigvee  \Big\{ \sigma : \Group\Top(G), \SIN(G,\sigma) ,  \sigma \subset \tau\} 	
+ 	}
+ }
+ \newpage
+\subsubsection{Subgroups}
+\Page{
+	\Theorem{ClosedCenterTHM}
+	{
+		\forall G \in \TGRP \And \TYPE{T2} \.
+		\Closed\big( G, Z(G) \big)     
+	}
+	\Explain{
+		If $g \in G$ then $Z(g) = z^{-1}_g\{e\}$, where $z_g(h) = hgh^{-1}g^{-1}$}
+	\Explain{
+		As $z_g$ is continuous, the subgroup $Z(g)$ is closed}
+	\Explain{
+		So, $Z(G) = \bigcap_{g \in G} Z(g)$ has to be closed}
+	\EndProof
+	\\
+	\Theorem{ClosedSubgroupByOpenSet}
+	{
+		\NewLine ::		
+		\forall G \in \TGRP \.
+		\forall H \subset_\GRP G \.
+		\forall h \in H \.
+		\forall U \in \U(h) \.
+		\Closed(U,H \cap G) \Imply \Closed(G,H)
+	}
+	\Explain{   
+		$h^{-1}U \cap H \subset h^{-1}U \in \U(e)$, obviously}
+	\Explain{
+		So there is a symmetric open subset $V \in \U(e)$ such that
+		$V \cap H$ is closed in $V$}
+	\Explain{
+		Assume $b \in \overline{H}$}
+	\Explain{
+		$c \in b(V \cap H) \neq \emptyset$, thus 
+		$b \in cV^{-1} = cV = c \intx V$}
+	\Explain{
+		Hence $b \in {\cl}_{cV} cV \cap H = {\cl}_{cV} c(V \cap H)$}
+	\Explain{
+		But then $b \in cV \cap H$ as $V \cap H$ is closed in $V$, whence $b \in H$}
+	\EndProof
+	\\
+	\Theorem{LocallyCompactSubgroupIsClosed}
+	{
+		\NewLine ::
+		\forall G \in \TGRP \And \TYPE{T2} \.
+		\forall H \subset_\GRP G \.
+		\LC(H) \Imply \Closed(G,H)
+	}
+	\Explain{
+		If $h \in H$ then there is $U \in \U(h)$ such that 
+		$H \cap U$ is a compact subset of $U$}
+	\Explain{
+			But then $H \cap U$ is closed, 
+			so by previous result  $H$ is closed}
+	\EndProof
+	\\
+	\Theorem{SubgroupLeftUniformity}
+	{
+		\forall G \in \TGRP \.
+		\forall H \subset_\GRP G \. 
+		\L_H = \L_G | H
+	}
+	\NoProof	
+	\\
+	\Theorem{SubgroupRightUniformity}
+	{
+		\forall G \in \TGRP \.
+		\forall H \subset_\GRP G \. 
+		\R_H = \R_G | H
+	}
+	\NoProof	
+	\\	
+	\Theorem{SubgroupUpperSymmetricUniformity}
+	{
+		\forall G \in \TGRP \.
+		\forall H \subset_\GRP G \. 
+		\S_H^\vee = \S_G^\vee | H
+	}
+	\NoProof	
+}\Page{
+	\Theorem{SubgroupLowerSymmetricUniformity}
+	{
+		\forall G \in \TGRP \.
+		\forall H \subset_\GRP G \. 
+		 \S_G^\wedge | H \subset \S_H^\wedge
+	}
+	\NoProof	
+}
+\newpage
+\subsubsection{Products}
+\Page{
+	\DeclareFunc{lexProduct}
+	{
+		\prod I \in \SET \. (I \to \GRP) \to \GRP
+	}
+	\DefineNamedFunc{lexProduct}{G}{\bigodot_{i \in I} G_i }
+	{
+		\left\{ g \in \prod_{i \in I} G_i \bigg|  \Big| \{ i \in I | g_i \neq e  \} \Big| < \infty   \right\}
+	}
+	\\
+	\Theorem{LexProductIsDense}
+	{
+		\forall I \in \Set \.
+		\forall G  : I \to \GRP \.
+		\Dense \And \TYPE{Normal}\left( \prod_{i \in I} G_i, \bigodot_{i\in I} G_i \right)
+	}
+	\Explain{
+		Take $g \in \prod_{i \in I} G_i$ }
+	\Explain{
+		Take $U \in \U(g)$
+	}
+	\Explain{
+		Then there is a finiite $F \subset I$ such that 
+		$g \in \prod_{i \in F} V_i \times \prod_{i \in \F^\c} G_i$,
+		where each $V_i$ is open  in $G_i$}
+	\Explain{
+		define $g' = \Lambda i \in I \. \If i \in F \Then g_i \Else e_{G_i} \in \bigodot_{i \in I} G_i$}
+	\Explain{
+		Then $g' \in U$, and as $U$ and $g$ was arbitrary 
+		$\bigodot_{i \in I} G_i$ is dense}
+	\EndProof
+}
+\newpage
+\subsubsection{Group Action}
+\Page{
+	\DeclareType{TopologicalGroupAction}
+	{
+		\prod G  : \TGRP \. \prod X : \TOP \. ?\TYPE{Action}(G,X)
+	}
+	\DefineNamedType{\omega}{TopologicalGroupAction}{\omega : G \ActOn_{\TOP} X}
+	{
+		 \omega \in \TOP( G \times X,  X)	
+	}
+	\\
+	\Theorem{TopologicalActionActsByHomeo}
+	{
+		\NewLine ::		
+		\forall G \in \TGRP \.
+		\forall X \in \TOP \.
+		\forall \omega : G \ActOn_{\TOP} X \.
+		\forall g \in \.
+		\Lambda x \in X \. gx \in \Aut_\TOP(X)
+	}
+	\Explain{ 
+		Consider $g^{-1}$ as a continuous inverse for $g$}
+	\EndProof
+	\\
+	\Theorem{QuotientMapIsOpen}
+	{
+		\forall G \in \TGRP \.
+		\forall X \in \TOP \.
+		\forall \omega : G \ActOn_{\TOP} X \.
+		\Open\left(G, \frac{X}{\omega}, \pi_\omega \right)
+	}
+	\Explain{
+		Assume $U$ is open in $X$
+	}
+	\Explain{
+		When $\pi^{-1}_\omega \pi_\omega(U) = \bigcup_{g \in G} g(U)$ 
+		is open in $X$ as $g$ is a homeomorphism}
+	\Explain{
+		As $\frac{X}{\omega}$ is equiped with final topology
+		the set $\pi_\omega(u)$ must be open}
+	\EndProof
+	\\
+	\DeclareType{Invariant}{\prod_{G \in \GRP} \prod_{X \in \SET} \. \TYPE{Action}(G,X) \to ?X } 
+	\DefineType{I}{Invariant}{
+		\Lambda \alpha : G \ActOn X \. 
+		\forall a \in A \. O_\alpha(a) \subset A 
+	}
+	\\
+	\DeclareType{InvariantRelation}
+	{\prod_{G \in \GRP} \prod_{X \in \SET} \. \TYPE{Action}(G,X) \to ?X^2 } 
+	\DefineType{R}{InvariantRelation}{
+		\Lambda \alpha : G \ActOn X \.
+		\forall (a,b) \in R \.
+		\forall g \in G \. 
+		(ga,gb) \in R }
+	\\
+	\DeclareType{InvariantSet}{\prod_{G \in \GRP} \prod_{X \in \SET} \. \TYPE{Action}(G,X) 
+		\to ??X^2 } 
+	\DefineType{\I}{InvariantSet}{
+		\Lambda \alpha : G \ActOn X \. 
+		\forall R \in \I \. \TYPE{InvariantRelation}(X,G,R) 
+	}
+	\\
+	\Theorem{InvariantOpenMap}
+	{
+		\forall G \in \TGRP \.
+		\forall X \in \TOP \.
+		\forall \omega : G \ActOn_\TOP X \. 
+		\forall A \in \TYPE{Invariant}(G,X,\omega) \. \NewLine \.	
+		\Open(A,\pi_\omega(A),\pi_{\omega|A} )
+	}
+	\Explain{ 
+		Same proof as in previous theorem}
+	\Explain{
+		Clearly, $\pi^{-1}_\omega \pi_\omega(U) = \bigcup_{g \in G} g(U) \subset A$
+		as $A$ is invariant
+	}
+	\\
+	\EndProof
+	\Theorem{InvariantHomeomorphism}
+	{
+		\forall G \in \TGRP \.
+		\forall X \in \TOP \.
+		\forall \omega : G \ActOn_\TOP X \. 
+		\forall A \in \TYPE{Invariant}(G,X,\omega) \. \NewLine \.
+		\forall g \in G \.	
+		g \in \Aut_\TOP(A)
+	}
+	\Explain{ 
+		This is obvious}
+	\EndProof
+}\Page{
+	\DeclareType{CompatibleEq}
+	{
+		\prod G \in \TGRP \.
+		\prod X \in \TOP \.
+		\TYPE{TopologicalAction}(G,X) \to ?\Eq(X)
+	}
+	\DefineType{E}{CompatibleEq}
+	{
+		\Lambda \omega : G \ActOn_\TOP X \.
+		\forall g \in G \. \exists \varphi \in \TOP\left( \frac{X}{E} ,\frac{X}{E}\right) \.
+		 \omega(g) \pi_G = \pi_G \varphi	
+	}
+	\\
+	\DeclareFunc{inducedAction}
+	{
+		\NewLine ::
+		\prod G \in \TGRP \.
+		\prod X \in \TOP \.
+		\prod \omega : G \ActOn_\TOP X \. 
+		\prod E : \TYPE{CompatibleEq}(X,G,\omega) \.
+		G \ActOn \frac{X}{E} 
+	}
+	\DefineNamedFunc{inducedAction}{}{\widetilde \omega}
+	{ \Lambda g \in G \. \Lambda [x] \in \frac{X}{E} \. 
+		\Elim \TYPE{CompatibleEq}(G,X,\omega,E,g)[x]
+	}
+	\\
+	\Theorem{ContinuityOfInducedAction}
+	{
+		\NewLine ::
+		\forall G \in \TGRP \.
+		\forall X \in \TOP \.
+		\forall \omega : G \ActOn_\TOP X \.
+		\forall E : \TYPE{CompatibleEq}(X,G,\omega) \. \NewLine \.
+		\Open \And \TOP\left(X,\frac{X}{E},\pi_E\right) 
+		\Imply
+		\widetilde\omega : G	\ActOn_\TOP \frac{X}{G}
+	}
+	\Explain{
+		Obviously $\omega \pi_E = (\id \times \pi_E) \widetilde \omega_E$}
+	\Explain{ 
+		Assume $U$ is an open set in $\frac{X}{E}$
+	}
+	\Explain{
+		Then $
+				V  = \Big((\id \times \pi_E)\widetilde \omega_E\Big)^{-1}(U) = 
+				(\omega \pi_E)^{-1}(U) 
+			$
+			is open
+	}
+	\Explain{
+		But then $\widetilde\omega^{-1}(U) = (\id \times \pi_E)(V)$ is open 
+		as $(\id \times \pi_E)$ is open and surjective.
+	}
+	\EndProof
+	\\
+	\DeclareFunc{QuotientUniformity}
+	{
+		\prod (X,\U) \in \UNI \. 
+		\prod E : \Eq(X) \. \Unif\left( \frac{X}{E} \right)
+	}
+	\DefineNamedFunc{QuotientUniformity}{}{\frac{\U}{E}}
+	{
+		\F\left( \frac{X}{E} ,\pi_E\right)
+	}
+	\\
+	\DeclareFunc{QuotientUniformSpace}
+	{
+		\prod X \in \UNI \. \Eq(X) \to \UNI
+	}
+	\DefineNamedFunc{QuotientUniformity}{E}{\frac{X}{E}} 
+	{
+		\left(\frac{X}{E}, \frac{\U_X}{E} \right)
+	}
+	\\
+	\Theorem{CechUniformQuotientTheorem}
+	{
+		\NewLine ::		
+		\forall (X,\U) \in \UNI \.
+		\forall E : \Eq(X) \. \NewLine \.
+		\Big( \forall M \in \U \. \exists N \in \U \. N \circ E \circ N \subset E \circ M \circ E \Big)
+		\iff
+		\UB\left(\frac{X}{E},\frac{\U}{E}, \pi_E \times \pi_E(\U) \right) 
+	}
+	\NoProof
+	\\
+	\DeclareType{UniformlyOpen}
+	{
+		\prod (X,\U),(Y,\W) \in \UNI \. ?\UNI\Big( (X,\U),(Y,\W) \Big)
+	}
+	\DefineType{\varphi}{UniformlyOpen}
+	{
+		\forall U \in \U \. \exists W \in \W \. 
+		\forall x \in X \.
+		W\left( \varphi(x) \right) \subset   \varphi\left( U(x) \right)
+	}
+}\Page{
+	\Theorem{UniformQuotientTheorem2}
+	{
+		\NewLine ::		
+		\forall (X,\U) \in \UNI \.
+		\forall E : \Eq(X) \. \NewLine \.
+		\Big( \forall M \in \U \. \exists N \in \U \. E \circ N \subset N \circ E \Big)
+		\iff \NewLine \iff
+		\left(
+			\UB\left(\frac{X}{E},\frac{\U}{E}, \pi_E \times \pi_E(\U) \right)
+			\And
+			\forall M \in \U \. \exists P \in \frac{\U}{E} \. \forall x \in X \.  
+				P\Big(\pi_E(x)\Big) \subset \pi_E\Big( M(x) \Big) 
+		\right)
+		 \NewLine \iff
+		\TYPE{UniformlyOpen}\left(X,\frac{X}{E},\pi_E \right)
+	}
+	\NoProof
+	\\
+	\Theorem{UniformGroupAction}
+	{
+		\NewLine ::		
+		\forall G \in \GRP \.
+		\forall X \in \UNI \.
+		\forall \omega : G \ActOn X \. \NewLine \.
+		\exists \UB(X) \And \TYPE{InvariantSet}(G,X,\omega) 
+		\iff
+		\TYPE{UniformlyEquicontinuous}\Big(  X, X, \omega(G) \Big)
+	}
+	\NoProof
+	\\
+	\Theorem{InvariantRelationsCommute}
+	{
+		\NewLine ::		
+		\forall G \in \GRP \.
+		\forall X \in \UNI \.
+		\forall \omega : G \ActOn X \.
+		\forall M : \TYPE{InvariantRelation}(G,X,\omega) \.
+		M \circ E_\omega = E_\omega \circ M
+	}
+	\NoProof
+	\\
+	\Theorem{InvariantUniformityMonotonicity}
+	{
+		\NewLine ::		
+		\forall G \in \GRP \.
+		\forall X \in \SET \.
+		\forall \omega : G \ActOn X \. \NewLine \.
+		\TYPE{Transitive}(G,X,\omega) \Imply		
+		\forall \U,\U' : \Unif(X) \.
+		\forall \B,\B' : \UB(X) \And \TYPE{InvariantSet}(G,X,\omega)  \.
+		\NewLine \.
+		\B \subset \B' \Imply \U \subset \U'
+	}
+	\NoProof
+	\\
+	\Theorem{InitialInvariantBasis}
+	{
+		\NewLine ::		
+		\forall I,X \in \SET \.
+		\forall G \in \GRP \.
+		\forall Y : I \to \UNI \.
+		\forall \alpha : G \ActOn X \.
+		\forall \omega : \prod_{i \in I} \omega_i :G \ActOn Y_i \.
+		\forall  f : \prod_{i \in I} X \to Y_i \. \NewLine \.
+		\forall \B : \prod_{i \in I} \UB(Y_i) \And \TYPE{InvariantSet}(G,Y_i,\omega_i) \.
+		\NewLine \.
+		\forall \aleph : \forall i \in I \. \forall g \in G \. f_i \omega_i(g) = \alpha(g) f_i \.
+		\exists \UB(X) \And \TYPE{InvariantSet}(G,X,\omega_i)
+	}
+	\NoProof
+}\Page{
+	\Theorem{FinestInvariantUniformityExists}
+	{
+		\forall (X,\U) \in \U \.
+		\forall G \in \GRP \.
+		\forall \omega : G \ActOn X \.
+		\NewLine \.
+		\exists \bigvee 
+		\{ \V : \Unif(X), \V \subset \U,  \exists \UB(X,\V) \And \TYPE{InvariantSet}(G,X,\alpha)   \}
+	}
+	\NoProof
+	\\
+	\DeclareFunc{invariantKernel}
+	{
+		\prod_{ G \in \GRP} \prod_{X \in \SET} \.
+		\TYPE{Action}(G,X) \to ?X^2 \to ?X^2  
+	}
+	\DefineNamedFunc{invariantKernel}{\omega,R}{\ker_\omega R}
+	{\bigcap_{g \in G} (\omega(g) \times \omega(g))(R)}
+	\\
+	\Theorem{CoarsestInvariantUniformityExists}
+	{
+		\forall (X,\U) \in \U \.
+		\forall G \in \GRP \.
+		\forall \omega : G \ActOn X \.
+		\NewLine \.
+		\exists \bigwedge 
+		\{ \V : \Unif(X), \U \subset \V,  \exists \UB(X,\V) \And \TYPE{InvariantSet}(G,X,\omega_i)   \} =
+		\NewLine =
+		\Big\langle\{
+			\ker_\omega U | U \in \U
+		\}\Big\rangle_\UNI
+	}
+	\NoProof
+	\\
+	\\
+	\Theorem{FinalUniformBasis}
+	{
+		\NewLine ::		
+		\forall I,Y \in \SET \.
+		\forall G \in \GRP \.
+		\forall X : I \to \UNI \.
+		\forall \omega : G \ActOn Y \.
+		\forall \alpha : \prod_{i \in I} \omega_i :G \ActOn X_i \.
+		\forall  f : \prod_{i \in I} X_i \to Y \. \NewLine \.
+		\forall \B : \prod_{i \in I} \UB(X_i) \And \TYPE{InvariantSet}(G,X_i,\alpha_i) \. \NewLine
+		\. \aleph : \forall g \in G \. \forall i \in I \.  f_i \alpha(g) = \omega_i(g) f_i \.
+		\exists \UB(Y) \And \TYPE{InvariantSet}(G,Y,\omega)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{permanent}
+	{
+		\prod_{X \in \SET} (\Nat \to ?X^2) \to X^2 
+	}
+	\DefineNamedFunc{permanent}{M}{\perm M}
+	{
+		\bigcup^\infty_{n=1} \bigcup_{\sigma \in S_n} \bigcirc^n_{k=1} M_{\pi(k)} 
+	}
+	\\
+	\Theorem{BasisPermanent}
+	{
+		\forall X \in \UNI \.
+		\forall \B : \UB(X) \.
+		\UB\Big( X, \{ \perm B | B : \Nat \to \B \} \Big)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{genenerateUniformity}
+	{
+		\prod_{X \in \SET} \TYPE{DownwardDirected}\big(??X^2\big) \to \Unif(X)
+	}
+	\DefineNamedFunc{generateUniformity}{\mathfrak{A}}{\langle \mathfrak{A} \rangle_\UNI}
+	{
+		\bigvee \Big\{ 
+			\V : \Unif(X),  
+			\forall {V \in \V}  \. 
+			\forall \A \in \mathfrak{A}\.
+			 \exists_{A \in \A} 
+		 	A \subset V   					
+		 \Big\}
+	}
+}\Page{
+	\DeclareType{PreUniformity}
+	{
+		\prod_{X \in \SET} ?\TYPE{WithDiagonal}(X) \And \TYPE{Filterbase}(X^2)
+	}
+	\DefineType{\U}{PreUniformity}
+	{
+		\forall U \in \U \. \exists V \in \U \. U^\top \subset V
+	}
+	\\
+	\Theorem{MonotonicPreUniformityBase}
+	{
+		\NewLine ::		
+		\forall X \in \SET \.
+		\forall \U : \Nat \downarrow \TYPE{PreUniformity}(X) \.
+		\UB\left( \langle \U \rangle_\UNI,  \left\{ \perm U | U : \prod^\infty_{n=1} \U_n    \right\}  \right)   
+	}
+	\\
+	\Theorem{FinalUniformityProduct}
+	{
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall X : I \to \UNI \.
+		\forall Y : I \to \SET \. 
+		\forall f : \prod_{i \in I} (X_i \to Y_i) \. \NewLine \.
+		\prod_{i \in \I} \Big(Y_i, \F(1,X_i,f_i) \Big) =
+		\left( \prod_{i \in \I} Y_i, \F\left(1,\prod_{i \in I} X_i, \prod_{i \in I} f_i \right) \right)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{groupPermanent}
+	{
+		\prod_{G \in \GRP} (\Nat \to ?G) \to ?G
+	}
+	\DefineNamedFunc{groupPermanent}{A}{\perm A}{
+		\bigcup^\infty_{n=1} \bigcup_{\sigma \in S_n} \prod^n_{k=1} A_{\sigma(k)}
+	}
+	\\
+	\Theorem{BasisPermanent}
+	{
+		\forall G \in \TGRP \.
+		\forall \B : \TYPE{Base}(X) \.
+		\TYPE{Base}\Big( G, \{ \perm B | B : \Nat \to \B \} \Big)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{generateGroupTopologyByFilterBase}
+	{
+		\prod G \in \GRP \.  ?\TYPE{Filterbase}(G) \to \Group\Top(G)
+	}
+	\DefineNamedFunc{generateGroupTopologyByFilterBase}{\mathfrak{F}}
+	{
+		\langle \mathfrak{F} \rangle_\TGRP
+	}
+	{
+		\bigvee\Big\{ \T : \Group\Top(G), \forall \F \in \mathfrak{F} \. \lim \F = e  \Big\}
+	}
+	\\
+	\DeclareType{GroupFilterbase}
+	{
+		\prod_{G \in \GRP} ?\TYPE{Filterbase}(G)
+	}
+	\DefineType{\F}{GroupFilterbase}
+	{
+		\forall A \in \F \. \exists B \in \F \. B^{-1} \subset A
+		\And 
+		\forall A \in \F \. \forall x \in X \. \exists B \in \F \. xB x^{-1} \subset A
+	}
+	\\
+	\Theorem{MonotonicGroupTopologyBase}
+	{
+		\NewLine ::		
+		\forall G \in \GRP 
+		\forall \F : \Nat \downarrow \TYPE{GroupFilterbase}(G) \.
+		\TYPE{Base}\left( \U_{(G,\langle \F \rangle_\UNI)}(e),  
+		\left\{ \perm F | F : \prod^\infty_{n=1} \F_n    \right\}  \right)   
+	}
+	\NoProof
+}\Page{
+	\Theorem{StrongGroupTopologyRight}
+	{
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall G : I \to \TGRP \.
+		\forall H \in \GRP \. 
+		\forall \phi : \prod_{i \in I} \GRP( G_i, H ) \. \NewLine \.
+		\R_{  \Big(H, \S(I,G,\phi) \Big)} =
+		\F_{H}\Big(I,(G,\R),\phi)
+	}
+	\NoProof
+	\\
+	\Theorem{StrongGroupTopologyLeft}
+	{
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall G : I \to \TGRP \.
+		\forall H \in \GRP \. 
+		\forall \phi : \prod_{i \in I} \GRP( G_i, H) \. \NewLine \.
+		\L_{  \Big(H, \S(I,G,\phi) \Big)} =
+		\F_{H}\Big(I,(G,\L),\phi)
+	}
+	\NoProof
+	\\
+	\Theorem{StrongGroupTopologySIN}
+	{
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall G : I \to \SIN \.
+		\forall H \in \GRP \. 
+		\forall \phi : \prod_{i \in I} \GRP( G_i, H) \. \NewLine \.
+		\SIN\Big(H, \S(I,G,\phi) \Big)
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Quotients}
+\subsubsection{Isomorphism Theorems}
+\subsubsection{Free Topological Groups}
 \subsection{Some Analytic Properties[1]}
 Many famous theorems of functional analysis can be proved for topological groups.
 This chapter will be written on demand in a first return.
 Prerequisite: Further Group Properties
+\subsubsection{Closed Graph Theorem}
+\subsubsection{Nearly Open Mapping Theorem}
+\subsubsection{Baire Category and Morphisms}
+\subsubsection{Haar Measures}
+\subsubsection{Unimodular Groups}
 \newpage
 \subsection{Representation[5]}
 Results about topological groups can be applied to their representations.
 Prerequisite: Further Group Properties, Some Analytic Properties,Haar measure, group representations
-\subsubsection{Continuous Characters[5]}
-Characters of topological groups are Also Continuous
+\subsubsection{Unitary Representations}
+\subsubsection{Continuous Characters}
+Characters of topological groups are also Continuous
 \Page{
 	\DeclareFunc{dualGroup}{\TGRP \to \TGRP}
 	\DefineNamedFunc{dualGroup}{G}{G^*}{\TGRP(G,\Sphere^1)}
 }
 \newpage
+\subsubsection{Representation with Haar Measure}
+\subsubsection{Bhor Compactification}
 \subsubsection{Keller's Theorem[6]}
 Keller's theorem states that every compact convex body 
 in a Hilbert space is homeomorphic to a Hilbert cube.
