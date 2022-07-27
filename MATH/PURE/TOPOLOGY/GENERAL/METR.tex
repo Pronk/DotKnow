@@ -1,4 +1,6 @@
 \documentclass[12pt]{scrartcl}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
 \usepackage{mathtools}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -116,7 +118,7 @@
 \DeclareMathOperator*{\codom}{codom}
 \DeclareMathOperator*{\colim}{colim}
 %variable
-\newcommand{\C}{\mathcal{C}}
+\renewcommand{\C}{\mathcal{C}}
 \newcommand{\A}{\mathcal{A}}
 \newcommand{\B}{\mathcal{B}}
 \newcommand{\D}{\mathcal{D}}
@@ -148,7 +150,7 @@
 \newcommand{\CG}{\mathsf{CG}}
 %Symbols
 \newcommand{\T}{\mathcal{T}}
-\newcommand{\U}{\mathcal{U}}
+\renewcommand{\U}{\mathcal{U}}
 \renewcommand{\O}{\mathcal{O}}
 \renewcommand{\d}{\mathrm{d}}
 \newcommand{\F}{\mathcal{F}}
@@ -1908,5 +1910,12 @@
 	\Conclude{[*]}{\THM{CompactHausdorffIsClosed}\bd^{-1} \TYPE{HomeomorphicEmbedding}}{\TYPE{HomeomorphicEmbedding}(X,\Reals^{1 + 2\dim X},f )}
 	\EndProof 
 }
+\newpage
+\section*{Sources}
+\begin{enumerate}
+\item A. Wilansky - Topology for Analysis (1970) 
+\item Dirk Hofmann et al. - Monoidal Topology: A Categorical Approach to Order, Metric, and Topology (2014)
+\item М. Вербитский - Начальный курс топологии в листочках: задачи и теоремы (2017)
+\item С. Шапошников - Анализ II, листок про топологическую размерность (2018)
+\end{enumerate}
 \end{document}
-\newpage 

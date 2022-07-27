@@ -1,4 +1,6 @@
 \documentclass[12pt]{scrartcl}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
 \usepackage{mathtools}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -116,7 +118,7 @@
 \DeclareMathOperator*{\codom}{codom}
 \DeclareMathOperator*{\colim}{colim}
 %variable
-\newcommand{\C}{\mathcal{C}}
+\renewcommand{\C}{\mathcal{C}}
 \newcommand{\A}{\mathcal{A}}
 \newcommand{\B}{\mathcal{B}}
 \newcommand{\D}{\mathcal{D}}
@@ -161,7 +163,7 @@
 %Symbols
 \newcommand{\T}{\mathcal{T}}
 \newcommand{\N}{\mathcal{N}}
-\newcommand{\U}{\mathcal{U}}
+\renewcommand{\U}{\mathcal{U}}
 \renewcommand{\O}{\mathcal{O}}
 \renewcommand{\d}{\mathrm{d}}
 \newcommand{\F}{\mathcal{F}}
@@ -4546,7 +4548,7 @@
 	{
 		\forall X,Y,Z \in \TOP \.
 		\forall f : \QM(X,Y) \.
-		\forall g : Y \to Z \.
+		\forall g : Y \to Z \. \NewLine \.
 		fg \in \TOP(X,Z) \iff g \in \TOP(Y,Z)
 	}
 	\Explain{ This Follows from the definition of strong topology}
@@ -7350,4 +7352,12 @@ So many familiar results hold here, including Ascoli-theorem.
 }
 \newpage
 \section{Cardinal Functions}
+\section*{Sources}
+\begin{enumerate}
+\item A. Wilansky - Topology for Analysis (1970) 
+\item R. Engelking - General Topology (1989) 
+\item О. Виро et al. - Элементарная тополгия (2010)
+\item Dirk Hofmann et al. - Monoidal Topology (2014)
+\item М. Вербитский - Начальный курс топологии в листочках: задачи и теоремы (2017)
+\end{enumerate}
 \end{document}
