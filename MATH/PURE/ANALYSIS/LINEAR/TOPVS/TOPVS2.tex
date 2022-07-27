@@ -1,0 +1,2295 @@
+\documentclass[12pt]{scrartcl}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{accents}
+\usepackage{extpfeil}
+\usepackage{graphicx}
+\usepackage{scalerel}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=5mm, left=10mm, right=2mm]{geometry}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+\newcommand{\Explain}[1]{& \text{#1.} \\}
+\newcommand{\ExplainFurther}[1]{& \text{#1} \\}
+\newcommand{\Exclaim}[1]{& \text{#1!} \\}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+\newcommand{\Imply}{\Rightarrow} 
+%TYPE THEORY
+\newcommand{\DFunc}[3]{\prod #1 : #2 \. #3 }
+\newcommand{\DPair}[3]{\sum #1 : #2 \. #3}
+\newcommand{\Type}{\TYPE{Type}}
+\newcommand{\Class}{\TYPE{Kind}}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\renewcommand{\i}{\mathrm{i}}
+%%Set Theory
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\DeclareMathOperator*{\supp}{supp}
+\newcommand{\Eq}{\TYPE{Equivalence}}
+\newcommand{\EqClass}[1]{\TYPE{EquivalenceClass}\left( #1 \right)}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\Func}[2]{\TYPE{Functor}\left( #1, #2 \right)}
+\mathchardef\hyph="2D
+\newcommand{\Surj}{\TYPE{Surjective}}
+\newcommand{\Inj}{\TYPE{Injective}}
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToMono}{\xhookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToEpi}{\xtwoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\ToIso}{\xleftrightarrow}
+\newcommand{\Arrow}{\xrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\Ideal}{\TYPE{Ideal}}
+\newcommand{\du}{\; \triangle \;}
+\newcommand{\Finites}{\TYPE{FiniteSubset}}
+\renewcommand{\c}{\complement}
+\newcommand{\Cover}{\TYPE{Cover}}
+\newcommand{\Ultrafilter}{\TYPE{Ultrafilter}}
+\newcommand{\Finite}{\TYPE{Finite}}
+\newcommand{\SA}{\TYPE{\sigma \hyph Algebra}}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\SayIn}[3]{& #1 \de #2 \in #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\ConcludeIn}[3]{& #1 \de #2 \in #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveIn}[3]{& \leadsto #1 \de #2 \in #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\} 
+\newcommand{\DeriveConcludeIn}[3]{& \leadsto #1 \de #2 \in #3 ; \\} 
+\newcommand{\Assume}[2]{& \LOGIC{Assume} \; #1 : #2, \\}
+\newcommand{\AssumeIn}[2]{& \LOGIC{Assume} \; #1 \in #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\Intro}{\LOGIC{I}}
+\newcommand{\Elim}{\LOGIC{E}}
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\ByDef}{\eth} 
+\newcommand{\ByConstr}{\jmath}  
+\newcommand{\Alt}{\LOGIC{Alternative} \;}
+\newcommand{\CL}{\LOGIC{Close} \;}
+\newcommand{\More}{\LOGIC{Another} \;}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+%CategoryTheory
+%Types
+\newcommand{\Cov}{\TYPE{Covariant}}
+\newcommand{\Contra}{\TYPE{Contravariant}}
+\newcommand{\NT}{\TYPE{NaturalTransform}}
+\newcommand{\UMP}{\TYPE{UnversalMappingProperty}}
+\newcommand{\CMP}{\TYPE{CouniversalMappingProperty}}
+\newcommand{\paral}{\rightrightarrows}
+%functions
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\obj}{\mathrm{obj}}
+\DeclareMathOperator*{\dom}{dom}
+\DeclareMathOperator*{\codom}{codom}
+\DeclareMathOperator*{\colim}{colim}
+%variable
+\renewcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\R}{\mathrm{R}}
+%Cats
+\newcommand{\CAT}{\mathsf{CAT}}
+\newcommand{\SET}{\mathsf{SET}}
+\newcommand{\PARALLEL}{\bullet \paral \bullet}
+\newcommand{\WEDGE}{\bullet \to \bullet \leftarrow \bullet}
+\newcommand{\VEE}{\bullet \leftarrow \bullet \to \bullet}
+%Topology
+%General Topology
+%Types
+\newcommand{\Top}{\TYPE{Topology}}
+\newcommand{\Homeo}{\TYPE{Homeomorphism}}
+\newcommand{\TS}{\TYPE{TopologicalSpace}} 
+\newcommand{\NbhdBase}{\TYPE{NeighborhoodBase}}
+\newcommand{\LF}{\TYPE{LocallyFinite}}
+\newcommand{\PN}{\TYPE{PerfectlyNormal}}
+\newcommand{\CR}{\TYPE{CompletelyRegular}}
+\newcommand{\OM}{\TYPE{OpenMap}}
+\newcommand{\Filter}{\TYPE{Filter}}
+\newcommand{\Filterbase}{\TYPE{Filterbase}}
+\newcommand{\CFilterbase}{\TYPE{ConvergentFilterbase}}
+\newcommand{\Dense}{\TYPE{Dense}}
+\newcommand{\Separable}{\TYPE{Separable}}
+\newcommand{\ND}{\TYPE{NowhereDense}}
+\newcommand{\Open}{\TYPE{Open}}
+\newcommand{\Net}{\TYPE{Net}}
+\newcommand{\Closed}{\TYPE{Closed}}
+\newcommand{\Clopen}{\TYPE{Clopen}}
+\newcommand{\Nbhd}{\TYPE{Neighborhood}}
+\newcommand{\Compact}{\TYPE{Compact}}
+\newcommand{\Compacts}{\TYPE{CompactSubset}}
+\newcommand{\OpenC}{\TYPE{OpenCover}}
+\newcommand{\Cluster}{\TYPE{Cluster}}
+\newcommand{\Convergent}{\TYPE{Convergent}}
+%\newcommand{\LC}{\TYPE{LocallyCompact}}
+\newcommand{\Locally}{\TYPE{Locally}}
+\newcommand{\Bair}{\TYPE{BaireSpace}}
+\newcommand{\Meager}{\TYPE{Meager}}
+\newcommand{\Connected}{\TYPE{Connected}}
+%FUNC
+\DeclareMathOperator*{\intx}{int}
+\DeclareMathOperator*{\cl}{cl} 
+\DeclareMathOperator*{\boundary}{\partial} 
+\DeclareMathOperator{\combo}{\triangledown} 
+%\DeclareMathOperator{\diag}{\triangle} 
+\DeclareMathOperator{\rem}{rem}
+%CATS
+\newcommand{\TOP}{\mathsf{TOP}}
+\newcommand{\HC}{\mathsf{HC}}
+\newcommand{\CG}{\mathsf{CG}}
+%Symbols
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\N}{\mathcal{N}}
+\renewcommand{\U}{\mathcal{U}}
+\renewcommand{\O}{\mathcal{O}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\X}{\mathcal{X}}
+%\newcommand{\d}{\mathrm{d}}
+%Metic Topology
+%FUNC
+\DeclareMathOperator{\diam}{diam}
+\newcommand{\Cell}{\mathbb{B}}
+\newcommand{\Disc}{\mathbb{D}}
+%CATS
+\newcommand{\Semiiso}{\mathsf{SMS}_{\circ \to \cdot}}
+\newcommand{\Iso}{{\mathsf{MS}_{\circ \to \cdot}}}
+\newcommand{\SMS}{\mathsf{SMS}}
+\newcommand{\MS}{\mathsf{MS}}
+\newcommand{\UNI}{\mathsf{UNI}}
+\newcommand{\UNIS}{\mathsf{UNIS}}
+\newcommand{\TG}{\mathsf{TG}}
+\newcommand{\CSeq}{\TYPE{CauchySequence}}
+\newcommand{\Complete}{\TYPE{Complete}}
+%Descriptive Set Theory
+%TYPE
+%Descriptive Set Theory
+%TYPE
+%\newcommand{\Bool}{\mathbb{B}}
+%\newcommand{\IS}{\TYPE{InitialSegement}}
+\newcommand{\FS}[1]{{#1}{}^*}
+\newcommand{\Ext}{\TYPE{Extension}}
+\newcommand{\Tree}{\TYPE{Tree}}
+\newcommand{\Pruned}{\TYPE{Pruned}}
+\newcommand{\PTM}{\TYPE{ProperTreeMorphism}}
+%\newcommand{\LTM}{\TYPE{LipschitzTreeMorphism}}
+\newcommand{\Polish}{\TYPE{Polish}}
+\newcommand{\IIPG}{\TYPE{InfiniteIterativeTwoPlayersGame}}
+\newcommand{\FPS}{\TYPE{FirstPlayerStrategy}}
+\newcommand{\SPS}{\TYPE{SecondPlayerStrategy}}
+\newcommand{\FPWS}{\TYPE{FirstPlayerWinningStrategy}}
+\newcommand{\SPWS}{\TYPE{SecondPlayerWinningStrategy}}
+\newcommand{\CS}{\TYPE{ChoquetSpace}}
+\newcommand{\SCS}{\TYPE{StrongChoquetSpace}}
+\newcommand{\BP}{\mathbf{BP}}
+\newcommand{\MGR}{\mathbf{MGR}}
+\newcommand{\cat}{\mathbf{CAT}}
+\newcommand{\BM}{\TYPE{BairMeasurable}}
+\newcommand{\CGSA}{\TYPE{CountablyGeneratedSigmaAlgebra}}
+\newcommand{\MC}{\TYPE{MonotonicClass}}
+\newcommand{\PSA}{\TYPE{PointSeparatingAlgebra}}
+\newcommand{\SBS}{\TYPE{StandardBorelSpace}}
+%FUNC
+\DeclareMathOperator{\len}{len}
+\newcommand{\inits}[2]{{#1}_{|\left[1,\ldots,#2\right]}}
+\DeclareMathOperator{\lb}{lb}
+\DeclareMathOperator{\WFpart}{WF}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\PTr}{PTr}
+\DeclareMathOperator*{\Tll}{{T\;\underline{lim}}}
+\DeclareMathOperator*{\Tul}{{T\;\overline{lim}}}
+\DeclareMathOperator*{\Tl}{{T\;lim}}
+\DeclareMathOperator{\rankcb}{rank_{CB}}
+\DeclareMathOperator{\lp}{lp}
+\newcommand{\alg}{\mathsf{A}}
+%CATS
+\newcommand{\TREE}{\mathsf{TREE}}
+\newcommand{\FSF}{\mathsf{FS}}
+\newcommand{\CRONE}{\mathsf{CRONE}}
+\newcommand{\BODY}{\mathsf{BODY}}
+\newcommand{\BOR}{\mathsf{BOR}}
+\newcommand{\bor}{\mathsf{B}}
+\newcommand{\Effros}{\mathsf{EFF}}
+%symbols
+\newcommand{\K}{\mathsf{K}}
+\renewcommand{\H}{\mathrm{H}}
+\renewcommand{\L}{\mathcal{L}}
+\renewcommand{\P}{\mathcal{P}}
+\renewcommand{\S}{\mathcal{S}}
+%Algebra
+%Groups
+%Types
+\newcommand{\Group}{\TYPE{Group}}
+\newcommand{\Abel}{\TYPE{Abelean}}
+\newcommand{\Sgrp}{\subset_{\mathsf{GRP}}}
+\newcommand{\Nrml}{\vartriangleleft}
+\newcommand{\FG}{\TYPE{FiniteGroup}}
+\newcommand{\Stab}{\mathrm{Stab}}
+\newcommand{\FGA}{\TYPE{FinitelyGeneratedAbelean}}
+\newcommand{\DN}{\TYPE{DirectedNormality}}
+\newcommand{\Sphere}{\mathbb{S}}
+\newcommand{\Torus}{\mathbb{T}}
+%Func
+\newcommand{\ActOn}{\curvearrowright}
+\DeclareMathOperator{\tor}{tor}
+\DeclareMathOperator{\bool}{bool}
+\DeclareMathOperator{\rank}{rank}
+%Cats
+\newcommand{\GRP}{\mathsf{GRP}}
+\newcommand{\ABEL}{\mathsf{ABEL}}
+%LINEAR
+%LINEAR
+%Linear Algebra
+%Types
+\newcommand{\Basis}{\TYPE{Basis}} % Basis of the linear space
+\newcommand{\submod}[1]{\subset_{\LMOD{#1}}}% submodule as a subset
+\newcommand{\subvec}[1]{\subset_{\VS{#1}}}% vector subspace as a subset
+\newcommand{\FGM}{\TYPE{FinitelyGeneratedModule}}% Finitely generated module
+\newcommand{\LI}{\TYPE{LinearlyIndependent}}
+\newcommand{\LIS}{\TYPE{LinearlyIndependentSet}}
+\newcommand{\FM}{\TYPE{FreeModule}}
+\newcommand{\IBP}{\TYPE{InvariantBasisProperty}}
+\newcommand{\UTM}{\TYPE{UpperTriangularMatrix}}
+\newcommand{\LTM}{\TYPE{LowerTriangularMatrix}}
+\newcommand{\Diag}{\TYPE{DiagonalMatrix}}
+\newcommand{\FP }{\TYPE{FinitelyPresented}}
+\newcommand{\GL}{\mathbf{GL}}% General Linear Group
+\newcommand{\SL}{\mathbf{SL}}% Special Linear group
+\newcommand{\SO}{\mathbf{SO}}
+\newcommand{\SU}{\mathbf{SU}}
+\newcommand{\prsubvec}[1]{\subsetneq_{\VS{#1}}}	% poper vector subspace as a subset
+\newcommand{\LC}{\TYPE{LinearComplement}} 
+\newcommand{\IS}{\TYPE{InvariantSubspace}}
+\newcommand{\RP}{\TYPE{ReducingPair}}
+\newcommand{\RCF}{\TYPE{RationalCanonicalForm}}
+\newcommand{\JCF}{\TYPE{JordanCanonicalForm}}
+\newcommand{\Diagble}{\TYPE{Diagonalizable}}
+\newcommand{\UT}{\TYPE{UpperTriangulizable}}
+\newcommand{\LT}{\TYPE{LowerTriangulizable}}
+%\newcommand{\IPS}{\TYPE{InnerProductSpace}}
+\newcommand{\OBasis}{\TYPE{OrthonormalBasis}}
+\newcommand{\FDIPS}{\TYPE{FiniteDimensionalInnerProductSpace}}
+\newcommand{\NO}{\TYPE{NormalOperator}}
+\newcommand{\NM}{\TYPE{NormalMatrix}}
+%\newcommand{\SA}{\TYPE{SelfAdjoint}}
+%\newcommand{\SSA}{\TYPE{SkewSelfAdjoint}}
+%\newcommand{\PI}{\TYPE{Pseudoinverse}}
+%\newcommand{\OVS}{\TYPE{OrthogonalVectorSpace}}
+%\newcommand{\SVS}{\TYPE{SymplecticVectorSpace}}
+%\newcommand{\MVS}{\TYPE{MetricVectorSpace}}
+%\newcommand{\FDMVS}{\TYPE{FiniteDimensionalMetricVectorSpace}}
+%\newcommand{\Sp}{\mathbf{Sp}}
+%Func
+\DeclareMathOperator{\Span}{span} % spann by subset
+\DeclareMathOperator{\Ann}{Ann}   % annihilator
+\DeclareMathOperator{\Ass}{Ass}   % associated primes
+\DeclareMathOperator{\diag}{diag} % diagonal
+\DeclareMathOperator{\adj}{adj}   % an adjoint matrix
+\DeclareMathOperator{\tr}{tr}     % trace
+\DeclareMathOperator{\codim}{codim} % codimension
+%\DeclareMathOperator{\Cell}{\mathbf{C}} % a componion matrix
+\DeclareMathOperator{\JC}{\mathbf{J}}  % a Jordan cell
+\DeclareMathOperator{\bigboxplus}{\scalerel*{\boxplus}{\sum}} % a direct sum of operators in the sence of the reducing a pair
+\DeclareMathOperator{\Spec}{Spec} % Spectre
+\DeclareMathOperator{\bigbot}{\scalerel*{\bot}{\sum}} % an othogonal direct sum
+\DeclareMathOperator{\GS}{\mathbf{GS}} %Gramm-Smmidt process
+\DeclareMathOperator{\NGS}{\mathbf{NGS}} %Normalized Gramm-Smmidt process
+\DeclareMathOperator{\WI}{\mathrm{WI}} %Witt Index
+%Cats
+\newcommand{\VS}[1]{#1\hyph\mathsf{VS}} % a category of vector spaces (Field)
+\newcommand{\FDVS}[1]{#1\hyph\mathsf{FDVS}} % a category of finite-dimensional vector spaces (Field)
+\newcommand{\LMOD}[1]{#1\hyph\mathsf{MOD}} % a category of the left modules (Ring)
+\newcommand{\RMOD}[1]{\mathsf{MOD}\hyph#1} % a category of the right modules (Ring)
+\newcommand{\LLMAP}[1]{#1\hyph\mathsf{LMAP}} % a cagory of based linear maps with the left scalar multiplication (Ring)
+\newcommand{\LMAT}[1]{#1\hyph\mathsf{MAT}}  % a category of based matrices with the left scalar multiplication (Ring)
+\newcommand{\NMAT}[1]{#1\hyph\mathbb{N}} % a category of finite matrices (Field)
+%Symbols
+\renewcommand{\L}{\mathcal{L}}
+\renewcommand{\O}{\mathbf{O}}
+%\newcommand{\U}{\mathbf{U}}
+\renewcommand{\S}{\mathbf{S}}
+%FIELDS
+\newcommand{\Field}{\TYPE{Field}}
+\newcommand{\ACF}{\TYPE{AlgebraicallyClosedField}}
+%Functional Analysis
+%TYPES
+\newcommand{\PLF}{\TYPE{PositiveLinearFunctional}}
+\newcommand{\NS}{\TYPE{NormedSpace}}
+\newcommand{\SNS}{\TYPE{SeminormedSpace}}
+\newcommand{\Banach}{\TYPE{Banach}}
+\newcommand{\IPS}{\TYPE{InnerProductSpace}}
+\newcommand{\Hilbert}{\TYPE{Hilbert}}
+\newcommand{\TopC}{\TYPE{TopologicalyCompletable}}
+\newcommand{\AbsC}{\TYPE{AbsolutelyConvergent}}
+\newcommand{\PNS}{\TYPE{PolynormedSpace}}
+\newcommand{\CNS}{\TYPE{CountablyNormedSpace}}
+%CATS
+\newcommand{\NORM}{\textsf{NORM}}
+\newcommand{\NORMI}{{\textsf{NORM}_{\circ \to \cdot}}}
+\newcommand{\BAN}{\textsf{BAN}}
+\newcommand{\BANI}{{\textsf{BAN}_{\circ \to \cdot}}}
+\newcommand{\HIL}[1]{#1\hyph\textsf{HIL}}
+\newcommand{\HILI}{{\textsf{HIL}_{\circ \to \cdot}}}
+%Simbols
+\newcommand{\w}{\mathbf{w}}
+%Convex
+%
+\newcommand{\Convex}{\TYPE{Convex}}
+\newcommand{\CB}{\TYPE{ConvexBody}}
+\newcommand{\CC}{\TYPE{ConvexCone}}
+\newcommand{\Mink}{\TYPE{MinkowskySpace}}
+\newcommand{\Euc}{\TYPE{EucledeanSpace}}
+\newcommand{\Cone}{\TYPE{Cone}}
+\newcommand{\Wedge}{\TYPE{Wedge}}
+\newcommand{\PVS}{\TYPE{PreorderedVectorSpace}}
+\newcommand{\OVS}{\TYPE{OrderedVectorSpace}}
+\newcommand{\AVS}{\TYPE{ArchemedeanVectorSpace}}
+\newcommand{\RS}{\TYPE{RieszSpace}}
+%FUNC
+\newcommand{\rint}{{\mathrm{rel}  \intx}}
+\DeclareMathOperator{\lina}{lina}
+\DeclareMathOperator{\lin}{lin}
+\DeclareMathOperator{\core}{core}
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\cone}{cone}
+\DeclareMathOperator{\cconv}{\overline{conv}}
+\DeclareMathOperator{\CCONV}{\mathsf{CCONV}}
+\renewcommand{\H}{\mathrm{H}}
+%TOPALG
+%\TYPES
+\newcommand{\Connector}{\TYPE{Connector}}
+\newcommand{\CConnector}{\TYPE{ClosedConnector}}
+\newcommand{\Unif}{\TYPE{Uniformity}}
+\newcommand{\US}{\TYPE{UniformSpace}}
+\newcommand{\UB}{\TYPE{UniformBase}}
+\newcommand{\Sym}{\TYPE{SymmetricConnector}}
+\newcommand{\SB}{\TYPE{SymmetricBase}}
+\newcommand{\BofU}{\TYPE{BaseOfUniformity}}
+\newcommand{\UNbhd}{\TYPE{UniformNeighborhood}}
+\newcommand{\UC}{\TYPE{UniformlyContinuous}}
+\newcommand{\UHomeo}{\TYPE{Unimorphism}}
+\newcommand{\UniCov}{\TYPE{UniformCover}}
+\newcommand{\CF}{\TYPE{CauchyFilterbase}}
+\newcommand{\CUS}{\TYPE{CompleteUniformSpace}}
+\newcommand{\SCUS}{\TYPE{SequenceCompleteUniformSpace}}
+\newcommand{\Small}{\TYPE{Small}}
+\newcommand{\TB}{\TYPE{TotallyBounded}}
+\newcommand{\MUS}{\TYPE{MetrizableUniformSpace}}
+\newcommand{\Completion}{\TYPE{Completion}}
+\newcommand{\SCompletion}{\TYPE{SeparableCompletion}}
+\newcommand{\pt}{\mathrm{pt}}
+\newcommand{\EqC}{\TYPE{Equicontinuous}}
+\newcommand{\UEqC}{\TYPE{UnifomlyEquicontinuous}}
+\newcommand{\LIM}{\TYPE{LeftInvariantMetric}}
+\newcommand{\RIM}{\TYPE{RightInvariantMetric}}
+\newcommand{\TIM}{\TYPE{TwosidedInvariantMetric}}
+\renewcommand{\SS}{\TYPE{SymmetricSet}}
+\newcommand{\veemetric}{\TYPE{\vee\hyph Semimetric}}
+\newcommand{\TGC}{\TYPE{TopologicalGroupCompletion}}
+\newcommand{\BG}{\TYPE{BaireGroup}}
+\newcommand{\PG}{\TYPE{PolishGroup}}
+\newcommand{\Borg}{\TYPE{BorelGroup}}
+\newcommand{\cli}{\TYPE{cli}}
+\newcommand{\Selector}{\TYPE{Selector}}
+\newcommand{\Transversal}{\TYPE{Transversal}}
+\newcommand{\SBG}{\TYPE{StandardBorelGroup}}
+\newcommand{\Polishable}{\TYPE{Polishable}}
+\newcommand{\SIN}{\TYPE{SIN}}
+%FUNC
+\newcommand{\inv}{\mathrm{inv}}
+\DeclareMathOperator{\perm}{\mathrm{perm}}
+%\CAT
+\newcommand{\TGRP}{\mathsf{TGRP}}
+\newcommand{\PGRP}{\mathsf{PGRP}}
+%\Symbol
+\newcommand{\V}{\mathcal{V}}
+\newcommand{\W}{\mathcal{W}}
+\renewcommand{\L}{\mathcal{L}}
+\renewcommand{\R}{\mathcal{R}}
+\renewcommand{\S}{\mathcal{S}}
+\newcommand{\OComplete}{\TYPE{OrderDedekindComplete}}
+%TopologicalVectorSpaces
+%TYPES
+\newcommand{\TopField}{\TYPE{TopologicalField}}
+\newcommand{\TopVS}{\TYPE{TopologicalVectorSpace}}
+\newcommand{\Vect}{\TYPE{Vector}}
+\newcommand{\AVF}{\TYPE{AbsoluteValueField}}
+\newcommand{\LConv}{\TYPE{LocallyConvexSpace}}
+\newcommand{\TC}{\TYPE{TopologicalComplement}}
+\newcommand{\MaxS}{\TYPE{MaximalSubspace}}
+\newcommand{\AKC}{\TYPE{AbsolutelyKConvex}}
+\newcommand{\KC}{\TYPE{KConvex}}
+\newcommand{\LKConv}{\TYPE{LocallyKConvexSpace}}
+\newcommand{\CCompact}{\TYPE{CCompact}}
+%Cats
+\newcommand{\TVS}[1]{{#1}\hyph\mathsf{TVS}}
+\newcommand{\HTVS}[1]{{#1}\hyph\mathsf{HTVS}}
+\newcommand{\LCS}[1]{{#1}\hyph\mathsf{LCS}}
+\newcommand{\LCHS}[1]{{#1}\hyph\mathsf{LCHS}}
+%FUNC
+\DeclareMathOperator{\bal}{\mathrm{bal}}
+\newcommand{\kconv}{K\hyph\mathrm{conv}\;}
+\title{Topological Vector Spaces 2}
+\author{Uncultured Tramp}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Abstract Topological Vector Spaces}
+\subsection{Locally Convex Spaces}
+\subsubsection{Intro and Definition}
+\Page{
+	\DeclareType{\TopVS}{\prod k : \TopField \. ? \sum_{V \in \VS{k}} \Top(V)}
+	\DefineType{(V,\tau)}{\TopVS}{\
+		\cdot_V \in \TOP\Big( k \times (V,\tau),(V,\tau)\Big) \And 
+		+_V \in \TOP\Big( (V,\tau) \times (V,\tau),(V,\tau)\Big)
+	}
+	\\
+	& k :: \TopField ;\\
+	\\
+	\Conclude{\Vect\Top}{\Lambda V \in \VS{k} \. \TopVS(V)}
+	{\prod_{V \in \VS{k}} V \. ? \Top(V)} 
+	\\
+	\DeclareFunc{categoryOfTopologicalVectorSpaces}
+	{
+		\TopField \to \CAT
+	}
+	\DefineNamedFunc{categoryOfTopologicalVectorSpaces}{k}{\TVS{k}}
+	{
+		\NewLine \de		
+		(\TopVS(k),\VS{k} \cap \TOP,\circ,\id)
+	}
+	\\
+	\DeclareFunc{categoryOfTopologicalVectorSpaces}
+	{
+		\TopField \to \CAT
+	}
+	\DefineNamedFunc{categoryOfHausdorffTopologicalVectorSpaces}{k}{\HTVS{k}}
+	{
+		\NewLine \de		
+		(\TopVS(k) \And \TYPE{T2},\VS{k} \cap \TOP,\circ,\id)
+	}
+	\\
+	\DeclareFunc{asTopologicalGroup}
+	{
+		\TVS{k} \to \TGRP
+	}
+	\DefineNamedFunc{asTopologicalGroup}{V}{V}{V}
+	\\
+	\\
+	\DeclareFunc{asVectorSpace}
+	{
+		\TVS{k} \to \VS{k}
+	}
+	\DefineNamedFunc{asVectorSpace}{V}{V}{V}
+	\\
+}
+\newpage
+\subsubsection{Absorbent and Balanced Sets}
+\Page{
+	& k :: \AVF(\Reals) ;\\
+	\\
+	\DeclareType{Balanced}{ \prod_{V : \TVS{k} } ??V }
+	\DefineType{B}{Balanced}{\Disc_k(0,1)B \subset B}
+	\\
+	\DeclareType{Absorbent}{\prod k : \AVF(\Reals) \. \prod_{V : \TVS{k} } ??V }
+	\DefineType{A}{Absorbent}{
+		\forall v \in V \. 
+		\exists \rho \in \Reals_{++} \. 
+		\forall \alpha \in \Disc_k(0,\rho) \.
+		\alpha v \in A
+	}
+	\\
+	\Theorem{VectorSubspaceIsBalanced}
+	{
+		\forall V \in \TVS{k} \.
+		\forall U \subset_{\VS{k}} V \.
+		\TYPE{Balanced}(V,U)
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Theorem{AbsorbentVectorSubspaceIswhole}
+	{
+		\forall V \in \TVS{k} \.
+		\forall U \subset_{\VS{k}} V \.
+		\TYPE{Absorbent}(V,U) \Imply V
+	}
+	\Explain{ Take $v \in V$}
+	\Explain{ By definition of absorbent there is $\alpha \in k_*$ such that $\alpha v \in U$}
+	\Explain{ But then  $ v = \alpha^{-1} \alpha v \in U$}
+	\Explain{ So, $U = V$}
+	\EndProof
+	\\
+	\Theorem{BalancedSetsAreDedikindComplete}
+	{
+		\forall V \in \TVS{k} \. \OComplete\Big( \TYPE{Balanced}(V)\Big)
+	}
+	\Explain{Assume $\beta$ is a set of balanced sets in $V$}
+	\Explain{ If $v \in \bigcup \beta$, then there is a $B \in \beta$ such that $v \in B$}
+	\Explain{ 
+	And by definition of balanced $\alpha v \in B \subset \bigcup \beta $ 
+	for any $\alpha \in \Cell_k(0,1)$}
+	\Explain{
+		So $\bigcup \beta$ is Balanced}
+	\Explain{ if $v \in \bigcap \beta$, then $v \in B$ for any $B \in \beta$}
+	\Explain{ 
+	And by definition of balanced $\alpha v \in B \subset \bigcup \beta $ 
+	for any $\alpha \in \Cell_k(0,1)$ and for all $B \in \beta$}
+	\Explain{
+		So $\bigcap \beta$ is Balanced}
+	\EndProof
+	\\
+	\Theorem{AbsorbentAreClosedUnderUnions}
+	{
+		\forall V \in \TVS{k} \. \forall \alpha : ?\TYPE{Absorbent}(V) \. 
+		\TYPE{Absorbent}\left(V,\bigcup\alpha \right)
+	}
+	\Explain{  This is obvious}
+	\EndProof
+}\Page{
+	\Theorem{AbsorbentAreClosedUnderFiniteIntersections}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \. \forall \alpha : \Finite\Big(\TYPE{Absorbent}(V)\Big) \. 
+		\TYPE{Absorbent}\left(V,\bigcap\alpha \right)
+	}
+	\Explain{  Say $n = |\alpha|$}
+	\Explain{ if $n = 0$, then $\bigcap \alpha = V$ which is always absorbent}
+	\Explain{
+		otherwisr represent $\alpha = \{A_1,\ldots, A_n\}$ and assume $v \in V$}
+	\Explain{
+		Select a finite sequence $\rho:\{1,\ldots,n\} \to \Reals_{++}$,
+		with $\rho_i$ absorbing $v$ for $A_i$}
+	\Explain{
+	Let $\sigma = \min \{\rho_1,\ldots,\rho_n\}$}
+	\Explain{
+		Then $\sigma$ is absorbing for every $A_i$, so it is absorbing for $\bigcap \alpha$}
+	\EndProof
+	\Explain{
+		In case of infinite intersiction the minimum may not exit}
+	\\
+	\DeclareFunc{balancedHull}{\prod_{V : \TVS{k}} 2^V \to \TYPE{Balanced}(V)}
+	\DefineNamedFunc{balancedHull}{A}{\bal A}
+	{
+		\bigcap \Big\{ B : \TYPE{Balanced}(V),  A \subset B \Big\}
+	}
+	\\
+	\Theorem{BalancedHullProductExpression}
+	{
+		\forall_{V \in \TVS{k}}  \forall A \subset V \. \bal A = \Cell_k(0,1) A
+	}
+	\Explain{
+		Clearly $\Cell_k(0,1)A$ is balanced}
+	\Explain{
+		Assume that $B$ is a balanced set such that $A \subset B$
+	}
+	\Explain{
+		Then $\Cell_k(0,1) A \subset \Cell_k(0,1) B \subset B$ as
+		$B$ as balanced}
+	\Explain{
+		This proves the result as balanced hull of $A$ may beviewed as the smallest
+		balanced set containing $A$}
+	\EndProof 
+	\\
+	\DeclareFunc{balancedCore}{\prod_{V : \TVS{k}} 2^V \to \TYPE{Balanced}(V)}
+	\DefineNamedFunc{balancedCore}{A}{ A^{\bal}}
+	{
+		\bigcup \Big\{ B : \TYPE{Balanced}(V),  B \subset A \Big\}
+	}
+	\\
+	\Theorem{BalancedCoreAsIntersction}
+	{
+		\forall_{V \in \TVS{k}}  \forall A \subset V \. \bal A = \bigcap_{\alpha \in \Cell_k^\c(0,1)} \alpha A
+	}
+	\Explain{Firstly, I show that $B = \bigcap_{\alpha \in \Cell_k^\c(0,1)} \alpha A$ is balanced}
+	\Explain{
+		Assume $v \in B$}
+	\Explain{
+		Then,  $v \in \alpha A $ for all $\alpha \in \Cell_k^\c(0,1)$}
+	\Explain{
+		Thus $\Cell_k(0,1)v \subset A$}
+	\Explain{
+		By definition $A^{\bal}$ as a union this means, that $v \in A^{\bal}$, so 
+		$B \subset A^{\bal}$}
+	\Explain{
+			Assume now that $v \in A^{\bal}$}
+	\Explain{
+			Then $\Cell_k(0,1) v \subset \Cell_k(0,1)A^{\bal} \subset A^{\bal} \subset A$
+			As $A^{\bal}$ is a union of subsets}
+	\Explain{
+		But this mean that $v \in B$
+	, so $A = B$}
+	\EndProof
+}\Page{
+	\Theorem{ClosedBalancedCoreIsOpen}
+	{
+		\forall V : \TVS{k} \. 
+		\forall F : \Closed(V) \.
+		\Closed(V,F^{\bal})  
+	}
+	\Explain{ Multiplication by non-zero scalar is a homeomorphism}	
+	\Explain{ So result follows from intersection representation as $\alpha F$ will be closed}
+	\EndProof
+	\\
+	\Theorem{LinearMapsBalancedToBalanced}
+	{
+		\NewLine ::		
+		\forall V,W : \TVS{k} \.
+		\forall T \in \VS{k}(V,W) \.
+		\forall B : \TYPE{Balanced}(V) \.
+		\TYPE{Balanced}\Big(W, T(B) \Big)
+	}
+	\Explain{ 
+		Assume $w \in T(B)$ and $\alpha \in \Disc_k(0,1)$}
+	\Explain{  
+		Then there is $v \in B$ such that $T(v) = w$}
+	\Explain{
+		as $B$ is balanced $\alpha v \in B$}
+	\Explain{
+		Thus $\alpha w = \alpha T(v) = T(\alpha v) \in T(B)$
+	}
+	\Explain{
+		This proves that $T(B)$ is balanced}
+	\EndProof
+	\\
+	\Theorem{LinearSurjectiveMapsAbsorbentToAbsorbent}
+	{
+		\NewLine ::		
+		\forall V,W : \TVS{k} \.
+		\forall T \in \VS{k} \And \Surj(V,W) \.
+		\forall A : \TYPE{Absorbent}(V) \.
+		\TYPE{Absorbent}\Big(W, T(A) \Big)
+	}
+	\Explain{ 
+		Assume $w \in W$}
+	\Explain{
+		Then there is $v \in V$ such that $T(v) = w$ as $T$ is surjective}
+	\Explain{  
+		Then there exists $\rho \in \Reals_{++}$ such that $\Disc(0,\rho)v \subset A$
+		as $A$ is absorbent}
+	\Explain{
+		Take $\alpha \in \Disc(0,\rho)$}
+	\Explain{
+		Then $\alpha w = \alpha T(v) = T(\alpha v) \in T(A)$}
+	\Explain{
+		This proves that $T(A)$ is absorbent}
+	\EndProof
+	\\
+	\Theorem{BalancedPreimageIsBalanced}{
+		\NewLine ::		
+		\forall V,W : \TVS{k} \.
+		\forall T \in \VS{k}(V,W) \.
+		\forall B : \TYPE{Balanced}(W) \.
+		\TYPE{Balanced}\Big(V, T^{-1}(B) \Big)
+	}
+	\Explain{
+		Take $v \in T^{-1}(B)$ and $\alpha \in \Disc_k(0,1)$}
+	\Explain{
+		Then $T(v) \in B$, but also $ T(\alpha v) = \alpha T(v) \in B$ as
+		$B$ is balanced }
+	\Explain{
+		But this means that $\alpha v \in T^{-1}(B)$}
+	\EndProof
+	\\
+	\Theorem{BalancedPreimageIsBalanced}{
+		\NewLine ::		
+		\forall V,W : \TVS{k} \.
+		\forall T \in \VS{k}(V,W) \.
+		\forall A: \TYPE{Absorbent}(W) \.
+		\TYPE{Absorbent}\Big(V, T^{-1}(A) \Big)
+	}
+	\Explain{
+		Take $v \in V$}
+	\Explain{
+		Then there is $\rho \in \Reals_{++}$ such that 
+		$ T(\alpha v) =  \alpha T(v) \in A$ for any $\alpha \in \Disc_k(0,\rho)$ 
+		as $A$ is absorbent}
+	\Explain{
+		But this means that $\alpha v \in T^{-1}(A)$
+	}
+	\EndProof
+}
+\newpage
+\subsubsection{Topology and Convexity}
+\Page{
+	\Conclude{\TYPE{Disc}}{ \Lambda V \in \TVS{k} \. \Convex \And \TYPE{Balanced}(V) }
+	{
+		\prod_{V \in \TVS{k}} ??V
+	}
+	\\
+	\Theorem{DiscCharacterization}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \.
+		\forall D \subset V \.
+		\TYPE{Disc}(V,D)
+		\iff
+		\forall v,w \in D \.
+		\forall \alpha, \beta \in k \.
+		|\alpha| + |\beta| \le 1
+		\Imply
+		\alpha v + \beta w \in D 
+	}
+	\Explain{ Firstly, assume that $D$ is a Disc}
+	\Explain{ 
+		Take $v,w \in D$ and $\alpha, \beta \in k$ such that $|\alpha| + |\beta| \le 1$}
+	\Explain{
+		$\alpha v, \beta w \in D$ as $D$ is balanced}
+	\Explain{
+		So if $\alpha = 0$ or $\beta = 0$ then $\alpha v + \beta w = \alpha v \in V$ or
+		$\alpha v + \beta w  = \beta w \in V$}
+	\Explain{
+		Otherwise, $|\alpha| + |\beta| \neq 0$ and  $ \frac{|\alpha|}{|\alpha| + |\beta|} +  
+			\frac{|\beta|}{|\alpha| + |\beta|} = 1$}
+	\Explain{
+		Also, $\frac{|\alpha| + |\beta|}{|\alpha|} \alpha v, 
+		\frac{|\alpha| + |\beta|}{|\beta|} \beta w \in D$
+		as $|\alpha| + |\beta| \le 1$ and $D$ is absorbent}
+	\Explain{
+		Then 
+		$\alpha v + \beta w = 
+		\frac{|\alpha|}{|\alpha| + |\beta|} \frac{|\alpha| + |\beta|}{|\alpha|} \alpha v +  
+		\frac{|\beta|}{|\alpha| + |\beta|}	\frac{|\alpha| + |\beta|}{|\beta|} \beta w \in D
+		$ as $D$ is convex}
+	\Explain{
+		Now assume that the condition holds}
+	\Explain{
+		Then convexity and being balanced is obvious}
+	\EndProof
+	\\
+	\Theorem{DiskedHull}
+	{
+		\forall V \in \TVS{K} \.
+		\forall A \subset V \.
+		\bigcap \Big\{ D : \TYPE{Disc}(V), A \subset D  \Big\} = 
+		\conv \bal A
+	}
+	\Explain{
+		Firstly we need to show that $\conv \bal A$ is balanced}
+	\Explain{
+		Assume $v \in \conv \bal A$ and $\alpha \in \Disc_k(0,1)$}
+	\Explain{
+		If $\alpha = 0$ then $\alpha v = 0 \in \bal A \subset \conv \bal A$}	
+	\Explain{
+		Otherwise, if $C$ is convex in $V$, 
+		then $ \frac{\alpha}{|\alpha|} C$ is also convex}
+	\Explain{
+		Also if $\bal A \subset C$ then $ \bal A =  \frac{\alpha}{|\alpha|} \bal A \subset 
+		\frac{\alpha}{|\alpha|} C$ as $\bal A$ is balanced}
+	\Explain{
+		Thus, $\frac{\alpha}{|\alpha|} v \in \conv \bal A $}
+	\Explain{
+		Also, as it was said $0 \in \bal A \subset \conv \bal A$}
+	\Explain{
+		So $\alpha v =  \frac{|\alpha|}{|\alpha|}  \alpha v  + \Big(1 - |\alpha|\Big)0 \in \conv \bal A$
+		as $\conv \bal A$ is convex}
+	\Explain{
+		So $\conv \bal A$ is a disk and 
+		$B = \bigcap \Big\{ D : \TYPE{Disc}(V), A \subset D  \Big\}   \subset \conv \bal A$}
+	\Explain{
+		Now assume that $D$ is a disk such that $A \subset D$}
+	\Explain{
+		Then $\bal A \subset D$ as $D$ is balanced}
+	\Explain{
+		Furthermore, $\conv \bal A \subset D$ as $D$ is convex}
+	\Explain{
+	 	Thus $\conv \bal A = B$}
+	\EndProof
+}\Page{
+	\Theorem{TVSIsConnected}
+	{
+		\forall V \in \TVS{k} \.		
+		\Connected(k)
+		\Imply
+		\Connected(V)
+	}
+	\Explain{
+		Note that $V = \bigcup_{v \in V} kv $}
+	\Explain{
+		Each $kv$ is connected as continuous image of connected $k$}
+	\Explain{
+		Then all lines $kv$ intersect at $0$, so  $V$ is connected}
+	\EndProof
+	\\
+	\Theorem{AbsorbentNeighborhoodsOfZero}
+	{
+		\forall V \in \TVS{k} \.
+		\forall U \in \U_V(0) \.
+		\TYPE{Absorbent}(V,U)		
+	}
+	\Explain{ Assume $v \in V$}
+	\Explain{
+		Then $\lim_{\alpha \to 0} \alpha v = 0$}
+	\Explain{
+			So, there exists $\rho \in \Reals_{++}$
+			such that $\Cell_k(0,\rho) v  \subset U$}
+	\Explain{
+		Then   $\Disc_k\left(0,\frac{\rho}{2}\right) v \subset  \Cell_k(0,\rho) v  \subset U$}
+	\Explain{
+		Thus, $U$ is absorbent}
+	\EndProof
+	\\
+	\Theorem{NeighborhoodsOfZeroScaling}
+	{
+		\forall V \in \TVS{k} \.
+		\forall U \in \U_V(0) \.
+		\forall \alpha \in k_* \.
+		\alpha U \in \U_V(0)
+	}
+	\Explain{
+		$\alpha \cdot \bullet$ is a homeomorphism,
+		so $\alpha U$ i	s open
+	}
+	\Explain{
+		Obviously, $0 = \alpha 0 \in \alpha U$ as $0 \in U$}
+	\Explain{
+		Thus, $U \in \U_V(0)$}
+	\EndProof
+	\\
+	\Theorem{EachNeighborhoodsOfZeroContainsBalancedNeighborhoods}
+	{
+		\NewLine ::
+		\forall V \in \TVS{k} \.
+		\forall U \in \U_V(0) \.
+		\exists W \in \U_V(0) \.
+		W \subset U \And \TYPE{Balanced}(V,W)
+	}
+	\Explain{
+		$(\cdot)^{-1}(U)$ is open in $k \times V$}
+	\Explain{
+		So there exist $W \in \U_V(0)$ and $\rho \in \Reals_{++}$
+		such that $\Cell_k(0,\rho) \times W \subset (\cdot)^{-1}(U) $
+		as $0 \in  (\cdot)^{-1}(U)$}
+	\Explain{
+		This means that $\Cell_k(0,\rho) W \subset U$}
+	\Explain{
+		Also, note that $\Cell_k(0,\rho) W = \bigcup_{|\alpha| < \rho} \alpha W \in \U_V(0)$}
+	\Explain{
+		Assume $v \in \Cell_k(0,\rho) W$ and $\alpha \in \Disc_k(0,1)$}
+	\Explain{
+		Then there is 
+		$w \in W$  and $\beta \in \Cell_k(0,\rho)$ such that $v = w\beta$}
+	\Explain{
+		But $\alpha \beta$ is also in $\Cell_k(0,\rho)$ and
+		so $\alpha v = \alpha \beta w \in \Cell_k(0,\rho) W$}
+	\Explain{
+		Thus, $\Cell_k(0,\rho) W$ is balanced}
+	\EndProof
+	\\
+	\Theorem{ClosedAndBlancedNeighborhoodBase}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \.
+		\exists \F : \TYPE{Filterbase}(V,\U_V(0)) \.
+		\forall F \in \F \. 
+		\Closed \And \TYPE{Balanced}(V,F)
+	}
+	\Explain{Pretty obvious}
+	\EndProof
+}\Page{
+	\DeclareType{\LConv}
+	{
+		? \TVS{k}
+	}
+	\DefineType{V}{\LConv}{
+		\exists \F : \TYPE{Filterbase}\Big(V,\N_V(0)\Big) \.
+		\forall F \in \F \. \Convex(F,\F)
+	}
+	\\
+	\DeclareFunc{categoryOfLocallyConvexSpaces}
+	{
+		\AVF(\Reals) \to \CAT
+	}
+	\DefineNamedFunc{categoryOfLocallyConvexSpaces}{k}{\LCS{k}}
+	{
+		\NewLine \de		
+		(\LConv(k),\VS{k} \cap \TOP,\circ,\id)
+	}
+	\\
+	\DeclareFunc{categoryOfTopologicalVectorSpaces}
+	{
+		\AVF(\Reals) \to \CAT
+	}
+	\DefineNamedFunc{categoryOfHausdorffTopologicalVectorSpaces}{k}{\LCHS{k}}
+	{
+		\NewLine \de		
+		(\LConv(k) \And \TYPE{T2},\VS{k} \cap \TOP,\circ,\id)
+	}
+	\\
+	\Theorem{NormedSpaceIsLocallyConvex}
+	{
+		\NORM(k) \subset \LCHS{k}
+	}
+	\Explain{ Balls in normed spaces are convex}
+	\Explain{
+		Also they are metric space, hence Hausdorff}
+	\EndProof
+	\\
+	\Theorem{NormedSpaceIsLocallyConvex}
+	{
+		\NORM(k) \subset \LCHS{k}
+	}
+	\Explain{ Balls in normed spaces are convex}
+	\Explain{
+		Also they are metric space, hence Hausdorff}
+	\EndProof
+	\\
+	\Theorem{LCSHasDiscBase}
+	{
+		\forall V \in \LCS{k} \.
+		\exists \F : \TYPE{Filterbase}\Big(V,\N_V(0), \F\Big) \.
+		\forall F \in \F \. \TYPE{Disc}(V,F)
+	}
+	\Explain{
+		Take $U \in \N_V(0)$}
+	\Explain{
+		Then there exists a convex neighborhood $C \in \N_V(0)$
+		with $C \subset U$ as $V$ is locally convex}
+	\Explain{
+		Then there is $B \subset C$ which is a balanced neiborhood 
+		which was proved for all topological vector spaces}
+	\Explain{
+		Then $\conv B \subset C$ is convex and still an neighborhood of zero}
+	\Explain{
+		But convex hull of the balanced set is balanced,hence $\conv B$ is a disc
+	}
+	\EndProof
+	\\
+	\Theorem{LCSHasOpenDiscBase}
+	{
+		\forall V \in \LCS{k} \.
+		\exists \F : \TYPE{Filterbase}\Big(V,\N_V(0), \F\Big) \.
+		\forall F \in \F \. \TYPE{Disc} \And \Open(V,F)
+	}
+	\NoProof
+	\\
+	\Theorem{LCSHasClosedDiscBase}
+	{
+		\forall V \in \LCS{k} \.
+		\exists \F : \TYPE{Filterbase}\Big(V,\N_V(0), \F\Big) \.
+		\forall F \in \F \. \TYPE{Disc} \And \Closed(V,F)
+	}
+	\NoProof
+}\Page{
+	 \Theorem{VectorTopologyByAbsorbentAndBalancedSets}
+	 {
+		\NewLine ::	 	
+	 	\forall V \in \VS{k} \.
+	 	\forall \F : \TYPE{GroupFilterbase}(V) \.
+	 	\forall \aleph : \F \subset \TYPE{Balanced} \And \TYPE{Absorbent}(V) \.
+	 	\Big( V  , \langle \F \rangle_{\TGRP} \Big) \in \TVS{k} 
+	 }
+	 \Explain{
+	 	As $F \in \F$ is balanced, then
+	 	$F = -F$, so $ \langle \F \rangle_{\TGRP}$ is a 
+	  group topology for $(V,+)$}
+	 \Explain{
+	 	Now assume $F \in \F$ and $\alpha \in k_*$}
+	 \Explain{
+	 	Then there exists balanced $U \in \langle \F \rangle_{\TGRP}$
+	 	such that $0 \in U$ and $2U \subset U + U \subset F$}
+	  \Explain{
+	 	Then there exists balanced $U \in \langle \F \rangle_{\TGRP}$
+	 	such that $0 \in U$ and $2U \subset U + U \subset F$}
+	 \Explain{
+	 	This can be generalized to th case when
+	 	 $U \in \langle \F \rangle_{\TGRP}$ and
+	 	 $2^n U \subset  F$}
+	 \Explain{
+	 		So, we can take such $U$ that $|\alpha| \le 2^n$ and $\alpha U \subset 2^n U \subset F$
+	 		for any $\alpha \in k_*$ and $F \in \F$}
+	 \Explain{
+	 	Now consider $\alpha \in k_*$, $v \in V$ and $F \in \F$}	
+	 \Explain{
+	 	There exists $U \in \F(0)$ such that $U + U + U \subset F$}
+	 \Explain{
+	 	As $U$ is absorbent there is $\rho \in (0,1)$ 
+	 	such that $\Cell(0,\rho)v \subset U \subset F$}
+	 \Explain{
+	 	Thus,
+	 	$Cell(0,\rho)(v + U) = \Cell(0,\rho)v + \Cell(0,\rho)U = U + U \subset F$
+	 }
+	 \Explain{
+	 	Now, assume $\alpha \neq 0$
+	 }
+	 \Explain{
+	 	There is $U' \in \F$ such that $\alpha U' \subset U$
+	 }
+	 \Explain{
+	 	Then there is also a $W \in \F$ such that $W \subset U' \cap U$
+	 }
+	 \Explain{
+	 	Thus,
+	 	$
+	 		\Cell(\alpha,\rho)(v + W)  = 
+	 		\alpha v +   \alpha W  + 	\Cell(0,\rho)(v + W) \subset
+	 		\alpha v + U + U + U \subset \alpha v + F
+	 	$
+	 }
+	 \Explain{
+	 	This proves that scalar multiplication is continuous}
+	 \EndProof
+	 \\
+	 \Theorem{LocallyConvexTopologyByDiscFilterbase}
+	 {
+		\NewLine ::	 	
+	 	\forall V \in \VS{k} \.
+	 	\forall \F : \TYPE{Filterbase}(V) \.
+	 	\forall \aleph : \F \subset \TYPE{Disc} \And \TYPE{Absorbent} (V) \. \NewLine \.
+	 	\forall \beth : \forall F \in \F \. \exists \alpha \in (0,1/2) \. \alpha F \in \F  \. 
+	 	\Big( V  , \langle \F \rangle_{\TGRP} \Big) \in \LCS{k} 
+	 }
+	 \Explain{
+	 	We need to show that $\F$ is a group filterbase}
+	 \Explain{	Assume $F \in \F$}
+	 \Explain{ By assumption there are $\alpha \in (0,1/2)$
+	 	such that $\alpha F \in \F$} 
+	 \Explain{
+	 	Then, as $\alpha F$ is convex and $F$ is absorbent
+	 	$\alpha F + \alpha F = 2 \alpha F \subset F$}
+	 \Explain{
+	 	Thus, by previous theorem $\Big( V  , \langle \F \rangle_{\TGRP} \Big)$
+	 	is a topolofical vector space
+	 }
+	 \Explain{
+	 	And it is locally convex as there is a filterbase consising of disks 
+	 	by construction}
+	 \EndProof
+}
+\newpage
+\subsubsection{Semimetrization}
+\Page{
+	\DeclareType{FSeminorm}
+	{
+		\prod V \in \VS{k} \. ?(V \to \Reals_+)
+	}
+	\DefineType{\sigma}{FSeminorm}
+	{
+		\Big(
+			\forall \alpha \in \Disc_k(0,1) \. 
+			\forall v \in V \.
+			\sigma(\alpha v) \le \sigma(v)
+		\Big)
+		\And  \NewLine \And
+		\left(
+			\forall v \in V \.
+			\lim_{n \to \infty} \sigma\left(\frac{v}{n}\right)
+		\right)
+		\And 
+		\left(
+			\forall v,w \in V \.
+			\sigma(v + w) \le \sigma(v) + \sigma(w)
+		\right)
+	}
+	\\
+	\DeclareType{FNorm}
+	{
+			\prod V \in \VS{k} \. ?\TYPE{FSeminorm}(V)
+	}
+	\DefineType{\sigma}{FNorm}
+	{
+		\forall v \in V \. \sigma(v) = 0 \iff v = 0
+	}
+	\\
+	\Theorem{FSeminormSemimetrization}
+	{
+		\forall V \in \VS{k} \.
+		\forall \sigma : \TYPE{FSeminorm} \.
+		\exists \tau : \Vect\Top(V) \.
+		\sigma \in C(V,\tau)
+	}
+	\Explain{ I will show that $\sigma$ is a value}
+	\Explain{
+		Firstly, note that 
+		$\sigma(-v)\le \sigma(v)$
+		and
+		$\sigma(v) \le \sigma(-v)$, so
+		$\sigma(v) = \sigma(-v$
+	}
+	\Explain{
+		Also $\sigma(0) = \sigma\left( \frac{0}{n} \right) \to 0$,
+		so $\sigma(0)$}
+	\Explain{
+		Other properties of value follows trivially by commutativity of $+_V$}
+	\Explain{
+		Now I show that scalar multiplication is continuous
+		in topology defined by semimetric $\rho(v,w) = \sigma(v-w)$}
+	\Explain{
+		There are neighborgoods of zero defined by relation $\sigma(v) < \varepsilon$}
+	\Explain{
+		By first property of F-seminorm these balls are ballanced
+	}
+	\Explain{
+		And by second property of F-seminorm these balls are absorbent}
+	\Explain{
+		So produced topology of $\rho$ is a vector space topplogy}
+	\EndProof
+	\\
+	\Theorem{FNormSemimetrization}
+	{
+		\forall V \in \VS{k} \.
+		\forall \sigma : \TYPE{FNorm} \.
+		\exists \tau : \Vect\Top(V) \.
+		\sigma \in C(V,\tau) \And \TYPE{T2}(V,\tau)
+	}
+	\Explain{In this case $\rho$ is a metric, so resulting topology musy be Hausdorff}
+	\EndProof
+	\\
+	\DeclareFunc{subspaceSeminorm}
+	{
+		\prod V  \in \VS{k} \.
+		\prod U \subset_{\VS{k}}  V \.
+		\TYPE{FSeminorm}(V) \to \TYPE{FSeminorm}\left(\frac{V}{U}\right)
+	}
+	\DefineNamedFunc{subspaceSeminorm}{\sigma}{[\sigma]_U}
+	{
+		\Lambda [v] \in \frac{V}{U} \.  \inf_{u \in U} \sigma(v + u)	
+	}
+	\\
+	\Theorem{SubspaceSemimetrization}{
+		\forall  V \in \TVS{k} \And \TYPE{Semimetrizable} \.
+		\forall U \subset_{\VS{k}} V \.
+		 \TYPE{Semimetrizable}\left( \frac{V}{U} \right)
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Completion}
+\Page{
+	\DeclareType{Completion}{
+		\prod_{V \in \TVS{k}} ?\sum_{W \in \TVS{k} } \TYPE{TopologicalEmbedding}(V,W)     
+	} 
+	\DefineType{(W,\iota)}{Completion}{\TYPE{Complete}(V) \And \Dense\Big(W,\iota(V)\Big)}
+	\\
+	\Theorem{EveryTVSHasACompletion}
+	{
+		\forall V \in \TVS{k} \.
+		\exists \TYPE{Completion}(V)
+	}
+	\Explain{As with topological Groups}
+	\EndProof
+	\\
+	\DeclareType{TopologicalVectorSpaceSubset}
+	{
+		\prod_{V \in \TVS{k}} ??V
+	}
+	\DefineNamedType{U}{TopologicalVectorSpaceSubset}
+	{
+		U \subset_{\TVS{k}} V
+	}
+	{
+		U \subset_{\VS{k}} V \And \Closed(V,U)
+	}
+	\\
+	\Theorem{CompleteteQuotient}
+	{
+		\forall V \in \TVS{k} \.
+		\forall U \subset{\TVS{k}} V \.
+		\Complete(V) \Imply \Complete\left(\frac{V}{U}\right)
+	}
+	\Explain{As with topological groups}
+	\EndProof
+	\\
+	\Theorem{BalancedHullOfTotallyBoundedIsTotallyBounded}
+	{
+		\NewLine ::
+		\forall V \in \TVS{k} \. 
+		\forall B : \TB(V) \.
+		\TB(V, \bal B)
+	}
+	\Explain{ 
+		Embed $B$ in a completion of $\hat V$ of $V$}
+	\Explain{
+		Then $\cl B$ is a compact in $\hat V$}
+	\Explain{
+		As $\Disc_k(0,1)$ is comapct in $k$, then
+		$\Disc_k(0,1){\cl}_{\hat V} B$ is compact is continuous image
+		of compact $\Disc_k(0,1) \times {\cl}_{\hat V} B$}
+	\Explain{
+		Then $\bal B = \Disc_k(0,1) B $ is totally bounded as 
+		a subset of compact $\Disc_k(0,1){\cl}_{\hat V} B$}
+	\EndProof
+	\\
+	\Theorem{BalancedHullOfCompactIsCompacts}
+	{
+		\NewLine ::
+		\forall V \in \TVS{k} \. 
+		\forall K : \Compacts(V) \.
+		\Compacts(V, \bal  K)
+	}
+	\Explain{ $\Disc_k(0,1)K$ is compact as am image of compact $\Disc_k(0,1) \times K$}
+	\EndProof
+}\Page{
+	\Theorem{ConvexHullofTotallyBoundedAsTotallyBounded}
+	{
+		\NewLine ::
+		\forall V \in \LCS{k} \.
+		\forall B : \TB(V) \.
+		\TB(V, \conv B)
+	}
+	\ExplainFurther{
+		In order to show that $\conv B$ is totally bounded
+		we need to show that $conv B$ can be covered}
+	\Explain{
+		by finite number of translates $(U + v_i)^n_{i=1}$		
+		for any $U \in \U_V(0)$
+	}
+	\Explain{
+		Select disc $D \in \U_V(0)$ such that $D + D \subset U$}
+	\Explain{
+		This is possible as $V$ is loclly convex}
+	\Explain{
+		As $K$ totally bounded there are a finite set of translates such that
+		$K \subset (D + v_i)^n_{i=1} \subset \conv \{ v_1, \ldots, v_n \} + D$}
+	\Explain{
+		As sum of convex sets is convex $\conv K \subset \conv \{ v_1, \ldots, v_n \} + D$
+	}
+	\ExplainFurther{
+		As $\conv \{ v_1, \ldots, v_n \} $ is compact it is possible to select a finite set
+		of  $m$ translates $u_i$ of $D$ such that} 
+	\Explain{	$\conv K \subset  \bigcup_{i=1}^m (D+u_i)$}
+	\Explain{
+		So $\conv K$ is totally bounded}
+	\EndProof	
+	\\
+	\Theorem{ConvexHullofTotallyBoundedAsTotallyBounded}
+	{
+		\NewLine ::
+		\forall V \in \LCS{k} \and \Complete \.
+		\forall K : \Compacts(V) \.
+		\Compacts(V, \conv K)
+	}
+	\Explain{$\conv K$ is closed}
+	\Explain{
+		And as it was shown in the previous theorem $\conv K$ is also totally bounded,
+	hence compact}
+	\EndProof
+}
+\newpage
+\subsubsection{Continuous Decompositions}
+\Page{
+	\DeclareType{TopologicalComplement}
+	{
+		\prod V : \TVS{k} \. ?\LC(V)
+	}
+	\DefineNamedType{(U,W)}{TopologicalComplement}{V =_{\TVS{k}} U \oplus W}
+	{
+		\NewLine \iff		
+		\Homeo\Big(U\oplus W, V, \Lambda(u,w) \in U \oplus W \. u  + w  \Big)  
+	}
+	\\
+	\Theorem{TopologicalComplementsByContinuousProjection}
+	{
+		\NewLine ::		
+		\forall V  \in \TVS{k} \.
+		\forall U,W : \LC(V) \. 
+		U \oplus W =_{\TVS{k}} V
+		\iff
+		P_{U,W} \in \End_{\TOP}(V) 		
+	}
+	\Explain{
+		Define $T : U \oplus W \to V$ by $T(u,w) = u + w$}
+	\Explain{ 
+		$(\Rightarrow):$ Assume that $T$ is a homeomorphism}
+	\ExplainFurther{ 
+		There is an expression $P_{U,W} = T^{-1} P_1 I_U$,
+		where $P_1 : U \oplus W \to U$ is a projection,}
+	\Explain{ 
+		and $I_U : U \to V$ is a natural embedding}
+	\Explain{
+		Thus, $P_{U,W}$ is continuous as composition 
+		of continuous functions}
+	\Explain{
+		$(\Leftarrow):$Assume $(\Delta, u_\delta + w_\delta)$ is a net in $V$ 
+		converging to $0$
+	}
+	\Explain{
+		Then by continuity 
+		$
+			0 = P_{U,W}(0) = 
+			P_{U,W}(\lim_{\delta \in \Delta} u_\delta + w_\delta)  =
+			\lim_{\delta \in \Delta} P_{U,W} (u_\delta + w_\delta) = 
+			\lim_{\delta \in \Delta} u_\delta
+		$}
+	\Explain{
+		Also $E - P_{U,W} = P_{W,U}$ is continuous}
+	\Explain{
+		So by the argument similar to one above $\lim_{\delta \in \Delta} w_\delta = 0$}
+	\Explain{
+		Thus, $\lim_{\delta \in \Delta} (u_\delta,w_\delta) = 0$ and $T^{-1}$ is  
+		continuous meaning that $T$ is homeomorphism}
+		\EndProof
+	\\
+	\Theorem{TopologicalComplementsByIsomorphicQuotient}
+	{
+		\NewLine ::		
+		\forall V  \in \TVS{k} \.
+		\forall U,W : \LC(V) \. 
+		U \oplus W =_{\TVS{k}} V
+		\iff
+		\Homeo\left(W,\frac{V}{U}, \pi_{U|W} \right)
+	}
+	\Explain{ 
+		$\pi_U$ is a quotient map, and hence continuous}
+	\Explain{
+		$(\Rightarrow):$Assume $(\Delta,[U + w_\delta])$ is a net in $\frac{V}{U}$ converging to zero}
+	\Explain{
+			But this means that $\lim_\delta w_\delta = 0$ 
+			and $\lim_\delta \pi_{U|W}^{-1}[U + \w_\delta] = \lim_\delta w_\delta= 0$}
+	\Explain{
+		So $\pi_{U|W}$ is homeomorphism}
+	\Explain{
+		$(\Leftarrow):$ write $P_{U,W} = \pi_{U} \pi_{U|W}^{-1} I_W$}
+	\Explain{
+		This is continuous a as composition of continuous functions}
+	\Explain{
+		So by the previous theorem $V = U \oplus_{\TVS{k}} W$}
+	\EndProof
+	\\
+	\Theorem{ComplementedImpliesClosed}
+	{
+		\forall V \in \TVS{k}
+		\forall (U,W) : \TC(V) \.
+		\Closed(V,U)
+	}
+	\Explain{ 
+		By previous theorem $P_{W,U}$ is continuous}
+	\Explain{
+		Thus, $U = \ker P_{W,U}$ is closed}
+	\EndProof
+}\Page{
+		\DeclareType{\MaxS}{\prod_{V \in \VS{k}} ?\TYPE{VectorSubspace}(V) }
+		\DefineType{U}{\MaxS}{\forall W \subvec{k} V \. U \subsetneq W \Imply W = V }
+		\\
+		\Theorem{MaximalClosedSubspace}
+		{
+			\NewLine ::			
+			\forall V \in \TVS{k} \.
+			\forall U \subvec{k} V \.	 \NewLine \.	
+			\MaxS \And \Closed(V,U) 
+			\iff
+			\exists f \in \TOP(V,k) \. 
+			U = \ker f \And f \neq 0
+		}
+		\Explain{ 
+			$(\Rightarrow):$ Assume $U$ is closed and maximal subspace in $V$}
+		\Explain{
+			As $U$ is maximal it should have a codimension 1}
+		\Explain{
+			So where exists $v \in U^\c$ such that $V = U \oplus \langle v \rangle$}
+		\Explain{
+			As $U$ is closed, where exists a balanced open subset $O \in \U_V(0)$
+			such that $(O + v) \cap U = \emptyset$}
+		\Explain{
+			assume $u + \alpha v \in O$ is such that $|\alpha| > 1$ and $u \in U$
+		}
+		\Explain{
+			Then, as $O$ is balanced, $\alpha^{-1} u + v \in O$
+		}
+		\Explain{
+			But, then  $(\alpha^{-1} u + v) - v = \alpha^{-1} u \in (O + v) \cap U$,
+			which is a contradiction}
+		\Explain{
+			Thus, $u + \alpha t \in \sigma O$ implies that $|\alpha| < |\sigma|$}
+		\Explain{
+			Define $f(u + \alpha v) = \alpha : V \to k$}
+		\Explain{ 
+			Consider a net $v_\delta = u_\delta + \alpha_\delta v$ converging to zero with $u_\delta$ 
+			in $U$}
+		\Explain{
+			But the previous remark shows that $f(v_\delta) = \alpha_\delta$  converges to zero}
+		\\
+		\Theorem{SchroederBernsteinTHM}
+		{
+			\NewLine ::			
+			\forall V,V' \in \TVS{k} \.
+			\forall \aleph : V \cong_{\TVS{k}} V \oplus V \.
+			\forall \beth :  V' \cong_{\TVS{k}} V' \oplus V' \. \NewLine \.
+			\forall \gimel :  \TC(V,V') \.
+			\forall \daleth : \TC(V',V') \.
+			V \cong_{\TVS{k}} V'
+		}
+		\Explain{
+			Write  
+			$V \cong V' \oplus U = (V' \oplus V') \oplus U \cong V'  \oplus (V' \oplus U) \cong V' \oplus V$
+		}
+		\Explain{ 
+			Symmetricaly, $V' \cong V' \oplus V$ 
+		}
+		\Explain{
+			Thus, $V \cong V \oplus V' \cong V'$
+		}
+		\EndProof
+}
+\newpage
+\subsubsection{Finite Dimension Conditions}
+\Page{
+	\Theorem{OneDimTVS}
+	{
+		\forall V \in \HTVS{k} \.
+		\dim V = 1 \iff V \cong_{\TVS{k}} k
+	}
+	\Explain{
+		As dimension is invarint for linear isomorphism $(\Leftarrow)$ is obvious }
+	\Explain{
+		$(\Rightarrow):$ As $\dim V = 1$ there is a $v \in V$ such that $v \neq 0$ 
+		and $V = kv$}
+	\Explain{ 
+		Then the map	$T(\alpha v) = \alpha$ is a linear isomorphism
+	}
+	\Explain{
+		fix some $\rho \in \Reals_{++}$}
+	\Explain{
+		As $V$ is Hausdorff there must exist 
+		an open set $U \in \U_V(0)$ such that $\rho v \not \in U$}
+	\Explain{
+		Furthermore, $U$ must have a balanced subset 
+		$W \in \U_V(0)$}
+	\Explain{
+		As $W$ is balanced, $W \subset \Cell(0,\rho)v$
+	}
+	\Explain{
+		So,  $\alpha_\delta v \to 0 \iff \alpha_\delta \to 0$ 
+	}
+	\Explain{
+		Thus, $T$ must be a homeomorphism}
+	\EndProof
+	\\
+	\Theorem{FinDimIsomorphism}
+	{
+		\NewLine		
+		\forall V \in \HTVS{k} \. \forall n \in \Nat \.
+		\dim V = n \iff V \cong_{\TVS{k}} (k^n,\|\bullet\|_\infty)
+	}
+	\Explain{
+		I modify the proof of the previous theorem}
+	\Explain{
+		By algebraic there must exist a base $\mathbf{e} = (e_1,\ldots, e_n)$ of $V$
+	}
+	\Explain{
+		fix $\rho$ in $\Reals_{++}$}
+	\Explain{
+		As $V$ is Hausdorff and each $e_i \neq 0$ there 
+		$U \subset \U_V(0)$ such $\rho e_i \not \in U$ for any $i \in \{1,\ldots,n\}$}
+	\Explain{
+		So there exists a blanced subset $W$ of $U$ such that
+		$W \subset \Cell_{k^n,\|\bullet\|_\infty}(0,\rho)\cdot \mathbf{e}$}
+	\Explain{
+		Thus, the mapping $\mathbf{\alpha \cdot e} \mapsto \mathbf{\alpha}$
+		is continuous}
+	\ExplainFurther{
+		Also, if $U \in \U_V(0)$ the set $U$ must be absorbent,}
+	\Explain{ so there is a sequence $\rho_1,\ldots,\rho_n \in \Reals_{++}$ such that
+		$\Disc_k(0,\rho_i) e_i \subset U$}
+	\Explain{
+		Let $\sigma = \min(e_1,\ldots,e_n) \in \Reals_{++}$}
+	\Explain{
+		Then $\Cell_{k^n,\|\bullet\|_\infty}(0,\sigma) \cdot \mathbf{e} \subset U$
+	}
+	\Explain{
+		So, the inverse $\alpha \mapsto \alpha \cdot \mathbf{e}$ is also continuous}
+	\EndProof
+	\\
+	\Theorem{FDimdSubspaceIsClosed}
+	{
+			\forall V \in \HTVS{k} \.
+			\forall U \subvec{k} V \.
+			\dim U  < \infty \Imply \Closed(V,U)
+	}
+	\Explain{ 
+		$U$ is Hausdorff as a subset of Hausdorff space}
+	\Explain{
+		Then $U$ is isomorphic to $\ell^\infty_{k,\dim U}$ which is complete}
+	\Explain{
+		So, $U$ can be viewed as an uniform embedding of complete space into
+		$V$, and hence must be closed}
+	\EndProof
+}\Page{
+	\Theorem{ClosedFDimSum}
+	{
+		\forall V \in \TVS{k} \.
+		\forall U \subset_{\TVS{k}} V \.
+		\forall W \subvec{k} V \.
+		\dim W < \infty \Imply \Closed(V,U + W)
+	}
+	\Explain{ 
+		As $U$ is closed in $V$ the quotient $\frac{V}{U}$ must be Hausdorff}
+	\Explain{ 
+		As $\dim P_U(W) \le \dim \dim W$ the image $P_U(W)$ is still finite dimensional}
+	\Explain{ 
+		So by previous theorem $P_U(W)$ is closed in $\frac{V}{U}$}
+	\Explain{ But then the preimage $ U + W  = P^{-1}_U P_U(W)$
+		is closed as quotient map  $P_U$ is continuous}
+	\EndProof
+	\\
+	\Theorem{FiniteDimensionalDomain}
+	{
+		\forall V,U \in \HTVS{k} \.
+		\forall T \in \VS{k}(V,U) \. \NewLine \.
+		\dim V < \infty  \Imply 
+		T \in \TVS{k}(V,U)
+	}
+	\Explain{
+		$\dim T(V) \le \dim V$, thus $T(V)$ must be finite dimensional}
+	\Explain{
+		Thus both $V$ and $T(V)$ are isomorphic to copies of 
+		$l^\infty_k$ with coresponding finite dimensions}
+	\Explain{
+		And $T$ must be continuous as any mapping between such spaces does}
+	\\
+	\Theorem{FiniteDimensionalCodomain}
+	{
+		\forall V,U \in \HTVS{k} \.
+		\forall T \in \TVS{k} \And \Surj(V,U) \. \NewLine \.
+		\dim U < \infty  \Imply 
+		\Open(V,U,T)
+	}
+	\Explain{
+		By isomorphism theorem
+		$\frac{V}{\ker T} \cong_{\VS{k}} T(V) = U$ 
+	}
+	\Explain{
+		So $\dim \frac{V}{\ker T} < \infty$
+	}
+	\Explain{
+		Also $\frac{V}{\ker T} $ is Haussdorf as $T$ is continuous
+	}
+	\Explain{
+		So by prvious theorem the isomorphism must 
+		$\frac{V}{\ker T} \cong_{\VS{k}} U$ must be continuous}
+	\Explain{
+		So $U$ is also finite dimensional Hausdorff  this bijection is homeomorphism 
+		and so $\frac{V}{\ker T} \cong_{\TVS{k}} U$}
+	\Explain{
+		Denote this homeomorphism by $S$}
+	\Explain{
+		Then $T$ factors as $P_{\ker T} S$ and both these maps are open}
+	\EndProof
+}\Page{
+	\Theorem{FDimIffLocallyCompact}
+	{
+		\forall V \in \HTVS{k} \.
+		\dim V < \infty 
+		\iff
+		\TYPE{LocallyCompact}(V)
+	}
+	\Explain{$(\Rightarrow): V$ is homeomorphic to $l^{\infty}_{k,\dim V}$
+		and this space is locally compact.}
+	\Explain{
+		This can be easily shown by considering a base of closed cubes}
+	\Explain{
+		So $V$ is locally compact}
+	\Explain{
+		$(\Leftarrow):$ now consider the case when $V$ is locally compact}
+	\Explain{
+		Then there exists a compact balansed neighborhood of zero, say $K$}
+	\Explain{
+		Take $K$ to be any another open neighborhood and choose
+		$W \in \U_V(0)$ such balanced set that $W+W \subset U$
+	}
+	\Explain{
+		As $K$ is compact, it is totally bounded and hence can be covered by
+		a finite set of translates $K \subset \bigcup^n_{i=1} W + v_i$}
+	\Explain{
+		As $W$ is absorbent and balanced there is $\rho \in (1,+\infty)$ 
+		such that each $v_i \in \rho U$}
+	\Explain{
+		Then $K \subset \bigcup^n_{i=1} W + v_i \subset W + \rho W \subset \rho W  + \rho W = 
+			\rho( W + W) \subset \rho U		
+		$
+	}
+	\Explain{ 
+		Thus, sets of form $2^{-n} K$ form base at zero}
+		\Explain{
+		As $K$ is totally bounded it can can be covered by
+		a finite set of translates $K \subset \bigcup^n_{i=1} \frac{1}{2}K + e_i$}
+		\Explain{
+			$F  = \Span e$ is finite-dimensional and hence closed}
+		\Explain{ 
+			 $K \subset \bigcup n_{i=1} \frac{1}{2}K + e_i \subset \frac{1}{2} K + F$}
+		\Explain{
+			But also 
+			$\alpha F = F$
+			or any non-zero scalar $\alpha$}
+		\Explain{
+			So $\frac{1}{2}K \subset \frac{1}{4} K + F$
+		}
+		\Explain{
+			Iterating this relation  and substituting we get the result
+			that
+			$K \subset \frac{1}{2^n} K + F$ for any $n \in \Nat$}
+		\Explain{
+			This can be rewriten as $K \subset \bigcap^\infty_{n=1} \frac{1}{2^n} K + F = F$  
+		}
+		\Explain{
+			But $K$ spans whole $V$, and so $V = F$ which is finite dimensional}
+		\EndProof
+		\\
+		\Theorem{FDimCompactConvexHullIsCompact}
+		{
+			\NewLine ::			
+			\forall V \in \TVS{k} \.
+			\forall K : \Compacts(V) \.
+			\dim V < \infty \Imply \Compacts(V,\conv K) \.
+		}
+		\Explain{
+			Let $n = \dim V$}
+		\Explain{
+			$\conv K$ consists of convex combination of form  
+			$\sum^{2n + 1}_{i=1} \lambda_i x_i$ where $\lambda \ge 0$
+			and $\sum^{2n + 1}_{i=1} \lambda_i = 1$ and $x_i \in K$  
+		}
+		\Explain{
+			This condition can be express as $\lambda \in \du_{2n+1} \subset k^{2n+1}$}
+		\Explain{
+			But $\du_{2n+1} $ is also compact, ans so is $\du_{2n+1} \times K^{2n+1}$
+			by Tychonoff's theorem}
+		\Explain{
+			So $\conv K = (\cdot)(\du_{2n+1} \times K^{2n+1})$ 
+			is compact as a continuous image of  a compact}
+		\EndProof
+}
+\newpage
+\subsubsection{Case of Ultravalued Field}
+\Page{
+	& k : \TYPE{UltravaluedField}; \\
+	\\
+	\DeclareType{\AKC}{\prod_{V : \TVS{k}} ??V}
+	\DefineType{A}{\AKC}{
+		\Disc_k(0,1)A +\Disc_k(0,1)A = A	
+	}
+	\\
+	\DeclareType{\KC}{\prod_{V : \TVS{k}} ??V}
+	\DefineType{V}{\KC}{
+		\exists v \in V \. \exists A : \AKC(V) \. C = A + v	
+	}
+	\\
+	\Theorem{AbsolutelyKConvexByZeroContaintment}
+	{
+		\forall V \in \TVS{k} \.
+		\forall C : \KC(V) \.
+		0 \in C \Imply \AKC(V,C)
+	}
+	\Explain{ $C$ must be a translate of absolutely K-Convex set, so write $C = A + v$}
+	\Explain{
+			As $A$ is absolutely K-Convex, then
+			$\alpha(x + v) + \beta(y + v) - v \in C$ for any $x,y \in C$ and $\alpha,\beta \in \Disc_k(0,1)$}
+	\Explain{
+		Take $\alpha = \beta =1, y=0$}
+	\Explain{
+		Then the expression above reduces to $x + v \in C$}
+	\Explain{
+		But this means that $ A \subset C$}
+	\Explain{
+		On the other hand,  $\alpha(x + v) + \beta(y + v) \in A$
+		for any $x,y \in C$ and $\alpha,\beta \in \Disc_k(0,1)$}
+	\Explain{
+		Taking $\alpha = 1, \beta = -1, y=0$, produces $x \in A$}
+	\Explain{
+		Thus $C \subset A$ and $C = A$ is absolutely K-convex}
+	\EndProof
+	\\
+	\Theorem{TripleCombinationKConvexityCondition}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \.
+		\forall C \subset V \. \NewLine \.
+		\KC(V,C)
+		\iff
+		\forall x,y,z \in C \.
+		\forall \alpha, \beta,\gamma \in \Disc_k(0,1) \.
+		\alpha + \beta + \gamma = 1
+		\Imply
+		\alpha x + \beta y + \gamma z \in C				
+	}
+	\Explain{ 1 $(\Rightarrow):$ assume that $C$ is K-convex}
+	\Explain{ 1.1 $C$ must be a translate of absolutely K-Convex set, so write $C = A + v$}
+	\Explain{
+		1.2 Then
+		$
+			\alpha x + \beta y + \gamma z  =
+			\alpha (x - v) + \beta (y - v) + \gamma (z - v)  + v \in C
+		$}
+	\Explain{ 2 $(\Leftarrow)$}
+	\Explain{ 2.1 If $C = \emptyset$ then it is trivially K-convex, so assume the contrary}
+	\Explain{ 2.2 Take $v \in V$ and let $A = C - v$}
+	\Explain{ 2.3 $A$ is absolutely K-convex}
+	\Explain{ 2.3.1 Assume $x,y \in C$ and $\alpha,\beta \in \Disc_k(0,1)$}
+	\Explain{ 2.3.2 $1 - \alpha - \beta \in \Disc_k(0,1)$ }
+	\Explain{ 2.3.2.1 $| 1 - \alpha - \beta| \le \max\Big(1,|\alpha|,|\beta|\Big) = 1$ }
+	\Explain{ 2.3.3 Then by the hypothesis
+		$ \alpha x + \beta y  + (1 - \alpha - \beta) v \in C  $  }
+	\Explain{ 2.3.4 Translating by $-v$ gives
+		$ \alpha (x - v) +  \beta (y -v) =  \alpha x + \beta y   + (1 - \alpha - \beta) v - v \in A  $  }
+	\EndProof
+}\Page{
+\Theorem{convexCombinationKConvexityCondition}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \.
+		\forall \aleph : \mathrm{res}\;\mathrm{char} \; k \neq 2 \.
+		\forall C \subset V \. \NewLine \.
+		\KC(V,C)
+		\iff
+		\forall x,y \in C \.
+		\forall \alpha \in \Disc_k(0,1) \.
+		\alpha x + (1 - \alpha) y + \gamma z \in C				
+	}
+	\Explain{ 1 $(\Rightarrow)$ This direction is obvious}
+	\Explain{ 1.1 The convex combination is a weaker form of triple combination in the previous result}
+	\Explain{ 2 $(\Leftarrow)$ }
+	\Explain{ 2.1 If $C = \emptyset$ then it is trivially K-convex, so assume the contrary}
+	\Explain{ 2.2 Take $v \in V$ and let $A = C - v$}
+	\Explain{ 2.3 $A$ is absolutely K-convex}
+	\Explain{ 2.3.1  Assume $x,y \in C$ and $\alpha,\beta \in \Disc_k(0,1)$}
+	\Explain{
+		2.3.2 Rewrite $\alpha (x - v) + \beta (y - v) + v =  
+		\frac{1}{2}\big( 2 \alpha x  + (1-2\alpha) v \big)
+		+ \frac{1}{2}\big( 2 \beta y  + (1-2\beta) v \big)$}
+	\Explain{
+		2.3.3 Both $\frac{1}{2}\big( 2 \alpha x  + (1-2\alpha) v \big)$ and
+		$\frac{1}{2}\big( 2 beta y  + (1-2\beta) v \big)$ in $C$}
+	\Explain{
+		2.3.3.1 for ultravalue $|2 \alpha | = |\alpha + \alpha| \le |\alpha| = 1$
+	}
+	\Explain{
+		2.3.3.2 Same holds for $\beta$}
+	\Explain{
+		2.3.3.3 So the convex combination hypothesis can be applied}
+	\Explain{ 2.3.4 clearlly $\frac{1}{2} + \frac{1}{2} = 1$, so
+		$ \alpha (x - v) + \beta (y - v)  \in A$
+	}
+	\Explain{ 2.3.4.1   
+		$\left|\frac{1}{2}\right| = 1$ as residual characteristic of the field is not $2$}
+	\EndProof
+	\\
+	\Theorem{AbsolutelyKConvexIntersection}
+	{
+		\forall V : \TVS{k} \.
+		\forall I \in \SET \. \NewLine \.
+		\forall A : I \to \AKC(V) \.
+		\AKC\left(V, \bigcap_{i \in I} A_i \right)
+	}
+	\Explain{ Obvious}
+	\EndProof
+}\Page{
+	\Theorem{KConvexIntersection}
+	{
+		\forall V : \TVS{k} \.
+		\forall I \in \SET \. \NewLine \.
+		\forall C : I \to \KC(V) \.
+		\KC\left(V, \bigcap_{i \in I} C_i \right)
+	}
+	\Explain{ 1 
+		Assume that $\bigcap_{i \in I} C_i \neq \emptyset$}
+	\Explain{ 1.1
+		Otherwise the condition is trivial}
+	\Explain{ 2
+		Take any $v \in \bigcap_{i \in I} C_i $}
+	\Explain{ 3 
+		Then  $\left(\bigcap_{i \in I} C_i\right) -v$ is absolutely K-convex and 
+		$\bigcap_{i \in I} C_i$ is K-convex}
+	\Explain{ 3.1
+		$\left(\bigcap_{i \in I} C_i\right) -v = \bigcap_{i \in I} (C_i - v) $
+		as translation by $v$ is bijective}
+	\Explain{ 3.2
+		Then every $C_i - v$ are K-convex sets, which contain zero, so they are absolutely K-Convex}
+	\Explain{ 3.3
+		So, the intersection $\bigcap_{i \in I} (C_i - v)$ is also absoluterly K-Convex}
+	\EndProof
+	\\
+	\DeclareFunc{kConvexHull}
+	{
+		\prod_{V : \TVS{k}} (?V) \to \KC(V)
+	}
+	\DefineNamedFunc{kConvexHull}{X}{\kconv X}
+	{
+		\bigcap \Big\{  C : \KC(V)  , X \subset C \Big\}	
+	}
+	\\
+	\Theorem{KConvexHullByLinearCombinations}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \. 
+		\forall X \subset V \. \NewLine \.
+		\kconv X =  \left\{
+			  x_{n+1} + \sum^{n}_{i=1} \alpha_i ( x_i - x_{n+1}) \Big|
+			  n \in \Int_+,  \alpha : \{1,\ldots,n\} \to \Disc_k(0,1),
+			  x : \{1,\ldots,n + 1\} \to X          
+		\right\}}
+	\Explain{ 1
+		Let $B$ denote the set defined above}
+	\Explain{ 2
+		$B$ is K-Convex}
+	\Explain{ 2.1
+		Note, that $x_{n+1}$ in definition can be fixed}
+	\Explain{ 2.2
+		Then $B - x_{n+1}$ is obviously absolutely K-convex}
+	\Explain{ 3
+		$X \subset B$
+	}
+	\Explain{ 3.1
+		Just take $n=1,\alpha_1 = 1$}
+	\Explain{ 4
+		So $\kconv X \subset B$
+	}
+	\Explain{ 5
+		If $C$ is K-convex, then $B \subset C$}
+	\Explain{ 5.1
+		Some $x_{n+1} \in X$ must also be contained in $C$
+	}
+	\Explain{ 5.2
+		So $C - x_{n+1}$ is absolutely K-convex.
+	}
+	\Explain{ 5.3
+		So by induction $\sum^n_{i=1} \alpha_i (x_i - x_{n+1} ) \in C - x_{n+1}  $
+	}
+	\Explain{ 6
+		Thus, $B \subset \kconv X$, and so $B = \kconv X$
+	}
+	\EndProof
+}\Page{
+		\DeclareFunc{kDiskHull}
+	{
+		\prod_{V : \TVS{k}} (?V) \to \AKC(V)
+	}
+	\DefineNamedFunc{kDiscHull}{X}{K\hyph\mathrm{disc}\; X}
+	{
+		\bigcap \Big\{  C : \AKC(V)  , X \subset C \Big\}	
+	}
+	\\
+	\Theorem{AbsolutelyKConvexInterior}
+	{
+		\forall V : \TVS{k} \.
+		\forall A : \AKC(V) \.
+		\intx A = \emptyset | \intx A = A
+	}
+	\Explain{ 1 assume $\intx A \neq \emptyset$}
+	\Explain{ 2 Take $v \in \intx A$}
+	\Explain{ 3 Without loss of generality assume $v = 0$}
+	\Explain{ 3.1 Then $A - v$ is an isomorphic absolutely convex set with $0 \in \intx A $}
+	\Explain{ 4 Take any $U \in \U_V(0)$ such that $U \subset \intx A \subset A$}
+	\Explain{ 5 Now take arbitrary $v \in A$}
+	\Explain{ 6 Then $U + v \subset A$ }
+	\Explain{ 6.1 $U + v$ consists of elements $u + v$ with $u \in U \subset A$}
+	\Explain{ 6.2 As $v \in A$ also and $A$ is absolutely K-convex it must be the case that $u + v \in A$}
+	\Explain{ 7 As translation is a homeomorphism $U + v$ is open and so $v \in \intx A$}
+	\EndProof
+	\\
+	\Theorem{OpenKDiscHull}
+	{
+		\forall V : \TVS{k} \.
+		\forall U : \Open(V) \.
+		\Open(V,K\hyph\mathrm{disc}\;U)
+	}
+	\Explain{ 1 $ K\hyph\mathrm{disc}\;U$ is absolutely K-convex}
+	\Explain{ 2 $ U \subset   K\hyph\mathrm{disc}\;U$, so $\intx  K\hyph\mathrm{disc}\;U \neq 0$}
+	\Explain{ 3 But this means that $K\hyph\mathrm{disc}\;U$ is open}
+	\EndProof
+	\\
+	\DeclareType{\LKConv}{?\TVS{k}}
+	\DefineType{V}{\LKConv}
+	{
+		\exists \F : \TYPE{Filterbase}\Big(V,\U_V(0)\Big) \. \forall F \in \F \. \KC(V,F)
+	}
+}\Page{
+	\Theorem{NonarchimedeanVSHasZeroTopDim}
+	{
+		\forall V : \LKConv(k) \And \TYPE{T2} \. \dim_\TOP V = 0
+	}
+	\Explain{ 1 $V$  has a base of closed K-discs}
+	\Explain{ 1.1 Consider $U \in \U_V(0)$}
+	\Explain{ 1.2 Then there exists an open K-disic $D$ such that $0 \in D \subset \overline{D} \subset U$}
+	\Explain{ 1.3 Then $\overline{D}$ is a K-disk}
+	\Explain{ 1.3.1 If $u,v \in \overline{D}$ it means that every their open neighborhood meet $D$ }
+	\Explain{ 1.3.2 Assume $\alpha,\beta \in \Disc_k(0,1)$ }
+	\Explain{ 1.3.3 Consider an open neighborhood $W$ of $\alpha u + \beta v$}
+	\Explain{ 1.3.4 Then there is  an open neighborhood of zero  $O + O \subset W - \alpha u- \beta v $}
+	\Explain{ 1.3.5 Consider the case $\alpha \neq 0 \neq \beta$}
+	\Explain{ 1.3.6 Then there must be some $u' \in D \cap \frac{1}{\alpha}(O + \alpha u)$}
+	\Explain{ 1.3.7 Then there is also $v' \in  D \cap \frac{1}{\beta}(O + \beta v)$}
+	\Explain{ 1.3.8 Then $\alpha u' + \beta v' \in D$ as $D$ is absoluterly K-convex}
+	\Explain{ 1.3.9 Also $\alpha u' + \beta  v' \in O + O + \alpha u + \beta v \subset W$}
+	\Explain{ 1.3.10 As $W$ was arbitrary this means that $\alpha u + \beta v \in \overline{D}$}
+	\Explain{ 1.4  $\overline{D} \subset U$}
+	\Explain{ 1.4.1 This is true as $V$ is Hausdorff, and Hence regular}
+	\Explain{ 2 But then every K-disc in this base is clopen}
+	\Explain{ 2.1 To be in base every K-disc $D$ should contain an element of $U_V(0)$}
+	\Explain{ 2.2 Hence $D$ has non-empty interior}
+	\Explain{ 2.3 But This means that $D$ is open}
+	\Explain{ 3 Thus $\dim_\TOP V = 0$}
+	\EndProof 
+	\\
+	\DeclareType{RelativelyKConvex}
+	{
+		 \prod_{V_\TVS{k}}  \prod_{A \subset V} ??A
+	}
+	\DefineType{R}{RelativelyKConvex}
+	{
+			\exists C : \KC(K) \.  R = C \cap A
+	} 
+	\\
+	\DeclareType{KConvexFilterbase}
+	{
+		 \prod V : \TVS{k} \. \prod_{A \subset V} ?\TYPE{Filterbase}(A) 
+	}
+	\DefineType{\F}{KConvexFilterbase}
+	{
+		\forall F \in \F \. \TYPE{RelativelyKConvex}(V,A,F)
+	}
+	\\
+	\DeclareType{CCompact}
+	{
+		 \prod_{V_\TVS{k}}  ??V
+	}
+	\DefineType{K}{CCompact}
+	{
+		\forall \F : \TYPE{KConvexFilterbase}(V,K) \.
+		\exists \TYPE{AdherencePoint}\Big(V, \F \Big)	
+	} 
+	\\
+	& |\cdot| \neq  \Lambda \alpha \in k \. [\alpha \neq 0] \\ 
+}\Page{
+	\Theorem{EveryCompactIsCCompact}
+	{
+		\forall V : \TVS{k} \. 
+		\forall K : \Compact(V,K) \.
+		 \CCompact(V,K)
+	}
+	\Explain{ 1 Assume $\F$ is a K-Convex filterbase on $K$}
+	\Explain{ 2 Then associated ultrafilter must have a limit}
+	\Explain{ 3 This limit is an adherence point of $\F$}
+	\EndProof
+	\\
+	\Theorem{ClosedSubsetOfCCompact}
+	{	
+		\forall V : \HTVS{k} \.
+		\forall K  : \CCompact(V) \.
+		\forall L : \Closed(K) \And \KC(V) \.
+		\CCompact(V,L)
+	}
+	\Explain{ 1 Assume $\F$ is a K-Convex filterbase on $L$}
+	\Explain{ 2 Then the $\F$ is also a K-Convex filterbase for $K$}
+	\Explain{ 3 Then, there is an adherence poiint $p \in K$ fo $\F'$}
+	\Explain{ 4 $p$ is also an adherence point for $\F$}
+	\Explain{ 4.1  Take any $U \in \U_V(p)$  }
+	\Explain{ 4.2  Then $F \cap K \cap U \neq \emptyset$ for any $F \in \F$ }
+	\Explain{ 4.3  Bat  all these $F \subset L$}
+	\Explain{ 4.4 Thus $p \in \cl_K L = L$}
+	\EndProof
+	\\
+	\Theorem{MaximalConvexFilterbase}
+	{
+		\NewLine :: 			
+		\forall V : \LKConv(k) \.
+		\forall C : \KC(V) \.
+		\forall \F \in \max \TYPE{KConvexFilterbase}(V,C) \. \NewLine \.
+		\forall p \in \C \.
+		\TYPE{AherencePoint}(C,\F, p)
+		\iff
+		\lim \F = p
+	}
+	\Explain{ 1  $(\Rightarrow):$ Assume $p$ is an adherence point for $\F$ in $\C$}
+	\Explain{ 1.1 Then $\forall F \in \. \forall U \in \U_V(p) \. U \cap F \neq \emptyset$ }
+	\Explain{ 1.2 Assume that $U \in \U_C(p)$}
+	\Explain{ 1.3 Then there exist a K-convex $D$ and open $W \in \U_C(p)$ 
+	such that $W \subset D \subset V$}
+	\Explain{ 1.4 Then $\forall F \in \F \.  D \cap F  \neq \emptyset$}
+	\Explain{ 1.4.1 $\forall F \in \F \.  W \cap F \neq \emptyset$}
+	\Explain{ 1.4.2 $W \subset D$ }
+	\Explain{ 1.5 As $\F$ is maximal $D \in \F$}
+	\Explain{ 1.6 Thus, $p = \lim \F$}
+	\Explain{ 2 $(\Leftarrow):$ Now Assume $p = \lim \F$}
+	\Explain{ 2.1 Then  $\forall U \in \U_C(p) \. \exists F \in \F \. F \subset U$}
+	\Explain{ 2.2 Take arbitrary $U \in \U_C(p)$ and $F \in \F$}
+	\Explain{ 2.3 Then by $(2.1)$ there exits $G \in \F$ such that $G \subset Y$}
+	\Explain{ 2.4 As $\F$ is a filterbase $G \cap F \neq \emptyset$}
+	\Explain{ 2.5 Thus $F \cap U \neq \emptyset$}
+	\Explain{ 2.6 This proves that $p$ is and adherence point for $\F$}
+	\EndProof
+}\Page{
+	\Theorem{KConvexAndCcompactIsClosed}
+	{
+		\NewLine ::		
+		\forall V : \LKConv(k) \.
+		\forall K : \CCompact \And \KC(V) \.
+		\Closed(V,K)
+	}
+	\Explain{ 1 Assume $p$ is a Limit point for $K$}
+	\Explain{ 2 Then there exists an filter $\F$ in $K$ such that $p = \lim \F$ }
+	\Explain{ 2.1 Take $\N_V(p) \cap K$ for example}
+	\Explain{ 3 Then $p$ is an adherence point of $\F$}
+	\Explain{ 4 construct a K-convex filterbase $\C$ from $\F$}
+	\Explain{ 4.1 For example, use the fact that $V$ is locally K-convex}
+	\Explain{ 4.2 Let $C$ be the intersections of $K$ and K-convex neighborhoods of $p$}
+	\Explain{ 5 Then $p$ is still a limit point of $\C$ in $V$}
+	\Explain{ 6 There also must exist an adherence point of $\C$ in $K$, say $q$}
+	\Explain{ 7 But as $V$ is Hausdorff and $\C$ has a limit it must be the case $q = p$}
+	\Explain{ 8 Thus $K$ has all its limit points and must be closed}
+	\EndProof
+	\\
+	\Theorem{CCompactProduct}
+	{
+		\forall I \in \Set \.
+		\forall V : I \to \TVS{k} \.
+		\forall C : \prod_{i \in I} \CCompact(V_i) \.
+		\CCompact\left(\prod_{i \in I}V_i,\prod_{i \in I} C_i \right)
+	}
+	\Explain{
+		Same proof as Tychonoff's theorem's proof with filters, but with $k$-convex sets}
+	\EndProof
+	\\
+	\Theorem{CCompactCombination}
+	{
+		\forall V : \LKConv{k} \.
+		\forall n \in \Int_+ \.
+		\forall D : \{1,\ldots,n\} \to \AKC \And \CCompact(V) \.
+		\CCompact\left(V ,\kconv \bigcup^n_{i=1} D_i\right) 
+	}
+	\Explain{ 1 I will give a proof by induction}
+	\Explain{ 2 $\kconv \bigcup^n_{i=1} D_i = \emptyset$ in case $n= 0$ 
+		and  is trivially c-compact}
+	\Explain{ 3  $\kconv \bigcup^{n+1}_{i=1} D_i = 
+		\kconv \left( D_{n+1} + \bigcup^{n}_{i=1} D_i\right)$ by the result
+		expressing K-convex hulls by linear combinations}
+	\Explain{ 4 So for the induction step we need to prove case 
+		of two с-compacts $D_1$ and $D_2$}
+	\Explain{ 5 assume $\F$ is a closed k-convex filterbase on $\kconv D_1 \cup D_2$ }
+	\Explain{ 6 Let $\F' = \Big\{ \{ (x,y) \in D_1 \times D_2 : 
+				\exists \alpha,\beta \in \Disc_k(0,1) \. \alpha x + \beta y \in F    \}   
+				\Big| F \in \F \Big\}$} 
+	\Explain{ 7 Then $\F'$ is a k-convex fiterbase on $D_1 \times D_2$}
+	\Explain{ 8 $D_1 \times D_2$ is c-compact}
+	\Explain{ 9 So there is an adherence point $(x,y)$ of $\F'$}
+	\Explain{ 10 Let $C = K\hyph\mathrm{disc}\{ x, y\}$}
+	\Explain{ 11 Then $C$ is c-compact K-disc}
+	\Explain{ 12 Then $\overline{F} \cap C \neq \emptyset$ fo all $F \in \F$}
+	\Explain{ 13 So $\F'' = \{ \overline{F} \cap C | F \in \F  \}$ is a filterbas on $C$}
+	\Explain{ 14 So there exists and adherence point $P$ of $\F''$}
+	\Explain{ 15 But $p$ is als an adherence point of $\F$ then}
+	\EndProof
+}\Page{
+	\Theorem{CCompactIffSphericallyComplete}
+	{
+		\CCompact(k) \iff \TYPE{SphericallyComplete}(k)
+	}
+	\Explain{ 1 $(\Rightarrow):$ Assume that $k$ is c-compact}
+	\Explain{ 1.1 Let $B:\Nat \to 2^k$ be a deacrising sequence of closed balls}
+	\Explain{ 1.2 Then $\B =\{B_i | i \in \Nat\}$ is a $k$-convex filter}
+	\Explain{ 1.3 So there must exist and adherence point $\beta$ of $\B$}
+	\Explain{ 1.4 Then $\beta \in B_n$ for every $n \in \Nat$}
+	\Explain{ 1.4.1 $B_n \cap U \neq \emptyset$for every $U \in \U_k(\beta)$}
+	\Explain{ 1.4.2 This means that $\beta \in \overline{B}_n$}
+	\Explain{ 1.4.3 But $B_n = \overline{B}_n$ as $B_n$ is closed}
+	\Explain{ 1.5 Which can be rendered as $\beta \in \bigcap^\infty_{n=1} B$}
+	\Explain{ 2  $(\Rightarrow):$ Assume that $k$ is sphercally complete}
+	\Explain{ 2.1  we claim that every $k$-convex set in $k$ is either 
+		$\emptyset$ or a ball}
+	\Explain{ 2.1.1 Assume $A$ is an absolutely $k$-convex set such that 
+		$\emptyset \neq A \neq k$}
+	\Explain{ 2.1.2 Take $\omega \in A^\c$}
+	\Explain{ 2.1.3 Then $\omega \neq 0$}
+	\Explain{ 2.1.4 Then every $\omega'$ such that $|\omega| \le |\omega'|$ is not in $A$} 
+	\Explain{ 2.1.4.1 Assume there is some $\omega' \in A$ such that $|\omega| \le |\omega'|$}
+	\Explain{ 2.1.4.2 Then $\left| \frac{\omega}{\omega'}\right| \le 1$}	
+	\Explain{ 2.1.4.3 Thus, as $A$ is a k-disc, $\omega = \frac{\omega}{\omega'}\omega' \in A$}
+	\Explain{ 2.1.5 So the set $R = \Big\{ |\omega| \Big| \omega \in A^\c\Big\}$
+		is bounded from above} 
+	\Explain{ 2.1.6 Let $r = \sup R$}
+	\Explain{ 2.1.7 Take $\alpha \in A$ and $\beta \in k$ with $|\beta| \le |\alpha|$}
+	\Explain{ 2.1.8 Then $\beta \in A$}
+	\Explain{ 2.1.9 so $A$ is a ball of radius $r$ open or closed depending on iclusion of $r$ to $R$}
+	\Explain{ 2.2 Also note, 
+		that in non-archimedian space any balls are either disjoin or contained in one or another}
+	\Explain{
+		2.3 So any $k$-convex filterbase $\F$ in $k$ can be represented as 
+		a decreasing sequence of balls, closed or open}
+	\Explain{
+		2.4 Construct sequence of closed balls $\B$ by taking closures}
+	\Explain{
+		2.4.1 radii of balls will form a set $R$ bounded from below by $0$}
+	\Explain{
+		2.4.2 let $\delta = \inf R$}
+	\Explain{
+		2.4.3 Then there exists a decreasing sequence of balls $B$ with respective radi $r$
+		such that $\lim_{n\to\infty} r_n = \delta$}
+	\Explain{
+		2.4.3.1 This is true as all elements in the filterbase $\F$ must have non-empty intersecion}
+	\Explain{
+		2.5 Then there exists $\beta \in \bigcap \B$}
+	\Explain{
+		2.4.4 Take $\B = \{ B_n | n \in \Nat\}$
+	}
+	\Explain{
+		2.6 $\beta$ is an adherence point of $\F$
+	}
+	\Explain{
+		2.6.1 There is some $B \in \B$ such $\beta \in B \subset \overline{F}$ for very element $F \in \F$}
+	\Explain{
+		2.6.2 Then $F \cap U \neq \emptyset$ for every $U \in \U_k(\beta)$}
+	\EndProof
+}
+\newpage
+\subsubsection{Some Interesting Examples}
+\Page{
+	& k :: \AVF \\
+	\\
+	\Theorem{NonLocallyConvexSpace}{
+		\exists V : \TVS{k} \.  
+		\neg\LConv(V)
+	}
+	\Explain{ 1 Let $V = L^p(\Reals,\lambda)$ for $p \in (0,1)$}
+	\Explain{ 2 Its topology can be metrized by the metroc $\rho(f,g) = \int |f- g|^p$  }
+	\Explain{ 2.1 we use inequelity of form 
+		$\left( \sum^n_{i=1} \alpha_i \right)^p \le \sum^n_{i=1} \alpha_i$
+			for 	$\alpha_i > 0$}
+	\Explain{ 3 on the other hand $\conv \Cell_V(0,\sigma) \subset \Cell_V(0,2^{p-1}\sigma)$ }
+	\Explain{ 3.1 Assume $f \in \Cell_V(0,\sigma)$}
+	\Explain{ 3.2 Define $F(t) = \int_{-\infty}^t |f|^p$}
+	\Explain{ 3.3 Then $F$ is a continuos function on $[-\infty,+\infty]$ 
+		such that $F(-\infty) = 0$ and $F(+\infty) = \rho(0,f)$ }
+	\Explain{ 3.4 By intermidieat value theorem there exists $t \in \Reals$
+		such that $F(t) = \frac{\rho(0,f)}{2}$
+	}
+	\Explain{ 3.5 Let $g(x) = f(x)\delta_x(-\infty,t), h(x) = f(x)\delta_x(t,+\infty)$}
+	\Explain{ 3.6 Then  $\rho(g,0) \le \frac{\sigma}{2}$ and  $\rho(h,0) \le \frac{\sigma}{2}$
+		and $f = h + g = \frac{2}{2}f + \frac{2}{2}g$}
+	\Explain{ 3.7 But $2g,2h \in \Cell_V(0,2^{2p-1}\sigma)$, so $f \in \conv \Cell_V(0,2^{2p-1}\sigma)$ }
+	\Explain{ 4 By iterating one gets $\conv \Cell_V(0,\sigma) = V$}
+	\Explain{ 5 So there are no non-trivial convex neighborhoods of $0$}
+	\EndProof
+	\\
+	\Theorem{NonCompactConvexHullOfTheCompact}
+	{
+		\exists V  : \TVS{k} \.
+		\exists K : \Compacts(V) \.
+		\neg \Compacts(V, \conv K)
+	}
+	\Explain{ 1 Let $V = \ell^1$ }
+	\Explain{ 2 Let $K = \left\{0, \delta_1^\bullet,\ldots, \frac{1}{n} \delta_{n}^\bullet  ,\ldots \right\}$}
+	\Explain{ 3 Define $\xi_n = 
+		\frac{1}{\sum^n_{i=1} 2^{-i}  } \sum^n_{t=1} \frac{2^{-t}}{t} \delta_{t}^\bullet
+			\in \conv K$}
+	\Explain{ 4 Then $\zeta = 
+		\lim_{n \to \infty} \xi_n =  \sum^\infty_{t=1} \frac{2^{-t}}{t} \delta_{t}^\bullet$
+	}
+	\Explain{ 5 But then $\zeta_i \neq 0$ for all $i \in \Nat$,
+		but this means that $\zeta \not \in \conv K$, so $K$ is not compact}
+	\EndProof
+}\Page{
+	\Theorem{NoncomplimentedClosedSubpaceExist}
+	{
+		\exists V : \TVS{k} \.
+		\exists U \subset_{\TVS{k}} V \.
+		\neg  \TC(V,U)
+	}
+	\Explain{ 1 Let $V = \ell^\infty$ }
+	\Explain{ 2 Let $U = c_0$}
+	\NoProof
+	\\
+	& k :: \TYPE{UltravaluedField} \\
+	\\
+	\Theorem{PathologicalConvexSet}
+	{
+		\NewLine ::		
+		\mathrm{res}\;\mathrm{char}(k) = 2
+		\Imply
+		\exists V : \TVS{k} \.
+		\exists A : \neg \KC(V) \.
+		\forall a,b \in A \.
+		\forall \lambda \in \Disc_k(0,1) \.
+		\lambda a + (1 - \lambda)b \in A
+	}
+	\Explain{ 1 Let $V = k^3$ and let 
+		$A = \Big\{ a \in \Disc_k(0,1) : \exists i \in \{1,2,3\} \. a_i \in \Cell_k(0,1) \Big\}$}
+	\Explain{2 $A$ has desired property for convex combinations of two elements}	
+	\Explain{ 2.1 Assume $\lambda \in \Disc_k(0,1)$ and $a,b \in A$}
+	\Explain{ 2.2 Note, 
+		either $|\lambda|=1$ or $|1-\lambda| = 1$}
+	\Explain{ 2.2.1 $ 1 = [1] = [1 - \lambda  + \lambda] = [1 - \lambda] + [\lambda]$ 
+		in a residue1 field $\mathbb{F}_2$ }
+	\Explain{ 2.3 There exists some $i,j \in \{1,2,3\}$ such that $|a_i| < 1$ and $|b_j| < 1$}
+	\Explain{ 2.4 So $|\lambda a_i| = |\lambda||a_i| < 1$ and $|(1-\lambda)b_j| = 
+		|1-\lambda||b_j| < 1$}
+	\Explain{ 2.5 so either $| \lambda a_i + (1-\lambda) b_i | < 1 $ or 
+					$| \lambda a_j + (1-\lambda) b_j | < 1 $}
+	\Explain{ 3 $A$ is not K-convex}
+	\Explain{ 3.1 $(-1,1,1) \not \in A$}
+	\Explain{ 3.1.1 $|-1| = |1| = 1$ }
+	\Explain{ 3.2 on the othe hand $(-1,1,1) =  -1 \cdot e_1 + 1\cdot e_2 + 1 \cdot e_3 \in \kconv A $ }
+}
+\newpage
+\subsection{Towards Bornology}
+\subsection{Hahn-Banach Theory}
+\subsection{Duality and Weak Notions}
+\subsection{ Vector-Valued Hahn-Banach Theorems}
+\subsection{Barreled Spaces}
+\subsection{Bornological Spaces}
+\subsection{Closed Graph Theory}
+\subsection{Reflexivity}
+\subsection{Norm Convexity}
+\section{Spaces of Distributions}
+\section{Ordered Topological Vector Spaces}
+\newpage
+\section*{Sources}
+\begin{enumerate}
+\item Horvath H. - Topological Vector Spaces and Distributions (1966)
+\item K\"othe G. - Topological Vector Spaces (1969)
+\item Trevis F.  - Topological Vector Spaces, Distributions and Kernels (2010)
+\item Grothendieck - Topological Vector Spaces (1973)
+\item Wilansky A. - Modern Methods in Topological Vector Spaces (1978) 
+\item Rudin W.  - Functional Analysis (1991) 
+\item Fabian M. et al.   - Functional Analysis and infinite-dimensional geometry (2001)
+\item Naricci L. ; Beckenstein E. - Topological Vector Spaces I (2010)
+\item Богачев В. ; Смолянов О. ; Cоболев В. И. -  Топологические Векторные пространства (2012)
+\item Chernikov A. ; Mennin A. ; -  Combinatorial properties of non-archimedean convex sets  (2021)
+\end{enumerate}
+\end{document}
