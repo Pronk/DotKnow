@@ -172,6 +172,7 @@
 \newcommand{\Bair}{\TYPE{BaireSpace}}
 \newcommand{\Meager}{\TYPE{Meager}}
 \newcommand{\Connected}{\TYPE{Connected}}
+\newcommand{\ED}{\TYPE{ExtemellyDisconnected}}
 %FUNC
 \DeclareMathOperator*{\intx}{int}
 \DeclareMathOperator*{\cl}{cl} 
@@ -192,7 +193,7 @@
 \newcommand{\F}{\mathcal{F}}
 \newcommand{\X}{\mathcal{X}}
 %\newcommand{\d}{\mathrm{d}}
-%Metic Topology
+%Metric Topology
 %FUNC
 \DeclareMathOperator{\diam}{diam}
 \newcommand{\Cell}{\mathbb{B}}
@@ -389,6 +390,7 @@
 \newcommand{\Wedge}{\TYPE{Wedge}}
 \newcommand{\PVS}{\TYPE{PreorderedVectorSpace}}
 \newcommand{\OVS}{\TYPE{OrderedVectorSpace}}
+\newcommand{\OU}{\TYPE{OrderUnit}}
 \newcommand{\AVS}{\TYPE{ArchemedeanVectorSpace}}
 \newcommand{\RS}{\TYPE{RieszSpace}}
 %FUNC
@@ -467,14 +469,19 @@
 \newcommand{\KC}{\TYPE{KConvex}}
 \newcommand{\LKConv}{\TYPE{LocallyKConvexSpace}}
 \newcommand{\CCompact}{\TYPE{CCompact}}
+\newcommand{\Seminorm}{\TYPE{Seminorm}}
+\newcommand{\LCCompact}{\TYPE{LocallyCCompact}}
 %Cats
 \newcommand{\TVS}[1]{{#1}\hyph\mathsf{TVS}}
 \newcommand{\HTVS}[1]{{#1}\hyph\mathsf{HTVS}}
 \newcommand{\LCS}[1]{{#1}\hyph\mathsf{LCS}}
 \newcommand{\LCHS}[1]{{#1}\hyph\mathsf{LCHS}}
+\newcommand{\SMN}{\mathsf{SMN}}
 %FUNC
 \DeclareMathOperator{\bal}{\mathrm{bal}}
 \newcommand{\kconv}{K\hyph\mathrm{conv}\;}
+\DeclareMathOperator{\ssc}{ssc}
+\DeclareMathOperator{\suc}{suc}
 \title{Topological Vector Spaces 2}
 \author{Uncultured Tramp}
 \begin{document}
@@ -482,8 +489,8 @@
 \newpage
 \tableofcontents
 \newpage
-\section{Abstract Topological Vector Spaces}
-\subsection{Locally Convex Spaces}
+b\section{Abstract Topological Vector Spaces}
+\subsection{Minkowski's Theory}
 \subsubsection{Intro and Definition}
 \Page{
 	\DeclareType{\TopVS}{\prod k : \TopField \. ? \sum_{V \in \VS{k}} \Top(V)}
@@ -1796,7 +1803,7 @@
 		+ \frac{1}{2}\big( 2 \beta y  + (1-2\beta) v \big)$}
 	\Explain{
 		2.3.3 Both $\frac{1}{2}\big( 2 \alpha x  + (1-2\alpha) v \big)$ and
-		$\frac{1}{2}\big( 2 beta y  + (1-2\beta) v \big)$ in $C$}
+		$\frac{1}{2}\big( 2 \beta y  + (1-2\beta) v \big)$ in $C$}
 	\Explain{
 		2.3.3.1 for ultravalue $|2 \alpha | = |\alpha + \alpha| \le |\alpha| = 1$
 	}
@@ -2013,7 +2020,7 @@
 	{	
 		\forall V : \HTVS{k} \.
 		\forall K  : \CCompact(V) \.
-		\forall L : \Closed(K) \And \KC(V) \.
+		\forall L : \Closed(K) \And \KC(V) \. \NewLine \.
 		\CCompact(V,L)
 	}
 	\Explain{ 1 Assume $\F$ is a K-Convex filterbase on $L$}
@@ -2090,7 +2097,7 @@
 	\Theorem{CCompactCombination}
 	{
 		\forall V : \LKConv{k} \.
-		\forall n \in \Int_+ \.
+		\forall n \in \Int_+ \. \NewLine \.
 		\forall D : \{1,\ldots,n\} \to \AKC \And \CCompact(V) \.
 		\CCompact\left(V ,\kconv \bigcup^n_{i=1} D_i\right) 
 	}
@@ -2180,7 +2187,7 @@
 \newpage
 \subsubsection{Some Interesting Examples}
 \Page{
-	& k :: \AVF \\
+	& k :: \AVF(\Reals) \\
 	\\
 	\Theorem{NonLocallyConvexSpace}{
 		\exists V : \TVS{k} \.  
@@ -2240,7 +2247,7 @@
 	\Theorem{PathologicalConvexSet}
 	{
 		\NewLine ::		
-		\mathrm{res}\;\mathrm{char}(k) = 2
+		\mathrm{res}\;k = \mathbb{F}_2
 		\Imply
 		\exists V : \TVS{k} \.
 		\exists A : \neg \KC(V) \.
@@ -2265,31 +2272,1336 @@
 	\Explain{ 3.1 $(-1,1,1) \not \in A$}
 	\Explain{ 3.1.1 $|-1| = |1| = 1$ }
 	\Explain{ 3.2 on the othe hand $(-1,1,1) =  -1 \cdot e_1 + 1\cdot e_2 + 1 \cdot e_3 \in \kconv A $ }
+	\EndProof
 }
 \newpage
-\subsection{Towards Bornology}
+\subsubsection{Seminorms}
+\Page{
+	& k :: \AVF(\Reals) \\
+	\\
+	\DeclareType{Seminorm}
+	{
+		\prod V : \VS{k} \.
+		?(V \to \Reals_{++})
+	}
+	\DefineType{\nu}{Seminorm}
+	{
+		\forall v,w \in V \. \nu(v + w) \le \nu(v) + \nu(w) 
+		\And
+		\forall v \in V \. \forall \lambda \in k \. \nu(\lambda v) = |\lambda|\nu(v)
+	}
+	\\
+	\Theorem{ZeroSeminorm}
+	{
+		\forall V : \VS{k} \.
+		\forall \nu : \Seminorm(V) \. 
+		\nu(0) = 0
+	}
+	\Explain{1  $\nu(0) = \nu(\lambda 0) = |\lambda|\nu(0)$ for any $\lambda \in k$}
+	\Explain{2 This means that $\nu(0)$ is not invertible in $k$}
+	\Explain{3 So $\nu(0) = 0$ }
+	\EndProof
+	\\
+	\Theorem{SymmetricSeminorm}
+	{
+		\forall V : \VS{k} \.
+		\forall \nu : \Seminorm(V) \.
+		\forall v \in V \. 
+		\nu(-v) = \nu(v)
+	}
+	\Explain{1  $\nu(-v) = |-1|\nu(v) = \nu(v)$}
+	\EndProof
+	\\
+	\Theorem{SumOfSeminorms}
+	{
+		\forall V : \VS{k} \.
+		\forall n \in \Nat \.
+		\forall \nu : \{1,\ldots,n\} \to \Seminorm(V) \.
+		\Seminorm\left(V, \sum^n_{i=1} \nu_i \right)
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Theorem{MaxOfSeminorms}
+	{
+		\forall V : \VS{k} \.
+		\forall n \in \Nat \.
+		\forall \nu : \{1,\ldots,n\} \to \Seminorm(V) \.
+		\Seminorm(v, \max_{1\le i \le n} \nu_i )
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Explain{Note: this means that seminorms over $V$ form an ordered tropical semirng
+		with $0 = -\infty$}
+	\\
+	\DeclareFunc{seminormsFunctor}{\Contra(\VS{k},\mathsf{TSRING})}
+	\DefineNamedFunc{seminormsFunctor}{V}{\mathsf{SMN}(V)}{\TYPE{Seminorm}(V)}
+	\DefineNamedFunc{seminormsFunctor}{V,W,T}{\mathsf{SMN}_{V,W}(T)}{T^*}
+}\Page{
+	\DeclareFunc{seminormCell}
+	{
+		\prod V  \in \VS{k} \.
+		\Seminorm(V) \to ?V
+	}
+	\DefineNamedFunc{seminormCell}{\nu}{\Cell(\nu)}
+	{
+		\{ v \in V : \nu(v) < 1  \}
+	}               
+	\\
+	\DeclareFunc{seminormDisc}
+	{
+		\prod V  \in \VS{k} \.
+		\Seminorm(V) \to ?V
+	}
+	\DefineNamedFunc{seminormDisc}{\nu}{\Disc(\nu)}
+	{
+		\{ v \in V : \nu(v) \le 1  \}
+	}
+	\\
+	\Theorem{SeminormIneq}
+	{
+		\forall V \in \VS{k} \.
+		\forall \nu,\nu' : \Seminorm(V) \.
+		\nu \le \nu' 
+		\iff
+		\Cell(\nu') \subset \Cell(\nu)
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Explain{ Note: This means that $\Cell$ is an antitone map or functor  $\SMN(V) \to 2^V$}
+	\Explain{ Moreover, both $\Cell$ and $\Disc$ are natural transform from $\SMN$
+		to the lattice of absorbent discs}
+	\\
+	\Theorem{SeminormScalling}
+	{
+		\forall V \in \VS{k} \.
+		\forall \nu \in \SMN(V) \.
+		\forall \lambda \in \Reals_{++} \.
+		\lambda\Cell(\nu) = \Cell(\lambda^{-1}\nu)
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Theorem{SeminormCellIsAbsobentDisc}
+	{
+		\forall V \in \VS{k} 
+		\forall \nu \in \SMN(V) \.
+		\TYPE{Absorbent} \And \TYPE{Disc}\Big(V,\Cell(\nu)\Big)
+	}
+	\Explain{Obvious}
+	\EndProof
+	\\
+	\Theorem{SeminormCellClosureTheorem}
+	{
+		\forall V \in \TVS{k} \.
+		\forall \nu \in \SMN \And C(V) \.
+		{\cl}_V \Cell(\nu) = \Disc(\nu) 
+	}
+	\Explain{ 1 Assume $v \in \Disc(\nu)$}
+	\Explain{ 2 then the sequence $u_n = \left(1-\frac{1}{n}\right)v \in \Cell(\nu)$
+		has limit $v$}
+	\Explain{ 3 So $\Disc(\nu) \subset {\cl}_V \Cell(\nu)$}
+	\Explain{ 4 On the other hand $\Disc(\nu) = \nu^{-1}[0,1]$ is closed}
+	\Explain{ 5 So ${\cl}_V \Cell(\nu) \subset \Disc(\nu)$ and $\Disc(\nu) = {\cl}_V \Cell(\nu)$}
+	\EndProof
+}\Page{
+	\Theorem{SeminormContinuity}
+	{
+		\forall V : \TVS{k} \.
+		\forall \nu \in \SMN(V) \. \NewLine 
+		(1) \;\nu \in \UNI(V,\Reals)
+		\iff \NewLine
+		(2) \; \Cell(\nu) \in \T(V)
+		\iff \NewLine
+		(3) \; \Disc(\nu) \in \N(V)
+		\iff \NewLine
+		(4) \; \TYPE{ContinuousAt}(V,\Reals, 0, \nu)
+	}
+	\Explain{ 1 $(1) \Imply (2) \Imply (3)$ obvious}
+	\Explain{ 2 $(3) \Imply (4)$}
+	\Explain{ 2.1 As non-zero scalar multiplication is a homeomorphism
+	$\lambda \Disc(\nu) \in \N(V)$ for all $\lambda \in \Reals_{++}$}
+	\Explain{ 
+			2.2 consider a net $v$ such that $\lim_\delta v_\delta = 0$} 
+	\Explain{
+			2.3 Eventualy  $v_\delta \in \lambda \Disc(\nu)$ for any $\lambda \in \Reals_{++}$
+	}
+	\Explain{ 2.4
+		This means that $\lim_\delta \nu(v_\delta) = 0$}
+	\Explain{ 3 $(4) \Imply (1)$}
+	\Explain{  3.1 $\nu^{-1}[0,\lambda)$ is open for any $\lambda \in \Reals_{++}$}
+	\Explain{ 3.2 As $V$ is a topological group there is $U \in \U_V(0)$
+		such that  $U - U \subset \nu^{-1}[0,\lambda)$}
+	\Explain{ 3.3 Thus, $\nu(x - y) < \lambda$ for any $x,y \in U$}
+	\Explain{ 3.4  Let $v \in V$ be arbitraty  }
+	\Explain{ 3.5 Take $u \in v + U$}
+	\Explain{
+				3.6 Then 
+				$  
+					 \nu(u) = \nu(u + v - v) \le \nu(u -v) + \nu(v) \le \nu(v) + \lambda)$}
+	\Explain{
+			  3.7 On the other hand
+			  $\nu(u) \ge \nu(v) - \nu(u-v) \ge \nu(v) - \lambda$
+			  as
+			  $\nu(v) = \nu(v -u + u) \le  \nu(u) + \nu(u - v)$}
+	\Explain{
+			3.8 So $\Big|\nu(u) - \nu(v)\Big| \le \lambda$}
+	\EndProof
+	\\
+	\Theorem{SeminormContinuityByDomination}
+	{
+		\NewLine ::		
+		\forall V : \TVS{k} \.
+		\forall \nu \in \SMN(V) \. 
+		\forall \mu \in \SMN \And C(V)  \.
+		\nu \le \mu 
+		\Imply
+		\nu \in \UNI(V,\Reals)
+	}
+	\Explain{
+		By antitonicity $\Cell(\mu) \subset \Cell(\nu) \subset \Disc(\nu)$
+	}
+	\Explain{
+		But $\Cell(\mu)$ is open, so $\Disc(\nu) \in \N_V(0)$
+	}
+	\Explain{
+		Thus $\nu$ is uniformly continuous}
+	\EndProof
+}\Page{
+	\Theorem{GaugesOfDiscsProduceSeminorms}
+	{
+		\forall V \in \VS{k} \.
+		\forall D : \TYPE{Disc} \And \TYPE{Absorbent}(D) \.
+		\gamma(\bullet|D) \in \SMN(V)
+	}
+	\Explain{ 1 Discs are convex, so $\gamma(\bullet|D)$ is a convex function}
+	\Explain{ 2 Take some $v \in V$}
+	\Explain{ 2.1 Let $I_v= \{ \lambda \in \Reals_{++} : \lambda^{-1} v \in D\}$}
+	\Explain{ 2.2 As $D$ is absorbent, $I_v \neq \emptyset$}
+	\Explain{ 2.3 As $D$ is balanced then if $\alpha \in I_v$ and $\beta \ge \alpha$, 
+		then  $\beta \in I$}
+	\Explain{ 2.4
+		Thus, $I_v = \Big( \gamma(v|D)   ,+\infty)$ }
+	\Explain{
+		2.5 Then it is clear that $I_{\lambda v} = \lambda I_v = 
+			\Big( \lambda \gamma(v|D),+\infty) = \Big( \gamma(\lambda v|D),+\infty\Big)$ 
+	}
+	\Explain{ 3 So $\gamma(\bullet|D)$ is positively homogeneous}
+	\Explain{ 4 $\gamma(\bullet|D)$ is subadditive}
+	\Explain{ 4.1 Take some $v,w \in V$}
+	\Explain{ 4.2 
+		Write $\gamma(v+ w|D) = \gamma\left( \frac{2}{2}v + \frac{2}{2}w | D  \right)
+			\le   \frac{1}{2} \gamma(2v|D) + \frac{1}{2}\gamma(2w|D) =
+			\gamma(v|D) + \gamma(w|D)	$}
+	\EndProof
+	\\
+	\Explain{ 
+		Note: Cells and gauges produce a Functor isomorphism}
+	\Explain{
+		This isomorphism is   
+		between $\SMN : \VS{k} \to \mathsf{ORD}$ and some absorbent disc functor, open or closed}
+	\\
+	\Theorem{GaugeContinuity}
+	{
+		\forall V \in \TVS{k} \.
+		\forall D : \TYPE{Disc} \And \TYPE{Absorbent}(D) \.
+		\gamma(\bullet|D) \in C(V)
+		\iff
+		D \in \N_V(0)
+	}
+	\Explain{ 1 This follows from seminorm continuity theorem as 
+		$\Cell(\gamma(\bullet|D)) \subset    D \subset \Disc(\gamma(\bullet|D))$}
+	\EndProof
+	\\
+	\DeclareType{Sublinear}
+	{
+		\prod V : \VS{k} \. 
+		?(V \to \Reals)
+	}
+	\DefineNamedType{\phi}{Sublinear}{\phi \in \S\L(V)}
+	{
+		\forall v,w \in V \. \phi(v + w) \le \phi(v) + \phi(w)
+		\And \forall v \in V \. \forall \alpha \in \Reals_{++} \.
+		\phi(\alpha v) = \alpha \phi(v)
+	}
+	\\
+	\DeclareFunc{seminormFromSublinear}
+	{
+		\prod V : \VS{k} \.
+		\TYPE{Sublinear}(V) \to \SMN(V)
+	}
+	\DefineNamedFunc{seminormFromSublinear}
+	{\phi}{\nu_\phi}{\Lambda v \in V \. \max\Big( \phi(v), \phi(-v)  \Big)}
+	\Explain{ 1 Either $\phi(v)\ge 0$ or $\phi(-v)\ge 0$}	
+	\Explain{ 1.1 From positive homogenity $\phi(0) = 0$}
+	\Explain{ 1.2 Write $0 = \phi(0) = \phi(v-v) \le \phi(v) + \phi(-v)$}
+	\Explain{ 2 So $\nu_\phi$ has positive range }
+	\Explain{ 3 Minkowsky Inequality holds also}
+	\ExplainFurther{
+		3.1 
+		$\nu_\phi(v + w) = max\Big(\phi(v + w), \phi(-v-w)\Big) \le 
+		\max\Big( \phi(v) + \phi(w), \phi(-v) + \phi(-w) \Big) \le$}
+	\Explain{ 
+		$ \quad \quad \le \max\Big(\phi(v),\phi(-v)\Big) + \max\Big(\phi(w),\phi(-w)\Big) = 
+		\nu_\phi(v) + \nu_\phi(w)$}
+	\EndProof
+}
+\newpage
+\subsubsection{Topology of Locally Convex Space}
+\Page{
+	\DeclareFunc{seminormTopology}{
+		\prod_{V \in \VS{k}} ?\SMN(V) \to	 \Vect\Top(V)
+	}
+	\DefineNamedFunc{seminormTopology}{\N}{\T(\N)}
+	{
+		\W_V(\N,\Reals,\id)
+	}
+	\\
+	\Theorem{HausdorffSeminormTopology}
+	{
+		\NewLine ::		
+		\forall V \in \VS{k} \.
+		\forall \N \subset \SMN(V) \.
+		\TYPE{T2}\Big(V, \T(\N)\Big)
+		\iff 
+		\forall v \in \V \. 
+		v \neq 0 \Imply \exists \nu \in \N \. \nu(v) \neq 0
+	}
+	\Explain{ 1 If such norm $\nu$ exists then $v$ can be sparated from $0$ by an open set}
+	\Explain{ 2 For topological group $(V,+)$ this is enough}
+	\EndProof
+	\\
+	\Theorem{SeminormTopologyBase}
+	{
+		\NewLine ::		
+		\forall V \in \VS{k} \.
+		\forall \N \subset \SMN(V) \.
+		\TYPE{Base}\bigg( V, \T(\N), 
+			\Big\{ \lambda \Cell(\nu) \Big| \lambda \in \Reals_{++}, \nu \in \N  \Big\} \bigg)
+	}
+	\Explain{1 Seems obvious by weak topology definition}
+	\EndProof
+	\\
+	\Theorem{SeminormTopologyIsLC}
+	{
+		\forall V \in \VS{k} \.
+		\forall \N \subset \SMN(V) \.
+		\Big( V, \T(\N) \Big) \in \LCS{k}
+	}
+	\Explain{1 This holds as the base is convex}
+	\EndProof
+	\\
+	\Theorem{EveryLCSHasSeminormTopology}
+	{
+		\forall V \in \LCS{k} \.
+		\exists \N \subset \SMN(V) \.
+		\T_V = \T(\N)
+	}
+	\Explain{ 1 As we working with froup topologies it is enough to work with zero equivalence}
+	\Explain{ 2 Take $U \in \U_V(0)$}
+	\Explain{ 3 Then there exists a disc $D \subset U$}
+	\Explain{ 4 $\gamma(\bullet|D)$ is continuous gauge for $V$}
+	\Explain{ 5 So $U \in \T\Big(\Big\{\gamma(\bullet|D)\Big\} \Big)$}
+	\Explain{ 6 Define $\N$ to be set of all such gauges}
+	\Explain{ 7 Then $\T_V \subset \T(\N)$}
+	\Explain{ 8 On the other hand $\T(\N) \subset \T_V$ as all gauges are continuous}
+	\EndProof
+	\\
+	\Explain{ Note: There should exists a $\VS{k} \to \mathsf{ORD}$  functor equivalence}
+ 	\Explain{ Take functors of saturated seminorm cones an locally convex topologies}
+}\Page{
+	\DeclareType{Saturated}{\prod_{V \in \VS{k}} ??\SMN(k)}
+	\DefineNamedType{\N}{Saturated}
+	{
+		\forall \nu,\mu \in \N \. \max(\nu,\mu) \in \N	
+	}
+	\\	
+	\DeclareFunc{saturatedSeminormCones}
+	{\Cov( \VS{k}, \mathsf{ORD}  )}
+	\DefineNamedFunc{saturatedSeminormCones}{V}{\mathsf{SSC}(V)}
+	{
+		\TYPE{Saturated}(V) \And \CC\Big( \S\L(V)\Big) 
+	}
+	\DefineNamedFunc{saturatedSeminormCones}{V,W,*}{\mathsf{SSC}_{V,W}(T)}
+	{
+		(T^*)^{-1}
+	}
+	\\
+	\Theorem{SeminormedProductTopolgy}
+	{
+		\NewLine		
+		\forall I \in \SET \.
+		\forall V : I \to \TVS{k} \. 
+		\forall \N : \prod_{i \in I} ?\SMN(V) \.
+		\prod_{i \in \I} \Big( V_i, \T(\N_i) \Big) 
+		\cong_\TOP 
+		\left( \prod_{i \in I} V_i,  \Big\{ \pi_i^* \nu \Big| i \in I, \nu \in \N_i  \Big\} \right)
+	}
+	\Explain{ 1 This may be seen as functorial eqiavalence interacting with limits}
+	\Explain{ 2 And weak topologies are limits}	
+	\EndProof
+	\\
+	\Theorem{LocallyConvexProduct}
+	{
+		\NewLine		
+		\forall I \in \SET \.
+		\forall V : I \to \LCS{k} \. 
+		\prod_{i \in I} V_i \in \LCS{k}
+	}
+	\Explain{ 1 Now this is obvious}
+	\EndProof
+}\Page{
+	\Theorem{LocallyConvexSemimetrizability}
+	{
+		\NewLine ::		
+		\forall V \in \LCS{k} \.
+		\TYPE{Semimetrizable}(V)
+		\iff
+		\exists \nu : \Nat \uparrow C(V) \And \SMN(V) \. 
+		\T_V = \T(\im \nu)
+	}
+	\Explain{ 1$(\Rightarrow)$ assume $V$ is semimetrizable}
+	\Explain{ 1.1 Then there exists a decreasing sequence of disked neighborhoods of unity $D$
+		which generate the toplogy}
+	\Explain{ 1.2 Then $\gamma(\bullet|D_n)$ is clearly a sequence of seminorms we seek}
+	\Explain{ 2$(\Leftarrow)$ assume $\nu$ are seminorms of the hypothesis}
+	\Explain{ 2.1 Define $\mu(x) = \sum^\infty_{n=1} 2^{1 - n} \frac{\nu_n(x)}{1 + \nu_n(x)}$}
+	\Explain{ 2.2 Then $\mu$ is an F-seminorm} 
+	\Explain{ 2.2.1 Assume $\alpha \in \Disc_k(0,1)$ and $v \in V$}
+	\Explain{ 2.2.2 Then  
+	  $\frac{\nu_n(\alpha v)}{1 + \nu_n(\alpha v)}
+		=	\frac{|\alpha|\nu_n(v)}{1 + |\alpha|\nu_n(v)} \le 
+			\frac{\nu_n(v)}{1 + \nu_n(v)}$   for any $n \in \Nat$}
+	\Explain{ 2.2.2.1 Note, that $f(x) = \frac{x}{1 + x}$ is increasing for $x > 0$}
+	\Explain{ 2.2.2.1.1 $f'(x) = \frac{1}{(1 + x)^2} > 0$}
+	\Explain{  2.2.2.2 And $|\alpha|\nu_n(v) \le \nu_n(v)$ for any $n \in \Nat$}
+	\Explain{ 2.2.3 Thus $\mu(\alpha v) \le \mu(v)$}
+	\ExplainFurther{ 
+		2.2.4 Also $\lim_{m \to\infty} \mu\left( \frac{v}{m} \right) =
+					\lim_{m \to \infty} 
+					\sum^\infty_{n=1} 2^{1 - n} \frac{\nu_n(v/m)}{1 + \nu_n(v/m)} =
+					\sum^\infty_{n=1} \lim_{m \to \infty}  
+					\frac{2^{1 - n}}{m} \frac{\nu_n(v)}{1 + \nu_n(v/m)}   = 0
+		$} 
+	\Explain{ by dominated convergence theorem
+		with dominator $x_n = 2^{2-n}$}
+	\ExplainFurther{ 2.2.5
+		The Minkowsky inequality for $\mu$ is obvious from metric topology}
+	\Explain{ 2.3
+		By construction $\mu$ is continuous in a topology defined by $(\nu_n)^\infty_{n=1}$
+		by construction}
+	\Explain{ 2.3.1 $\mu$ is a uniform limit of continuous functions}
+	\Explain{ 2.4 Also F-seminorm $2^{1-n} \frac{\nu_n}{\nu_n + 1} \le \mu $
+		for each $n$}
+	\Explain{
+		2.5 so each F-seminorm $2^{1-n} \frac{\nu_n}{\nu_n + 1}$
+		is continuous in the topology defined  by $\mu$}
+	\Explain{
+		2.6 But this means that each $\nu_n$ is also continuous in this topology
+	}
+	\EndProof
+	\\
+	\DeclareFunc{continuousDual}{\prod k : \TYPE{TopologicalField} \. \TVS{k} \to \VS{k}}
+	\DefineNamedFunc{continiousDual}{ V  }{V'}{V^* \cap \TOP(V,k) }
+	\\
+	\Theorem{DiscontinuousFunctionalExists}
+	{
+		\forall  V \in \LCS{k} \.
+		\forall \aleph : \TYPE{Semimetrizable}(V) \.
+		\forall \beth : \dim V = \infty \.
+		\exists	(V^* \setminus V')
+	}
+	\Explain{ 1 Let $\rho$ be a semimetric for $V$ }
+	\Explain{ 2 Then there exists an infinite
+		linearly independent sequence $(e_n)^\infty_{n=1}$}
+	\Explain{ 3 Extend $(e_n)^\infty_{n=1}$ to a Hamel basis $H$}
+	\Explain{ 4 As $V$ is semimetrizable it is possible to select a countables decreasing base
+		of absorbent discs $(D_n)^\infty_{n=1}$}
+	\Explain{ 5 Then it is possible to selecect $\lambda_n$ such that $\lambda_n e_n \in D_n$}
+	\Explain{ 6 Obviously, then $\lim_{n \to \infty} \lambda_n e_n = 0$}
+	\Explain{ 7 Define linear functional $f$ by $f(e_n) = \frac{1}{\lambda_n}$ and
+		and $f(h) = 0$ if $h$ is linearly independent from all $e_n$}
+	\Explain{ 8 Then clearly $lim_{n \to \infty} f(\lambda_n e_n) = 1$, so $f$ can't be contiuous}
+	\EndProof
+}\Page{
+	\Theorem{FinitieDimensionByContinuousFunctionals}
+	{
+		\NewLine ::
+		\forall V : \NS(k) \. 
+		\dim V < \infty \iff V' = V^*
+	}
+	\Explain{1 As $V$ is metric and locally convex this follows from the precious result}
+	\EndProof
+	\\
+	\Theorem{FinestLocallyConvexSpaceIsNotMetrizable}
+	{
+		\NewLine ::		
+		\forall V \in \VS{k} \.
+		\forall \aleph : \dim V = \infty \.
+		\neg \TYPE{Metrizable}\Big( V, \W_V(V^*,k,\id)\Big)
+	}
+	\Explain{1 As $V$ is locally convex this follows from the precious result}
+	\EndProof
+	\\
+	\DeclareFunc{defininigSeminorms}{\prod V \in  \LCS{k} \. \mathsf{SSC}(V) }
+	\DefineNamedFunc{definingSeminorms}{   }{\ssc(V)}{\SMN(V) \cap \TOP(V,\Reals) }
+	\\
+	\Theorem{ConvergenceInLocallyConvexSpace}
+	{	
+		\NewLine ::		
+		\forall V : \LCS{k} \.
+		\forall (\Delta,x) : \TYPE{Net}(V) \.
+		\forall v \in V \.
+		\lim_{\delta \in \Delta} x_\delta = v \iff
+		\forall \nu \in \ssc(V) \. \lim_{\delta \in \Delta} \nu(x_\delta - v) = 0
+	}
+	\Explain{ 1 $(\Rightarrow)$ This is obvious as each $\nu$ is continuous}
+	\Explain{ 2 $(\Leftarrow)$  Assume $D$ is an open disc in $V$}
+	\Explain{ 2.1 as $D$ is open disc then $\gamma(\bullet|D) \in \ssc(V)$ is continuous}
+	\Explain{ 2.2 But this meand that $\lim_{\delta \in \Delta} \gamma(x_\delta -v| D) = 0$ }
+	\Explain{ 2.3 So $x_\delta - v$ is eventually inside $D$}
+	\Explain{ 2.4 As $D$ was arbitraty this means that $\lim_{\delta \in \Delta} x_\delta = v$ }
+	\EndProof
+	\\
+	\Theorem{CauchyPropertyInLocallyConvexSpace}
+	{	
+		\NewLine ::		
+		\forall V : \LCS{k} \.
+		\forall (\Delta,x) : \TYPE{Cauchy}(V) \.
+		\forall \nu \in \ssc(V) \.
+		\TYPE{Cauchy}(V,\Delta , \nu(x))
+	}
+	\Explain{1 This is true as every $\nu$ is uniformly continuous}
+	\EndProof
+	\\
+	\Theorem{LocallyConvexContinuityCriterion}
+	{	
+		\NewLine ::		
+		\forall V,W : \LCS{k} \.
+		\forall T \in \VS{k}(V,W) \.
+		T \in \LCS{k} 
+		\iff
+		\forall \nu \in \ssc(W) \.
+		\exists \mu \in \ssc(V) \.
+		T^* \nu \le \mu 
+	}
+	\Explain{1 $(\Rightarrow)$ True as $T^* \nu$ is continuous as composition and 
+		$T^* \nu \le T^* \nu$}
+	\Explain{2 $(\Leftarrow)$ As $T* \nu \le \mu$ the seminorm $T^* \nu$ is continuous by domination}
+	\Explain{2.1 Then the result follows by universal property of weak topology}
+	\EndProof
+}\Page{
+	\Theorem{ContinuousIfBounded}
+	{
+		\NewLine ::
+		\forall V,W : \NS(k) \.
+		\forall T \in \VS{k}(V,W) \.
+		T \in \TOP(V,W)
+		\iff
+		T \in \B(V,W)
+	}
+	\Explain{ 1 Now this is obvious specification of the previous result}
+	\EndProof
+	\\
+	\ExplainFurther{Note:  This is intersting how the fundamental theorem 
+		of elementary functional analysis} 
+	\Explain{ can be seen as application of the universal property of weak topology}
+	\\
+	\Theorem{KernelSeparationLemma}
+	{
+		\forall V : \VS{k} \.
+		\forall f \in V^* \.
+		\forall v \in V \.
+		\forall \aleph : f(v) = 1 \. \NewLine \.
+		\forall U : \TYPE{Balanced}(V) \.
+		(v + U) \cap \ker f = \emptyset
+		\iff 
+		\forall u \in U \. |f(u)| < 1
+	}
+	\Explain{   1 $(\Rightarrow)$ Assume $x + U \cap \ker f = \emptyset$ }
+	\Explain{ 1.1 Assume there is $u \in U$ such that $|f(u)| \ge 1$ }
+	\Explain{ 1.2 As $U$ is balanced, then $w = -\frac{u}{f(u)} \in U$}
+	\Explain{ 1.3 But $f(v + w) = f(v) + f(w) = 1 - 1 = 0$, a contradiction !}
+	\Explain{ 2 $(\Leftarrow)$ Assume $\forall u \in U \. |f(u)| < 1$ is the case}
+	\Explain{ 2.1 $f(v) \neq - f(u)$ for any $u \in U$}
+	\Explain{ 2.2 So $f(v + u) = f(v) + f(u) \neq 0$}
+	\EndProof
+	\\
+	\Theorem{ContinuousByClosedKernel}
+	{
+		\forall V \in \TVS{k} \.
+		\forall f \in V^* \.
+		f \in V'
+		\iff
+		\Closed(V,\ker f) 
+	}
+	\Explain{ 1 $(\Rightarrow)$ This direction is obvious as $k$ is Hausdorff}
+	\Explain{ 2 $(\Leftarrow)$ Now assume $\ker f$ is closed}
+	\Explain{ 2.1 If $f = 0$ then continuity is trivial}
+	\Explain{2.2 So assume there is $x$ such that $f(x) \neq 0$}
+	\Explain{ 2.2.1  Without loss of generality assume $f(x) = 1$}
+	\Explain{ 2.2.2 Then there is some balanced open $U$
+		such that $U_\gamma +  x \cap \ker f = \emptyset $}
+	\Explain{ 2.2.3 But this means that $\forall u \in U \. |f(u)| < 1$}
+	\Explain{ 2.2.4 This means that $\Disc(|f|) \in \N_V(0)$}
+	\Explain{ 2.3 So $f$ is continuous}
+	\EndProof
+	\\
+	\Theorem{ContinuousByRealPart}
+	{
+		\forall V \in \TVS{\Complex} \.
+		\forall f \in V^* \.
+		f \in V'
+		\iff
+		\Re f \in C(V)
+	}
+	\Explain{ 1 write $f(v) = \Re f(v) - \i \Re f(\i v)$  }
+	\EndProof
+	\\
+	\Theorem{ContinuousFunctionalIsOpen}
+	{
+		\forall V \in \TVS{k} \.
+		\forall f \in V' \.
+		f \neq 0
+		\Imply
+		\Open(V,k,f)
+	}
+	\Explain{ 1 As $f \neq 0$ this musbe the case that $f$ is surjective}
+	\Explain{ 2 So $f$ is open as it linear, continuous and surjective}
+	\EndProof
+}
+\newpage
+\Page{
+	\Theorem{ContinuityOfMultilinearMap}
+	{
+		\NewLine ::		
+		\forall n \in \Nat \.
+		\forall V : \{1,\ldots,n\} \to \LCS{k} \.
+		\forall W \in \LCS{k} \.
+		\forall A : \bigotimes^n_{i=1} V_i \to W \. \NewLine \.
+		A \in \TVS{k}\left(  \bigotimes^n_{i=1} V_i ,  W \right)
+		\iff
+		\forall \nu : \prod_{i \in I} \ssc(V_i) \.
+		\forall \mu \in \ssc(W) \.
+		\exists \lambda \in \Reals_{++} \.
+		A\mu \le \lambda \prod^n_{i=1} \nu_i 
+	}
+	\Explain{
+		This follows from the theory of norms on tensor spaces}
+	\EndProof
+}
+\subsubsection{Spaces of Continuous Functions}
+\Page{
+	\DeclareFunc{compactOpenTopology}
+	{
+		\prod X \in \TOP \. \Top\Big(\TOP(X,k)\Big)
+	}
+	\DefineNamedFunc{compactOpenTopology}{}{\kappa_X}
+	{
+		\T \Big( 
+			\big\{ \Lambda f \in \TOP(X,k) \.  \sup_{x \in K} |f(x)| \big| K \in \K(X) \big\} \Big)		
+	}
+	\\
+	\Theorem{SpaceWithCompactOpenTopology}
+	{
+		\forall X \in \TOP \. V = \Big( \TOP(X,k), \kappa_X \Big) \in \LCHS{k}
+	}
+	\Explain{ 1 Topology on $V$ is generated by seminorms, so $V$ is locally convex}
+	\Explain{ 2 As sets $\{x\}$ are dcompact, 
+		the evaluation seminorm $\epsilon_x : f \mapsto |f(x)|$ is continuous for $V$}
+	\Explain{
+		3 If $f \neq 0$ then there is some $x \in X$ such that $f(x) \neq 0$ 
+	}
+	\Explain{ 4 So $\epsilon_x(f) \neq 0$  and this means that $V$ is Hausdorff}
+	\EndProof	
+	\\
+	\DeclareType{Hemicompact}{?\TOP}
+	\DefineType{X}{Hemicompact}{
+		\exists \C : \TYPE{Countable}\Big( \K(X) \Big) \. \forall K \in \K(X) \. \exists F \in \C \. K \subset F 
+	}
+	\\
+	\Theorem{CompactOpenTopologyMetrization}
+	{
+		\forall X \in \TYPE{T3.5} \.
+		\TYPE{Hemicompact}(X)
+		\iff
+		\TYPE{Metrizable}\Big( \TOP(X,k), \kappa_X \Big)
+	}
+	\Explain{ 1 $(\Rightarrow)$ Assume $X$ is hemicompact}
+	\Explain{ 1.1 Then let $F$ be an enumeration of the set $\C$ from the definition of hemicompact}
+	\Explain{ 1.2 Without loss of generality we may assume that $F$ is increasing}
+	\Explain{ 1.3 Then $\nu_n(f) = \sup_{x \in F_n} |f(x)|$ is an increasing family of seminorms}
+	\Explain{ 1.4 By hemicompactness $\nu_n$ defines $\kappa_X$}
+	\Explain{ 1.5 So the $\kappa_X$ is metrizable}
+	\Explain{ 2 $(\Leftarrow)$ now assume $\kappa_X$ is metrizable}
+	\Explain{ 2.1 Then there is a countable base defined by sup-functionals for some compacts $F_n$}
+	\Explain{ 2.2 Then for any compact $K$ its sup-functional is less then a scalar multiple of
+		a sup-functional of some $F_n$}
+	\Explain{ 2.3 Assune This is the case, but $K \not \subset F_n$ }
+	\Explain{ 2.4 Then there is some $x \in K \setminus F_n$}
+	\Explain{ 2.5 Also there is some $f \in \TOP(X,k)$ such that $f(x) = 1$ and $f(F_n)=\{0\}$}
+	\Explain{ 2.5.1 This is true as $X$ is Tychonoff and Hausdorff}
+	\Explain{ 2.6 Then $\sup_{x \in K} |f(x)| \ge \sup_{x \in \F_n} |f(x)|$ which is a contradiction}
+	\Explain{ 2.7 So $X$ must be hemicompact}
+	\EndProof 
+	\\
+	\DeclareType{KRSpace}{\TOP \to ?\TOP}
+	\DefineType{X}{KRSpace}
+	{
+		\Lambda Y  \in \TOP		
+		\forall f : X \to Y \. 
+		\Big( \forall K \in \K(X) \. f_{|K} \in \TOP(K,Y) \Big)
+		\Imply
+		f \in \TOP(X,Y)
+	}
+}\Page{
+	\Theorem{CompactOpenTopologyCompleteness}
+	{
+		\forall X : \TYPE{T3.5} \.
+		\TYPE{KRSpace}(k,X)
+		\iff
+		\Complete\Big( \TOP(X,k),\kappa_X \Big)
+	}
+	\Explain{ 1 $(\Rightarrow)$: Assume $X$ is a KRSpaces for $k$}
+	\Explain{ 1.1 Take $f$ to be a Cauchy sequence for $\kappa_X$}
+	\Explain{ 1.2 Then $f(x)$ is also Cauchy as $\{x\}$ is compact for any $x \in X$}
+	\Explain{ 1.3 Thus, as $k$ is complete $F = \lim_{n \to \infty} f_{n}$ exists}
+	\Explain{ 1.4 On every compact $K$ the convergence of $f_{|K}$ towards $F_{|K}$ is uniform
+		so $F_{|K}$ is continuous}
+	\Explain{ 1.5 But as $X$ is KRSpace the whole $F$ must be continuous}
+	\Explain{ 1.6 So $\kappa_X$ is complete}
+	\Explain{ 2 $(\Leftarrow)$: Now assume that $\kappa_X$ is complete}
+	\Explain{ 2.1 Take some $f: X \to k$ such that $f_{|K}$ is continuous for any comapct $K$}
+	\Explain{ 2.2 Then by Tietze extension theorem  $f_{|K}$ can extended
+		to a continuous function $F_K : \beta X \to k$}
+	\Explain{ 2.3 By properties of Tietze-Urysohn extension we may assume that $\sup F_K = \sup f_{|K}$}
+	\Explain{ 2.4 Define $g_K = F_{K|X}$}
+	\Explain{ 2.5 The set $\K(X)$ is directed}
+	\Explain{ 2.6 Then $g_K$ is a Cauchy net}
+	\Explain{ 2.6.1 Take $K$ be a compact in $X$ and let $\nu_K(f) = \sup_{x \in K} |f|$}
+	\Explain{ 2.6.2 Then 
+		$\nu_K(g_L - g_H) = 0$ for any $L,H \in \K(X)$ such that $K \subset L$ and $K \subset H$ }
+	\Explain{ 
+		2.6.3 So $g_L - g_H \in \Cell(\nu_K)$ in this case}
+	\Explain{
+		2.7 Thus there exists a continuous limit $G$ for $\kappa_X$}
+	\Explain{
+		2.8 But $G = f$
+	}
+	\Explain{ 2.8.1
+		If $x \in X$ then $g_K(x) = f(x)$ for any $K \in \K(X)$ such that $x \in K$}
+	\Explain{ 2.9
+		Thus $f$ is continuous}
+	\EndProof
+	\\
+	\DeclareFunc{pointwiseConvergenceTopology}
+	{
+		\prod X \in \TOP \. \Top\Big(\TOP(X,k)\Big)
+	}
+	\DefineNamedFunc{pointwiseConvergenceTopology}{}{\pi_X}
+	{
+		\T \Big( 
+			\big\{ \Lambda f \in \TOP(X,k) \.  |f(x)| \big| x \in X \big\} \Big)		
+	}
+	\\
+	\Theorem{SpaceWithPointeisConvergenceTopology}
+	{
+		\forall X \in \TOP \. V = \Big( \TOP(X,k), \kappa_X \Big) \in \LCHS{k}
+	}
+	\Explain{ 1 Topology on $V$ is generated by seminorms, so $V$ is locally convex}
+	\Explain{
+		2 If $f \neq 0$ then there is some $x \in X$ such that $f(x) \neq 0$ 
+	}
+	\Explain{ 3 So $\epsilon_x(f) \neq 0$  and this means that $V$ is Hausdorff}
+	\EndProof	
+	\\
+	\Theorem{PointwiseConvergence}
+	{
+		\NewLine ::		
+		\forall X \in \TOP \.
+		\forall (\Delta,f) : \TYPE{Net}\Big( \TOP(X,k) \Big) \.
+		\forall g \in \TOP(X,k) \.
+		\lim_{\delta \in \Delta} f_\delta =_{\pi_X} g
+		\iff
+		\forall x \in X \.
+		\lim_{\delta \in \Delta} f_\delta(x) = g(x)
+ 	}
+ 	\NoProof
+}\Page{
+	\DeclareType{Equicontinuous}
+	{
+		\prod X \in \TOP \.
+		\prod G \in \TGRP \.
+		??\TOP(X,G)
+	}
+	\DefineType{\F}{Equicontinuous}
+	{
+		\forall x \in X \.
+		\forall V \in \U_G(e) \.
+		\exists U \in \U_X(x) \.
+		\forall f \in \F \.
+		f(U) \subset f(x) V
+	}
+	\\
+	\DeclareType{Equibounded}
+	{
+		\prod X \in \TOP \.
+		??\TOP(X,k)
+	}
+	\DefineType{\F}{Equibounded}
+	{
+		\forall x \in X \.
+		\exists \beta \in \Reals_{++} \.
+		\forall f \in \F \.
+		|f(x)| \le \beta
+	}
+	\\
+	\Theorem{EquicontinuousTopologyEquality}
+	{
+		\forall X \in \TOP \.
+		\forall \F : \TYPE{Equicontinuous}(X,k) \.
+		(\F,\kappa_X) = (\F,\pi_X) 
+	}
+	\Explain{1 Firstly, $\kappa_X \subset $}
+	\Explain{1.1 Take $g \in \F$}
+	\ExplainFurther{1.2 Assume $U \in \kappa_X(g)$ 
+		has form $U = \Big\{ f \in \TOP(X,k) : \sup_{x \in K} |f(x)-g(x)| < \alpha \Big\}$}
+	\Explain{ for some compact $K$ and $\alpha \in \Reals_{++}$} 
+	\Explain{1.3 Then for each $x \in K$ there is some $W_x \in \U_X(x)$ 
+		such that $f(W_x) \subset f(x) + \Cell_k(0,\alpha/4)$ for each $f \in \F$}
+	\ExplainFurther{1.4 As $K$ is compact and $W$ is an open cover we can select
+		a finite family of points $(x_{i})_{i=1}^n$}
+	\Explain{  such that 
+		$K \subset \bigcup^{n}_{i=1} W_{x_i}$}
+	\Explain{ 1.5 Let $\epsilon_y$ stand for evaluation seminorm 
+		$\epsilon_y(f) =  |f(y)|$}
+	\Explain{ 1.6  Then $V =\bigcap^n_{i=1} \frac{\alpha}{2} \Cell(\epsilon_{x_i}) + g \in \pi_X$
+		and $V \subset U$ in $\F$}
+	\Explain{ 1.6.1 Take some $f \in V \cap \F$ and some $y \in K $}
+	\Explain{ 1.6.2 Then there is some $i \in \{1,\ldots,n\}$ such that $y \in W_{x_i}$}
+	\Explain{ 1.6.3       
+		$
+			|f(y) - g(y)| \le  
+			|f(y) -  f(x_i)|  +
+			|f(x_i) - g(x_i)| +
+			|g(x_i) - g(y)| < \alpha
+ 		$
+	}
+	\Explain{ 1.6.4 So $\sup_{K} |f - g| < \alpha$}
+	\Explain{ 1.7 This means that $U$ is open in $\pi_X$}
+	\Explain{ 2 This is obvious from definition that $\pi_X \subset \kappa_X$ 
+		and $\pi_X = \kappa_X$}
+	\EndProof
+	\\
+	\Theorem{PointwiseClosureEquicontinuous}
+	{
+		\NewLine ::		
+		\forall X \in \TOP \.
+		\forall \F : \TYPE{Equicontinuous}(X,k) \.
+		\TYPE{Equicontinuous}\Big( X, k ,\cl_{\pi_X} \F\Big)  
+	}
+	\Explain{ 1 Take $x \in X$ and $V \in \U_k(0)$}
+	\Explain{ 2 Then by equicontinuity there is $U \in \U_X(x)$
+		such that $f(U) \subset f(x) + V$ for any $f \in \F$}
+	\Explain{ 3 Take $g$ to be a limit point in $\F$}
+	\Explain{ 4 Then there is sequence $f$ such that $\lim_{n \to \infty} f_n = g$ pointwise}
+	\Explain{ 5 Take some $u \in U$}
+	\Explain{ 6 Then $g(u) = \lim_{n \to \infty} f_n(u)$}
+	\Explain{ 7 Then 
+		$|g(u) - g(x)| \le |g(u) - f_n(u)| + |f_n(u)  - f_n(x) | + |f_n(x) - g(x)| \le 3\varepsilon$
+		for suitably choosen $n$}
+	\Explain{ 8 So $\cl_{\pi_X} \F$ is equicontinuous}
+	\EndProof
+}\Page{
+	\Theorem{ArzeloAscoli1}
+	{
+		\NewLine ::		
+		\forall X \in \TOP \.
+		\forall \F  : \TYPE{Equicontinuous}(X,k) \And \TYPE{Equibounded}(X) 
+		 \And \Closed\Big(\TOP(X,k),\kappa_X,\F\Big)		
+		\. \NewLine \.
+		\Compacts\Big( \TOP(X,k), \pi_X, \F\Big)
+	}
+	\Explain{ 1 Eeach $\F(x)$ is a compact subset of $k$ by Heine-Borel Lemma}
+	\Explain{ 2 So by Tychonoff theorem $\prod \F(x)$ is compact in the product topology}
+	\Explain{ 3 But $\F$ is a closed subset of $\prod \F(x)$ in $\pi_X$, 
+		so $\F$ is also compact in $\pi_X$}
+	\Explain{ 4 As $\F$ is equicontinuous $\pi_X$ is equal to $\kappa_X$ on $\F$,
+			so $\F$ is also compact in $\kappa_X$}
+	\EndProof
+	\\
+	\Theorem{ArzeloAscoli2}
+	{
+		\NewLine ::		
+		\forall X  : \TYPE{LocallyCompact} \.
+		\forall \F  : \Compacts\Big( \TOP(X,k), \kappa_X, \F\Big) \. \NewLine \.
+		 \TYPE{Equicontinuous}(X,k,\F) \And \TYPE{Equibounded}(X,\F) 
+		 \And \Closed\Big(\TOP(X,k),\pi_X,\F\Big)
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Constructions}
+\Page{
+	\Theorem{SubspaceQuotientSeminorm}
+	{
+		\NewLine ::		
+		\forall V \in \LCS{k} \.
+		\forall U \subvec{k} V  \.
+		\T\left( \frac{V}{U} \right) = 
+		\T\left( \left\{   \Lambda [v] \in \frac{V}{U} \.  \inf_{u \in U} \nu(v + u) \bigg| \nu \in \ssc(V)
+		\right\} \right)
+	}
+	\Explain{ 1 Let $\nu \in \ssc(V)$}
+	\Explain{ 2 define $\mu = \Lambda [v] \in \frac{V}{U} \.  \inf_{u \in U} \nu(v + u)$}
+	\Explain{ 3 Then $\mu$ is a seminorm}
+	\Explain{ 3.1 $[v] = 0$ imply $v \in U$ }
+	\Explain{ 3.2 So $\mu=0$ as $\nu(w) \ge 0$ and $\nu=0$}
+	\Explain{ 3.3 Take $[v] \in \frac{V}{U}$ and $\alpha \in k$}
+	\Explain{ 3.4 Then $\mu[\alpha v] = 
+		\inf_{u \in U} \nu(\alpha v + u) = \inf_{u \in U} \nu(\alpha v  + \alpha u ) =
+		|\alpha|   \inf_{u \in U} \nu( v + u) = |\alpha|\mu[v]
+		$}
+	\Explain{ 3.5 Now take $v,w \in V$} 
+	\ExplainFurther{ 3.6 Then    
+			$			
+			\mu[ v +w]	=
+			\inf_{u \in U} \nu(v + w + u) =
+			\inf_{u,o \in U} \nu(v + w + u + o) \le 
+			\inf_{u,o \in U}  \nu(v + u) + \nu(w + o) =$}
+	\Explain{
+			$\quad  = \inf_{u \in U} \nu(v + u) + \inf_{o \in U} \nu(v + o) 
+			\mu[v] + \mu[w]
+			$}
+	\Explain{ 4 Then $\Cell(\mu) = \pi_U \Cell(\nu)$}
+	\ExplainFurther{ 5 As open cells as above form a base of topology on $V$,}
+	\Explain{ $\quad$ and quotien topology is an image topology, the result follows}
+	\EndProof
+	\\
+	\Theorem{LocallyConvexQuotient}
+	{
+		\forall V \in \LCS{k} \.
+		\forall U \subvec{k} V \.
+		\forall \frac{V}{U} \in \LCS{k}	
+	}
+	\Explain{
+		1 This is True as topology on $\frac{V}{U}$	is generated by seminorms}
+	\EndProof
+	\\
+	\DeclareFunc{kernelOfSeminorm}
+	{
+		\prod_{V \in \VS{k}} 
+		\SMN(V) \to \TYPE{VectorSubspace}(V)
+	}
+	\DefineNamedFunc{kernelOfSeminorm}{\nu}{\ker \nu}{\nu^{-1}\{0\}}
+	\\
+	\Theorem{SeminormedCompletion}
+	{
+		\forall V : \TYPE{SeminormedSpace}(k) \.
+		\exists (\hat V,\iota) : \TYPE{TVSCompletion}(V) \.
+		\SMS(k,\hat V) 
+	}
+	\Explain{ 1 Take $[v] \in \hat V$}
+	\Explain{ 2 Then $[v]$ can associated with Cauchy sequence  $v$}
+	\Explain{ 3 Define $\nu_{\hat V}[v] = \lim_{n \to \infty} \nu_V(v_n)$ }
+	\Explain{ 3.1 As $\nu_V$ is uniformly continuous the $\nu_V(v_n)$ must be again Cauchy, 
+		and hence convergent as $k$ is complete}
+	\Explain{ 3.2 Use completion metric argument to see that $\nu_{\hat V} is Uniquely determined$}
+	\Explain{ 3.2.1 Assume $x$ an $y$ are both Cauchy sequences for $[v]$}
+	\Explain{ 3.2.2 Then 
+		$\lim_{n \to \infty} |\nu_V(x_n) - \nu_V(y_n)|   \le 
+		 \lim_{n \to \infty} \nu_V(x_n - y_n)  =
+		 \lim_{n \to \infty} \rho_V(x_n,y_n) = 0   		
+		$}
+	\EndProof
+}\Page{
+	\Theorem{SeminormedSpaceProductEmbedding}
+	{
+		\forall V \in \LCS{k} \.
+		\exists I \in \SET \.
+		\exists W : I \to \TYPE{SeminormedSpace} \. \NewLine \.
+		\exists U \subvec{k} \prod_{i \in I} W_i \.
+		V \cong_{\TVS{k}} W
+	}
+	\Explain{ 1 For $\nu \in \ssc(V)$ define $W = (V,\nu)$}
+	\Explain{ 2 Then the mapping $x \mapsto (x)_{\nu \in \ssc(V)}$ is an isomorphism}
+	\EndProof
+	\\
+	\Theorem{BanachSpaceProductEmbedding}
+	{
+		\forall V \in \LCHS{k}\.
+		\exists I \in \SET \.
+		\exists W : I \to \BAN(k) \. \NewLine \.
+		\exists U \subvec{k} \prod_{i \in I} W_i \.
+		V \cong_{\TVS{k}} W
+	}
+	\Explain{ 1 For $\nu \in \ssc(V)$ define $W = \widehat{\left(\frac{V}{\ker \nu}\right)}$}
+	\Explain{ 2 Then each $W_\nu$ is an Banach space}
+	\Explain{ 3 Then the mapping $\phi:x \mapsto ([x]_{\ker \nu})_{\nu \in \ssc(V)}$ is an isomorphism}
+	\Explain{ 3.1 $\phi$ is one-to-one as $V$ is hausdorff}
+	\Explain{ 3.1.1 For any $v \in V$ such that $v \neq 0 $
+		exists $\nu \in \ssc(V)$ such that $\nu(v) \neq 0$}
+	\Explain{ 3.1.2 So $[v]_{\ker \nu} \neq 0$}	
+	\EndProof
+	\\
+	\Theorem{LCSCompletion}{
+			\forall V \in \LCS{k} \.
+			\exists (\hat V,\iota) : \TYPE{TVSCompletion}(V) \.
+			\hat V \in \LCS{k}
+	}
+	\Explain{ 1 Construct product emedding $\phi : V \hookrightarrow \prod_{\nu \in \ssc(V)} W_\nu$ as in the previous theorem}
+	\Explain{ 3 This embedding can be extended to the embedding into a complete 
+		vecor space $\prod_{\nu \in \ssc(V)} \hat W_\nu$}
+	\Explain{ 3.1 The product of complete spaces is complete}
+	\Explain{ 4 Then $\cl_{\hat W} \phi(V)$ is a closed subset of the complete space}
+	\Explain{ 5 So $\hat V = \cl_{\hat W} \phi(V)$ is the sought completion}
+	\EndProof
+	\\
+	\Theorem{LCHSCompletion}{
+			\forall V \in \LCHS{k} \.
+			\exists (\hat V,\iota) : \TYPE{TVSCompletion}(V) \.
+			\hat V \in \LCHS{k}
+	}
+	\Explain{ 1 Same argument as above}
+	\EndProof
+}
+\newpage
+\subsubsection{Non-Archimedean Spaces}
+\Page{
+	& k : \TYPE{UltravaluedField}; \\
+	\\
+	\DeclareType{Ultraseminorm}
+	{
+		\prod_{V \in \VS{k} }
+		?\SMN(V)
+	}
+	\DefineType{\nu}{Ultraseminorm}
+	{
+		\forall v,w \in V \. \nu(v + w) \le \max\Big( \nu(v),\nu(w)\Big)	
+	}
+	\\
+	\Theorem{UltraseminormMaximumPrinciple}
+	{
+		\NewLine ::		
+		\forall V \in \VS{k} \.		
+		\forall v,w \in V \. 
+		\forall \nu : \TYPE{Ultraseminorm}(V) \.
+		\nu(v) < \nu(w) \Imply  \nu(v+w) = \nu(w) 
+	}
+	\Explain{ 1
+		$\nu(w + v) \le \max\Big(\nu(w),\nu(v)\Big) = \nu(w)$
+	}   
+	\Explain{ 2
+		$ \nu(w) = \nu\Big(v  - (w + v) \Big) \le \max\Big( \nu(v), \nu(w+v) \Big) = \nu(w + v)$}
+	\Explain{ 2.1
+		This must be the case as $\nu(v) < \nu(w)$}
+	\Explain{ 3
+		$\nu(w) = \nu(w + v)$	
+	}
+	\EndProof
+	\\
+	\Theorem{Ultradisc}
+	{
+		\NewLine ::
+		\forall V \in \VS{k} \.
+		\forall \nu : \TYPE{Ultraseminorm}(V) \.
+		\AKC \And \TYPE{Absorbent} \Big(V,\Cell(\nu)\Big)
+	}
+	\Explain{1 Assume $v,w \in \Cell(\nu)$ and $\alpha,\beta \in \Disc_k(0,1)$}
+	\Explain{2 Then 
+		$\nu(\alpha v + \beta w) \le |\alpha|\nu(v) + |\beta|\nu(w) < 1$	
+	 }
+	\Explain{3 So $\Cell(\nu)$ is K-convex}
+	\Explain{4 Take $v \in V$ such that $\nu(v) \neq 0$}
+	\Explain{5 Then $\alpha v \in \Cell(\nu)$ for any $\alpha \in k$ such that $|\alpha| < \nu^{-1}(v) $}
+	\Explain{6 So $\Cell(\nu)$ is absorbent}
+	\EndProof
+	\\
+	\DeclareFunc{ultragauge}
+	{
+		\prod_{ V \in \VS{k}}
+		\AKC \And \TYPE{Absorbent}(V) \to \TYPE{Ultraseminorm}(V) 
+	}
+	\DefineNamedFunc{ultragauge}{D}{\upsilon(\bullet| D)}
+	{
+		\lambda v \in V \.  \inf \Big\{ |\alpha| \Big|\alpha \in k : v \in \alpha D  \Big\}
+	}
+	\Explain{ 1 It is obvious that the ultragauge is a seminorm}
+	\Explain{ 2 Now take $v,w \in V$}
+	\Explain{ 3  Then as $D$ is K-convex
+		$\upsilon(v + w|D) \le \max\Big( \upsilon(v |D),\upsilon(w|D) \Big) $}
+	\Explain{ 3.1 Take a sequence $\alpha,\beta : \Nat \to k_*$
+		such that $\alpha_n v \in D, \beta_n w \in D, \lim_{n \to \infty} |\alpha_n|^{-1} = \upsilon(v|D),
+		\lim_{n\to\infty}|\beta_n|^{-1}=\upsilon(w|D)$}
+	\Explain{ 3.2 Define $\gamma_n = {\arg\max}_{\tau \in \{\alpha_n,\beta_n\}} |\tau$  }
+	\Explain{ 3.3 Then $\gamma_n(v + w) \in D$ as $D$ is K-Convex}
+	\Explain{ 3.4 Then $\upsilon(v + w | D) \le |\gamma_n| \le \max\Big( |\alpha_n|,|\beta_n| \Big)$  }
+	\Explain{ 3.5 Taking limits gives 
+		$\upsilon(v + w | D) \le \max\Big(\upsilon(v|D) ,\upsilon(w|D) \Big)$}
+	\EndProof
+}\Page{
+	\Theorem{UltragaugeBound}
+	{
+		\NewLine ::		
+		\forall V \in \VS{k} \.
+		\forall D : \AKC \And \TYPE{Absorbent}(V) \.
+		\Cell\Big(\upsilon(\bullet|D)\Big) \subset D \subset \Disc\Big(\upsilon(\bullet|D)\Big)
+	}
+	\Explain{ Pretty obvious}
+	\EndProof
+	\\
+	\Theorem{UltragaugeContinuity}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \.
+		\forall D : \AKC \And \TYPE{Absorbent}(V) \.
+		D \in \N_V \iff
+		\upsilon(\bullet|D) \in C(V)
+	}
+	\Explain{ 1 $(\Rightarrow)$ Assume $D$ has non-empty interior} 
+	\Explain{ 1.1 By previous result this implies that $D$ is open}
+	\Explain{ 1.2 Then $\upsilon^{-1}\Big([0,\rho),D\Big)= \bigcup_{\alpha \in \Disc(0,\rho)} \alpha D$}
+	\Explain{ 1.3 But $\alpha D$ is also open as multiplication by $\alpha$ is a homeomorphism}
+	\Explain{ 1.4 So the ultraguage must be continuous}
+	\Explain{ 2 $(\Leftarrow)$ Assume that ultragauge is continuous}
+	\Explain{ 2.1 Then $\upsilon^{-1}\Big([0,\rho),D\Big) \subset D$}   
+	\Explain{ 2.2 So $D$ has non-empty interior}	
+	\EndProof
+	\\
+	\DeclareFunc{topologyOfUltraseminorms}
+	{
+		\prod_{V \in \VS{k}} ?\TYPE{Ultraseminorm}(V) \to \Vect\Top(V)
+	}
+	\DefineNamedFunc{topologyOfUltraseminorms}{\Upsilon}{\T(\Upsilon)}
+	{
+		\W_V(\Upsilon,\Reals,\id)
+	}
+	\\
+	\Theorem{UltraseminormsDefineLocallyKConvexTopology}
+	{
+		\NewLine ::		
+		\forall V \in \VS{k} \.
+		\forall \Upsilon : ?\TYPE{Ultraseminorm}(V)  \.
+		\LKConv(k,V,\T(\Upsilon))
+	}
+	\Explain{1 Take $\upsilon \in \Upsilon$}
+	\Explain{2 Then $\Cell(\upsilon)$ is absolutely K-convex}
+	\Explain{2.1 See ultradisc theorem}
+	\EndProof	
+	\\
+	\Theorem{LocallyKConvexTopologyIsGeneratedByUltraseminorms}
+	{
+		\NewLine ::		
+		\forall V : \LKConv(k) \.
+		\exists \Upsilon : ?\TYPE{Ultraseminorm}(V) \.
+		\T_V = \T(\Upsilon)
+	}
+	\Explain{ Take ultragauges for the K-discs generating the locally K-convex topology}
+	\EndProof	
+	\\
+	\DeclareFunc{definingUltraseminorms}
+	{
+		\prod V : \LKConv(k) \.
+		?\TYPE{Ultraseminorm}(V)
+	}
+	\DefineNamedFunc{definingUltraseminorms}{V}{\suc}
+	{
+		C(V) \cap \TYPE{Ultraseminorm}(V)
+	}
+}\Page{
+	\Theorem{Ultrasemimetrization}
+	{
+		\NewLine ::		
+		\forall V \in \LKConv(k) \.
+		\TYPE{Ultrasemimetrizable}(V)
+		\iff \NewLine \iff
+		\exists : \upsilon : \Nat \uparrow \TYPE{Ultraseminorm}(V) \.
+		\T_V = \T(\im \upsilon)
+	}
+	\Explain{ 1 This is simmilar to normal semimetrization theorem }
+	\Explain{ 2 Define an F-seminorm 
+		$\mu(v) = \sum^\infty_{n=1} \frac{1}{2^n} \frac{\upsilon_n(v)}{1 + \upsilon_n(v)}$}
+	\Explain{ 3 The only difference is in the proving the ulrametric property}
+	\Explain{ 3.1 Take some $v,w \in V$}
+	\Explain{ 3.2 Then $\upsilon_n(v + w) \le \max\Big(\upsilon_n(v),\upsilon_n(w)\Big)$}
+	\Explain{ 3.3 But as th function $\frac{x}{x + 1}$ is increasing   
+		$ \frac{\upsilon_n(v + w)}{1 + \upsilon_n(v + w)} \le 
+			\max\left(\frac{\upsilon_n(w)}{1 + \upsilon_n(v)},\frac{\upsilon_n(w)}{1 + \upsilon_n(w)}  
+			\right)$}
+	\Explain{ 4 Thus $\mu(v + w) \le  \max\Big(\mu(v),\mu(w)\Big)$  for any $v,w \in V$}
+	\Explain{ 5 So $\mu$ defines an ultrasemimetric}
+	\EndProof
+	\\
+	\DeclareType{\LCCompact}
+	{
+		?\TVS{k}
+	}
+	\DefineType{V}{\LCCompact}{
+	\exists \F : \Filterbase(\N_0(V)) \.
+	\forall F \in \F \. \CCompact \And \AKC(V,F)}
+	\\
+	\Theorem{LocallyCCompactIsFinDim}
+	{
+		\forall V : \LCCompact(k) \.
+		\LCCompact(k)
+		\And \dim  V < \infty 
+	}
+	\NoProof
+	\\
+	\Theorem{LocallyCCompactIsCCompact}
+	{
+		\forall V : \LCCompact \And \LKConv(k) \.
+		 \CCompact(V)
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Towards Bornology}
 \subsection{Hahn-Banach Theory}
-\subsection{Duality and Weak Notions}
-\subsection{ Vector-Valued Hahn-Banach Theorems}
-\subsection{Barreled Spaces}
-\subsection{Bornological Spaces}
-\subsection{Closed Graph Theory}
-\subsection{Reflexivity}
-\subsection{Norm Convexity}
+\subsection{Barelled and Bornological Spaces}
+\subsection{Towards Approximation Theory}
 \section{Spaces of Distributions}
+\newpage
 \section{Ordered Topological Vector Spaces}
+\subsection{Reisz Spaces and Banach Lattices}
+\subsubsection{Order Unit Norm}
+\Page{
+	\Theorem{OrderUnitDefinesASublinear}
+	{
+		\NewLine ::		
+		\forall V : \OVS(\Reals) \. 
+		\forall u : \OU(V) \.
+		\TYPE{Sublinear}(V, \Lambda v \in V \. \inf \{ \lambda \in \Reals_{++} : v \le \lambda u \} )
+	}
+	\Explain{ 1 Write $\omega(v) = \inf \{ \lambda \in \Reals_{++} : v \le \lambda u \}$}
+	\Explain{ 2 Obviously $\omega$ is positively homogeneous}
+	\Explain{ 3 Now take $v,w \in V$}
+	\Explain{ 3.1 Define $\alpha = \omega(v) + \omega(w)$}
+	\Explain{ 3.2 Then $ v + w \le \Big(\omega(v) + \omega(w)\Big)u = \alpha u$}
+	\Explain{ 3.3 So $\omega(v + w) \le \alpha = \omega(v) + \omega(w)$ }
+	\EndProof
+	\\
+	\DeclareFunc{orderUnitFunctional}
+	{
+		\prod V : \OVS(\Reals) \. 
+		\OU(V) \to \TYPE{Sublinear}(V)
+	}
+	\DefineNamedFunc{orderUnitFunctional}{u}{\omega_u}
+	{\inf \{ \lambda \in \Reals_{++} : v \le \lambda u \}}
+	\\
+	\DeclareFunc{orderUnitSeminorm}
+	{
+		\prod V : \AVS(\Reals) \. 
+		\OU(V) \to \SMN(V)
+	}
+	\DefineNamedFunc{orderUnitFunctional}{u}{\nu_u}
+	{\Lambda v \in V \. \max\Big(\omega_u(v),\omega_u(-v)\Big)}
+	\\
+	\Theorem{UnitDiscIsAnInterval}
+	{
+		\forall V : \AVS(\Reals) \.
+		\forall u : \OU(V) \.
+		\Disc(\nu_u) = [-u,u] 
+	}
+	\Explain{1 Obvious}
+	\EndProof
+}
+\newpage
+\subsubsection{Topological Vector Lattices}
+\Page{
+	\DeclareType{TopologicalVectorLattice}
+	{
+		? \TVS{\Reals} \And \RS
+	}
+	\DefineType{V}{TopologicalVectorLattice}
+	{
+		\Closed(V,\C_V) \And \NewLine \And 
+		\exists \B : \NbhdBase(V,0) \.
+		\forall B \in \B \.
+		\TYPE{OrderConvex}(V,B) 
+	}
+	\\
+	\DeclareType{BanachLattice}
+	{
+		? \NS \And \RS
+	}
+	\DefineType{V}{BanachLattice}
+	{
+		\forall v,w \in V \. 
+		|v| \le |w| \Imply \|v\| \le \|w\|  
+	}
+	\\
+	\DeclareType{MSpace}
+	{
+		? \NS \And \RS
+	}
+	\DefineType{V}{MSpace}
+	{
+		\forall v,w \in V_+ \. 
+		\| v \vee w \| = \|v\| \vee \|w\|
+	}
+	\\
+	\DeclareType{LSpace}
+	{
+		? \NS \And \RS
+	}
+	\DefineType{V}{LSpace}
+	{
+		\forall v,w \in V_+ \. 
+		\| v + w \| = \|v\| + \|w\|
+	}
+}
+\newpage
+\subsubsection{Lattice of Continuous Functions}
+\Page{
+	\Theorem{ExtremallyDisconnected}
+	{ 
+		\NewLine ::		
+		\forall X \in \TOP \.
+		\ED(X) \iff 
+		\forall U,V \in \T(X) \.
+		UV = \emptyset 
+		\Imply
+		\cl_X U \cl_X V = \emptyset 
+	}
+	\\
+	\Theorem{OrderCompletenessOfContinuousFunctions}
+	{
+		\NewLine ::		
+		\forall X \in \ED \. 
+		\OComplete\Big( C(X) \Big)
+	}
+	\NoProof
+	\\
+	\Theorem{OrderCompletenessOfContinuousFunctions}
+	{
+		\NewLine ::		
+		\forall X : \TYPE{T3.5} \. 
+		\OComplete\Big( C(X) \Big)
+		\Imply
+		\ED(X)
+	}
+	\NoProof
+}
 \newpage
 \section*{Sources}
 \begin{enumerate}
+\item Shaeffer H.H - Topologival Vector Spaces (1966)
 \item Horvath H. - Topological Vector Spaces and Distributions (1966)
 \item K\"othe G. - Topological Vector Spaces (1969)
-\item Trevis F.  - Topological Vector Spaces, Distributions and Kernels (2010)
-\item Grothendieck - Topological Vector Spaces (1973)
+\item Trevis F.  - Topological Vector Spaces, Distributions and Kernels (1970)
+\item Grothendieck A. - Topological Vector Spaces (1973)
 \item Wilansky A. - Modern Methods in Topological Vector Spaces (1978) 
 \item Rudin W.  - Functional Analysis (1991) 
 \item Fabian M. et al.   - Functional Analysis and infinite-dimensional geometry (2001)
+\item Peter Schneider - Nonarchimedean FUnctional Analysis (2005)
+\item Charalambos D.A. ; Tourky R. - Cones and Duality (2007)
+\item Fremlin T. - Measure Theory 35: Riesz Spaces (2009)
 \item Naricci L. ; Beckenstein E. - Topological Vector Spaces I (2010)
+\item Perez-Garcia C. ; Schikhof W. H. - Locally Convex Spaces over Non-Archimedean Valued Fields (2010)
 \item Богачев В. ; Смолянов О. ; Cоболев В. И. -  Топологические Векторные пространства (2012)
-\item Chernikov A. ; Mennin A. ; -  Combinatorial properties of non-archimedean convex sets  (2021)
+\item Chernikov A. ; Mennin A.  -  Combinatorial properties of non-archimedean convex sets  (2021)
 \end{enumerate}
 \end{document}
