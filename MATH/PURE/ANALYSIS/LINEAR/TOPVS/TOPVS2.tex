@@ -85,6 +85,7 @@
 \newcommand{\Ideal}{\TYPE{Ideal}}
 \newcommand{\du}{\; \triangle \;}
 \newcommand{\Finites}{\TYPE{FiniteSubset}}
+\newcommand{\Countables}{\TYPE{CountableSubset}}
 \renewcommand{\c}{\complement}
 \newcommand{\Cover}{\TYPE{Cover}}
 \newcommand{\Ultrafilter}{\TYPE{Ultrafilter}}
@@ -194,6 +195,7 @@
 \newcommand{\X}{\mathcal{X}}
 %\newcommand{\d}{\mathrm{d}}
 %Metric Topology
+\newcommand{\Bounded}{\TYPE{Bounded}}
 %FUNC
 \DeclareMathOperator{\diam}{diam}
 \newcommand{\Cell}{\mathbb{B}}
@@ -471,12 +473,18 @@
 \newcommand{\CCompact}{\TYPE{CCompact}}
 \newcommand{\Seminorm}{\TYPE{Seminorm}}
 \newcommand{\LCCompact}{\TYPE{LocallyCCompact}}
+\newcommand{\LO}{\TYPE{LocallyBounded}}
+\newcommand{\Homog}{\TYPE{Homogeneous}}
+\newcommand{\Born}{\TYPE{Bornology}}
+\newcommand{\BS}{\TYPE{BoundedStructure}}
+\newcommand{\BB}{\TYPE{BornologyBase}}
 %Cats
 \newcommand{\TVS}[1]{{#1}\hyph\mathsf{TVS}}
 \newcommand{\HTVS}[1]{{#1}\hyph\mathsf{HTVS}}
 \newcommand{\LCS}[1]{{#1}\hyph\mathsf{LCS}}
 \newcommand{\LCHS}[1]{{#1}\hyph\mathsf{LCHS}}
 \newcommand{\SMN}{\mathsf{SMN}}
+\newcommand{\BORN}{\mathsf{BORN}}
 %FUNC
 \DeclareMathOperator{\bal}{\mathrm{bal}}
 \newcommand{\kconv}{K\hyph\mathrm{conv}\;}
@@ -3442,24 +3450,988 @@ b\section{Abstract Topological Vector Spaces}
 	\exists \F : \Filterbase(\N_0(V)) \.
 	\forall F \in \F \. \CCompact \And \AKC(V,F)}
 	\\
-	\Theorem{LocallyCCompactIsFinDim}
+	\DeclareType{Ultranorm}
+	{
+		\prod_{V \in \VS{k}}	 ?\TYPE{Ultraseminorm}(V)
+	}
+	\DefineType{\upsilon}{Ultranorm}
+	{
+		\forall v \in V \. \upsilon(v) = 0 \iff v = 0	
+	}
+	\\
+	\DeclareType{UltranormedSpace}
+	{
+		? \sum_{V \in \TVS{k}} \TYPE{Ultraseminorm}(V)
+	}
+	\DefineType{(V,\upsilon)}{UltranormedSpace}
+	{
+		\T_V = \T\{\upsilon\}	
+	}
+	\\
+	& |\cdot|_k  \neq \Lambda \alpha \in k \. [k \neq 0]  \\
+	\\
+	\Theorem{LocallyCCompactHasLocllyCCompactField}
 	{
 		\forall V : \LCCompact(k) \.
-		\LCCompact(k)
-		\And \dim  V < \infty 
+		\dim V > 0 \Imply
+		\LCCompact(k,k)
 	}
-	\NoProof
+	\Explain{ 1 As $k$ has non-trivial valuation
+		Every one-dimensional subspace of $V$ is
+		isomorphic to  $k$}
+	\Explain{ 2 Let $L$ be such one-dimensional subspace}
+	\Explain{ 3 And let $C$ be a C-compact neighborhood of $0$ in $V$}
+	\Explain{ 4  The $C \cap L$ is C-compact and and reltively open in $L$}
+	\Explain{ 5 So $L$ is  locally compact}
+	\Explain{ 6 And so is $k$ as it is isomorphic to $L$}
+	\EndProof
+}\Page{
+	\Theorem{LocallyCCompactIsFinDim}
+	{
+		\forall V : \TYPE{Ultranormed} \And \LCCompact(k) \. \dim  V < \infty 
+	}
+	\Explain{1 Assume that $\dim V = \infty$}
+	\Explain{2 As $V$ is Locally C-compact there is a C-compact neighborhood
+		$C$ of $0$ in $V$}
+	\Explain{3 Then there is a ball $D \subset C$ if radius $\rho$}
+	\Explain{4 Select a topologically linearly independent seqyence $(e_i)_{i=1}^\infty$
+		such that $\|e_i\| = \rho$}
+	\Explain{5 Define $F_i =  \cl_V \kconv (e_j)_{j=i}^\infty$}
+	\Explain{6 Then $(F_i)^\infty_{i=1}$ is a closed k-convex filterbase on $C$}
+	\Explain{6.1  The K-convex filterbase property is obvious}
+	\Explain{6.2 As all points $e_i,e_j$ are separated, sets $ (e_j)_{j=i}^\infty$ are closed}
+	\Explain{6.3 And k-convex hull of closed sets must be closed}
+	\Explain{7 This mean that $\bigcap^\infty_{i=1} F_i \neq \emptyset $ as $C$ is C-convex} 
+	\Exclaim{8 On the other hand, clearly $\bigcap^\infty_{i=1} F_i = \emptyset$, a contradiction} 
+	\Explain{ 8.1 Assume $v \in \bigcap^\infty_{i=1} F_i = \emptyset$}
+	\Explain{ 8.2 Then $v \in \Span (e_i)^\infty_{i=1}$ by construction}
+	\Explain{ 8.3 But as $v \in F_{i=1}$ it means that its $e_i$ coefficient must be $0$}
+	\Explain{ 8.4 So it must be the case that $v = 0$}
+	\Explain{ 8.5 But $0$ do not belong to any $F_i$}
+	\EndProof
 	\\
 	\Theorem{LocallyCCompactIsCCompact}
 	{
 		\forall V : \LCCompact \And \LKConv(k) \.
 		 \CCompact(V)
 	}
+	\Explain{1 $k$ is C-compact}
+	\Explain{1.1 Let $\F$ be a K-convex Filter on $k$ }
+	\Explain{1.2 Then $\F$ can be structured as a monotonic sequence of balls}
+	\Explain{1.3 If $\F$ there is a ball $D$ such tha all  small enough elements $F \in \F$ 
+		are in $D$}
+	\Explain{1.4 but all closed discs are isomorphic in $k$}
+	\Explain{1.5 Thus $D$ is C-compact}
+	\Explain{1.6 So $\F$ must have an adherence point in $D$}
+	\Explain{1.7 So it also has an adherence point in $k$, and $k$ is C-compact}
+	\Explain{2 Then $V \cong k^n$ as $V$ must be finite-dimensional}
+	\Explain{3 And $k^n$ is C-compact as a product of C-compact sets}
+	\EndProof
+}
+\newpage
+\subsection{Towards Bornology}
+\subsubsection{Bounded Sets}
+\Page{
+	& k : \AVF(\Reals) \Big| \TYPE{UltravaluedField} ; \\
+	\\
+	\DeclareType{\Bounded}
+	{
+		\prod V \in \TVS{k} \.  ??V
+	}
+	\DefineType{B}{\Bounded}
+	{
+		\forall U \in \U_V(0) \. 
+		\exists \lambda \in \Reals \.
+		\forall \alpha \in k \.
+		|\alpha| \ge \lambda 
+		\Imply
+		B \subset \alpha U
+	}
+	\\
+	\Theorem{BoundedByBase}
+	{
+		\NewLine::		
+		\forall V \in \TVS{k} \.
+		\forall B \subset V \.
+		\forall \beta : \TYPE{BalancedBase}\TYPE{Base}(V) \.
+		\TYPE{Bounded}(V)  
+		\iff
+		\forall U \in \B \.
+		\exists \alpha \in k \.
+		\alpha B \subset U
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Theorem{BoundedBySeminirms}
+	{
+		\NewLine::		
+		\forall V \in \LCS{k} \.
+		\forall B \subset V \.
+		\forall \beta : \TYPE{BalancedBase}\TYPE{Base}(V) \.
+		\TYPE{Bounded}(V)  
+		\iff
+		\forall \nu \in \ssc \.
+		\Bounded(B,\nu_{|B})
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Theorem{TotallyBoundedIsBounded}
+	{
+		\forall V \in \TVS{k} \. 
+		\forall B : \TB(V) \.
+		\Bounded(V,B) 
+	}
+	\Explain{ 1 Assume $U \in \U_V(0)$}
+	\Explain{ 2 Then where exists a balanced  and absorbing $W \in \U_V(0)$ 
+		such that  $W + W \subset V$}
+	\Explain{ 
+		3 As $B$ is
+		totally bounded there is a finite subset $F \subset V$ 
+		such that $B \subset W + F$}
+	\Explain{
+		4 As $W$ is absorbing there exists $\alpha\in k$ such that 
+		$F \subset \alpha W$}
+	\Explain{
+		5 Without loss of generality we may assume that
+		$|\alpha| > 1$}
+	\Explain{
+		5 So, as $W$ is balanced $W \subset \alpha W$}
+	\Explain{
+		6 Thus, $B \subset \alpha W + \alpha W = \alpha ( W + W) \subset \alpha U$	
+	}
+	\EndProof
+	\\
+	\Theorem{KolomogorovsBoundednessCriterion}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \.
+		\forall B \subset V \.\
+		\Bounded(V,B)
+		\iff
+		\forall \alpha : \Nat \to k \. 
+		\forall b : \Nat \to B \. \Big(
+		\lim_{n \to \infty}  \alpha_n = 0
+		\Imply
+		\lim_{n \to \infty} \alpha_n b_n = 0 \Big)
+	}
+	\Explain{ 1 $(\Rightarrow)$ This direction is obvious}
+	\Explain{ 2 $(\Leftarrow)$ Assume $B$ is not bounded}
+	\Explain{ 2.1
+		Then there is an $U \in \U_V(0)$ such that for any
+		$\rho \in \Reals_{++}$ there is $\alpha \in k$ such
+		that $|\alpha| \ge \rho$ an $U \not \subset \alpha B$}
+	\Explain{  2.2 
+		So there exists sequences $\alpha$ with 
+		$|\alpha_n| \le \frac{1}{n}$ and $b:\Nat \to B$
+		such that $\alpha_n b_n \not\in U$}
+	\Explain{ 2.3
+		$|\alpha_n| \le \frac{1}{n}$ imply that
+		$\lim_{n \to \infty} \alpha_n = 0$}
+	\Explain{ 2.4
+		On the other hand
+		$ \alpha_n b_n \not\in U$ imply that
+		$\lim_{n \to \infty} \alpha_n bbb_n\neq 0 $}
+	\Explain{ 2.5
+		This conradicts an initial assumption}
+	\EndProof
+}\Page{
+	\Theorem{BoundednesByCountableSubsets}
+	{
+		\forall V \in \TVS{k} \.
+		\forall B \subset V \.
+		\Bounded(V,B)
+		\iff
+		\forall C: \Countables(V,B) \.
+		\Bounded(V,C)
+	}
+	\Explain{ This follows from Kolmogorov's ctiterion}
+	\EndProof
+	\\
+	\Theorem{BoundedMetrizationTHM}
+	{
+		\forall V \in \TVS{k} \.
+		\forall N \in \N_V(0) \.
+		\Bounded(V,N)
+		\Imply
+		\TYPE{Semimetrizable}(V)
+	}
+	\Explain{
+		$\left( \frac{1}{n} N \right)^\infty_{n=1}$ 
+		is a countable base of vector topology for $V$}
+	\EndProof
+	\\
+	\Theorem{BoundedNormizationTHM}
+	{
+		\forall V \in \TVS{k} \.
+		\forall N \in \N_V(0) \.
+		\Bounded \And \TYPE{Disc}(V,N)
+		\Imply
+		\TYPE{Seminormable}(V)
+	}
+	\Explain{
+		Topology may be determined by $\gamma(\bullet|N)$}
+	\EndProof
+}
+\newpage
+\subsubsection{Stability under Operations}
+\Page{
+	\Theorem{SubsetOfBounded}
+	{
+		\forall V \in \TVS{k} \.
+		\forall B : \Bounded(V) \.
+		\forall C \subset B \.
+		\Bounded(V,B)
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Theorem{BoundedUnion}
+	{
+		\forall V \in \TVS{k} \.
+		\forall B,C : \Bounded(V) \.
+		\Bounded(V,B \cap C)
+	}
+	\Explain{ Select max}
+	\EndProof
+	\\
+	\Theorem{BoundedScale}
+	{
+		\forall V \in \TVS{k} \.
+		\forall B : \Bounded(V) \.
+		\forall \alpha \in k \.		
+		\Bounded(V, \alpha B)
+	}
+	\Explain{ Rescale}
+	\EndProof
+	\\
+	\Theorem{BoundedSum}
+	{
+		\forall V \in \TVS{k} \.
+		\forall B,C : \Bounded(V) \.
+		\forall \alpha \in k \.		
+		\Bounded(V, B + C)
+	}
+	\Explain{ Assume $U \in \U_V(0)$}
+	\Explain{ Select $V \in \U_V(0)$ such that $V + V \subset U$}
+	\Explain{ Then there are two $V$-absorbtion factors $\rho$ and $\sigma$ for $B$ and $C$  
+		respectively}
+	\Explain{
+		If $\alpha \in k$ is such that $|\alpha| \ge \max(\rho,\sigma)$, then
+		$  B + C \subset \alpha V + \alpha V = \alpha(V + V) \subset \alpha U$ 
+	}
+	\EndProof
+	\\
+	\Theorem{BoundedQuotient}
+	{
+		\forall V \in \TVS{k} \.
+		\forall W\subvec{k} \.
+		\forall B : \Bounded(V)\.
+		\forall \Bounded\left( \frac{V}{W}, \pi_W(B) \right)
+	}
+	\Explain{ Use the preimage to determine the absorbtion factor}
+	\EndProof
+	\\
+	\Theorem{BoundedProducts}
+	{
+		\forall I \in \SET \.		
+		\forall V : I \to \TVS{k} \.
+		\forall B : \prod_{i \in \I} \Bounded(V_i) \.
+		\Bounded\left(\prod_{i\in I} V_i, \prod_{i \in I} B_i \right)
+	}
+	\Explain{ Assume $U \in \U_{\prod_{i \in I} V_i}(0)$}
+	\Explain{ Then there exists $W \in \prod_{i \in I} \T(V_i)$  
+		such that that $W_i \neq V_i$ only for a finite set of indices $J \subset I$ 
+		and $\prod_{i \in I} W_i \subset U$}
+	\Explain{
+		Then find a $W_i$-absorbtion factor $\rho_i$ for each $i \in J$ 
+	}
+	\Explain{ Then $\prod_{i \in I} B_i \subset \alpha \prod_{i \in I} W_i \subset \alpha U$ 
+		for any $\alpha \in k$ with $|\alpha| \ge \max_{i \in J} \rho_i$}
+	\EndProof
+}\Page{
+	\Theorem{BoundedClosure}
+	{
+		\forall V \in \TVS{k} \.
+		\forall B : \Bounded(V) \.
+		\Bounded(V,\overline B)
+	}
+	\Explain{ $\overline B$ is bounded for the base of closed neighborhoods of unity}
+	\Explain{ Thus,$ \overline B$ is bounded in a general sence}
+	\EndProof	
+	\\
+	\Theorem{BoundedBalancedHull}
+	{
+		\forall V \in \TVS{k} \.
+		\forall B : \Bounded(V) \.
+		\Bounded(V,\bal B)
+	}
+	\Explain{ $\bal B$ is bounded for the base of balanced neighborhoods of unity}
+	\Explain{ Thus,$ \overline B$ is bounded in a general sence}
+	\EndProof	
+	\\
+	\Theorem{BoundedConvexHull}
+	{
+		\forall V \in \LCS{k} \.
+		\forall B : \Bounded(V) \.
+		\Bounded(V,\conv B)
+	}
+	\Explain{ $\conv B$ is bounded for the base of disced neighborhoods of unity}
+	\Explain{ Thus,$ \overline B$ is bounded in a general sence}
+	\EndProof
+	\\
+	\DeclareType{BoundedBase}
+	{
+		\prod_{V \in \TVS{k}} ??\Bounded(V)
+	}
+	\DefineType{\beta}{BoundedBase}
+	{
+		\forall B : \Bounded(V) \. \exists B' \in \beta \. B \subset B'
+	}
+	\\
+	\Theorem{ClosedDiscsAsBoundedBase}
+	{
+		\forall V \in \LCS{k} \.
+		\TYPE{BoundedBase}\Big(V, \Closed \And \TYPE{Disc}(V) \Big)
+	}
+	\Explain{ Assume $B$ is bounded in $V$}
+	\Explain{ Then the disced hull of $B$ is also bounded}
+	\EndProof
+}
+\newpage
+\subsubsection{Locally Bounded Maps}
+\Page{
+	& k : \AVF(\Reals); \\
+	\\
+	\DeclareType{\LO}{\prod_{V,W: \TVS{k}} ?(V \to W)}
+	\DefineType{f}{\LO}
+	{
+		\forall B : \Bounded(V) \. \Bounded\Big(W, f(B) \Big)
+	}
+	\\
+	\DeclareType{Homogeneous}{ \prod_{V,W: \VS{k}} ?(V \to W)}
+	\DefineType{f}{Homogeneous}{
+		\exists \delta \in \Reals_{++} \.
+		\forall v \in V \.
+		\forall \rho \in \Reals_{++} \.
+		f(\rho v) = \rho^\delta f(v)
+	}
+	\\
+	\Theorem{ContunuousHomogenuousIsLocallyBounded}
+	{
+		\NewLine ::		
+		\forall V,W\in \TVS{k} \. 
+		\forall f : \TOP \And \Homog(V,W) \.
+		\LO(V,W,f)
+	}
+	\Explain{Pretty obvious if you use basic properties}
+	\EndProof
+	\\
+	\Theorem{BoundedProductsConverse}
+	{
+		\forall I \in \SET \.		
+		\forall V : I \to \TVS{k} \.
+		\forall B \subset \prod_{i \in \I} V_i \. \NewLine \.
+		\Big(\forall i \in I \. \Bounded(V_i,\pi_i(B)) \Big)
+		\iff
+		\Bounded\left(\prod_{i\in I} V_i, \prod_{i \in I} B_i \right)
+	}
+	\Explain{ 1 ($\Imply$) } 
+	\Explain{ 1.1 As $\pi_i(B)$ is bounde, so is $\prod_{i \in I} \pi_i(B)$}
+	\Explain{ 1.2 Then $B$ is bounded as $B \subset \prod_{i \in I} \pi_i(B)$}
+	\Explain{ 2 ($\Leftarrow$)}
+	\Explain{ 2.1 In product topology each $\pi_i$ is continuous linear and so locally bounded}
+	\EndProof
+	\\
+	\Theorem{MultilinearIsLocallyBounded}
+	{
+		\NewLine::		
+		 \forall n \in \Nat \.  
+		\forall V : \{1,\ldots,n \} \to \TVS{k} \.
+		\forall W \in \TVS{k} \. \NewLine \.
+		\forall T \in \L(V;W) \TOP\left( \prod^n_{i=1} V_i, W\right) \.
+		\LO\left( \prod^n_{i=1} V_i,W,T\right)
+	}
+	\Explain{Multilinear maps are homogeneous of degree $n$}
+	\EndProof
+}\Page{
+	\Theorem{BoundedSetsInWeakTopology}
+	{
+		\forall V \in \VS{k} \.
+		\forall I \in \SET \.
+		\forall W : I \to \TVS{k} \. \NewLine \.
+		\forall T : \prod_{i \in I} \VS{k}(V,W_i) \.
+		\forall  B \subset V \.
+		\Bounded\Big( \big(V,\W(I,W,T)\big),B\Big)
+		\iff
+		\forall i \in I \. \Bounded\Big( W_i, T_i(B) \Big)
+	}
+	\Explain{
+		1 This is simmilar to the case with products}
+	\Explain{
+		2 We may assume that topology is determined by one map
+		$T : V \to \prod_{i \in I} W_i$
+	}
+	\Explain{
+		3 Then $\prod_{i \in I} T_i(B)$ is bounded in $\prod_{i \in I} W_i$
+	}
+	\Explain{ 
+		4 Assume $U$ is a neighborhood in the weak topology
+	}
+	\Explain{ 5 Then it must be a preimage of some open $O \in \prod_{i \in I} W_i$}
+	\Explain{ 6 So find an $O$-absorbing scale $\rho$ for $\prod_{i \in I} T_i(B)$ 
+		and use it as $U$-absorbing scale for $B$}
+	\Explain{ 6.1 Take some $\alpha \in k$ such that $|\alpha| \ge \rho$}	
+	\Explain{ 6.2 Then $T(b) \in \alpha O$ for any $b \in B$  }
+	\Explain{ 6.3 By thaking inverse image 
+		$b \in T^{-1}(\alpha O) = \alpha T^{-1}(O) = \alpha U$}
+	\EndProof
+	\\
+	\Theorem{ContinuityByBoundedImage}
+	{
+		\NewLine::		
+		\forall V,W \in \TVS{k} \.
+		\forall T \in \VS{k}(V,W) \.
+		\forall U \in \U_V(0) \.
+		\Bounded\Big(W, T(U)\Big)
+		\Imply
+		T \in \TVS{k}(V,W)
+	}
+	\Explain{ Assume $O \in \U_W(0)$}
+	\Explain{ Then there exists an $\rho \in \Reals_{++}$ such that $T(U) \subset rO$}
+	\Explain{ But this means that $T(r^{-1}U) \subset O$}
+	\Explain{ Then by topological group theory $T$ is continuous}
+	\EndProof
+	\\
+	\Theorem{LocallyBoundedWithSemimetrizableDomainIsContinuous}
+	{
+		\NewLine ::
+		\forall V,W \in \TVS{k} \.
+		\forall T \in \VS{k} \And \LO(V,W) \.
+		\TYPE{Semimetrizable}(V)
+		\Imply
+		T \in \TVS{k} \. 
+	}
+	\Explain{ 1 Let $U$ be a decreasing countable base of neighborhoods of $0$ in $V$}
+	\Explain{ 2 Assume that $T$ is discontinuous}
+	\Explain{ 2.1 By group topology $T$ must be discontinuous at $0$}
+	\Explain{ 2.2 Then there is a $O \in \U_W(0)$ such that $T^{-1}(O)$
+		is not a neighborhood of $0$ in $V$}
+	\Explain{2.3 So $\frac{1}{n}U_n \not \subset T^{-1}(O)$}
+	\Explain{2.4 It must be possible select a sequence 
+		$u$ such that $u_n \in U_n$ and $Tu_n \not \in O$}
+	\Explain{2.5 As $U$ is a neighborhood baseit follows that 
+		$\lim_{n\to \infty} nu_n = 0$	
+	}
+	\Explain{ 2.6 This means that $\{ nu_n | n \in \Nat \}$ is bounded}
+	\Explain{ 2.6.1 Given $E \in \U_V(0)$ there is only finite amount of numbers
+		$n$ such that $nu_n \not \in E$}
+	\Explain{ 2.6.2 So it is posible to find $E$-absorbtion scales for this finite number  
+		and take max}
+	\Explain{
+		2.7 So $nTu_n$ can be also be viewed as a sequence in a bounded
+		subset of $W$}
+	\Explain{
+		2.8 So there exist an $O$-absorbtion scale $\alpha$ for $n Tu_n$}
+	\Explain{
+		2.9 That is $n Tu_n \in \alpha O$ for all $n \in \Nat$
+	}
+	\Exclaim{
+		2.10 By archemedian property there exists $n \in \Nat$ such that
+			$n \ge \alpha$, so $Tu_n \in O$, a contradiction}
+	\EndProof
+}
+\newpage
+\subsubsection{Liouville's Theorem}
+\Page{
+	\DeclareType{Bounded}
+	{
+		\prod_{X \in \Set} 
+		\prod_{V \in \TVS{k}} 
+		?(X \to V)
+	}
+	\DefineType{f}{Bounded}{\Bounded\Big(V,f(X)\Big)}
+	\\
+	\DeclareType{Analytic}
+	{
+		\prod_{U \in \T(\Complex)} 
+		\prod_{V \in \TVS{\Complex}} 
+		?(X \to V)
+	}
+	\DefineType{f}{Analytic}{
+		\forall u \in U \. \exists v \in V \. 
+		\lim_{z \to u} \frac{f(z) - f(u)}{z - u} = v	
+	}
+	\\
+	\Conclude{\TYPE{Entire}}{\Lambda V \in \TVS{\Complex} \. \TYPE{Analytic}(\Complex,V) }
+	{
+		\TVS{\Complex} \to \Type
+	}
+	\\
+	\Theorem{ContinuousComposition}
+	{
+		\NewLine ::		
+		\forall U \in \T(\Complex) \.
+		\forall V \in \TVS{\Complex} \.
+		\forall v : \TYPE{Analytic}(U,V) \.
+		\forall f \in V' \.
+		\TYPE{Analytic}\Big(U,\Complex, f(v)\Big)
+	}
+	\Explain{Use the continuity of $f$ on the limit, which defines derivative}
+	\EndProof
+	\\
+	\DeclareType{Total}
+	{
+		\prod_{V \in \VS{k}} ??V
+	}
+	\DefineType{A}{Total}{\forall v\in V \. \Big( \forall f \in A \. f(v) = 0\Big) \Imply v = 0}
+	\\
+	\Theorem{LiouvillesTheorem}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{\Complex} \.
+		\forall v : \Bounded(\Complex,V) \And \TYPE{Entire}(V) \.
+		\forall \aleph : \TYPE{Total}(V,V') \.
+		\Type{Constant}(\Complex,V,v)
+	}
+	\Explain{ $f(v)$ is an entire bounded function for every $f \in V'$}
+	\Explain{ So $f(v)$ must be constant by classical Liouville theorem}
+	\Explain{ But this means that 
+		$f\Big( v(\alpha) - v(\beta)\Big) = f\Big(v(\alpha)\Big) - f\Big(f(\beta)\Big) = 0$
+		for every $\alpha,\beta \in \Complex$}
+	\Explain{
+		But as $V'$ is total this means that $v$ is constant}
+	\EndProof
+}
+\newpage
+\subsubsection{p-convexity}
+\Page{
+	\DeclareType{PConvex}
+	{
+		\prod_{V \in \VS{\Reals}} \Reals_{++} \to ??V
+	}
+	\DefineType{A}{PConvex}
+	{
+		\Lambda p \in \Reals_{++} \. 		
+		\forall \alpha,\beta \in \Reals_{++} \.
+		\forall v,w \in A \.
+		\alpha^p + \beta^p = 1
+		\Imply
+		\alpha v + \beta w \in A
+	}	
+	\\
+	\DeclareType{AbsolutelyPConvex}
+	{
+		\prod_{V \in \VS{k}} \Reals_{++} \to ??V
+	}
+	\DefineType{A}{AbsolutelyPConvex}
+	{
+		\Lambda p \in \Reals_{++} \. 		
+		\forall \alpha,\beta \in k \.
+		\forall v,w \in A \.
+		|\alpha|^p + |\beta|^p \le 1
+		\Imply
+		\alpha v + \beta w \in A
+	}
+	\\	
+	\DeclareType{PSeminorm}
+	{
+		\prod_{V \in \VS{k}} \Reals_{++} \to ?\TYPE{Sublinear}(V,\Reals)
+	}
+	\DefineType{\nu}{PSeminorm}
+	{
+		\Lambda p \in \Reals_{++} \. 		
+		\forall \alpha \in k \.
+		\forall v \in A \.
+		\| \alpha v  \| = |\alpha|^p\|v\|
+	}
+	\\
+	\DeclareType{PSeminorm}
+	{
+		\prod_{V \in \VS{k}} \Reals_{++} \to ?\TYPE{Sublinear}(V,\Reals)
+	}
+	\DefineType{\nu}{PSeminorm}
+	{
+		\Lambda p \in \Reals_{++} \. 		
+		\forall \alpha \in k \.
+		\forall v \in A \.
+		\| \alpha v  \| = |\alpha|^p\|v\|
+	}
+	\\
+	\DeclareFunc{pSeminormedTopology}
+	{
+		\prod_{V \in \VS{k}} \TYPE{PSeminorm}(V,k,p) \to \Vec\Top(V)
+	}
+	\DefineNamedFunc{pSeminormedTopology}{\nu}{\T(\nu)}
+	{
+		\Big\langle \Big\{ 
+			\{ w \in W: \nu(v - w) < \rho  \} 
+			\Big| v \in V,\rho \in \Reals_{++}  
+		 \Big\} \Big\rangle
+	}
+	\\
+	\DeclareType{PSeminormable}{\Reals_{++} \to ?\TVS{k}}
+	\DefineType{V}{PSeminormable}{
+		\Lambda p \in \Reals_{++} \. 
+		\exists \nu : \TYPE{PSeminorm}(V) \. \T(V) = \T(\nu) }
+	\\
+	\Theorem{PSeminormableSpace}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \.
+		\forall p \in \Reals_{++}
+		\TYPE{PSeminormable}(V,p) 
+		\iff
+		\exists U \in \U_V(0) \. 
+		\Bounded(V,U) \And \TYPE{PConvex}(V,p,U)
+	}
+	\Explain{
+		$\left( \frac{1}{n} U \right)^\infty_{n=1}$ 
+		is a countable base of vector topology for $V$}
+	\Explain{
+		The gauges defined by $U$ are p-seminorms}
+	\EndProof
+}
+\newpage
+\subsubsection{Bornology}
+\Page{
+	& k : \AVF(\Reals) \Big| \TYPE{UltravaluedField} ; \\
+	\\
+	\Conclude{\TYPE{Bornology}}{
+		\Lambda X \in \SET \. 
+		\Ideal(2^X)
+	}{\SET \to \Type}
+	\\
+	\Conclude{\TYPE{BoundedStructrure}}{
+		\sum_{X \in \SET} \TYPE{Bornology}(X)
+	}{\Type}
+	\\
+	\DeclareFunc{asSet}{\BS \to \Set}
+	\DefineNamedFunc{asSet}{X,\beta}{(X,\beta)}{X}
+	\\
+	\DeclareFunc{bornology}{\prod (X,\beta) : \BS \. \TYPE{Bornology}(X)}
+	\DefineNamedFunc{bornology}{}{\B(X,\beta)}{\beta}
+	\\
+	\DeclareType{Bounded}{\prod X : \BS \. ??X}
+	\DefineType{B}{Bounded}{B \in \B(X)}
+	\\
+	\Theorem{CompactsAreBornology}
+	{
+		\forall X \in \TOP \. \Born\Big(X,\TYPE{RelativeCompcts}(X)\Big)
+	}  	
+	\Explain{This is obvious}
+	\EndProof
+	\\
+	\DeclareFunc{standardBornology}
+	{
+		 \TVS{k} \to \BS 
+	}
+	\DefineNamedFunc{standardBornology}{V}{V}{\Big(V,\Bounded(V)\Big)}
+	\\
+	\DeclareType{BornologyBase}
+	{
+		\prod X : \BS \. ??\B(X)
+	}
+	\DefineType{\C}{\BB}{\forall B \in \B(X) \. \exists C \in \C \. B \subset C}
+	\\
+	\DeclareFunc{generateBornology}
+	{
+		\prod_{X \in \SET} ??X \to \Born(X)
+	}
+	\DefineNamedFunc{generateBornology}{\alpha}{\langle \alpha \rangle_{\mathsf{BORN}}}
+	{
+		\left\{ A \subset X : 
+			\exists n \in \Nat \.  
+			\exists C : \{1,\ldots,n\} \to \alpha \.
+			 A \subset \bigcup^n_{i=1} C_i   \right\}
+	}
+	\\
+	\DeclareFunc{bornologicalCategory}
+	{
+		\CAT
+	}
+	\DefineNamedFunc{bornologicalCategory}{}{\BORN}
+	{
+		\NewLine \de		
+		\Big( \BS , \Lambda X,Y : \BS \. \{ f : X \to Y \. \forall B \in \B(X) \. f(B) \in \B(Y)   \},
+			\circ, \id \Big)
+	}
+}\Page{
+	\DeclareFunc{strongBornology}
+	{
+		\prod_{X \in \SET} \prod Y : \BS \. (X \to Y) \to \Born(X)
+	}
+	\DefineNamedFunc{strongBornology}{f}{\S(Y,f)}
+	{
+		\langle  f^{-1} \B(Y) \rangle_{\mathsf{BORN}}
+	}
+	\\
+	\DeclareFunc{weekBornology}
+	{
+		\prod_{Y \in \SET} \prod X : \BS \. (X \to Y) \to \Born(Y)
+	}
+	\DefineNamedFunc{weakBornology}{f}{\W(X,f)}
+	{
+		\langle  f \B(X) \rangle_{\BORN} 
+	}
+	\\
+	\ExplainFurther{
+		By use of week and strong notions,  
+		we may define subset bornology,}
+	\Explain{ 
+		quotient bornology or any kind of limit bornologies}
+	\\
+	\DeclareFunc{supBornology}
+	{
+		\prod_{X,I \in \SET} \Big(I \to \Born(X)\Big) \to \Born(X)
+	}
+	\DefineNamedFunc{supBornology}{\beta}{\bigvee_{i \in I} \beta_i}
+	{
+		\left\langle \bigcup_{i \in I} \beta_i \right\rangle_{\BORN}
+	}
+	\\
+	\DeclareFunc{infBornology}
+	{
+		\prod_{X,I \in \SET} \Big(I \to \Born(X)\Big) \to \Born(X)
+	}
+	\DefineNamedFunc{infBornology}{\beta}{\bigwedge_{i \in I} \beta_i}
+	{
+		\left\langle \bigcap_{i \in I} \beta_i \right\rangle_{\BORN}
+	}
+	\\
+	\Explain{This shows that a set of bornologies forms acomplete lattice}
+	\\
+	\DeclareType{VectorBornology}
+	{
+		\prod V \in \VS{k}  \. ?\Born(V)
+	}
+	\DefineType{\beta}{VectorBornology}
+	{
+		+_V \in \BORN\Big( (V,\beta) \times (V,\beta), (V,\beta)\Big)
+		\And
+		\cdot_V \in \BORN\Big( k \times (V,\beta), (V,\beta)\Big)
+	}
+	\\
+	\DeclareType{ConvexBornology}
+	{
+		\prod V \in \VS{k}  \. ?\Vect\Born(V)
+	}
+	\DefineType{\beta}{ConvexBornology}
+	{
+		\exists \gamma : \BB(V,\beta) \.
+		\forall B \in \gamma \. \Convex(V,B)
+	}
+	\\
+	\Theorem{VectorBornologyCharacterisation}
+	{
+		\NewLine ::		
+		\forall V \in \VS{k} \.
+		\forall \beta : \Born(V) \.  \NewLine \.
+		\Vect\Born(V,\beta)
+		\iff
+		\forall A,B \in \beta \. A + B \in \beta \And
+		\forall A \in \beta \. \bal A \in \beta
+	}
+	\Explain{ 1 $(\Rightarrow)$}
+	\Explain{ 1.1 $A + B \in \beta$ as addition is locally bounded}
+	\Explain{ 1.2 $\bal A = \Disc_k(0,1) A$ and scalar multiplication is uniformly bounded}
+	\Explain{ 2 $(\Leftarrow)$  }
+	\Explain{ 2.1  $A + B \in \beta$ implies that addition is locally bounded }
+	\Explain{ 2.2  $\Disc_k(0,r) A  \in \beta$}
+	\Explain{ 2.2.1 By archimedean property of $\Reals$ there is $n \in \Nat$ such that 
+		$n \ge r$}
+	\Explain{ 2.2.2 But
+		$
+			\Disc_k(0,r) A \subset \Disc_k(0,n) A \subset \sum^n_{i=1} \Disc(0,1) A =
+			\sum^n_{i=1} \bal A \in \beta   
+		$
+	}
+	\Explain{ 2.2.3 As $\beta$ is ideal $\Disc_k(0,r) A $}
+	\Explain{ 2.3 As $k$ has bornology base of discs the scalar multiplication must be continuous}
+	\EndProof
+}\Page{
+	\Theorem{EquicontinuousBornology}
+	{
+		\forall X \in \TOP \. 
+		\Vect\Born\Big(\TOP(X,k),\TYPE{Equicontinuous}(X,k) \Big)
+	}
+	\Explain{ 1 Denote by $\eta$ 
+		the set of equicontinuous subsets of $\TOP(X,k)$}
+	\Explain{	 2 It is obvious that $\eta$ is downwards closed}
+	\Explain{ 3 $\eta$ is also closed under finite unions}
+	\Explain{ 3.1 Assume $A,B \in \eta$, also assume $U \in \U_k(0)$ and $x \in X$}
+	\Explain{ 3.2 Then there exists $V \in \U_X(x)$ such that 
+			$f(V) \subset U + f(x)$ for all $f \in A$}
+	\Explain{ 3.3 Also there is $W \in \U_X(x)$ such that 
+			$f(W) \subset U + f(x)$ for all $f \in B$}
+	\Explain{ 3.4 Then taking $V \cap W$ should for $A \cup B$}
+	\Explain{ 4 Also $\eta$ is closed under addition}
+	\Explain{ 4.1 Assume $A,B \in \eta$, also assume $U \in \U_k(0)$ and $x \in X$}
+	\Explain{ 4.2 Then there exists $O \in \U_k(0)$ such that $O + O \subset U$}
+	\Explain{ 4.3 Then there exists $V \in \U_X(x)$ such that 
+			$f(V) \subset O + f(x)$ for all $f \in A$}
+	\Explain{ 4.4 Also there is $W \in \U_X(x)$ such that 
+			$f(W) \subset O + f(x)$ for all $f \in B$}
+	\Explain{ 4.5 A function $h \in A + B$  can be expressed as $h = f +g $ for
+		$f \in A$ and  $g \in B$}
+	\Explain{ 4.6
+		So $
+			h(V \cap W) = 
+			f(V \cap W) + g(V \cap W)  \subset
+			O + O + f(x) + g(x) \subset  U + h(x)			 
+		$}
+	\Explain{ 5 Scalar multiplication is locally bounded}
+	\Explain{ 5.1 Assume $A \in \eta$, also assume $U \in \U_k(0)$ and $x \in X$}
+	\Explain{ 5.2 Then there exist a balanced $W \in \U_k(0)$ such that $W \subset U$}
+	\Explain{ 5.3 Then there exists $V \in \U_X(x)$ such that 
+			$f(V) \subset W + f(x)$ for all $f \in A$}
+	\Explain{ 5.4 Then for any $f \in \bal A = \Disc_k(0,1) A$ 
+		there is $g \in A$ and $\alpha \in \Disc_k(0,1)$ such that $f = \alpha g$ }
+	\Explain{ 5.5 Then
+		$f(V) =\alpha g(V) \subset \alpha W + \alpha g(x) = W + f(x) \subset U + f(x)$}
+	\EndProof
+	\\
+	\DeclareFunc{closure}
+	{
+		\prod_{X \in \TOP} \Born(X) \to \Born(X) 
+	}
+	\DefineNamedFunc{closure}{\beta}{\cl \beta}
+	{\Big\langle \{ \cl B | B \in \beta \}  \Big\rangle_\BORN}
+	\\
+	\DeclareFunc{interior}
+	{
+		\prod_{X \in \TOP} \Born(X) \to \Born(X) 
+	}
+	\DefineNamedFunc{interior}{\beta}{\intx \beta}
+	{\Big\langle \{ \intx B | B \in \beta \}  \Big\rangle_\BORN}
+	\\
+	\Theorem{InteriorClosureOrder}
+	{
+		\forall X \in \TOP \.
+		\forall \beta  : \Born(X) \.
+		\intx \beta \subset \beta \subset \cl \beta
+	}
+	\Explain{ This follows from the fact that $\beta$ is closed under taking susets}
+	\Explain{ And $\intx A \subset A \subset \cl A$ for any $A \subset X$}
+	\EndProof
+	\\
+	\Theorem{MonotonicInterior}
+	{
+		\forall X \in \TOP \.
+		\forall \alpha, \beta  : \Born(X) \.
+		\alpha \subset \beta \Imply
+		\intx \alpha \subset \intx \beta
+	}
+	\Explain{ Obvious}
+	\EndProof
+}\Page{
+	\Theorem{MonotonicClosure}
+	{
+		\forall X \in \TOP \.
+		\forall \alpha, \beta  : \Born(X) \.
+		\alpha \subset \beta \Imply
+		\cl \alpha \subset \cl \beta
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\DeclareType{Open}
+	{
+		\forall X \in \TOP \.
+		?\Born(X)
+	}
+	\DefineType{\beta}{\Open}{\intx \beta = \beta}
+	\\
+	\DeclareType{Closed}
+	{
+		\forall X \in \TOP \.
+		?\Born(X)
+	}
+	\DefineType{\beta}{\Closed}{\cl \beta = \beta}
+	\\
+	\Conclude{\TYPE{Proper}}{\TYPE{Closed} \And \TYPE{Open}}
+	{
+		\prod_{X \in \TOP} ?\Born(X)
+	}
+	\\
+	\Theorem{ClodednessAltDef}
+	{
+		\NewLine \.		
+		\forall X \in \TOP \.
+		\forall \beta : \Born(X) \.
+		\Closed(X,\beta) \iff
+		\BB\Big( X, \beta,  \beta \cap \TYPE{Closed}(X) \Big)
+	}
+	\Explain{1 $(\Rightarrow)$}
+	\Explain{ 1.1 If $A \in \beta$, then $A \subset \cl A$}
+	\Explain{ 1.2 Also $\cl A \in \beta$}
+	\Explain{2 $(\Leftarrow)$}
+	\Explain{ 2.1 Assume $A \in \beta$}
+	\Explain{ 2.2 Then there is a closed set $F \in \beta$ such that $A \subset F$}
+	\Explain{ 2.3 But $A \subset \cl A \subset F$}
+	\Explain{ 2.4 So $\cl A \in \beta$ as $\beta$ is closed under taking subsets}
+	\EndProof
+	\\
+	\DeclareType{LocallyBounded}
+	{
+		?\TOP \And \BORN
+	}
+	\DefineType{X}{LocallyBounded}
+	{
+		\forall x \in X \.\N_V(x) \cap \beta \neq \emptyset
+	}
+	\\
+	\Theorem{CompactsAreBoundedInLocallyBoundedSpace}
+	{
+		\forall X : \TYPE{LocallyBounded} \.
+		\K(X) \subset \B(X)
+	}
+	\Explain{1 Take $K$ to be compact in $X$}
+	\Explain{2 Select a bounded Neighborhood $U_x$ for each point $x \in K$}
+	\Explain{3 As $K$ is compact there is a finite subcover $(x_i)_{i=1}^n$}
+	\Explain{4 Then $\bigcup^n_{i=1} U_{x_i} \in \B(X)$ as $\B(X)$ is an ideal}
+	\Explain{5 But $K \subset \bigcup^n_{i=1} U_{x_i} \in \B(X)$, so $K \in \B(X)$,
+		as $\B(X)$ is an ideal}
+	\EndProof
+}\Page{
+	\DeclareFunc{semimetricBornology}
+	{
+		\prod_{X \in \SET} \TYPE{Semimetric}(X) \to \Born(X)
+	}
+	\DefineNamedFunc{semimetricBornology}{\rho}{\B(\rho)}
+	{
+		\langle \Cell_{X}(X,\Reals_{++}) \rangle_\BORN
+	}
+	\\
+	\DeclareType{Semimetrizable}{?\TOP \And \BORN}
+	\DefineType{X}{Semimetrizable}
+	{
+		\exists \rho : \TYPE{Semimetric}(X) \.
+		\T(X) = \T(\rho) \And \B(X) = \B(\rho)
+	}
+	\\
+	\Theorem{SemimetrizationTHM}
+	{
+		\NewLine ::		
+		\forall (X,\tau,\beta) \in \TOP \And \BORN \.  \NewLine \.
+		\TYPE{Semimetrizable}(X,\tau,\beta)
+		\iff \NewLine\iff
+		\TYPE{Semimetrizable}(X,\tau)
+		\And
+		\TYPE{LocallyBounded}\And \TYPE{Proper}(X,\beta)
+		\And
+		\exists \beta' : \BB(X)  \.
+		|\beta'| \le \aleph_0
+	}
 	\NoProof
 }
 \newpage
-\subsubsection{Towards Bornology}
+\subsubsection{Interesting Examples and Facts}
 \subsection{Hahn-Banach Theory}
+\subsubsection{Dominated Extension}
+\subsubsection{Mazur-Orlich Theorem}
+\subsubsection{Minimal Subliniar functionals}
 \subsection{Barelled and Bornological Spaces}
 \subsection{Towards Approximation Theory}
 \section{Spaces of Distributions}
@@ -3593,6 +4565,7 @@ b\section{Abstract Topological Vector Spaces}
 \item K\"othe G. - Topological Vector Spaces (1969)
 \item Trevis F.  - Topological Vector Spaces, Distributions and Kernels (1970)
 \item Grothendieck A. - Topological Vector Spaces (1973)
+\item Hogbe-Nlend H.  - Bornologies and Functional Analysis (1977)
 \item Wilansky A. - Modern Methods in Topological Vector Spaces (1978) 
 \item Rudin W.  - Functional Analysis (1991) 
 \item Fabian M. et al.   - Functional Analysis and infinite-dimensional geometry (2001)
@@ -3602,6 +4575,7 @@ b\section{Abstract Topological Vector Spaces}
 \item Naricci L. ; Beckenstein E. - Topological Vector Spaces I (2010)
 \item Perez-Garcia C. ; Schikhof W. H. - Locally Convex Spaces over Non-Archimedean Valued Fields (2010)
 \item Богачев В. ; Смолянов О. ; Cоболев В. И. -  Топологические Векторные пространства (2012)
+\item Ptotasov I. V. - Notes on Bornology
 \item Chernikov A. ; Mennin A.  -  Combinatorial properties of non-archimedean convex sets  (2021)
 \end{enumerate}
 \end{document}
