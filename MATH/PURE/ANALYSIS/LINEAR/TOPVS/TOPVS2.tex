@@ -55,6 +55,8 @@
 \newcommand{\NNInt}{\mathbb{Z}_{+} }
 \newcommand{\Reals}{\mathbb{R} }
 \newcommand{\Complex}{\mathbb{C}}
+\renewcommand{\Re}{\mathrm{Re}\;}
+\renewcommand{\Im}{\mathrm{Im}\;}
 \newcommand{\Rats}{\mathbb{Q} }
 \newcommand{\Nat}{\mathbb{N} }
 \newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
@@ -497,7 +499,7 @@
 \newpage
 \tableofcontents
 \newpage
-b\section{Abstract Topological Vector Spaces}
+\section{Abstract Topological Vector Spaces}
 \subsection{Minkowski's Theory}
 \subsubsection{Intro and Definition}
 \Page{
@@ -4428,11 +4430,959 @@ b\section{Abstract Topological Vector Spaces}
 }
 \newpage
 \subsubsection{Interesting Examples and Facts}
-\subsection{Hahn-Banach Theory}
+\newpage
+\subsection{Infinite Dimensional Geometry}
 \subsubsection{Dominated Extension}
+\Page{
+	\Theorem{OneDimensionalExtension}
+	{
+		\NewLine ::		
+		\forall V \in \VS{\Reals} \.
+		\forall U \subvec{\Reals} V \.
+		\forall \sigma : \TYPE{Sublinear}(V) \,
+		\forall f \in U^* \.
+		\forall v \in U^\c \. \NewLine \.
+		\forall \aleph :  f \le \sigma_{|U} \.
+		\exists F \in (U \oplus v)^* \.
+		F_{|U} = f \And F \le \sigma_{|U \oplus v}
+	}
+	\Explain{ 1   
+		$
+			\alpha = \sup_{u \in U}  -\sigma(-u-v) - f(u) \le 
+		 	\inf_{u \in U} \sigma(u  +  v) - f(u) = \beta		
+		$}
+	\Explain{ 1.1 Assume $u,w \in U$}
+	\Explain{ 1.2 Then $f(u) - f(w) = f(u - w) \le \sigma(u -w)  =
+		\sigma( u + v - v - w) = \sigma(u + v) + \sigma(-v - w)$}
+	\Explain{ 1.3 By rearenging one gets
+		$
+			- \sigma(-v- w) - f(w) \le  \sigma(u + v) - f(u)
+		$}
+	\Explain{ 1.4 Not, that both $\alpha$ and $\beta$ must be finite by
+		inf and sup definition }
+	\Explain{ 2 So  $-\sigma(-v-u) \le \gamma \le \sigma(v+u)$
+			for any $\gamma \in [\alpha,\beta]$ and $u \in U$}
+	\Explain{ 3 Select $\gamma \in [\alpha,\beta]$}
+	\Explain{ 4 Define $F(u + \delta v) \de f(u) + \delta \gamma$ on $U \oplus v$, which is linear}
+	\Explain{ 5 $F \le \sigma$  on $U \oplus v$}
+	\Explain{ 5.1 Assume $\delta > 0$}
+	\Explain{ 5.1.1 Then 
+			$F(u + \delta v) \le f(u) + \delta\sigma\left( \frac{u}{\delta} + v \right) - f(u) = 
+			  \sigma(u + \delta v)$ by construction of $\gamma$}
+	\Explain{ 5.1.2 Here we used thed fact that $\sigma$ is conic}
+	\Explain{ 5.2 Assume $\delta < 0$  }
+	\Explain{ 5.2.1 Then
+		$F(u + \delta v) \le f(u)  - \delta\sigma\left( -\frac{u}{\delta} - v \right) - f(u) = 
+			  \sigma(u + \delta v)$  by construction of $\gamma$}
+	\Explain{ 5.3 The case $\delta = 0$ is evident}
+	\EndProof
+	\\
+	\Theorem{HahnBanachTheorem1}
+	{
+		\NewLine ::		
+		\forall V \in \VS{\Reals} \.
+		\forall U \subvec{\Reals} V \.
+		\forall \sigma : \TYPE{Sublinear}(V) \,
+		\forall f \in U^* \.
+		\forall \aleph :  f \le \sigma_{|U} \.
+		\exists F \in V^* \.
+		F_{|U} = f \And F \le \sigma
+	}
+	\Explain{ 1 Define $\phi \subset \sum W : \TYPE{VectorSubspace}(V) \. W^*$ 
+		to be the set of all extensions of $f$ bounded by $\sigma$}
+	\Explain{ 2 Order $\phi$ by saying $(W,g) \le (O,h)$ iff $W \subvec{k} O$ 
+	 and $h_{|W} = g$}
+	 \Explain{ 3 By Zorn Lemma extract an upper bound $(W,F)$ of $\phi$} 
+	 \Explain{ 3.1 Clearly $(U,f) \in \phi$, so $\phi \neq \emptyset$} 
+	 \Explain{ 3.2 If $\C$ is a chain in $\phi$, then $\bigcup \C \in \phi$ is an upper bound of $\C$}
+	 \Explain{ 4 If $W \neq V$ then the extension 
+	 	$F$ can be extended furtherly, but this contradicts the maximality}
+	 \EndProof
+	 \\
+	 & k :: \AVF(\Reals) ;\\
+	 \\
+	 \Theorem{HahnBanachExtension}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \.
+		\forall U \subvec{k} V \.
+		\forall \sigma \in \SMN(V) \.
+		\forall f \in U^* \.
+		\forall \aleph :  f \le \sigma_{|U} \.
+		\exists F \in V^* \.
+		F_{|U} = f \And |F| \le \sigma
+	}
+	\Explain{ This is a modification of Hahn-Banach}
+	\EndProof
+}\Page{
+	\Theorem{ContinuousExtension}{
+		\NewLine ::		
+		\forall V \in \LCS{k} \.
+		\forall U \subvec{k} V \.
+		\forall f \in U' \.
+		\forall \aleph :  f \le \sigma_{|U} \.
+		\exists F \in V' \.
+		F_{|U} = f
+	}
+	\Explain{ 1 The family of seminorms $\ssc(V)$ generates the topology of $V$}
+	\Explain{ 2 The restrictions $\sigma_{|U}$ for $\sigma \in \ssc(V)$ 
+		generate the locally convex topology of $U$}
+	\Explain{ 3 So there exists $\sigma \in \ssc(V)$ such that $|f| \le \sigma_{|U}$}
+	\Explain{ 3.1 This is a continiuity ctiterion for locally convex spaces}
+	\Explain{ 4  By Hahn-Banach there is an extension $F$ of $f$ 
+		such that $|F| \le \sigma$}
+	\Explain{ 5 So by same continuity criterion $F \in V'$}
+	\EndProof
+	\\
+	\Theorem{SublinearFunctionalSupport}
+	{
+		\forall V \in \TVS{k} \.
+		\forall  \sigma : \TYPE{Sublinear}(V) \.
+		\forall v \in V \.
+		\exists f \in V^* \. \NewLine \.
+		f(v) = \sigma(v) \And
+		\forall w \in V \.
+		-\sigma(-w) \le f(w) \le \sigma(w)	
+	}
+	\Explain{ 1 define $g$ on $kv$ by setting $g(\alpha v) = \alpha \sigma(v)$  }
+	\Explain{ 2 Obviously $g$ is linear}
+	\Explain{ 3 $g \le \sigma_{kv}$}
+	\Explain{ 3.1 Assume $\alpha \ge 0$}
+	\Explain{ 3.1.1 Then by defineition $g(\alpha v) = \alpha \sigma(v) = \sigma(\alpha v)$}
+	\Explain{ 3.1.2 So $g(\alpha v) \le \sigma(\alpha v)$}
+	\Explain{ 3.2 Assume $\alpha < 0$ }
+	\Explain{ 3.2.1 Then $f(\alpha v) = \alpha = -(-\alpha) \sigma( v) = -\sigma(-\alpha v) 
+		\le \sigma(\alpha v)$}
+	\Explain{ 3.2.2 Last Inequelity follow from the fact that 
+		$0 = \sigma(0) = \sigma(u - u) \le \sigma(u) + \sigma(-u)$ for any $u \in V$}
+	\Explain{ 3.2.3 So $-\sigma(-u) \le \sigma(u)$ }
+	\Explain{ 4 By Hahn Banach there is a dominated extendion $f \in V^*$  of $g$}
+	\Explain{ 5 By  one-dimensional extension proof's 
+		construction it must be the case that    
+		$-\sigma(w) \le f(w) \le \sigma(w)$}
+	\Explain{ 5.1 Apply statement (1) to the construction with $u=0$}
+	\EndProof
+	\\
+	\Theorem{SeminormFunctionalSupport}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall  \sigma \in \SMN(V) \.
+		\forall v \in V \.
+		\exists f \in V^* \. \NewLine \.
+		f(v) = \sigma(v) \And
+		|f| \le \sigma
+	}
+	\Explain{ This is an obvious modification of the previous result}
+	\EndProof
+}\Page{
+	\Theorem{ContinuousFunctionalSupport}
+	{
+		\forall V \in \TVS{\Reals} \.
+		\forall  \sigma : \TYPE{Sublinear}(V) \cap \TOP(V,\Reals) \.
+		\forall v \in V \.
+		\exists f \in V' \. \NewLine \.
+		f(v) = \sigma(v) \And
+		-\sigma(-w) \le f(w) \le \sigma(w)
+	}
+	\Explain{ 1 Assume $U \in \U_\Reals(0)$}
+	\Explain{ 2 Then there is a balanced $W \in \U_k(0)$ such that $W \subset U$ }
+	\Explain{ 3 By continuity there is $O \in \U_V(0)$ such that $\sigma(O) \subset W$}
+	\Explain{ 4 Let $E \in \U_V(0)$ be a balanced subset of $O$   }	
+	\Explain{ 5 Then $f(E) \subset U$}
+	\Explain{ 5.1 Select $w \in E$}
+	\Explain{ 5.2 Then $w,-w \in O$, so $-\sigma(-w),\sigma(w) \in W$}
+	\Explain{ 5.3 But $-\sigma(-w) \le f(w) \le \sigma(w)$}
+	\Explain{ 5.4 As $W$ is balanced $f(w) \in E$ }
+	\Explain{ 5.4.1 Think about $W$ as open interval $(-\alpha,\alpha)$}
+	\Explain{ 6 By continuity at zero, the general continiuity follows}	
+	\EndProof
+	\\
+	\Theorem{FiniteDimIsComplemented}
+	{
+		\forall V \in \LCHS{k} \.
+		\forall U \subvec{k} V \.
+		\dim U < \infty \Imply 
+		\exists W \subvec{k} \.
+		V =_{\TVS{k}} U \oplus W
+	}
+	\Explain{ Let $(e_i)^n_{i=1}$ be a finite base of $U$}
+	\Explain{ Then functionals $f_i\left( \alpha e \right) = \alpha_i$ are continuous }
+	\Explain{ So there exist a continuous extensions $F_i \in V'$ of each $f_i$}
+	\Explain{ Define continuous operator $P(v) =  F_i(v) e_i $}
+	\Explain{ Obviously, $P^2 = P$, so $P$ is a continuous projector}
+	\Explain{ This means that $P$ must be complemented}
+	\EndProof
+	\\
+	\Theorem{NormPreservingFunctionalExtension}
+	{
+		\forall V  : \NS(k) \.
+		\forall  U \subvec{k} V \.
+		\forall f \in U' \.
+		\exists F \in V' \.
+		\|f\| = \|F\|
+		\And
+		F_{|U} = f 
+	}
+	\Explain{ 1 Define a sublinear function $\sigma(v) = \|f\|\|v\|$  on V}
+	\Explain{ 2 Then, by the definition of dual normed space $|f| \le \sigma_{|U}$}
+	\Explain{ 3 Construct $F$ as Hahn-Banach dominated extension of $f$ dominated by $\sigma$}
+	\Explain{ 4 Then $F$ is continuous}
+	\Explain{ 5 As $|F| \le \sigma$ it must be the case that $\|F\| \le \|f\|$}
+	\Explain{ 6 On the other hand there must exist a sequence $u : \Nat \to U$
+		such that $|f(u_n)| \to \|f\|$}
+	\Explain{ 7 But this means that $|F(u_n)| = |f(u_n)| \to \|f\|$, so $\|F\| = \|f\|$}
+	\EndProof
+	\\
+	\Theorem{FunctionalAbundence}
+	{
+		\forall V  : \NS(k) \.
+		\forall  v \in V
+		\exists f \in \Sphere(V') \.
+		f(v) = \|v\|
+	}
+	\Explain{ 1 Define a a function $g : kv \to k$ by $g(\alpha v) = \alpha \|v\|$}
+	\Explain{ 2 Then $g$ is linear and has norm $\|g\| = 1$}
+	\Explain{ 3 By the previous result there exists an extension $f$ of $g$ on $V$}
+	\EndProof
+}\Page{
+	\Theorem{DualZeroCritetion}
+	{
+		\forall V : \NS(k) \.
+		\forall v \in V \.
+		v = 0
+		\iff
+		\forall f \in  \Sphere(V') \.
+		f(v) = 0
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Theorem{DualNormConstruction}
+	{
+		\forall V : \NS(k) \.
+		\forall v \in V \.
+		\|v\| = \sup \Big\{ |f(v)| \Big| f \in \Sphere(V') \Big\}
+	}
+	\Explain{ There must be $f \in \Sphere(V')$ such that $f(v) = \|v\|$}
+	\Explain{ On the other hand by definition of the dual norm $|f(v)| \le \|f\|\|v\| = \|v\|$ }
+	\EndProof
+	\\
+	\Theorem{SubspaceSeparatingFunctionalExists}
+	{
+		\NewLine ::		
+		\forall V : \NS(k) \.
+		\forall U \subvec{k} V \.
+		\forall v \in (\cl U)^\c \.
+		\forall \delta \in \Reals_{++} \.
+		\forall \aleph : d_V(v,U) = \delta \. \NewLine \.
+		\exists f \in \Sphere(V') \.
+		f(U) = \{0\} \And f(v) = \delta
+	}
+	\Explain{ 1  Define $g(u + \alpha v) = \alpha \delta$ over $U \oplus kv$}
+	\Explain{ 2  Then $g$ is linear}
+	\Explain{ 3 $g$ is continuous and has $\|g\| \le 1$}
+	\Explain{ 3.1 Assume $u + \alpha v$ is sach that $\|u + \alpha v \| = 1$}
+	\Explain{ 3.2 Then $f(u + \alpha v) = \alpha \delta$}
+	\Explain{ 3.3 If $\alpha = 0$, then $|f(u + \alpha v)| = |0| =  0 \le 1$}
+	\Explain{ 3.4 So assume $\alpha \neq 0$ }
+	\Explain{ 3.5 write $1 = \|u + \alpha v\| = \left\| - \alpha\frac{-u}{\alpha} + \alpha v\right\|
+		= |\alpha| \left\| v - \frac{ -u  }{\alpha} \right\| \ge |\alpha|\delta	
+	$ }
+	\Explain{ 3.5.1 Here the last inequality holds by the definition of a distance to a set}
+	\Explain{ 3.6 Also $|f(u + \alpha v)| = |\alpha \delta | = |\alpha| \delta \le 1$}
+	\Explain{ 4 Actually $\|g\| = 1$}
+	\Explain{ 4.1 Select a sequence $u : U \to \Nat$ such that $\lim_{n \to \infty} \|v - u_n\| = \delta$  }
+	\Explain{ 4.2 But $g(v-u_n) = \delta$, so $\|g\| \ge 1$}
+	\Explain{ 5 Define $f$ to be a Hahn-Banach extension of $g$}
+	\EndProof 
+	\\
+	\Theorem{LinearlyIndependendFunctionSeparation}
+	{
+		\NewLine ::		
+		\forall V : \NS(k) \.
+		\forall n \in \Int_+ \.
+		\forall v : \LI\Big(\{1,\ldots,n\},V\Big) \NewLine \.
+		\exists f : \{1,\ldots,n\} \to V' \.
+		\forall i,j \in \{1,\ldots,n\} \.
+		f_i(v_j) = \delta_{i,j}
+	}
+	\Explain{ Define functionals on $\Span\{v_1,\ldots,v_n\}$ and then extend the to the whole space}
+	\EndProof
+}\Page{
+	\Theorem{GreaterNormExtension}
+	{
+		\NewLine ::		
+		\forall V : \NS(k) \.
+		\forall U \subvec{k} V \.
+		\forall f \in U' \.
+		\exists F \in V' \.
+		F_{|U} = f \And \|F\| \ge \|f\|
+	}
+	\Explain{ 1 If $V = \cl U$ the result holds trivially}
+	\Explain{ 2 So take $v \in (\cl U)^\c$ }
+	\Explain{ 3 Let $\delta = d_V(U,v)$}
+	\Explain{ 4 define $g(u + \alpha v) = f(u) + \alpha \beta$ with $\beta \ge \|v\|\|f\|$  on $U \oplus kv$}
+	\ExplainFurther{ 5 This functional is continuous as $g$ is sum of $f$} 
+	\Explain{ $\quad$ and the fucntional  of the theorem  $\THM{SubspaceSeparatingFunctionalExists}$}
+	\Explain{ 6 $\|g\| \ge \|f\|$}
+	\Explain{ 6.1  See that $g\left( \frac{u}{\|u\|} \right) = \frac{\beta}{\|u\|} \ge \|f\|$}
+	\Explain{ 7 Extend $g$ By Hahn-Banach to get the result}	
+	\EndProof
+} 
+\newpage
 \subsubsection{Mazur-Orlich Theorem}
-\subsubsection{Minimal Subliniar functionals}
-\subsection{Barelled and Bornological Spaces}
+\Page{
+	\Theorem{MazurOrlichTHM}
+	{
+		\NewLine ::		
+		\forall V \in \VS{\Reals} \.
+		\forall \sigma : \TYPE{Sublinear}(V) \.
+		\forall X \in \SET \.
+		\forall v : X \to V \.
+		\forall \rho : X \to \Reals \. \NewLine \.
+		\Big( \exists f \in V^* \. f \le \sigma \And  \rho \le vf \Big)
+		\iff \NewLine \iff
+		\forall n \in \Nat \.
+		\forall \alpha : \{1,\ldots,n\} \to \Reals_{+} \.
+		\forall x : \{1,\ldots,n\} \to X \. 
+		\sum^n_{i=1} \alpha_i \rho(x_i) \le  \sigma\left( \sum^n_{i=1} \alpha_i v(x_i) \right)
+	}
+	\Explain{ 1 $(\Rightarrow)$}
+	\Explain{ 1.1 
+		$\sum^n_{i=1} \alpha_i \rho(x_i) \le  
+		\sum^n_{i=1} \alpha_i f( v(x_i) )  =
+		f\left( \sum^n_{i=1} \alpha_i v(x_i) \right)  \le 
+		\sigma\left( \sum^n_{i=1} \alpha_i v(x_i) \right)$}
+	\Explain{ 2 $(\Leftarrow)$}
+	\Explain{ 2.1 Take some $n \in \Nat$ and $u \in V$}
+	\Explain{ 2.2 Define $\Gamma_n(u) = \left\{ \sigma\left( u + \sum^n_{i=1} \alpha_i v(x_i) 
+		\right) - \sum^n_{i=1} \alpha_i \rho(x_i) \bigg|\alpha : \{1,\ldots,n\} \to \Reals_{+},
+		x : \{1,\ldots,n\} \to X  \right\}$}
+	\Explain{ 2.3 Also Define $\gamma(u) = \inf_{n \in \Nat} \inf \Gamma_n(u)$}
+	\Explain{ 2.3.1 $\gamma(u)$ is well defined and bounded below by $-\sigma(-u)$}
+	\Explain{ 2.3.1.1 $\sum^n_{i=1} \alpha_i \rho(x_i) \le  
+	\sigma\left( \sum^n_{i=1} \alpha_i v(x_i) \right) \le 
+	\sigma\left( u + \sum^n_{i=1} \alpha_i v(x_i) \right) + \sigma(-u)$ for any $\alpha$ and $x$}
+	\Explain{ 2.3.1.2 By rearanging inequality one gets the bound}
+	\Explain{ 2.3.2 $\gamma$ is subadditive} 
+	\Explain{ 2.3.2.1 Take some $u,w \in V$}
+	\ExplainFurther{ 
+		2.3.2.2 Then
+		$\gamma(u + w) = \inf_{n,\alpha,x} 
+			\sigma\left( u + w +  \sum^n_{i=1} \alpha_i v(x_i) 
+		\right) - \sum^n_{i=1} \alpha_i \rho(x_i) =$}
+		\ExplainFurther{ $=\inf_{n,\alpha,\beta,x,y} 
+			\sigma\left( u + w + \sum^n_{i=1} \alpha_i v(x_i) +   \sum^n_{i=1} \beta_i v(y_i)
+		\right)  - \sum^n_{i=1} \alpha_i \rho(x_i) - \sum^n_{i=1} \beta_i \rho(y_i) \le$ } 
+		\ExplainFurther{ $\le 
+		 \inf_{n,\alpha,\beta,x,y}   \sigma\left( u +  \sum^n_{i=1} \alpha_i v(x_i) 
+		\right) - \sum^n_{i=1} \alpha_i \rho(x_i) +
+		\sigma\left( w +  \sum^n_{i=1} \beta_i v(y_i) 
+		\right) - \sum^n_{i=1} \beta_i \rho(y_i)  =$}
+		\Explain{ $=
+		\inf_{n,\alpha,x}   \sigma\left( u +  \sum^n_{i=1} \alpha_i v(x_i) 
+		\right) - \sum^n_{i=1} \alpha_i \rho(x_i) +
+		\inf_{n,\beta,y} \sigma\left( w +  \sum^n_{i=1} \beta_i v(y_i) 
+		\right) - \sum^n_{i=1} \beta_i \rho(y_i) = \gamma(u) + \gamma(v)$	
+	}
+	\Explain{ 2.3.3 $\gamma$ is positively homogeneous}
+	\Explain{ 2.3.3.1 Take some $u \in V$ and $\lambda \in \Reals_{++}$}
+	\ExplainFurther{ 
+		2.3.3.2Then
+		$\gamma(\lambda u) = \inf_{n,\alpha,x} 
+			\sigma\left( \lambda u +  \sum^n_{i=1} \alpha_i v(x_i) 
+		\right) - \sum^n_{i=1} \alpha_i \rho(x_i) =$}
+	\Explain{
+		$ =\inf_{n,\alpha,x} 
+			\sigma\left( \lambda u +  \sum^n_{i=1} \lambda \alpha_i v(x_i) 
+		\right) - \sum^n_{i=1} \lambda \alpha_i \rho(x_i) = 
+		\lambda \inf_{n,\alpha,x} 
+			\sigma\left(u +  \sum^n_{i=1} \alpha_i v(x_i) 
+		\right) - \sum^n_{i=1} \alpha_i \rho(x_i) = \lambda \gamma(u) 
+		$}
+	\Explain{ 2.4 Define $f$ as Hahn-Banach extension of $0$ dominated by $\gamma$}
+	\Explain{ 2.5 Clearly $f \le \gamma \le \sigma$}
+	\Explain{ 2.6 $\rho  \le  f v$}
+	\Explain{ 2.6.1 Select $x \in X$}
+	\Explain{ 2.6.2 Then by construction $\gamma(-v(x)) \le \sigma( -v(x) + v(x) ) - \rho(x) = -\rho(x)$}
+}\Page{
+	\Explain{ 2.6.3 But  $f(v(x)) \ge -\gamma(-v(x)) \ge \rho(x)$}
+	\EndProof
+}
+\newpage
+\subsubsection{Subliniar Functionals}
+\Page{
+	\Conclude{\FUNC{sublinear} = \Lambda V \in \VS{k} \. V^\# }
+	{
+		 \Lambda V \in \VS{k} \. \TYPE{Sublinear}(V)
+	}{\VS{k} \to \Type}
+	\\
+	\Theorem{LinearityCriterion}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall \sigma \in V^\# \.
+		\sigma \in V^*
+		\iff
+		\forall v \in V \.
+		\sigma(v) + \sigma(-v) = 0
+	}
+	\Explain{1 $(\Rightarrow)$ is obvious}
+	\Explain{2 $(\Leftarrow)$}
+	\Explain{2.1 Assume $\sigma(v) + \sigma(-v) = 0$ holds}
+	\Explain{2.2 Then $\sigma(v) = -\sigma(-v)$}
+	\Explain{2.3 So $\sigma$ is homogeneous}
+	\Explain{2.4 $\sigma$ is additive}
+	\Explain{2.4.1 Assume $v,w \in V$}
+	\Explain{2.4.2 Then $\sigma(v) = \sigma(v + w - w) 
+		\le \sigma(v + w) + \sigma(-w) = \sigma(v + w) - \sigma(w) $}
+	\Explain{2.4.3 By rearanging inequalities $\sigma(v) + \sigma(w) \le \sigma(v + w)$}
+	\Explain{2.4.4 But this is an inverse of Minkowski's inequality, so 
+		$\sigma(v+w) = \sigma(v) + \sigma(w) $}
+	\EndProof
+	\\
+	\DeclareFunc{auxiliaryConjugate}
+	{
+		\prod_{V \in \VS{\Reals}} \. V^\# \to V^\# 
+	}
+	\DefineNamedFunc{auxiliaryConjugate}{\sigma}{\sigma^\#}
+	{
+		\Lambda v \in V \. \inf \{  \sigma(v + w) - \sigma(w) | w \in V  \}
+	}
+	\\
+	\Theorem{LinearIfMinimal}
+	{
+		\forall V \in \VS{\Reals} \.  V^*  = \min V^\#
+	}
+	\Explain{1 Take $f \in V^*$}
+	\Explain{1.1 Assume $\sigma \in V^\#$ is such that $\sigma \le f$}
+	\Explain{1.2 Then $f(v) \ge \sigma(v) \ge -\sigma(-v) \ge - f(-v) = f(v)$ for every $v \in V$}
+	\Explain{1.3 So $f = \sigma$}
+	\Explain{1.4 As $\sigma$ was arbitrary, this proves that $f$ is minimal}
+	\Explain{2 Take $\sigma \in \min V^\#$}
+	\Explain{2.1 Then $\sigma^\# = \sigma$ }
+	\Explain{2.1.1 This holds as $\sigma^\# \le \sigma$ and $\sigma$ is minimal}
+	\Explain{2.2 Note, that this implies that $\sigma(v) \le  
+		\sigma\left(\frac{1}{2}v\right) - \sigma\left( -\frac{1}{2}v\right) $ for any $v \in V $}
+	\Explain{ 2.3 which can be rewritten as   
+		$
+			\sigma\left(\frac{1}{2}v\right) \le \sigma\left( -\frac{1}{2}v\right)
+		$
+	}
+	\Explain{ 2.4 Or as $v$ was arbitrary $\sigma(v) \le - \sigma(-v)$ which proves that $\sigma \in V^*$}
+	\EndProof
+	\\
+	\Theorem{MinimalSublinearAlwaysExists}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall \sigma \in V^\# \.
+		\exists \tau \in \min V \.
+		\tau \le \sigma
+	}
+	\Explain{This is Equivalent to Hahn-Banach Theorem}
+	\EndProof
+}\Page{
+	\DeclareFunc{sublinearCell}
+	{
+		\prod V \in \VS{k} \.
+		V^\# \to \Convex(V)
+	}
+	\DefineNamedFunc{sublinearCell}{\sigma}{\Cell(\sigma)}
+	{
+		\{ v \in V : \sigma(v) < 1 \}
+	}
+	\\
+	\Theorem{SeparationAndDomination}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall f \in V^* \setminus \{0\} \.
+		\forall \sigma \in V^\#_+ \.
+		f \le \sigma  \iff   \Cell(\sigma) f^{-1}\{1\} = 1
+	}
+	\Explain{1 $(\Rightarrow)$}
+	\Explain{1.1 This is straightforward by inequality $f(v) \le \sigma(v) < 1$}
+	\Explain{2 $(\Leftarrow)$}
+	\Explain{2.1 Assume $v \in V$ such that $f(v) > \sigma(v) \ge 0$}
+	\Explain{2.2 Then there is a scale $\lambda$ such that $f(\lambda v) = 1$}
+	\Explain{2.3 But this means that 
+		 $ \lambda \sigma(v) < \lambda f(v) = f(\lambda v) \le \sigma(\lambda v) = \lambda \sigma(v)$}
+	\Exclaim{2.4 But this is impossible}
+	\EndProof
+	\\
+	\Theorem{ConrinuityAndDomination}
+	{
+		\forall V \in \TVS{\Reals} \.
+		\forall f \in V^* \setminus \{0\} \.
+		\forall \sigma \in V^\#_+ \cap \TOP(V,\Reals) \.
+		f \le \sigma  \Imply f \in V'
+	}
+	\Explain{1 Take $U \in \U_\Reals(0)$}
+	\Explain{2 Then there is a balanced $W \in \U_\Reals(0)$ such that $W \subset U$}
+	\Explain{3 By continuity there is $O \in \U_V(0)$ such that $\sigma(O) \subset W$}
+	\Explain{4 Select Balanced $E \in \U_V(0)$ such that $E \subset O$}
+	\Explain{5 Then $f(E) \subset W \subset U$}
+	\Explain{5.1 Assume $v \in E$}
+	\Explain{5.2 If $f(v) = 0$ then $f(v) \in W$, so assume that $f(v) \neq 0$}
+	\Explain{5.3 Then either $f(v) > 0$ or $f(-v) > 0$}
+	\Explain{5.4 So either $ 0 \le f(v)  \le \sigma(v)$ or $0 \le f(-v) \le \sigma(-v)$}
+	\Explain{5.5 And as $E$ is balanced this means that either $f(v) \in W$ or $f(-v) \in W$}
+	\Explain{5.6 But as $W$ is also balanced and $-f(v) = f(-v)$ it always must be thes case 
+		that $f(v) \in W$ }
+	\Explain{6 Continuity at $0$ of $f$ proves global continuity}
+	\EndProof
+	\\
+	\Theorem{InverseMinkowskiIneq}
+	{
+		\forall V \in \VS{k} \.
+		\forall \sigma \in V^\# \.
+		\forall v,w \in V \.
+		\sigma(v) - \sigma(w) \le \sigma(v - w)
+	}
+	\Explain{1 write $\sigma(v) = \sigma(v -w + w) \le \sigma(v - w) + \sigma(w)$}
+	\Explain{2 By rearanging the inequlity $\sigma(v) - \sigma(w) \le \sigma(v - w)$}
+	\EndProof
+	\\
+	\Theorem{SublinearUniformContinuityCriterion}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \.
+		\forall \sigma \in V^\# \.
+		\sigma \in C_0(V) \Imply \sigma \in \UNI(V,\Reals)
+	}
+	\Explain{ Obvious}
+	\EndProof
+}\Page{
+	\Theorem{PositiveSublinearContinuity}
+	{
+		\NewLine ::
+		\forall V \in \TVS{k} \.
+		\forall \sigma \in V^\#_+ \.
+		\sigma \in \UNI(V,\Reals) \iff 
+		\Cell(\sigma) \in \T(V)
+	}
+	\Explain{1 $(\Rightarrow)$}
+	\Explain{1.1 This follows directly from topological definition of continuity}
+	\Explain{2 $(\Leftarrow)$}
+	\Explain{2.1 Assume $(\Delta,v)$ is a net in $V$ such that $\lim_{\delta \in \Delta} v_\delta = 0$}
+	\Explain{2.2 Then $v_\delta \in  \lambda \Cell_V$ for all sufficiently large $\delta$ 
+		and any $\delta \in \Reals_{++}$}
+	\Explain{2.3 But this means that $\sigma(v_\delta) < \lambda$, so  
+		$\lim_{\delta \in \Delta} \sigma(v_\delta) = 0$}
+	\Explain{2.4 This proves uniform continuity }
+	\EndProof
+	\\
+	\Theorem{ContinuousGauge}{
+		\forall V \in \TVS{k} \.
+		\forall C : \Convex(V) \cap \U_0(V) \.
+		\gamma(\bullet|C) \in \UNI(V,\Reals) 
+	}
+	\Explain{This follows by the previous theorem}
+	\EndProof
+	\\
+	\Theorem{OpenConvexRepresentation}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \.
+		\forall C : \Convex \And \TYPE{NonEmpty} \And \T(V) \.
+		\exists \sigma \in V^\#_+ \And \UNI(V,\Reals) \.
+		\exists v \in V \.
+		C = v + \Cell(\sigma)
+	}
+	\Explain{This follows by the previous theorem}
+	\EndProof
+}
+\newpage
+\subsubsection{Geometric Interpretation}
+\Page{
+	\Theorem{GeometricRealHahnBanachTheorem}
+	{
+		\NewLine :: 		
+		\forall V \in \TVS{\Reals} \.
+		\forall C : \Convex \And \T(V) \.
+		\forall A \subset_{k\hyph\mathsf{AFF}} V \.
+		\forall \aleph : CA = \emptyset \. \NewLine \.
+		\exists H : \TYPE{Hyperplane}(V) \.
+		A \subset H \And CH = \emptyset
+	}
+	\Explain{1 Without loss of generality assume $A \subvec{k} V$}
+	\Explain{2 Represent $C$ as $v + \Cell(\sigma)$ with $\sigma \in V^\#_+ \And \UNI(V,\Reals)$ 
+		and $v \in V$}
+	\Explain{3 Note, that (1) implies that $v \neq 0$, furthermore $v \not \in A$}
+	\Explain{4  By separation and domination theorem $\sigma(a - v) \ge 1$ for any $a \in A$}
+	\Explain{5 define $f(a + \alpha v) = - \alpha$ on $A \oplus kv$}
+	\Explain{6 $f \le \sigma$ on $A \oplus kv$}
+	\Explain{6.1 $f(a + \alpha v) = - \alpha \le 0 \le \sigma(a + \alpha v)$ if $\alpha \le 0$ }
+	\Explain{6.2 $f(a + \alpha v) = - \alpha \le -\alpha\left( \alpha^{-1} a + v\right) 
+			\le \sigma f(a + \alpha v) $ if $\alpha > 0$ }
+	\Explain{7 Construct an extension $F$ of $f$ dominated by $\sigma$ by Hahn-Banach}
+	\Explain{8 Then using $H = \ker F$ produces the desired result}
+	\EndProof
+	\\
+	\Theorem{GeometricComplexHahnBanachTheorem}
+	{
+		\NewLine :: 		
+		\forall V \in \TVS{\Complex} \.
+		\forall C : \Convex \And \T(V) \.
+		\forall A \subset_{k\hyph\mathsf{AFF}} V \.
+		\forall \aleph : CA = \emptyset \. \NewLine \.
+		\exists H : \TYPE{Hyperplane}(V) \.
+		A \subset H \And CH = \emptyset
+	}
+	\Explain{1 Treat $V$ as a real vector space and construct $H'$ as in the previous theorem}
+	\Explain{2 Then $H = H' \cap \i H'$ is a desired complex hyperplane}
+	\EndProof
+	\\
+	\Theorem{PlaneOpenConvexSetSeparationReal}
+	{
+		\NewLine ::
+		\forall V \in \TVS{\Reals} \.
+		\forall C : \Convex \And \T(V) \.
+		\forall A \subvec{k} V \.
+		\forall \aleph : CA = \emptyset \. \NewLine \.
+		\exists f \in V' \. f(A) = 0 \And \forall x \in C \. f(x) > 0 
+	}
+	\Explain{1 Just use the functional $-F$ of geometric Hahn-Banach theorem}
+	\Explain{2 $F(H) = 0$, so $F(A) = 0$}
+	\Explain{3 $-F$ is positive on $C$}
+	\Explain{3.1 $v \in C$ and we know that  $-F(v) = 1$}
+	\Explain{3.2 If $x \in C$, then $[v,x] \subset C$}
+	\Explain{3.3 So, if $f(x) < 0$ there exists a midpoint $u \in [v,x]$ such that $f(u) = 0$
+		by intermidiate value theorem}
+	\Explain{3.4 But this means that $u \in CH$, which is imposible by construction}
+	\EndProof
+	\\
+	\Theorem{PlaneOpenConvexSetSeparationComplex}
+	{
+		\NewLine ::
+		\forall V \in \TVS{\Complex} \.
+		\forall C : \Convex \And \T(V) \.
+		\forall A \subvec{k} V \.
+		\forall \aleph : CA = \emptyset \. \NewLine \.
+		\exists f \in V' \. f(A) = 0 \And \forall x \in C \. \Re f(x) > 0 
+	}
+	\NoProof
+}\Page{
+	\Theorem{PlanePointSeparationTheorem}
+	{
+		\forall V \in \LCS{k} \.
+		\forall A \subset_{\TVS{k}} V \.
+		\forall v \in A^\c \.
+		\exists f \in V' \. f(A) = 0 \And f(v) \neq 0 
+	}
+	\Explain{1 As $A$ is closed and $V$ is locally convex there exists a convex set $C \in \U_V(A)$
+		such that $CA = \emptyset$}
+	\Explain{2 Apply separation theorem to $A$ and $C$}
+	\EndProof
+	\\
+	\Theorem{AbundanceOfContinuousFunctionals}
+	{
+		\forall V \in \LCS{k} \.
+		\forall v \in \Big(\cl\{0\}\Big)^\c \.
+		\exists f \in V' \. f(v) \neq 0
+	}
+	\Explain{Apply previous theorem to $\cl\{0\}$ and $v$}
+	\EndProof
+	\\
+	\Theorem{ContinuousDualSeparetesLocallyConvexSpace}
+	{
+		\forall V \in \LCHS{k} \.
+		\TYPE{Separates}(V,V')
+	}
+	\NoProof
+	\\
+	\Theorem{ContinuousDualIsTotal}
+	{
+		\forall V \in \LCHS{k} \.
+		\TYPE{Total}(V,V')
+	}
+	\NoProof
+	\\
+	\Theorem{NontrivialDual}
+	{
+		\forall V \in \TVS{k} \.
+		V' \neq \{0\} \iff
+		\exists U \in \U_V(0) \. \Convex(V,U) \And U \neq V
+	}
+	\NoProof
+	\\
+	\Theorem{VectorValuedCauchyIntegralTheorem}
+	{
+		\NewLine 		
+		\forall V \in \LCHS{\Complex} \.
+		\forall (D,C) : \TYPE{JordanArc} \.
+		\forall v  \in \TOP(D \cup C,V) \.
+		\forall \aleph : \TYPE{Analytic}(v,D) \.
+		\int_C v(s)ds = 0
+	}
+	\Explain{Take $f \in V'$}
+	\Explain{Then $f(v)$ is analytic}
+	\Explain{ Then $f\left( \int_C v(s)ds\right) = \int_C f\Big(v(s)\Big)ds = 0$
+		by normal cauchy intergral theorem}
+	\Explain{ But as $V'$ is total this means that $\int_C v(s)ds = 0$}
+	\EndProof
+}
+\newpage
+\subsubsection{From Geometry to Analysis}
+\Page{
+	\Theorem{GeneralHahnBanachTheorem}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall p  : \Convex(V,V) \.
+		\forall U \subvec{\Reals} V \.
+		\forall f \in U^* \. \NewLine \.
+		\forall [0] : f \le p \. 
+		\exists F \in V^* : 
+		F_{|U} = f \And F \le p
+	}
+	\Say{C}{\Big\{ (v,\alpha) \in V \times \Reals : \alpha > p(v) \Big\}}{?(V \times \Reals)}
+	\AssumeIn{(v,\alpha),(w,\beta)}{C}
+	\AssumeIn{t}{[0,1]}
+	\Say{[1]}{\bd \CF(V,V)(p)(v,w,t)}
+	{ p\Big(tv + (1-t)w \Big) \le t p(v) + (1-t)p(w) < t\alpha + (1 -t)\beta   }
+	\Conclude{\Big[\big((v,\alpha),(w,\beta)\big).*\Big]}
+	{ \ByConstr C [1]  }{ t(v,\alpha) + (1-t)(w,\beta) \in C}
+	\Derive{[1]}{\bd^{-1} \Convex}{\TYPE{Convex}(C)}
+	\Say{A}{\Big\{ (u,f(u)) \Big| u \in f(u) \Big\}}
+	{
+		\TYPE{VectorSubspace}(V\times\Reals)
+	}
+	\Say{[2]}{\ByConstr A \ByConstr C}{A \cap \core C = \emptyset}
+	\Say{[3]}{\bd \CF(V,V)(p)\ByConstr C}{\core C \neq \emptyset}
+	\Say{\Big(H,[4]\Big)}{\THM{SeparationTHM}(V \times \Reals,C,A)[2][3]}
+	{
+		\sum H : \TYPE{Hyperplane}(V\times\Reals) \. 
+		\TYPE{Separates}(V\times\Reals,H,C,A)
+	}
+	\Say{[5]}{\bd \TYPE{Separates} [4]}{ A \subset H}
+	\Say{\Big(g,r,[6]\Big)}{\bd \TYPE{Hyperplane}(V\times\Reals,H)}
+	{
+		\sum g \in (V \times \Reals)^* \. H = \H(g,r)
+	}
+	\Say{\Big(h,\gamma, [7] \Big)}{\bd (V \times \Reals)^*}
+	{
+		\sum h \in V^* \. \sum \gamma \in \Reals^\times \. 
+		\forall (v,\alpha) \in V \times \Reals \. 
+		g(v,\alpha) = h(v) + \gamma\alpha
+	}
+	\Say{[8]}{[5][6][7]}{\forall u \in U \. h(u) + \gamma f(u) = r}
+	\Say{[9]}{[8](0)}{r = 0}
+	\Say{[10]}{\bd \Field \Reals[8]}{ \forall u \in U \. f(u) = \frac{1}{\gamma} (r-h(u)) }
+	\Say{F}{-\frac{1}{\gamma}h}{V^*}
+	\Assume{v}{V}
+	\Say{[11]}{\bd \TYPE{Separates}[4][6][7][9]}{h(v) + \gamma p(v) \ge 0}
+	\Conclude{[v.*]}{\ByConstr F [11]}
+	{
+		F(v) = - \frac{1}{\gamma} h(v) \le p(v)
+	}
+	\DeriveConclude{[*]}{\bd^{-1} \TYPE{Ineq} }{ F \le p}
+	\EndProof
+}\Page{
+	\Theorem{DieodonneConvexExtensionTHM}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall p  : \Convex(V,V) \.
+		\forall U \subvec{\Reals} V \. \NewLine \.
+		\forall f : \Convex(V,U) \. 
+		\forall [0] : f \le p \. 
+		\exists F \in \Convex(V,V) : 
+		F_{|U} = f \And F \le p
+	}
+	\Say{C}{\Big\{ (v,\alpha) \in V \times \Reals : \alpha > p(v) \Big\}}{\Convex(V \times \Reals)}
+	\Say{C'}{\Big\{ (u,\alpha) \in U \times \Reals : \alpha > f(u) \Big\}}{\Convex(U \times \Reals)}
+	\AssumeIn{u}{U}
+	\Say{[1]}{\ByConstr C}{(u,f(u)) \in  \boundary C'}
+	\Say{\Big(H',[2]\Big)}{\THM{ClosedSupportExists}(U\times\Reals,C',u)}{
+		\sum H' : \TYPE{Hyperplane}(U\times\Reals) \. 
+		\TYPE{Supports}(V,H',C')
+	}
+	\Say{[3]}{\ByConstr C \bd \TYPE{Supports}[2]}{C \cap H' = \emptyset}
+	\Say{H,[4]}{\THM{ConvexBodyBound}(V,H')}
+	{
+		\sum H : \TYPE{Hyperplane}(V \times \Reals) \.
+		\TYPE{Bounds}(V,H,C)
+	}
+	\Conclude{E_u}{\Big\{ (v,\alpha) \in V\times\Reals \Big| \exists (v,h) \in H : \alpha \le h \Big\}}
+	{\Convex(V\times\Reals)}
+	\Derive{\Big(E,[1]\Big)}{\Intro\Act{\prod}}{
+		\prod_{u \in U} 
+		\sum E_u : \TYPE{Convex}(V\times\Reals) \. 
+		\TYPE{Bounds}(V,\lin E_u,C) \And \NewLine \And
+		\TYPE{Supports}\Big(V,\lin E_u \cap U\times\Reals,\lin C',(u,f(u))\Big)
+	}
+	\Say{D}{\bigcap_{u \in U} E_u}{\Convex(V)}
+	\Say{[2]}{\ByConstr D [1]}{ C \subset D}
+	\Say{F}{
+		\Lambda v \in V \. 
+		\inf \Big\{ \alpha \in \Reals \Big| (v,\alpha) \in D  \Big\} 
+	}
+	{       
+		V \to \Reals
+	}
+	\Say{[3]}{\ByConstr F \ByConstr D[1]}{F_{|U} = f}
+	\Say{[4]}{\ByConstr F \ByConstr D[2]}{F  \le p}
+	\Conclude{[*]}{\bd \Convex(V,D) \ByConstr F}{\CF(V,V,F)}
+	\EndProof
+}
+\newpage
+\subsubsection{Smooth Norms}
+\Page{ 
+	\DeclareType{SmoothAtPoint}
+	{
+		\prod V \in \TVS{k} \.
+		\prod C \in \Convex \.
+		?\boundary C
+	}
+	\DefineType{p}{SmoothAtPoint}
+	{
+		\# \TYPE{Support}(V,C,p) = 1
+	}
+	\\
+	\DeclareType{SmoothBody}
+	{
+		\prod V \in \TVS{k} \. ?\Convex 
+	}
+	\DefineType{C}{SmoothBody}
+	{
+		\forall p \in \boundary C \. \TYPE{SmoothAtPoint}(p)
+	}
+	\\
+	\DeclareType{SmoothNorm}
+	{
+		\prod V \in \TVS{k} \. \TYPE{Norm}(V) \to ?V
+	}
+	\DefineType{\nu}{SmoothNorm}
+	{
+		\TYPE{SmoothBody}(V,\Cell(\nu))
+	}
+	\\
+	\Theorem{SmmothNormIfDifferentiable}
+	{
+		\NewLine ::		
+		\forall V \in \TVS{k} \. 
+		\forall \nu : \TYPE{Norm}(V) \.
+		\TYPE{SmoothNorm}(V,\nu)
+		\iff
+		\nu \in \mathsf{Diff}(V,V\setminus \{0\},\Reals)        
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Sandwich Theorems}
+\Page{
+	\DeclareFunc{combinedAuxilarlyFunctional}
+	{
+		\prod_{V \in \VS{\Reals}}
+		\prod_{ \sigma \in V^\#} 
+		\prod_{X \subset V}
+		\prod_{f : X \to \Reals}
+		(f \le \sigma) \to  (V \to \Reals)
+	}
+	\DefineNamedFunc{combinedAuxilarlyFunctional}{\aleph}{(\sigma,f)_X^\#}
+	{
+		\Lambda v \in V \. \inf \{ \sigma(v + \lambda x) - \lambda f(x)  | x \in X, \lambda \in \Reals_{++}\}
+	}
+	\Explain{
+		$
+			\sigma(v + \lambda x) - \lambda f(x) \ge  \sigma(\lambda v)  - \sigma(-v) - \lambda f(x) =
+			-\sigma(-v)  + \lambda(\sigma(x) - f(x)) \ge - \sigma(-v)
+		$
+	}
+	\Explain{So $(\sigma,f)_X^\#(v) \ge -\sigma(-v) > - \infty$ and this means that
+		$(\sigma,f)_X^\#$ is well defined }
+	\EndProof
+	\\
+	\Theorem{combinedAuxilarlyFunctionalBound1}
+	{	
+		\NewLine ::		
+		\forall V \in \VS{\Reals} \.
+		\forall \sigma\in V^\# \.
+		\forall X \subset V \.
+		\forall f : X \to \Reals  \.
+		\forall \aleph  : f_{|X} \le \sigma \.
+		(\sigma, f)_X^\# \le \sigma
+	}
+	\Explain{
+			$
+				(\sigma, f)_X^\#(x) \le  
+				\sigma(v + \lambda x) - \lambda f(x) \le    
+				\sigma(v) + \lambda \sigma(x) -\lambda f(x)  = 
+				\sigma(v) + \lambda \big( \sigma(x) - f(x) \big)
+			$
+	}
+	\Explain{
+		By taking $\lambda \to 0$ one gets $(\sigma, f)_X^\#(v) \le \sigma(v)$
+	}
+	\EndProof
+	\\
+	\Theorem{combinedAuxilarlyFunctionalBound2}
+	{	
+		\NewLine ::		
+		\forall V \in \VS{\Reals} \.
+		\forall \sigma\in V^\# \.
+		\forall X \subset V \.
+		\forall f : X \to \Reals  \.
+		\forall \aleph : f_{|X} \le \sigma \. \NewLine \.
+		\forall h \in V^* \.
+		h \le (\sigma, f)_X^\#
+		\iff
+		f \le h_{|X} \And h \le \sigma 
+	}
+	\Explain{1 $(\Rightarrow)$ assume $h \le (\sigma, f)_X^\#$}
+	\Explain{1.1 $ h(x) =  -h(-x) \ge - (\sigma, f)_X^\#(-x) \ge 
+	 -\sigma(-x + x)  +  f(x) = f(x) $ for any $x \in X$}	
+	\Explain{1.2  $h \le (\sigma, f)_X^\# \le \sigma$  }
+	\Explain{2 $(\Leftarrow)$ assume $f \le h_{|X}$ anf $h \le \sigma$}
+	\Explain{2.1
+		Write
+		$
+			\sigma(v + \lambda x) - \lambda f(x) \ge 
+			h( v + \lambda x) - \lambda h(x) = h(v) 		
+		$}
+	\Explain{ 2.2
+		Then by taking infimum $ (\sigma,f)^\#_X(v) \ge h(v)$ 
+	}
+	\EndProof
+	\\
+	\Theorem{combinedAuxilarlyFunctionalBound2}
+	{	
+		\NewLine ::		
+		\forall V \in \VS{\Reals} \.
+		\forall \sigma\in V^\# \.
+		\forall X : \Convex(V) \.
+		\forall f : \TYPE{Concave}(V,V) \.
+		\forall \aleph : f_{|X} \le \sigma \. \NewLine \.
+		(\sigma,f)^\#_X \in V^\#
+	}
+	\Explain{ 1 Positive homogenety is obvious}
+	\Explain{ 2 So we investigate subadditivity}
+	\Explain{ 2.1 Select $v,w \in V$}
+	\Explain{
+			2.2 Then
+			$
+				(\sigma,f)^\#_X(v + w) = 
+				\inf_{x,\lambda} \sigma( v + w + \lambda x) -   \lambda f(x)  \le 
+				\inf_{x,\lambda} \sigma\left( v + \frac{\lambda}{2} x\right) -   \frac{\lambda}{2} f(x) 
+				+  \sigma\left( w + \frac{\lambda}{2} x\right) -   \frac{\lambda}{2} f(x) 
+			$
+	}
+\NoProof
+}\Page{
+	\Theorem{SandwichTheorem}
+	{
+		\forall V \in \VS{\Reals} \.
+		\forall \sigma\in V^\# \.
+		\forall X : \Convex(V) \.
+		\forall f : \TYPE{Concave}(V,V) \.
+		\forall \aleph : f_{|X} \le \sigma \. \NewLine \.
+		\exists  h \in V^* \.
+		f \le h_{|X} \And h \le \sigma 
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Paired Spaces}
+\subsubsection{Polar Sets}
+\subsection{Barelled Spaces}
+\subsection{Bornological Spaces}
 \subsection{Towards Approximation Theory}
 \section{Spaces of Distributions}
 \newpage
