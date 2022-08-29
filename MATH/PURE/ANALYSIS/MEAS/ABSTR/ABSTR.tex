@@ -1140,7 +1140,7 @@ Although, we assume here measures to be real-valued, we do not make any assumpti
 	\Explain{ Note, that each $A^\#_n \in \Sigma$}
 	\Explain{ Express $A^\#_n = \bigcup_{I \subset \Nat,|I|=n} \bigcap_{i \in I} A_i  $  } 
 	\EndProof
-	\\
+}\Page{
 	\Theorem{CountingTransformSum}
 	{
 		\forall (X,\Sigma,\mu) : \MS \.
@@ -1170,10 +1170,9 @@ Although, we assume here measures to be real-valued, we do not make any assumpti
 		Otherwise, both sums are infinite}
 	\EndProof
 	\Explain{
-		This prove is bogus as the references integration, 
+		This proof is bogus as the references integration, 
 		the proper proof must be purely combinatorial}
-}
-\Page{
+	\\
 	\Theorem{FiniteSumAlmostFinite}
 	{
 			\NewLine :			
@@ -8700,32 +8699,590 @@ It seems that $f^{-1}(\mu^\star) \le (f^{-1} \mu)^\star$ always true. The conver
 	\Explain{
 		So $\phi$ is measureable as supremum of convex functions}
 	\\	
-	\Theorem{JensenInequality}
+	\Theorem{GeneralJensenInequality}
 	{
 		\NewLine ::		
 		\forall (X,\Sigma,\mu) \in \MEAS \.
-		\forall \phi : \TYPE{Convex} \.
-		\forall f,g \in \BOR_\mu^*(X,\Sigma,) \.
+		\forall \phi : \TYPE{ConvexFunction}(\Reals) \.
+		\forall f,g \in \BOR_\mu^*(X,\Sigma) \.
 		\forall \aleph : f \ge_{\ae} 0 \.
 		\forall \beth : \int f = 1 \. \NewLine \.
 		\forall \gimel : fg  \in L^1(X,\Sigma,\mu) \. 
-		\phi( \int  fg ) \le \int \phi(f) g
+		\phi( \int  fg ) \le \int f \phi(g)
 	}
 	\Explain{
-		This follows from elementary convex analysis}
+		1 Let $\alpha$ be an affine approximation of $\phi$ at $\int  fg $}
+	\Explain{ 
+		2 Then $\alpha(t) = \lambda t + \sigma$, for a $\lambda,\sigma \in \Reals$
+	}
+	\Explain{
+		3 So $\phi(\int fg) = \alpha(\int fg) = \lambda \int fg   + \sigma =
+			  \int \lambda fg   + \sigma \int f = \int f (\lambda g + \sigma)  = 
+			 \int f \alpha(g) \le \int f \phi(g)$
+	}
 	\EndProof
+	\Theorem{ProbabilityJensenInequality}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\pi) : \TYPE{Probability} \.
+		\forall \phi : \TYPE{ConvexFunction}(\Reals) \.
+		\forall g \in L^1(X,\Sigma,\pi) \.
+		\phi( \int  g ) \le \int  \phi(g)
+	}
+	\Explain{Just use the previous theorem with $f=1$}
+	\EndProof
+	\\
+	\Theorem{RoselliWellemTHM}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall \phi : \TYPE{ConicFunction}(\Reals) \.
+		\forall g  \in L^1(X,\Sigma,\mu) \.
+		\phi( \int  g ) \le \int \phi(g)
+	}
+	\Explain{
+		1 Essentially Same proof as before}
+	\Explain{ 
+		2 But now use the fact that $\alpha(t) = \lambda t$, for a $\lambda \in \Reals$
+	}
+	\Explain{
+		3 So $\phi(\int g) = \alpha(\int g) = \lambda \int g  =
+			 \int \lambda g  = \int  \alpha(g) \le \int \phi(g)$
+	}
+	\EndProof
+	\\
+	\Explain{Comment: these theorems can be easely generalized for the case of vector valued $g$.}
+}\Page{
+	\Theorem{JensensInequalityForConditionalExpectations}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\pi)  : \TYPE{Probability} \.
+		\forall \phi : \TYPE{ConvexFunction}(\Reals) \.
+		\forall T \subset_\sigma \Sigma \.		
+		\forall f \in L^1(X,\Sigma,\pi) \.
+		\NewLine \.
+		\forall \aleph : \phi(f) \in L^1(X,\Sigma,\mu) \.
+		\forall  g :  \CE(X,\Sigma,\pi,T,f) \. \NewLine \.
+		\forall  h :  \CE(X,\Sigma,\pi,T,\phi(f)) \.  
+		\phi(g) \le h \And \int \phi(g) \le \int \phi(f)
+	}
+	\ExplainFurther{ 1 Intuitively, conditional expectations are composed of small integrals,} 
+	\Explain{ $\quad$ so ordinary  Jensens inequality can be applied to them}
+	\Explain{ 2 This produces $\phi(g) \le h$ }	
+	\Explain{ 3 Then use the equality of integrals to get $\int \phi(g) \le \int h  = \int \phi(f)$}
+	\EndProof
+	\\
+	\Theorem{RoselliWillemInequalityForConditionalExpectations}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu)  \in \MEAS \.
+		\forall \phi : \TYPE{ConvexFunction}(\Reals) \.
+		\forall T \subset_\sigma \Sigma \.		
+		\forall f \in L^1(X,\Sigma,\mu) \.
+		\NewLine \.
+		\forall \aleph : \phi(f) \in L^1(X,\Sigma,\mu) \.
+		\forall  g :  \CE(X,\Sigma,\mu,T,f) \. \NewLine \.
+		\forall  h :  \CE(X,\Sigma,\mu,T,\phi(f)) \.  
+		\phi(g) \le h \And \int \phi(g) \le \int \phi(f)
+	}
+	\NoProof
+	\\
+	\Theorem{StrongProduct}
+	{
+		\forall (X,\Sigma,\pi) : \TYPE{Probability} \.
+		\forall T \subset_\sigma X \.
+		\forall f \in L_1(X,\Sigma,P) \.
+		\forall h \in \BOR_{\pi|T}^*(X,T) \. \NewLine \.
+		\forall g : \CE(X,\Sigma,\pi,T,f) \.
+		\forall g' : \CE(X,\Sigma,\pi,T,|f|) \. \NewLine \.
+		f h \in L_1(X,\Sigma,\pi) \iff 
+		g' h \in L_1*(X,T,\pi|T) \And 
+		\CE(X,\Sigma,\pi,T,fh,gh)
+	}
+	\NoProof
 }
 \newpage
-\subsection{Transforamtions}
+\subsection{Structures and Transforamtions}
 \subsubsection{Measure Preserving Maps}
+\Page{
+	\DeclareType{MeasurePreserving}
+	{
+		\prod (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \. ?\BOR\Big((X,\Sigma,\mu),(Y,T,\nu)\Big)
+	}
+	\DefineType{f}{MeasurePreserving}
+	{
+		\forall A \in T \.  \nu(A) = \mu( f_*A)
+	}
+	\\
+	\DeclareFunc{measurePreimageCategory}
+	{
+		\CAT
+	}
+	\DefineNamedFunc{measurePreimageCategory}
+	{}
+	{\MEAS^\#}
+	{
+		(\TYPE{Measure},\TYPE{MeasurePreserving},\circ,\id)
+	}
+	\\
+	\Theorem{CompletionInvariance}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \. 
+		\MEAS^\#\Big((X,\Sigma,\mu),(Y,T,\nu)\Big) =
+		\MEAS^\#\Big((X,\hat \Sigma,\hat \mu),(Y,\hat T,\hat \nu)\Big)  
+	}
+	\Explain{ 1 Assume $A \in \hat T$}
+	\Explain{ 2 Then there exist measurable $A',A'' \in T$ such that 
+		$A' \subset A \subset A''$ and $\nu(A') = \nu(A'')$}
+	\Explain{ 3 It is evedent that $f^{-1}(A') \subset f^{-1}(A) \subset f^{-1}(A'')$}
+	\Explain{ 4 Also $\mu(f^{-1}(A')) = \nu(A') = \nu(A'') = \mu(f^{-1}(A''))$   }
+	\Explain{ 5 So $f^{-1}(A) \in \Sigma$ and $\hat\mu(f^{-1}(A)) = \nu(A') = \hat \nu(A)$}
+	\EndProof
+	\\
+	\Theorem{Probability}
+	{
+		\forall (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \. 
+		\forall f \in \MEAS^\#\Big((X,\Sigma,\mu),(Y,T,\nu)\Big) \. \NewLine \.
+		\TYPE{Probability}(X,\Sigma,\mu) 
+		\iff
+		\TYPE{Probability}(Y,T,\nu) 	
+	}
+	\Explain{ $\nu(Y) = \mu(f^{-1}(Y)) = \mu(X)$}
+	\EndProof
+	\\	
+	\Theorem{Finite}
+	{
+		\forall (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \. 
+		\forall f \in \MEAS^\#\Big((X,\Sigma,\mu),(Y,T,\nu)\Big) \. \NewLine \.
+		\TYPE{Finite}(X,\Sigma,\mu) 
+		\iff
+		\TYPE{Finite}(Y,T,\nu) 	
+	}
+	\Explain{ $\nu(Y) = \mu(f^{-1}(Y)) = \mu(X)$}
+	\EndProof
+	\\
+	\Theorem{SigmaFiniteCodomain}
+	{
+		\forall (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \. 
+		\forall f \in \MEAS^\#\Big((X,\Sigma,\mu),(Y,T,\nu)\Big) \. \NewLine \.
+		\SF{Y,T,\nu} 
+		\Imply
+		\SF{X,\Sigma,\nu} 
+	}
+	\Explain{1 Let $\F$ be a countable cover of $Y$ by $\nu$-finite sets}
+	\Explain{2 Then $f^{-1}(\F)$ is a such cover for $X$ and $\mu$-finite sets}
+	\EndProof
+}\Page{
+	\Theorem{SigmaFiniteDomain}
+	{
+		\NewLine ::	
+		\forall (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \. 
+		\forall f \in \MEAS^\#\Big((X,\Sigma,\mu),(Y,T,\nu)\Big) \. \NewLine \.
+		\SF{X,\Sigma,\nu} \And  \TYPE{Semifinite}(Y,T,\nu)
+		\Imply
+		\SF{Y,T,\nu} 
+	}
+	\Explain{1 Let $\F$ be a disjoint family in $Y$ of $\nu$-nonzero sets}
+	\Explain{2 Then $f^{-1}(\F)$ is a such cover for $X$ and $\mu$-nonzero sets}
+	\Explain{3 This means that $f^{-1}(\F)$ is countable}
+	\Explain{4 $f^{-1}$ is injective on $\F$}
+	\Explain{4.1 Assume $A,B \in \F$ such that $A \neq B$ and $f^{-1}(A) = f^{-1}(B)$}
+	\Explain{4.2 $\nu(A \cup B) = \nu(A) + \nu(B)$ as $AB = \emptyset$}
+	\Explain{4.3 By measure preservation $\nu(A) + \nu(B) = \mu( f^{-1}(A \cap B) ) = 
+		\mu(f^{-1}(A)) = \nu(A)$}
+	\Exclaim{4.4 But $\nu(A) + \nu(B) > \nu(A)$}
+	\Explain{4.4 So $\F$ must also be countable}
+	\Explain{4.5 Thus, $(Y,T,\nu)$ is $\sigma$-finite}
+	\EndProof
+	\\
+	\Theorem{AtomlessCodomain}
+	{
+		\NewLine ::	
+		\forall (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \. 
+		\forall f \in \MEAS^\#\Big((X,\Sigma,\mu),(Y,T,\nu)\Big) \. \NewLine \.
+		\sFinite \And \Aless(Y,T,\nu) \.
+		\Imply
+		\Aless(X,\Sigma,\mu) 
+	}
+	\Explain{ 1 Assume $A \in \Sigma$ such that $\mu(A) > 0$}
+	\Explain{ 2 Let $\F$ be a disjoint family in $Y$ of $\nu$-nonzero sets}
+	\Explain{ 3 As $\nu$ is atomless it is possible to assume thet $\nu(F) < \mu(A)$ for 
+		any $F \in \F$}
+	\Explain{ 4Then $f^{-1}(\F)$ covers $X$}
+	\Explain{ 5 So there must be $F \in \F$ such that $\mu(f^{-1}(F) \cap A) > 0$}
+	\Explain{ 6 But  $\mu(f^{-1}(F) \cap A) \le \mu(f^{-1}(F)) = \nu(F) < \mu(A)$ }
+	\Explain{ 7 Thus, $A$ is not an atom}
+	\EndProof
+	\\
+	\Theorem{PurelyAtomicDomain}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \. 
+		\forall f \in \MEAS^\#\Big((X,\Sigma,\mu),(Y,T,\nu)\Big) \. \NewLine \.
+		\Semifinite(Y,T,\nu) \And \PA(X,\Sigma,\mu)
+		\Imply
+		\PA(Y,T,\nu) 
+	}
+	\Explain{ 1 Assume $A \in T$ such that $\nu(A) > 0$}
+	\Explain{ 2 As $\nu$ is semifinite there is a measurable 
+		$B \subset A$ such that $0 < \nu(B) < \infty$ }
+	\Explain{  3  Then $\mu(f^{-1}(B)) = \nu(B) > 0 $
+	 	and as $\mu$ is purely atomic there is an atom 
+	 	$E \subset f^{-1}(B)$ of $\mu$}
+	 \Explain{ 4
+	 	Define $\F = \{ F \in T :  F \subset B \And \mu(f^{-1}(A) \cap E) = 0 \}$}
+	 \Explain{ 5
+	 	$\F$ is closed under countable unions}
+	 \Explain{ 6  So there is $G \in \F$ such that $\nu(F\setminus G) = 0$ for any $F \in \F$}
+	 \Explain{ 7 Then $H =  B \setminus G$ is a an atom of $\nu$}
+	 \Explain{ 7.1 $0 < \mu(E) = \mu(f^{-1}(H)) = \nu(H)$}
+	 \Explain{ 7.2 On the other hand, assume there is $F \subset H$ such that $ 0 < \nu(F) < \nu(H)$ }
+	 \Explain{ 7.3 But then $0 < \mu(E \cap f^{-1}(F)) < \mu(E)$, but this is imposible}
+	 \EndProof
+}\Page{
+	\Theorem{OuterMeasureInequality1}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \. 
+		\forall f \in \MEAS^\#\Big((X,\Sigma,\mu),(Y,T,\nu)\Big) \. \NewLine \.1
+		\forall B \in T \. 
+		\mu^*(f^{-1}(B)) \le \nu^*(B) 
+	}
+	\Explain{ 1 Outer measures are computed as infimums}
+	\Explain{ 2 So then computinus infimum for $\mu^*$ there are same
+		values as for $\nu^*$ plus something else}
+	\EndProof
+	\\
+	\Theorem{OuterMeasureInequality2}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \. 
+		\forall f \in \MEAS^\#\Big((X,\Sigma,\mu),(Y,T,\nu)\Big) \. \NewLine \.1
+		\forall A \in \Sigma \. 
+		\mu^*(A) \le \nu^*(f(A)) 
+	}
+	\Explain{ 1 Outer measures are computed as infimums}
+	\Explain{ 2 So then computinus infimum for $\mu^*$ there are same
+		values as for $\nu^*$ plus something else}
+	\EndProof
+	\\
+	\Theorem{ImageMeasureHasMeasurePreservingMap}
+	{
+		\NewLine : 
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall Y \in \SET \.
+		\forall f : X \to Y \.
+		f \in \MEAS^\#(\mu, f_* \mu)
+	}
+	\Explain{ 1 This is an obvious by definition}
+	\EndProof
+	\\
+	\Theorem{ImageMeasurePreservesCompleteness}
+	{
+		\NewLine :
+		\forall (X,\Sigma,\mu)  : \CMS \.
+		\forall Y \in \SET \.
+		\forall f : X \to Y \.
+		\CMS(Y, f_*\Sigma, f_* \mu ) 
+	}
+	\Explain{ 1 Assume $A \subset Y$ is such that $nu^*(A) = 0$}
+	\Explain{ 2 Then $\mu^*(f^{-1}(A)) \le \nu^*(A)  = 0$}
+	\Explain{ 3 But $\mu$ is complete, so $f^{-1}(A) \in \Sigma$}
+	\Explain{ 4 By the definition of the image measure $A \in f_* \Sigma$}
+	\EndProof
+	\\
+	\Theorem{ImageMeasureComposition}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall Y,Z \in \SET \.
+		\forall f : X \to Y \.
+		\forall g : Y \to Z \.
+		f^* g^* \mu = (fg)^* \mu 
+	}
+	\Explain{ True by elementary set-theoretic manipulation}
+	\EndProof
+}\Page{
+	\Theorem{PreimageMeasureConstruction}
+	{
+		\NewLine  ::
+		\forall (Y,T,\nu) \in \MEAS \.
+		\forall X \in \SET \.
+		\forall f  : X \to Y \.
+		\forall \aleph :   \TYPE{Thick}\Big(Y,T,\nu, f(X)\Big) \. \NewLine \.   
+		\exists \Sigma : \SA(X) \.
+		\exists \mu : \Measure(X,\Sigma) \.
+		\nu = f_* \mu 
+	}
+	\Explain{ 1 Define $\Sigma = \{ f^{-1}(A) | A \in T  \}$} 
+	\Explain{ 2 $\Sigma$ is a $\sigma$-algebra}
+	\Explain{ 2.1  $\emptyset = f^{-1}(\emptyset) \in \Sigma$}
+	\Explain{ 2.2 $\Sigma$ is closed under complements}
+	\Explain{ 2.3 $\Sigma$ is closed under countable unions}
+	\Explain{ 3 If $A,B \in T$ are such that $f^{-1}(A) = f^{-1}(B)$ then $A \du B$ 
+		has measure zero}
+	\Explain{ 3.1 This is true as $f(X)$ is $\nu$-thick}
+	\Explain{ 4 So  $\nu(A) = \nu(B)$}
+	\Explain{ 5 So it must be possible to define $\mu(f^{-1}(A)) = \nu(A)$ }
+	\Explain{ 6 Thne $\mu$ is a measure}
+	\Explain{ 6.1 Obviously $\mu(\emptyset) = \nu(\emptyset) = 0$ } 
+	\Explain{ 6.2 Assume $A$ is a disjoint sequence in $\Sigma$}
+	\Explain{ 6.3 Select $B$ in a such way that $A = f^{-1}(A)$}	
+	\Explain{ 6.4 Then $B$ are not necesserly disjoint}
+	\Explain{ 6.5 But the sequence $C_n = B_n \setminus \bigcup^{n-1}_{i=1} B_i$}
+	\Explain{ 6.6 And $A_n = f^{-1}(C_n)$}
+	\Explain{ 6.7 So $\mu\left( \bigcup^\infty_{n=1} A_n  \right) = 
+		\nu\left(\bigcup^\infty_{n=1} C_n \right) =  
+		\sum^\infty_{n=1} \nu(C_n) = \sum^\infty_{n=1} \mu(A_n)$}
+	\Explain{ 7 $f_* \mu = \nu$}
+}
+\newpage
 \subsubsection{Sums}
+\Page{
+	\DeclareFunc{sumOfMeasures}
+	{
+		\prod_{X,I \in \SET}  \Big(I \to \Measure(X)\Big) \to \Measure(X)
+	}
+	\DefineNamedFunc{sumOfMeasures}{(\Sigma,\mu)}{\sum_{i \in I} \mu_i}
+	{\left(  \bigcap_{i \in I} \Sigma_i, \Lambda A \in \bigcap_{i \in I} \Sigma_i \. 
+			\sum_{i \in I} \mu_i(A)	\right)
+	}
+	\\
+	\Theorem{SumOfCompleteIsComplete}
+	{
+		\NewLine ::		
+		\forall X,I \in \SET \.
+		\forall (Y,\Sigma,\mu) : I \to \CMS \.
+		\forall \aleph : \forall i \in I \. Y_i = X \. \NewLine \. 
+		\CMS\left( X, \bigcap_{i \in I} \Sigma_i, \sum_{i \in I} \mu_i   \right)
+	}
+	\Explain{ Assume $A \subset X$ is such that there is 
+		$E \in \bigcap_{i \in I} \Sigma_i$ with $A \subset E$ and $\sum_{i \in I}\mu_i(E) = 0$}
+	\Explain{ Then $E \in \Sigma_j$ and $0 = \sum_{i \in I}\mu_i(E) \ge  \mu_i(E)$ for each $j \in I$}
+	\Explain{ So $A \in \Sigma_j$ as $\mu_j$ is complete}
+	\Explain{ But this means that $A \in \bigcap_{i \in I} \Sigma_i$, so $\sum_{i \in I} \mu_i$ 
+		is also complete }
+	\\
+	\Theorem{SumNull}
+	{
+		\NewLine ::
+		\forall X,I \in \SET \.
+		\forall (Y,\Sigma,\mu) : I \to \CMS \.
+		\forall \aleph : \forall i \in I \. Y_i = X \. \NewLine \. 
+		\forall A \subset X \. 
+		A \in \Null_{\sum_{i \in I} \mu_i}
+		\iff
+		\forall i \in I \. A \in \Null_{\mu_i} 
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\Theorem{SumConull}
+	{
+		\NewLine ::
+		\forall X,I \in \SET \.
+		\forall (Y,\Sigma,\mu) : I \to \CMS \.
+		\forall \aleph : \forall i \in I \. Y_i = X \. \NewLine \. 
+		\forall A \subset X \. 
+		A \in \Null_{\sum_{i \in I} \mu_i}'
+		\iff
+		\forall i \in I \. A \in \Null_{\mu_i}' 
+	}
+	\Explain{ Obvious}
+	\EndProof
+}\Page{
+	\Theorem{SumIntegrability}
+	{
+		\NewLine ::
+		\forall (Y,\Sigma,\mu) : I \to \CMS \.
+		\forall \aleph : \forall i \in I \. Y_i = X \. \NewLine \. 
+		\forall f : X \to \EReals \.
+		f \in  \Integrable\left( X, \bigcap_{i \in I } \Sigma_i, \sum_{i\in I} \mu_i \right)
+		\iff \NewLine \iff 
+		\Finite\left( X, \bigcap_{i \in I } \Sigma_i, \sum_{i\in I} f^+ \; d\mu_i \right) \Bigg|
+		\Finite\left( X, \bigcap_{i \in I } \Sigma_i, \sum_{i\in I} f^- \; d\mu_i \right)
+		\And 
+		\forall i \in I \. f \in \Integrable(X,\Sigma_i,\mu_i)
+	}
+	\Explain{ 1 $(\Rightarrow)$ Assume $f$ is sum-integrable}
+	\Explain{ 1.1 $\sum_{i\in I} f^+ \; d\mu_i(X) - \sum_{i\in I} f^- \; d\mu_i(X) = 
+		 \int_X f^+ \sum_{i \in I } d\mu_i  - \int_X   \sum_{i\in I} f^- \; d\mu_i(X) =
+		 \int_X f \sum_{i \in I } d\mu_i  \in \EReals	 
+		 $}
+	\Explain{ 1.2 This means that one of the measures above
+	$\sum_{i\in I} f^+ \; d\mu_i(X)$ or $\sum_{i\in I} f^- \; d\mu_i(X)$
+	 is finite}
+	 \Explain{ 1.3 Generally $f^+ d \mu_i \le \sum_{i\in I} f^+ \; d\mu_i(X)$
+	 	and $f^- d \mu_i \le \sum_{i\in I} f^- \; d\mu_i(X)$}
+	 \Explain{ 1.4 So $f$ must be integrable with respect to individual measures $\mu_i$}
+	 \Explain{ 2 $(\Leftarrow)$}
+	 \Explain{ 2.1 Assume that $f \ge 0$}
+	 \Explain{ 2.2 Approximate $f$ by simple functions 
+	 	$\sigma_n(x) = \sum^{4^n}_{k=1} 2^{-n}[ f(x) \ge 2^{-1}k ] $}
+	 \ExplainFurther{
+			2.3 Then 
+			$
+				\int \sigma_n \; d \sum_{i \in I} \mu_i = 
+				\sum^{4^n}_{k=1} \left(\sum_{i \in I} \mu_i\right)\{ x \in X : f(x) \ge 2^{-n}k  \}	=
+				\sum_{i \in I} \sum^{4^n}_{k=1} \mu_i \{ x \in X : f(x) \ge 2^{-n}k  \}	 =$}
+	\Explain{
+			$	\quad = \sum_{i \in I} \int \sigma_n \;d \mu_i$}
+	\Explain{ 2.4 So by taking supremas
+		 $\int f \; d\sum_{i \in I} \mu_i = \sum_{i \in I} \int f \; d \mu_i$
+	}
+	\Explain{ 2.5 In the general case the assumptions provide the desired result}
+	\EndProof
+	\\	
+	\Theorem{SumIntegral}
+	{
+		\NewLine ::
+		\forall (Y,\Sigma,\mu) : I \to \CMS \.
+		\forall \aleph : \forall i \in I \. Y_i = X \. \NewLine \. 
+		\forall f  \in  \Integrable\left( X, \bigcap_{i \in I } \Sigma_i, \sum_{i\in I} \mu_i \right)
+		\NewLine 
+		\int f \; d\sum_{i \in I} \mu_i = \sum_{i \in I} \int f \; d \mu_i
+	}
+	\Explain{This follows from the previous deduction}
+	\EndProof
+	\\
+	\Explain{
+		This result can be seen as a special case of Fubbini's theorem}
+}
+\newpage
+\subsubsection{Indefinite Integrals}
+\Page{
+	\DeclareFunc{indefiniteIntegral}
+	{
+		\prod (X,\Sigma,\mu) \in \MEAS \.
+		\prod f \in \BOR_\mu^*(X,\Sigma) \. 
+		f \ge 0 \to \CMS
+	}
+	\DefineNamedFunc{indefiniteIntegral}{\aleph}{f \; d \mu}
+	{
+		\left( X, \left\{ A \subset X  : f\chi_A \in \Integrable(X,\Sigma,\mu) \right\},  
+			A \mapsto \int f \chi_A \; d\mu		
+		   \right)	
+	}
+	\\
+	\Theorem{IndefiniteIntegralSubdomain}
+	{
+		\forall (f,\Sigma,\mu) \in \MEAS \.
+		\forall f \in 	\BOR_\mu^*(X,\Sigma) \. 
+		\forall \aleph : f \ge 0 \.
+		\Sigma \subset \dom f\;d\mu
+	}
+	\Explain{ If $A$ is measurable then $\chi_A$ has integral}
+	\Explain{ And so $f\chi_A$ has integral}
+	\EndProof
+	\\
+	\Theorem{IndefeniteIntegralDomain}
+	{
+		\NewLine ::		
+		\forall (f,\Sigma,\mu) \in \MEAS \.
+		\forall f \in 	\BOR_\mu^*(X,\Sigma) \. 
+		\forall \aleph : f \ge 0 \.
+		 \dom f\;d\mu   = \Big\{ A \subset X : A \cap \supp f \in \hat \Sigma  \Big\}
+	}
+	\NoProof
+	\\
+	\Theorem{IndefeniteIntegraAsCompletion}
+	{
+		\NewLine ::		
+		\forall (f,\Sigma,\mu) \in \MEAS \.
+		\forall f \in 	\BOR_\mu^*(X,\Sigma) \. 
+		\forall \aleph : f \ge 0 \.
+		\dom f\;d\mu   =  \widehat{ (f\;d\mu)_{|\Sigma}}
+	}
+	\NoProof
+	\\
+	\Theorem{IndefiniteIntegralZeroSet}
+	{
+		\NewLine ::		
+		\forall (f,\Sigma,\mu) \in \MEAS \.
+		\forall f \in 	\BOR_\mu^*(X,\Sigma) \. 
+		\forall \aleph : f \ge 0 \.
+		\forall A \in \Sigma \.
+		A \in \Null_{f\;d\mu} \iff A \cap \supp f \in \Null_\mu
+	}
+	\NoProof
+	\\
+	\Explain{ Indefinite integral preserves regularity properties of measures starting 
+		from $\sigma$-finiteness}
+	\\
+	\Theorem{StrongRadonNykodimTheorem}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) : \Loc \.
+		\forall (X,T,\nu) : \CMS \. 
+		\NewLine \.
+		\exists f : X \to \EReals \. \nu = f \; d\mu 
+		\iff
+		\Semifinite(X,T,\nu)
+		\And
+		\Sigma \subset T  
+		\And
+		\forall Z \in \Null_\mu \. \nu(Z) = 0
+		\And \NewLine \And
+		\nu = \widehat{\nu_{|\Sigma}}
+		\And
+		\forall E \in T \. \nu(E) > 0 \Imply 
+		\exists F \in \Sigma \. F \subset R \And \nu(F) > 0 \And \mu(F) < \infty 
+	}
+	\NoProof
+}
+\newpage
 \subsubsection{Order}
+\Page{
+	\DeclareType{MeasureOrder}{\prod_{X \in \SET} \TYPE{Order} \; \Measure(X)}
+	\DefineNamedType{\Big( (\Sigma,\mu),(T,\nu) \Big)}{MeasureOrder}
+	{(\Sigma,\mu) \le (T,\nu)}{\Sigma \subset T  \And \forall A \in \Sigma \. \mu(A) \le \nu(A) }
+	\\
+	\Theorem{Difference}
+	{
+		\NewLine :: 		
+		\forall X \in \SET \
+		\forall (\mu,\Sigma),(\nu,T) : \Measure(X) \.
+		(\mu,\Sigma) \le (\nu,T) \iff \exists (\Upsilon, \xi) : \Measure(X) \.
+		\nu_{|\Sigma} = \mu + \xi	
+	}
+	\Explain{$(\Rightarrow):$ define $\Upsilon = \Sigma$ and 
+		$\xi = \Lambda E \in \Sigma \.  \sup \{ \mu(F) - \nu(F) | F \in \Sigma_f, F \subset E \}$}
+	\Explain{$(\Leftarrow):$ condition implies that $\Sigma \subset \Upsilon$ and 
+		$\Sigma \subset T$}
+	\Explain{ Then by simple ineq $\nu_{|\Sigma} = \mu + \xi \ge \mu$}
+	\EndProof	
+	\\
+	\Theorem{IntegrabilityByIneq}
+	{
+		\NewLine ::
+		\forall X \in \SET \
+		\forall (\mu,\Sigma),(\nu,T) : \Measure(X) \.
+		\forall \aleph : (\mu,\Sigma) \le (\nu,T) \.
+		\forall f \in \Integrable(X,\nu,T) \.
+		f \in \Integrable(X,\mu,\Sigma) 
+	}
+	\NoProof
+	\\
+	\Explain{This means that $\Integrable$ is an antitone mapping}
+	\\
+	\Theorem{IntegralIneq}
+	{
+		\NewLine ::
+		\forall X \in \SET \
+		\forall (\mu,\Sigma),(\nu,T) : \Measure(X) \.
+		f \in \Integrable(X,\mu,\Sigma)  \.
+		\int f \; d\mu \le \int f \; d\nu
+	}	
+	\NoProof
+}
+\newpage
 \subsection{Change of Variable in the Integral}
 \newpage
 \section{Products of Measures}
 \subsection{Product Measure Theorem }
 \Page{
-\DeclareFunc{SigmaAlgebraProduct}{\SA{A} \to \SA{B} \to \Set(A \times B)}
+\DeclareFunc{SigmaAlgebraProduct}{\SA(A) \to \SA(B) \to \Set(A \times B)}
 \DefineNamedFunc{SigmaAlgebraProduct}{\mathcal{A},\B}{\mathcal{A} \times \B}
 {\{ a \times b | a \in \mathcal{A}, b \in \mathcal{B} \}}
 \\
@@ -9236,15 +9793,13 @@ X \to \TYPE{Measure}(Y) }
 \DefineNamedFunc{ RandomFieldLaw  }{ P }{[P]}{ \THM{ KolmogorovExtension  }(P) }
 }
 \newpage
-\section{Finitly Additive Functionals}
-\newpage
 \section*{Sources:}
 \begin{enumerate}
 \item K. P. S. Bashkra Rao ---Theory of Charges: A Study of Finitely Additive Measures 1975
 \item  R. Ash     --- Probability and Measure Theory 2000
 \item  В. И. Богачев --- Основы Теории меры (том 1) 2006 
 \item  D. H. Fremlin --- Measure Theory (11,12,13,21,23,25) 2016
-\item P. Bouafia, T. De Pauw ---  Localizable Locally Determined Measurable spaces with Neglidgibles 2020
+\item P. Bouafia, T. De Pauw ---  Localizable Locally Determined Measurable Spaces with Neglidgibles 2020
 \end{enumerate}
 \end{document}
 
