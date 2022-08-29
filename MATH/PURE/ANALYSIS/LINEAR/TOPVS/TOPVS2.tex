@@ -480,6 +480,8 @@
 \newcommand{\Born}{\TYPE{Bornology}}
 \newcommand{\BS}{\TYPE{BoundedStructure}}
 \newcommand{\BB}{\TYPE{BornologyBase}}
+\newcommand{\PS}{\TYPE{PairedSpace}}
+\newcommand{\DP}{\TYPE{DualPair}}
 %Cats
 \newcommand{\TVS}[1]{{#1}\hyph\mathsf{TVS}}
 \newcommand{\HTVS}[1]{{#1}\hyph\mathsf{HTVS}}
@@ -3642,7 +3644,7 @@
 	\Theorem{BoundednesByCountableSubsets}
 	{
 		\forall V \in \TVS{k} \.
-		\forall B \subset V \.
+		\forall B \subset V \. \NewLine \.
 		\Bounded(V,B)
 		\iff
 		\forall C: \Countables(V,B) \.
@@ -4432,7 +4434,7 @@
 \subsubsection{Interesting Examples and Facts}
 \newpage
 \subsection{Infinite Dimensional Geometry}
-\subsubsection{Dominated Extension}
+\subsubsection{Hahn-Banach theorems}
 \Page{
 	\Theorem{OneDimensionalExtension}
 	{
@@ -5355,16 +5357,24 @@
 	\Explain{ 1 Positive homogenety is obvious}
 	\Explain{ 2 So we investigate subadditivity}
 	\Explain{ 2.1 Select $v,w \in V$}
-	\Explain{
-			2.2 Then
+	\Explain{ 2.2
+		Also select $\alpha,\beta \in \Reals_{++}$ and $x,y \in X$}
+	\Explain{ 2.3 $\lambda = \frac{\alpha}{\alpha + \beta} \in \Reals_{++}$}
+	\Explain{ 2.4 Then $u = \lambda x + (1 - \lambda)y \in X$ by convexity of $X$}
+	\ExplainFurther{
+			2.5 Then
 			$
-				(\sigma,f)^\#_X(v + w) = 
-				\inf_{x,\lambda} \sigma( v + w + \lambda x) -   \lambda f(x)  \le 
-				\inf_{x,\lambda} \sigma\left( v + \frac{\lambda}{2} x\right) -   \frac{\lambda}{2} f(x) 
-				+  \sigma\left( w + \frac{\lambda}{2} x\right) -   \frac{\lambda}{2} f(x) 
-			$
-	}
-\NoProof
+				\sigma(v + \alpha x) - \alpha f(x) +
+				\sigma(w + \beta y) - \beta f(y) \ge$ (by subbaditivity of $\sigma$)}
+  \ExplainFurther{ 
+				$\ge \sigma(v + w + \alpha x + \beta y) -  (\alpha + \beta) \lambda f(x) 
+				- (\alpha + \beta)(1 -\lambda) f(y) \ge$ (by concavity of $f$)  }
+	\Explain{ 
+				$\ge \sigma( v + w + (\alpha + \beta)u) - (\alpha + \beta) f(u) \ge 
+				(\sigma,f)^\#_X(v + w)$}
+\Explain{ 2.6 By taking infimum of both summands separadly one getas 
+	$(\sigma,f)^\#_X(v + w)  \le (\sigma,f)^\#_X(v) + (\sigma,f)^\#_X(w)$   }
+\EndProof
 }\Page{
 	\Theorem{SandwichTheorem}
 	{
@@ -5376,11 +5386,384 @@
 		\exists  h \in V^* \.
 		f \le h_{|X} \And h \le \sigma 
 	}
-	\NoProof
+	\Explain{1 In the conditions of the theorem the fucntional $(\sigma,f)^\#_X$ is sublinear}
+	\Explain{2 So by Hahn Banach theorem there are an extension $h$ of $0$ dominated by 
+		$(\sigma,f)^\#_X$}
+	\Explain{3 But the bounding theorems above imply that $f \le h_{|X}$ and  $h \le \sigma$ }
+	\EndProof
 }
 \newpage
-\subsubsection{Paired Spaces}
-\subsubsection{Polar Sets}
+\subsubsection{Paired Spaces and  Weak Topologies}
+\Page{
+	\Conclude{\PS}
+	{
+		\sum_{V,W\in\VS{k}} \L(V,W;k)
+	}{\Type}
+	\\
+	\DeclareFunc{pairing}{\prod (V,W,B) : \PS(k) \to \L(V,W;k)}
+	\DefineNamedFunc{pairing}{}{\Lambda v \in W \. w \in W \. \langle v, w \rangle}{B}
+	\\
+	\DeclareType{DistinguishesPoints}
+	{
+		 ? \PS(k)
+	}
+	\DefineType{(V,W,\ldots)}{DistinguishesPoints}
+	{
+		\forall w \in W \. w \neq 0 \Imply \exists  v \in V \.  \langle v, w \rangle \neq 0 
+	}
+	\\
+	\DeclareType{DualPair}
+	{
+		 ? \PS(k)
+	}
+	\DefineType{(V,W,B)}{DualPair}
+	{
+		\TYPE{DistinguishesPoints}(V,W,B) \And \TYPE{DistinguishesPoints}(W,V,\FUNC{swap}B) 
+	}
+	\\
+	\DeclareFunc{naturalMap}{\prod (V,W,\ldots) : \PS(k) \.  \VS{k}(W,V^*)}
+	\DefineNamedFunc{naturalMap}{w}{ w^*}{\Lambda v \in V \. \langle v, w \rangle }
+	\\
+	\Theorem{DualSpaceHasInjectiveNaturalMap}
+	{
+		\forall (V,W,\ldots) : \DP \.       
+		\TYPE{Injective}\Big(W, V^*, \bullet^*\Big)
+	}
+	\Explain{ Obvious}
+	\EndProof
+	\\
+	\DeclareFunc{algebraicDualPair}{\VS{k} \to \DP(k)}
+	\DefineNamedFunc{algebraicDualPair}{V}{(V,V^*)}{\Lambda v \in V \. \Lambda f \in V^* \. f(v) }
+	\\
+	\DeclareFunc{subalgebraicDualPair}{\prod_{V \in \VS{k}} \TYPE{Total}(V) \to \DP(k)}
+	\DefineNamedFunc{algebraicDualPair}{V,U}{(V,U)}{\Lambda v \in V \. \Lambda f \in U \. f(v) }
+	\\
+	\DeclareFunc{analyticDualPair}{\LCHS{k} \to \DP(k)}
+	\DefineNamedFunc{analyticDualPair}{V}{(V,V')}{\Lambda v \in V \. \Lambda f \in V^* \. f(v) }
+	\\
+	\DeclareFunc{weakTopology}{\prod (V,W,\ldots) \to \Top(V)}
+	\DefineNamedFunc{weakTopology}{}{\sigma(V,W)}{\W_V(W,k,\bullet^*)}
+	\\
+	\DeclareFunc{weakStarTopology}{\prod (V,W,\ldots) \to \Top(V)}
+	\DefineNamedFunc{weakStarTopology}{}{\sigma(W,V)}{\W_W(V,k,\bullet^*)}
+	\\
+	\Theorem{DualPairsHasHausdorffTopology}
+	{
+		\forall (V,W,\ldots) : \DP \. \TYPE{T2}\Big(V,\sigma(V,W)\Big) \And \TYPE{T2}(W,\sigma(V,W))
+	}
+	\Explain{ Obvious}
+	\EndProof
+}\Page{
+	\Theorem{WeakConvergence}
+	{
+		\forall V \in \TVS{k} \.
+		\forall (\Delta,v) : \TYPE{Net}(V) \.
+		\forall w \in V \.
+		\lim_{\delta \in \Delta} v_\delta =_{\sigma(V,V')} w \iff \NewLine \iff
+		\forall f \in V' \.
+		\lim_{\delta \in \Delta} f(v_\delta) = f(w)
+	}
+	\Explain{ Straightforward properties of the weak topology}
+	\EndProof
+	\\
+	\Theorem{OrthogonalSequenceWeaklyConvergesToZero}
+	{
+		\forall V \in \HIL{k} \.
+		\forall e : \TYPE{Orthogonal}(\Nat,V) \.
+		\lim_{n \to \infty} e_n =_{\sigma(V,V')} 0
+	}
+	\Explain{ 1 Take $f \in V^*$}
+	\Explain{ 2 By Hilbert space theory there is a representation $f=\langle \bullet, v \rangle$ for 
+		some $v \in V$}
+	\Explain{ 3
+		By Bessel's inequality $\sum_{n=1} \Big|\langle e_n, v \rangle\Big| \le \| v \| < + \infty$	
+	}
+	\Explain{ 4 This implies that $f(e_n) = \langle e_n, v \rangle \to 0$}
+	\Explain{ 5 As $f$ was arbitrary by the previous theorem this implies the weak convergence}
+	\EndProof
+	\\
+	\DeclareType{WeakCauchyNet}{\prod (V,W,\ldots) : \PS \. ?\TYPE{Net}(V)}
+	\DefineType{(\Delta,v)}{WeakCauchyNet}{
+		\forall w \in W \. 
+		\TYPE{CauchySequence}\Big(k,(\Delta,\langle v, w \rangle)\Big)}
+	\\
+	\DeclareType{WeaklyCompleteSpace}{?\PS}
+	\DefineType{(V,W,\ldots)}{WeaklyCompleteSpace}{
+		\forall (\Delta,v) : \TYPE{WeakCauchyNet}(V,W,\ldots) \.
+		\TYPE{Convergent}\Big( V,\sigma(V,W), (\Delta,v) \Big)		
+		}
+	\\
+	\Theorem{WeakBoundednessTheorem}
+	{
+		\NewLine ::		
+		\forall (V,W,\ldots) : \DP \.
+		\forall A \subset V \.
+		\TYPE{Bounded}\Big(V,\sigma(V,W),A\Big) \iff \TYPE{TotallyBounded}\Big(V,\sigma(V,W),A\Big)
+	}
+	\Explain{ 1 $(\Rightarrow)$  Assume $A$ is weakly bounded}
+	\Explain{ 1.1 Take $U \in \U_{V,\sigma(V,W)}(0)$}
+	\ExplainFurther{ 1.2 There is a finite number of $w  : \{1,\ldots,n\} \to W$ 
+		and $I : \{1,\ldots,n\} \to \U_k(0)$ such that} 
+	\Explain{$\quad E =  \bigcap^n_{i=1} w^{*-1}_i(I_i)  \subset U$}
+	\Explain{1.3 As $A$ is bounded there is a scalar $\lambda \in \Reals_{++}$
+		such that $A \subset \lambda E =  \bigcap^n_{i=1} w^{*-1}_i(\lambda I_i)$}
+	\Explain{1.4 As $(V,W)$ is a dual pair for each $w_i$ to select $v_i$
+		such that $\langle w_i,v_i \rangle  > 0$ and $v_i \in U$}
+	\Explain{1.5 Then for every $i \in \{1,\ldots,n\}$ there is some
+		$m_i \in \Nat$ such that $\langle w_i,v_i \rangle m_i \ge 
+			\sup \Big\{ |\alpha| \Big| \alpha \in \lambda I_i   \Big\}$ 
+	}
+	\Explain{
+		1.6 Then  
+		$
+				A \subset \lambda E \subset				
+				U + \sum^n_{i=1} \sum^m_{j=0} j v_i $}
+	\Explain{
+		1.7 So $A$ is totally Bounded
+	}
+	\Explain{
+		2 $(\Leftarrow)$ this direction holds in any topology}
+	\EndProof
+}\Page{
+	\Theorem{AlgebraicDualIsWeaklyStarComplete}
+	{
+		\NewLine ::		
+		\forall V \in \VS{k} \.
+		\TYPE{WeaklyComplete}(V^*,V)
+	}
+	\Explain{ 1 Assume $(\Delta,f)$ is weakly Cauchy in $V$}
+	\Explain{ 2 Then, define $g(v) = \lim_{\delta \in \Delta} f_\delta(v)$}
+	\Explain{ 2.1 This is possible as $k$ is complete}
+	\Explain{ 3 Then $g \in V^*$}
+	\EndProof
+	\\
+	\Theorem{WeakPepresentationTheorem}
+	{
+		\NewLine::		
+		\forall (V,W,\ldots) : \PS  \.
+		\forall f \in \TVS{k}\bigg(\Big(V,\sigma(V,W)\Big), k \bigg) \. \exists w \in W \. f = w^* 
+	}
+	\Explain{1 Assume $f$ as in the hypothesis}
+	\Explain{2 Define siminorm $\phi = \Lambda v \in V \. |f(v)|$}
+	\Explain{3 By hypothesis $\phi$ is continuous}
+	\Explain{4 Then $\Cell(\phi) \in \U_V(0)$}
+	\ExplainFurther{5 So by definition of weak topology 
+		there exists $u : \{1,\ldots,n\} \to W$  and $I : \{1,\ldots,n\} \to \U_k(0)$}
+	\Explain{ such that 
+		$\bigcap^n_{i=1} u^{*-1}_n(I_n) \subset \Cell(\phi)$}
+	\Explain{6 By Vector Spaces theorem 1.3 Span by Kernel Containments $f \in \Span(u^*)$}
+	\Explain{7 But this means that that there is $w \in W$ such that $f = w^*$}
+	\EndProof
+	\\
+	\DeclareFunc{leftOrthogonal}
+	{
+		\prod (V,W,\ldots) : \PS(k) \. ?V \to ?W
+	}
+	\DefineNamedFunc{leftOrthogonal}{A}{A^\bot}{\Big\{ w \in W \. \forall a \in A \. w^*(a) = 0\Big\}}
+	\\
+	\DeclareFunc{rightOrthogonal}
+	{
+		\prod (V,W,\ldots) : \PS(k) \. ?W \to ?V
+	}
+	\DefineNamedFunc{rightOrthogonal}{A}{A^\bot}{\Big\{ v \in V \. \forall a \in A \. a^*(v) = 0\Big\}}
+	\\
+	\Theorem{WeakDualRepresentation}
+	{
+		\forall (V,W,\ldots) : \PS(k) \. 
+		\Big(V,\sigma(V,W)\Big)' \cong_{\TVS{K}} \frac{W}{V^\bot}
+	}
+	\Explain{Follows from previous theorem and the isomorphism theorem}
+	\EndProof
+}
+\newpage
+\subsubsection{Polarity}
+\Page{
+	\DeclareFunc{leftPolar}
+	{
+		\prod (V,W,\ldots) : \PS(k) \. ?V \to \TYPE{Disc}(W)
+	}
+	\DefineNamedFunc{leftPolar}{A}{A^\circ}{\Big\{ w \in W \. \forall a \in A \. |w^*(a)| \le 1\Big\}}
+	\\
+	\DeclareFunc{rightPolar}
+	{
+		\prod (V,W,\ldots) : \PS(k) \. ?W \to \TYPE{Disc}(V)
+	}
+	\DefineNamedFunc{rightPolar}{A}{A^\circ}{\Big\{ w \in W \. \forall a \in A \. |a^*(w)| \le 1\Big\}}
+	\\
+	\Theorem{WeeklyBoundedIffAbsorbentPolar}
+	{
+		\forall (V,W,\ldots) : \PS(k) \. 
+		\forall A \subset V \. \NewLine \.
+		\TYPE{Bounded}(V,\sigma(W,C),A)
+		\iff
+		\TYPE{Absorbent}(W,A^\circ)
+	}
+	\Explain{ Pretty obvious}
+	\EndProof
+	\\
+	\Theorem{WeeklyClosedPolars}
+	{
+		\forall (V,W,\ldots) : \PS(k) \. 
+		\forall A \subset V \. \NewLine \.
+		\TYPE{Closed}(W,\sigma(W,C),A^\circ)
+	}
+	\Explain{ Pretty obvious}
+	\EndProof
+	\\
+	\Theorem{PolarMonotonicity}
+	{
+		\forall (V,W,\ldots) : \PS(k) \. 
+		\forall A,B \subset V \. \NewLine \.
+		A \subset B \Imply B^\circ \subset A^\circ
+	}
+	\Explain{ Pretty obvious}
+	\EndProof
+	\\
+	\Theorem{PolarScaling}
+	{
+		\forall (V,W,\ldots) : \PS(k) \. 
+		\forall A \subset V \. \NewLine \.
+		\forall \alpha \in k \.
+		(\alpha A)^\circ = \alpha A^\circ  = |\alpha| A^\circ
+	}
+	\Explain{ Use the fact that $A$ is a disc, hence balanced}
+	\EndProof
+	\\
+	\Theorem{BipolarSubset}
+	{
+		\forall (V,W,\ldots) : \PS(k) \. 
+		\forall A \subset V \. \NewLine \.
+		A \subset A^{\circ \circ}
+	}
+	\Explain{ Pretty obvious}
+	\EndProof
+	\\	
+	\Theorem{TripolarStability}
+	{
+		\forall (V,W,\ldots) : \PS(k) \. 
+		\forall A \subset V \. \NewLine \.
+		A^{\circ \circ \circ} = A^{\circ}
+	}
+	\Explain{ Pretty obvious}
+	\EndProof
+}\Page{
+	\Theorem{BalancedHullPolar}
+	{
+		\forall  (V,W,\ldots) : \PS(k) \.
+		\forall  A \subset V \.
+		A^\circ = (\bal A)^\circ
+	}
+	\Explain{ Pretty obvious}
+	\EndProof
+	\\
+	\Theorem{ConvexHullPolar}
+	{
+		\forall  (V,W,\ldots) : \PS(k) \.
+		\forall  A \subset V \.
+		A^\circ = (\conv A)^\circ
+	}
+	\Explain{ Pretty obvious}
+	\EndProof
+	\\
+	\Theorem{PolarClosure}
+	{
+		\forall  (V,W,\ldots) : \PS(k) \.
+		\forall  A \subset V \.
+		A^\circ = ({\cl}_{\sigma(V,W)} A)^\circ
+	}
+	\Explain{ Pretty obvious}
+	\EndProof
+	\\
+	\Theorem{PolarFullClosure}
+	{
+		\forall  (V,W,\ldots) : \PS(k) \.
+		\forall  A \subset V \.
+		A^\circ = ({\cl}_{\sigma(V,W)} A)^\circ
+	}
+	\Explain{ Pretty obvious}
+	\EndProof
+	\\
+	\Theorem{BipolarTheorem}
+	{
+		\forall (V,W,\ldots) : \PS(\Complex) \.
+		\forall A \subset V \.
+		A^{\circ \circ}  = {\cl}_{\sigma(V,W)} \conv \bal A
+	}
+	\Explain{ 1 It follows from the general definition of hulls that 
+		${\cl}_{\sigma(V,W)} \conv \bal A \subset A^{\circ \circ}$}
+	\Explain{ 1.2 Any polar set is a weakly closed disc}
+	\Explain{ 2 Assume $u \in ({\cl}_{\sigma(V,W)} \conv \bal A)^\c$}
+	\ExplainFurther{ 3 Then by Hahn-Banach there exists a real functional $f \in (V,\sigma(V,W))'$} 
+	\Explain{	such that $\alpha  = \sup f({\cl}_{\sigma(V,W)} \conv \bal A) < f(u)$}
+	\Explain{
+		4  Without loss of generality assume $\alpha = 1$
+	}
+	\Explain{
+		4.1  $0 \in {\cl}_{\sigma(V,W)} \conv \bal A$ as this set obiously balanced
+	}
+	\Explain{ 4.2 So $f(u) > 0$ and we can compute a renormalization $\frac{f}{\alpha}$}
+	\Explain{ 5  Define complex functional $g(v) = f(v) - \i f(\i v)$}
+	\Explain{ 6  By representation theorem there is $w \in W$ such that $g = w^*$}
+	\Explain{ 7 It follows that $w \in A^\circ$}
+	\Explain{ 8 By (3) and (7) it follows that $\langle u, w \rangle > 1$, so $u \not \in A^{\circ \circ}$}
+	\EndProof
+	\\
+	\Theorem{UnionPolar}
+	{
+		\forall (V,W,\ldots) : \PS(k) \.
+		\forall I \in \SET \.
+		\forall A : I \to ?V \.
+		\left( \bigcup_{i \in I} A_i \right)^\circ=  \bigcap_{i \in I} A_i^\circ
+	}
+	\Explain{ Pretty straightforward}
+	\EndProof
+}\Page{
+	\Theorem{IntersectionPolar}
+	{
+		\NewLine ::
+		\forall (V,W,\ldots) : \PS(\Complex) \.
+		\forall I \in \SET \.
+		\forall A : I \to \Closed(V,\sigma(V,W)) \And \TYPE{Disc}(V) \. \NewLine \.
+		\left( \bigcap_{i \in I} A_i \right)^\circ=  {\cl}_{\sigma(V,W)} \conv \bal \bigcup_{i \in I} A_i^\circ
+	}
+	\Explain{ 
+		$
+			\left( \bigcap_{i \in I} A_i \right)^\circ =
+			\left( \bigcap_{i \in I} A_i^{\circ \circ} \right)^\circ =
+			\left( \bigcup_{i \in I} A_i^{\circ} \right)^{\circ\circ} =
+			\cl_{\sigma(V,W)} \conv \bal \bigcup_{i \in I} A_i^\circ
+		$ by the use of the bipolar theorem}
+	\EndProof
+	\\
+	\Theorem{BanachAlaogluTHM}
+	{
+		\forall V \in \TVS{k} \.
+		\forall N \in \N_V(0) \.
+		\Compacts\Big(W, \sigma(V',V), N^\circ\Big)
+	}
+	\Explain{ 1 $U$ is absorbent}
+	\Explain{ 2 $U \subset U^{\circ \circ}$}
+	\Explain{ 3 From (1) and (2) $U^{\circ \circ}$ is absorbent}
+	\Explain{ 4  This implies that $U^\circ$ is weakly bounded}
+	\Explain{ 5 As $(V,V')$ is a dual pair $U^\circ$ is actually totally bounded}
+	\Explain{ 6 Moreover, it also totally bounded in $V^*$}
+	\Explain{ 7 As polars in $V'$ and $V^*$ coincide it must the case that $U$ is algebraically compact}
+	\Explain{ 8 But then it is also weakly compact}
+	\EndProof
+}
+\newpage
+\subsubsection{Polar Topologies}
+\subsubsection{Orthogonality}
+\subsubsection{Adjoints}
+\subsubsection{Conjugates}
+\subsubsection{Constructions}
+\subsubsection{Open Maps}
+\subsubsection{HBEP}
+\subsubsection{Extreme Points}
+\subsubsection{Krein-Milman Theorems}
+\subsubsection{The Choquet Boundary}
+\subsubsection{Banach-Stone Theorem}
+\subsubsection{Non-Archimedean Case}
 \subsection{Barelled Spaces}
 \subsection{Bornological Spaces}
 \subsection{Towards Approximation Theory}
