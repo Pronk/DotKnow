@@ -9278,6 +9278,182 @@ It seems that $f^{-1}(\mu^\star) \le (f^{-1} \mu)^\star$ always true. The conver
 }
 \newpage
 \subsection{Change of Variable in the Integral}
+\Page{
+	\DeclareType{RadonNikodymJacobian}
+	{
+		\prod  (X,\Sigma,\mu),(Y,T,\nu)  \in \MEAS\.
+		\prod A,B \in \Null'_\mu  \.
+		(A \to Y) \to ?(B \to \Reals_+)
+	}
+	\DefineType{J}{RadonNykodimJacobian}
+	{
+		\NewLine \iff
+		\Lambda \phi : A \to Y \. 		
+		\forall F \in T \. 
+		\nu(F) < \infty \Imply		
+		\int J(x)  \delta_x(\phi^{-1} \; F) \; d\mu(x)  = \nu(F) 
+	}
+	\\	
+	\Theorem{ChangeOfVariable}
+	{
+		\NewLine :: 		
+		\forall (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \.
+		\forall A,B \in \Null'_\mu \.
+		\forall \phi : A \to Y \.
+		\forall J : \TYPE{RadonNikodymJacobiam}(\phi) \.	\NewLine \.	
+		\forall g \in \Integrable(B,T|B,\nu) \.
+		\forall   H \in T \.
+		\int_{\phi^{-1}(H)} J(x) g\big( \phi(x) \big) \; d\mu(x) = \int_H g \; d \nu
+	}
+	\Explain{ 1 The theorem holds trivially if $g$ is simple by the definition 
+		of Radon-Nikodym Jacobian}
+	\Explain{ 2 Without loss of generality, consider the case $g > 0$}
+	\Explain{ 3  Represent $g = \lim_{n \to \infty} \sigma_n$ 
+		for increasing sequence of simple functions}
+	\ExplainFurther{ 4 Then by monotomic convergence theorem
+		$
+			\int_H g \; d\nu = 
+			\int_H \lim_{n \to \infty} \; \sigma_n \; d\nu =
+			\lim_{n \to \infty}\int_H  \sigma_n \; d\nu =$}
+	\Explain{
+			$ \quad =\lim_{n \to \infty}  \int_{\phi^{-1}(H)} J(x) \sigma_n\big( \phi(x) \big) \; d\mu(x)  =
+			\int_{\phi^{-1}(H)} J(x) g_n\big( \phi(x) \big) \; d\mu(x) 
+		$
+	}
+	\Explain{4.1 $\sigma_n(\phi)$ is still increasing}
+	\EndProof
+	\\
+	\Theorem{LowerUpperIntegralChangeOfVariable}
+	{
+		\NewLine :: 		
+		\forall (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \.
+		\forall A,B \in \Null'_\mu \.
+		\forall \phi : A \to Y \.
+		\forall J : \TYPE{RadonNikodymJacobiam}(\phi) \.	\NewLine \.	
+		\forall f : B \to \EReals \.
+		\underline{\int} f d\nu \le \underline{\int} J(x) f(\phi(x)) \; d\mu(x)  \le
+		\overline{\int} J(x)f(\phi(x)) \; d\mu(x) \le  \overline{\int} f d\nu 
+	}
+	\Explain{1 The middle inequality is standard}
+	\ExplainFurther{2 For upper integrals it holds
+			$ \overline{\int} f d\nu  =
+				\inf  \left\{ \int g d\mu \bigg| g \in \Integrable(Y,T,\nu), g \ge f \right\}=  $}
+	\ExplainFurther{ $= 
+				 \inf  \left\{ \int  J(x)g(\phi(x)) \; d\mu(x) \bigg| g \in \Integrable(Y,T,\nu), g \ge f \right\}
+			\ge \inf \left\{  \int g \; d\mu | g \in \Integrable(X,\Sigma,\mu), g \ge J \cdot \phi f    \right\}=$}
+	\Explain{ $= \overline{\int} J(x)f(\phi(x)) \; d\mu(x)$}
+	\Explain{ 2.1  Assume $g \ge f$}
+	\Explain{ 2.2 Then $J \cdot \phi g \ge J \cdot \phi f$ as $J$ is non-negative}
+	\Explain{ 2.3 So the inequality is justify}
+	\Explain{ 3 The argument for lower integrals is dual}
+	\EndProof
+}\Page{
+	\Theorem{RadonNikodymJacobianExistance}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu),(Y,T,\nu) : \sFinite \.
+		\forall D \in \Null_\mu' \. \NewLine \. 
+		\forall \phi : D \to Y \.
+		\forall \aleph : \forall F \in T \. \phi^{-1}(F) \in \Sigma \.
+		\forall \beth :  \forall F \in T \. \nu(T) > 0 \Imply \phi_* \mu(T) > 0 \. \NewLine \. 
+		\exists \TYPE{RadonNikodumJacobian}\Big( (X,\Sigma,\mu), (Y,T,\nu), A, \phi \Big)
+	}
+	\Explain{1 The theorem holds in the case $D=X$ and $\nu$ is finite}
+	\Explain{1.1 Define $\hat T = \phi^{-1} T$}
+	\Explain{1.2 $\hat T$ is a $\sigma$-algebra}
+	\Explain{1.2.1 $\emptyset = \phi^{-1}(\emptyset) \in \hat T$}
+	\Explain{1.2.2 Assume $A \in \hat T$}
+	\Explain{1.2.3 Then there is $C \in T$ such that $A = \phi^{-1}(C)$}
+	\Explain{1.2.4 So $X\setminus A = \phi^{-1}(Y)\setminus\phi^{-1}(C) 
+		= \phi^{-1}(T\setminus C) \in \hat T$}
+	\Explain{1.2.5 Now consider a sequence $A : \Nat \to \hat T$}
+	\Explain{1.2.6 Then again there is a sequence $C : \Nat \to T$ such that $A_n = \phi^{-1}(C_n)$}
+	\Explain{1.2.7 $ \bigcap^\infty_{n=1} A_n = \bigcap^\infty_{n=1} \phi^{-1}(C_n) = 
+		\phi^{-1}\left( \bigcap^\infty_{n=1} C_n \right) \in \hat T $}
+	\Explain{1.3 Define $\hat \nu : \hat T \to \Reals_+$ by $\hat\nu(\phi^{-1}(A)) = \nu(A)$}
+	\Explain{1.3.1 Assume $A,B \in T$ are such that $\phi^{-1}(A) = \phi^{-1}(B)$}
+	\Explain{1.3.2 Obviously $\phi^{-1}(A \du B) = \emptyset$}
+	\Explain{1.3.3 So $\mu(\phi^{-1}(A \du B) ) = 0$ and $\nu(A \du B) = 0$ by initial hypothesis}
+	\Explain{1.3.4 This $\nu(A) = \nu(B)$ and $\hat \nu$ is well-defined}
+	\Explain{1.4 $\hat \nu$ is a finite measure}
+	\Explain{1.4.1  $\hat \nu(\emptyset) = \nu(\emptyset)$}
+	\Explain{1.4.2 Consider a disjoint sequence $A : \Nat \hat T$}
+	\Explain{1.4.3 Thene there is a sequence $C' : \Nat \to T$ such that $A_n = \phi^{-1}(C'_n)$}
+	\Explain{1.4.4 The sequence $C'$ may not be disjoint, 
+		so define $C_n = C'_n \setminus^{n-1}_{k=1} C'_k $}
+	\Explain{1.4.5 Then the sequence $C_n$ is disjoint and still has property 
+		 $A_n = \phi^{-1}(C_n)$}
+	\Explain{1.4.6 So 
+		$
+			\hat \nu\left( \bigcap^\infty_{n=1} A_n \right) = 
+			\nu\left( \bigcap^\infty_{n=1} C_n \right) =
+			\sum^\infty_{n=1} \nu(C_n)  = 
+			\sum^\infty_{n=1} \hat \nu(A_n)
+		$
+	}
+	\Explain{1.5 Note, that $\hat \nu(A) > 0$ imply that $\mu(A) > 0$}
+	\Explain{1.6 By principle of exhaustion theres is a function $f : X \to \Reals_{++}$such that 
+		 $\int f \; d\mu < \infty$ }
+	\Explain{1.7 Define $\hat \mu : \hat T \to \Reals_+$ by $\hat \mu(E) = \int_E f \; d \mu$  }
+	\Explain{1.8 $\hat \mu$ is a finite measure}
+	\Explain{1.9 $\hat \mu(A)$ implies that $\mu(A) = 0$ as $f > 0$}
+	\Explain{1.10 So, by Radon-Nikodym theorem there is a density $g$ such that 
+		$\hat \nu = g \;d \hat \mu$}
+	\Explain{1.11  Thus,   	$\hat \nu = fg \; d\mu$
+	}
+	\Explain{1.12 Moreover, 
+		$\nu(F) = \hat \nu(\phi^{-1}(F)) = \int f(x)g(x) \delta_x(\phi^{-1}(F)) \; d\mu$
+		for any $F \in T$ 
+	}
+	\Explain{1.13 So write $J = fg$ and use it as Radon-Nocodym Jacobian}
+	\Explain{2 In case $D \neq X$ we may use extension $\hat \phi$ of $\phi$
+		which is constant on $X \setminus D$}
+}\Page{ 
+	\Explain{
+		3 In case $\nu$ is $\sigma$-finite construct a $\nu$-finite partition $\F$ 
+		  and construct Jacobian separately for each $F \in \F$}
+	\EndProof
+	\\
+	\DeclareType{InverseJacobian}
+	{
+		\prod  (X,\Sigma,\mu),(Y,T,\nu)  \in \MEAS\.
+		\prod A \in \Null'_\mu  \.
+		\prod B \in \Null'_\nu \.
+		(A \to Y) \to ?(B \to \Reals_+)
+	}
+	\DefineType{I}{InverseJacobian}
+	{\forall E \in T \. \int_E I \; d\nu =  \phi_*\mu(E)}
+	\\	
+	\Theorem{InverseChangeOfVariable}
+	{
+		\NewLine :: 		
+		\forall (X,\Sigma,\mu),(Y,T,\nu) \in \MEAS \.
+		\forall A \in \Null'_\mu \.
+		\forall B \in \Null'_\nu
+		\forall \phi : A \to Y \.
+		\forall I : \TYPE{InverseJacobian}(\phi,B) \.	\NewLine \.	
+		\forall g \in \Integrable(Y,T,\nu) \.
+		\forall   H \in T \.
+		\int_{\phi^{-1}(H)} g\big( \phi(x) \big) \; d\mu(x) = \int_H I(x)g(x) \; d \nu
+	}
+	\Explain{ 1 The theorem holds trivially if $g$ is simple by the definition 
+		of Radon-Nikodym Jacobian}
+	\Explain{ 2 Without loss of generality, consider the case $g > 0$}
+	\Explain{ 3  Represent $g = \lim_{n \to \infty} \sigma_n$ 
+		for increasing sequence of simple functions}
+	\ExplainFurther{ 4 Then by monotomic convergence theorem
+		$
+			\int_H g \; d\nu = 
+			\int_H \lim_{n \to \infty} \; \sigma_n \; d\nu =
+			\lim_{n \to \infty}\int_H  \sigma_n \; d\nu =$}
+	\Explain{
+			$ \quad =\lim_{n \to \infty}  \int_{\phi^{-1}(H)} J(x) \sigma_n\big( \phi(x) \big) \; d\mu(x)  =
+			\int_{\phi^{-1}(H)} J(x) g_n\big( \phi(x) \big) \; d\mu(x) 
+		$
+	}
+	\Explain{4.1 $\sigma_n(\phi)$ is still increasing}
+	\EndProof
+}
 \newpage
 \section{Products of Measures}
 \subsection{Product Measure Theorem }
