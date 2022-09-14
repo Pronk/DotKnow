@@ -1,0 +1,1645 @@
+\documentclass[12pt]{scrartcl}
+\usepackage{mathtools}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{ wasysym }
+\usepackage{ upgreek }
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,top=5mm, bottom=20mm, left=10mm, right=2mm]{geometry}
+\renewcommand\pagemark{{\usekomafont{pagenumber}\thepage\ }}
+%Markup
+\newcommand{\TYPE}[1]{\textcolor{NavyBlue}{\mathtt{#1}}}
+\newcommand{\FUNC}[1]{\textcolor{Cerulean}{\mathtt{#1}}}
+\newcommand{\LOGIC}[1]{\textcolor{Blue}{\mathtt{#1}}}
+\newcommand{\THM}[1]{\textcolor{Maroon}{\mathtt{#1}}}
+%META
+\renewcommand{\.}{\; . \;}
+\newcommand{\de}{: \kern 0.1pc =}
+\newcommand{\extract}{\LOGIC{Extract}}
+\newcommand{\where}{\LOGIC{where}}
+\newcommand{\If}{\LOGIC{if} \;}
+\newcommand{\Then}{ \; \LOGIC{then} \;}
+\newcommand{\Else}{\; \LOGIC{else} \;}
+\newcommand{\IsNot}{\; ! \;}
+\newcommand{\Is}{ \; : \;}
+\newcommand{\DefAs}{\; :: \;}
+\newcommand{\Act}[1]{\left( #1 \right)}
+\newcommand{\Example}{\LOGIC{Example} \; }
+\newcommand{\Theorem}[2]{& \THM{#1} \, :: \, #2 \\ & \Proof = \\ } 
+\newcommand{\DeclareType}[2]{& \TYPE{#1} \, :: \, #2 \\} 
+\newcommand{\DefineType}[3]{& #1 : \TYPE{#2} \iff #3 \\} 
+\newcommand{\DefineNamedType}[4]{& #1 : \TYPE{#2} \iff #3 \iff #4 \\} 
+\newcommand{\DeclareFunc}[2]{& \FUNC{#1} \, :: \, #2 \\}  
+\newcommand{\DefineFunc}[3]{&  \FUNC{#1}\Act{#2} \de #3 \\} 
+\newcommand{\DefineNamedFunc}[4]{&  \FUNC{#1}\Act{#2} = #3 \de #4 \\} 
+\newcommand{\NewLine}{\\ & \kern 1pc}
+\newcommand{\Page}[1]{ \begin{align*} #1 \end{align*}   }
+\newcommand{ \bd }{ \ByDef }
+\newcommand{\NoProof}{ & \ldots \\ \EndProof}
+%LOGIC
+\renewcommand{\And}{\; \& \;}
+\newcommand{\ForEach}[3]{\forall #1 : #2 \. #3 }
+\newcommand{\Exist}[2]{\exists #1 : #2}
+\newcommand{\Imply}{\Rightarrow} 
+\newcommand{\Intro}{\LOGIC{I}}
+\newcommand{\Elim}{\LOGIC{E}}
+%TYPE THEORY
+\newcommand{\Type}{\TYPE{Type}}
+%\DeclareMathOperator*{\dom}{dom}
+%%STD
+\newcommand{\Int}{\mathbb{Z} }
+\newcommand{\NNInt}{\mathbb{Z}_{+} }
+\newcommand{\Reals}{\mathbb{R} }
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Rats}{\mathbb{Q} }
+\newcommand{\Sphere}{\mathbb{S}}
+\newcommand{\Ball}{\mathbb{B}}
+\newcommand{\Nat}{\mathbb{N} }
+\newcommand{\EReals}{\stackrel{\mathclap{\infty}}{\mathbb{R}}}
+\newcommand{\ERealsn}[1]{\stackrel{\mathclap{\infty}}{\mathbb{R}}^{#1}}
+\DeclareMathOperator*{\centr}{center}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\id}{id}
+\DeclareMathOperator*{\im}{Im}
+\DeclareMathOperator*{\supp}{supp}
+\newcommand{\EqClass}[1]{\TYPE{EqClass}\left( #1 \right)}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\mathchardef\hyph="2D
+\newcommand{\ToInj}{\hookrightarrow}
+\newcommand{\ToMono}{\xhookrightarrow}
+\newcommand{\ToSurj}{\twoheadrightarrow}
+\newcommand{\ToEpi}{\xtwoheadrightarrow}
+\newcommand{\ToBij}{\leftrightarrow}
+\newcommand{\ToIso}{\xleftrightarrow}
+\newcommand{\Arrow}{\xrightarrow}
+\newcommand{\Set}{\TYPE{Set}}
+\newcommand{\du}{\; \triangle \;}
+\renewcommand{\c}{\complement}
+\renewcommand{\i}{\mathbf{i}}
+\newcommand{\Eqmod}[3]{#1 = #2 \quad \mathrm{mod} \quad #3}
+%%ProofWritting
+\newcommand{\Say}[3]{& #1 \de #2 : #3, \\}
+\newcommand{\SayIn}[3]{& #1 \de #2 \in #3, \\}
+\newcommand{\Conclude}[3]{& #1 \de #2 : #3; \\}
+\newcommand{\Derive}[3]{& \leadsto #1 \de #2 : #3, \\}
+\newcommand{\DeriveConclude}[3]{& \leadsto #1 \de #2 : #3 ; \\} 
+\newcommand{\Assume}[2]{& \LOGIC{Assume} \; #1 : #2, \\}
+\newcommand{\AssumeIn}[2]{& \LOGIC{Assume} \; #1 \in #2, \\}
+\newcommand{\As}{\; \LOGIC{as } \;} 
+\newcommand{\ByDef}{\LOGIC{E}}
+\newcommand{\QED}{\; \square}
+\newcommand{\EndProof}{& \QED \\}
+\newcommand{\Proof}{\LOGIC{Proof} \; }
+\newcommand{\Explain}[1]{& \text{#1.} \\}
+\newcommand{\ExplainFurther}[1]{& \text{#1} \\}
+\newcommand{\Exclaim}[1]{& \text{#1!} \\}
+%SetTheory
+\newcommand{\NonEmpty}{\TYPE{NonEmpty}}
+\newcommand{\Finite}{\TYPE{Finite}}
+\newcommand{\Countable}{\TYPE{Countable}}
+\newcommand{\Uncountable}{\TYPE{Uncountable}}
+\newcommand{\Ideal}{\TYPE{Ideal}}
+\newcommand{\Inj}{\TYPE{Injective}}
+\newcommand{\Surj}{\TYPE{Surjective}}
+\newcommand{\Bij}{\TYPE{Bijective}}
+\newcommand{\SIdeal}{\TYPE{\sigma\hyph \Ideal}}
+\newcommand{\SA}{\TYPE{\sigma \hyph Algebra}}
+\newcommand{\Eq}{\TYPE{Equivalence}}
+%CategoryTheory
+%Types
+\newcommand{\Cov}{\TYPE{Covariant}}
+\newcommand{\Contra}{\TYPE{Contravariant}}
+\newcommand{\NT}{\TYPE{NaturalTransform}}
+\newcommand{\UMP}{\TYPE{UnversalMappingProperty}}
+\newcommand{\CMP}{\TYPE{CouniversalMappingProperty}}
+\newcommand{\paral}{\rightrightarrows}
+%functions
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\obj}{\mathrm{obj}}
+\DeclareMathOperator*{\dom}{dom}
+\DeclareMathOperator*{\codom}{codom}
+\DeclareMathOperator*{\colim}{colim}
+%variable
+\renewcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\R}{\mathcal{R}}
+%Cats
+\newcommand{\CAT}{\mathsf{CAT}}
+\newcommand{\SET}{\mathsf{SET}}
+\newcommand{\PARALLEL}{\bullet \paral \bullet}
+\newcommand{\WEDGE}{\bullet \to \bullet \leftarrow \bullet}
+\newcommand{\VEE}{\bullet \leftarrow \bullet \to \bullet}
+%OrderTheory
+%Types
+\newcommand{\Poset}{\TYPE{Poset}}
+\newcommand{\Toset}{\TYPE{Toset}}
+\newcommand{\Pres}{\TYPE{PreorderedSet}}
+\newcommand{\WF}{\TYPE{WellFounded}}
+\newcommand{\WO}{\TYPE{WellOrdered}}
+\newcommand{\II}{\TYPE{InitialInterval}}
+\newcommand{\UB}{\TYPE{UpperBound}}
+\newcommand{\LUB}{\TYPE{LowerUpperBound}}
+\newcommand{\LB}{\TYPE{LowerBound}}
+\newcommand{\ULB}{\TYPE{UpperLoweBound}}
+%Cats
+\newcommand{\POSET}{\mathsf{POSET}}
+\newcommand{\ORD}{\mathsf{ORD}}
+%Symbols
+\renewcommand{\P}{\mathsf{P}}
+%\newcommand{\F}{\mathsf{F}}
+%\newcommand{\U}{\mathsf{U}}
+%Algebra
+%Groups
+%Types
+\newcommand{\Group}{\TYPE{Group}}
+\newcommand{\Abel}{\TYPE{Abelean}}
+\newcommand{\Sgrp}{\subset_{\mathsf{GRP}}}
+\newcommand{\Nrml}{\vartriangleleft}
+\newcommand{\FG}{\TYPE{FiniteGroup}}
+\newcommand{\Stab}{\mathrm{Stab}}
+\newcommand{\FGA}{\TYPE{FinitelyGeneratedAbelean}}
+\newcommand{\DN}{\TYPE{DirectedNormality}}
+\newcommand{\ActsOn}{\curvearrowright}
+%Func
+\DeclareMathOperator{\tor}{tor}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\bool}{bool}
+\DeclareMathOperator{\rank}{rank}
+%Cats
+\newcommand{\GRP}{\mathsf{GRP}}
+\newcommand{\ABEL}{\mathsf{ABEL}}
+%Boolean Algebra
+%TYPE
+\newcommand{\Bool}{\mathbb{B}}
+\newcommand{\Alg}{\TYPE{Algebra}}
+\newcommand{\BR}{\TYPE{BooleanRing}}
+\newcommand{\BA}{\TYPE{BooleanAlgebra}}
+\newcommand{\PD}{\TYPE{PairwiseDisjointElements}}
+\newcommand{\PoU}{\TYPE{PartitionOfUnity}}
+\renewcommand{\SS}{\TYPE{StoneSpace}}
+\newcommand{\TK}{\mathcal{TK}}
+\newcommand{\BL}{\TYPE{BooleanLattice}}
+\newcommand{\Fix}{\mathrm{Fix}}
+\newcommand{\OC}{\TYPE{OrderClosed}}
+\newcommand{\SOC}{\TYPE{SequentiallyOrderClosed}}
+\newcommand{\oC}{\TYPE{OrderContinuous}}
+\newcommand{\sC}{\TYPE{\sigma\hyph Continuous}}
+\newcommand{\OD}{\TYPE{OrderDense}}
+\newcommand{\REing}{\TYPE{RegularEmbedding}}
+\newcommand{\REed}{\TYPE{RegularEmbeded}}
+\newcommand{\REable}{\TYPE{RegularEmbedable}}
+\newcommand{\OComplete}{\TYPE{OrderDedekindComplete}}
+\newcommand{\TAlgebra}{\TYPE{\tau\hyph Algebra}}
+\newcommand{\OCompletes}{\TYPE{OrderDedekindCompleteSubset}}
+\newcommand{\SComplete}{\TYPE{\sigma\hyph DedekindComplete}}
+\newcommand{\SCompletes}{\TYPE{\sigma\hyph DedekindCompleteSubset}}
+\newcommand{\LS}{\mathcal{LS}}
+\newcommand{\POpen}{\TYPE{PseudoOpen}}
+\newcommand{\od}{\mathbf{OD}}
+\newcommand{\mgr}{\mathbf{MGR}}
+\newcommand{\nd}{\mathbf{ND}}
+\newcommand{\CCC}{\TYPE{WithCountableChainCondition}}
+\newcommand{\CSI}{\TYPE{\omega_1\hyph SaturatedIdeal}}
+\newcommand{\WD}{\TYPE{(\sigma,\infty)\hyph WeaklyDistributive}}
+\newcommand{\Aless}{\TYPE{Atomless}}
+\newcommand{\PA}{\TYPE{PurelyAtomic}}
+\newcommand{\Homog}{\TYPE{Homogeneous}}
+%\newcommand{\FS}{\TYPE{FullSubgroup}}
+%\newcommand{\CFS}{\TYPE{CountablyFullSubgroup}}
+%\newcommand{\EI}{\TYPE{ExchangingInvolution}}
+%\newcommand{\SwS}{\TYPE{SubgroupWithSeparators}}
+%\newcommand{\SwmI}{\TYPE{SubgroupWithManyInvolutions}}
+%FUNC
+\DeclareMathOperator{\upr}{upr}
+\DeclareMathOperator{\Atom}{Atom}
+%\DeclareMathOperator{\Supp}{Supp}
+%\newcommand{\genFS}[1]{\left\langle #1 \right\rangle_\mathrm{F}}
+%\newcommand{\genCFS}[1]{\left\langle #1 \right\rangle_\mathrm{CF}}
+%\DeclareMathOperator{\Sep}{Sep}
+%\DeclareMathOperator{\Tr}{Tr}
+%CATS
+\newcommand{\BOL}{\mathsf{BOL}}
+\newcommand{\BOOL}{\mathsf{BOOL}}
+%SYMBOL
+\newcommand{\Z}{\mathsf{Z}}
+%Topology
+%General Topology
+%Types
+\newcommand{\Top}{\TYPE{Topology}}
+\newcommand{\Homeo}{\TYPE{Homeomorphism}}
+\newcommand{\TS}{\TYPE{TopologicalSpace}} 
+\newcommand{\NbhdBase}{\TYPE{NeighborhoodBase}}
+\newcommand{\LF}{\TYPE{LocallyFinite}}
+\newcommand{\PN}{\TYPE{PerfectlyNormal}}
+\newcommand{\CR}{\TYPE{CompletelyRegular}}
+\newcommand{\OM}{\TYPE{OpenMap}}
+\newcommand{\Filter}{\TYPE{Filter}}
+\newcommand{\Filterbase}{\TYPE{Filterbase}}
+\newcommand{\CFilterbase}{\TYPE{ConvergentFilterbase}}
+\newcommand{\Dense}{\TYPE{Dense}}
+\newcommand{\Separable}{\TYPE{Separable}}
+\newcommand{\ND}{\TYPE{NowhereDense}}
+\newcommand{\Open}{\TYPE{Open}}
+\newcommand{\Net}{\TYPE{Net}}
+\newcommand{\Closed}{\TYPE{Closed}}
+\newcommand{\Clopen}{\TYPE{Clopen}}
+\newcommand{\Nbhd}{\TYPE{Neighborhood}}
+\newcommand{\Compact}{\TYPE{Compact}}
+\newcommand{\Compacts}{\TYPE{CompactSubset}}
+\newcommand{\OpenC}{\TYPE{OpenCover}}
+\newcommand{\Cluster}{\TYPE{Cluster}}
+\newcommand{\Convergent}{\TYPE{Convergent}}
+%\newcommand{\LC}{\TYPE{LocallyCompact}}
+\newcommand{\Locally}{\TYPE{Locally}}
+\newcommand{\Bair}{\TYPE{BaireSpace}}
+%\newcommand{\Meager}{\TYPE{Meager}}
+\newcommand{\Connected}{\TYPE{Connected}}
+\newcommand{\ED}{\TYPE{ExtemellyDisconnected}}
+%FUNC
+\DeclareMathOperator*{\intx}{int}
+\DeclareMathOperator*{\cl}{cl} 
+\DeclareMathOperator*{\boundary}{\partial} 
+\DeclareMathOperator{\combo}{\triangledown} 
+%\DeclareMathOperator{\diag}{\triangle} 
+\DeclareMathOperator{\rem}{rem}
+%CATS
+\newcommand{\TOP}{\mathsf{TOP}}
+\newcommand{\HC}{\mathsf{HC}}
+\newcommand{\CG}{\mathsf{CG}}
+%Symbols
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\N}{\mathcal{N}}
+\renewcommand{\U}{\mathcal{U}}
+\renewcommand{\O}{\mathcal{O}}
+\renewcommand{\d}{\mathrm{d}}
+%\newcommand{\F}{\mathcal{F}}
+\newcommand{\X}{\mathcal{X}}
+%\newcommand{\d}{\mathrm{d}}
+%Metric Topology
+\newcommand{\Bounded}{\TYPE{Bounded}}
+%FUNC
+\DeclareMathOperator{\diam}{diam}
+\newcommand{\Cell}{\mathbb{B}}
+\newcommand{\Disc}{\mathbb{D}}
+%CATS
+\newcommand{\Semiiso}{\mathsf{SMS}_{\circ \to \cdot}}
+\newcommand{\Iso}{{\mathsf{MS}_{\circ \to \cdot}}}
+\newcommand{\SMS}{\mathsf{SMS}}
+\newcommand{\MS}{\mathsf{MS}}
+\newcommand{\UNI}{\mathsf{UNI}}
+\newcommand{\UNIS}{\mathsf{UNIS}}
+\newcommand{\TG}{\mathsf{TG}}
+\newcommand{\CSeq}{\TYPE{CauchySequence}}
+\newcommand{\Complete}{\TYPE{Complete}}
+%Descriptive Set Theory
+%TYPE
+%\newcommand{\Bool}{\mathbb{B}}
+\newcommand{\IS}{\TYPE{InitialSegement}}
+\newcommand{\FS}[1]{{#1}{}^*}
+\newcommand{\Ext}{\TYPE{Extension}}
+\newcommand{\Tree}{\TYPE{Tree}}
+\newcommand{\Pruned}{\TYPE{Pruned}}
+\newcommand{\PTM}{\TYPE{ProperTreeMorphism}}
+\newcommand{\LTM}{\TYPE{LipschitzTreeMorphism}}
+\newcommand{\Polish}{\TYPE{Polish}}
+\newcommand{\IIPG}{\TYPE{InfiniteIterativeTwoPlayersGame}}
+\newcommand{\FPS}{\TYPE{FirstPlayerStrategy}}
+\newcommand{\SPS}{\TYPE{SecondPlayerStrategy}}
+\newcommand{\FPWS}{\TYPE{FirstPlayerWinningStrategy}}
+\newcommand{\SPWS}{\TYPE{SecondPlayerWinningStrategy}}
+\newcommand{\CS}{\TYPE{ChoquetSpace}}
+\newcommand{\SCS}{\TYPE{StrongChoquetSpace}}
+\newcommand{\BP}{\mathbf{BP}}
+\newcommand{\MGR}{\mathbf{MGR}}
+\newcommand{\cat}{\mathbf{CAT}}
+\newcommand{\BM}{\TYPE{BairMeasurable}}
+\newcommand{\CGSA}{\TYPE{CountablyGeneratedSigmaAlgebra}}
+\newcommand{\MC}{\TYPE{MonotonicClass}}
+\newcommand{\PSA}{\TYPE{PointSeparatingAlgebra}}
+\newcommand{\SBS}{\TYPE{StandardBorelSpace}}
+\newcommand{\IH}{\TYPE{InducedHomomorphism}}
+%FUNC
+\DeclareMathOperator{\len}{len}
+\newcommand{\inits}[2]{{#1}_{|\left[1,\ldots,#2\right]}}
+\DeclareMathOperator{\lb}{lb}
+\DeclareMathOperator{\WFpart}{WF}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\PTr}{PTr}
+\DeclareMathOperator*{\Tll}{{T\;\underline{lim}}}
+\DeclareMathOperator*{\Tul}{{T\;\overline{lim}}}
+\DeclareMathOperator*{\Tl}{{T\;lim}}
+\DeclareMathOperator{\rankcb}{rank_{CB}}
+\DeclareMathOperator{\lp}{lp}
+\newcommand{\alg}{\mathsf{A}}
+%CATS
+\newcommand{\TREE}{\mathsf{TREE}}
+\newcommand{\FSF}{\mathsf{FS}}
+\newcommand{\CRONE}{\mathsf{CRONE}}
+\newcommand{\BODY}{\mathsf{BODY}}
+\newcommand{\BOR}{\mathsf{BOR}}
+\newcommand{\bor}{\mathsf{B}}
+\newcommand{\Effros}{\mathsf{EFF}}
+%symbols
+\newcommand{\K}{\mathsf{K}}
+\renewcommand{\H}{\mathrm{H}}
+\renewcommand{\L}{\mathcal{L}}
+\renewcommand{\P}{\mathcal{P}}
+\renewcommand{\S}{\mathcal{S}}
+%LINEAR
+%Linear Algebra
+%Types
+\newcommand{\Basis}{\TYPE{Basis}} % Basis of the linear space
+\newcommand{\submod}[1]{\subset_{\LMOD{#1}}}% submodule as a subset
+\newcommand{\subvec}[1]{\subset_{\VS{#1}}}% vector subspace as a subset
+\newcommand{\FGM}{\TYPE{FinitelyGeneratedModule}}% Finitely generated module
+\newcommand{\LI}{\TYPE{LinearlyIndependent}}
+\newcommand{\LIS}{\TYPE{LinearlyIndependentSet}}
+\newcommand{\FM}{\TYPE{FreeModule}}
+\newcommand{\IBP}{\TYPE{InvariantBasisProperty}}
+\newcommand{\UTM}{\TYPE{UpperTriangularMatrix}}
+%\newcommand{\LTM}{\TYPE{LowerTriangularMatrix}}
+\newcommand{\Diag}{\TYPE{DiagonalMatrix}}
+\newcommand{\FP }{\TYPE{FinitelyPresented}}
+\newcommand{\GL}{\mathbf{GL}}% General Linear Group
+\newcommand{\SL}{\mathbf{SL}}% Special Linear group
+\newcommand{\SO}{\mathbf{SO}}
+\newcommand{\SU}{\mathbf{SU}}
+\newcommand{\prsubvec}[1]{\subsetneq_{\VS{#1}}}	% poper vector subspace as a subset
+\newcommand{\LC}{\TYPE{LinearComplement}} 
+%\newcommand{\IS}{\TYPE{InvariantSubspace}}
+\newcommand{\RP}{\TYPE{ReducingPair}}
+\newcommand{\RCF}{\TYPE{RationalCanonicalForm}}
+\newcommand{\JCF}{\TYPE{JordanCanonicalForm}}
+\newcommand{\Diagble}{\TYPE{Diagonalizable}}
+\newcommand{\UT}{\TYPE{UpperTriangulizable}}
+\newcommand{\LT}{\TYPE{LowerTriangulizable}}
+\newcommand{\IPS}{\TYPE{InnerProductSpace}}
+\newcommand{\OBasis}{\TYPE{OrthonormalBasis}}
+\newcommand{\FDIPS}{\TYPE{FiniteDimensionalInnerProductSpace}}
+\newcommand{\NO}{\TYPE{NormalOperator}}
+\newcommand{\NM}{\TYPE{NormalMatrix}}
+%\newcommand{\SA}{\TYPE{SelfAdjoint}}
+\newcommand{\SSA}{\TYPE{SkewSelfAdjoint}}
+\newcommand{\PI}{\TYPE{Pseudoinverse}}
+\newcommand{\OVS}{\TYPE{OrthogonalVectorSpace}}
+\newcommand{\SVS}{\TYPE{SymplecticVectorSpace}}
+\newcommand{\MVS}{\TYPE{MetricVectorSpace}}
+\newcommand{\FDMVS}{\TYPE{FiniteDimensionalMetricVectorSpace}}
+\newcommand{\Sp}{\mathbf{Sp}}
+%Func
+\DeclareMathOperator{\Span}{span} % spann by subset
+\DeclareMathOperator{\Ann}{Ann}   % annihilator
+\DeclareMathOperator{\Ass}{Ass}   % associated primes:
+\DeclareMathOperator{\adj}{adj}   % an adjoint matrix
+\DeclareMathOperator{\tr}{tr}     % trace
+\DeclareMathOperator{\codim}{codim} % codimension
+%\DeclareMathOperator{\Cell}{\mathbf{C}} % a componion matrix
+\DeclareMathOperator{\JC}{\mathbf{J}}  % a Jordan cell
+\DeclareMathOperator{\bigboxplus}{\scalerel*{\boxplus}{\sum}} % a direct sum of operators in the sence of the reducing a pair
+\DeclareMathOperator{\Spec}{Spec} % Spectre
+\DeclareMathOperator{\bigbot}{\scalerel*{\bot}{\sum}} % an othogonal direct sum
+\DeclareMathOperator{\GS}{\mathbf{GS}} %Gramm-Smmidt process
+\DeclareMathOperator{\NGS}{\mathbf{NGS}} %Normalized Gramm-Smmidt process
+\DeclareMathOperator{\WI}{\mathrm{WI}} %Witt Index
+%Cats
+\newcommand{\VS}[1]{#1\hyph\mathsf{VS}} % a category of vector spaces (Field)
+\newcommand{\FDVS}[1]{#1\hyph\mathsf{FDVS}} % a category of finite-dimensional vector spaces (Field)
+\newcommand{\LALGE}[1]{#1\hyph\mathsf{ALGE}}
+\newcommand{\LMOD}[1]{#1\hyph\mathsf{MOD}} % a category of the left modules (Ring)
+\newcommand{\RMOD}[1]{\mathsf{MOD}\hyph#1} % a category of the right modules (Ring)
+\newcommand{\LLMAP}[1]{#1\hyph\mathsf{LMAP}} % a cagory of based linear maps with the left scalar multiplication (Ring)
+\newcommand{\LMAT}[1]{#1\hyph\mathsf{MAT}}  % a category of based matrices with the left scalar multiplication (Ring)
+\newcommand{\NMAT}[1]{#1\hyph\mathbb{N}} % a category of finite matrices (Field)
+%Symbols
+\renewcommand{\L}{\mathcal{L}}
+%\renewcommand{\O}{\mathbf{O}}
+%\renewcommand{\S}{\mathbf{S}}
+%%Measure theorty
+%Types
+\newcommand{\Measure}{\TYPE{Measure}}
+%\newcommand{\MS}{\TYPE{MeasureSpace}}
+\newcommand{\CMS}{\TYPE{CompleteMeasureSpace}}
+\newcommand{\Null}{\mathcal{N}}
+\renewcommand{\ae}{\mathrm{a.e.}}
+\renewcommand{\OM}{\TYPE{OuterMeasure}}
+\newcommand{\IM}{\TYPE{InnerMeasure}}
+\newcommand{\Thick}{\TYPE{Thick}}
+\newcommand{\Integrable}{\mathsf{I}}
+\newcommand{\ME}{\TYPE{MeasurableEnvelope}}
+\newcommand{\Probability}{\TYPE{Probability}}
+\newcommand{\sFinite}{\TYPE{\sigma \hyph  Finite}}
+\newcommand{\Semifinite}{\TYPE{Semifinite}}
+\newcommand{\Decomposition}{\TYPE{Decomposition}}
+\newcommand{\SLoc}{\TYPE{StrictlyLocalizable}}
+\newcommand{\Loc}{\TYPE{Localizable}}
+\newcommand{\LocDet}{\TYPE{LocallyDetermined}}
+\newcommand{\PtSupp}{\TYPE{PointSupported}}
+\newcommand{\SF}[1]{\TYPE{\sigma \hyph  Finite}\left( #1 \right) }
+\newcommand{\DRP}{\TYPE{DiscreteRandomProcces}}
+\newcommand{\MwLDNS}{\TYPE{MeasureWithLocallyDeterminedNullSets}}
+\newcommand{\AF}{\TYPE{AdditiveFunctional}} 
+\newcommand{\CAF}{\TYPE{CountablyAdditiveFunctional}}
+\newcommand{\TC}{\TYPE{TrulyContinuous}} 
+\newcommand{\CE}{\TYPE{ConditionalExpectation}}
+%Functions and Operators
+\DeclareMathOperator{\esssup}{ess\sup}
+%Symbols
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\E}{\mathcal{E}}
+%CATS
+\newcommand{\MEAS}{\mathsf{MEAS}}
+\newcommand{\Simple}{\mathsf{S}}
+\newcommand{\caf}{\mathsf{ca}}
+\newcommand{\af}{\mathsf{a}}
+\newcommand{\baf}{\mathsf{ba}}
+\newcommand{\ac}{\mathsf{ac}}
+\newcommand{\tc}{\mathsf{tc}}
+%%Measure Algebra
+%Types
+\newcommand{\MA}{\TYPE{MeasureAlgebra}}
+\author{Uncultured Tramp} 
+\title{Abstract Measure Theory}
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\newpage
+\thispagestyle{empty}
+\tableofcontents
+\newpage
+\section*{Intro}
+\newpage
+\pagenumbering{arabic}
+\section{Measure Algebras}
+\subsection{Subject}
+\subsubsection{Definition and Basic Property}
+\Page{
+	\DeclareType{MeasureAlgebra}
+	{
+		? \sum A : \SComplete \. A \to \EReals_+
+	}
+	\DefineType{(A,\mu)}{MeasureAlgebra}
+	{
+			\forall a \in A \. \mu(a) = 0 \iff a = 0
+			\And \NewLine \And
+			\forall a : \PD(\Nat,A) \. 
+			\mu\left(\bigvee^\infty_{n=1}  a_n \right) = \sum^\infty_{n=1} \mu(a_n)
+	}
+	\\
+	\Theorem{MeasureMonotonicity}
+	{
+		\forall (A,\mu) : \MA \. 
+		\forall a,b \in A \. 
+		a \le b \Imply  \mu(a) \le \mu(b)
+	}
+	\Explain{ Write $\mu(b) = \mu(a) + \mu(b\setminus a) \ge \mu(a)$}
+	\EndProof
+	\\
+	\Theorem{MeasureStrictMonotonicity}
+	{
+		\forall (A,\mu) : \MA \. 
+		\forall a,b \in A \. 
+		a > b \Imply  \mu(a) > \mu(b)
+	}
+	\Explain{ Definition of measure algebra implies that $\mu(b \setminus a) > 0$ }
+	\Explain{ Write $\mu(b) = \mu(a) + \mu(b\setminus a) > \mu(a)$}
+	\EndProof
+	\\
+	\Theorem{MinkovskyIneq}
+	{
+		\forall (A,\mu) : \MA \.
+		\forall a,b \in A \. 
+		\mu(a \vee b) \le \mu(a) + \mu(b)
+	}
+	\Explain{
+		Write
+		$
+			\mu(a) + \mu(b) =
+		    \mu(a \setminus ab) + \mu(ab) + \mu(b \setminus ab) + \mu(ab) 
+		    \ge   mu(a \setminus ab) + \mu(ab) + \mu(b \setminus ab = 
+		    \mu(a \vee b)
+		$
+	}
+	\EndProof
+	\\
+	\Theorem{MonotonicSupremumAsLimit}
+	{
+		\forall (A,\mu) : \MA \.
+		\forall a : \Nat \uparrow A \. 
+		\mu\left( \bigvee^\infty_{n=1} a_n\right)  = \lim_{n \to \infty} \mu(a_n)
+	}
+	\Explain{ Construct disjoint sequence $b_n = a_n \setminus \bigvee^{n-1}_{k=1} a_k$}
+	\Explain{ Then by construction 
+			$
+				\mu\left( \bigvee^\infty_{n=1} a_n \right) = 
+				\mu\left(  \bigvee^\infty_{n=1} b_n \right) =
+				\sum^\infty_{n=1} \mu(b_n) = 
+				\lim_{n \to \infty} \sum^n_{k=1} \mu(b_n) =
+				\lim_{n \to \infty} \mu\left(\bigvee^n_{k=1} b_k\right) =
+				\lim_{n \to \infty} \mu(a_n)
+			$}
+	\EndProof
+}\Page{
+	\Theorem{SupremumIneq}
+	{
+		\forall (A,\mu) : \MA \.
+		\forall a : \Nat \to A \. 
+		\mu\left( \bigvee^\infty_{n=1} a_n\right) \le \sum^\infty_{n=1} \mu(a_n)
+	}
+	\Explain{ Construct increasing sequence $b_n = \bigvee^n_{k=1} a_n$}
+	\Explain{
+		Then by construction
+		$
+			\mu\left( \bigvee^\infty_{n=1} a_n \right) = 
+			\mu\left(  \bigvee^\infty_{n=1} b_n \right) =
+			\lim_{n \to \infty} \mu( b_n ) =
+			\lim_{n \to \infty} \mu\left( \bigvee^n_{k=1} a_k \right)  \le 
+			\lim_{n \to \infty} \sum^n_{k=1} \mu(a_k) =
+			\sum^\infty_{n=1} \mu(a_n)  
+		$
+	}
+	\EndProof
+	\\
+	\Theorem{MonotonicInfimumAsLimit}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\forall a : \Nat \downarrow A \.
+		\forall \aleph : \inf_{n \in \Nat} \mu(a_n) < \infty \.
+		\mu\left( \bigwedge^\infty_{n=1} a_n\right)  = \lim_{n \to \infty} \mu(a_n)
+	}
+	\Explain{ Without loss of generality assume that $\mu(a_1) < \infty$}
+	\Explain{ Then construc the increasing sequence $b_n = a_1 \setminus a_n$} 
+	\ExplainFurther{ Then $
+			\mu(a_1) - \mu\left(\bigwedge^\infty_{n=1} a_n  \right) =
+			\mu\left( a_1 \setminus \bigwedge^\infty_{n=1} a_n \right)
+			=\mu\left( \bigvee^\infty_{n=1} a_1 \setminus a_n\right) 
+			=\mu\left( \bigvee^\infty_{n=1} b_n\right)  = \lim_{n \to \infty} \mu(b_n) =$}
+	\Explain{$  =
+			\lim_{n \to \infty} \mu\left( a_1 \setminus a_n \right)=\lim_{n \to \infty} \mu(a_1) - \mu(a_n) = \mu(a_1) - \lim_{n \to \infty} \mu(a_n)$}
+	\Explain{
+		So basic algebraic manipulations
+		$
+			\mu\left(\bigwedge^\infty_{n=1} a_n  \right) = \lim_{n \to \infty} \mu(a_n)
+		$		
+	}
+	\EndProof
+	\\
+	\Theorem{SupremumExistance}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\forall C : \TYPE{UpwardsDirected}(A) \.
+		\forall \aleph : \sup_{c \in C} \mu(c) < \infty \.
+		\exists a \in A : a = \sup C
+	}
+	\Explain{1 Assume $\gamma = \sup_{c \in C} \mu(c)$}
+	\Explain{2 Then there exists a sequrnce of $a:\Nat \to C$ such that $\mu(a_n )\ge \gamma - 2^{-n}$}
+	\Explain{3 As $C$ is upwards closed, it is possible to find $c:\Nat \to C$ 
+		such that $c_{n+1} \ge a_{n} \vee c_n$}
+	\Explain{4 Then $c$ is monotonic-nondecreasing and so it has 
+		$\mu\left(\bigvee^\infty_{n=1} c_n\right) = \lim_{n \to \infty} \mu(c_n) = \gamma$}
+	\Explain{4.1 Note that $\gamma \ge \mu(c_n) \ge \gamma - 2^{-n}$}
+	\Explain{5 let $d = \bigvee^\infty_{n=1} c_n$}
+	\Explain{6 $d \ge f$ for everty $f \in C$}
+	\Explain{6.1 Assume this is false}
+	\Explain{6.2 Then $f \setminus d \neq 0$ and so $\alpha = \mu(f\setminus d) > 0$}
+	\Explain{6.3 Then there exists $n$ such that $\gamma - \mu(c_n) < \alpha$}
+	\Explain{6.4 As $C$ is upwards derected there is $g \in C$
+		such that $g \ge f \vee c_n$}
+	\Explain{6.5 But
+		$\mu(g) \ge \mu(f \vee c_n) = \mu(c_n) + \mu(f \setminus c_n) \ge 
+			\mu(c_n) + \mu(f \setminus d) > \gamma$ which is impossible}                                                     
+	\Explain{7 If there is another $f$ with the property (6), then 
+		$d = \bigvee^\infty_{n=1} c_n \le f$ as $c_n \le f$ for each $n\in\Nat$}
+	\EndProof
+}\Page{
+	\Theorem{UpperContinuity}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\forall C : \TYPE{UpwardsDirected}(A) \.
+		\forall \aleph : \exists a \in A : a = \sup C \.
+		\sup_{c \in C} \mu(c) = \mu\left( \sup C \right)
+	}
+	\Explain{ Case $\sup_{c \in C} \mu(c) = \infty$ is trivial}
+	\Explain{ Finite case follows from the cconstruction in the previous theorem}
+	\EndProof
+	\\
+	\Theorem{DisjointUpperContinuity}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\forall C : \PD(A) \.
+		\forall \aleph : \exists a \in A : a = \sup C \. \NewLine \.
+		\mu\left( \sup C \right)= \sum_{c \in C} \mu(c)
+	}
+	\Explain{Construct a new set $D = \left\{ \bigvee^\infty_{n=1} c_k \bigg|  c : \Nat \to C  \right\}$}
+	\Explain{ Then $D$ is upwards directed and $\sup C = \sup D$}
+	\Explain{ But this is evedent that 
+		$\mu\left(\sup D\right) = \sup_{d \in D} \mu(d) = 
+		\sup_{c : \Nat \to C} \mu\left( \bigvee_{n=1} c_n \right)  =
+		\sup_{n \in \Nat, c : \{1,\ldots,n\} \to C} \sum^n_{k=1} \mu(c_k)  =
+		\sum_{c \in C} \mu(c)$}
+	\EndProof
+	\\
+	\Theorem{InfimumExistance}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\forall C : \TYPE{DownwaedDirected}(A) \.
+		\forall \aleph : \inf_{c \in C} \mu(c) < \infty \.
+		\exists a \in A : a = \inf C
+	}
+	\Explain{ 1 There exists some $a \in C$ such that $\mu(a) < \infty$}
+	\Explain{ 2 Construct another set $D = a \setminus C$}
+	\Explain{ 3 Then $D$ is upwards directed and $\sup_{d \in D} \mu(d) \le \mu(a) < \infty$}
+	\Explain{ 4 So there is $d = \sup d$ }
+	\Explain{ 5 Define $f = a \setminus d$ }
+	\Explain{ 6 $f \le c$ for any $c \in C$ as $a \setminus f \ge a \setminus c$}
+	\Explain{ 7 if some $g$ has property (6) then $a \setminus g \ge d$ and so $g \le f$}
+	\EndProof
+	\\
+	\Theorem{LowerContinuity}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\forall C : \TYPE{DownwardsDirected}(A) \.
+		\forall \aleph : \exists a \in A : a = \inf C \. \NewLine \.
+		\forall \beth :  \inf_{c \in C} \mu(c) < \infty \.
+		\inf_{c \in C} \mu(c) = \mu\left( \inf C \right)
+	}
+	\Explain{ Use the construction in the previous theorem}
+	\EndProof
+}
+\newpage
+\subsubsection{Measure Algebras Generated by Measure Spaces}
+\Page{
+	\DeclareFunc{measureAlgebra}
+	{
+		\MEAS \to \MA
+	}
+	\DefineNamedFunc{measureAlgebra}{X,\Sigma,\mu}{(A_\mu,\bar \mu)}
+	{\left( \frac{\Sigma}{\Sigma \cap \Null_\mu},[E] \mapsto \mu(E)\right)}
+	\Explain{ This is obviously well defined as $[E] = [F]$ iff $\mu(E \du F) = 0$}
+	\\
+	\DeclareFunc{canononicalProjection}
+	{
+		\forall (X,\Sigma,\mu) \in \MEAS \. 
+		\sigma\hyph\BOOL(\Sigma,A_\mu) 
+	}
+	\DefineNamedFunc{canonicalProjection}{E}{\pi_\mu(E)}{[E]}
+	\Explain{ 1 The algebraic properites are obvious as $\Sigma \cap \Null_\mu$ is an ideal}
+	\Explain{ 2 In order to prove sigma-continuity assume $E : \Nat \to \Sigma$}
+	\Explain{ 2.1 Let $Z : \Nat \to \Sigma \cap \Null_\mu$}
+	\Explain{ 2.2 Then $F_Z = \bigvee^\infty_{n=1} (E_n \du Z_n) = 
+		\left(\bigvee^\infty_{n=1} E_n\right) \du \left( \bigvee^\infty_{n=1} Z_n\right)$}
+	\Explain{ 2.3 Note that 
+	$\mu\left( \bigvee^\infty_{n=1} Z_n\right) \le \sum^\infty_{n=1} \mu(Z_n)=0$}
+	\Explain{ 2.4 So $ \bigvee^\infty_{n=1} Z_n \in \Sigma \cap \Null_\mu$ as $\mu \ge 0$}
+	\Explain{ 2.5 Thus $[F_Z] = \left[\bigcap^\infty_{n=1} E_n\right]$ for any selection of $Z$}
+	\Explain{ 2.6 This means that 
+			$\pi_\mu\left(\bigcap^\infty_{n=1} E_n\right) = \bigvee^\infty_{n=1} \pi_\mu(E_n)$}
+	\EndProof
+	\\
+	\Theorem{MeasureAlgebraMonotonicity}
+	{
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall T \subset_\sigma \Sigma \.
+		\pi_\mu(T) \subset_\sigma A_\mu
+	}
+	\Explain{ 1 Clearly $B = \pi_\mu(T) \subset A_\mu$}
+	\Explain{ 2 Also as $T$ is $\sigma$-algebra and $\pi-\mu$ is a $\sigma$-continuous homomorphism 
+		$B$ is again}
+	\EndProof
+	\\
+	\Theorem{MeasureAlgebraInverseMonotonicity}
+	{
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall B \subset_\sigma A_\mu \.
+		\pi_\mu^{-1}(B) \subset_\sigma \Sigma
+	}
+	\Explain{ 1 Clearly $T = \pi_\mu^{-1}(B) \subset \Sigma$}
+	\Explain{ 2 Assume $F$ is a set constructed by applying $\sigma$-algebra operations to setes $E_1,E_2,\ldots \in T$ }
+	\Explain{ 3 Then $\pi_\mu(F)$ can be constructed by applying same operations to $\pi(E_1),\pi(E_2),\ldots$}
+	\Explain{ 4 This implies that $\pi_\mu(F) \in B$ and reciprorary $F \in T$}
+	\Explain{ 5 Thus $T$ is a $\sigma$-algebra}
+	\EndProof
+}
+\newpage
+\subsubsection{Stone Representation Theorem}
+\Page{
+	\Theorem{StoneRepresentationTheorem}
+	{
+		\forall (A,\mu) : \MA \. \exists (X,\Sigma,\nu) \in \MEAS \. (A,\mu) = (A_\nu,\bar \nu)
+	}
+	\ExplainFurther{
+		1 By Loomis-Sikorski representation there exists a set $X$ with a sigma-algebra $\Sigma$ and}
+	\Explain{ 	sigma-ideal $I$ such that $\frac{\Sigma}{I} \cong_\BOOL  A$
+	}
+	\Explain{ 2
+		Then there is a canonical projetion $\pi_I \in \BOOL(\Sigma,A)$	
+	}
+	\Explain{ 3 Define $\nu = \pi_I \mu$}
+	\Explain{ 4 $\nu$ is measure on $\Sigma$}
+	\Explain{ 4.1 $\nu(\emptyset) = \mu(0) = 0$}
+	\Explain{ 4.2 Assume $E$ is a disjoint sequence in $\Sigma$}
+	\Explain{ 4.3 Then $\pi_I(E_n)\pi_I(E_m) = \pi_i(E_n \cap E_m) = \pi_i(\emptyset) =  0$,
+	 so $\pi_I(E)$ is disjoint in $A$}
+	\Explain{ 4.4 Thus, 
+		$\nu\left( \bigcup^\infty_{n=1} E_n \right) = 
+		\pi_I\mu\left( \bigcup^\infty_{n=1} E_n \right) =  
+		\mu\left( \bigvee^\infty_{n=1} \pi_I(E_n)\right) =
+		\sum^\infty_{n=1} \pi_I\mu(E_n) = 
+		\sum^\infty_{n=1} \nu(E_n) $ }
+	\Explain{ 5 Also by consytuction $ \Null_\nu \cap \Sigma = I$, so $ (A,\mu) = (A_\nu,\bar \nu)$} 
+	\EndProof
+	\\
+	\DeclareFunc{spaceOfStone}{\MA \to \MEAS}
+	\DefineNamedFunc{SpaceOfStone}{A,\mu}{(Z_A,\dot \Sigma_\mu,\dot \mu)}
+	{
+			\THM{StoneRepresentationTheorem}(A,\mu)	
+	}
+}
+\newpage
+\subsubsection{Ideals}
+\Page{
+	\Theorem{PrincipleIdealRestriction}
+	{
+		\forall (A,\mu) : \MA \.
+		\forall a \in A \.
+		\MA\Big( (a), \mu_{|(a)} \Big) 
+	}
+	\Explain{This is obvious}
+	\EndProof
+	\\
+	\Theorem{measureQuotient}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\forall I : \Ideal(A) \.
+		\forall [a] \in \frac{A}{I} \.
+		\exists \gamma \in \EReals_{++} \.
+		\gamma = \min \{ \mu(b) | b \in A, \pi_I(b) = [a] \}	
+	}
+	\Explain{ 1 $\gamma = \inf \{ \mu(b) | b \in A, \pi_I(b) = [a] \}$ exists as a set
+	 is bounded by below by $0$}
+	\Explain{ 2 If $\gamma = \infty$ then the result is obvious}
+	\Explain{ 3 Otherwise there is a decreasing sequence $b : \Nat \to A$ 
+		such that $\pi_I(b_n) = [a]$ for any $n$ and 
+		$\lim_{n \to \infty} \mu(b_n) = \gamma$}
+	\Explain{ 4 Then  $c = \bigwedge^\infty_{n=1} b_n$
+		is such that $\mu(c) = \gamma$ and $\pi_I(c) = a$}
+	\Explain{ 4.1 Clearly 
+		$
+		\pi_I\left(\bigwedge^\infty_{n=1} b_n \right) = 
+		\bigwedge^\infty_{n=1} \pi_I(b_n) =
+		\bigwedge^\infty_{n=1} [a] = [a]		
+		$}
+	\Explain{ 5 So the infimum is atteined}
+	\EndProof
+	\\
+	\DeclareFunc{measureQuotient}
+	{  \prod (A,\mu) : \MA \. 
+		\prod I : \Ideal(A) \.
+		\frac{A}{I} \to \Reals_{++}
+	}
+	\DefineNamedFunc{measureQuotient}
+	{a}{\mu_{I}(a)}
+	{
+		\min \{ \mu(b) | b \in A, \pi_I(b) = a \}	
+	}
+	\\
+	\DeclareFunc{finiteElementsIdeal}{\prod (A,\mu) : \MA \. \Ideal(A)}
+	\DefineNamedFunc{finiteElementsIdeal}{}{A^f}{\{a \in A | \mu(a) < \infty \}}
+}\Page{
+	\Theorem{MeasureIdealQuotient}
+	{
+		\forall (A,\mu) : \MA \.
+		\forall I : \Ideal(A) \.		
+		\MA\left( \frac{A}{I}, \mu_{I} \right) 
+	}
+	\Explain{ 1 Clearly $\mu_I(0) = 0$}
+	\Explain{ 2 Assume that $[a] \neq 0$}
+	\Explain{ 2.1 Then there exists $b \in A$ such that $\pi_I(a) = [a]$ and $\mu(b) = \mu_I[a]$ }
+	\Explain{ 2.2 As $[a] \neq 0$, then $b \neq 0$, and henceforth $\mu(b) \neq 0$}
+	\Explain{ 2.3 Thus, $\mu_I[a] \neq 0$}
+	\Explain{ 3 Assume $[a] : \Nat \to \frac{A}{I}$ is disjoint}
+	\Explain{ 3.1 It is possible to select representatives $b_n$ for each $[a_n]$ 
+		such that $\mu(b_n) = \mu_I[a_n]$}
+	\Explain{ 3.2 Then $b_n b_m \in I$ if $n \neq m$}	
+	\Explain{ 3.3 Construct a new sequence 
+		$c_n = b_n + \sum^{n-1}_{k=1} b_n b_k$ is a disjoint represintative sequance for $[a_n]$}
+	\Explain{ 3.3.1 In fact $c = b$}
+	\Explain{ 3.4 $\bigvee^\infty_{n=1} c_n$ is the minimal representative 
+		of $\bigvee^\infty_{n=1} [a_n]$ }
+	\Explain{ 3.4.1  Assume $d$ is a representative for $\bigvee^\infty_{n=1} a_n$}
+	\Explain{ 3.4.2 If $\mu(d) < \mu\left(\bigvee^\infty_{n=1} c_n\right)$ 
+		then we may construct $c_n \wedge d$ which is smaller then $c$}
+	\Explain{ 3.4.3  But this is a contradiction}
+	\Explain{ 3.5 So 
+		$\mu_I\left(\bigvee^\infty_{n=1} [a_n]\right) =  
+		\mu\left( \bigvee^\infty_{n=1} c_n \right) = 
+		\sum^\infty_{n=1} \mu(c_n) =
+		\sum^\infty_{n=1} \mu_I[a_n]
+		$}	
+	\EndProof
+}
+\newpage
+\subsubsection{Measure Properties}
+\Page{
+	\DeclareType{ProbabilityAlgebra}{?\MA}
+	\DefineType{(A,\pi)}{ProbabilityAlgebra}{\pi(e) = 1}
+	\\
+	\DeclareType{Finite\MA}{?\MA}
+	\DefineType{(A,\mu)}{Finite\MA}{\mu(e) < \infty}
+	\\
+	\DeclareType{\sFinite\MA}{?\MA}
+	\DefineType{(A,\mu)}{\sFinite\MA}
+	{
+		\exists a : \Nat \to A \. \forall n \in \Nat \. \mu(a_n) < \infty \And \bigvee^\infty_{n=1} a_n = e
+	}
+	\\
+	\DeclareType{\Semifinite\MA}{?\MA}
+	\DefineType{(A,\mu)}{\Semifinite\MA}
+	{
+		\forall a \in A \. \mu(a) = \infty \Imply \exists b \in A \. b  < a \And 0 < \mu(b) < \infty
+	}
+	\\
+	\Conclude{\Loc\MA}{ \OComplete \And \Semifinite\MA }{\Type}
+	\\
+	\Theorem{ProbabilityConstruction}
+	{
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\TYPE{Probability}(X,\Sigma,\mu)
+		\iff 	
+		\TYPE{ProbabilityAlgebra}(A_\mu,\bar \mu)
+	}
+	\Explain{ This is obvious}
+	\EndProof
+	\\
+	\Theorem{FiniteConstruction}
+	{
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\Finite(X,\Sigma,\mu)
+		\iff 	
+		\Finite\MA(A_\mu,\bar \mu)
+	}
+	\Explain{ This is obvious}
+	\EndProof
+	\\
+	\Theorem{SigmaFiniteConstruction}
+	{
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\sFinite(X,\Sigma,\mu)
+		\iff 	
+		\sFinite\MA(A_\mu,\bar \mu)
+	}
+	\Explain{ This is obvious}
+	\EndProof
+	\\
+	\Theorem{SemifiniteConstruction}
+	{
+		\NewLine ::
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\Semifinite(X,\Sigma,\mu)
+		\iff 	
+		\Semifinite\MA(A_\mu,\bar \mu)
+	}
+	\Explain{ This is obvious}
+	\EndProof
+	\\
+	\Theorem{LocalizableConstruction}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\Loc(X,\Sigma,\mu)
+		\iff 	
+		\Loc\MA(A_\mu,\bar \mu)
+	}
+	\Explain{ This is obvious}
+	\EndProof
+}\Page{
+	\Theorem{AtomInConstruction}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall  E \in \Sigma \.
+		E \in \Atom(X,\Sigma,\mu)
+		\iff
+		[E] \in \Atom(A_\mu,\bar\mu)
+	}
+	\Explain{ This is obvious}
+	\EndProof
+	\\
+	\Theorem{AtomlessConstruction}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall  E \in \Sigma \.
+		E \in \Aless(X,\Sigma,\mu)
+		\iff
+		[E] \in \Aless(A_\mu,\bar\mu)
+	}
+	\Explain{ This is obvious}
+	\EndProof
+	\\
+	\Theorem{PurelyAtomicConstruction}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall  E \in \Sigma \.
+		E \in \PA(X,\Sigma,\mu)
+		\iff
+		[E] \in \PA(A_\mu,\bar\mu)
+	}
+	\Explain{ This is obvious}
+	\EndProof
+	\\
+	\Theorem{FinitenessPropertiesIerarchy}
+	{
+		\NewLine  :: 
+		\forall (A,\mu) : \MA \.
+		\TYPE{PobabilityAlgebra}(A,\mu)
+		\Imply
+		\Finite\MA(A,\mu)
+		\Imply \NewLine \Imply
+		\sFinite\MA(A,\mu)
+		\Imply
+		\Loc\MA(A,\mu)
+		\Imply
+		\Semifinite(A,\mu)				
+	}
+	\Explain{1 Most implications here are obvious 
+		expect the one deriving Localizability from $\sigma$-finiteness}
+	\Explain{2 So assume that $(A,\mu)$ is $\sigma$-finite } 
+	\Explain{2.1 Then the corresponding Stone space $(\Z A, \Sigma_\mu, \bar \mu )$ is $\sigma$-finite}
+	\Explain{2.2  But then $(\Z A, \Sigma_\mu, \bar \mu )$ is localizable }
+	\Explain{2.3 So $(A,\mu)$ is also localizable}
+	\EndProof
+	\\
+	\Theorem{MeasureAlgebraOfCompletion}
+	{
+		\forall (X,\Sigma, \mu) \in \MEAS \. 
+		A_\mu \cong_\BOOL A_{\hat \mu}
+	}
+	\Explain{This is basically follows from definitions}
+	\EndProof
+	\\
+	\Theorem{MeasureAlgebraOfLocallyDeterminedCompletion}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma, \mu) \in \MEAS \. 
+		\exists  A_\mu \Arrow{\phi} A_{\bar \mu} : \BOOL \.
+		\forall a \in A_{\bar \mu} \. \hat {\bar \mu}(a) < \infty \Imply \exists b \in A_{\mu} \. \phi(b) = a
+		\And \NewLine \And
+ 		\forall b \in A_{\mu} \. \hat \mu(b) < \infty \Imply  \hat {\bar \mu}(\phi(b)) = \hat \mu (b)
+	}
+	\NoProof
+	\\
+	\DeclareFunc{localDeterminationMorphism}
+	{
+		\prod (X,\Sigma, \mu) \in \MEAS \. 
+		 \BOOL(A_\mu, A_{\bar \mu})
+	}
+	\DefineNamedFunc{localDeterminationMorphism}{}{\phi_\mu}
+	{\THM{MeasureAlgebraOfLocallyDeterminedCompletion}}
+}
+\Page{
+	\Theorem{localDeterminationMorhismInjectivity}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\Semifinite(X,\Sigma,\mu)
+		\iff
+		\Inj(A_\mu,A_{\bar \mu},\phi_\mu)
+	}
+	\NoProof
+	\\
+	\Theorem{localDeterminationMorhismBijectivity}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\Loc(X,\Sigma,\mu)
+		\iff
+		\Bij(A_\mu,A_{\bar \mu},\phi_\mu)
+	}
+	\NoProof
+	\\
+	\Theorem{SemifinitenessCriterion}
+	{
+		\forall (A,\mu) : \MA \. \NewLine \.
+		\Semifinite\MA(A,\mu)
+		\iff
+		\exists P : \PoU(A) \. \forall p \in P \. \mu(p) < \infty
+	}
+	\Explain{ 1 $(\Rightarrow)$ assume first that $(A,\mu)$ is semifinite}
+	\Explain{ 1.1 Then $A^f$ is order dense in $A$}
+	\Explain{ 1.2 By order density theorem there is a desired partition of unity}
+	\Explain{ 2 $(\Leftarrow)$  Let $P$ be the partition of unity}
+	\Explain{ 2.1 Assume $a \in A$ is such that $\mu(a) = \infty$}
+	\Explain{ 2.2 Then there exists $p \in P$ such that $pa \neq 0$}
+	\Explain{ 2.3 Note that this means that $\mu(pa) > 0$}
+	\Explain{ 2.4 Also it is clear that $\mu(pa) \le \mu(p) < \infty$}
+	\EndProof
+	\\
+	\Theorem{SemifiniteneSupElementExpression}
+	{
+		\NewLine ::
+		\forall (A,\mu) : \Semifinite\MA(A,\mu) \.
+		\forall a \in A \. a = \bigvee \{ b \in A : b \le a, \mu(b) < \infty   \}
+	}
+	\Explain{ This follows from the previous theorem}
+	\EndProof
+	\\
+	\Theorem{SemifiniteneSupMeasureComputation}
+	{
+		\NewLine ::
+		\forall (A,\mu) : \Semifinite\MA(A,\mu) \.
+		\forall a \in A \. \mu(a) = \bigvee \{ \mu(b) \in A : b \le a, \mu(b) < \infty   \}
+	}
+	\Explain{ This follows from the previous theorem}
+	\EndProof
+}
+\newpage
+\subsubsection{Connections with other Boolean Properties}
+\Page{
+	\Theorem{SemifiniteIsWeaklyDistributive}
+	{
+		\NewLine ::	
+		\forall (A,\mu) : \Semifinite\MA(A,\mu) \. 
+		\WD(A,\mu)
+	}
+	\Explain{ 1 Assume 
+		$X : \Nat \to 2^A$ is a sequence of downwards selected sets with 
+		$\inf X_n =  0$ for every $n \in \Nat$}
+	\Explain{ 2 Let $C = \{ a \in A : \forall n \in \Nat \. \exists  x \in X_n \. a \ge x \}$}
+	\Explain{ 3 Assume $d \in A$ is such that $d \neq 0$}
+	\Explain{ 4 Then there is an element $d' \le d$ such that $0 < \mu(d') < 0$}
+	\Explain{ 5 $\inf_{x \in X} d'x = 0$ for each $n \in N$}
+	\Explain{ 6 Select a sequence $x : \prod^\infty_{n=1} X_n$ suc that 
+		$\mu(d'x_n) \le 2^{-n-2} \mu(d')$}
+	\Explain{ 7 Define $c = \sup_{n=1} a_n \in C$}
+	\Explain{ 8 Then $\mu(d'c) \le \sum^\infty_{n=0} \mu(c x_n) < \mu(d')$} 
+	\Explain{ 9 This means that $d \not \le c$}
+	\Explain{ 10 And as $d$  was arbitrary $\inf C = 0$}
+	\EndProof
+	\\
+	\Theorem{SemifiniteIffCCC}
+	{
+		\forall (A,\mu ) : \Semifinite\MA(A,\mu) \. \NewLine \.
+		\sFinite\MA(A,\mu) \iff \CCC(A)
+	}
+	\Explain{ 1 $(\Leftarrow)$ assume that $A$ has ccc}
+	\Explain{ 1.1 Then there is a partition of unitity $P$ in $A$ consisting of finite elements 
+		as $A$ is semifinite}
+	\Explain{ 1.2 But as $A$ has ccc $P$ must be atmost countable}
+	\Explain{ 1.3 This proves that $A$ is $\sigma$-finite}
+	\Explain{ 2 $(\Rightarrow)$ assume that $(A,\mu)$ is $\sigma$-finite }
+	\Explain{ 2.1 Then there exists a countable partition of unity $P$ of $A$ 
+		wirh finite elements}
+	\Explain{ 2.2 If $A$ is not ccc, then there exists an uncountable refinement $Q$ of $A$ 
+		with finite elements}
+	\ExplainFurther{ 2.3 Then by pigionhole principle there exists $p \in P$}
+	\Explain{ \quad \quad such that  set $Q' = \{ q \in Q :  q \subset p \}$ such that $Q'$ is uncountable}
+	\ExplainFurther{ 2.4 as for $\mu(q) > 0$ for any $q \in Q'$ 
+		by pigionhole principle there exists some $n\in \Int$}
+	\Explain{ \quad \quad such that there are an infinite number 
+		of $q \in Q'$ with $\mu(q) \in [2^{-n-1},2^{-n}]$}
+	\Explain{ 2.5 So $\mu(p) \ge \sum_{q \in Q'} \mu(q) = \infty$, but this is a contradiction}
+	\EndProof
+}\Page{
+	\Theorem{SemifiniteIffProbabilityRenormalizationExists}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA(A,\mu) \. A \neq \{0\} \Imply \NewLine \Imply
+		\exists \pi : A \to \EReals_+ \.  \TYPE{ProbabilityAlgebra}(A,\pi)
+	}
+	\Explain{ 1 Corresponding Stone space is $\sigma$-finite}
+	\Explain{ 2 So there exists a proper renormalization of $\bar \mu$ to a probability $\pi$
+		with the same sets of measure zero}
+	\Explain{ 3 Then the measure algebra of $(\Z A,\pi)$ is a probability algebra and 
+		$A_\pi \cong_\BOOL A$}
+	\EndProof
+}
+\newpage
+\subsubsection{Subspace Measures and Indefinite Integrals}
+\Page{
+	\Theorem{MeasurableEnvelopePrincipleIdealIsomorphism}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall Y \subset X \.
+		\forall E : \ME(X,\Sigma,\mu,Y) \.  
+		(A_{\mu|Y},\widehat{\mu|Y}) \cong_{\mathsf{MA}}  \Big( ([E]), \hat \mu_{|([E])} \Big)
+	}
+	\Explain{ This result is technically convoluted but actually is pretty intuituve}
+	\EndProof
+	\\
+	\Theorem{PrincipleIdealIsomorphism}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall E \in \Sigma \.  
+		(A_{\mu|E},\widehat{\mu|E}) \cong_{\mathsf{MA}}  \Big( ([E]), \hat \mu_{|([E])} \Big)
+	}
+	\Explain{ A straightforward application of  a previous theorem}
+	\EndProof
+	\\
+	\Theorem{ThickEquivalence}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall Y : \Thick(X,\Sigma,\mu) \.  
+		(A_{\mu|E},\widehat{\mu|E}) \cong_{\mathsf{MA}}  ( X, \hat \mu )
+	}
+	\Explain{ A straightforward application of a previous theorem}
+	\EndProof
+	\\
+	\Theorem{IndefiniteIntegralPrincipleIdealIsomorphism}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall f \in \Integrable_+(X,\Sigma,\mu)  \.
+		\exists E \in \Sigma \.
+		A_{f\;d\mu} \cong_\BOOL ([E])
+	}
+	\Explain{ We may assume that $\supp f$ has a measurable envelope $E$}
+	\Explain{ Then the result is obvious as $\Null_{\mu} \subset \Null_{f\;d\mu}$}
+	\EndProof
+}
+\newpage
+\subsubsection{Simple Products}
+\Page{
+	 \DeclareFunc{simpleProduct}
+	 {
+	 	\prod_{I \in \SET} (I \to \MA) \to \MA
+	 }
+	 \DefineNamedFunc{simpleProduct}{A,\mu}{\prod_{i \in I} \left( A_i,  \mu_i \right)}
+	 {
+		\left( \prod_{i \in I} A_i, \sum_{i \in I} \mu_i \right)	 
+	 }
+	 \Explain{ Obviously $\sum_{i \in I} \mu_i (0) = \sum_{i \in I} 0 = 0$}
+	 \Explain{ Also assume $a : \Nat \to \prod_{i \in I} A_i$ is disjoint}
+	 \Explain{ Then  
+			$\sum_{i \in I} \mu_i\left( \bigvee^\infty_{n=1} a_n \right) =
+			 \sum_{i \in I} \sum^\infty_{n=1} \mu_i( a_{n,i} ) =
+			 \sum^\infty_{n=1} \sum_{i \in I} \mu_i( a_{n,i} ) =
+			 \sum^\infty_{n=1} \sum_{i \in I} \mu_i (a_n)  			
+			$}
+	\EndProof
+	\\
+	\Theorem{PrincipleIdealsInMeasureAlgebras}
+	{		
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall (A,\mu) : I \to \MA \.
+		(A_i,\mu_i) \cong_{\mathsf{MA}} \left( (e_i), \left(\sum_{i \in I} \mu_i\right)_{|(e_i)}  \right)
+	}
+	\Explain{This is pretty ovious}
+	\EndProof
+	\\
+	\\
+	\Theorem{SimpleProductCoproductCorrespondance}
+	{		
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall (X,\Sigma,\mu) : I \to \MEAS \.
+		\prod_{i \in I} (A_{\mu_i}, \hat \mu_i) \cong  
+		\FUNC{measureAlgebra} \coprod_{i \in I} (X_i,\Sigma_i,\mu_i)
+	}
+	\Explain{ Obvious by Stone Theory}
+	\EndProof
+	\\
+	\Theorem{SimpleProductOfSemifinite}
+	{
+		\NewLine ::
+		\forall I \in \SET \.
+		\forall (A,\mu) : I \to \Semifinite\MA \.
+		\Semifinite\MA\left( \prod_{i \in I} (A,\mu) \right)
+	}
+	\Explain{ Assume $a$ has infinite measure in $(A,\mu)$}
+	\Explain{ Then there exists $i \in I$ such that $a_i \neq 0$}
+	\Explain{ As $(A_i,\mu_i)$ is semifinite there is $b \le a_i$ such that $0 < \mu_i(b) < \infty $}
+	\Explain{ Then $be_i \le a$ and $0 < \sum_{j \in I} \mu_j (be_i) = \mu_i(b) < \infty$ }
+	\EndProof
+	\\	
+}\Page{
+	\Theorem{SimpleProductOfLocalizable}
+	{
+		\NewLine ::
+		\forall I \in \SET \.
+		\forall (A,\mu) : I \to \Loc\MA \.
+		\Loc\MA\left( \prod_{i \in I} (A,\mu) \right)
+	}
+	\Explain{ Let $J$ be a set and $a : J \to \prod_{i \in I} (A_i,\mu_i)$ }
+	\Explain{ Then $\sup_{j \in J} a_j = (\sup_{j \in J} a_{j,i} )_{i \in I}$}
+	\EndProof
+	\\
+	\Theorem{PoUProductRepresentation}
+	{
+		\NewLine ::
+		\forall (A,\mu) : \MA \.
+		\forall (e_n)^\infty_{n=1} : \PoU(A) \.
+		(A,\mu) \cong_{\mathsf{MA}} \prod^\infty_{n=1} \Big((e_n), \mu_{|(e_m)}\Big)
+	}
+	\Explain{This is pretty obvious}
+	\EndProof
+	\\
+	\Theorem{PoUProductRepresentation}
+	{
+		\NewLine ::
+		\forall (A,\mu) : \Loc\MA \.
+		\exists I \in \SET \.		
+		\exists  (B,\nu)  : I \to \Finite\MA \. \NewLine \.  
+		(A,\mu) \cong_{\mathsf{MA}} \prod_{i \in I} (B_i,\nu_i) 
+	}
+	\Explain{ It is possible to select a partition of unity $P$ of $A$ consisting of finite elements}
+	\Explain{ Then by previous theorem $(A,\mu) \cong \prod_{p \in P} \Big( (p), \mu_{|(p)} \Big)$}
+	\Explain{ And each $\Big( (p), \mu_{|(p)} \Big)$ are obviously finite}
+	\EndProof
+	\\
+	\Theorem{LocalizableMeasureAlgebrasHasLocallyDeterminedRepresentations}
+	{
+		\NewLine ::
+		\forall (A,\mu) : \Loc\MA \.
+		\exists  (X,\Sigma,\nu)  : \LocDet \.
+		(A,\mu) \cong_{\mathsf{MA}} (A_\nu,\hat \nu) 
+	}
+	\Explain{ Represent $(A,\mu) \cong_{\mathsf{MA}} \prod_{i \in I} (B_i,\nu_i) $}
+	\Explain{ Then Stone's spaces $\Z \; B_i$ correspond to finite measure spaces}
+	\Explain{ And Stone's space of product correspond to a disjoint union of $\Z \; B_i$}
+	\Explain{ But such spaces are trivially locally determined}
+	\EndProof
+}
+\newpage
+\subsubsection{Strictly Localizable Spaces}
+\Page{
+	\Theorem{StrictlyLocalizableSpacePoU}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) : \SLoc \.
+		\forall P : \PoU(A_\mu) \. \NewLine \.
+		\exists  E  : P \to \Sigma \.
+		\forall p \in P \. [E_p] = p
+		\And
+		\TYPE{Decomposition}(X,\Sigma,\mu,\im E)
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Subalgebras}
+\Page{
+	\Theorem{SubalgebaMeasureAlgebra}
+	{
+		\forall (A,\mu) : \MA \.
+		\forall B \subset_\sigma A \.
+		\MA(B,\mu_{|B})
+	}
+	\Explain{This is obvious}
+	\EndProof
+	\\
+	\Theorem{SubalgebaFinifteMeasureAlgebra}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Finite\MA \.
+		\forall B \subset_\sigma A \.
+		\Finite\MA(B,\mu_{|B})
+	}
+	\Explain{This is obvious}
+	\EndProof
+	\\
+	\Theorem{SigmaFiniteSubalgebraMeasureAlgebra}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \sFinite\MA \.
+		\forall B \subset_\sigma A \. \NewLine \.
+		\Semifinite\MA(B,\mu_{|B}) \Imply
+		\sFinite\MA(B,\mu_{|B})
+	}
+	\Explain{ 1 The set $B^f$ is order-dense in $B$}
+	\Explain{ 2 But then $B^f$ is also order-dense in $A$}
+	\Explain{ 3 Select a finite-measured countable partition of unity $P$ in $A$}
+	\Explain{  4 If $B$ is not $\sigma$-finite, then there is a subordinate uncountale partition of unity $Q$}	
+	\Explain{ 5 Then there would exist 
+		a uncountable refinement of $P$ subordinate to $Q$}
+	\Explain{ 6 Then $P$ must contain an infinite element, but this is imposible!}
+	\Explain{ 7 So $Q$ must be countable, and so $(B,\mu_{|B})$ must be countable}
+	\EndProof
+	\\
+	\Theorem{FinifteMeasureAlgebraBySubalgebra}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\forall B \subset_\sigma A \.
+		\Finite\MA(B,\mu_{|B}) \Imply \Finite\MA(A,\mu)
+	}
+	\Explain{This is obvious}
+	\EndProof
+	\\
+	\Theorem{ProbabilityAlgebraBySubalgebra}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\forall B \subset_\sigma A \. \NewLine \.
+		\TYPE{ProbabilityAlgebra}(B,\mu_{|B}) \Imply \TYPE{ProbabilityAlgebra}(A,\mu)
+	}
+	\Explain{This is obvious}
+	\EndProof
+}\Page{
+	\Theorem{SigmaFiniteAlgebraBySubalgebra}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\forall B \subset_\sigma A \. \NewLine \.
+		\sFinite(B,\mu_{|B}) \Imply \sFinite(A,\mu)
+	}
+	\Explain{This is obvious}
+	\EndProof
+}
+\newpage
+\subsubsection{Localization}
+\Page{
+	\Theorem{MeasureAlgebraCompletion}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA \.
+		\exists! \hat \mu : \tau(A) \to \EReals_{++} \. \NewLine \.
+		\hat \mu_{|A} = \mu  \And \Loc\MA(\tau(A),\hat \mu) 
+	}
+	\Explain{ 1 Define $\hat \mu(t) =  \sup \{ \mu(a) | a \in A, a \le t \}$}
+	\Explain{ 2 As $A$ is order dense in $\tau(A)$, it holds that $\hat\mu(a) = 0\iff a = 0$ 
+		for any $a \in \tau(A)$}
+	\Explain{ 3 If $t : \Nat \to \tau(A)$ is disjoint then 
+		$\hat \mu\left( \bigvee_{n=1}^\infty t_n\right) = \sum^\infty_{n=1} \hat \mu(t_n) $
+	}
+	\Explain{ 3.1 Write $S = 
+		\{ a \in A : \exists c : \Nat \to A \.  a = \lim_{n \to \infty} c_n \And c \le t  \}$}
+	\Explain{ 3.2 Then there is $s = \sup S \in \tau(A)$}
+	\Explain{ 3.3 We write 
+		$
+			\hat \mu(s) = \sup_{c \le t } \mu\left( \bigvee^\infty_{n=1} c_n \right) =
+			\sup_{c \le t} \sum^\infty_{n=1} \mu(c_n) = 
+			\sum^\infty_{n=1} \sup_{c \le t_n} \mu(c) =
+			\sum^\infty_{n=1} \hat \mu(t_n)
+		$ }
+	\Explain{ 4 Obviously $(\tau(A),\hat \mu)$ is semifinite and order-complete, and hence Localizable}
+	\EndProof
+	\\
+	\DeclareFunc{localization}
+	{
+		\Semifinite\MA \to \Loc\MA
+	}
+	\DefineNamedFunc{localization}{A,\mu}{\Big(\tau(A),\tau(\mu)\Big)}
+	{
+		\THM{MeasureAlgebraCompletion}	
+	}
+	\\
+	\Theorem{LocalizationFiniteEmbedding}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA \.
+		\iota_\tau(A^f) =  \tau^f(A) 
+	}
+	\Explain{ 1 Assume $t \in \tau(A)$ such that $\hat \mu(t) < \infty$}
+	\Explain{ 2 Note, $\hat \mu(t) = \sup_{a \le t} \mu(a)$ }
+	\Explain{ 3 So we may select an increasing $a : \Nat \to A$
+		such that $\lim_{n \to \infty} \mu(a_n) = \hat \mu(t)$}
+	\Explain{ 4 Then $b = \bigvee^\infty_{n=1} a_n \in A$ and $\hat \mu(b) = \mu(b) = \hat \mu(t)$}
+	\Explain{ 5 So $\mu(t \setminus b) = 0$, and  so $t = b \in A$ as clearly $b < t$}
+	\EndProof
+}
+\newpage
+\subsubsection{Stone Spaces}
+\Page{
+	\Theorem{LocallalizableMeasureAlgebraHasStrictlyLocalizableStoneSpace}
+	{
+		\NewLine ::
+		\forall (A,\mu) : \Loc\MA \.
+		\SLoc (\Z\; A, \Sigma_\mu, \bar \mu)  	
+	}
+	\Explain{ 1 We already proved that $\bar \mu$ is locally determined}
+	\Explain{ 2 As $(A,\mu)$ is semifinite there is a partition of  unity $P$ 
+		consisting of finite elements}
+	\Explain{ 3 Use Stone representation $S_A(P)$ to construct a corresponding set in $\Z\; A$}
+	\Explain{ 4 Assume $E \in \Sigma_\mu$ such that $\bar \mu(E) > 0$}
+	\Explain{ 5 By definition of Stone's Space there is a clopen set $F \in \Z \; A$ 
+		such that $E \du F$ is meager}
+	\Explain{ 6 And there is a Stone representation $a \in A$ such that $F = S_A(a)$}
+	\Explain{ 7 Then $\mu(a) = \nu(S_A(a)) = \nu(E) > 0$}
+	\Explain{ 8 So, there exists $p \in P$ such that $ap \neq 0$}
+	\Explain{ 9 Ths means that $\nu(E \cap S_A(p)) > 0$}
+	\Explain{ 10 As  $E$ was arbitrary this means that $S_A(P)$ 
+		provides a strict localization for $\bar \mu$}
+	\EndProof
+	\\
+	\Theorem{MeagerSetsAreNowhereDense}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA \.		
+		\forall  M  \in \mgr(\Z\; A)  \. 
+		 \ND(\Z\;A, M)
+	}
+	\Explain{ 1 As it was shown $A$ is $\WD$ boolean algebra}
+	\Explain{ 2 And this is a property of $\WD$ boolean algebra}
+	\EndProof
+	\\
+	\Theorem{StoneSpaceMeasurableExpression}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA \.		
+		\forall  E \in \Sigma_\mu  \.  \NewLine \.
+		\exists U : \Clopen(\Z\;A) \.
+		\exists F : \ND(\Z\;A)	\.	
+		E = U \cap F
+	}
+	\Explain{ 1 This is clear from the previous theorem}
+	\EndProof
+	\\
+	\Theorem{StoneSpaceMeasureComputation}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA \.		
+		\forall  E \in \Sigma_\mu  \.  \NewLine \.
+		\bar \mu(E) = \sup \Big\{ \mu(U) \Big| U : \Clopen(\Z\;A) , U \subset E   \Big\}
+	}
+	\Explain{ 1 This is clear from the previous theorem}
+	\EndProof
+	\\
+	\Theorem{StoneSpaceCLDIsStrictlyLocalizable}
+	{
+		\NewLine ::
+		\forall (A,\mu)  : \Semifinite\MA \.
+		\SLoc(\Z \;A, \bar \Sigma_\mu, \bar{\bar \mu}) 
+	}
+	\NoProof
+}\Page{
+	\Theorem{StoneSpaceCLDZeroSets}
+	{
+		\NewLine ::
+		\forall (A,\mu)  : \Semifinite\MA \.
+		\Null_{\bar{\bar \mu}} = \Null_{\bar \mu} 
+	}
+	\NoProof
+	\\
+	\Theorem{FiniteStoneSpaceMeasureComputation}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Finite\MA \.		
+		\forall  E \in \Sigma_\mu  \.  \NewLine \.
+		\bar \mu(E) = \inf \Big\{ \mu(U) \Big| U : \Clopen(\Z\;A), E \subset U \Big\}
+	}
+	\Explain{ 1 This is clear from the previous theorem}
+	\EndProof
+}
+\newpage
+\subsubsection{Purely Infinite Elements}
+\Page{
+	\DeclareFunc{purelyInfiniteElements}
+	{
+		\prod (A,\mu) : \MA \. \SIdeal(A)
+	}
+	\DefineNamedFunc{purelyInfiniteElements}{}{I_\infty(\mu}
+	{
+		\{ a \in A : \forall b  \in A \. b \le a \And \mu(b) < \infty \Imply b = 0  \}
+	}
+	\\
+	\DeclareFunc{semifiniteMeasure}{\prod (A,\mu) : \MA \. \frac{A}{I_\infty(\mu)} \to \EReals_+}
+	\DefineNamedFunc{semifiniteMeasure}{[a]}{\mu_{\mathrm{sf}}}
+	{\sup \{ \mu(b) | b \in A : b \le a \And \mu(b) < \infty\}}
+	\Explain{ If $[a] = [b]$, then $a \du b \in I_\infty(\mu)$}
+	\Explain{ So $\mu_{\mathrm{sf}}$ is well-defined} 
+	\\
+	\Theorem{SemifiniteMeasureIsMeasure}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \. \Semifinite\MA\left( \frac{A}{I}, \mu_{\mathrm{sf}} \right)	
+	}
+	\Explain{ 1 If $\mu_{\mathrm{sf}}[a] = 0$, then clearly $a \in I_\infty$}
+	\Explain{ 2 Assume $[a] : \Nat \to A$ is disjoint}
+	\Explain{ 2.1 Then $a_n a_m \in I_\infty$  if $n \neq m$}
+	\Explain{ 2.2 Select increasing $b : \Nat \to A^f$ such that $b_n \le \bigvee^\infty_{k=1} a_k$
+		and $\lim_{n \to \infty} \mu(b_n) = \mu_{\mathrm{sf}} \left[\bigvee^\infty_{k=1} a_k  \right] 
+			= \mu_{\mathrm{sf}} \bigvee^\infty_{k=1} [a_k]$}
+	\Explain{ 2.3  By (2.1) we mat assert that $ab_n$ is disjoint and then $\bigvee^\infty_{k=1} a_kb_n = b_n$
+	 for any $n \in \Nat$ }
+	\Explain{ 2.4 So $\mu(b) = \sum^\infty_{k=1}  \mu(a_k b_n) $}
+	\ExplainFurther{ 2.5 By taking limits and using monotonic convergence theorem} 
+	\Explain{ $\quad \quad \sum^\infty_{k=1} \mu_{\mathrm{sf}}[a_k] = 
+		\sum^\infty_{k=1}  \lim_{n \to \infty} \mu(a_k b_n) = 
+		\lim_{n \to \infty} \mu(b_n) = 
+		\mu_{\mathrm{sf}} \bigvee^\infty_{k=1} [a_k]$}	
+	\Explain{ 3 Clearly  $\mu_{\mathrm{sf}}[a] < \mu(a)$}	
+	\Explain{ 3.1 If $\mu_{\mathrm{sf}}[a] = \infty$, then $a \not \in I_\infty$}
+	\Explain{ 3.2 So it is possible to select $b \in A$ such that $b \le a$ and $0 < \mu(b) \le a$}
+	\Explain{ 3.3 $0 < \mu_{\mathrm{sf}}[b] \le \mu(b) < \infty$}
+	\Explain{3.4 This proves that $\left( \frac{A}{I}, \mu_{\mathrm{sf}} \right)$ is semifinite}
+	\EndProof
+}
+\newpage
+\subsection{Topology}
+\subsubsection{Subject}
+\Page{
+	\DeclareFunc{measureAlgebraAsTopologicalSpace}
+	{
+		\MA \to \TOP
+	}
+	\DefineNamedFunc{measureAlgebraAsTopologicalSpace}{(A,\mu)}{(A,\mu)}
+	{
+		\NewLine \de 		
+		\Big( A, \mathcal{W}\big(A^f \times A^f,
+			\Reals, \Lambda a \in A^f \. \Lambda b \in A^f \. \Lambda c \in A \. \mu(ac + ab )\big)\Big) 
+	}
+	\\
+	\DeclareFunc{measureAlgebraAsUniformlSpace}
+	{
+		\MA \to \UNI
+	}
+	\DefineNamedFunc{measureAlgebraAsUniformSpace}{(A,\mu)}{(A,\mu)}
+	{
+		\NewLine \de 		
+		\Big( A, \mathcal{I}\big(A^f \times A^f,
+			\Reals, \Lambda a \in A^f \. \Lambda b \in A^f \. \Lambda c \in A \. \mu(ac \du ab )\big)\Big) 
+	}
+	\\
+	\DeclareFunc{metricOfFrechetNikodym}
+	{
+		\prod (A,\mu) : \MA \.  \TYPE{Metric}(A^f) 
+	}
+	\DefineNamedFunc{metricOfFrechetNikodym}{}{\rho_\mu}
+	{
+		\Lambda a,b \in A^f \. \mu(a \du b)
+	}
+	\\
+	\Theorem{BooleanOperationsAreUniformlyContinuous}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.  (*),(\setminus),(\vee),(\wedge) \in \UNI(A \times A, A)
+	}
+	\Explain{ 1 Let $\circ$ stay for any binary operation above}
+	\Explain{ 2 Select $c,d \in A$}
+	\Explain{ 3 Then 
+		$
+			\mu\Big(a(c \circ d) +  b\Big) \le 
+			\mu\Big( a(c \vee d) + b \Big) \le 
+			\mu( ac + d) + \mu(ad + b)
+		$  }
+	\Explain{ 4 So $\mu$ is bounded by the sum of uniform functions and is uniformly continuous}
+	\EndProof
+	\\
+	\Theorem{FiniteElementsAreDense}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.  \Dense(A,A^f)
+	}
+	\Explain{ 1 Select $c \in A$}
+	\Explain{ 2 Then $c$ has a base of neighborhoods of form 
+		$U = \{ u \in A : \mu(au + ac) \le r\}$ with $a \in A^f, r \in \Reals_{++}$}
+	\Explain{ 3 But then $ac \in U$ and $ac \in A^f$}
+	\EndProof
+	\\
+	\Theorem{FiniteMeasureAlgebraHasUniformlyContinuousMeasure}
+	{
+			\NewLine
+			\forall (A,\mu) : \Finite\MA \. \mu \in \UNI(A,\Reals_{++})
+	}
+	\Explain{ This is pretty obvious as $\mu = \rho_\mu(0,a)$}
+	\EndProof
+	\\
+	\Theorem{FiniteMeasureAlgebraHasUniformlyContinuousMeasure}
+	{
+			\NewLine
+			\forall (A,\mu) : \Finite\MA \. \mu \in \UNI(A,\Reals_{++})
+	}
+	\Explain{ This is pretty obvious as $\mu = \rho_\mu(0,a)$}
+	\EndProof
+}\Page{
+	\Theorem{SemifinitMeasureAlgebraHasLoweSemicontinuousMeasure}
+	{
+			\NewLine
+			\forall (A,\mu) : \Semifinite\MA \. \mu \in \TYPE{LowerSemicontinuous}(A,\EReals_{++})
+	}
+	\Explain{ This is pretty obvious as $\mu = \rho_\mu(0,a)$}
+	\EndProof
+}
+\newpage
+\subsection{Category}
+\subsection{Radon-Nikodym Parallels}
+\section{Maharam's Theory}
+\section{Abstract Ergodic Theory}
+\section{Measurable Algebras}
+\newpage
+\section*{Sources:}
+\begin{enumerate}
+\item  D. H. Fremlin --- Measure Theory (32,33,34) 2016
+\end{enumerate}
+\end{document}
+
