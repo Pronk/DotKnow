@@ -290,6 +290,7 @@
 \DeclareMathOperator{\diam}{diam}
 \newcommand{\Cell}{\mathbb{B}}
 \newcommand{\Disc}{\mathbb{D}}
+\newcommand{\Lip}[1]{#1\hyph\mathrm{Lip}}
 %CATS
 \newcommand{\Semiiso}{\mathsf{SMS}_{\circ \to \cdot}}
 \newcommand{\Iso}{{\mathsf{MS}_{\circ \to \cdot}}}
@@ -466,6 +467,9 @@
 %%Measure Algebra
 %Types
 \newcommand{\MA}{\TYPE{MeasureAlgebra}}
+\newcommand{\SI}{\TYPE{SummableIncrements}}
+%Categroy
+\newcommand{\ma}{\mathsf{MA}}
 \author{Uncultured Tramp} 
 \title{Abstract Measure Theory}
 \begin{document}
@@ -1613,7 +1617,7 @@
 	}
 	\Explain{ This is pretty obvious as $\mu = \rho_\mu(0,a)$}
 	\EndProof
-	\\
+}\Page{
 	\Theorem{FiniteMeasureAlgebraHasUniformlyContinuousMeasure}
 	{
 			\NewLine
@@ -1621,16 +1625,472 @@
 	}
 	\Explain{ This is pretty obvious as $\mu = \rho_\mu(0,a)$}
 	\EndProof
-}\Page{
-	\Theorem{SemifinitMeasureAlgebraHasLoweSemicontinuousMeasure}
+	\\
+	\Theorem{SemifinitMeasureAlgebraHasLowerSemicontinuousMeasure}
 	{
 			\NewLine
 			\forall (A,\mu) : \Semifinite\MA \. \mu \in \TYPE{LowerSemicontinuous}(A,\EReals_{++})
 	}
-	\Explain{ This is pretty obvious as $\mu = \rho_\mu(0,a)$}
+	\Explain{ 1 Assume $a \in A$ and $\alpha \in \Reals_{+}$ such that $\mu(a) > \alpha$ }
+	\Explain{ 2 As $A$ is semifinite there exists $b \le a$ such that $\infty > \mu(b) > \alpha$}
+	\Explain{ 3 Assume $c \in A$ is such that $\mu(b + cb) < \mu(b) - \alpha$ }
+	\Explain{ 4 Then 
+		$\mu(c) \ge \mu(cb) = 
+		\mu(b)  - \mu(b(a\setminus c)) =  
+		\mu(b) - \mu(b + cb) > \alpha $}
+	\EndProof
+	\\
+	\Theorem{MeasureAlgebraHasUniformlyContinuousFinitisedMeasure}
+	{
+			\NewLine
+			\forall (A,\mu) : \MA \. 
+			\forall a \in A^f \.			
+			(\Lambda c \in A \. \mu(ac)) \in \UNI(A,\Reals_{++})
+	}
+	\Explain{  This is simmilar to the case of finite measure space}
+	\EndProof
+	\\
+	\DeclareFunc{finiteElementMetric}
+	{
+		\prod A : \MA \. A^f \to \TYPE{Semimetric}(A)
+	}
+	\DefineNamedFunc{finiteElementMetric}{a}{\rho_a}
+	{
+		\Lambda x,y \in A \. \mu(ax + ay)	
+	}
+	\\
+	\Theorem{MeasurAlgebraProductTopology}
+	{
+		\NewLine ::
+		\forall I \in \SET \.
+		\forall (A,\mu) : I \to \MA \. 
+		\prod_{i \in I} (A,\mu) =_\TOP \left(\prod_{i \in I} A_i, \sum_{i \in I} \mu_i \right)
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Relations with an Order Structure}
+\Page{
+	\DeclareFunc{upwardDirectedFilter}
+	{
+		\NewLine ::		
+		\prod (A,\mu) : \MA \. 
+		 \TYPE{NonEmpty} \And \TYPE{UpwardsDirected}(A) \to \TYPE{CauchyFilerbase}(A)
+	}
+	\DefineNamedFunc{upwardDirectedFilter}{D}{\F(\uparrow D)}
+	{
+		\Big\{ \{ c \in D : d \le c \} \Big| d \in D \Big\} 	
+	}
+	\Explain{ 1 Write $F_d = \{ c \in D : d \le c \}$}
+	\Explain{ 2 $\F(\uparrow D)$ is a filter}
+	\Explain{ 2.1 As $D$ is non empty, $\F(\uparrow D)$ is also non-empty}
+	\Explain{ 2.2  $d \in F_d$, so $F_d \neq \emptyset$ 
+		and henceforth $\emptyset \not \in \F(\uparrow D)$}
+	\Explain{ 2.3 Assume $F_d,F_f \in \F(\uparrow D)$    }
+	\Explain{ 2.3.1  Then there is an element $g \in D$ such that $g \ge f \vee d$}
+	\Explain{ 2.3.2  Note, that $F_g \subset F_d \cap F_f$ and $F_g \in  \F(\uparrow D)$ }
+	\Explain{ 3 $\F(\uparrow D)$ is Cauchy}
+	\Explain{ 3.1 Assume $U$ is some measure connector for $(A,\mu)$}
+	\Explain{ 3.2 then there is an element $a \in A^f$ and $r \in \Reals_{++}$
+		such that $\{ (f,g) \in A \times A : \mu(af  +  ag) < r \} \subset U$}
+	\Explain{ 3.3 The set $\{ \mu(ad) | d \in D  \}$ is bounded  by $\mu(a)$,
+		so supremum is attained}
+	\Explain{ 3.4 So there is $f \in D$, so $\mu(ad) < \mu(af) + r/2$ for any $d \in D$   }
+	\Explain{ 3.5 Assume $g,h \in F_f$ }
+	\Explain{ 3.5 Then 
+		$
+			\mu(ag + ah) \le \mu(ag \setminus af) + \mu(ah \setminus af) =
+			\Big(\mu(ag) - \mu(af)\Big) + \Big(\mu(ah) - \mu(af)\Big)  < r 
+		$}
+	\Explain{ 3.6 Thus, $(g,h) \in U$ and $F_f \times F_f \subset U$}
+	\EndProof
+	\\
+	\Theorem{UpwardsDirectedSup}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA \. 
+		\forall D :  \TYPE{UpwardsDirected}(A) \to \TYPE{CauchyFilerbase}(A)  \.
+		\forall a \in A	\. \NewLine \.
+		a = \sup D \Imply a = \lim \F(\uparrow D)  
+	}
+	\Explain{ 1 Assume $a = \sup D$}
+	\Explain{ 2 Assume $U$ is an uniformity fo $(A,\mu)$}
+	\Explain{ 3 then there is an element $c \in A^f$ and $r \in \Reals_{++}$
+		such that $\{ g \in A \times A : \mu(ca  +  cg) < r \} \subset U(a)$}
+	\Explain{ 4 Consider set $M = \{ \mu(cd) | d \in D  \}$}
+	\Explain{ 5 Then $\sup M = \mu(ca)$}
+	\Explain{ 6 So there is $d \in D$ such that $\mu(ca + cd) < r$}
+	\Explain{ 7 But $ d \le f \le a $for any $f \in F_d$}
+	\Explain{ 8 Thus $\mu(cf + cd) < r$ and $F_d \subset U(a)$}
+	\Explain{ 9 Thus, $da = \lim \F(\uparrow D)$}
+	\EndProof
+}\Page{
+	\Theorem{UpwardsDirectedLimit}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA \. 
+		\forall D : \TYPE{NonEmpty} \And \TYPE{UpwardsDirected}(A)  \.
+		\forall a \in A	\. \NewLine \.
+		a = \sup D \Imply a  \in \cl_{A} D
+	}
+	\NoProof
+	\\
+	\Theorem{UpwardsDirectedFilterLimit}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA \. 
+		\forall D : \TYPE{NonEmpty} \And \TYPE{UpwardsDirected}(A)  \.
+		\forall a \in A	\. \NewLine \.
+		a = \lim \F(\uparrow D) \iff a = \sup D  
+	}
+	\Explain{ 1 $(\Rightarrow) \quad a = \lim \F(\uparrow D)$ }
+	\Explain{ 1.1 Then for any connector $U$ of $(A,\mu)$
+		There is some $F \in \F(\uparrow F)$ such that $F \subset U(a)$}
+	\Explain{ 1.2 Assume $d \in D$ }
+	\Explain{ 1.3 Assume $d \not \le a$}
+	\Explain{ 1.4 Then there is $f \in A$ such that $f \le d \setminus a$ 
+		and $0 < \mu(f) < \infty$}
+	\Explain{ 1.5 Thus $\mu(fh + fa) \ge \mu(f)$ for every $h \in F_s$}
+	\Explain{ 1.6 But $G \cap F_d \neq \emptyset$ for  any  $G \in \F(\uparrow D)$ 
+		so this contradicts $(1.1)$}
+	\EndProof
+	\\
+	\DeclareFunc{lowerDirectedFilter}
+	{
+		\NewLine ::		
+		\prod (A,\mu) : \MA \. 
+		 \TYPE{NonEmpty} \And \TYPE{LowerDirected}(A) \to \TYPE{CauchyFilerbase}(A)
+	}
+	\DefineNamedFunc{loweDirectedFilter}{D}{\F(\uparrow D)}
+	{
+		\Big\{ \{ c \in D : d \ge c \} \Big| d \in D \Big\} 	
+	}
+	\\
+	\Theorem{LowerDirectedInf}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA \. 
+		\forall D :  \TYPE{NonEmpty} \And \TYPE{LowerDirected}(A)   \.
+		\forall a \in A	\. \NewLine \.
+		a = \inf D \Imply a = \lim \F(\uparrow D)  
+	}
+	\Explain{ By duality}
+	\EndProof	
+	\\
+	\Theorem{UpwardsDirectedLimit}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA \. 
+		\forall D :  \TYPE{NonEmpty} \And \TYPE{LowerDirected}(A)  \.
+		\forall a \in A	\. \NewLine \.
+		a = \inf D \Imply a  \in \cl_{A} D
+	}
+	\Explain{ By duality}
+	\EndProof
+	\\
+	\Theorem{UpwardsDirectedFilterLimit}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA \. 
+		\forall D : \TYPE{NonEmpty} \And \TYPE{LowerDirected}(A)  \.
+		\forall a \in A	\. \NewLine \.
+		a = \lim \F(\uparrow D) \iff a = \inf D  
+	}
+	\Explain{ By duality}
+	\EndProof	
+}\Page{
+		\Theorem{ClosedSetsAreOrderClosed}{ 
+		\forall (A,\mu) : \MA \. 
+		\forall F : \Closed(A) \.
+		\oC(A,F)
+	}	
+	\Explain{Follows from previous theorems in this chapter}
+	\EndProof
+	\\
+	\Theorem{DenseSetsAreOrderDense}{ 
+		\forall (A,\mu) : \MA \. 
+		\forall F : \Dense(A) \.
+		\OD(A,F)
+	}	
+	\Explain{Follows from previous theorems in this chapter}
+	\EndProof
+	\\
+	\Theorem{ClosedRays}
+	{
+		\forall (A,\mu) : \Semifinite\MA \.
+		\forall a \in A \.		
+		\Closed\Big( A, \{ c \in A : c \le a  \} \And \{ c \in A : c \ge a \} \Big)
+	}
+	\Explain{ 1 Let $F = \{ c \in A : c \le a \}$ }
+	\Explain{ 2 Assume $d \in F^\c$}
+	\Explain{ 3 Then $d \setminus a \neq 0$}
+	\Explain{ 4 As $A$ is semifinite there is an $g \in A^f$ 
+		such that $g \le d \setminus a$ and $0 < \mu(g)$}
+	\Explain{ 5 $\rho_g(d,f) \ge \mu(g)$ fo any $f \in F^\c$}
+	\Explain{ 6 And this means that $F^\c$ and $F$ is closed}
+	\EndProof
+	\\
+	\Theorem{SupremumConvergence}
+	{
+		\forall A : \MA \.
+		\forall a : \Nat \uparrow A \.
+		\forall s \in A \.
+		s = \sup_{n=1} a_n \Imply  s = \lim_{n=1} a_n
+	}
+	\Explain{ This is obvious now}
+	\EndProof
+	\\
+	\Theorem{InfimumConvergence}
+	{
+		\forall A : \MA \.
+		\forall a : \Nat \downarrow A \.
+		\forall s \in A \.
+		s = \inf_{n=1} a_n \Imply  s = \lim_{n=1} a_n
+	}
+	\Explain{ This is obvious now}
+	\EndProof
+	\\
+	\DeclareType{\SI}{
+		\prod A : \MA \. ?(\Nat \to A)	
+	}
+	\DefineType{a}{\SI}{\forall n \in \Nat \. \sum^\infty_{n=1} \mu(a_n + a_{n+1}) < \infty}
+}\Page{
+	\Theorem{SummableIncrementsLimSupLimInfEq}
+	{
+		\NewLine ::		
+		\forall A : \MA \.
+		\forall a : \SI(A) \. 
+		\inf_{n=1} \sup_{m=n} a_n = \sup_{n=1} \inf_{m=n} a_n	
+	}
+	\Explain{ 1 Let $\alpha_n =   \mu(a_n + a_{n+1}),\beta_n = \sum^\infty_{m=n} \alpha_n$}
+	\Explain{ 2 As $a$ has summable increments this means $\beta \downarrow 0$}
+	\Explain{ 3 Let $b_n = \sup_{m \ge n} a_m + a_{m + 1} = \bigvee^\infty_{m=n} a_m + a_{m+1}$}
+	\Explain{ 4 Then $\mu(b_n) \le \sum^\infty_{m=n} \mu(c_m + c_{m+1} ) = \beta_n $}
+	\Explain{ 5 Assume $m \le n$}
+	\Explain{ 6 And also $a_m + a_n \le \sup_{m\le k \le n} a_k + a_{k+1} \le b_n$}
+	\Explain{ 7 So $a_n \setminus b_n \le a_m \le a_n \vee b_n$}
+	\Explain{ 8 Thus $a_n \setminus b_n \le \inf_{k \ge m} a_k \le \sup_{k \ge m} a_k \le a_n \vee b_n$}
+	\Explain{ 9 By taking limits in $m$ one gets
+		$a_n \setminus b_n \le \inf_{m=1} \sup_{k=n} a_k \le \sup_{m=1} \inf_{k=m} a_k \le 
+			a_n \vee b_n$}
+	\Explain{ 10 $a_n + \inf_{m=1} \sup_{k=m} a_k \le b_n $}
+	\Explain{ 11 $a_n + \sup_{m=1} \inf_{k=m} a_k \le b_n $}
+	\Explain{ 12 From (10) and (11) 
+		$\inf_{m=1} \sup_{k=m} a_k \setminus \sup_{m=1} \inf_{k=m} a_k  \le b_n$}
+	\Explain{ 13 But $\lim_{n \to \infty}  b_n = 0$}
+	\Explain{ 14 So $\inf_{m=1} \sup_{k=m} a_k  = \sup_{m=1} \inf_{k=m} a_k $}
+	\EndProof
+	\\
+	\Theorem{SummableIncrementsLim}
+	{
+		\NewLine ::		
+		\forall A : \MA \.
+		\forall a : \SI(A) \. 
+		\forall x \in A \. \NewLine \.
+		x = \lim_{n \to \infty} a_n \Imply
+		\inf_{n=1} \sup_{m=n} a_n = x = \sup_{n=1} \inf_{m=n} a_n	
+	}
+	\Explain{ This follows from the previous proof}
 	\EndProof
 }
 \newpage
+\subsubsection{Classification Theorems}
+\Page{
+	\Theorem{SemifiniteIffHausdorff}
+	{
+		\forall (A,\mu) : \MA \.
+		\Semifinite\MA(A,\mu) \iff \TYPE{T2}(A)
+	}
+	\Explain{1 $(\Rightarrow)$ assume that $(A,\mu)$ is semifinite}
+	\Explain{1.1 Take $x,y \in A$ such that $x \neq y$}
+	\Explain{1.2 Then  $x +  y \neq 0$ so there is $a \in A^f$ such that $\mu(a) > 0$ and $a < x + y$ }
+	\Explain{1.3 So $\rho_a(x,y) = \mu(a) > 0$}
+	\Explain{1.4 And cells of form $\Cell_{\rho_a}(x,\mu(a)/2)$ and $\Cell_{\rho_a}(y,\mu(a)/2)$
+		produce the separation}
+    \Explain{2 $(\Leftarrow)$ assume that $A$ is Hausdorff in the topology of $(A,\mu)$}
+    \Explain{2.1 Assume $x \in A$ such that $\mu(x) = \infty$}
+    \Explain{2.2 Then $x \neq 0$}
+    \Explain{2.3 Assume $a \in A^f$}
+    \Explain{2.4 If $xa = 0$ then $\rho_a(x,0) = 0$}
+    \Explain{2.5 So, as $A$ is Hausdorff there mustb some $a \in A^f$ such that $xa \neq 0$}
+    \Explain{2.6 But this means that $(A,\mu)$ is semifinite}
+    \EndProof
+    \\
+    \Theorem{SigmaFiniteIffMetrizable}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\sFinite\MA(A,\mu) \iff \TYPE{Metrizable}(A)
+	}
+	\Explain{1 $(\Rightarrow)$ assume that $(A,\mu)$ is $\sigma$-finite}
+	\Explain{1.1 Then there is a countable partition of unity $a$ with finite elements}
+	\Explain{1.2 define $\sigma : A^2 \to \Reals_{++}$ as 
+		$\sigma(x,y) = \sum^\infty_{n=1} 2^{-n} \frac{\rho_{a_n}(x,y)}{\mu(a_n)}$}
+	\Explain{1.3 Then $\sigma$ is a metic for $A$ }
+	\Explain{1.4 So the topology of $(A,\mu)$ is metrizable}  
+	\Explain{2 $(\Leftarrow)$ assume that $(A,\mu)$ is metrizable}
+	\Explain{2.1 Let $\sigma$ be an metrizing metric}
+	\ExplainFurther{2.2 Then there exists a system of elements 
+		$k : \Nat \to \Nat, a : \prod^\infty_{n=1} \{1,\ldots,k_n\} \to A^f$ and 
+		$\delta : \Nat \to \Reals_{++}$ }
+	\Explain{ $\quad \quad$ such that  $\rho_{a_{n,i}}(b,e)$ 
+		for any $1 \le i \le k_n$ imply that $\sigma(b,e) < 2^{-n}$ for any $b \in A$}
+	\Explain{ 2.3 Then $e = \bigvee^\infty_{n=1} \bigvee^{k_n}_{i=1} a_{n,i}$}
+	\Explain{ 2.4 So $(A,\mu)$ is $\sigma$-finite} 
+    \EndProof
+ }\Page{
+    \Theorem{LocalizableIffComplete}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\Loc\MA(A,\mu) \iff \TYPE{T2}\And \TYPE{Complete}(A)
+	}
+	\Explain{ 1 $(\Rightarrow)$ Assume $(A,\mu)$ is localizable measure algebra}
+	\Explain{ 1.2 Then $A$ is Hausdorff as $(A,\mu)$ is semifinite}
+	\Explain{ 1.3  Assume $\F$ is a Cauchy filter in $A$}
+	\Explain{ 1.4 Take $a \in A^f$ }
+	\Explain{ 1.5 Then there is $d_a \le a$ and a cauchy sequence $c_a$ subordinate to $\F$ 
+			such that 	$\lim_{n \to \infty} \rho_a(d_a,c_{a,n}) = 0$	
+		}
+	\Explain{ 1.5.1 select a sequence $F_a : \Nat \to \F$
+		such that $\rho_a(x,y) \le 2^{-n}$ for $x,y \in F_{a,n}$ and $n \in \Nat$}
+	\Explain{ 1.5.2 Then select a sequence $c_{a,n} \in \bigcap^n_{k=1} F_{a,k}$}
+	\Explain{ 1.5.3 Then $\rho(c_{a,n},c_{a,n+1}) \le 2^{-n}$}
+	\Explain{ 1.5.4 Construct $d_a = \liminf ac_a$}
+	\Explain{ 1.5.5 Then $\lim_{n \to \infty} \rho_a(d_a,c_{an}) = 
+		\lim_{n \to \infty} \mu( d_a + ac_a  ) = 0$}
+	\Explain{ 1.6 Assume $a,b \in A^f$ are such that $a \le b$}
+	\Explain{ 1.7 Then  $d_a  = ad_b$}
+	\Explain{ 1.7.1  $F_{n,a} \cap F_{n,b} \neq \emptyset$}
+	\Explain{ 1.7.2 So select $f \in F_{n,a} \cap F_{n,b}$}
+	\ExplainFurther{ 1.7.3 Then 
+		$
+			\rho_a(d_a,d_b) \le 
+				\rho_a(d_a,c_{a,n}) + 
+				\rho_a(c_{a,n}, f) +
+				\rho_a(f, c_{b,n}) +
+				\rho_a(c_{b,n},d_b) \le$}
+	\Explain{$\quad\quad
+				\le \rho_a(d_a,c_{a,n}) + 
+				 2^{-n} +
+				2^{-n} +
+				\rho_a(c_{b,n},d_b) \to 0
+		$ as $n \to \infty$}
+	\Explain{ 1.8 Let $f = \bigvee_{a \in A^f} d_a$}
+	\Explain{ 1.9 Then $\lim \F = f$}
+	\Explain{ 1.9.1  $ ad_a = af $ for any $a \in A^f$ }
+	\Explain{ 1.9.2 and there is a $\F$ subordinate Cauchy sequence $c_a$
+		such that $\rho_a(f,c_a) = \rho_a(d_a,c_a) \to 0$}
+	\Explain{ 1.9.3 Then there is $n \in \Nat$ such that $\rho_a(d_a,c_{a,n}) + 2^{-n} < \varepsilon$}
+	\Explain{ 1.9.4 Take any $g \in F_{a,n}$}	
+	\Explain{ 1.9.5 But $\rho_a(f,g) \le \rho_a(f,c_{a,n}) + \rho_{c_{a,n}} \le 
+			 \rho_a(d_a,c_{a,n}) + 2^{-n} < \varepsilon$}
+	\Explain{ 1.9.6 This $F_{a,n} \subset \Cell_{\rho_a}(f,\varepsilon)$ }
+	\Explain{ 2 $(\Leftarrow)$ now Assume that $A$ is Hausdorff and complete}
+	\Explain{ 2.1 As $A$ is Hausdorff $(A,\mu)$ must be semifinite}
+	\Explain{ 2.2 As $A$ is complete $(A,\mu)$ is order complete and hence localizable}
+	\Explain{ 2.2.1 Think about order filters $\F(\uparrow D)$ and $\F(\downarrow D)$}
+	\EndProof
+}
+\newpage
+\subsubsection{Closed Subalgebras}
+\Page{
+	\Theorem{ClosedSubalgebraTHM}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Loc\MA \.
+		\forall B \subset_{\mathsf{RING}} A \.
+		\Closed(A,B) \iff \OC(A,B) 
+	}
+	\Explain{ 1 $(\Rightarrow)$ follows from the general theory}
+	\Explain{ 2 $(\Leftarrow)$ Assume now that $B$ is order-closed}
+	\Explain{ 2.1 Assume $g \in {\cl}_A B$}
+	\Explain{ 2.2 Assume $a \in A^f$ and $n \in \Nat$} 
+	\Explain{ 2.3 Then there exists a sequence $c_a : \Nat \to B$ 
+		such that $\rho_a(c_{a,n},g) < 2^{-n}$}
+	\Explain{ 2.4 Note, $\sum^\infty_{n=1} \mu(ac_{a,n} + ac_{a,n + 1}) 
+		\le \sum^\infty_{n=1} \mu(ac_{a,n} +ag) + \mu(ag + ac_{a,n + 1}) < 
+		 \sum^\infty_{n=1} 2^{-n} + 2^{-n-1} = \frac{3}{2} $ }
+	\Explain{ 2.5 So, sequence $ac_a$ has summable increments  }
+	\Explain{ 2.6 Define $d_a = \liminf c_{a}$}
+	\Explain{ 2.7 As $ac_a$ has finite increments $\lim_{n \to \infty} \rho_a(c_{a,n},d_n) = 0$}
+	\Explain{ 2.8 Furthermore, $\rho_a(d_a,g) = 0$, so $ag = d_a$}
+	\Explain{ 2.9 As $B$ is order-closed $d_a \in B$ for each $a \in A^f$}
+	\Explain{ 2.10 Set $d'_a = \inf \{ d_b : b \in A^f, a \le b  \} \in B$}
+	\Explain{ 2.11  $d'_a a  = \bigwedge_{a \le b} d_b a = \bigwedge_{a \le b} d_b b a  = 
+		  \bigwedge_{a \le b}  g b a = g a$}
+	\Explain{ 2.12 Let $D = \{ d_a' | a \in A \} $}
+	\Explain{ 2.13 Clearly $D$ is upwards directed as $d'_a \vee d'_b = d'_{a \wedge b}$}
+	\Explain{ 2.14 Then  $\sup D = \{ ad_a' | a \in A \} = \{ ag | a \in A \} = g$
+		as $(A,\mu)$ is semifinite}
+	\Explain{ 2.15 so $g \in B$ as $B$ is order-closed}
+	\Explain{ 2.16 Thus $B$ is closed}
+	\EndProof
+	\\
+	\Theorem{SubalgebraClosure}
+	{
+		\forall (A,\mu) : \Loc\MA \.
+		\forall B \subset_{\mathsf{RING}} A \.
+		\overline{B} =  \tau(B)
+	}
+	\Explain{ 1 Note that $\overline{B}$ is a subgroup of $A$}
+	\Explain{ 2 Also it must be order-closed as $\overline{B}$ is closed}
+	\Explain{ 3 Also $\tau(B)$ is an order-closed subalgebra, and hence a closed subalgebra}
+	\ExplainFurther{ 4 So both objects can be realized as intersections 
+		of closed subalgebras containing $B$,}
+	\Explain{ $\quad\quad$	and hence they are equal}
+	\EndProof      
+	\\
+	\DeclareType{ClosedMeasureSubalgebra}{\prod (A,\mu) : \MA \. \TYPE{Subalgebra}(A)}
+	\DefineNamedType{B}{ClosedMeasureSubalgebra}{B \subset_{\ma} A}
+	{\Closed(A,B)}
+}\Page{
+	\Theorem{OrderClosedExtension}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Loc\MA \.
+		\forall B \subset_{\ma} A \.
+		\forall a \in A \. 
+		\langle B \cup \{a\} \rangle_{\BOOL} \subset_{\ma} A
+	}
+	\Explain{ This follows from order-closed subalgebra extension theorem for boolean algebras}
+	\EndProof
+}
+\newpage
+\subsubsection{Metric Space of Finite Elements}
+\Page{
+	\Theorem{BooleanOperationsAreUniformlyContinuous}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.  (*),(\setminus),(\vee),(\wedge) \in \UNI(A^f \times A^f, A^f)
+	}
+	\Explain{ This is obvious}
+	\EndProof
+	\\
+	\Theorem{MeasureIs1Lip}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.  \mu_{|A^f} \in \Lip{1}(A^f) 
+	}
+	\Explain{ This is obvious}
+	\EndProof
+	\\
+	\Theorem{FiniteElementsAreComplete}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.  \Complete(A^f) 
+	}
+	\Explain{ 1 Assume $a$ is a cauchy sequence in $A^f$}
+	\Explain{ 2 without loss of generality we may assume that $a$ has summable differences }
+	\Explain{ 2.1 Just select a subsequence}
+	\Explain{ 3 Define $x = \lim \inf a \in A$}
+	\Explain{ 4 Then $\lim_{n \to \infty} a_n = x $}
+	\Explain{ 5 So, there is some $n \in \Nat$ such that  $\mu(x \setminus a_n) < \infty$ }
+	\Explain{ 6 Thus $\mu(x) < \infty$ and $x \in A^f$ }
+	\EndProof
+}
+\newpage
+\subsubsection{Relation with Convergence In Measure}
 \subsection{Category}
 \subsection{Radon-Nikodym Parallels}
 \section{Maharam's Theory}
