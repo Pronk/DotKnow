@@ -468,10 +468,14 @@
 %Types
 \newcommand{\MA}{\TYPE{MeasureAlgebra}}
 \newcommand{\SI}{\TYPE{SummableIncrements}}
+\newcommand{\MPH}{\TYPE{MeasurePreservingHomomorphism}}
+\newcommand{\Lp}[1]{\mathbf{L}^{#1}}
+\newcommand{\SInd}{\TYPE{StochasticalyIndependent}}
+\newcommand{\PAlg}{\TYPE{ProbabilityAlgebra}}
 %Categroy
 \newcommand{\ma}{\mathsf{MA}}
 \author{Uncultured Tramp} 
-\title{Abstract Measure Theory}
+\title{Algebraic Measure Theory}
 \begin{document}
 \maketitle
 \thispagestyle{empty}
@@ -496,6 +500,12 @@
 			\And \NewLine \And
 			\forall a : \PD(\Nat,A) \. 
 			\mu\left(\bigvee^\infty_{n=1}  a_n \right) = \sum^\infty_{n=1} \mu(a_n)
+	}
+	\\
+	\DeclareFunc{measureAlgebraCategory}{\CAT}
+	\DefineNamedFunc{measureAlgebraCategory}{}{\ma}
+	{
+		\Big( \MA,  \BOOL, \circ, \id \Big)	
 	}
 	\\
 	\Theorem{MeasureMonotonicity}
@@ -1802,15 +1812,15 @@
 		\Theorem{ClosedSetsAreOrderClosed}{ 
 		\forall (A,\mu) : \MA \. 
 		\forall F : \Closed(A) \.
-		\oC(A,F)
+		\OC(A,F)
 	}	
 	\Explain{Follows from previous theorems in this chapter}
 	\EndProof
 	\\
 	\Theorem{DenseSetsAreOrderDense}{ 
 		\forall (A,\mu) : \MA \. 
-		\forall F : \Dense(A) \.
-		\OD(A,F)
+		\forall \Dense(A,D) \.
+		\OD(A,D) \.	
 	}	
 	\Explain{Follows from previous theorems in this chapter}
 	\EndProof
@@ -1991,6 +2001,16 @@
 	\Explain{ 2.2 As $A$ is complete $(A,\mu)$ is order complete and hence localizable}
 	\Explain{ 2.2.1 Think about order filters $\F(\uparrow D)$ and $\F(\downarrow D)$}
 	\EndProof
+	\\
+	\Theorem{LessRelationIsClosed}
+	{
+		\forall (A,\mu) : \Semifinite\MA \.
+		\Closed\Big( A^2, \{ (a,b) \in A^2 : a \le b \} \Big) 
+	}
+	\Explain{ 1 As $(A,\mu)$ is a semifinite measure algebra $A$ must be Hausdorff}
+	\Explain{ 2 So singleton $\{0\}$ is closed}
+	\Explain{ 3 Then $\{ (a,b) \in A^2 : a \le b \} = (\setminus)^{-1}\{0\}$ is closed}
+	\EndProof
 }
 \newpage
 \subsubsection{Closed Subalgebras}
@@ -2055,6 +2075,56 @@
 	}
 	\Explain{ This follows from order-closed subalgebra extension theorem for boolean algebras}
 	\EndProof
+	\\
+	\Theorem{SigmaFiniteSigmaSubalgebraIsClosed}
+	{
+		\forall (X,\Sigma,\mu) : \sFinite \.
+		\forall T \subset_\sigma \Sigma \.
+		\pi_\mu(T) \subset_{\ma} A_\mu
+	}
+	\Explain{ 1 As $(X,\Sigma,\mu)$ is $\sigma$-finite $A_\mu$ is also $\sigma$-finite}
+	\Explain{ 2 So $A_mu$ is actually metrizable with a metric $\sigma$}
+	\Explain{ 3 In a metric space set is closed iff it is sequence-closed}
+	\Explain{ 4 Consider a sequence $a : \Nat \to \pi_\mu(T)$ with a limit $x$}
+	\Explain{ 5 Then there is a sequence $E : \Nat \to T$ such that $a = [E]$}
+	\Explain{ 7 Then $\lim \sup E = \lim \inf E \in T$, but also $[\lim \sup E] = x$ }
+	\Explain{ 8 Thus $x \in \pi_\mu(T)$}
+	\EndProof
+	\\
+	\Theorem{SigmaFiniteSigmaSubalgebraIsClosed2}
+	{
+		\forall (X,\Sigma,\mu) : \sFinite \.
+		\forall B \subset_{\ma} A_\mu \.
+		\pi_\mu^{-1}(B) \subset_\sigma A_\mu
+	}
+	\Explain{Inverse argument}
+	\EndProof
+	\\
+	\Theorem{OrderClosedSetsAreClosedInLocalizableAlgebra}
+	{
+		\NewLine :: 		
+		\forall (A,\mu) : \Loc\MA \.
+		\forall  C : \OC(A) \.
+		\Closed(A,C)
+	}
+	\Explain{ 1 Same proof as with closed algebras}
+	\EndProof
+	\\
+	\Theorem{SubalgebraClosureIsSubalgebra}
+	{
+		\NewLine :: 		
+		\forall (A,\mu) : \MA \.
+		\forall  B \subset_{\mathsf{RING}} A \.
+		\overline{B} \subset_{\mathsf{RING}} A
+	}
+	\Explain{ 1 $B$ is a topological subgroup of $A$}
+	\Explain{ 2 So by general theory of topological groups $\overline{B}$ is a subgroup of $A$ again}
+	\Explain{ 3 So $\overline{B}$ is closed under operation $(+)$}
+	\Explain{ 4 Also $\overline{B}$ is closed and hence order-closed}
+	\Explain{ 5 But then it is closed under operations $(\vee),(\wedge)$}
+	\Explain{ 6 And being closed under operations $(\vee),(\wedge),(+)$ is enough to be a
+		boolean algebra}
+	\EndProof
 }
 \newpage
 \subsubsection{Metric Space of Finite Elements}
@@ -2091,7 +2161,860 @@
 }
 \newpage
 \subsubsection{Relation with Convergence In Measure}
+\Page{
+	\DeclareFunc{indicatorFunctionRepresentation}
+	{
+		\prod (X,\Sigma,\mu) \in \MEAS \. A_\mu \to \Lp{0}(X,\Sigma,\mu)
+	}
+	\DefineNamedFunc{indicatorFunctionRepresentation}{a}{\chi_a}
+	{
+		[ \chi_E  ] \quad \where \quad a = [E]
+	}
+	\\
+	\Explain{1 This is well defined}
+	\Explain{2 Assume that $a = [E] = [F]$ for some $E,F \in \Sigma$}
+	\Explain{3 Then $\mu(E \du F) = 0$}
+	\Explain{4 Hence, $\chi_E = _\mu \chi_F$ and $[\chi_E] = [\chi_F]$}
+	\EndProof
+	\\
+	\Theorem{IndicatorFunctionRepresentationIsHomeo}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\TYPE{Homeomorphism}\Big(A_\mu,\chi_{A_\mu},\chi_\bullet\Big)
+	}
+	\Explain{1 Here we always assume that $\Lp{0}(X,\Sigma,\mu)$ is equiped with 
+		a convergenve in measure topology}
+	\Explain{2  Clearly $\chi_\bullet$ is injective}
+	\Explain{2.1 Assume $\chi_a = \chi_b$}
+	\Explain{2.2 Then there is common representative $E \in \Sigma$ such that $a = [E] = b$}
+	\Explain{3 Also $\chi_\bullet$ is trivially sirjective}
+	\Explain{4 $\chi_\bullet$ is homeomorphism}
+	\ExplainFurther{4.1 This can be seen by direct corespondence between semimetrics
+		$\rho_a$} 
+	\Explain{4.2 and $\rho_E = \inf_{t \in \Reals_{++}} t + \mu\Big\{ x \in E : |f(x) - g(x)| > t  \Big\}$}
+	\Explain{ 4.3 where corespondence is between finite $a \in A^f_\mu$ and $E \in \Sigma^f$ such that 
+		$a = [E]$}
+	\EndProof
+	\\
+	\Theorem{FiniteIndicatorEmbeddingL1Isometri}
+	{	
+		\NewLine ::
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\TYPE{Isometry}\Big(A_\mu,\chi_{A_\mu},\chi_\bullet\Big)
+	}
+	\Explain{ This is obvious as difference of indicators are measure of difference of sets}
+	\EndProof
+}
+\newpage
+\subsubsection{Localization}
+\Page{
+	\Theorem{LocalizationIsCompletion}
+	{
+		\forall (A,\mu) : \Semifinite\MA \.
+		\TYPE{Completion}(A,\tau(A),\iota_\tau) 
+	}
+	\Explain{1 $\iota_\tau(A)$ is order dense in $\tau(A)$}
+	\Explain{2 So its order-closure is $\tau(A)$}
+	\Explain{3 $\tau(A)$ is localizable and $\iota_\tau(A)$ is a subalgebra, 
+		so the closure of $\iota_\tau(A)$ is equal to the order closure}
+	\EndProof
+}
+\newpage
+\subsubsection{Metric Space of Pobability Subalgebras}
+\Page{
+	\DeclareFunc{metricSpaceOfProbabilitySubalgebra}
+	{
+		\TYPE{ProbabilityAlgebra} \to \Complete\TYPE{MetricSpace}
+	}
+	\DefineNamedFunc{metricSpaceOfProbabilitySubalgebra}{A,\pi}
+	{ \mathsf{FB}(A,\pi)}
+	{
+		\NewLine \de
+		\left(  
+			\Closed \And \TYPE{Subring}(A),
+			\Lambda B,C \subset_{\ma} A \.
+			\max\Big( \sup_{b \in B} \inf_{c \in C} \rho_\pi(b,c),
+			 \sup_{c \in C} \inf_{b \in B} \rho_\pi(b,c) \Big)
+		\right)	
+	}
+	\ExplainFurther{ 1 Note, that indicator representation maps such closed subalgebras into  
+		closed uniformly integrable } 
+	\Explain{$\quad\quad$ subsets of $\Lp{1}(\Z\;A,\Sigma_\pi,\bar \pi)$}
+	\ExplainFurther{ 2 Then there is a natural isometric inclusion 
+		$\chi\Big(\mathbf{FB}(A,\pi)\Big) \subset \mathbf{F}\Big( \Lp{1}(\Z\;A,\Sigma_\pi,\bar \pi) \Big)$,}
+	\Explain{ $\quad\quad$  which can be equiped with a Hausdorff metric $d$}
+	\Explain{ 3 Now consider an boolean binary operation $\circ$}
+	\Explain{ 4 Assume $C : \Nat \to \mathsf{FB}(A,\pi)$  is a converging sequence with a limit $L$}
+	\Explain{ 5 Then clearly $e,0 \in L$ as $e,0 \in C_n$ for every $n \in \Nat$}
+	\Explain{ 6 Now assume $x,y \in L$}
+	\Explain{ 7 Then there exists a sequences $u,v : \prod^\infty_{n=1} C_n$
+		such that $x = \lim_{n \to \infty} u_n$ and $y = \lim_{n \to \infty}  v_n$}
+	\Explain{ 8 But Then $u_n \circ v_n \in C_n$ and $x \circ y = 
+		\lim_{n \to \infty} u_n \circ \lim_{n \to \infty} v_n = \lim_{n \to \infty} u_n \circ v_n \in L$  }
+	\Explain{ 9 So $L \in \mathsf{FB}(A,\pi)$}
+	\Explain{ 10 As $C$ and $L$ were arbitraty $\chi\Big(\mathbf{FB}(A,\pi)\Big)$
+		must be a closed subset of $\mathsf{F}\Big(\Lp{1}(\Z\;A,\Sigma_\pi,\bar \pi)\Big)$}	
+	\Explain{ But $\mathsf{F}\Big(\Lp{1}(\Z\;A,\Sigma_\pi,\bar \pi)\Big)$ 
+		as complete $\Lp{1}(\Z\;A,\Sigma_\pi,\bar \pi)$ is complete, so 
+		$\mathsf{FB}(A,\pi)$ is complete}
+	\EndProof
+}
+\newpage
+\subsubsection{Topology of the Lebesgue Algebra}
+\Page{
+	\DeclareFunc{algebraOfLebesgue}{\sFinite}
+	\DefineNamedFunc{algebraOfLebesgue}{}{\Lambda}{\B(\Reals)_\lambda}
+	\\
+	\Theorem{LebesgueAlgebraIsSeparable}
+	{
+		\TYPE{Separable}(\Lambda)
+	}
+	\Explain{1 consider $\A$ to be an algebra generated by open intervals with rational endpoints}
+	\Explain{2 Then $|\A| = \aleph_0$ as $\Rats$ are countable}
+	\Explain{3 As $\Lambda$ is localizable 
+		$\Lambda = \pi_\lambda\Big( \B(\Reals)\Big) = \pi_\lambda\Big( \tau_{\B(\Reals)}(\A) \Big) 
+		= \tau\Big( \pi_\lambda(\A) \Big) = \overline{\pi_\lambda(\A)}$}
+	\Explain{4 So $\Lambda$ is separable}
+	\EndProof
+}
+\newpage
 \subsection{Category}
+\subsubsection{Measure Algebra Functor}
+\Page{
+	\Theorem{NullIdealPreservingMapToHomomorphism}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu), (Y,T,\nu) \in \MEAS \.
+		\forall D : \Thick(X,\Sigma,\mu) \. 
+		\forall f : D \to Y \. \NewLine \.
+		\forall \aleph : \forall E \in T \.  f^{-1}(E) \in (\hat \Sigma | D) \.  
+		\forall \beth :  \forall E \in \Null_\nu \cap T \, f^{-1}(E) \in \Null_\mu \. \NewLine \.
+		\exists \phi \in \ma \And \SOC(A_\nu,A_mu) \. 
+		\forall E \in  T \. \forall F \in \Sigma  \.    \NewLine \.
+		\phi[E] = [F] \iff   f^{-1}(F) \du (E \cap D) \in \Null_\mu 
+	}
+	\Explain{ 1  Define $\phi[E] = \Big[f^{-1}(E)\Big]$}
+	\Explain{ 2  $\phi$ is well defined}
+	\Explain{ 2.1 Assume $E,F \in T$ are such that $[E] = [F]$}
+	\Explain{ 2.2 Then $\nu(E \du F) = 0$}
+	\Explain{ 2.3 So $\mu\Big( f^{-1}(E \du F) \Big) = 0$}
+	\Explain{ 2.4 Write 
+		$\phi[E] = \Big[f^{-1}(E)\Big] = \Big[f^{-1}(E \du F \du F)\Big] = 
+		\Big[f^{-1}(F)\Big] + \Big[ f^{-1}(E \du F)\Big] = 
+		\Big[f^{-1}(F)\Big] = \phi[F]$ 
+	}
+	\Explain{3 $\phi$ is a boolean morphism}
+	\Explain{3.1 $\phi(1) = \Big[ f^{-1}(X)\Big] = \Big[ f^{-1}(Y)\Big] = 1$}
+	\Explain{3.2 The rest is obvious from properties of $f^{-1}:2^Y \to 2^D$}
+	\Explain{3.3 As measures are $\sigma$-additive the $\sigma$-continuity follows by simmilar arguments}
+	\Explain{4 The final property is also obvious by construction}
+	\EndProof
+	\\	
+	\DeclareFunc{measureAlgebraFunctor}
+	{
+		\Contra(\BOR_0,\MA)
+	}
+	\DefineNamedFunc{measureAlgebraFunctor}{(X,\Sigma,\mu)}
+	{\ma(X,\Sigma,\mu)}{(A_\mu,\hat\mu)}
+	\DefineNamedFunc{measureAlgebraFunctor}{X,Y,f}
+	{\ma_{X,Y}(f)}{\THM{NullIdealPreservingMapToHomomorphism}}
+}
+\newpage
+\subsubsection{Stone Space Functor}
+\Page{
+	\DeclareFunc{spaceOfStoneFunctor}
+	{
+		\Contra(\MA, \BOR_0)
+	}
+	\DefineNamedFunc{spaceOfStoneFunctor}{(A,\mu)}
+	{\Z(A,\mu))}{(\Z A, \Sigma_\mu, \bar \mu)}
+	\DefineNamedFunc{spaceOfStoneFunctor}{X,Y,f}
+	{\Z_{X,Y}(f)}{\Z_{X,Y}(f)}
+	\Explain{1 Assume $E$ is  nowhere dense in $\Z X$}
+	\Explain{1.2 Then $\Big(\Z_{X,Y}(f)\Big)^{-1}(E)$ is nowhere dense in $\Z Y$}
+	\Explain{1.3 But this means that $\Big(\Z_{X,Y}(f)\Big)^{-1}(E)$ is meager and has measure zero}
+	\Explain{2 Now assume $E$ has $\bar \mu$-measure zero}
+	\Explain{2.1 Then $E$ must be meager}
+	\Explain{2.2 So write $E = \bigcap^\infty_{n=1} N_n$, where each $N$ is nowhere dense}
+	\Explain{2.3 By elementary set theory 
+		$\Big(\Z_{X,Y}(f)\Big)^{-1}(E) = \bigcup^\infty_{n=1}\Big(\Z_{X,Y}(f)\Big)^{-1}(N_n)$}
+	\Explain{2.3 As each $\Big(\Z_{X,Y}(f)\Big)^{-1}(N_n)$ has measure $0$, 
+		$\Big(\Z_{X,Y}(f)\Big)^{-1}(E)$ also has measure $0$}
+	\EndProof
+}
+\newpage
+\subsubsection{Order Continuous Homomorphism}
+\Page{
+	\Theorem{OrderContinuousByCodomain}
+	{
+		\NewLine ::		
+		\forall (A,\mu) \in \ma \.
+		\forall (B,\nu)  : \Semifinite\MA \.
+		\forall \phi \in \ma\Big((A,\mu),(B,\nu)\Big) \. \NewLine \.
+		\phi \in \TOP(A,B) \Imply \oC(A,B,\phi)
+	}
+	\Explain{1 Assume $D$ is downwards directed subset of $A$ such that $\inf D = 0$}
+	\Explain{2 Then $0 \in \overline{D}$}
+	\Explain{3 As $\phi$ is continuous $0 \in \overline{\phi(D)}$}
+	\Explain{4 $\inf \phi(D) = 0$}
+	\Explain{4.1 Assume $\inf \phi(D) = b > 0$}
+	\Explain{4.2 As $\nu$ is semifinite, where is $c \in B^f$ such that $c \le b$ 
+		and $\nu(b) > 0$}
+	\Explain{4.3 Then $\rho_c(\phi(a),0) = \nu(\phi(a)c) = \nu(c) > 0$ for any $a \in D$}
+	\Exclaim{4.4 So $0 \not \in \overline{\phi(D)}$, a contradiction}
+	\Explain{5 Then $\phi$ must be order-continuous}
+	\EndProof
+}\Page{
+	\Theorem{ContinuousByDomain}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite\MA \.
+		\forall (B,\nu)  \in \ma \.
+		\forall \phi \in \ma\Big((A,\mu),(B,\nu)\Big) \. \NewLine \.
+		\oC(A,B,\phi) \Imply \phi \in \TOP(A,B)
+	}
+	\Explain{1 It is enough to prove that $\phi$ is continuous at zero}
+	\Explain{2 Assume $b \in B^f$ and $\varepsilon \in \Reals_{++}$}
+	\Explain{2.1 Assume that for any $a \in A^f$ and $\delta \in \Reals_{++}$
+		where is some $c \in A$ such that $\rho_a(c,0) < \delta$ but $\rho_b(\phi(c),0) \ge \varepsilon$}
+	\ExplainFurther{2.1.1  Then it is possible to construct a system of elements $c : A^f \times \Nat \to A$}
+	\Explain{ $\quad \quad$ such that $\rho_a(c_{a,n},0) < 2^{-n}$ and 
+		$\rho_b(\phi(c_{a,n}),0) \ge \varepsilon$}
+	\Explain{ 2.1.2  Set $d_a = \liminf c_a$}
+	\Explain{2.1.3 Then $\rho_a(d_a,0) = 0$}
+	\Explain{2.1.4 Thus, $d_a a = 0$}
+	\Explain{2.1.5 As $\phi$ is order continuous $\phi(d_a) = \limsup \phi(c_a)$}
+	\Explain{2.1.6 So, $\rho_b(\phi(d_a),0) \ge \varepsilon$ }
+	\Explain{2.1.7 This implies that $\rho_b(\phi(\bar a),0) \ge \varepsilon$}
+	\Explain{2.1.8 Now consider set $D = \{ \bar a | a \in A^f \}$}
+	\Explain{2.1.8.1 Then $D$ is downwards directed}
+	\Explain{2.1.8.1.1 If $c,d \in A^f$ then $c \vee d \in A^f$ also}
+	\Explain{2.1.8.1.2 So by De Muavre  law if $\bar c, \bar d \in D$, then 
+	$\bar a \wedge \bar b = \overline{a \vee b} \in D$}
+	\Explain{2.1.8.2 As $\mu$ is semifinite $\inf D = 0$}
+	\Explain{2.1.8.2.1 There is dense subset consisting of elements of $A^f$}
+	\Explain{2.1.9 So $0 \in \overline{D}$}
+	\Exclaim{2.1.10 But (2.1.9) is in contradiction with (2.1.7)}
+	\Explain{2.2 So we showed that there is always some $\delta$ and $a \in A^f$
+		such that $\rho_b(\phi(c),0) < \varepsilon$ for any $c \in \Cell_{a}(0,\delta)$}
+	\Explain{3 But as $b$ and $\varepsilon$ were arbitrary, the homomorphism $\phi$ 
+		must be continuous}
+	\EndProof
+	\\
+	\Theorem{ContinuoutyEquivalence}
+	{
+		\NewLine ::		
+		\forall (A,\mu), (B,\nu) : \Semifinite\MA \.
+		\forall \phi \in \ma\Big((A,\mu),(B,\nu)\Big) \. \NewLine \.
+		\oC(A,B,\phi) \iff \phi \in \TOP(A,B)
+	}
+	\Explain{Combine two previous results}
+	\EndProof
+	\\
+	\Theorem{UniformEquivalencse}
+	{
+		\NewLine ::		
+		\forall A \in \BOOL \.
+		\forall \mu,\nu : \Semifinite\MA(A) \.
+		\U_\nu = \U_\mu
+	}
+	\Explain{1 Identity mapping is always order-continuous}
+	\Explain{2 But by previous theorem it must be a homeomorphism}
+	\Explain{3 A homomorphism whis is also a homeomorphism must be a unimorphism}
+	\EndProof
+}
+\newpage
+\subsubsection{Measure Preserving Homomorphism}
+\Page{
+	\DeclareType{\MPH}{\prod (A,\mu),(B,\nu) \in \ma \. ?\BOOL(A,B)}
+	\DefineType{\phi}{\MPH}{\forall a \in A \. \mu(a) = \nu\Big( \phi(a) \Big)}
+	\\
+	\DeclareFunc{measurePreservingMeasureAlgebraCategory}{\mathsf{LSCAT}}
+	\DefineNamedFunc{measurePreservingMeasureAlgebraCategory}{}{\ma_\#}
+	{\Big( \ma, \MPH, \circ, \id\Big)}
+	\\
+	\Theorem{MPHIsInjective}
+	{
+		\forall (A,\mu),(B,\nu) \in \ma \.
+		\forall \phi \in \ma_\#\Big( (A,\mu), (B,\nu) \Big) \.
+		\forall \phi \in \Inj(A,B)
+	}
+	\Explain{ 1 If $\phi$ is not injective then it has nontrivial kernel}
+	\Explain{ 2 Select $a \in \ker \phi$ such that $a \neq 0$}
+	\Exclaim{ 3 Then $\mu(a) > 0$ but $\nu(\phi(a)) = \nu(0) = 0$, a contradiciton}
+	\EndProof
+	\\
+	\Theorem{MPHFiniteness}
+	{
+		\NewLine ::		
+		\forall (A,\mu),(B,\nu) \in \ma \.
+		\forall \phi \in \ma_\#\Big( (A,\mu), (B,\nu) \Big) \. \NewLine \.
+		\Finite\MA(A,\mu) \iff \Finite\MA(B,\nu)
+	}
+	\Explain{ 1 For any boolean homomorphism $\phi(e_A) = e_B$}
+	\Explain{ 2 So finiteness follows by measure preservation}
+	\EndProof
+	\\  
+	\\
+	\Theorem{FiniteMPHIsContinuous}
+	{
+		\NewLine ::		
+		\forall (A,\mu),(B,\nu) : \Finite\MA \.
+		\forall \phi \in \ma_\#\Big( (A,\mu), (B,\nu) \Big) \. \phi \in \TOP(A,B)
+	}
+	\Explain{ $\phi$ is an isometry with respect to natural metrics $\rho_\mu$ and $\rho_\mu$}
+	\EndProof
+	\\
+	\Theorem{FiniteMPHIsOrderContinuous}
+	{
+		\NewLine ::		
+		\forall (A,\mu),(B,\nu) : \Finite\MA \.
+		\forall \phi \in \ma_\#\Big( (A,\mu), (B,\nu) \Big) \. \NewLine \.
+		\oC(A,B,\phi)
+	}
+	\Explain{This follows from the previous chapter and previous theorem}
+	\EndProof
+}\Page{
+	\Theorem{SigmaFiniteMPH1}
+	{
+		\forall (A,\mu) : \Semifinite\MA \.
+		\forall (B,\nu) : \sFinite\MA \. \NewLine \.
+		\forall \phi \in \ma_\#\Big( (A,\mu), (B,\nu) \Big) \. 
+		\sFinite(A,\mu)
+	}
+	\Explain{ 1 As $\mu$ is semifenit there is a partition of unity of finite elements $D$}
+	\Explain{ 2 $|\phi(D)| = |D|$ as $\phi$ is injective}
+	\Explain{ 3 $\phi(D)$ is disjoint}
+	\Explain{ 3 As $\nu$ is $\sigma$-finite $\phi(D)$ can be embeded into 
+		a countable partition of unity, so $|D| \le \aleph_0$ }
+	\Explain{ 4 This means that $\mu$ is $\sigma$-finite}
+	\EndProof 
+	\\
+	\Theorem{SigmaFiniteMPH2}
+	{
+		\forall (A,\mu) : \sFinite\MA \.
+		\forall (B,\nu)  \in \ma \. \NewLine \.
+		\forall \phi \in \ma_\#\Big( (A,\mu), (B,\nu) \Big) \And \sC(A,B) \. 
+		\sFinite\MA(B,\nu)
+	}
+	\Explain{ 1 There is countable partition of unity $P$ consisting of finite measure elements in $A$}
+	\Explain{ 2 Then $\phi(P)$ is a countable disjoint subset of $B$ consisting of finite measure elements}
+	\Explain{ 3 But $\sup \phi(P) = \phi(\sup P) = \phi(e_A) = e_B$}
+	\Explain{ 4 Thus, $\phi(P)$ is also a countable partition of unity in $(B,\nu)$
+		consisting of finite measure elements}
+	\Explain{ 5 So $(B,\nu)$ is $\sigma$-finite}
+	\EndProof
+	\\
+	\Theorem{SemifiniteMPH}
+	{
+		\forall (A,\mu) : \Semifinite\MA \.
+		\forall (B,\nu)  \in \ma \. \NewLine \.
+		\forall \phi \in \ma_\#\Big( (A,\mu), (B,\nu) \Big) \And \oC(A,B) \. 
+		\Semifinite\MA(B,\nu)
+	}
+	\Explain{ 1 There is  partition of unity $P$ consisting of finite measure elements in $A$}
+	\Explain{ 2 Then $\phi(P)$ is a disjoint subset of $B$ consisting of finite measure elements}
+	\Explain{ 3 But $\sup \phi(P) = \phi(\sup P) = \phi(e_A) = e_B$}
+	\Explain{ 4 Thus, $\phi(P)$ is also a partition of unity in $(B,\nu)$
+		consisting of finite measure elements}
+	\Explain{ 5 So $(B,\nu)$ is semifinite}
+	\EndProof
+	\\
+	\Theorem{AtomlessMPH}
+	{
+		\forall (A,\mu) : \Semifinite\MA \And \Aless \.
+		\forall (B,\nu)  \in \ma \. \NewLine \.
+		\forall \phi \in \ma_\#\Big( (A,\mu), (B,\nu) \Big) \And \oC(A,B) \. 
+		\Aless(B)
+	}
+	\Explain{ 1 There is  partition of unity $P$ consisting of finite measure elements in $A$}
+	\Explain{ 2 Then $\phi(P)$ is a disjoint subset of $B$ consisting of finite measure elements}
+	\Explain{ 3 But $\sup \phi(P) = \phi(\sup P) = \phi(e_A) = e_B$}
+	\Explain{ 4 Thus, $\phi(P)$ is also a partition of unity in $(B,\nu)$
+		consisting of finite measure elements}
+	\Explain{ 5 Now assume $b$ is an atom in $B$}
+	\Explain{ 5.1 Then there is an element $a \in P$ such that $\phi(a)b \neq 0$}
+	\Explain{ 5.2 But as $b$ is an atom this means that $b = \phi(a)$}
+	\Explain{ 5.3 $A$ is atomless so there are some $c$ such that $0 < c < a$}
+	\Explain{ 5.4 So $0 < \phi(c) < \phi(a) = b$}
+	\Exclaim{ 5.5 But this means that $b$ is not an atom, a contradiction!}
+	\EndProof
+}\Page{
+	\Theorem{PurelyAtomicMPH}{
+		\NewLine ::
+		\forall (A,\mu) : \Semifinite\MA \.
+		\forall (B,\mu) : \PA\MA \. \NewLine \.
+		\forall \phi \in \ma_\#\Big( (A,\mu), (B,\nu) \Big) \.
+		\PA(A) 
+	}
+	\Explain{ 1 Assume $a \in A$ is such that $a \neq 0$}
+	\Explain{ 1.1 Assume that $a$ do not contain any atoms}
+	\Explain{ 1.2 As $A$ is semifinite there is a $c \in A^f$ such that $0 < c \le a$}
+	\ExplainFurther{ 1.3 Then there exist a sequnce of partitions $d : \Bool^* \to A^f$ such that}
+	\ExplainFurther{$\quad \quad$ such that $c = \bigvee^{2^n}_{t \in \Bool^n} d_t$ and 
+		$d_t \neq 0$ for any $t \in \Bool^*$and $d_t d_s = d_s$ iff $t \sqsubset s$ 
+		and $d_t d_s = 0$ iff $|s|=|t|$ and $t \neq s$}
+	\Explain{ $\quad \quad$ and $\mu(d_t) \to 0$ as $|t| \to \infty$ }
+	\Explain{ 1.3 Then $\phi(d)$ has all same properties }
+	\Explain{ 1.4 Moreover $\nu(\phi(c)) = \nu\phi\left(  \bigvee^{2^n}_{t \in \Bool^n} d_t \right)=
+	\sum^{2^n}_{t \in \Bool^n} \nu(\phi(d_t))$}
+	\Explain{ 1.5 So $\phi(c) = \bigvee^{2^n}_{t \in \Bool^n} \phi(d_t)$ as $\phi(d_t)$ must be disjoint}
+	\Explain{ 1.6 So $\phi(c)$ can't contain atoms}
+	\Exclaim{ 1.7 But $B$ is purely atomic, so we have a contradiction}
+	\EndProof
+	\\
+	\Theorem{GeneratedSigmaSubalgebraImage}
+	{
+		\NewLine  ::	
+		\forall (A,\mu),(B,\nu) : \Finite\MA \.
+		\forall \phi \in \ma_\#\Big( (A,\mu), (B,\nu) \Big) \.
+		\forall C \subset A \.
+		\phi\langle C \rangle_\sigma = \langle \phi(C) \rangle_\sigma
+	}
+	\Explain{This follows from previous theorems about finite measure algebras}
+	\EndProof
+	\\
+	\Theorem{MeasurePreservingMeasureAlgebra}
+	{
+		\NewLine  ::	
+		\forall (X,\Sigma,\mu),(Y,T,\nu)  \in \MEAS \.
+		\forall  f \in \MEAS^\#\Big((X,\Sigma,\mu),(Y,T,\nu)\Big) \.
+		\ma_{X,Y}(f) \in \ma_\#(T_\nu,\Sigma_\mu) 
+	}
+	\Explain{This is obvious}
+	\EndProof
+	\\
+	\Theorem{MeasurePreservingZeroSpace}
+	{
+		\NewLine  ::	
+		\forall (A\mu),(B,\nu)  \in \MA \.
+		\forall  f \in \ma_\#\Big((A,\mu),(B,\nu)\Big) \. \NewLine \.
+		\Z_{A,B}(f) \in \MEAS^\#\Big(
+			(\Z\;B,\Sigma_\nu,\bar \nu), 
+			(\Z\;A,\Sigma_\mu,\bar \mu)
+		\Big) 
+	}
+	\Explain{This is obvious}
+	\EndProof
+}\Page{
+	\Theorem{MeasurePresevingHomomorphismExtensionFromSubalgebra}{
+		\NewLine ::
+		\forall (A,\mu),(B,\nu) : \Finite\MA \.
+		\forall  C \subset_\BOOL A \.
+		\forall \aleph : \Dense(A,C) \. \NewLine \.
+		\forall \phi \in \MA_\#(C,B) \.
+		\exists \Phi \in \MA_\#(A,B) \.
+		\Phi_{|C} = \phi 	
+	}
+	\Explain{ 1 obviously $\phi$ is an isometry}
+	\Explain{ 2 So there exists a uniqui iometry extrnsion $\Phi$ of $\phi$ by $\aleph$}
+	\Explain{ 3 $\Phi$ is a homomorphism}
+	\Explain{ 3.1 This holds as boolean operations are continuous and $\phi$ is also continuous}
+	\Explain{ 3.2 Let $\circ$ be some binary boolean operation and $u,v \in A$}
+	\Explain{ 3.3 Then there are sequences $x,y : \Nat \to C$ such that $u = \lim x$ and $v =\lim y$}
+	\Explain{ 3.4 $\Phi(v) \circ \Phi(u) =  \lim_{n \to \infty} \phi(x_n) \circ \phi(y_n) = 
+		\lim_{n \to \infty} \phi(x_n \circ y_n) = \Phi(v \circ u)$ }
+	\Explain{4 $\Phi$ is measure preserving}
+	\Explain{4.1 Assume $a \in A$}
+	\Explain{4.2 just note $\nu(\Phi(a)) = \rho_\nu(\Phi(a),0) = \rho_\nu(\Phi(a),\Phi(0)) = 
+		\rho_\mu(a,0) = \mu(a)$}
+	\EndProof
+	\\
+	\Theorem{MeasurePresevingHomomorphismExtensionFromSubset}{
+		\NewLine ::
+		\forall (A,\mu),(B,\nu) : \Finite\MA \.
+		\forall  C \subset  A \.
+		\forall f : C \to A \. \NewLine \.
+		\forall \aleph : \forall c : \Nat \to C \. \nu(\inf f(c)) = \mu(\inf c) \.
+		\exists \Phi \in \ma_\#\Big(\langle C \rangle_\ma, B\Big) \.
+		\Phi_{|C} = f 	
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Example}
+\Page{
+	\Explain{ Let $A = 2^\Nat$ with $\mu = \#$}
+	\Explain{ The elements of $A$ can be identified with sequences $\Nat \to \BOOL$}
+	\Explain{ Let $\phi(a)$ be defined as right shift padded by $0$ if $a$ is finite}
+	\Explain{ Let $\phi(a)$ be defined as right shift padded by $1$ if $a$ is cofinite}
+	\Explain{ Otherwis let $\phi(a) = a$}
+	\Explain{ Then as finite sets form an and $0 + 0 = 0$ and $0 \wedge t = 0$
+		it is clear $\phi$ that preserves their structure}
+	\ExplainFurther{ Also as cofinite sets are their complement and $ 1 + 1 = 0$ and $1 \wedge t = t$}
+	\Explain{ $\quad \quad$  it is clear that $\phi$ is an algebra morphism}
+	\Explain{ Clearly $\phi$ preserves cardinality}	
+	\Explain{On the other hand consider a sequence $f_n = \{2,\ldots,2n\}$}
+	\Explain{ Then $\bigvee^\infty_{n = 1} f_n = 2\Nat$}
+	\Explain{ But $2\Nat = \phi(2\Nat) = \phi\left( \bigvee^\infty_{n = 1} f_n \right) \neq 
+		\bigvee^\infty_n=1 \phi(f_n) = 2\Nat + 1$}
+	\EndProof
+}
+\newpage
+\subsubsection{Tensor Products}
+\Page{
+	\DeclareFunc{measureAlgebraTensorProduct}
+	{
+		\prod I : \Finite \. (I \to \ma) \to \ma
+	}
+	\DefineNamedFunc{measureAlgebraTensorProduct}{A,\mu}{
+		\left(\bigotimes_{i \in I} A_i, \prod_{i \in I} \mu_i\right)}
+		{
+					\ma\left( \bigotimes_{i \in \I} \Z(A_i,\mu_i) \right)
+		}
+		\\
+	\DeclareFunc{measureAlgebraTensorProductEmbedding}
+	{
+		\NewLine ::		
+		\prod I : \Finite \. 
+		\prod (A,\mu) : I \to \ma \.
+		\prod_{i \in I} \oC\left( A_i , \bigotimes_{j \in I} A_j \right)
+	} 
+	\DefineNamedFunc{measureAlgebraTensorProductEmbedding}{}{\iota_i}
+	{
+		\ma_{\Z(A_i,\mu_i),\bigotimes_{i \in I} \Z(A_i,\mu_i)}( \pi_i   )
+	}
+	\Explain{ 1 $\iota_i$ is well defined}
+	\Explain{ 1.1 Assume $E \in  \sigma_{\mu_i}$ 
+		is such that $\bar \mu_i(E) = 0$}
+	\Explain{ 1.2 Then   
+		$\bigotimes_{j \in I} \bar \mu_j \Big(\pi_i^{-1}(E) \Big) = 
+		   \bigotimes_{j \in I} \bar \mu_j \prod_{k \in I} \Big(\widehat{\Z A_i}(E)\Big)_k =
+			\sup  \left\{ \prod_{j \in I} \bar \mu_j(F) \bigg| 
+				F : \prod_{j \in I} \Sigma_{\mu_i}, F_i \subset   E \right\} = 0		
+		$}
+	\Explain{ 1.3 So $\pi_i \in \BOR_0\left( \bigotimes_{j \in I} \Z(A_j,\mu_j) , \Z(A_i,\mu_i)\right)$}
+	\Explain{ 2 $\iota_i$ is order-continuous}
+	\Explain{ 2.1 Assume $D \subset A_i$ is downwards closed with $\inf D = 0$}
+	\Explain{ 2.2 Also assume $0 \neq u = \inf \iota_i(D)$}
+	\Explain{ 2.3 Then $\prod_{i \in I} \mu_i (u) > 0 $ }
+	\Explain{ 2.4 By definition there is $E : \prod_{i \in I} \Sigma_{\bar \mu_i}^f$
+			 and $F \in \bigotimes_{j \in I} \Sigma_{\bar \mu_j}$ such that $u = [F]$	
+			 and $\bigotimes_{i \in I} \bar \mu_i \left( F \cap \prod_{j \in I} E_j \right) > 0$}
+	\Explain{ 2.5 But $\inf_{d \in D} d [E_i]  = 0$, so $\inf_{d \in D} \mu_i\Big(d[E_i]\Big) = 0$}
+	\Explain{ 2.6 So there exists $d \in D$ such that 
+	$\mu_i\Big(d[E_i]\Big)\prod_{j \in \{i\}^\c} \bar \mu_j(E_j) 
+	< \bigotimes_{i \in I}  \bar \mu_i \left( F \cap \prod_{j \in I} E_j \right)$}
+	\Explain{ 2.7 Also there is $G \in \Sigma$ such that $d = [G]$}
+	\Explain{ 2.8 Thus, $\bigotimes_{i \in I} \bar 
+		\mu_i\left( F \setminus \prod_{j \in I} \Big(\widehat{E_i}(G)\Big)_j \right) = 0$}
+	\ExplainFurther{
+		2.9 Then
+		$ 
+		\bigotimes_{i \in I} \bar \mu_i \left( F \cap \prod_{j \in I} E_j \right) \le
+		\bigotimes_{j \in J} \bar \mu_i\left(  \prod_{j \in I}\Big(\widehat{E_i}(G \cap E_i)\Big)_j \right) =
+		\bar \mu_i( G \cap E_i) \prod_{j \in \{i\}^\c} \mu_j(E_j) = $}
+	\Explain{	
+		$\mu_i\Big( d [E_i]\Big )	\prod_{j \in \{i\}^\c} \mu_j(E_j) 
+		$
+	}
+	\Exclaim{ 2.10 A contradiction with (2.5)}
+	\EndProof
+}\Page{
+	\DeclareFunc{measureAlgebraTensorRepresentation}
+	{
+		\NewLine ::		
+		\prod I : \Finite \. 
+		\prod (A,\mu) : I \to \ma \.
+		\BOOL \left( \bigotimes_{i \in I} A_i, \bigotimes_{i \in I} (A_i,\mu_i) \right)
+	} 
+	\DefineNamedFunc{measureAlgebraTensorRepresentation}{}{\Psi_{A,\mu}}
+	{
+		    \FUNC{tensor}\left( 
+		    	\Lambda [E] \in \prod_{i \in I} A_i \. \left[ \prod_{i \in I} E_i \right]
+		    \right)
+	}
+	\\
+	\Theorem{TensorRepresentationsAreDense}
+	{
+		\forall I : \Finite \.
+		\forall (A,\mu) : I \to \ma \.
+		\Dense\left( \bigotimes_{i \in i} (A,\mu_i), \Psi_{A,\mu}\left( \bigotimes_{i \in I} A_i \right) \right)
+	}
+	\Explain{ 1 Assume $s \in \bigotimes_{i \in I} (A_i,\mu_i)$ and $f \in \left(\bigotimes_{i \in I} (A_i,\mu_i)\right)^f$ and $\varepsilon \in \Reals_{++}$}
+	\Explain{ 2 Then there is $S,F \in \bigotimes_{i \in I} \Z(A_i,\mu_i)$
+		such that $s = [E]$ and $f = [F]$}
+	\Explain{ 3 We show that there is $t \in \Psi_{A,\mu}\left( \bigotimes_{i \in I} A_i \right)$
+		such that $\rho_f(t,s) < \varepsilon$}
+	\ExplainFurther{ 3.1 As $sf$ is finite there must exist a  natural number $n$ and a  
+		system $E : \{1,\ldots,n\} \to \prod_{i \in I} \Sigma_\mu$}
+	\Explain{
+		such that $\bigotimes_{i \in I} \hat \mu_i 
+		\left( S \cap F \du \bigcup^n_{k=1} \prod_{i \in I} E_i \right) < \varepsilon$}
+	\Explain{ 3.2 But then $\rho_f\left(s, \bigvee^n_{k=1} 
+		\Psi_{A,\mu}\left(\bigotimes_{i \in I} [E_i]\right)\right)  < \varepsilon$}
+	\EndProof
+	\\
+	\Explain{Write just $\bigotimes_{i \in I} a_i$ for $\Psi_{A,\mu}\left(\bigotimes_{i \in I} a_i\right)$}
+	\\
+	\Theorem{TensorMeasureComputation}
+	{
+		\forall I : \Finite \.
+		\forall (A,\mu) : I \to \ma \.
+		\forall t \in \bigotimes_{i \in I} (A,\mu) \. \NewLine \.
+		\prod_{i \in I} \mu_i (t) =
+		\sup \left\{ \prod_{i \in I} \mu_i\left(t \bigotimes_{i \in I} a_i \right) 
+		\bigg|
+			a \in \prod_{i \in I} A_i^f 	
+		\right\}
+	}
+	\Explain{ This follos by the definition of the cld product}
+	\EndProof
+}\Page{
+	\Theorem{TensorRepresentationComputation}
+	{
+		\forall I : \Finite \.
+		\forall (A,\mu) : I \to \Semifinite\MA \. \NewLine \.
+		\forall a \in \prod_{i \in I} A_i \.
+		\prod_{i \in I} \mu_i \left( \bigotimes_{i \in I} a_i \right) = \prod_{i \in I} \mu(a_i)
+	}
+	\Explain{ This is pretty obvious}
+	\EndProof
+	\\
+	\Theorem{TensorRepresentationUniqueness}
+	{
+		\NewLine \.		
+		\forall I : \Finite
+		\forall (A,\mu) : I \to \Semifinite\MA \. \NewLine \.
+		\Inj\left(  \bigotimes_{i \in I} A_i, \bigotimes_{i \in I} (A_i,\mu_i), \Psi_{A,\mu} \right)
+	}
+	\Explain{ This follows from the previous result}
+	\EndProof
+	\\
+	\Theorem{MeasureSpaceCLDProductUniversalProperty}
+	{
+		\NewLine ::		
+		\forall I : \Finite \.
+		\forall (X,\Sigma,\mu) : I \to  \Semifinite \.
+		\forall (A,\nu) : \Loc\MA \. \NewLine \.
+		\forall \phi : \prod_{i \in I} \oC \And \BOOL\left( \ma(X_i,\Sigma_i,\mu_i),  A \right) \.
+		\NewLine \.
+		\forall \aleph : \forall x \in \prod_{i \in I} \ma(X_i,\Sigma_i,\mu_i) \.
+		\nu\left( \bigwedge_{i \in I} \phi_i(x_i) \right) = \prod_{i \in I} \mu_i(x_i) \. \NewLine \.
+		\exists! \psi : \MPH\left( \ma\left( \bigotimes_{i \in I} (X,\Sigma,\mu) \right), (A,\nu)\right) \.
+		\psi\left( \bigotimes_{i \in I} x_i \right) = \bigwedge_{i \in I} \phi_i(x_i)
+	}
+	\NoProof
+	\\
+	\Theorem{LocalizableTensorProductUniversalProperty}
+	{
+		\NewLine ::
+		\forall I : \Finite \.
+		\forall (A,\mu) : I \to \Semifinite\MA \.
+		\forall (B,\eta) :  \Loc\MA \. \NewLine \.
+		\forall \phi : \prod_{i \in I} \oC \And \BOOL(A_i,B) \.
+		\forall \aleph : \forall a : \prod_{i \in I}(A_i)  \. 
+		\eta\left( \bigvee_{i \in I} \phi_i(a_i) \right) = \prod_{i \in I} \mu_i(a_i) \. \NewLine \.
+		\exists! \psi : \MPH \And \oC\left(\bigotimes_{i \in I} (A,\mu_i), B\right) \.  \iota \psi = \phi
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Independent Process Algebra}
+\Page{
+	\DeclareFunc{independentProcessAlgebra}
+	{
+		\prod_{I \in \SET}  (I \to \TYPE{ProbabilityAlgrbra} ) \to \TYPE{ProbabilityAlgebra}             
+	}
+	\DefineNamedFunc{randomProcessAlgebra}{A, p}{
+		\left(\bigotimes_{i \in I} A_i, \prod_{i \in I} p_i\right)}
+		{
+					\ma\left( \bigotimes_{i \in \I} \Z(A_i, p_i) \right)
+		}
+		\\
+	\DeclareFunc{independentAlgebraTensorProductEmbedding}
+	{
+		\NewLine ::		
+		\prod_{I \in \SET}
+		\prod (A,\mu) : I \to \ma \.
+		\prod_{i \in I} \oC\left( A_i , \bigotimes_{j \in I} A_j \right)
+	} 
+	\DefineNamedFunc{independetAlgebraTensorProductEmbedding}{}{\iota_i}
+	{
+		\ma_{\Z(A_i,p_i),\bigotimes_{i \in I} \Z(A_i,p_i)}( \pi_i   )
+	}
+	\\
+	\Theorem{independentProcessUniversalProperty}
+	{
+		\NewLine ::
+		\forall I \in \SET \.
+		\forall (A, p) : I \to \TYPE{ProbabilityAlgebra} \.
+		\forall (B, q) :   \TYPE{ProbabilityAlgebra} \. \NewLine \.
+		\forall \phi : \prod_{i \in I} \oC \And \BOOL\left(A_i, \bigotimes_{i \in I} (A_i,p_i) \right) \.
+		\NewLine \. 
+		\forall \aleph : \forall J : \Finite(I) \. \forall a : \prod_{j \in J}(A_j)  \. 
+		\eta\left( \bigvee_{j \in J} \phi_j(a_j) \right) = \prod_{j \in J} \mu_j(a_j) \. \NewLine \.
+		\exists! \psi : \MPH \And \oC\left(\bigotimes_{i \in I} (A_i,\mu_i), B\right) \.  \iota \psi = \phi
+	}
+	\NoProof
+	\\
+	\DeclareFunc{measureAlgebraTensorRepresentation}
+	{
+		\NewLine ::		
+		\prod I \in \SET \. 
+		\prod (A,p) : I \to \TYPE{ProbabilityAlgebra} \.
+		\BOOL \left( \bigotimes_{i \in I} A_i, \bigotimes_{i \in I} (A_i,p_i) \right)
+	} 
+	\DefineNamedFunc{measureAlgebraTensorRepresentation}{}{\Psi_{A,\mu}}
+	{
+		    \FUNC{tensor}\left( 
+		    	\Lambda [E] \in \prod_{i \in I} A_i \. \left[ \prod_{i \in I} E_i \right]
+		    \right)
+	}
+	\\
+	\Theorem{TensorRepresentationsAreDense}
+	{
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall (A,p) : I \to \TYPE{ProbabilityAlgebra} \.
+		\Dense\left( \bigotimes_{i \in i} (A,p_i), \Psi_{A,\mu}\left( \bigotimes_{i \in I} A_i \right) \right)
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{independent Subalgebras}
+\Page{
+	\DeclareType{StochasticalyIndependent}
+	{
+		\prod (A,p) :  \TYPE{ProbabilityAlgebra} \.
+		\prod I \in \SET \.
+		?(I \to \TYPE{Subring}(A))
+	}
+	\DefineType{C}{StochasticalyIndependent}
+	{
+		\forall J : \TYPE{Finite}(I) \. 
+		\forall c : \prod_{j \in J} A_j \.
+		p\left( \bigvee_{j \in J} c_j \right) = \prod_{j \in J} p(c_j)
+	}
+	\\
+	\Theorem{StochasticalyIndependentGeneration}
+	{
+		\NewLine ::		
+		\forall (A,p) : \TYPE{ProbabilityAlgebra} \.
+		\forall I \in \SET \.
+		\forall C : \SInd(A,p,I) \. \NewLine \.
+		\forall \aleph : \forall i \in I \. C_i \subset_\ma (A,p) \.
+		\bigotimes_{i \in I} (C_i, p) \cong_\ma \left\langle \bigcup_{i \in I} C_i \right\rangle_\ma 
+		\subset_\ma (A,p)
+	}
+	\Explain{ This is obvious}
+	\EndProof
+	\\
+	\Theorem{StochasticalyIndependentInProcessAlgebra}
+	{
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall (A,p) : I \to \TYPE{ProbabilityAlgebra} \.
+		 \SInd\left(\bigotimes_{i \in I} (A_i,p_i),I, (A,p)\right) }
+	\Explain{ This is obvious}
+	\EndProof
+}
+\newpage
+\subsubsection{Coordinate Determination}
+\Page{
+	\DeclareFunc{coordinateSubalgebra}{\prod_{I \in \SET}  (I \to \PAlg) \to ?I \to \PAlg}
+	\DefineNamedFunc{coordinateSubalgebra}{(C,p),J}{C_J}{\bigvee_{j \in J} \iota_j(C_j)}
+	\\
+	\Theorem{ProcessAlgebraRepresentation}
+	{
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall (C,p) : I \to \PAlg \.
+		\forall J \subset I \.
+		C_J \cong_{\ma} \bigotimes_{j \in J} (C_j,p_j)
+	}
+	\Explain{ This is obvious}
+	\EndProof
+	\\
+	\Theorem{CoordinateDeterminationExists}
+	{
+		\NewLine ::		
+		\forall i \in \SET
+		\forall (C,p) : I \to \PAlg \. 
+		\forall c \in C \. \exists! \min\Big\{ J : \TYPE{Countable}(I) \Big| c \in C_J \Big\}
+	}
+	\Explain{ 1 Let $\J = \Big\{ J : \TYPE{Countable}(I) \Big| c \in C_J \Big\}$ }	
+	\Explain{ 2 $\J \neq \emptyset$}	
+	\Explain{ 2.1 Note that $\bigotimes_{i \in I} C_i$ is dense in $\bigotimes_{i \in I} (C_i,p_i)$}
+	\ExplainFurther{ 2.2 So there exists a sequence of natural numbers $n : \Nat \to \Nat$,}
+	\ExplainFurther{ $\quad \quad$ 
+		a system of finite subsets $i \in \prod^\infty_{k=1} \{1,\ldots,n_l\}\times\{1,\ldots,n_k\}\to I$
+		and $t \in \prod^\infty_{k=1} \prod^k_{l=1} \prod^{n_k}_{h=1} C_{i_{k,l,h}}$}
+	\Explain{  $\quad \quad$ 
+			such that $c = \lim_{k \to \infty} \sum^{k}_{l=1} \bigotimes_{h=1}^{n_k} t_{k,t,h}$,
+			where are all missing slots are filled by $e$}
+	\Explain{
+		2.3 Then $J = \im i \in \J$, so $\J \neq \emptyset$}
+	\Explain{ 3 $\J$ has a minimal element}
+	\Explain{
+		3.1 Assume $\C$ is a chain in $\J$}
+	\Explain{
+		3.2 Then $c \in C_J$ for any $J \in \C$}
+	\Explain{
+		3.3  So $c \in \bigcap_{J \in \C} C_J = C_{\bigcap_{J \in \C} J}$
+	}
+	\Explain{ 3.3.1 Here we used the fact that $\C$ is decreasing}
+	\Explain{ 3.3.2 $C_J$ Form a sequence of decreasing closed subalgebras}
+	\Explain{ 3.4 So $\bigcap_{J \in \C} J \in \J$ and the lower bound is atained}
+	\Explain{ 4 The minimum Is unique}
+	\Explain{ 4.1 Assume that $I,J \in \J$}
+	\Explain{ 4.2 Then $c \in C_I \cap C_J$ }
+	\NoProof
+	\\
+}\Page{
+	\DeclareFunc{coordinateDetermination}
+	{
+		\prod_{I \in \SET}  \prod (C,p) : I \to \PAlg \.  \bigotimes_{i \in I}  (C_i,p_i) \to \TYPE{Countable}(I)
+	}
+	\DefineNamedFunc{coordinateDetermination}{c}{J_c}
+	{
+			\THM{CoordinateDeterminationExists}
+	}
+	\\
+	\Theorem{MidElementCoordinatesDetermination}
+	{
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall (C,p) : I \to \PA \.
+		\forall a,c \in \bigotimes_{I} (C_i,p_i) \.
+		\forall \aleph : a \le c \.
+		\exists b \in C_{J_a \cap J_c} \.
+		a \le b \le c
+	}
+	\Exclaim{This follows from Fubbini Theorem}
+	\NoProof
+	\\
+	\Theorem{MidElementCoordinatesDetermination}
+	{
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall (C,p) : I \to \PA \.
+		\forall a,c \in \bigotimes_{I} (C_i,p_i) \.
+		\forall \aleph : a \le c \.
+		\exists b \in C_{J_a \cap J_c} \.
+		a \le b \le c
+	}
+	\Exclaim{This follows from Fubbini Theorem}
+	\NoProof
+	\\
+	\Theorem{CoordinatesDetermination}
+	{
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall (C,p) : I \to \PA \.
+		\forall \J : ??I \.
+		\bigcap C_\J = C_{\bigcap \J}
+	}
+	\Explain{Part of the previous Theorem}
+	\NoProof
+	\\
+	\ExplainFurther{
+		Note: It may be interesting to prove this results independently of abstract measure theory,}
+	\Explain{
+		and then prove Fubbini therorem and related results from coordinate Determination}
+}
+\newpage
 \subsection{Radon-Nikodym Parallels}
 \section{Maharam's Theory}
 \section{Abstract Ergodic Theory}
