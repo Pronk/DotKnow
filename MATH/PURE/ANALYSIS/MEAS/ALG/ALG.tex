@@ -472,8 +472,10 @@
 \newcommand{\Lp}[1]{\mathbf{L}^{#1}}
 \newcommand{\SInd}{\TYPE{StochasticalyIndependent}}
 \newcommand{\PAlg}{\TYPE{ProbabilityAlgebra}}
+\newcommand{\PAless}{\TYPE{ProperlyAtomless}}
 %Categroy
 \newcommand{\ma}{\mathsf{MA}}
+\newcommand{\Caf}{\tau\hyph\mathsf{ca}}
 \author{Uncultured Tramp} 
 \title{Algebraic Measure Theory}
 \begin{document}
@@ -3015,14 +3017,1232 @@
 		and then prove Fubbini therorem and related results from coordinate Determination}
 }
 \newpage
+\subsubsection{Reduced Products}
+\newpage
 \subsection{Radon-Nikodym Parallels}
+\subsubsection{Finitely Additive Functionals}
+\Page{
+	\DeclareFunc{finitelyAdditiveFunctionals}
+	{
+		\Contra(\BOOL,\VS{\Reals})
+	}
+	\DefineNamedFunc{finitlyAdditiveFunctionals}{A}{\af(A)}
+	{
+		\NewLine \de	    
+	    \Big\{ f : A \to \Reals : \forall (a,b) : \TYPE{DisjointPair}(A) \. f(a \vee b) = f(a) + f(b) \Big\}	
+	}
+	\DefineNamedFunc{finitelyAdditiveFunctionals}{A,B,\phi}{\af_{A,B}(\phi)}
+	{
+		\phi_*
+	}
+	\\
+	\DeclareFunc{boundedAdditiveFunctionals}
+	{
+		\Contra(\BOOL,\VS{\Reals})
+	}
+	\DefineNamedFunc{boundedAdditiveFunctionals}{A}{\baf(A)}
+	{	    
+	    \Big\{ f \in \af(A) : \exists r \in \Reals_+ \. \forall a \in a \. |f(a)| < r  \ \Big\}	
+	}
+	\DefineNamedFunc{boundedAdditiveFunctionals}{A,B,\phi}{\baf_{A,B}(\phi)}
+	{
+		\phi_*
+	}
+	\\
+	\Theorem{Zero}
+	{
+		\forall A \in \BOOL \.
+		\forall f \in \af(A) \.
+		f(0) = 0
+	}
+	\Explain{ 1 $(0,0)$ is a disjoint pair as $0 \cdot 0 = 0$}
+	\Explain{ 2 So $f(0) = f(0 \vee 0) = f(0) + f(0)$}
+	\Explain{ 3 Which can be rewritten as $f(0) = 0$}
+	\EndProof		
+	\\
+	\Theorem{Restriction}
+	{
+		\forall A \in \BOOL \.
+		\forall f \in \af(A) \.
+		\forall a \in A \.
+		\Lambda c \in A \. f(ac)  \in \af(A)
+	}
+	\Explain{ 1 Defin $g(c) = f(ab)$}
+	\Explain{ 2 Assume $(c,d)$ is a disjoint pair}
+	\Explain{ 3 Then $(ac)(ad) = acd = 0$}
+	\Explain{ 4 $(ac,ad)$ is a disjoint pair also}	
+	\Explain{ 5 So $g(c \vee d) = f\Big(a(c \vee d)\Big) = f\Big(ac \vee ad\Big) =
+		f(ac) + f(ad) = g(c) + g(d)$}
+	\Explain{ 6 Thus, $g \in \af(A)$}
+	\EndProof		
+	\\
+	\Theorem{PositiveIffMonotonic}
+	{
+		\forall A \in \BOOL \.
+		\forall f \in \af(A) \.
+		f \ge 0 \iff \TYPE{Monotonic}(A,\Reals,f)
+	}
+	\Explain{1 Assume $f > 0$}
+	\Explain{1.1 Asume $a,b \in A$ is such that $a > b$ }
+	\Explain{1.2 Then $f(a) = f(ab \vee b \setminus a) = f(ab) + f(b \setminus a) = 
+		f(a) + f(b \setminus a) \ge f(a)$}
+	\Explain{2 Assume that $f$ is monotonic}
+	\Explain{2.1 Assume $a \in A$}
+	\Explain{2.2 Note, that $f(0) = 0$}
+	\Explain{2.3 So, as $a \ge 0$ then $f(a) \ge 0$}
+	\EndProof
+}\Page{
+	\Theorem{JordanDecomposition}
+	{
+		\NewLine ::		
+		\forall A \in \BOOL \.
+		\forall f \in \af(A) \.
+		f \in \baf(A) \iff 
+		\exists g,h \in \af(A) \.		g,h \ge 0 \And f = g - h
+	}
+	\Explain{ 1 ($\Rightarrow$) Assume $f$ is bounded}
+	\Explain{ 1.1 Define $g(a) = \sup \{ f(c) | c \in A, c \le a   \} $ }
+	\Explain{ 1.2 $g$ is finitely addive}
+	\Explain{ 1.2.1 Assume $a,b \in A$ are such that $ab = 0$}
+	\ExplainFurther{ 1.2.2 Then 
+			$g(a \vee b) = \sup \{  f(c) | c \in A, c \le a \vee b   \}=	
+			\sup \Big\{  f\Big(c(a \vee b)\Big) \Big| c \in A, c \le a \vee b \Big\} =$}
+   \ExplainFurther{ $\quad \quad
+			= \sup \{  f(ca \vee cb) | c \in A, c \le a \vee b   \} =
+			\sup \{ f(ca) + f(cb) | c \in A, c \le a \vee b   \} =$}
+	\Explain{ $\quad\quad		
+			=\sup \{ f(c) + f(d)  | c,d \in A, c \le a, d \le b   \} =
+			\sup \{ f(c) | c \in A, c \le a\} + \{ f(c) | c \in A, c \le b\} =
+			g(a) + g(b)
+			$}
+	\Explain{ 1.3 Then $h$ can be defined in a simmilar manner but for $-f$}
+	\Explain{ 1.4 $f = g - h$}	
+	\ExplainFurther{ 1.4.1 $g(a) - h(a) = 
+		\sup \{ f(c) | c \in A, c \le a\} - \sup \{ -f(c) | c \in A, c \le a\} =$}
+	\Explain{ $\quad \quad 
+		=\sup \{ f(c) | c \in A, c \le a\} + \inf \{ f(c) | c \in A, c \le a\}		
+		$ }
+   \Explain{ 1.4.2 Then we may select some $c : \Nat \to (a)$  
+   	such that $g(a) = \lim_{n \to \infty} f(c_n)$}
+   	\Explain{ 1.4.3 Then $-h(a) = \lim_{n \to \infty} f(a \setminus c_n)$ from $(1.4.1)$}
+   	\Explain{ 1.4.4 Thus 
+   	$g(a) - h(a) = 
+   		\lim_{n \to \infty} f(c_n)  + \lim_{n \to \infty} f(a \setminus c_n) =
+   	 \lim_{n \to \infty} f(c_n) + f(a \setminus c_n) =
+   	 \lim_{n \to \infty} f(a) = f(a)	$}
+   	\Explain{ 2 ($\Leftarrow$)  Assume there are $g,h \in \af_+(A)$ such that $f = g - h$}
+   	\Explain{ 2.1 Assume $a : \Nat \to A$ is a disjoint sequence}
+   	\Explain{ 2.2 Then $\sum^\infty_{n=1} g(a_n) = 
+		\lim_{k \to \infty} \sum^k_{n=1} g(a_n) =
+		\lim_{k \to \infty} g\left( \bigvee^k_{n=1} a_n \right) \le g(a) < \infty$}
+	\Explain{ 2.3 $g$ is bounded}	
+	\Explain{ 2.3.1 Assume now that $g$ is unbounded}
+	\Explain{ 2.3.2 Then there exists a sequence $c$ such that $\lim_{n \to \infty} g(c_n)=0$}
+	\Explain{ 2.3.3 Define $a_n = c_n \setminus \bigvee^{n-1}_{k=1} a_k $}
+	\Explain{ 2.3.4 Then $\sum^\infty_{n=1} g(a_n) = 
+		\lim_{n \to \infty} g\left( \bigvee^n_{k=1} c_k\right) \ge 
+		\lim_{n \to \infty} g(c_k) = \infty$ }
+	\Exclaim{ 2.3.5 But this contradicts $(2.2)$}
+	\Explain{ 2.4 The same is true about $h$}
+	\Explain{ 2.5 So $f$ is bounded as linear comination of bounded functionals}
+	\EndProof
+	\\
+	\DeclareFunc{decompositionOfJordan}
+	{
+		\prod{A \in \BOOL} \baf(A) \to \baf_+^2(A)
+	}
+	\DefineNamedFunc{decompositionOfJordan}{f}{(f_+,f_-)}{\THM{JordanDecomposition}(A,f)}
+}\Page{
+	\DeclareFunc{cilindersElements}
+	{
+		\prod I \in \SET \. (I \to \BOOL) \to \TYPE{Monoid}
+	}
+	\DefineNamedFunc{cilindersElements}{A}{C(I,A)}
+	{
+		\left\{ \bigwedge_{j \in J} \iota_j(a_j)\bigg| J : \Finite(I),  a \in \prod_{j \in J} A_j \right\}
+	}
+	\\
+	\Theorem{CoproductExtension}
+	{
+		\forall I \in \SET \.
+		\forall A : I \to \BOOL \.
+		\forall \theta : C(I,A) \to \Reals \. \NewLine \.
+		\forall \aleph : \forall c \in C(I,A) \. \forall i \in I \. \forall a \in A_i \.
+		\theta(c) = \theta\Big( c \iota_i(a) \Big) + \theta\Big( c \overline{\iota_i(a)} \Big) \.
+		\exists f \in \af\left( \bigotimes_{i \in I} A_i \right) \. f_{|C} = \theta
+	}
+	\NoProof
+}
+\newpage
+\subsubsection{Properly Atomless Functionals}
+\Page{
+	\DeclareType{\PAless}{\prod_{A \in \BOOL} ?\af(A)}
+	\DefineType{f}{\PAless}{ \NewLine
+		\iff 
+		\forall \varepsilon \in \Reals_{++} \.
+		\exists P : \PoU(A) \. 
+		|P| < \infty \And 
+		\forall p \in P \. 
+		\forall a \in (p) \.
+		|f(a)| \le \varepsilon  
+	}
+	\\
+	\Theorem{VectorSubspace}
+	{
+		\forall A \in \BOOL \.
+		\PAless(A) \subvec{\Reals} \baf(A)
+	}
+	\Explain{1 Assume $f$ is properly Atomless}
+	\Explain{2 Then $f$ is bounded}
+	\Explain{2.1 There is a finite partition of unity $P$ such that 
+		$|f(a)| < 1$ for any $p \in P$ and $a \in (p)$}
+	\Explain{2.2 Then 
+		$|f(a)| = \left|f\left(a \bigvee P \right)\right| 
+			=\left| \sum_{p \in P} f(ap) \right| \le \sum_{p \in P} |f(ap)| \le |P| < \infty		
+		$}
+	\Explain{3 Then $\alpha P$ may use simmilar partitions as $P$ fo $\frac{\varepsilon}{|\alpha|}$}
+	\Explain{4 And a sum $f + g$ may use intermeshes of $f$ and $g$}
+	\EndProof
+}\Page{
+	\Theorem{ContinuousPartitioningTHM1}
+	{
+		\NewLine ::
+		\forall A : \SA \.
+		\forall I \in \SET \.
+		\forall f : I \to \af_+(A) \. \NewLine \.
+		\forall \aleph : \forall a \in A \. 
+		\exists \alpha \in \left[ \frac{1}{3},\frac{2}{3} \right] \.
+		\exists a' \in (a) \.
+		\forall i \in I \.
+		\alpha f_i(a) = f_i(a') \. \NewLine \.
+		\forall a \in A \. 
+		\exists  u : [0,1] \uparrow (a) \.
+		u_0 = 0 \And u_1 = a \And 
+		\forall \tau \in [0,1] \.
+		\forall i \in I \.
+		f_i(u_\tau) =  \tau f_i(a) 
+	}
+	\Explain{1 Assume that there is $k \in I$ such that $f_k(a) > 0$ }
+	\Explain{1.1 Otherwise set $u_1 = a$ and $u_\tau = 0$}
+	\Explain{2 Define $\gamma_i = \frac{f_i(a)}{f_k(a)}$}
+	\ExplainFurther{3 Define sets $D : \Int_+ \to 2^{(a)}$ recursevely in a such way that 
+	   $D$ is increasing, and each $D_n$ is finite and ordered}
+	\Explain{ $\quad \quad$ with $a,0 \in D_n$ and $f_i(d) = \gamma_i f_k(d)$ for every $i \in I$}
+	\Explain{3.1 Let $D_0 = \{0,a\}$  }
+	\Explain{3.2  Then assume $m = |D_n|$ and let $d : \{1,\ldots,m\} \to D_n$ be an   
+		an order-preserving enumeration}
+	\ExplainFurther{3.3 Then by $\aleph$ there is 
+		$c : \{1,\ldots,m-1\} \to (a)$ such that $c_l \le d_{l+1} \setminus d_l$m}
+	\Explain{$\quad \quad$ And  a sequence 
+		$\alpha : \{1,\ldots,m-1\} \to \left[\frac{1}{3},\frac{2}{3}\right]$
+		such that $f_i(c_l) = \alpha_l f_i(d_{l+1}\setminus d_l)$ for any $i \in I$}
+	\Explain{3.4 Define $D_{n+1} = D_n \cup \Big\{ d_l \vee c_l \Big| l \in \{1,\ldots,m-1\}   \Big\}$}
+	\Explain{3.5 The it is obvious that $D_{n+1}$ is finite and ordered}
+	\ExplainFurther{3.6 So we constructed and increasing $D$ with a property
+		$f_i(d_{l+1}\setminus d_l) \le \left( \frac{2}{3} \right)^n  f_i(a) $}
+	\Explain{ $\quad \quad$ for any $i \in I$ and $d$ being enumeration of $D_n$ as above}
+	\Explain{ 4 Set $C = \bigcup_{n=1}^\infty D_n$}
+	\Explain{ 5 Then $C$ is countale totally ordered set with $0,a \in C$ and
+		$f_k(C)$ is dense in $[0,f_k(a)]$}
+	\Explain{ 6 Define $u_\tau = \sup \{ c \in C, f_k(c) \le \tau f_k(a)\}$ }
+	\Explain{ 6.1 This supremum has to exists}
+	\Explain{ 6.2 As $f_k(C)$ is dense in $[0,f_k(a)]$ there is
+		a sequence $c : \Nat \to C$ with $\lim_{n \to \infty} c_n = \tau f_k(a)$ }
+	\Explain{ 6.3 Without loss of generality we may assume that $c$ is non-decreasing}
+	\Explain{ 6.4 And we may define $u_\tau = \bigvee^\infty_{n=1} c_n$}
+	\Explain{ 7 Then $u_0 = 0$ and $u_1 = a$ and $f_i(u_\tau) = \tau f_i(a)$ for any $i \in I$}
+	\EndProof
+}\Page{
+	\Theorem{ContinuousPartitioningTHM2}
+	{
+		\NewLine ::
+		\forall A : \SA \.
+		\forall n \in \Nat \.
+		\forall f : \{1,\ldots,n\} \to \PAless(A) \. \NewLine \.
+		\forall \aleph :  \forall i \in \{1,\ldots,n\} \. 0 \le f_i \le f_1 \.
+		\NewLine \.
+		\forall a \in A \. 
+		\exists  u : [0,1] \uparrow (a) \.
+		u_0 = 0 \And u_1 = a \And 
+		\forall \tau \in [0,1] \.
+		\forall i \in \{1,\ldots,n\} \.
+		f_i(u_\tau) =  \tau f_i(a) 
+	}
+	\Explain{ 1 We prove that conditions of Previous theorem are satisfied with $I = \{1,\ldots,n\}$}
+	\Explain{ 2 At first consider the case $I = \{1\}$}
+	\Explain{ 2.1 We seek to prove 
+			$a \in A$ 
+			there is an $\alpha \in \left[\frac{1}{3}, \frac{2}{3} \right]$ and $a' \in (a)$ such that 
+			$f_1(a') = \alpha f_1(a)$}
+	\Explain{ 2.2 Then there is finite partition of unity $P$ 
+		such that $|f_1(c)| < \frac{1}{3} f_1(a)$ for any $p \in P$ and for any $c \le p$}
+	\Explain{ 2.3 Then it must be possible to sample $Q \subset P$ 
+		in such a way that $a' = a\bigvee_{p \in Q} p$ and 
+		$\frac{f_1(a')}{f_1(a)} \in \left[\frac{1}{3}, \frac{2}{3} \right]$}
+	\Explain{ 2.3.1 We know that $a = a \bigvee_{p \in P} p$ 
+	 and $|f_1(ap)| \le \frac{f_1(a)}{3}$}
+	 \Explain{ 2.3.2 So if $f_1(ap) <  \frac{f_1(a)}{3}$ for some $p \in P$
+		there is also some $q \in P$ such that $f_1(a(p\vee q)) \le \frac{2f_1(a)}{3}$}
+	\Explain{ 2.3.3 This Process must stop as 
+		$f_1(a) = f_1\left(a\bigvee_{p \in P} p\right) = \sum_{p \in P} f_1(ap)$
+	}
+	\Explain{ 3 We follow by induction}
+	\Explain{ 3.1 Assume the theorem holds for all  $i \in I$ with $i < m$ and we have corresponding $u$
+		for $\{1,\ldots,m-1\}$}
+	\Explain{ 3.2  $|f_m(u_t) - f_m(u_s)| = 
+			f_m(u_t \setminus u_s) \le f_0(u_t\setminus u_s)= (t - s) f_0(a)
+		$ for $0 \le s \le t \le 1$}
+	\Explain{ 3.3  So $\phi(t) = f_m(u_t)$ is continuous}
+	\Explain{ 3.4  and the function $\psi : \left[0,\frac{1}{2}\right] \to \Reals_+$ 
+		defined by $\psi(t) = f_m(u_{t + \frac{1}{2}}) - f_m(u_t)$
+		is continuous}
+	\Explain{ 3.5 Note that $\psi(0) + \psi\left(\frac{1}{2}\right) = f_m(a)$ }
+	\Explain{ 3.6 So by the intermidiate value theorem there must be some 
+	$t \in \left[0,\frac{1}{2}\right]$ such that $\psi(t) = \frac{1}{2}f_m(a)$}
+	\Explain{ 3.7 Define $u' = u_{t + \frac{1}{2}} \setminus u_t$}
+	\Explain{ 3.8 Then $f_i(u') = \frac{1}{2} f_i(a)$ for all $i \in \{1,\ldots,m\}$}
+	\Explain{ 3.9 But this means that that the assertion holds fo $\{1,\ldots,m\}$ 
+		And we can use the previous theorem}
+	\EndProof
+}
+\newpage
+\subsubsection{Liapounoff's Convexity Theorem}
+\Page{
+	\\
+	\DeclareFunc{vectorValuedFinitelyAdditiveFunctionals}
+	{
+		\prod V : \Reals\hyph\mathsf{BAN} \. \Contra(\BOOL,\VS{\Reals})
+	}
+	\DefineNamedFunc{finitlyAdditiveFunctionals}{A}{\af(A,V)}
+	{
+		\NewLine \de	    
+	    \Big\{ f : A \to V : \forall (a,b) : \TYPE{DisjointPair}(A) \. f(a \vee b) = f(a) + f(b) \Big\}	
+	}
+	\DefineNamedFunc{finitelyAdditiveFunctionals}{A,B,\phi}{\af_{A,B}(\phi)}
+	{
+		\phi_*
+	}
+	\\
+	\DeclareFunc{vectorValuedBoundedAdditiveFunctionals}
+	{
+		\prod V : \Reals\hyph\mathsf{BAN} \. \Contra(\BOOL,\VS{\Reals})
+	}
+	\DefineNamedFunc{boundedAdditiveFunctionals}{A}{\baf(A,V)}
+	{	    
+	    \Big\{ f \in \af(A) : \exists r \in \Reals_+ \. \forall a \in a \. \|f(a)\| < r  \ \Big\}	
+	}
+	\DefineNamedFunc{boundedAdditiveFunctionals}{A,B,\phi}{\baf_{A,B}(\phi)}
+	{
+		\phi_*
+	}
+	\\
+	\DeclareType{\PAless}{\prod_{A \in \BOOL} \prod_{V \in \Reals\hyph\mathsf{BAN}} ?\af(A)}
+	\DefineType{f}{\PAless}{ \NewLine
+		\iff 
+		\forall \varepsilon \in \Reals_{++} \.
+		\exists P : \PoU(A) \. 
+		|P| < \infty \And 
+		\forall p \in P \. 
+		\forall a \in (p) \.
+		\|f(a)\| \le \varepsilon  
+	}
+	\\
+	\Theorem{LiapounoffsConvexityTHM}
+	{
+		\NewLine ::		
+		\forall A : \SA \.
+		\forall n \in \Nat \.	
+		\forall f : \PAless(A,\Reals^n) \. 
+		\TYPE{Convex}(\Reals^n,f(A))
+	}
+	\Explain{ This is an application of continuous decomposition theorems}
+	\NoProof
+	\\
+	\Explain{ Note this is an additional problem then this theorem hold for infinite-dimensional vector spaces}
+}
+\newpage
+\subsubsection{Countably Additive Functionals}
+\Page{
+	\DeclareFunc{countablyAdditiveFunctionals}
+	{
+		\Contra(\BOOL_\sigma, \VS{\Reals})
+	}
+	\DefineNamedFunc{countablyAdditiveFunctionals}{A}{\caf(A)}
+	{
+		\NewLine \de
+		\left\{ 
+			f \in \af(A) : \forall a : \TYPE{DisjointSequence}(A) 
+			\exists \bigvee^\infty_{n=1} a_n \Imply
+			f\left(\bigvee^\infty_{n=1} a_n\right) = \sum^\infty_{n=1} f(a_n)  
+		\right\} 
+	}
+	\DefineNamedFunc{countablyAdditiveFunctionals}{A,B,\varphi}{\caf_{A,B}(\varphi)}
+	{
+		\varphi_*
+	}
+	\\
+	\Theorem{IncreasingExpression}
+	{
+		\NewLine ::		
+		\forall A \in \BOOL \.
+		\forall f \in \caf(A) \.
+		\forall a : \Nat \uparrow A \.
+		\exists \bigvee^\infty_{n=1} a_n 
+		\Imply
+		f\left( \bigvee^\infty_{n=1} a_n \right) = \lim_{n \to \infty} f(a_n)
+	}
+	\Explain{ 1 Note that $a_{n} \setminus a_{n-1}$ is a disjoint sequence
+		with $a_0 = 0$}
+	\Explain{ 2 Then 
+		$
+		f\left( \bigvee^\infty_{n=1} a_n \right)  =
+		f\left( \bigvee^\infty_{n=1} a_n \setminus a_{n-1} \right) = 
+		\sum^\infty_{n=1} f(a_n \setminus a_{n-1})  =
+		\lim_{n \to \infty} \sum^n_{k=1} f(a_k \setminus a_{k-1}) =
+		\lim_{n \to \infty} f(a_n)
+		$}
+	\EndProof
+	\\
+	\Theorem{DecreasingExpression}
+	{
+		\NewLine ::		
+		\forall A \in \BOOL \.
+		\forall f \in \caf(A) \.
+		\forall a : \Nat \downarrow A \.
+		\exists \bigwedge^\infty_{n=1} a_n 
+		\Imply
+		f\left( \bigwedge^\infty_{n=1} a_n \right) = \lim_{n \to \infty} f(a_n)
+	}
+	\Explain{ 1 Note that $a_{1} \setminus a_{n}$ is increasing}
+	\ExplainFurther{ 2 Then 
+		$
+		f\left(\bigwedge^\infty_{n=1} a_n \right)  =
+		f\left(a_1 \setminus \bigvee^\infty_{n=1} (a_1 \setminus a_n) \right)= 
+		f(a_1) -  f\left(\bigvee^\infty_{n=1} (a_1 \setminus a_n)\right) = 
+		f(a_1) - \lim_{n \to \infty} f(a_1 \setminus a_n) = $}
+	\Explain{ $ \quad \quad =
+		f(a_1) - \lim_{n \to \infty} f(a_1) - f(a_n) = 
+		\lim_{n \to \infty} f(a_n) $}
+	\EndProof
+	\\	
+	\Theorem{Restriction}
+	{
+		\forall A \in \BOOL \.
+		\forall f \in \caf(A) \.
+		\forall a \in A \.
+		\Lambda c \in A \. f(ac)  \in \caf(A)
+	}
+	\NoProof
+} \Page{
+	\Theorem{CAFByLimits}
+	{
+		\forall A \in \BOOL \. 
+		\forall f \in \af(A) \.
+		\forall \aleph : \forall a : \Nat \downarrow A \. 
+		\bigwedge_{n=1}^\infty a_n = 0 \Imply \lim_{n\to\infty} f(a_n) = 0 \.
+		f \in \caf(A)
+	}
+	\Explain{ 1 Assume $a : \Nat \to A$ is a disjoint sequence with $\bigvee^\infty_{n=1} a_n$
+		existing}
+	\Explain{ 2 Then $\bigwedge^\infty_{n=1} \bigvee^\infty_{m=n} a_n = 0 $}
+	\Explain{ 3 So, $\lim_{n \to \infty} f\left(  \bigvee^\infty_{m=n} a_n\right) = 0$ by $\aleph$}
+	\Explain{ 4 Then for any $m \in \Nat$ there is a rewrite 
+		$
+			f\left( \bigvee^\infty_{n=1} a_n \right) = 
+			\sum^m_{k=1} f(a_k) + f\left( \bigvee^\infty_{n=m + 1} a_n \right)
+		$ 
+	}
+	\Explain{ 5 Taking a limit $m \to \infty$ produces the desired result
+		$
+			f\left( \bigvee^\infty_{n=1} a_n \right) = \sum^\infty_{n=1} f(a_n)
+		$   }
+	\EndProof
+	\\
+	\Theorem{DominatedCAF}
+	{
+		\forall A \in \BOOL \.
+		\forall f \in \af(A) \.
+		\forall g \in \caf(A) \.
+		|f| \le g \Imply f \in \caf(A)
+	}
+	\Explain{ 1 Assume $a : \Nat \downarrow A$ such that $\bigwedge^\infty_{n=1} a_n = 0$}
+	\Explain{ 2 $g \in \caf(A)$ imply that $\lim_{n \to \infty} g(a_n) = 0$}
+	\Explain{ 3 But then domination Imply that $\lim_{n \to \infty} f(a_n) = 0$}
+	\Explain{ 4 By previous theorem this means that $f \in \caf(A)$}
+	\EndProof
+	\\
+	\Theorem{JordanDecomposition}
+	{
+		\forall A \in \BOOL \.  
+		\forall f \in \caf(A) \.
+		f  \in \baf(A) \iff
+		\exists g,h \in \caf_+(A) \. f = g - h
+	}
+	\Explain{ 1 $(\Rightarrow)$ Assume $f$ is bounded}
+	\Explain{ 1.1 Then $f = f_+ - f_-$ by simple Jordan's decomposition for finitely additive functionals}
+	\Explain{ 1.2 We may write $f_+(a) = \sup \{f(c) | c \in A, c \le a\}$ }
+	\Explain{ 1.3 Assume $a : \Nat \to A$ is a disjoint sequence
+	  such that $\bigvee^\infty_{n=1} a_n$ exists}
+	\ExplainFurther{ 1.4 Then $f_+\left(\bigvee^\infty_{n=1} a_n\right) = 
+			\sup \left\{f(c) \bigg| c \in A, c \le \bigvee_{n=1}^\infty a\right\} =
+			\sup \left\{f\left(c\bigvee^\infty_{n=1} a_n\right) 
+				\bigg| c \in A, c \le \bigvee_{n=1}^\infty a\right\} =$}
+	\ExplainFurther{
+	$  \quad \quad= \sup \left\{f\left(\bigvee^\infty_{n=1} ca_n\right) \bigg| c \in A, c \le \bigvee_{n=1}^\infty a\right\} = \sup \left\{ \sum^\infty_{n=1} f(ca_n) \bigg| c \in A, c \le \bigvee_{n=1}^\infty a\right\} =$}
+ 	\ExplainFurther{
+ 			$\quad \quad=\sup \left\{ \sum^\infty_{n=1} f(c_n) \bigg| 
+ 			c : \Nat \to A, \forall n \in \Nat \. c _n\le a_n \right\} =
+ 			\sum^\infty_{n=1} \sup \{f(c) | c \in A, c \le a_n\} =
+ 			\sum^\infty_{n=1} f_+(a_n)
+ 			$ 
+	 }
+}
+\Page{
+	 \Explain{ 1.4.1 the sum $\sum^\infty_{n=1} f(c_n)$ must exist
+	 	as $\sum^\infty_{n=1} |f(c_n)| \le \sum^\infty_{n=1} f_+(c_n) $}
+	 \Explain{ 1.4.2 And if $\sum^\infty_{n=1} f_+(c_n) $ diverges then the 
+	 	sequence $\phi_n = f_+\left( \bigvee^n_{k= 1} c_k\right)$ must be unbounded}
+	 \Exclaim{ 1.4.3 But $f_+$ must bounded by basic Jordan decomposition theorem, a contradiciton}
+	 \Explain{ 1.4.4 So $\sum^\infty_{n=1} f(c_n)$ exists as absolutely converging series}
+	 \Explain{ 2 $(\Leftarrow)$ This direction follows from basic Jordan Decomposition}
+	 \EndProof
+	\\	 
+	 \Theorem{HahnDecomposition1}
+	{
+		\forall A \in \SA \.  
+		\caf(A) \subvec{\Reals} \baf(A) 
+	}
+	\Explain{ 1 Assume $f \in \baf(A)$ }
+	\Explain{ 2  Let  $\gamma = \sup_{a \in A} f(a)$}
+	\Explain{ 3 Then there is a disjoint sequence $a : \Nat \uparrow A$
+		such that $\gamma = \lim_{n=1} f(a_n) = f\left( \bigvee^\infty_{n=1}  a_n \right) < \infty$}
+	\Explain{ 3.1 Clearly there is a sequence $c : \Nat \to A$ 
+		such that $\lim_{n=1} f\left( c_n \right) = \gamma$
+	}
+	\Explain{ 3.2 Without loss of generality it may be assumed that $f(c_n) > 0$}
+	\Explain{ 3.2.1 Otherwise $\sup_{a \in A} f(a) = f(0) = 0$}
+	\Explain{ 3.3 So $\gamma = 
+		\lim_{n \to \infty} f(c_n) \le 
+		\lim_{n \to \infty} \sum^n_{k=1} f(c_k)  =
+		\lim_{n \to \infty} f\left( \bigvee^n_{k=1} c_k \right) \le \gamma$  }
+	\Explain{ 3.4 So $\gamma = \lim_{n \to \infty} f\left( \bigvee^n_{k=1} c_k \right)$}	
+	\Explain{ 3.5 Just define $a_n = \bigvee^n_{k=1} c_k$}
+	\EndProof	
+	\\
+	\Theorem{HahnDecomposition2}
+	{
+		\forall A \in \SA \.  
+		\forall f \in \caf(A) \.
+		\exists d \in A \.
+		\forall c \in A \.
+		f(c\bar d) \le 0 \And f(cd) \ge 0
+	}
+	\Explain{ 1 Let $\gamma$ and $a$ be as above}
+	\Explain{ 2 Let $d = \bigvee^\infty_{n=1} a_n$}
+	\Explain{ 3 Assume $c \in (\bar d)$ }
+	\Explain{ 4 If $f(c) \ge 0$ then $f(c \vee d) > \gamma$ but this is impossible}
+	\Explain{ 5 Otherwise if $c \le d$ and $f(c) < 0$ then $f(d \setminus c) > \gamma$
+		which is impossible}
+	\EndProof
+}
+\newpage
+\subsubsection{Completely Additive Functionals}
+\Page{
+	\DeclareFunc{completelyAdditiveFunctionals}
+	{
+		\Contra(\BOOL_\tau, \VS{\Reals})
+	}
+	\DefineNamedFunc{completelyAdditiveFunctionals}{A}{\Caf(A)}
+	{
+		\NewLine \de
+		\left\{ 
+			f \in \af(A) : \forall D : \TYPE{DownwardsDirected}(A) \.
+			\bigvee_{d \in D} d = 0 \Imply \inf_{d \in D}  |f(d)| = 0 
+		\right\} 
+	}
+	\\
+	\Theorem{CountaleAdditivity}
+	{
+		\forall A \in \BOOL \. \Caf(A) \subvec{\Reals} \caf(A)
+	}
+	\Explain{ 1 Assume $f \in \Caf(A)$}
+	\Explain{ 2 Also Assume $a : \Nat \to A$ is a decreasing with $\bigwedge^\infty_{n=1} a_n = 0$}
+	\Explain{ 3 Then $\lim_{n =1} f(a_1) = 0$}
+	\Explain{ 4 Hence $f$ is countably additive}
+	\EndProof
+	\\
+	\Theorem{InfimumLocalization}
+	{
+		\NewLine ::		
+		\forall A \in \BOOL \.
+		\forall f \in \Caf(A) \.
+		\forall \varepsilon \in \Reals_{++} \.
+		\forall D : \TYPE{DownwardsDirected}(A) \.
+		\forall \aleph : \inf D =  0 \. \NewLine \.
+		\exists d \in D \.
+		\forall c \in (d) \.
+		|f(c)| < \varepsilon
+	}
+	\Explain{ 1 Assume otherwise}	
+	\Explain{ 2 Let $C = \{ c \in A : |f(c)| \ge \varepsilon, \exists d : d \le c \}$}
+	\Explain{ 3 Every member of $A$ includes some membebr of $C$}	
+	\Explain{ 3.1 Assume $d \in D$ }
+	\Explain{ 3.2 Then by $(1)$ there is $c \in A$ such that $c \le d$ and $|f(c)| \ge \varepsilon$}
+	\Explain{ 3.3 Let $D'_d = \{ d'\setminus c |  d' \in D, d' \le d \}$}
+	\Explain{ 3.4 Then $D'_d$ is downwards directed and $\lim D'_d = 0$}
+	\Explain{ 3.5 So there is a $d'$ such that $|f(d'\setminus c)| <  |f(c)| - \varepsilon $}
+	\Explain{ 3.6 Let $c' = d' \vee c$}
+	\Explain{ 3.7 Then $c' \le d$}
+	\Explain{ 3.8 Also $|f(c')| = | f(d' \setminus c)  + f(c)| \ge |f(c)| - |f(d' \setminus c)|  \ge \varepsilon$}
+	\Explain{ 3.9 So $c' \in C$}
+	\Explain{ 4 Since every member of $C$ includes a member $A$ 
+		it must be the case that $C$ is downwards directed and $\lim C = 0$}
+	\Explain{ 5 On the other hand $\lim_{c \in C} |f(c)| \ge \varepsilon$}
+	\Explain{ 6 And this contradicts the fact of $f \in \Caf(A)$}
+	\EndProof
+	\\
+	\Theorem{Continuity}
+	{
+		\forall A \in \BOOL \. 
+		\forall f \in \Caf_+(A) \. 
+		\oC(A,\Reals, f) 
+	}
+	\NoProof
+	\\
+}\Page{
+	\Theorem{Restriction}
+	{
+		\forall A \in \BOOL \.
+		\forall f \in \Caf(A) \.
+		\forall a \in A \.
+		\Lambda c \in A \. f(ac)  \in \Caf(A)
+	}
+	\NoProof
+	\\	
+	\Theorem{DominatedCAF}
+	{
+		\forall A \in \BOOL \.
+		\forall f \in \af(A) \.
+		\forall g \in \Caf(A) \.
+		|f| \le g \Imply f \in \Caf(A)
+	}
+	\NoProof
+	\\
+	\Theorem{CCCUpgrade}
+	{
+		\forall A : \CCC \.
+		\caf(A) = \Caf(A)
+	}
+	\Explain{ 1 Take $f \in \caf(A)$}
+	\Explain{ 2 Assume $D$ is downwards directed in $A$ with $\inf D = 0$}
+	\Explain{ 3 Then there is a countable $C \subset D$ with $\inf C = 0$
+		as $A$ is CCC}
+	\Explain{ 4 Let $c$ be an enumeration of $C$ with $\lim_{n \to \infty} c_n = 0$}
+	\Explain{ 5 Then it is possible to construct a sequence $d \in D$ such that 
+		$d_n \le \bigvee^n_{k=1} c_k$}
+	\Explain{ 6 Thus $ \inf f(  D ) \le \lim_{n \to infty} f(d_n) = 0$ }
+	\Explain{ 7 and so $f \in \Caf(A)$}
+	\EndProof
+	\\
+	\Theorem{BoundedBySup}
+	{
+		\forall A \in \BOOL \.
+		\forall f \in \af(A) \.
+		\forall \aleph : \forall d : \TYPE{DisjointSequence}(A) \.  
+		\sup_{m \in \Nat} |f(d_m)|  < \infty \.
+		f \in \baf(A) 
+	}
+	\Explain{1 Assume $f$ is not bounded}
+	\Explain{2 Then we can construct recursevely a  countale partition of unity 
+		such that $\sup |f(p)| > \infty$}
+	\Explain{2.1 Select $p_{0,1} = e$ }
+	\Explain{2.2 On the step $n$ there can be we seek elemen $a$ with 
+		$|f(a)| \ge n + |f(p_{n,n})|$}
+	\Explain{2.3 Then we can assert that $a \le p_{n,n}$}
+	\Explain{2.3.1 Define $p_{n+1,k} = p_{n,k}$ fo $k < n$} 
+	\Explain{2.3.2 Define $p_{n+1,n} = p_{n,n} \setminus a$ and $p_{n+1,n+1} = a$}
+	\Explain{2.3.3 Then $\bigvee^{n+1}_{k=1} p_{n+1,k} = 
+	\bigvee^{n-1}_{k=1} p_{n,k}  \vee (p_{n,n} \setminus a) \vee (a) =
+	\bigvee^n_{k=1} p_{n,k}	
+	$}
+	\Explain{2.3.4 Also $|f(p_{n+1,n})| \ge n > n-1$}
+	\Explain{2.3.5 Then either $\sup |f(p_{n+1,n})| = \infty$ or $\sup |f(p_{n+1,n+1})| = \infty$}
+	\Explain{2.3.6 In the first case swap $p_{n+1,n}$ and $p_{n+1,n+1}$}
+	\Explain{2.4 As every element $p_{\bullet,k}$  of the fixed index $k$ changes atmost 2 times 
+		we can construct an infinite disjoint sequence $d$}
+	\Explain{ 2.5 Then $|f(d_n)| \ge n-1$, so $\sup_{m \in \Nat} |f(d_m)|  = \infty$}
+	\Explain{ 3 This contradicts $(\aleph)$}
+	\EndProof	
+}\Page{
+	\Theorem{JordanDecomposition1}
+	{
+		\forall A \in \BOOL \.
+		\Caf(A) \subvec{\Reals} \baf(A)
+	}
+	\Explain{ 1 Assume that $d$ is a disjoint sequence in $A$}
+	\Explain{ 2 Define $D = \{ a \in A : \exists N \in \Nat \. \forall n \in \Nat \. n \ge N \Imply   
+		 d_n \le a \}$}
+	\Explain{ 3 Then $D$ is downwards directed}
+	\Explain{ 4 Also as $d_n^\c \in D$ and $d$ is disjoint it follows that $\bigwedge D = 0$}
+	\Explain{ 5 So it follows that there is $a \in D$ such 
+		that $|f(c)| \le 1$ for all $c \le a$}
+	\Explain{ 6 But this means that $|f(d_n)| \le 1$ for a cofinite set of indexes}
+	\Explain{ 7 Thus, $d$ is bounded}
+	\Explain{ 8 So, as $d$ was arbitrary, by the previous theorem $f$ is also bounded}
+	\EndProof
+\\
+	\Theorem{JordanDecomposition2}
+	{
+		\forall A \in \BOOL \.
+		\forall f \in \Caf(A) \. f_+,f_- \in \Caf(A)
+	}
+	\Explain{ 1 Write $f_+(a) = \sup \{ f(c) | c \in A, c \le a\}$}
+	\Explain{ 2 Assume $D$ is a downwards directed set with $\bigwedge D = 0$}
+	\Explain{ 3 Also assume $\varepsilon \in \Reals_{++}$}
+	\Explain{ 4 We know that there is $d \in D$ such that $|f(c)| \le \varepsilon$ for all $c \le d$}
+	\Explain{ 5 So $\inf_{u \in D} f_+(u) \le f_+(d) \le \varepsilon$}
+	\Explain{ 6 Thus, $\inf_{d \in D} f_+(d) = 0$ and $f_+ \in \Caf(A)$}
+	\Explain{ 7 The same argument holds for $f_-$}	
+	\EndProof
+}\Page{
+	\Theorem{UnitySummability}
+	{
+		\NewLine ::		
+		\forall A \in \BOOL \.
+		\forall f : A \to \Reals \.
+		f \in \Caf(A) \iff
+		\forall P : \PoU(A) \.
+		f(e) = \sum_{p \in P} f(p)
+	}
+	\Explain{ 1 $(\Rightarrow)$ Assume $f \in \Caf(A)$}
+	\Explain{ 1.1 Transfinite induction on $|J|$ with trivial base $f(e) = f(e)$}
+	\Explain{ 1.1.1 Assume that the result holds for some non-limit ordinal $\kappa$}
+	\Explain{ 1.1.2 Consider an ordering $p$ of $P$ with cardinality equivalent to $\kappa + 1$}
+	\Explain{ 1.1.3 Let $f' \in \Caf(A)$ be a restiction of $f$ to $p_{\kappa + 1}^\c$}
+	\Explain{ 1.1.4 Also define $Q$ to be qual to $P$ but with $p_{\kappa +1}$ and $p_{\kappa}$
+		replaced by $p_\kappa \vee p_{\kappa + 1}$}
+	\ExplainFurther{ 1.1.5 Then by induction hypothesis}
+	\Explain{ 
+		$ \quad \quad f(e) = f'(e)  + f(p_{\kappa + 1}) =  f(p_{\kappa + 1}) + \sum_{q \in Q} f'(q) = 
+		f(p_{\kappa + 1}) + \sum_{\tau \le \kappa} f(p_\tau) = \sum_{q \in P} f(q)$}
+	\Explain{ 1.2 Now let $\kappa$ be a limit cardinal and that induction hypothesis holds for 
+		all $\tau  < \kappa$}
+	\ExplainFurther{ 1.2.1 Note that $\sum_{p \in P} f(p)$
+		converges unconditionally to $f(e)$ iff for any $\varepsilon \in \Reals_{++}$
+		there is finite $F \subset P$}
+	\Explain{ $\quad \quad$ such that $\left| f(e) - \sum_{p \in G} f(p)\right| \le \varepsilon$ 
+		for any finite $G$ with $F \subset G$}
+	\Explain{ 1.2.2 Consider a set 
+		$D = \left\{ e \setminus \bigvee_{p \in F} p \bigg| F : \Finite(P) \right\}$}
+	\Explain{ 1.2.3 Then, as $P$ is a partition of unity $\bigwedge D = 0$}
+	\Explain{ 1.2.4 Also $D$ is downwards directed as $\bar a \wedge \bar b = \overline{a \vee b}$}
+	\Explain{ 1.2.5 So there is $d \in D$ such that $|f(c)| \le \varepsilon$ for all $c \le d$}
+	\Explain{ 1.2.6 Represent $d = e \setminus \bigvee_{ p \in F} p$ for some finite $F \subset P$}
+	\Explain{ 1.2.7 Take some finite $G \subset P$ such that $F \subset G$}
+	\Explain{ 1.2.8 Then $\left|f(e) - \sum_{p \in G} f(p) \right| = 
+		\left| f(e \setminus \bigvee_{p \in G} p \right| < \varepsilon$ as 
+		$e \setminus \bigvee_{p \in G} p \le e \setminus \bigvee_{p \in F} p  $ }
+	\Explain{ 2 $(\Leftarrow)$ Now consider the case then the second condition holds}
+	\Explain{ 2.1 for any disjoint $D \subset A$ with $\bigvee D = a$ it holds that
+		$f(a) = \sum_{d \in D} f(d)$}
+	\Explain{ 2.1.1 Consider a  a partiotion of unity $P = D \cup \{\bar a\}$}	
+	\Explain{ 2.1.2 Then $ \sum_{p \in P} f(p) = f(e) = f(a) + f(\bar a) $}
+	\Explain{ 2.1.3 By substraction $f(\bar a)$ one gets $\sum_{d \in D} f(d) = f(a)$}
+	\Explain{ 2.2 $f \in \af(A)$}
+	\Explain{ 2.2.1 Consider $a,c \in A$ such that $ac = 0$}
+	\Explain{ 2.2.2 Then $f(a \vee c) = f(a) + f(c)$ by $(2.1)$}
+}\Page{
+	\Explain{ 2.3 $f \in \baf(A)$ }
+	\Explain{ 2.3.1 Assume $d : \Nat \to A$ is disjoint}
+	\Explain{ 2.3.2 Let $\mathcal{D}$ be a set of all disjoint sets $D$ with $\im d \subset D$}
+	\Explain{ 2.3.3 Then By Zorn Lemma there is an upper bound $P$ which must be a partition of unity}
+	\Explain{ 2.3.4 Then $f(e) = \sum_{p \in P} f(p)$}
+	\Explain{ 2.3.5 But this means the $\lim_{n \to \infty} f(d) = 0$}
+	\Explain{ 2.3.6 As $d$ was arbitrary $f(d)$ is bounded}
+	\Explain{ 2.4 Now it is possible to write $f = f_+ - f_-$}
+	\Explain{ 2.5 Then $\sup_{d \in D} f_+(d) = f(a)$ for a disjoint set $D$ with $\bigwedge D =  a$}
+	\Explain{ 2.5.1 Assume $D$ is such disjoint set}
+	\Explain{ 2.5.2 Then $f(b) = \sum_{d \in D} f(bd) \le \sum_{d \in D} f_+(d)$ for any $b \le a$}
+	\Explain{ 2.5.3 So by taking supremum $f_+(a) \le \sum_{d \in D } f_+(d)$ }	
+	\Explain{ 2.5.4 But also $\sum_{d \in D } f_+(d) = 
+		\sup \left\{ \sum_{d \in F} f(d) \bigg|  F : \Finite(D)  \right\}  =
+		\sup \left\{ f\left( \bigvee F \right)  \bigg|  F : \Finite(D)  \right\} \le f_+(a)
+		$   }
+	\Explain{ So $\sum_{d \in D } f_+(d) = f_+(a)$}
+	\Explain{ 2.6 $f_+ \in \Caf(A)$  }
+	\Explain{ 2.6.1 Assume $D$ is a downwards directed set with $\bigwedge D = 0$  }
+	\Explain{ 2.6.2 Let $C = \{a \in A : \exists d \in D : da = 0 \}$ }
+	\Explain{ 2.6.3  Then $C$ is order dense}
+	\Explain{ 2.6.4 So it is possible to extract a partition of Unity $P \subset C$}	
+	\Explain{ 2.6.5  $ \sum_{p \in P} f_+(p) = f_+(e)$ by (2.5)}
+	\Explain{ 2.6.6 So for any $\varepsilon \in \Reals_{++}$
+		 there is some finite $F \subset C$ such that 
+		 $ f_+\left( e \setminus \bigvee F \right) = f_+(e) - \sum_{p \in F} f_+(p) < \varepsilon $}	
+	\Explain{ 2.6.7  By construction of $C$ there is a $d \in D$ such that $d \le e \setminus \bigvee F$} 
+	\Explain{ 2.6.8 Therefore $f_+(d) < \varepsilon$}
+	\Explain{ 2.6.9 $\inf_{d \in D} f_+(d) = 0$ as $\varepsilon$ was arbitrary}
+	\Explain{ 2.7 $f_- \in \Caf(A)$  by simmilar arguments}
+	\Explain{ 2.8 So $f \in \Caf(A)$}	
+	\EndProof
+	\\
+	\Theorem{Summability}
+	{
+		\NewLine ::		
+		\forall A \in \BOOL \.
+		\forall f  \in \Caf(A) \.
+		\forall D : \TYPE{Disjoint}(A) \.
+		\forall a \in A \
+		a = \bigvee D \Imply
+		f(a) = \sum_{d \in D} f(d)
+	}
+	\Explain{ This is a part of the previous theorem}
+	\EndProof
+}\Page{
+	\Theorem{StrictHahnDecomposition}
+	{
+		\NewLine ::		
+		\forall A \in \BOOL \. 
+		\forall f \in \Caf(A) \.
+		\exists! q \in A \.
+		\forall c \in C \.   0 < c \le q \Imply f(c) > 0 \And c \le \bar(q) \Imply f(c) \le 0
+	}
+	\Explain{ 1 Define $C_+ = \{ a \in A : 0 < c \le a \Imply f(c) > 0  \}$ 
+		and $C_- = \{ a \in A : c \le a \Imply f(c) \le 0 \}$}
+	\Explain{ 2 $C_+ \cup C_-$ is order dense}
+	\ExplainFurther{ 2.1 By ordinary Hahn decomposition there is $a' \in A$
+		such that $f(c) \ge 0$ for all $c \le a'$}
+	\Explain{ $\quad \quad$ and $f(c) \le 0$ for all $c \le \overline{a'}$}
+	\Explain{ 2.2  $ a\overline{a'} \in C_- $ for any $a \in A$ such that $a\ neq 0$}
+	\Explain{ 2.3 In case $a\overline{a'} = 0$ it must be the case that $a \le a'$}
+	\Explain{ 2.4 If $a \not \in C_+$ there must be some $d \le a$ such that $f(d) \le 0$}
+	\Explain{ 2.5 But $d \le a'$, so $f(d) = 0$ and $f(c) = 0$ for any $c \le d$}
+	\Explain{ 2.6 So $d \in C_-$ and $ad \neq 0$}
+	\Explain{ 3 So there is a partition of unity $P \subset C_+ \cup C_- $}
+	\Explain{ 4 $P \cap C_+$ is countable}
+	\Explain{ 4.1 The series $\sum_{p \in P} f(p)$ must be absolutely convergent}
+	\Explain{ 4.2 So any subseries of $\sum_{p \in P} f(p)$ must be strictly convergent}
+	\Explain{ 4.3 This includes $\sum_{p \in P \cap C_+} f(p)$}
+	\Explain{ 4.4 But $f(p) > 0$ any element $P \cap C_+$, so there can be 
+		atmost countable number of such elements}
+	\Explain{ 5 Element $q = \bigvee (P \cap C_+)$ exists}
+	\Explain{ 6 Clearly $f(a) = 
+		f\left( \bigvee_{p \in P \cap C_+} ap \right) = 
+		\sum_{p \in p \cap C_+} f(ap) > 0$ for any $a \le q$ such that $a \neq 0$}
+	\Explain{ 7 Then $f(a) \le 0$ if $a \le \bar{q}$}
+	\Explain{ 8 $q$ is unique}
+	\Explain{ 8.1 Assume $p$ has same properties as $q$}
+	\Explain{ 8.2 But then $f(p\setminus q) \le 0$ and $f(q \setminus p) = 0$ 
+		meaning that $p \setminus q = q \setminus p = 0$}
+	\Explain{ 8.3 Thus $p = q$}
+	\EndProof
+	\\
+	\DeclareFunc{saturation}
+	{
+		\prod_{A \in \BOOL} \Caf^2(A) \to A
+	}
+	\DefineNamedFunc{saturation}{f,g}{[f > g]_A}{\THM{StrictHahnDecomposition}(A, f-g)}	
+}
+\newpage
+\subsubsection{Absolutely Continuous Additive Functionals}
+\Page{
+	\DeclareType{AbsolutelyContinuousAdditiveFunctional}
+	{
+		\NewLine ::		
+		\prod (A,\mu) \in \ma \.  ?\af(A) 
+	}
+	\DefineNamedType{f}{AbsolutelyContinuousAdditiveFunctional}{f \in \ac(A,\mu)}
+	{
+		\NewLine \iff		
+		\forall \varepsilon \in \Reals_{++} \.
+		\exists \delta \in \Reals_{++} \.
+		\forall a \in A \. \mu(a) \le \delta \Imply |f(a)| \le \varepsilon 
+	}
+	\\
+	\Theorem{ContinuousIsCompletelyAdditive}
+	{
+		\forall (A,\mu) \in \ma \.
+		\forall f \in \af(A) \.
+		f \in C_0(A) \Imply f \in \Caf(A)
+	}
+	\Explain{ 1 Assume $D$ is a downwards directed in $A$ with $\bigwedge D = 0$}
+	\Explain{ 2 Then $\lim_{d \in D} d = 0$ in a measure topology of $A$}
+	\Explain{ 3 So by continuity $\lim_{d \in D} |f(d)| = 0$ so $\inf_{d \in D} |f(d)| = 0$ also}
+	\Explain{ 4 But this means that $f \in \Caf(A)$}
+	\EndProof
+	\\
+	\Theorem{CountablyAdditive}
+	{
+		\forall (A,\mu) \in \ma \.
+		\caf(A) \subset \ac(A,\mu) 
+	}
+	\Explain{ 1 Take $f \in \caf(A) \setminus \ac(A,\mu)$}
+	\ExplainFurther{ 2 Then there exists $\varepsilon \in \Reals_{++}$
+		such that for all $\delta \in \Reals_{++}$ there is an 
+		element $a \in A$} 
+	\Explain{ $\quad\quad$ with $\mu(a) \le \delta$ anf $|f(a)| \ge \varepsilon$}
+	\Explain{ 3 Select a sequence $a : \Nat \to A$ 
+		with $|f(a_n)| \ge \varepsilon$ and $\mu(a_n) \le 2^{-n}$}
+	\Explain{ 4  Define a decreasing sequence $c_n = \bigvee_{k=n}^\infty a_k$}
+	\Explain{ 5  Then $\mu(c_n) = 2^{1-n} \to 0$}
+	\Explain{ 6  So $\lim_{n \to \infty} c_n = 0$ and $\bigvee^\infty_{n=1} c_n = 0$}
+	\Explain{ 7  Thus, $\inf_{n \in \Nat} |f(c_n)| = 0$}
+	\Explain{ 8 on the other hand $f(c_n) \ge \varepsilon$ which leads to a contradiction}
+	\EndProof
+	\\
+	\DeclareType{QuasiSemifinite}{ 
+		\forall (A,\mu) \in \ma \.  ?(A \to \Reals)	
+	}
+	\DefineType{\varphi}{QuasiSemifinite}
+	{
+		\forall a  \in A \. \varphi(a) \neq 0 \Imply
+		\exists c \in A^f \. \varphi(ac) \neq 0
+	}
+}\Page{
+	\Theorem{ContinuousIsQuasiSemifinite}
+	{
+		\NewLine :: 		
+		\forall (A,\mu) \in \ma \.
+		\forall f \in \af(A) \. \NewLine \.
+		f \in C_0(A) \Imply  f \in \caf \And \TYPE{QuasiSemifinite}(A) 
+	}
+	\Explain{ 1 We know that $f \in \Caf(A)$, so $f \in \caf(A)$}
+	\Explain{ 2 Assume $a \in A$ such that $f(a) \neq 0$}
+	\Explain{ 3 Then $a \neq 0$ and $\mu(a) \neq 0$}
+	\Explain{ 4 Assume $\mu(a) = \infty$} 
+	\Explain{ 5 If $\mu(c) = \infty$ for any $c \in A$ such that $c \le a$ and $c \neq 0$
+	  Then $\lim a = 0$}
+	 \Explain{ 6 And so $f(a) = \lim f(a) = 0$, which is impossible}
+	 \Explain{ 7 Therefore,  $\{ 0\} \subsetneq C =  A^f \cap (a)$}
+	 \Explain{ 8 Let $D = \{ d \in A : d \le a \And  \forall u \in A \. 0 < u \le d \Imply \mu(u) = \infty \}$}
+	 \Explain{ 9 Then $C \cup D$ is dense in $(a)$}
+	 \Explain{ 10 Let $P \subset C \cup D$ be a partition of unity}
+	 \Explain{ 11 Note that $f(d) = 0$ by arguments simmilar to $(5)$ and $(6)$
+	 	for any $d \in D$}
+	 \Explain{ 12 Thus, $0 \neq f(a) = \sum_{p \in P} f(p) = \sum_{p \in P \cap C} f(p)$}
+	 \Explain{ 13 Therefore, there exists $c \in C$ such that $f(ac) = f(c) \neq 0$}
+	 \EndProof
+}\Page{
+	 \Theorem{SigmaAdditiveAndQuasiSemifiniteIsUniformlyContinuous}
+	 {
+		\NewLine ::	 	
+	 	\forall (A,\mu) \in \ma \.
+	 	\forall f \in \af(A) \. 
+	 	f \in \caf \And \TYPE{QuasiSemifinite}(A) 
+	 	\Imply
+	 	f \in \UNI\Big((A,\mu),\Reals \Big)
+	 }
+	 \Explain{ 1 $f$ is bounded, so there is a Jordan decomposition $f = f_+ - f_-$}
+	 \Explain{ 2 Define $g = f_+ + f_-$ and $\gamma = \sup \{ g(a) | a \in A^f \}$}
+	 \Explain{ 3 Then there is a sequence of elements $a : \Nat \to A^f$ 
+	 	such that $\gamma = \lim_{n \to \infty} g(a_n)$}
+	 \Explain{ 4 Let $a^* = \bigvee^\infty_{n=1} a_n$}
+	 \Explain{ 5 If $d \in A$ and $a^*d = 0$ then $f(d) = 0$ }
+	 \Explain{ 5.1 Assume $d \in A$ is such that $a^*d = 0$ and $c \in A^f$}
+	 \Explain{ 5.2 Then $|f(cd)| \le g(cd) \le g(c \setminus a_n) = 
+	  g(a_n \vee c) - g(a_n) \le \gamma - g(a_n)$}
+	 \Explain{ 5.3 By taking the limit we see that $|f(cd)| = 0$
+	 	and hence $f(cd) = 0$}
+	 \Explain{ 5.4 As $c$ was arbitrary as $f$ is quasi-semifinite $f(d)=0$}
+	 \Explain{ 6 Construct the sequence $c^*_n = \bigvee^\infty_{k=n} a_n$}
+	 \Explain{ 7 Then $\lim_{n \to \infty} g(a^* \setminus c^*_n) = 0$}
+	 \Explain{ 8 As $f$ is countably additive it must be absolutely continuous}
+	 \Explain{ 9 Assume $\varepsilon \in \Reals_{++}$,
+	 	then there is $\delta$ such that $|f(a)| \le \varepsilon$ having $\mu(a) < \delta$
+	 	for all $a \in A$}
+	\Explain{ 10 Assume $n \in \Nat$ is such that $|g(a^* \setminus c^*_n)| < \varepsilon$}
+	\Explain{ 11 Then  
+		$|f(a)| \le | f(ac^*_n)| + |f(a(a^* \setminus c^*_n))| + |f(a \setminus a^*)|
+		\le | f(ac^*_n)|  + g(a^*\setminus c^*_n) \le  | f(ac^*_n)|  + \varepsilon$
+		for any $a \in A$}
+	\Explain{ 12 Assume $a,c \in A$ such that $\mu((b+c)c^*_n) < \delta$ }	
+	\Explain{ 13 Then
+		$
+			|f(a) - f(c)|  \le |f(a \setminus c)|   + |f(c \setminus a)| \le 
+			| f((a \setminus c)c^*_n)| +   | f((a \setminus d)c^*_n)| + 2\varepsilon  
+			\le 4\varepsilon 		
+		$}
+	\Explain{ 14 But this means that $f$ is uniformly continuous}
+	\EndProof
+	\\
+	\Theorem{AdditiveFunctionalContinuity}
+	{
+		\forall (A,\mu) \in \ma \.
+		\forall f \in \af(A) \.
+		f \in C_0(A) \iff f \in \UNI(A,\Reals)
+	}
+	\Explain{This follows from the previous theorems}
+	\EndProof
+}\Page{
+	\Theorem{SemifiniteAdditiveFunctionalContinuity}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Semifinite \.
+		\forall f \in \af(A) \.
+		f \in \Caf(A) \iff f \in \UNI(A,\Reals)
+	}
+	\Explain{ 1 $(\Leftarrow)$ is obvious}
+	\Explain{ 1.1 $f$ is continuous in zero an hence completely additive}
+	\Explain{ 2 $(\Rightarrow)$ consider $f \in \Caf(A)$}
+	\Explain{ 2.1 I will show that $f$ is quasi-Semifinite}
+	\Explain{ 2.1.1 Assume $a \in A$ is such that $f(a) \neq 0$}
+	\Explain{ 2.1.2 Then $a \neq 0$}
+	\Explain{ 2.1.3  $\{0\} \neq C = (a) \cap A^f$ is dense in $(a)$
+		as $\mu$ is semifinite}
+	\Explain{ 2.1.4 Let $P \subset C$ be a partiotion of unity for $(a)$}
+	\Explain{ 2.1.5 Then $0 \neq f(a) = \sum_{p \in P} f(p)$}
+	\Explain{ 2.1.6 So there must be $c \in C$ such that $f(c) \neq 0$}
+	\Explain{ 2.2 As $f$ is also countably additive it must be uniformly continuous}
+	\EndProof
+	\\
+	\Theorem{SigmaFiniteAdditiveFunctionalContinuity}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \sFinite \.
+		\forall f \in \af(A) \.
+		f \in \Caf(A) \iff f \in \UNI(A,\Reals) \iff f \in \caf(A)
+	}
+	\Explain{1 $\sigma$-finite measure algebras are CCC}
+	\Explain{2 So every countably additive functional must be completely additive}
+	\EndProof
+	\\
+	\Theorem{FiniteAdditiveFunctionalContinuity}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \Finite \.
+		\forall f \in \af(A) \. \NewLine \.
+		f \in \Caf(A) \iff f \in \UNI(A,\Reals) \iff f \in \caf(A) \iff f \in \ac(A,\mu)
+	}
+	\Explain{ 1 Assume $f$ is absolutely continuous with repsect to $\mu$}
+	\Explain{ 2 Also assume $D$ is downwards directed in $A$ with $\bigvee D = 0$}	
+	\Explain{ 3 So $\inf_{d \in D} \mu(d) = 0$}
+	\Explain{ 3.1 This argument requires $\mu$ to be finite}
+	\Explain{ 4 By absolute continuity $\inf_{d \in D} |f(d)| = 0$}
+	\Explain{ 5 As $D$ was arbitraty this means that $f$ is completely continuous }
+	\EndProof
+	\\
+	\DeclareFunc{zeroIdealRespectingAdditiveFunctionals}
+	{
+		\prod (X,\Sigma,\mu) \in \MEAS \. \TYPE{VectorSubspace}(\af(X,\Sigma,\mu))	
+	}
+	\DefineNamedFunc{zeroIdealRespectingAddivieFunctionals}{}
+	{\af_0(X,\Sigma,\mu)}{\{ f \in \af(X,\Sigma,\mu) : \forall Z \in \Null_\mu \. f(Z) = 0 \}}
+}\Page{
+	\DeclareFunc{canonicalAdditiveFunctionalsIsomorphism}
+	{
+		\prod (X,\Sigma,\mu) \in \MEAS \.   \NewLine \.
+		\TYPE{Isomorphism}\Big( \VS{\Reals}, \af\big( \ma(X,\Sigma,\mu) \big), \af_0(X,\Sigma,\mu) \Big)	
+	}
+	\DefineNamedFunc{canonicalAdditiveFunctionalsIsomorphism}{f}
+	{\varphi(f)}{  f \circ \pi_{\Null_\mu} }
+	\Explain{ 1 The Mapping $\varphi$ is cleary injective}
+	\Explain{ 2 It is also bijective}
+	\Explain{ 2.1 Assume $f \in \af_0(X,\Sigma,\mu) $ }
+	\Explain{ 2.2 Then there is an auxilary functional $\bar f$ 
+		defined by $\bar f [E] = E$}
+	\Explain{ 2.3 This is well defined as $f$ respects the ideal od zero sets}
+	\Explain{ 2.4 Then obviously $\varphi(\bar f) = f$}
+	\EndProof
+	\\
+	\Theorem{Isomorphism}
+	{
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall f \in \af\big(\ma(X,\Sigma,\mu) \big) \.
+		f \in \ac\big(\ma(X,\Sigma,\mu) \big) \iff
+		\varphi(f) \in \ac(X,\Sigma,\mu) 
+	}
+	\Explain{This is obvious }
+	\EndProof
+	\\
+	\Theorem{IsomorphismCountablyAdditive}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall f \in \af\big(\ma(X,\Sigma,\mu) \big) \.
+		f \in \caf\big(\ma(X,\Sigma,\mu) \big) \iff
+		\varphi(f) \in \caf(X,\Sigma,\mu) 
+	}
+	\Explain{This is obvious }
+	\EndProof
+	\\
+	\Theorem{IsomorphismCountablyAdditive}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall f \in \af\big(\ma(X,\Sigma,\mu) \big) \.
+		f \in \caf\big(\ma(X,\Sigma,\mu) \big) \iff
+		\varphi(f) \in \ac(X,\Sigma,\mu) \cap \caf(X,\Sigma,\mu) 
+	}
+	\Explain{This is obvious}
+	\EndProof
+	\\
+	\Theorem{IsomorphismTruelyContinuous}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) \in \MEAS \.
+		\forall f \in \af\big(\ma(X,\Sigma,\mu) \big) \.
+		f \in C\big(\ma(X,\Sigma,\mu) \big) \iff
+		\varphi(f) \in \tc(X,\Sigma,\mu) 
+	}
+	\Explain{This is obvious }
+	\EndProof
+	\\
+	\Theorem{SemifiniteIsomorphismTruelyContinuous}
+	{
+		\NewLine ::		
+		\forall (X,\Sigma,\mu) : \Semifinite \.
+		\forall f \in \af\big(\ma(X,\Sigma,\mu) \big) \.
+		f \in \Caf\big(\ma(X,\Sigma,\mu) \big) \iff
+		\varphi(f) \in \tc(X,\Sigma,\mu) 
+	}
+	\Explain{This is obvious }
+	\EndProof
+}
+\newpage
+\subsubsection{Radon-Nikodym's Isomorphism}
+\Page{
+	\DeclareFunc{isomorphismOfRadonNikodym}
+	{
+		\prod (X,\Sigma,\mu) : \Semifinite \.   \NewLine \.
+		\TYPE{Isomorphism}\Big( \mathsf{OVS}, 
+		\mathbf{L}^1(X,\Sigma,\mu),  \Caf\big( \ma(X,\Sigma,\mu) \big) \Big)	
+	}
+	\DefineNamedFunc{isomorphismOfRadonNikodym}{[f]}
+	{\rho\nu[f]}{ \Lambda [E] \in \Sigma_\mu \.  \int_E f \; d\mu  }
+	\ExplainFurther{ 1 The expression $\int_E f \; d\mu$ above is clearly well defined 
+		for an integrable $f$ as $[E]$}
+	\Explain{ $\quad\quad$ is defined up to a set of the measure zero}
+	\ExplainFurther{ 2 $[f]$ Is also defined up to function $g$ equal to $0$ almost everywhere $\mu$} 
+	\Explain{ $\quad\quad$ so the whole operator $\rho\nu$ is well defined}
+	\Explain{ 3 $\rho \nu$  is invertible}
+	\Explain{ 3.1 Assume $f \in \Caf(\Sigma_\mu,\bar \mu)$}
+	\Explain{ 3.2 Then $\varphi(f)$ is truely continuous additive functional on $(X,\Sigma,\mu)$  
+		as this space is semifinite}
+	\ExplainFurther{ 3.3 So by classical Radon-Nikodym's theorem
+		there is $\frac{d \varphi(f)}{d \mu} \in L^1(X,\Sigma,\mu)$}
+	\Explain{$\quad \quad$ such that 
+	$\varphi(f)(E) = \int_E  \frac{d \varphi(f)}{d \mu} \; d\mu$ for any $E \in \Sigma$}
+	\Explain{ 3.4 So define 
+	$(\rho \nu)^{-1}(f) = \left[ \frac{d \varphi(f)}{d \mu} \right] \in \mathbf{L}^1(X,\Sigma,\mu)$   }	
+	\Explain{ 4 The linearity and order preservation is pretty obvious for 
+		$\rho\nu$}
+	\EndProof
+	\\
+	\ExplainFurther{Question: Is this a natural equivalence of functors?}
+}
+\newpage
+\subsubsection{Standard Extension}
+\Page{
+	\Theorem{CompleteleAdditiveRestriction}
+	{
+		\NewLine ::		
+		\forall (A,\mu) : \MA \.
+		\forall a \in A^f \.
+		(\Lambda c \in A \. \mu(ac)) \in \Caf(A) 
+	}
+	\Explain{1 As $\mu$ is additive its restriction is also additive}
+	\Explain{2 Assume $D$ is a downwards directed in $A$ with $\bigwedge D = 0$}
+	\Explain{3 Then $aD$ is still downwards directed in $A^f$ and $\bigwedge aD = 0 $}
+	\Explain{4 Note, that by choice of $a$ the restriction is finitely additive}
+	\Explain{5 Then $\inf_{d \in D} \mu(ad) = \inf_{d \in aD} \mu(d) = 0$}
+	\EndProof
+}\Page{
+	\Theorem{StandardExtensionLemma}
+	{
+		\NewLine ::		
+		\forall (A,\mu) \in \Finite\MA \.
+		\forall (C,\nu) \subset_\ma (A,\mu) \.
+		\exists! \caf(C,\nu) \Arrow{R} \caf(A,\mu) : \mathsf{OVS} \. \NewLine \.
+		\forall f \in \caf(C,\nu) \.
+		\forall \alpha \in \Reals \.
+		R(f)_{|C} = f \And
+		[R(f) > \alpha \mu]   =   [f > \alpha \nu]
+	}
+	\Explain{ 1 Represent $(A,\mu)$ as a measure algebra of the
+		measure space $(X,\Sigma,\hat \mu)$}
+	\Explain{ 2 Then $(C,\nu)$ can be seen as a measure algebra of the  
+		measure space $(X, T, \hat \nu)$  with $T \subset \Sigma$ 
+		and $\hat \nu = \hat \mu_{|T}$}
+	\Explain{ 3 $\varphi(f) \in \tc(X, T ,\hat \nu)$  for any $f \in \caf(C,\nu)$ }
+	\Explain{ 4 So there is a Radon-Nikodym presentation $\phi = \rho\nu^{-1}(f)$
+		such that $f[E] = \int_E \phi \; d\hat\nu$ for any $E \in T$}
+	\Explain{ 5 Define $R(f)[E] = \int_E \phi \; d\hat\mu$ 
+		for any $E \in \Sigma$}
+	\Explain{ 6 $[R(f) > \alpha \mu] \in C$}
+	\Explain{ 6.1 Define level sets $H_\alpha = \{ x \in X : \phi(x) > \alpha \} \in T$}
+	\Explain{ 6.2 $\int_E \phi \; d\mu > \alpha \hat \mu(E) $
+		 if $E \subset H_\alpha$ and $\hat \mu(E) > 0$ for any $E \in \Sigma$}
+	\Explain{ 6.3 $\int_E \phi \; d\mu \le \alpha \hat \mu(E) $
+		 if $E \cap H_\alpha = \emptyset$ for any $E \in \Sigma$}
+	\Explain{ 6.4 This can be rewritten in terms of measur algebras}
+	\Explain{ 6.5 $R(f)(a) > \alpha \mu(a)$ if $a \le [H_\alpha]$ and $a \neq 0$  
+		for any $a \in A$}
+	\Explain{ 6.6 And $R(f)(a) \le \alpha \mu(a)$ if $a[H_\alpha] = 0$ 
+		for any $a \in A$}
+	\Explain{ 6.7 Thus, $[R(f) > \alpha \mu] = [H_\alpha] \in C$}	
+	\Explain{ 7 Clearly $R(f)_{|C} = f$}
+	\Explain{ 8 Note, that $\mu_{|C} = \nu$}
+	\Explain{ 9 Therefore, $[R(f) > \alpha \mu]   =   [f > \alpha \nu]$
+		for all $\alpha \in \Reals$}
+	\Explain{ 10 $R$ is uinquily detrermined}
+	\Explain{ 10.1 Assume $g$ has all required properties}
+	\Explain{ 10.2 Then $[g > \alpha \mu] = [f > \alpha \nu] = [R(f) > \alpha \mu]$
+		for all $\alpha \in \Reals$}
+	\Explain{ 10.3 Then there is a measurable function $\gamma : X \to \Reals$ 
+		such that $\int_E \gamma \;d \mu = g[E]$ for any $E \in \Sigma$}
+	\Explain{ 10.4 But then level sets of $\gamma$ equal to level sets of $\phi$
+		modulo $\mu$-measure zero}
+	\Explain{ 10.5 So $\gamma = \phi$ $\mu$-almost everywhere}
+	\Explain{ 10.6 Thus $R(f) = g$}
+	\EndProof
+	\\
+	\DeclareFunc{standardExtension}
+	{
+		\prod (A,\mu)  : \Finite\MA \. \prod (C,\nu) \subset_{\ma} (A,\mu) \.
+		\mathsf{OVS}\Big( \caf(C,\nu), \caf(A,\mu) \Big)
+	}
+	\DefineNamedFunc{standardExtension}{f}{R(f)}
+	{\THM{StandardExtensionLemma}\Big( (A,\mu), (C,\nu), f \Big)}
+	\\
+	\Theorem{Measure}
+	{
+		\forall (A,\mu)  : \Finite\MA \. \forall (C,\nu) \subset_{\ma} (A,\mu) \.
+		R(\nu) = \mu
+	}
+	\Explain{In this case $\phi(x) = 1$}
+	\EndProof
+}\Page{
+	\Theorem{PartitionOfUnity}
+	{
+		\NewLine ::		
+		\forall (A,\mu)  : \Finite\MA \. \forall (C,\nu) \subset_{\ma} (A,\mu) \.
+		\forall f : \Nat \to \caf_+(C,\nu) \. \NewLine \.
+		\forall \aleph : \forall c \in C \. \nu(c) = \sum^\infty_{n=1} f_n(c) \.
+		\forall a \in A \. \mu(a) = \sum^\infty_{n=1} R(f_n)(a)
+	}
+	\Explain{ 1 Let $\phi : \Nat \to L^1(X,T,\hat\nu)$ be functional representations for
+		$f_n$ as in the previous theorem } 
+	\Explain{ 2 Define $\gamma_n  = \sum^n_{k=0} \phi_k$}
+	\Explain{ 3 Then $\gamma$ is an increasing sequence such that 
+		$\lim_{n \to \infty} \gamma_n = 1$ almost everywhere $\mu$}
+	\Explain{ 4 But then  
+		$\sum^\infty_{n=1} R(f_n)[E] = 
+		 \sum^\infty_{n=1} \int_E \phi_n \; d\hat \mu  =
+		 \lim_{n \to \infty} \int_E \gamma_n \; d \hat \mu =
+		 \int_E \lim_{n \to \infty} \gamma_n \; d\hat \mu =
+		 \int_E  d\hat \mu =  \mu [E]  
+		$}
+	\Explain{4.1  Here we used monotonic convergence theorem}
+	\EndProof
+}
+\newpage
 \section{Maharam's Theory}
 \section{Abstract Ergodic Theory}
 \section{Measurable Algebras}
 \newpage
-\section*{Sources:}
+\section*{Sources}
 \begin{enumerate}
-\item  D. H. Fremlin --- Measure Theory (32,33,34) 2016
+\item  O. Vladimirskaya --- Classes of Banach spaces connected with the Lyapunov convexity 1999
+\item  D. H. Fremlin --- Measure Theory Volume 3 (32,33,34,37,38,39) 2016
 \end{enumerate}
 \end{document}
 
