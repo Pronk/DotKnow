@@ -475,6 +475,7 @@
 \newcommand{\PAless}{\TYPE{ProperlyAtomless}}
 %Categroy
 \newcommand{\ma}{\mathsf{MA}}
+\newcommand{\pa}{\mathsf{PA}}
 \newcommand{\Caf}{\tau\hyph\mathsf{ca}}
 \author{Uncultured Tramp} 
 \title{Algebraic Measure Theory}
@@ -2626,7 +2627,7 @@
 	\Theorem{MeasurePresevingHomomorphismExtensionFromSubset}{
 		\NewLine ::
 		\forall (A,\mu),(B,\nu) : \Finite\MA \.
-		\forall  C \subset  A \.
+		\forall  C \subset  B \.
 		\forall f : C \to A \. \NewLine \.
 		\forall \aleph : \forall c : \Nat \to C \. \nu(\inf f(c)) = \mu(\inf c) \.
 		\exists \Phi \in \ma_\#\Big(\langle C \rangle_\ma, B\Big) \.
@@ -3017,9 +3018,8 @@
 		and then prove Fubbini therorem and related results from coordinate Determination}
 }
 \newpage
-\subsubsection{Reduced Products}
-\newpage
 \subsection{Radon-Nikodym Parallels}
+\newpage
 \subsubsection{Finitely Additive Functionals}
 \Page{
 	\DeclareFunc{finitelyAdditiveFunctionals}
@@ -4235,7 +4235,329 @@
 	\EndProof
 }
 \newpage
+\subsection{Category of Probility Algebras}
+\subsubsection{Reduced Products}
+\Page{
+	\Theorem{ReducedProductExists}
+	{
+		\NewLine ::		
+		\forall I \in \SET \.
+		\forall (A,p) \to \PAlg \.
+		\forall \F : \TYPE{Ultrafilter}(I) \. \NewLine \. 
+		\exists P \in \af\left( \frac{\prod_{i \in I}A_i}{J} \right) \.  
+	 	\forall a \in \prod_{i \in I} A_i \.
+	 	P[a] = \lim_{i \to \F} p_i(a_i)  
+		\NewLine
+		\quad \quad \where \quad  J = \left\{ a_i \in \prod_{i \in I} : \lim_{i \to \F} p_i(a_i)  = 0   \right\}
+	}
+	\Explain{1 Clearly $J$ is ideal}
+	\Explain{1.1 If $a,b \in J$ then $a + b \in J$}
+	\Explain{1.1.1 $ \lim_{i \to \F} p_i(a_i +b_i) \le 
+		\lim_{i \to \F} p_i(a_i) + p_i(b_i)  = 
+		\lim_{i \to \F} p_i(a_i) + \lim_{i \to \F} p_i(b_i) = 0		
+		 $  }
+	\Explain{1.1.2 So $ \lim_{i \to \F} p_i(a_i +b_i) = 0$ as each $p_i \ge 0$}
+	\Explain{1.2 if $a \in J$ and $b \in \prod_{i \in I} A_i$  then $ab \in J$}
+	\Explain{1.2.1 $ \lim_{i \to \F} p_i(a_i b_i) \le 
+		\lim_{i \to \F} p_i(a_i) = 0		
+		 $  }
+	\Explain{1.2.2 So $ \lim_{i \to \F} p_i(a_i +b_i) = 0$ as each $p_i \ge 0$}
+	\Explain{2 $P[a] = \lim_{i \to \F} p_i(a_i)$ is well defined}
+	\Explain{2.1 The system $\lim_{i \to \F} p_i(a_i)$
+		must be convergent $p_i(a_i) \in [0,1]$ which is compact and 
+		$\F$ is an ultrafilter}
+	\Explain{2.2 Clearly $[a]$ is defined up to a $j \in J$}
+	\Explain{2.3 And $\lim_{i \in \F} p_i(j_i)  = 0$}
+	\ExplainFurther{2.4 Thus, $ 
+			\lim_{i \in \F} p_i(a_i) = 			
+			\lim_{i \in \F} p_i(a_i) - \lim_{i \in \F} p_i(j_i) =
+			\lim_{i \in \F} p_i(a_i) -  p_i(j_i) \le 
+			\lim_{i \in \F} p_i(a_i + j_i) \le$}
+	\Explain{ $ \quad \quad \le \lim_{i \in \F} p_i(a_i) +  p_i(j_i) =
+			\lim_{i \in \F} p_i(a_i) + \lim_{i \in \F} p_i(j_i) =  \lim_{i \in \F} p_i(a_i)  $}
+	\Explain{ 2.5 Showing that $\lim_{i \in \F} p_i(a_i + j_i) = \lim_{i \in \F} p_i(a_i) $ }
+	\EndProof
+}\Page{
+	\DeclareFunc{reducedProduct}
+	{
+		\prod_{I \in \SET} (I \to \PAlg) \to \TYPE{Ultrafilter}(I) \to \PAlg
+	}
+	\DefineNamedFunc{reducedProduct}{(A,p),\F}{
+		\left( \prod_{i\in I} (A_i,p_i)|\F, p_\F \right)}
+	{
+		\left( \frac{\prod_{i \in I} A_i}{J},
+			\THM{ReducedProductExists}\Big( I, (A,\mu), \F \Big) \right) \NewLine \quad \quad \where \quad
+		 J = \left\{ a_i \in \prod_{i \in I} : \lim_{i \to \F} p_i(a_i)  = 0   \right\}
+	}
+	\Explain{ 1 Clearly $ \prod_{i\in I} (A_i,p_i)|\F$ is and algebra and $p_\F$ is non-negative additive}
+	\Explain{ 2 $p_\F$ is countably additive}
+	\Explain{ 2.1 Assume $[a] : \Nat \to \frac{\prod_{i \in I} A_i}{J}$ is disjoint}
+	\Explain{ 2.2 Then $\lim{i \to \F} p_i(a_{n,i}a_{m,i}) = 0$ 
+		for each $n,m \in \Nat$ such that $n \neq m$}
+	\Explain{ 2.3 Define $b_{n,i} = \bigvee_{k=1}^n a_{k,i}$}
+	\Explain{ 2.4 Then $[b_n] = \bigvee^n_{k=1} [a_k]$}
+	\Explain{ 2.5 Define $\gamma = \sum^\infty_{n=0} p_\F[a_n]  =  
+		\sup_{n \in \Nat} p_\F[b_n] = \sup_{n \in \Nat} \lim_{i \to \F}  p_i(b_{n,i})$}
+	\Explain{ 2.6 Define $R_n = \{ i \in I : p_i(b_{n,i}) \le \gamma + 2^{-n} \}$}
+	\Explain{ 2.7 Then $R_n$ is non-decreasing in $I$ and $R_1 = I$ }
+	\Explain{ 2.8 Each $R_n \in \F$}
+	\Explain{ 2.8.1 Not that by 2.5 there is an $F \in \F$ such that $F \subset R_n$ for any $n \in \Nat$}
+	\Explain{ 2.8.2 But $\F$ is upwards closed}
+	\Explain{ 2.9 Define $c \in \prod_{i \in I} A_i$ 
+		by setting $c_i =  b_{n-1,i}$ if $i \in R_{n-1} \setminus R_{n}$
+		and $c_i = \bigvee^\infty_{n=1} b_{n,i}$ otherwise}
+	\Explain{ 2.10 Then $[a_n] \le [c]$}
+	\Explain{ 2.10.1   $a_n,i \le c $ on $R_n \in \F$}
+	\Explain{ 2.10.2 But this means that 
+		$p_\F([a_n] \setminus [c]) = \lim_{i \to \F} p_i(a_{n,i} \setminus c_i) = 0$}
+	\Explain{ 2.11 Also $p_\F[c] \le \gamma$}
+	\Explain{ 2.11.1 This follows from the definition of $R_n$}
+	\Explain{ 2.12 Thus, by the standard argument $c = \bigvee^\infty_{n=1} a_n$}
+	\Explain{ 3 $\prod_{i \in I} (A_i,\mu_i) | \F$ is $\sigma$-algebra}
+	\Explain{ 3.1 Proof of (2) tells as how to construct a supremum}
+	\EndProof 
+	\\
+	\DeclareFunc{reducedPower}
+	{
+		\prod_{I \in \SET} \PAlg \to \TYPE{Ultrafilter}(I) \to \PAlg
+	}
+	\DefineNamedFunc{reducedProduct}{(A,p),\F}{
+		( (A,p)^I|\F, p_\F )}
+	{
+		\left( \prod_{i \in I}(A,p |\F, p_\F \right)
+	}
+}\Page{
+	\Theorem{Morphisms}
+	{
+		\NewLine :: 		
+		\forall I \in \SET \.
+		\forall \F : \TYPE{Ultrafilter}(I) \.
+		\forall (A,p),(B,q)  : I \to \PAlg \. \NewLine \.
+		\forall \phi \in \prod_{i \in I} \ma_\#\Big((A_i,p_i),(B_i,q_i)\Big) \.
+		\exists! \Phi \in \ma_\#\left( 
+			\left( \prod_{i \in I} A_i | \F, p_\F\right),\left( \prod_{i \in I} B_i |\F, q_\F \right) \right) \.
+		\NewLine \.
+		\forall a \in \prod_{i \in I} A_i \. 
+		\Phi[a] = \Big[( \phi_i(a_i) )_{i \in I} \Big]
+	}
+	\Explain{ 1 $\Phi[a]$ is well defined by relation above}
+	\Explain{ 1.1 $a$ is determined modulo 
+		$j \in J_A = \left\{ a_i \in \prod_{i \in I} A_i : \lim_{i \to \F} p_i(a_i)  = 0   \right\}$}
+	\ExplainFurther{ 1.2 As $\phi$ are measure preserving 
+	$\prod_{i \in I}\phi_i(j) \in J_B = 
+	\left\{ b_i \in \prod_{i \in I} B_i : \lim_{i \to \F} q_i(a_i)  = 0   \right\}$}
+	\Explain{ $\quad \quad$ having  $\lim_{i \to \F} q_i( \phi_i(j_i)) = \lim_{i \to \F} p_i(j_i) = 0$ }
+	\Explain{2 Obviously $\Phi$ is unique}
+	\EndProof
+	\\
+	\DeclareFunc{morphismReducedProduct}
+	{
+		\prod_{I \in \SET} \prod \F : \TYPE{Ultrafilter}(I) \. 
+		\prod  (A,p),(B,q)  : I \to \PAlg \. \NewLine \.
+		\prod_{i \in I} \ma_\#\Big((A_i,p_i),(B_i,q_i)\Big) 
+		\to
+		 \ma_\#\left( 
+		 \left( \prod_{i \in I} A_i | \F, p_\F\right),\left( \prod_{i \in I} B_i |\F, q_\F \right) \right)
+	}
+	\DefineNamedFunc{morphismReducedProduct}{\phi}{ \phi_\F}
+	{
+		\Lambda [a] \in \prod_{i \in I} (A_i, p_i) | \F \. \Big[  (\phi_i(a_i))_{i \in I}  \Big] 
+	}	
+	\\
+	\Theorem{Functoriality}
+	{
+		\NewLine :: 		
+		\forall I \in \SET \.
+		\forall \F : \TYPE{Ultrafilter}(I) \.
+		\forall (A,p),(B,q),(C,u)  : I \to \PAlg \. \NewLine \.
+		\forall \phi \in \prod_{i \in I} \ma_\#\Big((A_i,p_i),(B_i,q_i)\Big) \.
+		\forall \psi \in  \prod_{i \in I} \ma_\#\Big((B_i,p_i),(C_i,u_i)\Big) \.
+		\phi_\F \psi_\F = (\phi \psi)_\F
+	}
+	\Explain{This is obvious by the expression}
+	\EndProof	
+}
+\newpage
+\subsubsection{Filtered Colimits}
+\Page{
+	\DeclareFunc{measurePreservingMeasureAlgebraCategory}{\mathsf{LSCAT}}
+	\DefineNamedFunc{measurePreservingMeasureAlgebraCategory}{}{\pa_\#}
+	{\NewLine \de \Big( \PAlg, \MPH, \circ, \id\Big)}
+	\\
+	\DeclareType{FilteredDiagram}{\prod_{\C \in \CAT} 
+		?\sum I : \TYPE{Preorder} \. \sum X : I \to \C \. \sum \prod_{(i,j) \in \prec_I} \C(X_i,X_j) 
+		\And \TYPE{Ultrafilter}(I)     }
+	\DefineType{(I,X,\phi,\F)}{FilteredDiagram}
+	{
+		\forall (i,j),(j,k) \in \prec_I \. \phi_{i,j}\phi_{j,k} =	\phi_{i,k}	
+		\forall i \in I \.  \{ j \in I : j \preceq i   \} \in \F	
+	}
+	\\
+	\Theorem{CofilteredCoconeConstruction}
+	{
+		\NewLine ::		
+		\forall  (I,(A,p),\phi,\F) : \TYPE{FilteredDiagram}(\pa_\#) \.
+		\exists \TYPE{Cocone}\Big(\pa_\#,(A,p), \phi \Big)
+	}
+	\Explain{ 1  The limit is $(B,P) = \prod_{i \in I} (A_i,p_i) | \F$}
+	\Explain{ 2 There are $\psi_i \in \pa_\#\Big( (A_i,p_i), (B,P)\Big)$ 
+		such that $\psi_i = \phi_{i,j} \psi_j$}
+	\Explain{ 2.1 Assume $a \in A_i$}
+	\Explain{ 2.2 Take  $a' \in \prod_{j \in I} A_j$ such that 
+		$a'_j = \phi_{j,i}(a)$ if $i \prec j$ and otherwise $a'_j = x_j$ 
+		is arbitrary}
+	\Explain{ 2.3 Then $[a']$ do not depend on the choice of $x$
+		by the property of $\F$}
+	\Explain{ 2.3.1 Consider a structure $u \in \prod_{j \in I} A_j$
+		such that $u_j = 0$ then $i  \preceq  j$}
+	\Explain{ 2.3.2 Assume $j \in I$}
+	\Explain{ 2.3.3 Then $\{ k \in I : j \preceq k \},\{ k \in I : i \preceq k \} \in \F$}
+	\Explain{ 2.3.4 As $\F$ an ultrafilter 
+		$\{ k \in I : j \preceq k \} \cap \{ k \in I : i \preceq k \} \neq \emptyset$ }
+	\Explain{ 2.3.5 Thus $\lim_{i \to \F} p_j(u_j) = 0$}
+	\Explain{ 2.4 Define $\psi_i(a) = [a']$}
+	\Explain{ 2.5 Then  $\psi_i(a)$ is a measure preserving homomorphism as $phi_{i,j}$ is}
+	\Explain{ 2.6 And Property $\psi_i = \phi_{i,j} \psi_j$ follows by construction
+		and properties of cofiltered diagrams}
+	\EndProof
+	\\
+	\DeclareFunc{cofilteredCoconeConstruction}
+	{
+		\NewLine ::		
+		\prod  (I,(A,p),\phi,\F) : \TYPE{CofilteredDiagram}(\pa_\#) \.
+		\sum \TYPE{Cocone}\Big(\pa_\#,(A,p), \phi \Big)
+	}
+	\DefineNamedFunc{cofilteredCoconeConstruction}{}{  \lim_{i,j \to \F} \Big( (A_i,p_i), \phi_{i,j}\Big) }
+	{ \NewLine \de \THM{CofilteredCoconeConstruction}\Big(I,(A,p), \phi, \F \Big)  }
+}\Page{
+	\Theorem{CofiltratedCoconeElementsRepresentation}
+	{
+		\NewLine ::		
+		\forall  (I,(A,p),\phi,\F) : \TYPE{FilteredDiagram}(\pa_\#) \.
+		\forall  a \in \prod_{i \in I} A_i \. \NewLine \.
+		[a]_B \le \bigvee_{i \in I} \psi_i(a_i) \quad \where \quad
+		\Big( (B,P),\psi \Big) =  \lim_{i,j \to \F} \Big( (A_i,p_i), \phi_{i,j}\Big)
+	}
+	\Explain{ This is intuitively clear bu requires an eloborate proof}
+	\Explain{ Assume we have operation $b|i$ for $b$ such that $[a] | i = a_i$}
+	\Explain{ Then $[a] | i = a_i \le a_i \vee \bigvee_{j \preceq i} \phi_{i,j}(a_i) = 
+		\bigvee_{i \in I} \psi_i(a_i) | i$}
+	\NoProof
+}\Page{
+	\Theorem{DirectedLimits}{\TYPE{HasАilteredСolimits}(\pa_\#)}
+	\Explain{ 1 Consider a filtered diagram $(I,(A,p),\phi,\F)$}
+	\Explain{ 2 Let $\Big((B,P),\psi\Big) = \lim_{i,j \to \F} \Big( (A_i,p_i), \phi_{i,j} \Big) $}
+	\Explain{ 3 Let $C = \bigcup_{i \in I} \psi_i(A_i)$}
+	\Explain{ 5 Assume $(D,Q)$ ia another probability algebra and 
+		$\xi_i \in \ma_\#\Big((A_i,p_i) ,(D,Q)\Big)$ 
+		is such that $\phi_{i,j} \xi_i = \xi_j$}	
+	\Explain{ 6 Define mapping $eta : C \to D$ as 
+		$eta(\psi_i(a)) = \xi_i(a)$}
+	\Explain{ 6.1 Locally $\eta$ is defined for each $A_i$
+		as measure preserving map $\xi_i$ must be injective}
+	\Explain{ 6.2 And in the case $\psi_i(a) = \psi_j(b)$ for $i \neq j$
+		this is still the case that $\xi_i(a) = \xi_j(b)$}
+	\Explain{ 6.2.1 There are $k \in I$ such that $i \prec k$ and $j \prec k$}
+	\Explain{ 6.2.2 So there ae $\phi_{k,i}$ and $\phi_{k,j}$}
+	\Explain{ 6.2.3 Also $\phi_{i,k} \xi_k = \xi_i$ and $\phi_{j,k} \xi_k = \xi_j$}
+	\Explain{ 6.2.4 Measure preserving $\xi_k$ is injective, 
+		so it must be the case that $\phi_{i,k}(a) = \phi_{i,k}(b)$}
+	\Explain{ 6.2.5 But $\phi_{i,k} \xi_k = \xi_i$ and $\phi_{j,k}\xi_k = \xi_j$}
+	\Explain{ 6.2.6 Thus, $\xi_i(a) = \xi_k(\phi_{i,k}(a)) = \xi_k(\phi_{j,k}(b)) = \xi_j(b)$}
+	\Explain{ 6.3 So the mapping $\eta$ is well defined}
+	\Explain{ 7 $\inf_{c \in C} Q(\eta(c)) = \inf_{c \in C} P(c)$}
+	\Explain{ 7.1 For each $c \in C$ where is $i \in I$ and $a \in A_i$ such that $c = \phi_i(a)$}
+	\Explain{ 7.2 Then by construction  $\eta(c) = \xi_i(a)$}
+	\Explain{ 7.3 But both $\xi_i$ and $\phi_i$ are measure preserving so
+		  $Q(\eta(c)) = Q(\xi_i(a)) = p_i(a) = P(\psi_i(a))$}
+	\Explain{ 8 Then we can apply a subset extension theorem to $\eta$
+		and get $H \in \ma\Big( (\langle C \rangle_\ma, P_{|\ldots}),(D,Q)\Big)$}
+	\Explain{ 9 Set  $(\langle C \rangle_\ma, P_{|\ldots})$ to be our colimit}
+	\Explain{ 10 From construction it follows that $\phi_i H = \xi_i$}
+	\Explain{ 11 If $H'$ i any other measure preserving morphism with this property 
+		it mus be the case that $H_{|C} = H'_{|C}$.}
+	\Explain{ 12 But $\langle C \rangle_\ma$ is the domain, so  $H = H'$}
+	\EndProof
+	\\
+	\Theorem{ProjectiveLimits}{\TYPE{HasFilteredLimits}(\pa_\#)}
+	\Explain{ Consider a filtered diagram $(I,(A,p),\phi,\F)$}
+	\Explain{ The limit can be defined as
+		$\left\{ a \in \prod_{i \in I} A_i : \forall (i,j) \in (\prec_I) \. a_j = \phi_{i,j}(a_i)  \right\}$}	
+	\EndProof
+} 
+\newpage
+\subsubsection{Commuting endomorphism}
+\Page{
+	\Theorem{Augmentation}{
+		\forall (A,p) \in \PAlg \.
+		\forall \Phi \subset_{\mathsf{MONO}} \End_{\pa_\#}(A,p) \.
+		\forall \aleph : \forall \phi,\phi' \in \Phi \. \phi \phi' = \phi' \phi \. \NewLine \.
+		\exists (B,q) \in \PAlg \.
+		\exists \eta  \in \pa_\#\Big( (A,p), (B,q)\Big) \. 
+		\exists  \Phi \Arrow{\mathcal{H}} \Aut_{\pa_\#}(B,q) : \mathsf{MONO} \. \NewLine
+		\forall \phi \in \Phi \.   \phi \eta = \eta \mathcal{H}(\phi)
+	}
+	\Explain{ 1 Introduce preorder on $\Phi$ by
+		$\phi \preceq \psi$ if there is $\theta \in \Phi$ such that $\psi = \theta \phi$} 
+	\Explain{ 2 As these endomorphisms are injective there can be atmost one such $\theta$}
+	\Explain{ 3 So we may define structure $\theta_{\phi,\psi}$}
+	\Explain{ 4 Then construction $(A,\theta)$ is a diagram}
+	\Explain{ 5 If $\phi,\psi \in \Phi$, then $\phi \prec \psi \phi$ and $\psi \prec \phi \psi = \psi \phi$}
+	\Explain{ 6 So by ultrafilter Lemma we can define an ultrafilter $\F$ on $\Phi$ 
+		making $(\Phi,A,\theta,\F)$ into filtered diagram}
+	\Explain{ 7 Define $(B,q) = (A,p)^\Phi|\F$}
+	\Explain{ 8 Define $\eta(a) =   \Big[\phi(a)\Big]_{\phi \in \Phi} \in \pa_\#\Big( (A,p), (B,q)\Big)$}
+	\Explain{ 9 Define $\mathcal{H}(\phi)[a] = [\phi(a_\psi)]_{\psi \in \Phi }$}
+	\Explain{ 9.1 $\mathcal{H}(\phi)$ is well defined as $\phi$ is measure preserving}
+	\Explain{ 9.2        
+		$ \phi \eta a   = 
+		  [\phi \psi(a)]_{\psi \in \Phi} =  
+		  [\psi \phi(a)]_{\psi \in \Phi} = 
+		  \eta \mathcal{H}(\phi) [a] 		
+		$	
+	}
+	\Explain{ 9.3 Each $\mathcal{H}(\phi)$ is invertible}
+	\Explain{ 9.3.1 Define $\alpha_\phi(a) = (\theta_{\psi,\phi}(a))_{\phi \prec \psi}$}
+	\Explain{ 9.3.2 Each $\alpha_\phi$ is well defined by the argument simmilar to the previous chapter}
+	\Explain{ 9.3.3 Also $\alpha_\phi \mathcal{H}(\psi) = \alpha_{\phi \psi} 
+		= \theta_{\phi,\phi\psi} \alpha_\phi = \psi \alpha_\phi$ }
+	\Explain{	 9.3.4 Also $ \phi \alpha_{\phi \psi} = \alpha_\psi$ }
+	\Explain{ 9.3.5  $\alpha_\phi(A) \cup \alpha_\psi(A) =
+		\alpha_{\phi\psi}(\psi(A)) \cup \alpha_{\phi\psi}(\phi(A)) \subset
+		\alpha_{\phi\psi}(A)		
+		$  for all $\phi,\psi \in \Phi$}
+	\Explain{ 9.3.6 So $D = \bigcup_{\phi \in \Phi} \alpha_\phi(A)$ is a subalgebra of $B$} 
+	\Explain{ 9.3.7 Define probability algebra $C = \overline{D}$ with probability $P|C$}
+	\Explain{ 9.3.8 Then $\eta = \alpha_{\id}$ has its image contained in $C$}
+	\Explain{ 9.3.9 $\mathcal{H}(\psi)(D) = D$ for any $\psi \in \Phi$}	
+	\Explain{ 9.3.9.1 $\mathcal{H}(\psi)(D) =  
+		\bigcup_{\phi \in \Phi} \alpha_\phi\mathcal{H}(\psi)(A) = 
+		\bigcup_{\phi \in \Phi} \psi \alpha_\phi (A) \subset D$}
+	\Explain{ 9.3.9.2 Assume $d \in D$}
+	\Explain{ 9.3.9.3 Then there is $\psi \in \Phi$ such that $a = \alpha_\psi(a)$}	
+	\Explain{ 9.3.9.4 Define 
+		$b = (\theta_{\psi,\xi} a)_{\psi \preceq \xi},$
+		and
+		$b' = (\theta_{\psi \phi, \xi} a)_{ \psi \phi  \preceq \xi} $
+	}
+	\Explain{ 9.3.9.5 Then $\phi \psi b' = ( \xi(a))_{\xi \in \Phi} $ and $\psi b = (\xi( a))_{\xi \in \Phi} $ }
+	\Explain{ 9.3.9.6 So by injectivity and commutativity $\phi b' = b$}	
+	\Explain{ 9.3.9.7 Then  
+		$ \mathcal{H}(\phi)[b'] = [b] = a $} 	
+	\Explain{ 9.3.10 Thus, each $\mathcal{H}(\phi)$ is surjective}
+	\Explain{ 9.3.11  As $\mathcal{H}(\phi)$ is injective as a measure preserving map it must be 
+			an isomorphism}
+	\EndProof
+}
+\newpage
 \section{Maharam's Theory}
+\subsection{Types}
+\subsubsection{Relative Atoms}
+\subsubsection{Subject}
+\subsection{Classification Theorem}
+\subsection{Closed Subalgebras}
+\subsection{Classification of Products}
+\subsection{Von Neuman's Lifting Theorem}
 \section{Abstract Ergodic Theory}
 \section{Measurable Algebras}
 \newpage
